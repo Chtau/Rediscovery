@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Rediscovery.Views
+namespace Rediscovery.DesktopConfiguration
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DesktopConfigurationPage : ContentPage

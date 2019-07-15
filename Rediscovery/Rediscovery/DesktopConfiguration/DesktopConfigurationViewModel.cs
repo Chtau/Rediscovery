@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Rediscovery.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.ViewModels
+namespace Rediscovery.DesktopConfiguration
 {
     public class DesktopConfigurationViewModel : BaseViewModel
     {

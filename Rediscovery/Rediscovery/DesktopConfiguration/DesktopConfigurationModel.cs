@@ -1,11 +1,12 @@
-﻿using SQLite;
+﻿using Rediscovery.Models;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Models
+namespace Rediscovery.DesktopConfiguration
 {
-    public class DesktopConfiguration : BaseModel
+    public class DesktopConfigurationModel : BaseModel
     {
         public enum Connection
         {

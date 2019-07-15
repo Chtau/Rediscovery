@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Views\DesktopConfigurationPage.xaml">
+    <EmbeddedResource Update="DesktopConfiguration\DesktopConfigurationPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

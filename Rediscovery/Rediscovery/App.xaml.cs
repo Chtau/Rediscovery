@@ -13,8 +13,10 @@ namespace Rediscovery
         {
             InitializeComponent();
 
+            DependencyService.Register<Logger>();
             DependencyService.Register<MockDataStore>();
-            DependencyService.Register<NetworkDiscovery>();
+            DependencyService.Register<DBStore>();
+            DependencyService.Register<DesktopConfiguration.DesktopConfigurationStore>();
             MainPage = new MainPage();
         }
 
