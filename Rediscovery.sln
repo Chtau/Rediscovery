@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29025.244
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopService", "DesktopService\DesktopService.csproj", "{1AF0F3B8-4B60-4D07-8882-EF93D8B1F1FD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rediscovery.Android", "Rediscovery\Rediscovery.Android\Rediscovery.Android.csproj", "{F9C86884-BB0E-424A-AD62-85B29F533BA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rediscovery", "Rediscovery\Rediscovery\Rediscovery.csproj", "{DE1F1607-91A9-4F5A-BF2C-384F4E8BFFA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery", "Rediscovery\Rediscovery\Rediscovery.csproj", "{DE1F1607-91A9-4F5A-BF2C-384F4E8BFFA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Desktop", "Desktop\Desktop.csproj", "{B7AFE589-F102-4A59-92FE-153CAA03C929}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1AF0F3B8-4B60-4D07-8882-EF93D8B1F1FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1AF0F3B8-4B60-4D07-8882-EF93D8B1F1FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1AF0F3B8-4B60-4D07-8882-EF93D8B1F1FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1AF0F3B8-4B60-4D07-8882-EF93D8B1F1FD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
@@ -29,6 +25,10 @@ Global
 		{DE1F1607-91A9-4F5A-BF2C-384F4E8BFFA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE1F1607-91A9-4F5A-BF2C-384F4E8BFFA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE1F1607-91A9-4F5A-BF2C-384F4E8BFFA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7AFE589-F102-4A59-92FE-153CAA03C929}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7AFE589-F102-4A59-92FE-153CAA03C929}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7AFE589-F102-4A59-92FE-153CAA03C929}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7AFE589-F102-4A59-92FE-153CAA03C929}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
