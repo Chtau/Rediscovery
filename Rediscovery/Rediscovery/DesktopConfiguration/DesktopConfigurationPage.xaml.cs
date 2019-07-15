@@ -27,10 +27,8 @@ namespace Rediscovery.DesktopConfiguration
             if (item == null)
                 return;
 
-            //await Navigation.PushAsync(new DeviceItemDetailPage(new DeviceItemDetailViewModel(item)));
             await Navigation.PushModalAsync(new NavigationPage(new DesktopConfigurationEditPage(item)));
 
-            // Manually deselect item.
             ItemsListView.SelectedItem = null;
         }
 
@@ -44,11 +42,6 @@ namespace Rediscovery.DesktopConfiguration
             base.OnAppearing();
             if (viewModel.Items.Count == 0)
                 viewModel.LoadItemsCommand.Execute(null);
-        }
-
-        private async void Configuration_Clicked(object sender, EventArgs e)
-        {
-            //await Navigation.PushModalAsync(new NavigationPage(new AppDeviceConfigurationPage()));
         }
     }
 }
