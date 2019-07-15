@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="Rediscovery.DesktopConfiguration.DesktopConfigurationEditPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Save" Clicked="Save_Clicked" />
+        <ToolbarItem Text="Remove" Clicked="Remove_Clicked" />
+        <ToolbarItem Text="Back" Clicked="Back_Clicked" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <Grid>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <ScrollView Grid.Row="0">
+                    <StackLayout Spacing="20" Padding="15">
+                        <Label Text="Name" FontSize="Medium" />
+                        <Entry Text="{Binding Item.Name}" FontSize="Small" />
+                        <Label Text="IP Address" FontSize="Medium" />
+                        <Editor Text="{Binding Item.LastKnownAddress}" FontSize="Small" Margin="0" />
+                        <Label Text="Identifier" FontSize="Medium" />
+                        <Editor Text="{Binding Item.Identifies}" FontSize="Small" Margin="0" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Label Grid.Column="0" Grid.Row="0" Text="AutoConnect" FontSize="Medium"/>
+                            <Switch Grid.Column="1" Grid.Row="0" IsToggled="{Binding Item.AutoConnect}" />
+                            <Label Grid.Column="0" Grid.Row="1" Text="ConnectionState:" FontSize="Medium" />
+                            <Label Grid.Column="1" Grid.Row="1" Text="{Binding Item.ConnectionState}" FontSize="Medium"/>
+                            <Label Grid.Column="0" Grid.Row="2" Text="LastConnection:" FontSize="Medium" />
+                            <Label Grid.Column="1" Grid.Row="2" Text="{Binding Item.LastConnection}" FontSize="Medium"/>
+                        </Grid>
+                    </StackLayout>
+                </ScrollView>
+                <StackLayout Grid.Row="1">
+                    <Button Text="Connect" Command="{Binding Connect}" />
+                </StackLayout>
+            </Grid>
+            <ContentView x:Name="actOverlay" IsVisible="{Binding Load.IsLoading}" 
+                         HorizontalOptions="FillAndExpand" 
+                         VerticalOptions="FillAndExpand"
+                         >
+                <ActivityIndicator IsVisible="True" IsRunning="True" x:Name="busyActivity" Color="Red" VerticalOptions="CenterAndExpand"
+                                   HorizontalOptions="CenterAndExpand"/>
+            </ContentView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

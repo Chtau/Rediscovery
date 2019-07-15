@@ -12,9 +12,43 @@ namespace Rediscovery.DesktopConfiguration
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DesktopConfigurationPage : ContentPage
     {
+        DesktopConfigurationViewModel viewModel;
+
         public DesktopConfigurationPage()
         {
             InitializeComponent();
+            BindingContext = viewModel = new DesktopConfigurationViewModel();
+        }
+
+
+        async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
+        {
+            DesktopConfigurationModel item = args.SelectedItem as DesktopConfigurationModel;
+            if (item == null)
+                return;
+
+            //await Navigation.PushAsync(new DeviceItemDetailPage(new DeviceItemDetailViewModel(item)));
+            await Navigation.PushModalAsync(new NavigationPage(new DesktopConfigurationEditPage(item)));
+
+            // Manually deselect item.
+            ItemsListView.SelectedItem = null;
+        }
+
+        async void AddItem_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushModalAsync(new NavigationPage(new DesktopConfigurationEditPage()));
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            if (viewModel.Items.Count == 0)
+                viewModel.LoadItemsCommand.Execute(null);
+        }
+
+        private async void Configuration_Clicked(object sender, EventArgs e)
+        {
+            //await Navigation.PushModalAsync(new NavigationPage(new AppDeviceConfigurationPage()));
         }
     }
 }
