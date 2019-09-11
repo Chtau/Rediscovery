@@ -1,4 +1,5 @@
-﻿using Rediscovery.Models;
+﻿using Microsoft.AspNetCore.SignalR.Client;
+using Rediscovery.Models;
 using Rediscovery.Services;
 using Rediscovery.ViewModels;
 using System;
@@ -45,11 +46,22 @@ namespace Rediscovery.DesktopConfiguration
                 };
             }
 
+            HubConnection connection;
             Connect = new Command(async () =>
             {
                 Load.IsLoading = true;
 
-                //await App.Connections.TryConnect(Item);
+                connection = new HubConnectionBuilder()
+                .WithUrl("http://" + Item.LastKnownAddress + "/connect")
+                .Build();
+                await connection.StartAsync();
+                connection.On<bool>("Hello", (status) =>
+                {
+                    Item.ConnectionState = Connection.OK;
+                    item.LastConnection = DateTime.Now;
+                });
+                await connection.InvokeAsync("Welcome", "dev1", Item.Id);
+                
 
                 Load.IsLoading = false;
             });

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using DesktopService.Features.Authentication;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,6 +27,7 @@ namespace DesktopService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHostedService<Worker>();
+            services.AddSignalR();
             services.AddLogging();
             services.AddSingleton<IConfigurationRoot>(Configuration);
             services.AddSingleton<Features.Authentication.IManifest, Features.Authentication.Manifest>();
@@ -35,7 +37,10 @@ namespace DesktopService
         // Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app)
         {
-            
+            app.UseSignalR(route =>
+            {
+                route.MapHub<ConnectHub>("/connect");
+            });
         }
     }
 }

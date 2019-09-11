@@ -46,30 +46,15 @@ namespace DesktopService
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureLogging((hostingContext, logging) =>
                 {
-                    logging.AddConsole();//.AddEventLog();
+                    logging.AddConsole();
                 })
                 .ConfigureAppConfiguration((context, config) =>
                 {
                     // Configure the app here.
-
                 })
+            .UseKestrel(options => {
+                options.ListenAnyIP(44341);
+            })
                 .UseStartup<Startup>();
-
-        /*static void Main(string[] args)
-        {
-            IServiceCollection services = new ServiceCollection();
-            Startup startup = new Startup();
-            startup.ConfigureServices(services);
-            IServiceProvider serviceProvider = services.BuildServiceProvider();
-
-            serviceProvider.GetService<ILoggerFactory>();
-
-            var logger = serviceProvider.GetService<ILoggerFactory>()
-                .CreateLogger<Program>();
-
-            logger.LogDebug("Prepare for discovery");
-
-            // Get Service and call method
-        }*/
     }
 }
