@@ -32,6 +32,7 @@ namespace DesktopService
             services.AddSingleton<IConfigurationRoot>(Configuration);
             services.AddSingleton<Features.Authentication.IManifest, Features.Authentication.Manifest>();
             services.AddSingleton<Features.Authentication.IDiscovery, Features.Authentication.Discovery>();
+            services.AddSingleton<Features.Authentication.IAuth, Features.Authentication.Auth>();
         }
 
         // Use this method to configure the HTTP request pipeline.

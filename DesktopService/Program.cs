@@ -12,6 +12,7 @@ namespace DesktopService
     internal class Program
     {
         // TODO: https://docs.microsoft.com/en-us/aspnet/core/signalr/dotnet-client?view=aspnetcore-2.2
+        // TODO: https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/windows-service?view=aspnetcore-2.2&tabs=visual-studio
 
         public static void Main(string[] args)
         {

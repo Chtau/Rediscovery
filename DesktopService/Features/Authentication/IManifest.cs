@@ -6,5 +6,7 @@ namespace DesktopService.Features.Authentication
 {
     public interface IManifest
     {
+        bool BuildManifest();
+        SharedCoreModels.Manifest GetManifest();
     }
 }
