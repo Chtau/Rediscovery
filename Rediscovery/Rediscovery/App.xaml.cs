@@ -18,6 +18,8 @@ namespace Rediscovery
             DependencyService.Register<DBStore>();
             DependencyService.Register<DesktopConfiguration.DesktopConfigurationStore>();
             DependencyService.Register<Features.Authentication.Connect>();
+            DependencyService.Register<Features.Authentication.ConnectionStore>();
+            DependencyService.Register<Features.Authentication.ConnectionManifestFeatureStore>();
             MainPage = new MainPage();
         }
 
