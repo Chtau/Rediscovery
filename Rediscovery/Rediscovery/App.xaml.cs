@@ -17,6 +17,7 @@ namespace Rediscovery
             DependencyService.Register<MockDataStore>();
             DependencyService.Register<DBStore>();
             DependencyService.Register<DesktopConfiguration.DesktopConfigurationStore>();
+            DependencyService.Register<Features.Authentication.Connect>();
             MainPage = new MainPage();
         }
 

@@ -15,6 +15,7 @@ namespace Rediscovery.DesktopConfiguration
     {
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private IDataStoreGuid<DesktopConfigurationModel> Store => DependencyService.Get<IDataStoreGuid<DesktopConfigurationModel>>() ?? new DesktopConfigurationStore();
+        private Features.Authentication.IConnect auth => DependencyService.Get<Features.Authentication.IConnect>() ?? new Features.Authentication.Connect();
 
         public DesktopConfigurationModel Item { get; set; }
         public Command Connect { get; }
@@ -22,6 +23,8 @@ namespace Rediscovery.DesktopConfiguration
 
         public DesktopConfigurationEditViewModel(DesktopConfigurationModel item = null)
         {
+            auth.HelloReceived += Auth_HelloReceived;
+            auth.ManifestReceived += Auth_ManifestReceived;
             Load = new LoadBinding
             {
                 IsLoading = false
@@ -46,25 +49,37 @@ namespace Rediscovery.DesktopConfiguration
                 };
             }
 
-            HubConnection connection;
+            //HubConnection connection;
             Connect = new Command(async () =>
             {
                 Load.IsLoading = true;
 
-                connection = new HubConnectionBuilder()
+                await auth.TryConnect(Item);
+                /*connection = new HubConnectionBuilder()
                 .WithUrl("http://" + Item.LastKnownAddress + "/connect")
                 .Build();
                 await connection.StartAsync();
-                connection.On<bool>("Hello", (status) =>
+                connection.On<bool, string>("Hello", (status, info) =>
                 {
                     Item.ConnectionState = Connection.OK;
                     item.LastConnection = DateTime.Now;
                 });
                 await connection.InvokeAsync("Welcome", "dev1", Item.Id);
-                
+                */
 
                 Load.IsLoading = false;
             });
+        }
+
+        private void Auth_ManifestReceived(object sender, Tuple<DesktopConfigurationModel, SharedCoreModels.Manifest> e)
+        {
+            
+        }
+
+        private void Auth_HelloReceived(object sender, DesktopConfigurationModel e)
+        {
+            Item.ConnectionState = e.ConnectionState;
+            Item.LastConnection = e.LastConnection;
         }
 
         public async Task Save()
