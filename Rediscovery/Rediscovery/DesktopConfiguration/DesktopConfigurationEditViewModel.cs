@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using Rediscovery.Features.Authentication;
 using Rediscovery.Models;
 using Rediscovery.Services;
 using Rediscovery.ViewModels;
@@ -15,6 +16,7 @@ namespace Rediscovery.DesktopConfiguration
     {
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private IDataStoreGuid<DesktopConfigurationModel> Store => DependencyService.Get<IDataStoreGuid<DesktopConfigurationModel>>() ?? new DesktopConfigurationStore();
+        private IDataStoreGuid<Features.Authentication.Models.Connection> connectionStore => DependencyService.Get<IDataStoreGuid<Features.Authentication.Models.Connection>>() ?? new ConnectionStore();
         private Features.Authentication.IConnect auth => DependencyService.Get<Features.Authentication.IConnect>() ?? new Features.Authentication.Connect();
 
         public DesktopConfigurationModel Item { get; set; }
@@ -54,7 +56,7 @@ namespace Rediscovery.DesktopConfiguration
             {
                 Load.IsLoading = true;
 
-                await auth.TryConnect(Item);
+                await auth.TryConnect(Item.Id);
                 /*connection = new HubConnectionBuilder()
                 .WithUrl("http://" + Item.LastKnownAddress + "/connect")
                 .Build();
@@ -71,26 +73,36 @@ namespace Rediscovery.DesktopConfiguration
             });
         }
 
-        private void Auth_ManifestReceived(object sender, Tuple<DesktopConfigurationModel, SharedCoreModels.Manifest> e)
+        private void Auth_ManifestReceived(object sender, Tuple<Features.Authentication.Models.Connection, List<Features.Authentication.Models.ConnectionManifestFeature>> e)
         {
-            
+            //throw new NotImplementedException();
         }
 
-        private void Auth_HelloReceived(object sender, DesktopConfigurationModel e)
+        private void Auth_HelloReceived(object sender, Features.Authentication.Models.Connection e)
         {
-            Item.ConnectionState = e.ConnectionState;
+            Item.ConnectionState = (Connection)(int)e.ConnectionState;
             Item.LastConnection = e.LastConnection;
         }
 
+
         public async Task Save()
         {
-            await Store.AddItemAsync(Item);
+            await connectionStore.AddItemAsync(new Features.Authentication.Models.Connection
+            {
+                AutoConnect = Item.AutoConnect,
+                ConnectionState = SharedCoreModels.Enums.ConnectionState.None,
+                Id = Item.Id,
+                Identifies = Item.Identifies,
+                LastConnection = Item.LastConnection,
+                LastKnownAddress = Item.LastKnownAddress,
+                Name = Item.Name
+            });
             MessagingCenter.Send(this, "refresh_desktop_configuration", Item);
         }
 
         public async Task Remove()
         {
-            await Store.DeleteItemAsync(Item.Id);
+            await connectionStore.DeleteItemAsync(Item.Id);
             MessagingCenter.Send(this, "refresh_desktop_configuration", Item);
         }
     }

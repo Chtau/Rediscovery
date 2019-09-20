@@ -4,50 +4,91 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 using Rediscovery.DesktopConfiguration;
+using Rediscovery.Services;
 using SharedCoreModels;
+using Xamarin.Forms;
+using System.Linq;
 
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.Authentication.Connect))]
 namespace Rediscovery.Features.Authentication
 {
     public class Connect : IConnect
     {
+        private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
+        private IDataStoreGuid<Models.Connection> connectionStore => DependencyService.Get<IDataStoreGuid<Models.Connection>>() ?? new ConnectionStore();
+        private IDataStoreGuid<Models.ConnectionManifestFeature> connectionManifestFeatureStore => DependencyService.Get<IDataStoreGuid<Models.ConnectionManifestFeature>>() ?? new ConnectionManifestFeatureStore();
+
         private HubConnection connection;
 
-        public event EventHandler<DesktopConfigurationModel> HelloReceived;
-        public event EventHandler<Tuple<DesktopConfigurationModel, Manifest>> ManifestReceived;
+        public event EventHandler<Models.Connection> HelloReceived;
+        public event EventHandler<Tuple<Models.Connection, List<Models.ConnectionManifestFeature>>> ManifestReceived;
 
         public Connect()
         {
 
         }
 
-        private void OnHello(HubConnection con, DesktopConfigurationModel model)
+        private void OnHello(HubConnection con, Models.Connection model)
         {
-            con.On<bool, string>("Hello", (status, info) =>
+            con.On<Enums.ConnectionState, string>("Hello", (state, serverInfo) =>
             {
-                model.ConnectionState = DesktopConfigurationModel.Connection.OK;
+                logger.Message($"hello received from {model.Name ?? model.Identifies} ({DateTime.Now})");
+                model.ConnectionState = state;
                 model.LastConnection = DateTime.Now;
                 HelloReceived.Invoke(this, model);
             });
         }
 
-        private void OnManifest(HubConnection con, DesktopConfigurationModel model)
+        private void OnManifest(HubConnection con, Models.Connection model)
         {
-            con.On<Manifest>("Manifest", (manifest) =>
+            con.On<Manifest>("Manifest",async (manifest) =>
             {
-                ManifestReceived?.Invoke(this, new Tuple<DesktopConfigurationModel, Manifest>(model, manifest));
+                logger.Message($"manifest received from {model.Name ?? model.Identifies} ({DateTime.Now})");
+                model.ManifestAppMinimumVersion = SharedCoreModels.Version.ConvertFrom(manifest.AppMinimumVersion);
+                model.ManifestClientName = manifest.ClientName;
+                model.ManifestClientVersion = SharedCoreModels.Version.ConvertFrom(manifest.ClientVersion);
+                await connectionStore.UpdateItemAsync(model);
+                var features = new List<Models.ConnectionManifestFeature>();
+                foreach (var item in manifest.SupportedFeatures)
+                {
+                    var feature = new Models.ConnectionManifestFeature
+                    {
+                        ConnectionId = model.Id,
+                        FeatureKey = item
+                    };
+                    await connectionManifestFeatureStore.AddItemAsync(feature);
+                    features.Add(feature);
+                }
+                ManifestReceived?.Invoke(this, new Tuple<Models.Connection, List<Models.ConnectionManifestFeature>>(model, features));
             });
         }
 
-        public async Task TryConnect(DesktopConfigurationModel model)
+        public async Task TryConnect(Guid connectionId)
+        {
+            var model = await connectionStore.GetItemAsync(connectionId);
+            await OnTryConnect(model);
+        }
+
+        private async Task OnTryConnect(Models.Connection model)
         {
             connection = new HubConnectionBuilder()
                 .WithUrl("http://" + model.LastKnownAddress + "/connect")
                 .Build();
+            logger.Message($"try connect to {model.Name ?? model.Identifies} ({DateTime.Now})");
             await connection.StartAsync();
             OnHello(connection, model);
             OnManifest(connection, model);
+            logger.Message($"send welcome to {model.Name ?? model.Identifies} ({DateTime.Now})");
             await connection.InvokeAsync("Welcome", "dev1", model.Id);
+        }
+
+        public async Task AutoConnect()
+        {
+            var models = await connectionStore.GetItemsAsync();
+            foreach (var item in models.Where(x => x.AutoConnect))
+            {
+                await OnTryConnect(item);
+            }
         }
     }
 }

@@ -9,8 +9,9 @@ namespace Rediscovery.Features.Authentication
 {
     public interface IConnect
     {
-        Task TryConnect(DesktopConfigurationModel model);
-        event EventHandler<DesktopConfigurationModel> HelloReceived;
-        event EventHandler<Tuple<DesktopConfigurationModel, Manifest>> ManifestReceived;
+        Task AutoConnect();
+        Task TryConnect(Guid connectionId);
+        event EventHandler<Models.Connection> HelloReceived;
+        event EventHandler<Tuple<Models.Connection, List<Models.ConnectionManifestFeature>>> ManifestReceived;
     }
 }

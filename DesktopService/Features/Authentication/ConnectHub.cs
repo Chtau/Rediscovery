@@ -50,7 +50,7 @@ namespace DesktopService.Features.Authentication
 
         private async Task OnLogin(string user, string identifyer)
         {
-            await Clients.Caller.SendAsync("Hello", true, "OK");
+            await Clients.Caller.SendAsync("Hello", SharedCoreModels.Enums.ConnectionState.OK, "");
             await Clients.Caller.SendAsync("Manifest", _manifest.GetManifest());
         }
     }
