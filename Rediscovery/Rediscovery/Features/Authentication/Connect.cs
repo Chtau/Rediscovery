@@ -18,7 +18,7 @@ namespace Rediscovery.Features.Authentication
         private IDataStoreGuid<Models.Connection> connectionStore => DependencyService.Get<IDataStoreGuid<Models.Connection>>() ?? new ConnectionStore();
         private IDataStoreGuid<Models.ConnectionManifestFeature> connectionManifestFeatureStore => DependencyService.Get<IDataStoreGuid<Models.ConnectionManifestFeature>>() ?? new ConnectionManifestFeatureStore();
 
-        private HubConnection connection;
+        private Dictionary<Guid, HubConnection> connections;
 
         public event EventHandler<Models.Connection> HelloReceived;
         public event EventHandler<Tuple<Models.Connection, List<Models.ConnectionManifestFeature>>> ManifestReceived;
@@ -71,15 +71,21 @@ namespace Rediscovery.Features.Authentication
 
         private async Task OnTryConnect(Models.Connection model)
         {
-            connection = new HubConnectionBuilder()
+            if (model == null)
+                return;
+            var connection = new HubConnectionBuilder()
                 .WithUrl("http://" + model.LastKnownAddress + "/connect")
                 .Build();
+            if (connections.ContainsKey(model.Id))
+                connections[model.Id] = connection;
+            else
+                connections.Add(model.Id, connection);
             logger.Message($"try connect to {model.Name ?? model.Identifies} ({DateTime.Now})");
-            await connection.StartAsync();
-            OnHello(connection, model);
-            OnManifest(connection, model);
+            await connections[model.Id].StartAsync();
+            OnHello(connections[model.Id], model);
+            OnManifest(connections[model.Id], model);
             logger.Message($"send welcome to {model.Name ?? model.Identifies} ({DateTime.Now})");
-            await connection.InvokeAsync("Welcome", "dev1", model.Id);
+            await connections[model.Id].InvokeAsync("Welcome", "dev1", model.Id);
         }
 
         public async Task AutoConnect()
