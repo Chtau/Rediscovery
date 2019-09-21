@@ -13,7 +13,7 @@ namespace DesktopService
         {
             do
             {
-                Console.WriteLine($"{DateTime.Now}");
+                //Console.WriteLine($"{DateTime.Now}");
                 Task.Delay(500);
             } while (!cancellationToken.IsCancellationRequested);
             return Task.CompletedTask;
