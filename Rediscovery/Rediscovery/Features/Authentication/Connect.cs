@@ -18,7 +18,7 @@ namespace Rediscovery.Features.Authentication
         private IDataStoreGuid<Models.Connection> connectionStore => DependencyService.Get<IDataStoreGuid<Models.Connection>>() ?? new ConnectionStore();
         private IDataStoreGuid<Models.ConnectionManifestFeature> connectionManifestFeatureStore => DependencyService.Get<IDataStoreGuid<Models.ConnectionManifestFeature>>() ?? new ConnectionManifestFeatureStore();
 
-        private Dictionary<Guid, HubConnection> connections;
+        private Dictionary<Guid, HubConnection> connections = new Dictionary<Guid, HubConnection>();
 
         public event EventHandler<Models.Connection> HelloReceived;
         public event EventHandler<Tuple<Models.Connection, List<Models.ConnectionManifestFeature>>> ManifestReceived;
@@ -95,6 +95,15 @@ namespace Rediscovery.Features.Authentication
             {
                 await OnTryConnect(item);
             }
+        }
+
+        public async Task CloseConnections()
+        {
+            foreach (var item in connections)
+            {
+                await item.Value.StopAsync();
+            }
+            connections.Clear();
         }
     }
 }

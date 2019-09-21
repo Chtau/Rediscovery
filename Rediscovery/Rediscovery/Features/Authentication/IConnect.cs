@@ -11,6 +11,7 @@ namespace Rediscovery.Features.Authentication
     {
         Task AutoConnect();
         Task TryConnect(Guid connectionId);
+        Task CloseConnections();
         event EventHandler<Models.Connection> HelloReceived;
         event EventHandler<Tuple<Models.Connection, List<Models.ConnectionManifestFeature>>> ManifestReceived;
     }
