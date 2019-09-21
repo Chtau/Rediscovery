@@ -28,7 +28,6 @@ namespace Rediscovery.Services
 
         private async Task OnCreateTables()
         {
-            await Store.CreateTableAsync<DesktopConfiguration.DesktopConfigurationModel>();
             await Store.CreateTableAsync<Features.Authentication.Models.Connection>();
             await Store.CreateTableAsync<Features.Authentication.Models.ConnectionManifestFeature>();
         }

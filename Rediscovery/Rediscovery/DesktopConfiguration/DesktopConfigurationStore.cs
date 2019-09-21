@@ -1,6 +1,7 @@
 ﻿using Rediscovery.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -11,47 +12,77 @@ namespace Rediscovery.DesktopConfiguration
     public class DesktopConfigurationStore : IDataStoreGuid<DesktopConfigurationModel>
     {
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
-        private IDBStore db => DependencyService.Get<IDBStore>() ?? new DBStore();
+
+        private IDataStoreGuid<Features.Authentication.Models.Connection> connectionStore => DependencyService.Get<IDataStoreGuid<Features.Authentication.Models.Connection>>() ?? new Features.Authentication.ConnectionStore();
 
         public async Task<bool> AddItemAsync(DesktopConfigurationModel item)
         {
-            if (await db.Store.Table<DesktopConfigurationModel>().Where(s => s.Id == item.Id).CountAsync() > 0)
+            var con = await connectionStore.GetItemAsync(item.Id);
+            if (con != null)
             {
-                await UpdateItemAsync(item);
+                con.Identifies = item.Identifies;
+                con.Name = item.Name;
+                con.LastKnownAddress = item.LastKnownAddress;
+                con.AutoConnect = item.AutoConnect;
+                return await connectionStore.UpdateItemAsync(con);
             }
-            else
+            return await connectionStore.AddItemAsync(new Features.Authentication.Models.Connection
             {
-                await db.Store.InsertAsync(item);
-            }
-
-            return await Task.FromResult(true);
+                Id = Guid.NewGuid(),
+                AutoConnect = item.AutoConnect,
+                LastKnownAddress = item.LastKnownAddress,
+                Identifies = item.Identifies,
+                Name = item.Name
+            });
         }
 
         public async Task<bool> DeleteItemAsync(Guid id)
         {
-            var _item = await db.Store.Table<DesktopConfigurationModel>().Where((DesktopConfigurationModel arg) => arg.Id == id).FirstOrDefaultAsync();
-            await db.Store.DeleteAsync(_item);
-
-            return await Task.FromResult(true);
+            return await connectionStore.DeleteItemAsync(id);
         }
 
         public async Task<DesktopConfigurationModel> GetItemAsync(Guid id)
         {
-            return await Task.FromResult(
-                await db.Store.Table<DesktopConfigurationModel>().Where(s => s.Id == id).FirstOrDefaultAsync()
-                );
+            var con = await connectionStore.GetItemAsync(id);
+            return new DesktopConfigurationModel
+            {
+                Id = con.Id,
+                AutoConnect = con.AutoConnect,
+                ConnectionState = con.ConnectionState,
+                Identifies = con.Identifies,
+                LastConnection = con.LastConnection,
+                LastKnownAddress = con.LastKnownAddress,
+                Name = con.Name
+            };
         }
 
         public async Task<IEnumerable<DesktopConfigurationModel>> GetItemsAsync(bool forceRefresh = false)
         {
-            return await db.Store.Table<DesktopConfigurationModel>().ToListAsync();
+            return from x in await connectionStore.GetItemsAsync()
+                   select new DesktopConfigurationModel
+                   {
+                       Id = x.Id,
+                       AutoConnect = x.AutoConnect,
+                       ConnectionState = x.ConnectionState,
+                       Identifies = x.Identifies,
+                       LastConnection = x.LastConnection,
+                       LastKnownAddress = x.LastKnownAddress,
+                       Name = x.Name
+                   };
         }
 
         public async Task<bool> UpdateItemAsync(DesktopConfigurationModel item)
         {
-            await db.Store.UpdateAsync(item);
-
-            return await Task.FromResult(true);
+            var con = await connectionStore.GetItemAsync(item.Id);
+            if (con != null)
+            {
+                con.Identifies = item.Identifies;
+                con.Name = item.Name;
+                con.LastKnownAddress = item.LastKnownAddress;
+                con.AutoConnect = item.AutoConnect;
+                return await connectionStore.UpdateItemAsync(con);
+            }
+            return await Task.FromResult(false);
         }
     }
 }

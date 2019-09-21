@@ -8,24 +8,13 @@ namespace Rediscovery.DesktopConfiguration
 {
     public class DesktopConfigurationModel : BaseModel
     {
-        public enum Connection
-        {
-            None,
-            OK,
-            Error,
-            Warning,
-            Offline,
-            Denied,
-            WaitForApprovel
-        }
-
         private Guid _id;
         private string _name;
         private string _identifies;
         private string _lastKnownAddress;
         private DateTime? _lastConnection = null;
         private bool _autoConnect;
-        private Connection _connectionState;
+        private SharedCoreModels.Enums.ConnectionState _connectionState;
 
         [PrimaryKey]
         public Guid Id
@@ -64,7 +53,7 @@ namespace Rediscovery.DesktopConfiguration
             set { SetProperty(ref _autoConnect, value); }
         }
 
-        public Connection ConnectionState
+        public SharedCoreModels.Enums.ConnectionState ConnectionState
         {
             get { return _connectionState; }
             set { SetProperty(ref _connectionState, value); }

@@ -46,7 +46,7 @@ namespace Rediscovery.DesktopConfiguration
                     Name = "Device Name",
                     LastKnownAddress = "192.168.1.160:44314",
                     AutoConnect = true,
-                    ConnectionState = Connection.None,
+                    ConnectionState = SharedCoreModels.Enums.ConnectionState.None,
                     LastConnection = null
                 };
             }
@@ -80,7 +80,7 @@ namespace Rediscovery.DesktopConfiguration
 
         private void Auth_HelloReceived(object sender, Features.Authentication.Models.Connection e)
         {
-            Item.ConnectionState = (Connection)(int)e.ConnectionState;
+            Item.ConnectionState = e.ConnectionState;
             Item.LastConnection = e.LastConnection;
         }
 
