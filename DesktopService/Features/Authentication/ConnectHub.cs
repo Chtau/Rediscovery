@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DesktopService.Features.Authentication
 {
+    // TODO: auth [Authorize]
     public class ConnectHub : Hub
     {
         private readonly Features.Authentication.IAuth _auth;
