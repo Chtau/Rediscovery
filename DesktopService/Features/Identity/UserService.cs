@@ -12,6 +12,8 @@ namespace DesktopService.Features.Identity
 {
     public class UserService : IUserService
     {
+        public event EventHandler<User> NewUserAdded;
+
         private List<User> _users = new List<User>
         {
             new User { Id = new Guid("45092B6B-6435-40EC-A01A-E1245C610404"), UserName = "dev", PasswordKey = "123456" },
@@ -27,6 +29,7 @@ namespace DesktopService.Features.Identity
 
         public User Authenticate(string username, string passwordKey)
         {
+            // TODO: the passwordKey is the displayed value
             var user = _users.SingleOrDefault(x => x.UserName == username && x.PasswordKey == passwordKey);
 
             // return null if user not found
@@ -79,6 +82,28 @@ namespace DesktopService.Features.Identity
                 user.PasswordKey = null;
 
             return user;
+        }
+
+        // add user with new password key
+        // TODO: add event so we can show the username/devicename with password key to the desktop user
+        public void AddUser(string userName)
+        {
+            User user = GetByName(userName);
+            if (user != null)
+            {
+                user.Token = null;
+                user.PasswordKey = "123456";
+            } else
+            {
+                user = new User
+                {
+                    Id = Guid.NewGuid(),
+                    PasswordKey = "123456",
+                    UserName = userName
+                };
+                _users.Add(user);
+            }
+            NewUserAdded?.Invoke(this, user);
         }
     }
 }

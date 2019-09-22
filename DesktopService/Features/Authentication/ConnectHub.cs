@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using DesktopService.Features.Identity;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,11 +12,19 @@ namespace DesktopService.Features.Authentication
     {
         private readonly Features.Authentication.IAuth _auth;
         private readonly IManifest _manifest;
+        private readonly IUserService _userService;
 
-        public ConnectHub(Features.Authentication.IAuth auth, IManifest manifest)
+        public ConnectHub(Features.Authentication.IAuth auth, IManifest manifest, IUserService userService)
         {
             _auth = auth;
             _manifest = manifest;
+            _userService = userService;
+            _userService.NewUserAdded += _userService_NewUserAdded;
+        }
+
+        private void _userService_NewUserAdded(object sender, Identity.Models.User e)
+        {
+            // TODO: show key on desktop
         }
 
         public async Task Welcome(string user, string identifyer)
@@ -31,7 +40,7 @@ namespace DesktopService.Features.Authentication
             }
             else if (result == Auth.LoginState.RequiredAuthorizeKey)
             {
-                // TODO: show key on desktop
+                _userService.AddUser(user);
                 await OnSendHello(SharedCoreModels.Enums.ConnectionState.WaitForApprovel, null);
             } else if (result == Auth.LoginState.OK)
             {
@@ -44,7 +53,6 @@ namespace DesktopService.Features.Authentication
             var result = await _auth.Authorize(user, key);
             if (result.Item1)
             {
-                // TODO: if the user validate with a key we can add the user to the local db
                 await OnLogin(user, result.Item2);
             } else
             {
