@@ -1,6 +1,7 @@
 ﻿using DesktopService.Features.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DesktopService
 {
@@ -38,16 +40,33 @@ namespace DesktopService
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(x =>
+            .AddJwtBearer(options =>
             {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
                     ValidateAudience = false
+                };
+                
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            (path.StartsWithSegments("/hubs/") || (path.HasValue ? path.Value.StartsWith("/hubs/") : false)))
+                        {
+                            // Read the token out of the query string
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
 
@@ -61,6 +80,7 @@ namespace DesktopService
             services.AddSingleton<Features.Authentication.IManifest, Features.Authentication.Manifest>();
             services.AddSingleton<Features.Authentication.IDiscovery, Features.Authentication.Discovery>();
             services.AddSingleton<Features.Authentication.IAuth, Features.Authentication.Auth>();
+            services.AddSingleton<IUserIdProvider, Features.Identity.ClaimUserIdProvider>();
         }
 
         // Use this method to configure the HTTP request pipeline.
@@ -70,7 +90,7 @@ namespace DesktopService
 
             app.UseSignalR(route =>
             {
-                route.MapHub<ConnectHub>("/connect");
+                route.MapHub<ConnectHub>("/hubs/connect");
             });
         }
     }
