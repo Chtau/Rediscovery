@@ -9,5 +9,6 @@ namespace DesktopService.Features.Identity
         Models.User Authenticate(string username, string passwordKey);
         IEnumerable<Models.User> GetAll();
         Models.User GetById(Guid id);
+        Models.User GetByName(string userName);
     }
 }

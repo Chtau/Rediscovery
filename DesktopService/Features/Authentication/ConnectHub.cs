@@ -20,39 +20,47 @@ namespace DesktopService.Features.Authentication
 
         public async Task Welcome(string user, string identifyer)
         {
-            var result = await _auth.RequestLogin(user, identifyer);
+            var result = await _auth.RequestLogin(user);
             if (result == Auth.LoginState.Denied)
             {
-                await Clients.Caller.SendAsync("Hello", false, "Denied_Access");
+                await OnSendHello(SharedCoreModels.Enums.ConnectionState.Denied, null);
             }
             else if (result == Auth.LoginState.Failed)
             {
-                await Clients.Caller.SendAsync("Hello", false, "Failed_Login");
+                await OnSendHello(SharedCoreModels.Enums.ConnectionState.Error, null);
             }
             else if (result == Auth.LoginState.RequiredAuthorizeKey)
             {
                 // TODO: show key on desktop
+                await OnSendHello(SharedCoreModels.Enums.ConnectionState.WaitForApprovel, null);
             } else if (result == Auth.LoginState.OK)
             {
-                await OnLogin(user, identifyer);
+                await OnLogin(user, null);
             }
         }
 
         public async Task AuthorizeKey(string user, string identifyer, string key)
         {
-            if (await _auth.Authorize(user, identifyer, key))
+            var result = await _auth.Authorize(user, key);
+            if (result.Item1)
             {
-                await OnLogin(user, identifyer);
+                // TODO: if the user validate with a key we can add the user to the local db
+                await OnLogin(user, result.Item2);
             } else
             {
-                await Clients.Caller.SendAsync("Hello", false, "Failed_Authorize");
+                await OnSendHello(SharedCoreModels.Enums.ConnectionState.Denied, null);
             }
         }
 
-        private async Task OnLogin(string user, string identifyer)
+        private async Task OnLogin(string user, string token)
         {
-            await Clients.Caller.SendAsync("Hello", SharedCoreModels.Enums.ConnectionState.OK, "");
+            await OnSendHello(SharedCoreModels.Enums.ConnectionState.OK, token);
             await Clients.Caller.SendAsync("Manifest", _manifest.GetManifest());
+        }
+
+        private async Task OnSendHello(SharedCoreModels.Enums.ConnectionState connectionState, string token)
+        {
+            await Clients.Caller.SendAsync("Hello", connectionState, token);
         }
     }
 }

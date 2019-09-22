@@ -80,6 +80,7 @@ namespace DesktopService
             services.AddSingleton<Features.Authentication.IManifest, Features.Authentication.Manifest>();
             services.AddSingleton<Features.Authentication.IDiscovery, Features.Authentication.Discovery>();
             services.AddSingleton<Features.Authentication.IAuth, Features.Authentication.Auth>();
+            services.AddSingleton<Features.Identity.IUserService, Features.Identity.UserService>();
             services.AddSingleton<IUserIdProvider, Features.Identity.ClaimUserIdProvider>();
         }
 

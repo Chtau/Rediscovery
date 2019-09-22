@@ -66,8 +66,15 @@ namespace DesktopService.Features.Identity
         public User GetById(Guid id)
         {
             var user = _users.FirstOrDefault(x => x.Id == id);
+            if (user != null)
+                user.PasswordKey = null;
 
-            // return user without password
+            return user;
+        }
+
+        public User GetByName(string userName)
+        {
+            var user = _users.FirstOrDefault(x => string.Equals(x.UserName, userName, StringComparison.OrdinalIgnoreCase));
             if (user != null)
                 user.PasswordKey = null;
 
