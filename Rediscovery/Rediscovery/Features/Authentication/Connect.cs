@@ -74,8 +74,17 @@ namespace Rediscovery.Features.Authentication
         {
             if (model == null)
                 return;
+            /*
+             * TODO: signalr jwt token providing
             var connection = new HubConnectionBuilder()
-                .WithUrl("http://" + model.LastKnownAddress + "/connect")
+            .WithUrl("https://example.com/myhub", options =>
+            { 
+                options.AccessTokenProvider = () => Task.FromResult(_myAccessToken);
+            })
+            .Build();
+            */
+            var connection = new HubConnectionBuilder()
+                .WithUrl("http://" + model.LastKnownAddress + "/hubs/connect")
                 .Build();
             if (connections.ContainsKey(model.Id))
                 connections[model.Id] = connection;
