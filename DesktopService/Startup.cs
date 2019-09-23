@@ -91,7 +91,7 @@ namespace DesktopService
         {
             app.UseAuthentication();
 
-            app.UseSignalR(route =>
+            app.UseEndpoints(route =>
             {
                 route.MapHub<ConnectHub>("/hubs/connect");
             });
