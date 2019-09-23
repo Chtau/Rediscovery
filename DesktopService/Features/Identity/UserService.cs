@@ -25,6 +25,17 @@ namespace DesktopService.Features.Identity
         public UserService(IOptions<Models.IdentitySettings> identitySettings)
         {
             _identitySettings = identitySettings.Value;
+
+            OnLoadDemoUsers();
+        }
+
+        private void OnLoadDemoUsers()
+        {
+            var u1 = Authenticate("dev", "123456");
+            _users[0].Token = u1.Token;
+
+            var u2 = Authenticate("dev1", "654321");
+            _users[1].Token = u1.Token;
         }
 
         public User Authenticate(string username, string passwordKey)
@@ -46,7 +57,7 @@ namespace DesktopService.Features.Identity
                     new Claim(ClaimTypes.Sid, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.UserName),
                 }),
-                Expires = DateTime.UtcNow.AddDays(30),
+                Expires = DateTime.UtcNow.AddDays(180),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
