@@ -2,11 +2,15 @@
 using System.Linq;
 using Avalonia;
 using Avalonia.Logging.Serilog;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DesktopHub
 {
     class Program
     {
+        public static IServiceProvider ServiceProvider { get; private set; }
+
+
         // Initialization code. Don't use any Avalonia, third-party APIs or any
         // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
         // yet and stuff might break.
@@ -22,6 +26,11 @@ namespace DesktopHub
         // container, etc.
         private static void AppMain(Application app, string[] args)
         {
+            var service = new ServiceCollection();
+            service.AddSingleton<Pipes.IPipe, Pipes.Pipe>();
+            service.AddSingleton<Connection.IIncomingConnectionPipe, Connection.IncomingConnectionPipe>();
+            ServiceProvider = service.BuildServiceProvider();
+
             if (args.Any(x => x.StartsWith(Connection.Models.IncomingConnectionViewModel.CodeArgStart, StringComparison.OrdinalIgnoreCase)))
                 app.Run(new Connection.IncomingConnection(new Connection.Models.IncomingConnectionViewModel(args)));
             else

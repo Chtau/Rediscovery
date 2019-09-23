@@ -9,8 +9,17 @@ namespace DesktopService
 {
     public class Worker : IHostedService, IDisposable
     {
+        private readonly Features.Pipes.IPipeIncomingConnection _pipeIncomingConnection;
+
+        public Worker(Features.Pipes.IPipeIncomingConnection pipeIncomingConnection)
+        {
+            _pipeIncomingConnection = pipeIncomingConnection;
+        }
+
         public Task StartAsync(CancellationToken cancellationToken)
         {
+            Task.Delay(2000);
+            _pipeIncomingConnection.ShowCode("999666", "internal-test");
             do
             {
                 //Console.WriteLine($"{DateTime.Now}");

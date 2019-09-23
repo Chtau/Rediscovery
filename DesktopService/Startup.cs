@@ -82,6 +82,8 @@ namespace DesktopService
             services.AddSingleton<Features.Authentication.IAuth, Features.Authentication.Auth>();
             services.AddSingleton<Features.Identity.IUserService, Features.Identity.UserService>();
             services.AddSingleton<IUserIdProvider, Features.Identity.ClaimUserIdProvider>();
+            services.AddSingleton<Features.Pipes.IPipe, Features.Pipes.Pipe>();
+            services.AddSingleton<Features.Pipes.IPipeIncomingConnection, Features.Pipes.PipeIncomingConnection>();
         }
 
         // Use this method to configure the HTTP request pipeline.
