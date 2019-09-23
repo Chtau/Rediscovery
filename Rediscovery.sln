@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedCoreModels", "SharedC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopHub", "DesktopHub\DesktopHub.csproj", "{0E24B3C4-5F40-4F67-8987-2CB3B024554E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IPCPipe", "IPCPipe\IPCPipe.csproj", "{2F0E6193-A5C9-4B6D-A0C2-B2D6C64159B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{0E24B3C4-5F40-4F67-8987-2CB3B024554E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E24B3C4-5F40-4F67-8987-2CB3B024554E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E24B3C4-5F40-4F67-8987-2CB3B024554E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F0E6193-A5C9-4B6D-A0C2-B2D6C64159B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F0E6193-A5C9-4B6D-A0C2-B2D6C64159B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F0E6193-A5C9-4B6D-A0C2-B2D6C64159B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F0E6193-A5C9-4B6D-A0C2-B2D6C64159B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
