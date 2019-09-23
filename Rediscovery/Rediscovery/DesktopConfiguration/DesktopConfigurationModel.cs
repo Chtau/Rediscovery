@@ -9,8 +9,8 @@ namespace Rediscovery.DesktopConfiguration
     public class DesktopConfigurationModel : BaseModel
     {
         private Guid _id;
-        private string _name;
-        private string _identifies;
+        private string _displayName;
+        private string _user;
         private string _lastKnownAddress;
         private DateTime? _lastConnection = null;
         private bool _autoConnect;
@@ -23,16 +23,16 @@ namespace Rediscovery.DesktopConfiguration
             set { SetProperty(ref _id, value); }
         }
 
-        public string Name
+        public string DisplayName
         {
-            get { return _name; }
-            set { SetProperty(ref _name, value); }
+            get { return _displayName; }
+            set { SetProperty(ref _displayName, value); }
         }
 
-        public string Identifies
+        public string User
         {
-            get { return _identifies; }
-            set { SetProperty(ref _identifies, value); }
+            get { return _user; }
+            set { SetProperty(ref _user, value); }
         }
 
         public string LastKnownAddress

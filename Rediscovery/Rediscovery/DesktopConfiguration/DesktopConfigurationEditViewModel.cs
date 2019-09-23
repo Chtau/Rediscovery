@@ -43,7 +43,7 @@ namespace Rediscovery.DesktopConfiguration
                 Item = new DesktopConfigurationModel
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Device Name",
+                    DisplayName = "Device Name",
                     LastKnownAddress = "192.168.1.160:44314",
                     AutoConnect = true,
                     ConnectionState = SharedCoreModels.Enums.ConnectionState.None,
@@ -92,10 +92,10 @@ namespace Rediscovery.DesktopConfiguration
                 AutoConnect = Item.AutoConnect,
                 ConnectionState = SharedCoreModels.Enums.ConnectionState.None,
                 Id = Item.Id,
-                Identifies = Item.Identifies,
+                User = Item.User,
                 LastConnection = Item.LastConnection,
                 LastKnownAddress = Item.LastKnownAddress,
-                Name = Item.Name
+                DisplayName = Item.DisplayName
             });
             MessagingCenter.Send(this, "refresh_desktop_configuration", Item);
         }

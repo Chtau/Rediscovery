@@ -27,18 +27,18 @@
                  HasUnevenRows="true"
                  RefreshCommand="{Binding LoadItemsCommand}"
                  IsPullToRefreshEnabled="true"
-                 IsRefreshing="{Binding IsBusy, Mode=OneWay}"
                  CachingStrategy="RecycleElement"
                  ItemSelected="OnItemSelected">
+                    <!--IsRefreshing="{Binding IsBusy, Mode=OneWay}"-->
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
                                 <StackLayout Padding="10">
-                                    <Label Text="{Binding Name}" 
+                                    <Label Text="{Binding DisplayName}" 
                        LineBreakMode="NoWrap" 
                        Style="{DynamicResource ListItemTextStyle}" 
                        FontSize="16" />
-                                    <Label Text="{Binding Identifies}" 
+                                    <Label Text="{Binding User}" 
                        LineBreakMode="NoWrap"
                        Style="{DynamicResource ListItemDetailTextStyle}"
                        FontSize="13" />

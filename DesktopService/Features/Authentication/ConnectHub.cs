@@ -27,7 +27,7 @@ namespace DesktopService.Features.Authentication
             // TODO: show key on desktop
         }
 
-        public async Task Welcome(string user, string identifyer)
+        public async Task Welcome(string user)
         {
             var result = await _auth.RequestLogin(user);
             if (result == Auth.LoginState.Denied)
@@ -48,7 +48,7 @@ namespace DesktopService.Features.Authentication
             }
         }
 
-        public async Task AuthorizeKey(string user, string identifyer, string key)
+        public async Task AuthorizeKey(string user, string key)
         {
             var result = await _auth.Authorize(user, key);
             if (result.Item1)

@@ -32,7 +32,7 @@ namespace Rediscovery.Features.Authentication
         {
             con.On<Enums.ConnectionState, string>("Hello",async (state, serverInfo) =>
             {
-                logger.Message($"hello received from {model.Name ?? model.Identifies} ({DateTime.Now})");
+                logger.Message($"hello received from {model.DisplayName} ({DateTime.Now})");
                 model.ConnectionState = state;
                 model.LastConnection = DateTime.Now;
                 await connectionStore.UpdateItemAsync(model);
@@ -44,7 +44,7 @@ namespace Rediscovery.Features.Authentication
         {
             con.On<Manifest>("Manifest",async (manifest) =>
             {
-                logger.Message($"manifest received from {model.Name ?? model.Identifies} ({DateTime.Now})");
+                logger.Message($"manifest received from {model.DisplayName} ({DateTime.Now})");
                 model.ManifestAppMinimumVersion = SharedCoreModels.Version.ConvertFrom(manifest.AppMinimumVersion);
                 model.ManifestClientName = manifest.ClientName;
                 model.ManifestClientVersion = SharedCoreModels.Version.ConvertFrom(manifest.ClientVersion);
@@ -72,30 +72,36 @@ namespace Rediscovery.Features.Authentication
 
         private async Task OnTryConnect(Models.Connection model)
         {
-            if (model == null)
-                return;
-            /*
-             * TODO: signalr jwt token providing
-            var connection = new HubConnectionBuilder()
-            .WithUrl("https://example.com/myhub", options =>
-            { 
-                options.AccessTokenProvider = () => Task.FromResult(_myAccessToken);
-            })
-            .Build();
-            */
-            var connection = new HubConnectionBuilder()
-                .WithUrl("http://" + model.LastKnownAddress + "/hubs/connect")
+            try
+            {
+                if (model == null)
+                    return;
+                /*
+                 * TODO: signalr jwt token providing
+                var connection = new HubConnectionBuilder()
+                .WithUrl("https://example.com/myhub", options =>
+                { 
+                    options.AccessTokenProvider = () => Task.FromResult(_myAccessToken);
+                })
                 .Build();
-            if (connections.ContainsKey(model.Id))
-                connections[model.Id] = connection;
-            else
-                connections.Add(model.Id, connection);
-            logger.Message($"try connect to {model.Name ?? model.Identifies} ({DateTime.Now})");
-            await connections[model.Id].StartAsync();
-            OnHello(connections[model.Id], model);
-            OnManifest(connections[model.Id], model);
-            logger.Message($"send welcome to {model.Name ?? model.Identifies} ({DateTime.Now})");
-            await connections[model.Id].InvokeAsync("Welcome", "dev1", model.Id);
+                */
+                var connection = new HubConnectionBuilder()
+                    .WithUrl("http://" + model.LastKnownAddress + "/hubs/connect")
+                    .Build();
+                if (connections.ContainsKey(model.Id))
+                    connections[model.Id] = connection;
+                else
+                    connections.Add(model.Id, connection);
+                logger.Message($"try connect to {model.DisplayName} ({DateTime.Now})");
+                await connections[model.Id].StartAsync();
+                OnHello(connections[model.Id], model);
+                OnManifest(connections[model.Id], model);
+                logger.Message($"send welcome to {model.DisplayName} ({DateTime.Now})");
+                await connections[model.Id].InvokeAsync("Welcome", model.User);
+            } catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
         }
 
         public async Task AutoConnect()

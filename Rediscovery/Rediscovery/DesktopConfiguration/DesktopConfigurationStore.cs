@@ -20,8 +20,8 @@ namespace Rediscovery.DesktopConfiguration
             var con = await connectionStore.GetItemAsync(item.Id);
             if (con != null)
             {
-                con.Identifies = item.Identifies;
-                con.Name = item.Name;
+                con.User = item.User;
+                con.DisplayName = item.DisplayName;
                 con.LastKnownAddress = item.LastKnownAddress;
                 con.AutoConnect = item.AutoConnect;
                 return await connectionStore.UpdateItemAsync(con);
@@ -31,8 +31,8 @@ namespace Rediscovery.DesktopConfiguration
                 Id = Guid.NewGuid(),
                 AutoConnect = item.AutoConnect,
                 LastKnownAddress = item.LastKnownAddress,
-                Identifies = item.Identifies,
-                Name = item.Name
+                User = item.User,
+                DisplayName = item.DisplayName
             });
         }
 
@@ -49,10 +49,10 @@ namespace Rediscovery.DesktopConfiguration
                 Id = con.Id,
                 AutoConnect = con.AutoConnect,
                 ConnectionState = con.ConnectionState,
-                Identifies = con.Identifies,
+                User = con.User,
                 LastConnection = con.LastConnection,
                 LastKnownAddress = con.LastKnownAddress,
-                Name = con.Name
+                DisplayName = con.DisplayName
             };
         }
 
@@ -64,10 +64,10 @@ namespace Rediscovery.DesktopConfiguration
                        Id = x.Id,
                        AutoConnect = x.AutoConnect,
                        ConnectionState = x.ConnectionState,
-                       Identifies = x.Identifies,
+                       User = x.User,
                        LastConnection = x.LastConnection,
                        LastKnownAddress = x.LastKnownAddress,
-                       Name = x.Name
+                       DisplayName = x.DisplayName
                    };
         }
 
@@ -76,8 +76,8 @@ namespace Rediscovery.DesktopConfiguration
             var con = await connectionStore.GetItemAsync(item.Id);
             if (con != null)
             {
-                con.Identifies = item.Identifies;
-                con.Name = item.Name;
+                con.User = item.User;
+                con.DisplayName = item.DisplayName;
                 con.LastKnownAddress = item.LastKnownAddress;
                 con.AutoConnect = item.AutoConnect;
                 return await connectionStore.UpdateItemAsync(con);

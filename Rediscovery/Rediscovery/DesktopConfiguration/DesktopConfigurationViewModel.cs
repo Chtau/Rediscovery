@@ -54,10 +54,10 @@ namespace Rediscovery.DesktopConfiguration
 
         async Task ExecuteLoadDeviceItemsCommand()
         {
-            /*if (IsBusy)
-                return;*/
+            if (IsBusy)
+                return;
 
-            //IsBusy = true;
+            IsBusy = true;
 
             try
             {
@@ -74,7 +74,7 @@ namespace Rediscovery.DesktopConfiguration
             }
             finally
             {
-                //IsBusy = false;
+                IsBusy = false;
             }
         }
 
