@@ -1,0 +1,26 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="150"
+        Width="250" Height="150" CanResize="False" WindowStartupLocation="CenterScreen"
+        Topmost="True"
+        x:Class="DesktopHub.Connection.IncomingConnection"
+        Title="Rediscovery Connection">
+  <Grid Margin="5">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="50"/>
+    </Grid.RowDefinitions>
+    <StackPanel Grid.Row="0" Orientation="Horizontal">
+      <TextBlock Text="Authorization request from "/>
+      <TextBlock Name="txtDevice" FontWeight="Bold" Text="{Binding Device}"/>
+    </StackPanel>
+    <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+      <TextBlock Text="Code:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      <TextBlock Name="txtCode" Margin="10, 0" FontWeight="Bold" FontSize="20" Text="{Binding Code}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    </StackPanel>
+    <TextBlock TextWrapping="Wrap" Grid.Row="2" Text="Enter the code above in the Authorization request window of the Mobile App to allow access to this Desktop."/>
+  </Grid>
+</Window>

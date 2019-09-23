@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Avalonia;
 using Avalonia.Logging.Serilog;
 
@@ -21,7 +22,10 @@ namespace DesktopHub
         // container, etc.
         private static void AppMain(Application app, string[] args)
         {
-            app.Run(new MainWindow());
+            if (args.Any(x => x.StartsWith(Connection.Models.IncomingConnectionViewModel.CodeArgStart, StringComparison.OrdinalIgnoreCase)))
+                app.Run(new Connection.IncomingConnection(new Connection.Models.IncomingConnectionViewModel(args)));
+            else
+                app.Run(new MainWindow());
         }
     }
 }
