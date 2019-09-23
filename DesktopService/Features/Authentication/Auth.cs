@@ -31,13 +31,13 @@ namespace DesktopService.Features.Authentication
                 return new Tuple<bool, string>(false, null);
         }
 
-        public async Task<LoginState> RequestLogin(string user)
+        public async Task<Tuple<LoginState, Identity.Models.User>> RequestLogin(string user)
         {
             var u = _userService.GetByName(user);
             if (u != null)
-                return LoginState.OK;
+                return new Tuple<LoginState, Identity.Models.User>(LoginState.OK, u);
             else
-                return LoginState.RequiredAuthorizeKey;
+                return new Tuple<LoginState, Identity.Models.User>(LoginState.RequiredAuthorizeKey, null);
         }
     }
 }

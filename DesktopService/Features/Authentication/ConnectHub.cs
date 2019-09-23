@@ -30,21 +30,21 @@ namespace DesktopService.Features.Authentication
         public async Task Welcome(string user)
         {
             var result = await _auth.RequestLogin(user);
-            if (result == Auth.LoginState.Denied)
+            if (result.Item1 == Auth.LoginState.Denied)
             {
                 await OnSendHello(SharedCoreModels.Enums.ConnectionState.Denied, null);
             }
-            else if (result == Auth.LoginState.Failed)
+            else if (result.Item1 == Auth.LoginState.Failed)
             {
                 await OnSendHello(SharedCoreModels.Enums.ConnectionState.Error, null);
             }
-            else if (result == Auth.LoginState.RequiredAuthorizeKey)
+            else if (result.Item1 == Auth.LoginState.RequiredAuthorizeKey)
             {
                 _userService.AddUser(user);
                 await OnSendHello(SharedCoreModels.Enums.ConnectionState.WaitForApprovel, null);
-            } else if (result == Auth.LoginState.OK)
+            } else if (result.Item1 == Auth.LoginState.OK)
             {
-                await OnLogin(user, null);
+                await OnLogin(user, result.Item2.Token);
             }
         }
 

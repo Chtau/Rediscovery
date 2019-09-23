@@ -30,11 +30,12 @@ namespace Rediscovery.Features.Authentication
 
         private void OnHello(HubConnection con, Models.Connection model)
         {
-            con.On<Enums.ConnectionState, string>("Hello",async (state, serverInfo) =>
+            con.On<Enums.ConnectionState, string>("Hello",async (state, token) =>
             {
                 logger.Message($"hello received from {model.DisplayName} ({DateTime.Now})");
                 model.ConnectionState = state;
                 model.LastConnection = DateTime.Now;
+                model.Token = token;
                 await connectionStore.UpdateItemAsync(model);
                 HelloReceived?.Invoke(this, model);
             });
