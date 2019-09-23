@@ -55,7 +55,6 @@ namespace DesktopService
                 })
             .UseKestrel(options => {
                 options.ListenAnyIP(44341);
-            })
-                .UseStartup<Startup>();
+            }).UseStartup<Startup>();
     }
 }

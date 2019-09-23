@@ -90,7 +90,7 @@ namespace DesktopService
         public void Configure(IApplicationBuilder app)
         {
             app.UseAuthentication();
-
+            app.UseRouting();
             app.UseEndpoints(route =>
             {
                 route.MapHub<ConnectHub>("/hubs/connect");

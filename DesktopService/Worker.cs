@@ -19,7 +19,7 @@ namespace DesktopService
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Task.Delay(2000);
-            _pipeIncomingConnection.ShowCode("999666", "internal-test");
+            //_pipeIncomingConnection.ShowCode("999666", "internal-test");
             do
             {
                 //Console.WriteLine($"{DateTime.Now}");
