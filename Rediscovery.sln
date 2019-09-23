@@ -7,11 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rediscovery.Android", "Redi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery", "Rediscovery\Rediscovery\Rediscovery.csproj", "{DE1F1607-91A9-4F5A-BF2C-384F4E8BFFA8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desktop", "Desktop\Desktop.csproj", "{B7AFE589-F102-4A59-92FE-153CAA03C929}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopService", "DesktopService\DesktopService.csproj", "{CDAB17EE-1789-475E-A57E-5EB2680EAA46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedCoreModels", "SharedCoreModels\SharedCoreModels.csproj", "{65DE6FDC-4E63-43EA-AE5E-4F1415AB886A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedCoreModels", "SharedCoreModels\SharedCoreModels.csproj", "{65DE6FDC-4E63-43EA-AE5E-4F1415AB886A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +27,6 @@ Global
 		{DE1F1607-91A9-4F5A-BF2C-384F4E8BFFA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE1F1607-91A9-4F5A-BF2C-384F4E8BFFA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE1F1607-91A9-4F5A-BF2C-384F4E8BFFA8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B7AFE589-F102-4A59-92FE-153CAA03C929}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B7AFE589-F102-4A59-92FE-153CAA03C929}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B7AFE589-F102-4A59-92FE-153CAA03C929}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B7AFE589-F102-4A59-92FE-153CAA03C929}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CDAB17EE-1789-475E-A57E-5EB2680EAA46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CDAB17EE-1789-475E-A57E-5EB2680EAA46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDAB17EE-1789-475E-A57E-5EB2680EAA46}.Release|Any CPU.ActiveCfg = Release|Any CPU
