@@ -44,7 +44,8 @@ namespace Rediscovery.DesktopConfiguration
                 {
                     Id = Guid.NewGuid(),
                     DisplayName = "Device Name",
-                    LastKnownAddress = "192.168.1.160:44314",
+                    LastKnownAddress = "192.168.1.160:44341",
+                    User = "dev5",
                     AutoConnect = true,
                     ConnectionState = SharedCoreModels.Enums.ConnectionState.None,
                     LastConnection = null

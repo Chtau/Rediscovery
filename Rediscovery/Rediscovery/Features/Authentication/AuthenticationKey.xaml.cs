@@ -21,9 +21,9 @@ namespace Rediscovery.Features.Authentication
             BindingContext = viewModel = new Models.AuthenticationKeyViewModel(connectionId);
         }
 
-        private void Close_Clicked(object sender, EventArgs e)
+        async void Close_Clicked(object sender, EventArgs e)
         {
-            
+            await Navigation.PopModalAsync();
         }
     }
 }

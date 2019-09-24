@@ -10,9 +10,21 @@ namespace Rediscovery.Views
     [DesignTimeVisible(false)]
     public partial class MainPage : TabbedPage
     {
+        private Features.Authentication.IConnect auth => DependencyService.Get<Features.Authentication.IConnect>() ?? new Features.Authentication.Connect();
+
         public MainPage()
         {
             InitializeComponent();
+
+            auth.HelloReceived += Auth_HelloReceived;
+        }
+
+        private void Auth_HelloReceived(object sender, Features.Authentication.Models.Connection e)
+        {
+            if (e.ConnectionState == SharedCoreModels.Enums.ConnectionState.WaitForApprovel)
+            {
+                Navigation.PushModalAsync(new Features.Authentication.AuthenticationKey(e.Id));
+            }
         }
     }
 }
