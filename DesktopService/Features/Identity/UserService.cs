@@ -97,7 +97,7 @@ namespace DesktopService.Features.Identity
 
         // add user with new password key
         // TODO: add event so we can show the username/devicename with password key to the desktop user
-        public void AddUser(string userName)
+        public User AddUser(string userName)
         {
             User user = GetByName(userName);
             if (user != null)
@@ -115,6 +115,7 @@ namespace DesktopService.Features.Identity
                 _users.Add(user);
             }
             NewUserAdded?.Invoke(this, user);
+            return user;
         }
     }
 }

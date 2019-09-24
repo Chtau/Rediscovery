@@ -11,6 +11,6 @@ namespace DesktopService.Features.Identity
         IEnumerable<Models.User> GetAll();
         Models.User GetById(Guid id);
         Models.User GetByName(string userName);
-        void AddUser(string userName);
+        Models.User AddUser(string userName);
     }
 }

@@ -15,20 +15,17 @@ namespace DesktopService.Features.Authentication
         private readonly Features.Authentication.IAuth _auth;
         private readonly IManifest _manifest;
         private readonly IUserService _userService;
+        private readonly Pipes.IPipeIncomingConnection _pipeIncomingConnection;
 
-        public ConnectHub(Features.Authentication.IAuth auth, IManifest manifest, IUserService userService)
+        public ConnectHub(Features.Authentication.IAuth auth, IManifest manifest, IUserService userService,
+            Pipes.IPipeIncomingConnection pipeIncomingConnection)
         {
             _auth = auth;
             _manifest = manifest;
             _userService = userService;
-            _userService.NewUserAdded += _userService_NewUserAdded;
+            _pipeIncomingConnection = pipeIncomingConnection;
         }
-
-        private void _userService_NewUserAdded(object sender, Identity.Models.User e)
-        {
-            // TODO: show key on desktop
-        }
-
+        
         public async Task Welcome(string user)
         {
             var result = await _auth.RequestLogin(user);
@@ -42,8 +39,9 @@ namespace DesktopService.Features.Authentication
             }
             else if (result.Item1 == Auth.LoginState.RequiredAuthorizeKey)
             {
-                _userService.AddUser(user);
+                var userInfo = _userService.AddUser(user);
                 await OnSendHello(SharedCoreModels.Enums.ConnectionState.WaitForApprovel, null);
+                await _pipeIncomingConnection.ShowCode(userInfo.PasswordKey, userInfo.UserName);
             } else if (result.Item1 == Auth.LoginState.OK)
             {
                 await OnLogin(user, result.Item2.Token);
