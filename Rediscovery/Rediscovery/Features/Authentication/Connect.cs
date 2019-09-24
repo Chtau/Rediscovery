@@ -122,5 +122,10 @@ namespace Rediscovery.Features.Authentication
             }
             connections.Clear();
         }
+
+        public Task ValidateKey(Guid connectionId, string key)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
