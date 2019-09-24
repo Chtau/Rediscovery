@@ -75,30 +75,12 @@ namespace Rediscovery.Features.Authentication
         {
             try
             {
-                if (model == null)
-                    return;
-                /*
-                 * TODO: signalr jwt token providing
-                var connection = new HubConnectionBuilder()
-                .WithUrl("https://example.com/myhub", options =>
-                { 
-                    options.AccessTokenProvider = () => Task.FromResult(_myAccessToken);
-                })
-                .Build();
-                */
-                var connection = new HubConnectionBuilder()
-                    .WithUrl("http://" + model.LastKnownAddress + "/hubs/connect")
-                    .Build();
-                if (connections.ContainsKey(model.Id))
-                    connections[model.Id] = connection;
-                else
-                    connections.Add(model.Id, connection);
-                logger.Message($"try connect to {model.DisplayName} ({DateTime.Now})");
-                await connections[model.Id].StartAsync();
-                OnHello(connections[model.Id], model);
-                OnManifest(connections[model.Id], model);
-                logger.Message($"send welcome to {model.DisplayName} ({DateTime.Now})");
-                await connections[model.Id].InvokeAsync("Welcome", model.User);
+                var con = await OnGetConnection(model);
+                if (con != null)
+                {
+                    logger.Message($"send welcome to {model.DisplayName} ({DateTime.Now})");
+                    await con.InvokeAsync("Welcome", model.User);
+                }
             } catch (Exception ex)
             {
                 logger.Error(ex);
@@ -123,9 +105,59 @@ namespace Rediscovery.Features.Authentication
             connections.Clear();
         }
 
-        public Task ValidateKey(Guid connectionId, string key)
+        public async Task ValidateKey(Guid connectionId, string key)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var model = await connectionStore.GetItemAsync(connectionId);
+                var con = await OnGetConnection(model);
+                if (con != null)
+                {
+                    logger.Message($"send key verify to {model.DisplayName} ({DateTime.Now})");
+                    await con.InvokeAsync("AuthorizeKey", model.User, key);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+        }
+
+        private async Task<HubConnection> OnGetConnection(Models.Connection model)
+        {
+            if (model == null)
+                return null;
+            /*
+             * TODO: signalr jwt token providing
+            var connection = new HubConnectionBuilder()
+            .WithUrl("https://example.com/myhub", options =>
+            { 
+                options.AccessTokenProvider = () => Task.FromResult(_myAccessToken);
+            })
+            .Build();
+            */
+
+            if (connections.ContainsKey(model.Id))
+            {
+                if (connections[model.Id].State != HubConnectionState.Connected)
+                {
+                    logger.Message($"try connect to {model.DisplayName} ({DateTime.Now})");
+                    await connections[model.Id].StartAsync();
+                }
+            }
+            else
+            {
+                var connection = new HubConnectionBuilder()
+                .WithUrl("http://" + model.LastKnownAddress + "/hubs/connect")
+                .Build();
+                
+                connections.Add(model.Id, connection);
+                logger.Message($"try connect to {model.DisplayName} ({DateTime.Now})");
+                await connections[model.Id].StartAsync();
+                OnHello(connections[model.Id], model);
+                OnManifest(connections[model.Id], model);
+            }
+            return connections[model.Id];
         }
     }
 }
