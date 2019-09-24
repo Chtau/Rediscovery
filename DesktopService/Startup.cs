@@ -30,6 +30,11 @@ namespace DesktopService
         // Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = true;
+            });
+
             var identitySettingsSection = Configuration.GetSection("IdentitySettings");
             services.Configure<Features.Identity.Models.IdentitySettings>(identitySettingsSection);
 
@@ -73,8 +78,8 @@ namespace DesktopService
             // configure DI for application services
             services.AddScoped<Features.Identity.IUserService, Features.Identity.UserService>();
 
-            services.AddHostedService<Worker>();
-            services.AddSignalR();
+            //services.AddHostedService<Worker>();
+
             services.AddLogging();
             services.AddSingleton<IConfigurationRoot>(Configuration);
             services.AddSingleton<Features.Authentication.IManifest, Features.Authentication.Manifest>();
@@ -89,11 +94,17 @@ namespace DesktopService
         // Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app)
         {
-            app.UseAuthentication();
             app.UseRouting();
-            app.UseEndpoints(route =>
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+            /*app.UseSignalR(route =>
             {
                 route.MapHub<ConnectHub>("/hubs/connect");
+            });*/
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<ConnectHub>("/hubs/connect");
             });
         }
     }

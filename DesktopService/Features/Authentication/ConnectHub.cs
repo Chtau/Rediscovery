@@ -1,4 +1,5 @@
 ﻿using DesktopService.Features.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 namespace DesktopService.Features.Authentication
 {
     // TODO: auth [Authorize]
+    [AllowAnonymous]
     public class ConnectHub : Hub
     {
         private readonly Features.Authentication.IAuth _auth;

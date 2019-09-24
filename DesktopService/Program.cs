@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.WindowsServices;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
@@ -16,6 +17,7 @@ namespace DesktopService
 
         public static void Main(string[] args)
         {
+            //CreateHostBuilder(args).Build().Run();
             var isService = !(Debugger.IsAttached || args.Contains("--console"));
 
             if (isService)
@@ -25,7 +27,7 @@ namespace DesktopService
                 Directory.SetCurrentDirectory(pathToContentRoot);
             }
 
-            var builder = CreateWebHostBuilder(
+            var builder = CreateHostBuilder(
                 args.Where(arg => arg != "--console").ToArray());
 
             var host = builder.Build();
@@ -35,7 +37,8 @@ namespace DesktopService
                 // To run the app without the CustomWebHostService change the
                 // next line to host.RunAsService();
                 //host.RunAsCustomService();
-                host.RunAsService();
+                //host.RunAsService();
+                host.Run();
             }
             else
             {
@@ -43,18 +46,20 @@ namespace DesktopService
             }
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .ConfigureLogging((hostingContext, logging) =>
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+    Host.CreateDefaultBuilder(args)
+        .ConfigureWebHostDefaults(webBuilder =>
+        {
+            webBuilder.ConfigureKestrel(serverOptions =>
+            {
+                serverOptions.ListenAnyIP(44341);
+                serverOptions.ConfigureEndpointDefaults(listenOptions =>
                 {
-                    logging.AddConsole();
-                })
-                .ConfigureAppConfiguration((context, config) =>
-                {
-                    // Configure the app here.
-                })
-            .UseKestrel(options => {
-                options.ListenAnyIP(44341);
-            }).UseStartup<Startup>();
+                    // Configure endpoint defaults
+                    
+                });
+            })
+            .UseStartup<Startup>();
+        });
     }
 }
