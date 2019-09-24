@@ -16,8 +16,8 @@ namespace DesktopService.Features.Identity
 
         private List<User> _users = new List<User>
         {
-            new User { Id = new Guid("45092B6B-6435-40EC-A01A-E1245C610404"), UserName = "dev", PasswordKey = "123456" },
-            new User { Id = new Guid("37ED7C16-91DE-4A38-ACEA-8997CBF53D8F"), UserName = "dev1", PasswordKey = "654321" }
+            new User { Id = new Guid("45092B6B-6435-40EC-A01A-E1245C610404"), UserName = "dev", PasswordKey = "123456", AllowAccess = true },
+            new User { Id = new Guid("37ED7C16-91DE-4A38-ACEA-8997CBF53D8F"), UserName = "dev1", PasswordKey = "654321", AllowAccess = true }
         };
 
         private readonly Models.IdentitySettings _identitySettings;
@@ -40,12 +40,13 @@ namespace DesktopService.Features.Identity
 
         public User Authenticate(string username, string passwordKey)
         {
-            // TODO: the passwordKey is the displayed value
             var user = _users.SingleOrDefault(x => x.UserName == username && x.PasswordKey == passwordKey);
 
             // return null if user not found
             if (user == null)
                 return null;
+
+            user.AllowAccess = true; // update user db
 
             // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
