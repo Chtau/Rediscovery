@@ -37,6 +37,8 @@ namespace DesktopService
 
             var identitySettingsSection = Configuration.GetSection("IdentitySettings");
             services.Configure<Features.Identity.Models.IdentitySettings>(identitySettingsSection);
+            var pipeSettingsSection = Configuration.GetSection("PipeSettings");
+            services.Configure<Features.Pipes.Models.PipeSettings>(pipeSettingsSection);
 
             var appSettings = identitySettingsSection.Get<Features.Identity.Models.IdentitySettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
@@ -87,7 +89,7 @@ namespace DesktopService
             services.AddSingleton<Features.Authentication.IAuth, Features.Authentication.Auth>();
             services.AddSingleton<Features.Identity.IUserService, Features.Identity.UserService>();
             services.AddSingleton<IUserIdProvider, Features.Identity.ClaimUserIdProvider>();
-            services.AddSingleton<Features.Pipes.IPipe, Features.Pipes.Pipe>();
+            services.AddSingleton<IPCPipe.IPipeClient, IPCPipe.PipeClient>();
             services.AddSingleton<Features.Pipes.IPipeIncomingConnection, Features.Pipes.PipeIncomingConnection>();
         }
 
