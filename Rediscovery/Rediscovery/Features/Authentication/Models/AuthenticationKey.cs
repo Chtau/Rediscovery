@@ -9,6 +9,8 @@ namespace Rediscovery.Features.Authentication.Models
     {
         private string _key;
         private Guid _connectionId;
+        private SharedCoreModels.Enums.ConnectionState _connectionState = SharedCoreModels.Enums.ConnectionState.WaitForApprovel;
+        private bool _showState;
 
         public Guid ConnectionId
         {
@@ -20,6 +22,18 @@ namespace Rediscovery.Features.Authentication.Models
         {
             get { return _key; }
             set { SetProperty(ref _key, value); }
+        }
+
+        public SharedCoreModels.Enums.ConnectionState ConnectionState
+        {
+            get { return _connectionState; }
+            set { SetProperty(ref _connectionState, value); }
+        }
+
+        public bool ShowState
+        {
+            get { return _showState; }
+            set { SetProperty(ref _showState, value); }
         }
     }
 }

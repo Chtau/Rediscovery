@@ -54,13 +54,13 @@
                         Command="{Binding KeyVerify}"
                         BackgroundColor="{StaticResource Primary}"
                         TextColor="White" />
-                    <Label HorizontalOptions="Center" Margin="0, 25, 0, 0">
+                    <Label HorizontalOptions="Center" Margin="0, 25, 0, 0" IsVisible="{Binding Item.ShowState}">
                         <Label.FormattedText>
                             <FormattedString>
                                 <FormattedString.Spans>
                                     <Span Text="Server response:" />
                                     <Span Text=" " />
-                                    <Span FontSize="16" TextColor="{StaticResource Dismiss}" Text="Denied" FontAttributes="Bold" />
+                                    <Span FontSize="16" TextColor="{StaticResource Dismiss}" Text="{Binding Item.ConnectionState}" FontAttributes="Bold" />
                                 </FormattedString.Spans>
                             </FormattedString>
                         </Label.FormattedText>

@@ -19,6 +19,12 @@ namespace Rediscovery.Features.Authentication
             InitializeComponent();
 
             BindingContext = viewModel = new Models.AuthenticationKeyViewModel(connectionId);
+            viewModel.ShouldClose += ViewModel_ShouldClose;
+        }
+
+        private void ViewModel_ShouldClose(object sender, EventArgs e)
+        {
+            Navigation.PopModalAsync();
         }
 
         async void Close_Clicked(object sender, EventArgs e)
