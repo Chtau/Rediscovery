@@ -78,7 +78,7 @@ namespace DesktopService
             // configure DI for application services
             services.AddScoped<Features.Identity.IUserService, Features.Identity.UserService>();
 
-            //services.AddHostedService<Worker>();
+            services.AddHostedService<Worker>();
 
             services.AddLogging();
             services.AddSingleton<IConfigurationRoot>(Configuration);

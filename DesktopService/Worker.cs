@@ -18,19 +18,21 @@ namespace DesktopService
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            Task.Delay(2000);
-            //_pipeIncomingConnection.ShowCode("999666", "internal-test");
-            do
+            Task.Run(() =>
             {
-                //Console.WriteLine($"{DateTime.Now}");
-                Task.Delay(500);
-            } while (!cancellationToken.IsCancellationRequested);
+                Task.Delay(2000);
+                //_pipeIncomingConnection.ShowCode("999666", "internal-test");
+                do
+                {
+                    //Console.WriteLine($"{DateTime.Now}");
+                    Task.Delay(500);
+                } while (!cancellationToken.IsCancellationRequested);
+            });
             return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-
             return Task.CompletedTask;
         }
 
