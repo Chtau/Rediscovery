@@ -106,8 +106,11 @@ namespace DesktopService.Features.Identity
             if (user != null)
             {
                 user.Token = null;
-                user.PasswordKey = OnCreatePasswordKey();
-                user.PasswordKeyValidTill = DateTime.UtcNow;
+                if (user.PasswordKeyValidTill >= DateTime.UtcNow || string.IsNullOrWhiteSpace(user.PasswordKey))
+                {
+                    user.PasswordKey = OnCreatePasswordKey();
+                    user.PasswordKeyValidTill = DateTime.UtcNow;
+                }
                 OnUpdateUser(user);
             } else
             {
