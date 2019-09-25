@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DesktopService.Features.Identity
 {
     public interface IUserService
     {
         event EventHandler<Models.User> NewUserAdded;
-        Models.User Authenticate(string username, string passwordKey);
-        IEnumerable<Models.User> GetAll();
-        Models.User GetById(Guid id);
-        Models.User GetByName(string userName);
-        Models.User AddUser(string userName);
+        Task<Models.User> Authenticate(string username, string passwordKey);
+        Task<IEnumerable<Models.User>> GetAll();
+        Task<Models.User> GetById(Guid id);
+        Task<Models.User> GetByName(string userName);
+        Task<Models.User> AddUser(string userName);
     }
 }

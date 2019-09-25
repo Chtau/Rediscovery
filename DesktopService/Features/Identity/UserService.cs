@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 using DesktopService.Features.Identity.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -14,35 +15,21 @@ namespace DesktopService.Features.Identity
     {
         public event EventHandler<User> NewUserAdded;
 
-        private List<User> _users = new List<User>
-        {
-            new User { Id = new Guid("45092B6B-6435-40EC-A01A-E1245C610404"), UserName = "dev", PasswordKey = "123456", AllowAccess = true, PasswordKeyValidTill = DateTime.MaxValue },
-            new User { Id = new Guid("37ED7C16-91DE-4A38-ACEA-8997CBF53D8F"), UserName = "dev1", PasswordKey = "654321", AllowAccess = true, PasswordKeyValidTill = DateTime.MaxValue }
-        };
-
         private readonly Models.IdentitySettings _identitySettings;
         private readonly Random _random;
+        private readonly DAL.IDBContext _dBContext;
 
-        public UserService(IOptions<Models.IdentitySettings> identitySettings)
+        public UserService(IOptions<Models.IdentitySettings> identitySettings, DAL.IDBContext dBContext)
         {
+            _dBContext = dBContext;
             _identitySettings = identitySettings.Value;
             _random = new Random();
-
-            OnLoadDemoUsers();
         }
 
-        private void OnLoadDemoUsers()
-        {
-            var u1 = Authenticate("dev", "123456");
-            _users[0].Token = u1.Token;
 
-            var u2 = Authenticate("dev1", "654321");
-            _users[1].Token = u1.Token;
-        }
-
-        public User Authenticate(string username, string passwordKey)
+        public async Task<User> Authenticate(string username, string passwordKey)
         {
-            var user = _users.SingleOrDefault(x => x.UserName == username && x.PasswordKey == passwordKey && x.PasswordKeyValidTill > DateTime.UtcNow);
+            var user = await _dBContext.Instance.Table<Models.User>().FirstOrDefaultAsync(x => x.UserName == username && x.PasswordKey == passwordKey && x.PasswordKeyValidTill > DateTime.UtcNow);
 
             // return null if user not found
             if (user == null)
@@ -50,7 +37,7 @@ namespace DesktopService.Features.Identity
 
             user.AllowAccess = true; // update user db
             user.PasswordKeyValidTill = DateTime.MaxValue;
-            OnUpdateUser(user);
+            await OnUpdateUser(user);
 
             // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -74,35 +61,39 @@ namespace DesktopService.Features.Identity
             return user;
         }
 
-        public IEnumerable<User> GetAll()
+        public async Task<IEnumerable<User>> GetAll()
         {
-            return _users.Select(x => {
+            var users = await _dBContext.Instance.Table<Models.User>().ToListAsync();
+
+            return users.Select(x => {
                 x.PasswordKey = null;
                 return x;
             });
         }
 
-        public User GetById(Guid id)
+        public async Task<User> GetById(Guid id)
         {
-            var user = _users.FirstOrDefault(x => x.Id == id);
+            var user = await _dBContext.Instance.Table<Models.User>().FirstOrDefaultAsync(x => x.Id == id);
             if (user != null)
                 user.PasswordKey = null;
 
             return user;
         }
 
-        public User GetByName(string userName)
+        public async Task<User> GetByName(string userName)
         {
-            var user = _users.FirstOrDefault(x => string.Equals(x.UserName, userName, StringComparison.OrdinalIgnoreCase));
+#pragma warning disable RCS1155 // Use StringComparison when comparing strings.
+            var user = await _dBContext.Instance.Table<Models.User>().FirstOrDefaultAsync(x => x.UserName.ToLower() == userName.ToLower());
+#pragma warning restore RCS1155 // Use StringComparison when comparing strings.
             if (user != null)
                 user.PasswordKey = null;
 
             return user;
         }
 
-        public User AddUser(string userName)
+        public async Task<User> AddUser(string userName)
         {
-            User user = GetByName(userName);
+            User user = await GetByName(userName);
             if (user != null)
             {
                 user.Token = null;
@@ -111,7 +102,7 @@ namespace DesktopService.Features.Identity
                     user.PasswordKey = OnCreatePasswordKey();
                     user.PasswordKeyValidTill = DateTime.UtcNow.AddMinutes(5);
                 }
-                OnUpdateUser(user);
+                await OnUpdateUser(user);
             } else
             {
                 user = new User
@@ -121,24 +112,20 @@ namespace DesktopService.Features.Identity
                     UserName = userName,
                     PasswordKeyValidTill = DateTime.UtcNow.AddMinutes(5)
                 };
-                OnAddUser(user);
+                await OnAddUser(user);
             }
             NewUserAdded?.Invoke(this, user);
             return user;
         }
 
-        private void OnUpdateUser(User user)
+        private async Task OnUpdateUser(User user)
         {
-            var index = _users.FindIndex(x => x.Id == user.Id);
-            if (index != -1)
-            {
-                _users[index] = user;
-            }
+            await _dBContext.Instance.UpdateAsync(user);
         }
 
-        private void OnAddUser(User user)
+        private async Task OnAddUser(User user)
         {
-            _users.Add(user);
+            await _dBContext.Instance.InsertOrReplaceAsync(user);
         }
 
         private string OnCreatePasswordKey()

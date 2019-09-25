@@ -24,7 +24,7 @@ namespace DesktopService.Features.Authentication
 
         public async Task<Tuple<bool, string>> Authorize(string user, string key)
         {
-            var u = _userService.Authenticate(user, key);
+            var u = await _userService.Authenticate(user, key);
             if (u != null && u.AllowAccess)
                 return new Tuple<bool, string>(true, u.Token);
             else
@@ -33,7 +33,7 @@ namespace DesktopService.Features.Authentication
 
         public async Task<Tuple<LoginState, Identity.Models.User>> RequestLogin(string user)
         {
-            var u = _userService.GetByName(user);
+            var u = await _userService.GetByName(user);
             if (u != null && u.AllowAccess)
                 return new Tuple<LoginState, Identity.Models.User>(LoginState.OK, u);
             else

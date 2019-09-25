@@ -39,6 +39,8 @@ namespace DesktopService
             services.Configure<Features.Identity.Models.IdentitySettings>(identitySettingsSection);
             var pipeSettingsSection = Configuration.GetSection("PipeSettings");
             services.Configure<Features.Pipes.Models.PipeSettings>(pipeSettingsSection);
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
 
             var appSettings = identitySettingsSection.Get<Features.Identity.Models.IdentitySettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
@@ -84,6 +86,7 @@ namespace DesktopService
 
             services.AddLogging();
             services.AddSingleton<IConfigurationRoot>(Configuration);
+            services.AddSingleton<DAL.IDBContext, DAL.DBContext>();
             services.AddSingleton<Features.Authentication.IManifest, Features.Authentication.Manifest>();
             services.AddSingleton<Features.Authentication.IDiscovery, Features.Authentication.Discovery>();
             services.AddSingleton<Features.Authentication.IAuth, Features.Authentication.Auth>();
@@ -100,10 +103,7 @@ namespace DesktopService
 
             app.UseAuthentication();
             app.UseAuthorization();
-            /*app.UseSignalR(route =>
-            {
-                route.MapHub<ConnectHub>("/hubs/connect");
-            });*/
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<ConnectHub>("/hubs/connect");

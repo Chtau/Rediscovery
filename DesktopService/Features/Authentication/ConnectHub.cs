@@ -39,7 +39,7 @@ namespace DesktopService.Features.Authentication
             }
             else if (result.Item1 == Auth.LoginState.RequiredAuthorizeKey)
             {
-                var userInfo = _userService.AddUser(user);
+                var userInfo = await _userService.AddUser(user);
                 await OnSendHello(SharedCoreModels.Enums.ConnectionState.WaitForApprovel, null);
                 await _pipeIncomingConnection.ShowCode(userInfo.PasswordKey, userInfo.UserName, userInfo.PasswordKeyValidTill);
             } else if (result.Item1 == Auth.LoginState.OK)
@@ -56,7 +56,7 @@ namespace DesktopService.Features.Authentication
                 await OnLogin(user, result.Item2);
             } else
             {
-                var userInfo = _userService.AddUser(user);
+                var userInfo = await _userService.AddUser(user);
                 await OnSendHello(SharedCoreModels.Enums.ConnectionState.Denied, null);
                 await _pipeIncomingConnection.ShowCode(userInfo.PasswordKey, userInfo.UserName, userInfo.PasswordKeyValidTill);
             }
