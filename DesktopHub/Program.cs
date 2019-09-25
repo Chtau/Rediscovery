@@ -27,7 +27,7 @@ namespace DesktopHub
         private static void AppMain(Application app, string[] args)
         {
             var service = new ServiceCollection();
-            service.AddSingleton<Pipes.IPipe, Pipes.Pipe>();
+            service.AddSingleton<IPCPipe.IPipeServer, IPCPipe.PipeServer>();
             service.AddSingleton<Connection.IIncomingConnectionPipe, Connection.IncomingConnectionPipe>();
             ServiceProvider = service.BuildServiceProvider();
 

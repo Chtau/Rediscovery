@@ -9,11 +9,11 @@ namespace IPCPipe
 {
     public abstract class PipeBase<T>
     {
-        public event EventHandler<object> DataReceived;
+        public event EventHandler<string> DataReceived;
 
         internal Dictionary<string, PipeStream> hubs = new Dictionary<string, PipeStream>();
 
-        public void Listen(string hub, Action<object> callback = null)
+        public virtual void Listen(string hub, Action<string> callback = null)
         {
             if (!hubs.ContainsKey(hub))
             {
@@ -22,19 +22,7 @@ namespace IPCPipe
                     try
                     {
                         var server = OnCreateHub(hub);
-                        using (StreamReader reader = new StreamReader(server))
-                        {
-                            while (true)
-                            {
-                                var result = reader.ReadToEnd();
-                                if (!string.IsNullOrWhiteSpace(result))
-                                {
-                                    var obj = Newtonsoft.Json.JsonConvert.DeserializeObject(result);
-                                    DataReceived?.Invoke(this, obj);
-                                    callback?.Invoke(obj);
-                                }
-                            }
-                        }
+                        OnReadStream(server, callback);
                     }
                     finally
                     {
@@ -45,15 +33,41 @@ namespace IPCPipe
             }
         }
 
-        public void Send(string hub, object data)
+        internal void OnReadStream(PipeStream stream, Action<string> callback = null)
+        {
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                bool active = true;
+                while (active)
+                {
+                    var result = reader.ReadToEnd();
+                    if (!string.IsNullOrWhiteSpace(result))
+                    {
+                        System.Diagnostics.Debug.Print("ReadStream received data =>" + result);
+                        DataReceived?.Invoke(this, result);
+                        callback?.Invoke(result);
+                    } else
+                    {
+                        active = false;
+                    }
+                }
+            }
+        }
+
+        public void Send(string hub, string data)
         {
             if (data != null)
             {
-                if (hubs.ContainsKey(hub))
+                using (StreamWriter writer = new StreamWriter(OnCreateHub(hub)))
+                {
+                    writer.Write(data);
+                    writer.Flush();
+                }
+                /*if (hubs.ContainsKey(hub))
                 {
                     using (StreamWriter writer = new StreamWriter(hubs[hub]))
                     {
-                        writer.Write(Newtonsoft.Json.JsonConvert.SerializeObject(data));
+                        writer.Write(data);
                         writer.Flush();
                     }
                 }
@@ -61,10 +75,10 @@ namespace IPCPipe
                 {
                     using (StreamWriter writer = new StreamWriter(OnCreateHub(hub)))
                     {
-                        writer.Write(Newtonsoft.Json.JsonConvert.SerializeObject(data));
+                        writer.Write(data);
                         writer.Flush();
                     }
-                }
+                }*/
             }
         }
 

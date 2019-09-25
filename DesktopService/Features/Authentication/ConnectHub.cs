@@ -56,7 +56,9 @@ namespace DesktopService.Features.Authentication
                 await OnLogin(user, result.Item2);
             } else
             {
+                var userInfo = _userService.AddUser(user);
                 await OnSendHello(SharedCoreModels.Enums.ConnectionState.Denied, null);
+                await _pipeIncomingConnection.ShowCode(userInfo.PasswordKey, userInfo.UserName);
             }
         }
 

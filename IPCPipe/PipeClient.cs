@@ -23,7 +23,12 @@ namespace IPCPipe
         {
             var client = OnCreate(hub);
             if (client != null)
-                base.hubs.Add(hub, client);
+            {
+                if (base.hubs.ContainsKey(hub))
+                    base.hubs[hub] = client;
+                else
+                    base.hubs.Add(hub, client);
+            }
             return client;
         }
 

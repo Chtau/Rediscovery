@@ -28,12 +28,13 @@ namespace DesktopService.Features.Pipes
             {
                 if (_pipeClient.TryConnect(RediscoveryHub))
                 {
-                    _pipeClient.Send(RediscoveryHub, new SharedCoreModels.IncomingConnectionInfo
+                    var infoData = Newtonsoft.Json.JsonConvert.SerializeObject(new SharedCoreModels.IncomingConnectionInfo
                     {
                         Code = code,
                         Device = device,
                         Created = DateTime.Now
                     });
+                    _pipeClient.Send(RediscoveryHub, infoData);
                 }
                 else
                 {

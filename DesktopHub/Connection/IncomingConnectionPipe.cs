@@ -11,17 +11,26 @@ namespace DesktopHub.Connection
     {
         public event EventHandler<SharedCoreModels.IncomingConnectionInfo> NewConnectionInfo;
 
-        private readonly Pipes.IPipe _pipe;
+        private readonly IPCPipe.IPipeServer _pipeServer;
 
         public IncomingConnectionPipe()
         {
-            _pipe = (Pipes.IPipe)Program.ServiceProvider.GetService(typeof(Pipes.IPipe));
+            _pipeServer = (IPCPipe.IPipeServer)Program.ServiceProvider.GetService(typeof(IPCPipe.IPipeServer));
         }
 
         public void ListenForConnections()
         {
-            Task.Factory.StartNew(() =>
+            _pipeServer.Listen("rediscoveryhub", (string data) =>
             {
+                if (!string.IsNullOrWhiteSpace(data))
+                {
+                    var infoData = Newtonsoft.Json.JsonConvert.DeserializeObject<SharedCoreModels.IncomingConnectionInfo>(data);
+                    NewConnectionInfo?.Invoke(this, infoData);
+                }
+            });
+            /*Task.Factory.StartNew(() =>
+            {
+                
                 var server = new NamedPipeServerStream("rediscoveryhub");
                 server.WaitForConnection();
 
@@ -36,16 +45,7 @@ namespace DesktopHub.Connection
                         }
                     }
                 }
-
-                /*StreamReader reader = new StreamReader(server);
-                StreamWriter writer = new StreamWriter(server);
-                while (true)
-                {
-                    var line = reader.ReadLine();
-                    writer.WriteLine(String.Join("", line.Reverse()));
-                    writer.Flush();
-                }*/
-            });
+            });*/
         }
     }
 }

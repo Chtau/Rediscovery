@@ -122,7 +122,7 @@ namespace DesktopService.Features.Identity
         private string OnCreatePasswordKey()
         {
             string retVal = "";
-            for (int i = 0; i < _identitySettings.PasswordKeyLength + 1; i++)
+            for (int i = 0; i < _identitySettings.PasswordKeyLength; i++)
             {
                 retVal += _random.Next(0, 9);
             }
