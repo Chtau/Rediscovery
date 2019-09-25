@@ -13,3 +13,6 @@ This window requires to arguments
 
 --device:dev
 
+--valid:123124124
+(value are date ticks)
+
