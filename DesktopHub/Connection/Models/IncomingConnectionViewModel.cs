@@ -79,8 +79,7 @@ namespace DesktopHub.Connection.Models
                     Countdown = $"{dif.Minutes.ToString("00")}:{dif.Seconds.ToString("00")} minutes";
                     await Task.Delay(1000);
                 }
-                Countdown = "Request new Key";
-                await Task.Delay(5000);
+                Countdown = "Request a new Key on the Mobile App";
             });
         }
     }
