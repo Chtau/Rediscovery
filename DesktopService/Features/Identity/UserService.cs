@@ -21,10 +21,12 @@ namespace DesktopService.Features.Identity
         };
 
         private readonly Models.IdentitySettings _identitySettings;
+        private readonly Random _random;
 
         public UserService(IOptions<Models.IdentitySettings> identitySettings)
         {
             _identitySettings = identitySettings.Value;
+            _random = new Random();
 
             OnLoadDemoUsers();
         }
@@ -96,27 +98,35 @@ namespace DesktopService.Features.Identity
             return user;
         }
 
-        // add user with new password key
-        // TODO: add event so we can show the username/devicename with password key to the desktop user
         public User AddUser(string userName)
         {
             User user = GetByName(userName);
             if (user != null)
             {
                 user.Token = null;
-                user.PasswordKey = "123456";
+                user.PasswordKey = OnCreatePasswordKey();
             } else
             {
                 user = new User
                 {
                     Id = Guid.NewGuid(),
-                    PasswordKey = "123456",
+                    PasswordKey = OnCreatePasswordKey(),
                     UserName = userName
                 };
                 _users.Add(user);
             }
             NewUserAdded?.Invoke(this, user);
             return user;
+        }
+
+        private string OnCreatePasswordKey()
+        {
+            string retVal = "";
+            for (int i = 0; i < _identitySettings.PasswordKeyLength + 1; i++)
+            {
+                retVal += _random.Next(0, 9);
+            }
+            return retVal;
         }
     }
 }

@@ -7,5 +7,6 @@ namespace DesktopService.Features.Identity.Models
     public class IdentitySettings
     {
         public string Secret { get; set; }
+        public int PasswordKeyLength { get; set; }
     }
 }
