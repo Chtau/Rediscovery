@@ -16,8 +16,8 @@ namespace DesktopService.Features.Identity
 
         private List<User> _users = new List<User>
         {
-            new User { Id = new Guid("45092B6B-6435-40EC-A01A-E1245C610404"), UserName = "dev", PasswordKey = "123456", AllowAccess = true },
-            new User { Id = new Guid("37ED7C16-91DE-4A38-ACEA-8997CBF53D8F"), UserName = "dev1", PasswordKey = "654321", AllowAccess = true }
+            new User { Id = new Guid("45092B6B-6435-40EC-A01A-E1245C610404"), UserName = "dev", PasswordKey = "123456", AllowAccess = true, PasswordKeyValidTill = DateTime.MaxValue },
+            new User { Id = new Guid("37ED7C16-91DE-4A38-ACEA-8997CBF53D8F"), UserName = "dev1", PasswordKey = "654321", AllowAccess = true, PasswordKeyValidTill = DateTime.MaxValue }
         };
 
         private readonly Models.IdentitySettings _identitySettings;
@@ -42,13 +42,15 @@ namespace DesktopService.Features.Identity
 
         public User Authenticate(string username, string passwordKey)
         {
-            var user = _users.SingleOrDefault(x => x.UserName == username && x.PasswordKey == passwordKey);
+            var user = _users.SingleOrDefault(x => x.UserName == username && x.PasswordKey == passwordKey && x.PasswordKeyValidTill > DateTime.UtcNow);
 
             // return null if user not found
             if (user == null)
                 return null;
 
             user.AllowAccess = true; // update user db
+            user.PasswordKeyValidTill = DateTime.MaxValue;
+            OnUpdateUser(user);
 
             // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -105,18 +107,35 @@ namespace DesktopService.Features.Identity
             {
                 user.Token = null;
                 user.PasswordKey = OnCreatePasswordKey();
+                user.PasswordKeyValidTill = DateTime.UtcNow;
+                OnUpdateUser(user);
             } else
             {
                 user = new User
                 {
                     Id = Guid.NewGuid(),
                     PasswordKey = OnCreatePasswordKey(),
-                    UserName = userName
+                    UserName = userName,
+                    PasswordKeyValidTill = DateTime.UtcNow
                 };
-                _users.Add(user);
+                OnAddUser(user);
             }
             NewUserAdded?.Invoke(this, user);
             return user;
+        }
+
+        private void OnUpdateUser(User user)
+        {
+            var index = _users.FindIndex(x => x.Id == user.Id);
+            if (index != -1)
+            {
+                _users[index] = user;
+            }
+        }
+
+        private void OnAddUser(User user)
+        {
+            _users.Add(user);
         }
 
         private string OnCreatePasswordKey()

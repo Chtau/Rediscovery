@@ -8,8 +8,8 @@ namespace DesktopService.Features.Identity.Models
     {
         public Guid Id { get; set; }
         public string UserName { get; set; }
-        // TODO: password key will be generated only on registry request in IAuth
         public string PasswordKey { get; set; }
+        public DateTime PasswordKeyValidTill { get; set; }
         public string Token { get; set; }
         public bool AllowAccess { get; set; }
     }
