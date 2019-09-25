@@ -8,6 +8,6 @@ namespace SharedCoreModels
     {
         public string Code { get; set; }
         public string Device { get; set; }
-        public DateTime Created { get; set; }
+        public DateTime ValidTill { get; set; }
     }
 }

@@ -109,7 +109,7 @@ namespace DesktopService.Features.Identity
                 if (user.PasswordKeyValidTill >= DateTime.UtcNow || string.IsNullOrWhiteSpace(user.PasswordKey))
                 {
                     user.PasswordKey = OnCreatePasswordKey();
-                    user.PasswordKeyValidTill = DateTime.UtcNow;
+                    user.PasswordKeyValidTill = DateTime.UtcNow.AddMinutes(5);
                 }
                 OnUpdateUser(user);
             } else
@@ -119,7 +119,7 @@ namespace DesktopService.Features.Identity
                     Id = Guid.NewGuid(),
                     PasswordKey = OnCreatePasswordKey(),
                     UserName = userName,
-                    PasswordKeyValidTill = DateTime.UtcNow
+                    PasswordKeyValidTill = DateTime.UtcNow.AddMinutes(5)
                 };
                 OnAddUser(user);
             }

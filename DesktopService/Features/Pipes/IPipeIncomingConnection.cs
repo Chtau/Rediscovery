@@ -7,6 +7,6 @@ namespace DesktopService.Features.Pipes
 {
     public interface IPipeIncomingConnection
     {
-        Task ShowCode(string code, string device);
+        Task ShowCode(string code, string device, DateTime validTill);
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DesktopHub.Connection.Models
 {
@@ -9,6 +10,7 @@ namespace DesktopHub.Connection.Models
     {
         public const string CodeArgStart = "--code:";
         public const string DeviceArgStart = "--device:";
+        public const string ValidArgStart = "--valid:";
 
         string code = string.Empty;
         public string Code
@@ -23,6 +25,15 @@ namespace DesktopHub.Connection.Models
             get { return device; }
             set { SetProperty(ref device, value); }
         }
+
+        string countdown = "00:00 minutes";
+        public string Countdown
+        {
+            get { return countdown; }
+            set { SetProperty(ref countdown, value); }
+        }
+
+        private DateTime validTill = DateTime.Now.AddMinutes(5);
 
         public IncomingConnectionViewModel(string[] args)
         {
@@ -40,7 +51,37 @@ namespace DesktopHub.Connection.Models
                     var vals = deviceArg.Split(':');
                     Device = vals[1].Trim();
                 }
+                if (args.Any(x => x.StartsWith(ValidArgStart, StringComparison.OrdinalIgnoreCase)))
+                {
+                    var validArg = args.First(x => x.StartsWith(ValidArgStart, StringComparison.OrdinalIgnoreCase));
+                    var vals = validArg.Split(':');
+                    var val = vals[1].Trim();
+                    if (long.TryParse(val, out long result))
+                        validTill = new DateTime(result);
+                }
+                OnCountdown();
             }
+        }
+
+        public void InitCountdown(DateTime validTill)
+        {
+            this.validTill = validTill;
+            OnCountdown();
+        }
+
+        private void OnCountdown()
+        {
+            Task.Run(async () =>
+            {
+                while (DateTime.UtcNow < validTill)
+                {
+                    var dif = validTill - DateTime.UtcNow;
+                    Countdown = $"{dif.Minutes.ToString("00")}:{dif.Seconds.ToString("00")} minutes";
+                    await Task.Delay(1000);
+                }
+                Countdown = "Request new Key";
+                await Task.Delay(5000);
+            });
         }
     }
 }

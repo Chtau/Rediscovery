@@ -24,6 +24,7 @@ namespace DesktopHub
             var model = new Connection.Models.IncomingConnectionViewModel(null);
             model.Code = e.Code;
             model.Device = e.Device;
+            model.InitCountdown(e.ValidTill);
             Dispatcher.UIThread.Post(() =>
             {
                 var conWindow = new Connection.IncomingConnection(model);

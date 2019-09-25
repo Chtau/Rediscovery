@@ -22,7 +22,7 @@ namespace DesktopService.Features.Pipes
             _pipeSettings = pipeSettings.Value;
         }
 
-        public async Task ShowCode(string code, string device)
+        public async Task ShowCode(string code, string device, DateTime validTill)
         {
             try
             {
@@ -32,7 +32,7 @@ namespace DesktopService.Features.Pipes
                     {
                         Code = code,
                         Device = device,
-                        Created = DateTime.Now
+                        ValidTill = validTill
                     });
                     _pipeClient.Send(RediscoveryHub, infoData);
                 }
@@ -45,7 +45,7 @@ namespace DesktopService.Features.Pipes
                             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                             {
                                 FileName = _pipeSettings.RediscoveryDesktopHubPath,
-                                Arguments = $"--code:{code} --device:{device}"
+                                Arguments = $"--code:{code} --device:{device} --valid:{validTill.Ticks}"
                             });
                         } else
                         {
