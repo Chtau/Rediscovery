@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 
 namespace DesktopHub
 {
@@ -9,5 +10,5 @@ namespace DesktopHub
         {
             AvaloniaXamlLoader.Load(this);
         }
-   }
+    }
 }

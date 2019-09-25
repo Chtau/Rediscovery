@@ -2,6 +2,7 @@
 using System.Linq;
 using Avalonia;
 using Avalonia.Logging.Serilog;
+using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DesktopHub
@@ -29,12 +30,17 @@ namespace DesktopHub
             var service = new ServiceCollection();
             service.AddSingleton<IPCPipe.IPipeServer, IPCPipe.PipeServer>();
             service.AddSingleton<Connection.IIncomingConnectionPipe, Connection.IncomingConnectionPipe>();
+            service.AddSingleton<Connection.IIncomingConnectionService, Connection.IncomingConnectionService>();
             ServiceProvider = service.BuildServiceProvider();
+
+            var incomingConnectionService = (Connection.IIncomingConnectionService)Program.ServiceProvider.GetService(typeof(Connection.IIncomingConnectionService));
+            incomingConnectionService.Init();
 
             if (args.Any(x => x.StartsWith(Connection.Models.IncomingConnectionViewModel.CodeArgStart, StringComparison.OrdinalIgnoreCase)))
                 app.Run(new Connection.IncomingConnection(new Connection.Models.IncomingConnectionViewModel(args)));
             else
                 app.Run(new MainWindow());
         }
+
     }
 }

@@ -8,6 +8,11 @@ namespace DesktopHub.Connection
     {
         private readonly Connection.Models.IncomingConnectionViewModel _viewModel;
 
+        public Connection.Models.IncomingConnectionViewModel Model
+        {
+            get { return _viewModel; }
+        }
+
         public IncomingConnection(Connection.Models.IncomingConnectionViewModel viewModel)
         {
             this.InitializeComponent();
@@ -20,6 +25,12 @@ namespace DesktopHub.Connection
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
+        }
+
+        public void UpdateModel(string code, System.DateTime validTill)
+        {
+            _viewModel.Code = code;
+            _viewModel.InitCountdown(validTill);
         }
     }
 }
