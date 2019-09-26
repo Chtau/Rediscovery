@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IPCPipe.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
@@ -15,7 +16,7 @@ namespace IPCPipe
             return server;
         }
 
-        public void Provide(string hub, Func<string, string> callback)
+        public void Provide(string hub, Func<string, string> resourceCallback)
         {
             Task.Factory.StartNew(() =>
             {
@@ -25,7 +26,7 @@ namespace IPCPipe
                     System.Diagnostics.Debug.Print("Wait for Client connection");
                     server.WaitForConnection();
                     var requestedResource = OnReadStream(server);
-                    var resourceValues = callback.Invoke(requestedResource);
+                    var resourceValues = resourceCallback.Invoke(requestedResource);
                     OnWriteStream(server, resourceValues);
                     if (server.IsConnected)
                         server.Disconnect();
@@ -33,12 +34,12 @@ namespace IPCPipe
             });
         }
 
-        public void Receiver(string hub, string requestedResource, Action<string> callback)
+        public void Receiver<T>(string hub, string requestedResource, Action<Models.PipeResource<T>> callback)
         {
             var client = (NamedPipeClientStream)OnCreateClientHub(hub);
             OnWriteStream(client, requestedResource);
             var resourceValues = OnReadStream(client);
-            callback.Invoke(resourceValues);
+            callback.Invoke(Newtonsoft.Json.JsonConvert.DeserializeObject<Models.PipeResource<T>>(resourceValues));
         }
 
         internal string OnReadStream(PipeStream stream)

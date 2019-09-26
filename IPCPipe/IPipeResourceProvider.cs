@@ -6,7 +6,7 @@ namespace IPCPipe
 {
     public interface IPipeResourceProvider
     {
-        void Provide(string hub, Func<string, string> callback);
-        void Receiver(string hub, string requestedResource, Action<string> callback);
+        void Provide(string hub, Func<string, string> resourceCallback);
+        void Receiver<T>(string hub, string requestedResource, Action<Models.PipeResource<T>> callback);
     }
 }
