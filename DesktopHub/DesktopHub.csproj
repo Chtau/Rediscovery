@@ -42,4 +42,7 @@
       <Generator>MSBuild:Compile</Generator>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Devices\" />
+  </ItemGroup>
 </Project>

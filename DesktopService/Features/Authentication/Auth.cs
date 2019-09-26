@@ -15,29 +15,29 @@ namespace DesktopService.Features.Authentication
             OK
         }
 
-        private readonly Features.Identity.IUserService _userService;
+        private readonly Features.Identity.IDeviceService _deviceService;
 
-        public Auth(Features.Identity.IUserService userService)
+        public Auth(Features.Identity.IDeviceService deviceService)
         {
-            _userService = userService;
+            _deviceService = deviceService;
         }
 
-        public async Task<Tuple<bool, string>> Authorize(string user, string key)
+        public async Task<Tuple<bool, string>> Authorize(string device, string key)
         {
-            var u = await _userService.Authenticate(user, key);
+            var u = await _deviceService.Authenticate(device, key);
             if (u != null && u.AllowAccess)
                 return new Tuple<bool, string>(true, u.Token);
             else
                 return new Tuple<bool, string>(false, null);
         }
 
-        public async Task<Tuple<LoginState, Identity.Models.User>> RequestLogin(string user)
+        public async Task<Tuple<LoginState, Identity.Models.Device>> RequestLogin(string device)
         {
-            var u = await _userService.GetByName(user);
+            var u = await _deviceService.GetByName(device);
             if (u != null && u.AllowAccess)
-                return new Tuple<LoginState, Identity.Models.User>(LoginState.OK, u);
+                return new Tuple<LoginState, Identity.Models.Device>(LoginState.OK, u);
             else
-                return new Tuple<LoginState, Identity.Models.User>(LoginState.RequiredAuthorizeKey, null);
+                return new Tuple<LoginState, Identity.Models.Device>(LoginState.RequiredAuthorizeKey, null);
         }
     }
 }

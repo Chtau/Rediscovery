@@ -11,15 +11,15 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DesktopService.Features.Identity
 {
-    public class UserService : IUserService
+    public class DeviceService : IDeviceService
     {
-        public event EventHandler<User> NewUserAdded;
+        public event EventHandler<Device> NewDeviceAdded;
 
         private readonly Models.IdentitySettings _identitySettings;
         private readonly Random _random;
         private readonly DAL.IDBContext _dBContext;
 
-        public UserService(IOptions<Models.IdentitySettings> identitySettings, DAL.IDBContext dBContext)
+        public DeviceService(IOptions<Models.IdentitySettings> identitySettings, DAL.IDBContext dBContext)
         {
             _dBContext = dBContext;
             _identitySettings = identitySettings.Value;
@@ -27,9 +27,9 @@ namespace DesktopService.Features.Identity
         }
 
 
-        public async Task<User> Authenticate(string username, string passwordKey)
+        public async Task<Device> Authenticate(string deviceName, string passwordKey)
         {
-            var user = await _dBContext.Instance.Table<Models.User>().FirstOrDefaultAsync(x => x.UserName == username && x.PasswordKey == passwordKey && x.PasswordKeyValidTill > DateTime.UtcNow);
+            var user = await _dBContext.Instance.Table<Models.Device>().FirstOrDefaultAsync(x => x.DeviceName == deviceName && x.PasswordKey == passwordKey && x.PasswordKeyValidTill > DateTime.UtcNow);
 
             // return null if user not found
             if (user == null)
@@ -47,7 +47,7 @@ namespace DesktopService.Features.Identity
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Sid, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Name, user.DeviceName),
                 }),
                 Expires = DateTime.UtcNow.AddDays(180),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -61,9 +61,9 @@ namespace DesktopService.Features.Identity
             return user;
         }
 
-        public async Task<IEnumerable<User>> GetAll()
+        public async Task<IEnumerable<Device>> GetAll()
         {
-            var users = await _dBContext.Instance.Table<Models.User>().ToListAsync();
+            var users = await _dBContext.Instance.Table<Models.Device>().ToListAsync();
 
             return users.Select(x => {
                 x.PasswordKey = null;
@@ -71,19 +71,19 @@ namespace DesktopService.Features.Identity
             });
         }
 
-        public async Task<User> GetById(Guid id)
+        public async Task<Device> GetById(Guid id)
         {
-            var user = await _dBContext.Instance.Table<Models.User>().FirstOrDefaultAsync(x => x.Id == id);
+            var user = await _dBContext.Instance.Table<Models.Device>().FirstOrDefaultAsync(x => x.Id == id);
             if (user != null)
                 user.PasswordKey = null;
 
             return user;
         }
 
-        public async Task<User> GetByName(string userName)
+        public async Task<Device> GetByName(string deviceName)
         {
 #pragma warning disable RCS1155 // Use StringComparison when comparing strings.
-            var user = await _dBContext.Instance.Table<Models.User>().FirstOrDefaultAsync(x => x.UserName.ToLower() == userName.ToLower());
+            var user = await _dBContext.Instance.Table<Models.Device>().FirstOrDefaultAsync(x => x.DeviceName.ToLower() == deviceName.ToLower());
 #pragma warning restore RCS1155 // Use StringComparison when comparing strings.
             if (user != null)
                 user.PasswordKey = null;
@@ -91,9 +91,9 @@ namespace DesktopService.Features.Identity
             return user;
         }
 
-        public async Task<User> AddUser(string userName)
+        public async Task<Device> AddDevice(string deviceName)
         {
-            User user = await GetByName(userName);
+            Device user = await GetByName(deviceName);
             if (user != null)
             {
                 user.Token = null;
@@ -105,27 +105,27 @@ namespace DesktopService.Features.Identity
                 await OnUpdateUser(user);
             } else
             {
-                user = new User
+                user = new Device
                 {
                     Id = Guid.NewGuid(),
                     PasswordKey = OnCreatePasswordKey(),
-                    UserName = userName,
+                    DeviceName = deviceName,
                     PasswordKeyValidTill = DateTime.UtcNow.AddMinutes(5)
                 };
                 await OnAddUser(user);
             }
-            NewUserAdded?.Invoke(this, user);
+            NewDeviceAdded?.Invoke(this, user);
             return user;
         }
 
-        private async Task OnUpdateUser(User user)
+        private async Task OnUpdateUser(Device device)
         {
-            await _dBContext.Instance.UpdateAsync(user);
+            await _dBContext.Instance.UpdateAsync(device);
         }
 
-        private async Task OnAddUser(User user)
+        private async Task OnAddUser(Device device)
         {
-            await _dBContext.Instance.InsertOrReplaceAsync(user);
+            await _dBContext.Instance.InsertOrReplaceAsync(device);
         }
 
         private string OnCreatePasswordKey()

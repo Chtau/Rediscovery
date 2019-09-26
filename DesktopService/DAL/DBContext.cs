@@ -30,7 +30,7 @@ namespace DesktopService.DAL
 
         private async Task OnBuildModel()
         {
-            await DB.CreateTableAsync<Features.Identity.Models.User>();
+            await DB.CreateTableAsync<Features.Identity.Models.Device>();
         }
 
         public SQLiteAsyncConnection Instance

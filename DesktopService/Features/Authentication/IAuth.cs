@@ -7,7 +7,7 @@ namespace DesktopService.Features.Authentication
 {
     public interface IAuth
     {
-        Task<Tuple<Auth.LoginState, Identity.Models.User>> RequestLogin(string user);
-        Task<Tuple<bool, string>> Authorize(string user, string key);
+        Task<Tuple<Auth.LoginState, Identity.Models.Device>> RequestLogin(string device);
+        Task<Tuple<bool, string>> Authorize(string device, string key);
     }
 }

@@ -80,7 +80,7 @@ namespace DesktopService
             });
 
             // configure DI for application services
-            services.AddScoped<Features.Identity.IUserService, Features.Identity.UserService>();
+            services.AddScoped<Features.Identity.IDeviceService, Features.Identity.DeviceService>();
 
             services.AddHostedService<Worker>();
 
@@ -90,7 +90,7 @@ namespace DesktopService
             services.AddSingleton<Features.Authentication.IManifest, Features.Authentication.Manifest>();
             services.AddSingleton<Features.Authentication.IDiscovery, Features.Authentication.Discovery>();
             services.AddSingleton<Features.Authentication.IAuth, Features.Authentication.Auth>();
-            services.AddSingleton<Features.Identity.IUserService, Features.Identity.UserService>();
+            services.AddSingleton<Features.Identity.IDeviceService, Features.Identity.DeviceService>();
             services.AddSingleton<IUserIdProvider, Features.Identity.ClaimUserIdProvider>();
             services.AddSingleton<IPCPipe.IPipeClient, IPCPipe.PipeClient>();
             services.AddSingleton<Features.Pipes.IPipeIncomingConnection, Features.Pipes.PipeIncomingConnection>();
