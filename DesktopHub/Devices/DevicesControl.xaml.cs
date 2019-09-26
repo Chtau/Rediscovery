@@ -13,6 +13,7 @@ namespace DesktopHub.Devices
             this.InitializeComponent();
 
             DataContext = _viewModel = new Models.DevicesControlViewModel();
+            _viewModel.Refresh();
         }
 
         private void InitializeComponent()

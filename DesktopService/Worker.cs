@@ -10,14 +10,18 @@ namespace DesktopService
     public class Worker : IHostedService, IDisposable
     {
         private readonly Features.Pipes.IPipeIncomingConnection _pipeIncomingConnection;
+        private readonly Features.Pipes.IPipeRepository _pipeRepository;
 
-        public Worker(Features.Pipes.IPipeIncomingConnection pipeIncomingConnection)
+        public Worker(Features.Pipes.IPipeIncomingConnection pipeIncomingConnection,
+            Features.Pipes.IPipeRepository pipeRepository)
         {
             _pipeIncomingConnection = pipeIncomingConnection;
+            _pipeRepository = pipeRepository;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
+            _pipeRepository.Init();
             Task.Run(() =>
             {
                 Task.Delay(2000);

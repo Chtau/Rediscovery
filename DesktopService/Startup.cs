@@ -93,7 +93,9 @@ namespace DesktopService
             services.AddSingleton<Features.Identity.IDeviceService, Features.Identity.DeviceService>();
             services.AddSingleton<IUserIdProvider, Features.Identity.ClaimUserIdProvider>();
             services.AddSingleton<IPCPipe.IPipeClient, IPCPipe.PipeClient>();
+            services.AddSingleton<IPCPipe.IPipeResourceProvider, IPCPipe.PipeResourceProvider>();
             services.AddSingleton<Features.Pipes.IPipeIncomingConnection, Features.Pipes.PipeIncomingConnection>();
+            services.AddSingleton<Features.Pipes.IPipeRepository, Features.Pipes.PipeRepository>();
         }
 
         // Use this method to configure the HTTP request pipeline.
