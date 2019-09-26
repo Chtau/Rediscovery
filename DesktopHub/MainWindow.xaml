@@ -2,9 +2,28 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:devices="clr-namespace:DesktopHub.Devices"
+        xmlns:feat="clr-namespace:DesktopHub.Features"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         Width="800" Height="450"
         x:Class="DesktopHub.MainWindow"
         Title="Rediscovery Hub">
-  Welcome to Rediscovery!
+  <TabControl>
+    <TabItem>
+      <TabItem.Header>
+        <TextBlock VerticalAlignment="Center">Devices</TextBlock>
+      </TabItem.Header>
+      <StackPanel>
+        <devices:DevicesControl></devices:DevicesControl>
+      </StackPanel>
+    </TabItem>
+    <TabItem>
+      <TabItem.Header>
+        <TextBlock VerticalAlignment="Center">Features</TextBlock>
+      </TabItem.Header>
+      <StackPanel>
+        <feat:FeaturesControl></feat:FeaturesControl>
+      </StackPanel>
+    </TabItem>
+  </TabControl>
 </Window>

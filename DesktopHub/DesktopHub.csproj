@@ -13,9 +13,13 @@
     </AvaloniaResource>
   </ItemGroup>
   <ItemGroup>
+    <AvaloniaResource Remove="Devices\DevicesControl.xaml" />
+    <AvaloniaResource Remove="Features\FeaturesControl.xaml" />
     <AvaloniaResource Remove="IncomingConnection.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Devices\DevicesControl.xaml" />
+    <None Remove="Features\FeaturesControl.xaml" />
     <None Remove="IncomingConnection.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -43,6 +47,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Devices\" />
+    <EmbeddedResource Include="Devices\DevicesControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Features\FeaturesControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
