@@ -4,5 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DesktopHub.Devices.DevicesControl">
-    Welcome to Avalonia!
+  <StackPanel>
+    <ListBox Items="{Binding MyItems}">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <Border Background="Red" CornerRadius="4" Padding="4">
+            <TextBlock Text="{Binding}"/>
+          </Border>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+  </StackPanel>
 </UserControl>
