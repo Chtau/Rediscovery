@@ -32,7 +32,7 @@ namespace IPCPipe
                     var requestedResource = reader.ReadLine();
                     var resourceValues = resourceCallback.Invoke(requestedResource);
                     System.Diagnostics.Debug.Print("Provider send requested resource => " + requestedResource);
-                    writer.Write(requestedResource + Environment.NewLine);
+                    writer.Write(resourceValues + Environment.NewLine);
                     writer.Flush();
                     server.Dispose();
                 }
