@@ -3,16 +3,19 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:Local="clr-namespace:DesktopHub.Devices;assembly=DesktopHub"
              x:Class="DesktopHub.Devices.DevicesControl">
-  <StackPanel>
-    <ListBox Items="{Binding MyItems}">
+  <Grid RowDefinitions="*, Auto">
+    <ListBox Grid.Row="0" Items="{Binding Items}">
       <ListBox.ItemTemplate>
         <DataTemplate>
-          <Border Background="Red" CornerRadius="4" Padding="4">
-            <TextBlock Text="{Binding}"/>
-          </Border>
+          <StackPanel Orientation="Horizontal">
+            <Button Command="{Binding $parent[UserControl].DataContext.RemoveItem}" CommandParameter="{Binding .}">Remove</Button>
+            <TextBlock Margin="10,0" Text="{Binding Name}" TextAlignment="Center" VerticalAlignment="Center"/>
+            <CheckBox Margin="10,0" IsChecked="{Binding AllowAccess}" IsEnabled="False"></CheckBox>
+          </StackPanel>
         </DataTemplate>
       </ListBox.ItemTemplate>
     </ListBox>
-  </StackPanel>
+  </Grid>
 </UserControl>

@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Text;
 using IPCPipe.Models;
 using SharedCoreModels;
+using System.Linq;
+using Avalonia.Threading;
 
 namespace DesktopHub.Devices.Models
 {
@@ -11,7 +13,7 @@ namespace DesktopHub.Devices.Models
     {
         private readonly IPCPipe.IPipeResourceProvider _resourceProvider;
 
-        public ObservableCollection<SharedCoreModels.DeviceInfo> Items { get; set; }
+        public ObservableCollection<SharedCoreModels.DeviceInfo> Items { get; set; } = new ObservableCollection<DeviceInfo>();
 
         public DevicesControlViewModel()
         {
@@ -23,9 +25,24 @@ namespace DesktopHub.Devices.Models
             _resourceProvider.Receiver<List<SharedCoreModels.DeviceInfo>>("rediscoveryservice", "deviceinfo", OnReceiveResource);
         }
 
+        public void RemoveItem(DeviceInfo item)
+        {
+            if (item != null)
+            {
+                Items.Remove(item);
+            }
+        }
+
         private void OnReceiveResource(PipeResource<List<DeviceInfo>> resource)
         {
-            Items = new ObservableCollection<DeviceInfo>(resource.Entity);
+            Dispatcher.UIThread.Post(() =>
+            {
+                Items.Clear();
+                foreach (var item in resource.Entity)
+                {
+                    Items.Add(item);
+                }
+            });
         }
     }
 }
