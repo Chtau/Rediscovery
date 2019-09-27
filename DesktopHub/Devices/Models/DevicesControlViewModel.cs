@@ -12,12 +12,14 @@ namespace DesktopHub.Devices.Models
     public class DevicesControlViewModel : BaseViewModel
     {
         private readonly IPCPipe.IPipeResourceProvider _resourceProvider;
+        private readonly IPCPipe.IPipeClient _pipeClient;
 
         public ObservableCollection<SharedCoreModels.DeviceInfo> Items { get; set; } = new ObservableCollection<DeviceInfo>();
 
         public DevicesControlViewModel()
         {
             _resourceProvider = (IPCPipe.IPipeResourceProvider)Program.ServiceProvider.GetService(typeof(IPCPipe.IPipeResourceProvider));
+            _pipeClient = (IPCPipe.IPipeClient)Program.ServiceProvider.GetService(typeof(IPCPipe.IPipeClient));
         }
 
         public void Refresh()
@@ -29,6 +31,12 @@ namespace DesktopHub.Devices.Models
         {
             if (item != null)
             {
+                var sync = new IPCPipe.Models.Sync<DeviceInfo>
+                {
+                    ActionType = SyncAction.Delete,
+                    Entity = item
+                };
+                _pipeClient.Send("sync_device_rediscoveryservice", Newtonsoft.Json.JsonConvert.SerializeObject(sync));
                 Items.Remove(item);
             }
         }
