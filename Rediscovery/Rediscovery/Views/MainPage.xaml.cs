@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Rediscovery.Services;
+using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -10,13 +12,30 @@ namespace Rediscovery.Views
     [DesignTimeVisible(false)]
     public partial class MainPage : TabbedPage
     {
-        private Features.Authentication.IConnect auth => DependencyService.Get<Features.Authentication.IConnect>() ?? new Features.Authentication.Connect();
+        private MainPageViewModel viewModel;
 
+        private Features.Authentication.IConnect auth => DependencyService.Get<Features.Authentication.IConnect>() ?? new Features.Authentication.Connect();
+        
         public MainPage()
         {
             InitializeComponent();
 
+            BindingContext = viewModel = new MainPageViewModel();
+            viewModel.Items.CollectionChanged += Items_CollectionChanged;
+            viewModel.Load();
             auth.HelloReceived += Auth_HelloReceived;
+        }
+
+        private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            foreach (var item in viewModel.Items)
+            {
+                var navigationPage = new NavigationPage(new Desktops.DesktopPage());
+                navigationPage.IconImageSource = "tab_feed.png";
+                navigationPage.Title = item.DisplayName;
+
+                Children.Add(navigationPage);
+            }
         }
 
         private void Auth_HelloReceived(object sender, Features.Authentication.Models.Connection e)
