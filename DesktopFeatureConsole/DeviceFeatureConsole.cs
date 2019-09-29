@@ -5,8 +5,10 @@ using SharedCoreModels.DeviceFeature;
 
 namespace DesktopFeatureConsole
 {
-    public class DeviceFeatureManifest : IDeviceFeatureManifest
+    public class DeviceFeatureConsole : IDeviceFeatureManifest, IDeviceFeatureImplementation<object>
     {
+        public event EventHandler<object> SendData;
+
         public DeviceFeature GetDeviceFeatureInfo()
         {
             return new DeviceFeature
@@ -19,6 +21,16 @@ namespace DesktopFeatureConsole
                 MinFeatureIntegrationPoint = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
                 Version = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
             };
+        }
+
+        public void Init()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReceiveData(object data)
+        {
+            throw new NotImplementedException();
         }
     }
 }

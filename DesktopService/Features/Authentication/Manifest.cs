@@ -32,7 +32,7 @@ namespace DesktopService.Features.Authentication
         {
             return new List<SharedCoreModels.DeviceFeature.DeviceFeature>
             {
-                new DesktopFeatureConsole.DeviceFeatureManifest().GetDeviceFeatureInfo()
+                new DesktopFeatureConsole.DeviceFeatureConsole().GetDeviceFeatureInfo()
             };
         }
     }
