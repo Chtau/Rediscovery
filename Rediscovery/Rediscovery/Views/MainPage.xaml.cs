@@ -33,11 +33,13 @@ namespace Rediscovery.Views
                 foreach (var item in e.NewItems)
                 {
                     var model = (Features.Authentication.Models.Connection)item;
-                    var navigationPage = new NavigationPage(new Desktops.DesktopPage());
-                    navigationPage.IconImageSource = "tab_feed.png";
-                    navigationPage.Title = model.DisplayName;
-
-                    Children.Add(navigationPage);
+                    var navigationPage = new NavigationPage(new Desktops.DesktopPage())
+                    {
+                        IconImageSource = "tab_feed.png",
+                        Title = model.DisplayName
+                    };
+                    Children.Insert(0, navigationPage);
+                    //Children.Add(navigationPage);
                 }
             }
         }
