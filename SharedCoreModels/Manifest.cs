@@ -7,7 +7,7 @@ namespace SharedCoreModels
     {
         public string ClientName { get; set; }
 
-        public List<string> SupportedFeatures { get; set; }
+        public List<DeviceFeature.DeviceFeature> SupportedFeatures { get; set; }
 
         public Version ClientVersion { get; set; }
 

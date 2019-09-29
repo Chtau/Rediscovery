@@ -43,6 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DesktopFeatureConsole\DesktopFeatureConsole.csproj" />
     <ProjectReference Include="..\IPCPipe\IPCPipe.csproj" />
     <ProjectReference Include="..\SharedCoreModels\SharedCoreModels.csproj" />
   </ItemGroup>

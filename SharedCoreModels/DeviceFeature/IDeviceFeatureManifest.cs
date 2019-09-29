@@ -4,7 +4,8 @@ using System.Text;
 
 namespace SharedCoreModels.DeviceFeature
 {
-    public interface IControlIntegrationContent
+    public interface IDeviceFeatureManifest
     {
+        DeviceFeature GetDeviceFeatureInfo();
     }
 }

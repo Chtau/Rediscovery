@@ -15,7 +15,7 @@ namespace DesktopService.Features.Authentication
             {
                 AppMinimumVersion = new SharedCoreModels.Version() { Major = 0, Minor = 0, Patch = 0, Label = null },
                 ClientVersion = new SharedCoreModels.Version() { Major = 0, Minor = 0, Patch = 0, Label = null },
-                SupportedFeatures = new List<string>(),
+                SupportedFeatures = GetDeviceFeatures(),
                 ClientName = "DEV-Desktop"
             };
             return true;
@@ -26,6 +26,14 @@ namespace DesktopService.Features.Authentication
             if (manifest == null)
                 BuildManifest();
             return manifest;
+        }
+
+        private List<SharedCoreModels.DeviceFeature.DeviceFeature> GetDeviceFeatures()
+        {
+            return new List<SharedCoreModels.DeviceFeature.DeviceFeature>
+            {
+                new DesktopFeatureConsole.DeviceFeatureManifest().GetDeviceFeatureInfo()
+            };
         }
     }
 }

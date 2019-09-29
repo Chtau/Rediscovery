@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedCoreModels", "SharedC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopHub", "DesktopHub\DesktopHub.csproj", "{0E24B3C4-5F40-4F67-8987-2CB3B024554E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IPCPipe", "IPCPipe\IPCPipe.csproj", "{2F0E6193-A5C9-4B6D-A0C2-B2D6C64159B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IPCPipe", "IPCPipe\IPCPipe.csproj", "{2F0E6193-A5C9-4B6D-A0C2-B2D6C64159B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopFeatureConsole", "DesktopFeatureConsole\DesktopFeatureConsole.csproj", "{C78CC576-A6BB-4CE4-BCE1-1825485A357B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{2F0E6193-A5C9-4B6D-A0C2-B2D6C64159B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F0E6193-A5C9-4B6D-A0C2-B2D6C64159B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F0E6193-A5C9-4B6D-A0C2-B2D6C64159B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C78CC576-A6BB-4CE4-BCE1-1825485A357B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C78CC576-A6BB-4CE4-BCE1-1825485A357B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C78CC576-A6BB-4CE4-BCE1-1825485A357B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C78CC576-A6BB-4CE4-BCE1-1825485A357B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
