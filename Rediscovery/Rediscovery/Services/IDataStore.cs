@@ -21,4 +21,14 @@ namespace Rediscovery.Services
         Task<T> GetItemAsync(Guid id);
         Task<IEnumerable<T>> GetItemsAsync(bool forceRefresh = false);
     }
+
+    public interface IDataStoreConnectionGuid<T>
+    {
+        Task<bool> AddItemAsync(T item);
+        Task<bool> UpdateItemAsync(T item);
+        Task<bool> DeleteAllAsync(Guid connectionId);
+        Task<bool> DeleteItemAsync(Guid connectionId, Guid id);
+        Task<T> GetItemAsync(Guid connectionId, Guid id);
+        Task<IEnumerable<T>> GetItemsAsync(Guid connectionId);
+    }
 }

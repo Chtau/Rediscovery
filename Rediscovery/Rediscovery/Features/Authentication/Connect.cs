@@ -16,7 +16,7 @@ namespace Rediscovery.Features.Authentication
     {
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private IDataStoreGuid<Models.Connection> connectionStore => DependencyService.Get<IDataStoreGuid<Models.Connection>>() ?? new ConnectionStore();
-        private IDataStoreGuid<Models.ConnectionManifestFeature> connectionManifestFeatureStore => DependencyService.Get<IDataStoreGuid<Models.ConnectionManifestFeature>>() ?? new ConnectionManifestFeatureStore();
+        private IDataStoreConnectionGuid<Models.ConnectionManifestFeature> connectionManifestFeatureStore => DependencyService.Get<IDataStoreConnectionGuid<Models.ConnectionManifestFeature>>() ?? new ConnectionManifestFeatureStore();
 
         private Dictionary<Guid, HubConnection> connections = new Dictionary<Guid, HubConnection>();
 

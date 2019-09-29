@@ -11,7 +11,7 @@ namespace Rediscovery.Desktops
 {
     public class DesktopViewModel : BaseViewModel
     {
-        private IDataStoreGuid<Features.Authentication.Models.ConnectionManifestFeature> connectionManifestStore => DependencyService.Get<IDataStoreGuid<Features.Authentication.Models.ConnectionManifestFeature>>() ?? new Features.Authentication.ConnectionManifestFeatureStore();
+        private IDataStoreConnectionGuid<Features.Authentication.Models.ConnectionManifestFeature> connectionManifestStore => DependencyService.Get<IDataStoreConnectionGuid<Features.Authentication.Models.ConnectionManifestFeature>>() ?? new Features.Authentication.ConnectionManifestFeatureStore();
 
         public Features.Authentication.Models.Connection Connection { get; private set; }
         public ObservableCollection<Features.Authentication.Models.ConnectionManifestFeature> ConnectionManifestFeatures { get; set; } = new ObservableCollection<Features.Authentication.Models.ConnectionManifestFeature>();
@@ -25,7 +25,7 @@ namespace Rediscovery.Desktops
         {
             Task.Run(async () =>
             {
-                var items = await connectionManifestStore.GetItemsAsync();
+                var items = await connectionManifestStore.GetItemsAsync(Connection.Id);
                 foreach (var item in items)
                 {
                     ConnectionManifestFeatures.Add(item);

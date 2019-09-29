@@ -9,14 +9,15 @@ using Xamarin.Forms;
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.Authentication.ConnectionManifestFeatureStore))]
 namespace Rediscovery.Features.Authentication
 {
-    public class ConnectionManifestFeatureStore : IDataStoreGuid<Models.ConnectionManifestFeature>
+
+    public class ConnectionManifestFeatureStore : IDataStoreConnectionGuid<Models.ConnectionManifestFeature>
     {
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private IDBStore db => DependencyService.Get<IDBStore>() ?? new DBStore();
 
         public async Task<bool> AddItemAsync(ConnectionManifestFeature item)
         {
-            if (await db.Store.Table<ConnectionManifestFeature>().Where(s => s.ConnectionId == item.ConnectionId).CountAsync() > 0)
+            if (await db.Store.Table<ConnectionManifestFeature>().Where(s => s.ConnectionId == item.ConnectionId && s.FeatureId == item.FeatureId).CountAsync() > 0)
             {
                 await UpdateItemAsync(item);
             }
@@ -28,24 +29,35 @@ namespace Rediscovery.Features.Authentication
             return await Task.FromResult(true);
         }
 
-        public async Task<bool> DeleteItemAsync(Guid id)
+        public async Task<bool> DeleteAllAsync(Guid connectionId)
         {
-            var _item = await db.Store.Table<ConnectionManifestFeature>().Where((ConnectionManifestFeature arg) => arg.ConnectionId == id).FirstOrDefaultAsync();
+            var _items = await db.Store.Table<ConnectionManifestFeature>().Where((ConnectionManifestFeature arg) => arg.ConnectionId == connectionId).ToListAsync();
+            foreach (var item in _items)
+            {
+                await db.Store.DeleteAsync(item);
+            }
+
+            return await Task.FromResult(true);
+        }
+
+        public async Task<bool> DeleteItemAsync(Guid connectionId, Guid id)
+        {
+            var _item = await db.Store.Table<ConnectionManifestFeature>().Where((ConnectionManifestFeature arg) => arg.ConnectionId == connectionId && arg.FeatureId == id).FirstOrDefaultAsync();
             await db.Store.DeleteAsync(_item);
 
             return await Task.FromResult(true);
         }
 
-        public async Task<ConnectionManifestFeature> GetItemAsync(Guid id)
+        public async Task<ConnectionManifestFeature> GetItemAsync(Guid connectionId, Guid id)
         {
             return await Task.FromResult(
-                await db.Store.Table<ConnectionManifestFeature>().Where(s => s.ConnectionId == id).FirstOrDefaultAsync()
+                await db.Store.Table<ConnectionManifestFeature>().Where(s => s.ConnectionId == connectionId && s.FeatureId == id).FirstOrDefaultAsync()
                 );
         }
 
-        public async Task<IEnumerable<ConnectionManifestFeature>> GetItemsAsync(bool forceRefresh = false)
+        public async Task<IEnumerable<ConnectionManifestFeature>> GetItemsAsync(Guid connectionId)
         {
-            return await db.Store.Table<ConnectionManifestFeature>().ToListAsync();
+            return await db.Store.Table<ConnectionManifestFeature>().Where(x => x.ConnectionId == connectionId).ToListAsync();
         }
 
         public async Task<bool> UpdateItemAsync(ConnectionManifestFeature item)
