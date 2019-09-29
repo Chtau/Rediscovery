@@ -11,23 +11,26 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <StackLayout Grid.Row="0">
-                <!--<ListView x:Name="ItemsListView" 
-                ItemsSource="{Binding Items}"
+                <Label Text="Features" FontSize="22"/>
+                <ListView x:Name="FeatureControl" 
+                ItemsSource="{Binding ConnectionManifestFeaturesControl}"
                 VerticalOptions="FillAndExpand"
                  HasUnevenRows="true"
-                 RefreshCommand="{Binding LoadItemsCommand}"
-                 IsPullToRefreshEnabled="true"
-                 CachingStrategy="RecycleElement"
-                 ItemSelected="OnItemSelected">
+                 CachingStrategy="RecycleElement">
+                    <!--
+                    RefreshCommand="{Binding LoadItemsCommand}"
+                    IsPullToRefreshEnabled="true"
+                    ItemSelected="OnItemSelected"
+                    -->
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
                                 <StackLayout Padding="10">
-                                    <Label Text="{Binding DisplayName}" 
+                                    <Label Text="{Binding FeatureDisplayName}" 
                        LineBreakMode="NoWrap" 
                        Style="{DynamicResource ListItemTextStyle}" 
                        FontSize="16" />
-                                    <Label Text="{Binding User}" 
+                                    <Label Text="{Binding FeatureVersion}" 
                        LineBreakMode="NoWrap"
                        Style="{DynamicResource ListItemDetailTextStyle}"
                        FontSize="13" />
@@ -35,7 +38,7 @@
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
-                </ListView>-->
+                </ListView>
             </StackLayout>
         </Grid>
     </ContentPage.Content>

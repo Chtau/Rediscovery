@@ -14,7 +14,8 @@ namespace Rediscovery.Desktops
         private IDataStoreConnectionGuid<Features.Authentication.Models.ConnectionManifestFeature> connectionManifestStore => DependencyService.Get<IDataStoreConnectionGuid<Features.Authentication.Models.ConnectionManifestFeature>>() ?? new Features.Authentication.ConnectionManifestFeatureStore();
 
         public Features.Authentication.Models.Connection Connection { get; private set; }
-        public ObservableCollection<Features.Authentication.Models.ConnectionManifestFeature> ConnectionManifestFeatures { get; set; } = new ObservableCollection<Features.Authentication.Models.ConnectionManifestFeature>();
+        public ObservableCollection<Features.Authentication.Models.ConnectionManifestFeature> ConnectionManifestFeaturesProvide { get; set; } = new ObservableCollection<Features.Authentication.Models.ConnectionManifestFeature>();
+        public ObservableCollection<Features.Authentication.Models.ConnectionManifestFeature> ConnectionManifestFeaturesControl { get; set; } = new ObservableCollection<Features.Authentication.Models.ConnectionManifestFeature>();
 
         public DesktopViewModel(Features.Authentication.Models.Connection con)
         {
@@ -23,12 +24,20 @@ namespace Rediscovery.Desktops
 
         public void Load()
         {
+            ConnectionManifestFeaturesControl.Clear();
+            ConnectionManifestFeaturesProvide.Clear();
             Task.Run(async () =>
             {
                 var items = await connectionManifestStore.GetItemsAsync(Connection.Id);
                 foreach (var item in items)
                 {
-                    ConnectionManifestFeatures.Add(item);
+                    if (item.FeatureControlIntegrationPoint == SharedCoreModels.DeviceFeature.DeviceFeature.IntegrationPoint.Mobile)
+                    {
+                        ConnectionManifestFeaturesControl.Add(item);
+                    } else if (item.FeatureFeatureIntegrationPoint == SharedCoreModels.DeviceFeature.DeviceFeature.IntegrationPoint.Mobile)
+                    {
+                        ConnectionManifestFeaturesProvide.Add(item);
+                    }
                 }
             });
         }
