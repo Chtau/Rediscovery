@@ -15,7 +15,7 @@ namespace Rediscovery.Views
 
         private IDataStoreGuid<Features.Authentication.Models.Connection> connectionStore => DependencyService.Get<IDataStoreGuid<Features.Authentication.Models.Connection>>() ?? new Features.Authentication.ConnectionStore();
 
-        public ObservableCollection<Features.Authentication.Models.Connection> Items { get; set; }
+        public ObservableCollection<Features.Authentication.Models.Connection> Items { get; set; } = new ObservableCollection<Features.Authentication.Models.Connection>();
 
         public MainPageViewModel()
         {
@@ -24,9 +24,14 @@ namespace Rediscovery.Views
 
         public void Load()
         {
+            Items.Clear();
             Task.Run(async () =>
             {
-                Items = new ObservableCollection<Features.Authentication.Models.Connection>(await connectionStore.GetItemsAsync());
+                var items = await connectionStore.GetItemsAsync();
+                foreach (var item in items)
+                {
+                    Items.Add(item);
+                }
             });
         }
     }

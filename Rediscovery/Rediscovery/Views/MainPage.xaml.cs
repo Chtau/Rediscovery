@@ -28,13 +28,17 @@ namespace Rediscovery.Views
 
         private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            foreach (var item in viewModel.Items)
+            if (e.NewItems != null)
             {
-                var navigationPage = new NavigationPage(new Desktops.DesktopPage());
-                navigationPage.IconImageSource = "tab_feed.png";
-                navigationPage.Title = item.DisplayName;
+                foreach (var item in e.NewItems)
+                {
+                    var model = (Features.Authentication.Models.Connection)item;
+                    var navigationPage = new NavigationPage(new Desktops.DesktopPage());
+                    navigationPage.IconImageSource = "tab_feed.png";
+                    navigationPage.Title = model.DisplayName;
 
-                Children.Add(navigationPage);
+                    Children.Add(navigationPage);
+                }
             }
         }
 
