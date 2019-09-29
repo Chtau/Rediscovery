@@ -5,9 +5,22 @@ using SharedCoreModels.DeviceFeature;
 
 namespace DesktopFeatureConsole
 {
-    public class DeviceFeatureConsole : IDeviceFeatureManifest, IDeviceFeatureImplementation<object>
+    public class DeviceFeatureConsole : IDeviceFeatureManifest, IDeviceFeatureImplementation<string>
     {
-        public event EventHandler<object> SendData;
+        private readonly Terminal terminal;
+
+        public DeviceFeatureConsole()
+        {
+            terminal = new Terminal();
+            terminal.Output += Terminal_Output;
+        }
+
+        private void Terminal_Output(object sender, string e)
+        {
+            SendData?.Invoke(this, e);
+        }
+
+        public event EventHandler<string> SendData;
 
         public DeviceFeature GetDeviceFeatureInfo()
         {
@@ -25,12 +38,22 @@ namespace DesktopFeatureConsole
 
         public void Init()
         {
-            throw new NotImplementedException();
+            
         }
 
-        public void ReceiveData(object data)
+        public void Dispose()
         {
-            throw new NotImplementedException();
+            terminal.Close();
+        }
+
+        public void ReceiveData(string data)
+        {
+            if (!string.IsNullOrWhiteSpace(data))
+            {
+                terminal.WriteLine(data);
+                //var result = terminal.WriteLine(data);
+                //SendData?.Invoke(this, result);
+            }
         }
     }
 }
