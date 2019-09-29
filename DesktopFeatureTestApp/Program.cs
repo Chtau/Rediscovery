@@ -3,7 +3,7 @@ using System;
 
 namespace DesktopFeatureTestApp
 {
-    class Program
+    class ProgramConsole
     {
         static void Main(string[] args)
         {
@@ -13,17 +13,12 @@ namespace DesktopFeatureTestApp
             feature.SendData += (object sender, string e) =>
             {
                 Console.WriteLine(e);
-                //Console.Write(e);
             };
             feature.Init();
             feature.ReceiveData("echo Hallo");
             feature.ReceiveData("echo World");
 
             Console.ReadLine();
-            /*do
-            {
-                System.Threading.Thread.Sleep(500);
-            } while (true);*/
         }
     }
 }
