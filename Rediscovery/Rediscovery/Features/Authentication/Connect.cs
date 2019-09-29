@@ -56,7 +56,13 @@ namespace Rediscovery.Features.Authentication
                     var feature = new Models.ConnectionManifestFeature
                     {
                         ConnectionId = model.Id,
-                        FeatureKey = item
+                        FeatureDisplayName = item.DisplayName,
+                        FeatureControlIntegrationPoint = item.ControlIntegrationPoint,
+                        FeatureFeatureIntegrationPoint = item.FeatureIntegrationPoint,
+                        FeatureId = item.Id,
+                        FeatureMinControlIntegrationPoint = SharedCoreModels.Version.ConvertFrom(item.MinControlIntegrationPoint),
+                        FeatureMinFeatureIntegrationPoint = SharedCoreModels.Version.ConvertFrom(item.MinFeatureIntegrationPoint),
+                        FeatureVersion = SharedCoreModels.Version.ConvertFrom(item.Version),
                     };
                     await connectionManifestFeatureStore.AddItemAsync(feature);
                     features.Add(feature);
