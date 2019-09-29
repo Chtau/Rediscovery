@@ -14,15 +14,16 @@ namespace Rediscovery.Desktops
     {
         private DesktopViewModel viewModel;
 
-        public DesktopPage()
+        public DesktopPage(DesktopViewModel model)
         {
             InitializeComponent();
-            BindingContext = viewModel = new DesktopViewModel();
+            BindingContext = viewModel = model;
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            viewModel.Load();
         }
     }
 }

@@ -10,7 +10,7 @@
             x:Class="Rediscovery.Views.MainPage">
 
     <TabbedPage.Children>
-        <NavigationPage Title="Desktop DEV">
+        <!--<NavigationPage Title="Desktop DEV">
             <NavigationPage.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
                     <On Platform="iOS" Value="tab_feed.png"/>
@@ -19,7 +19,7 @@
             <x:Arguments>
                 <desktops:DesktopPage />
             </x:Arguments>
-        </NavigationPage>
+        </NavigationPage>-->
 
         <NavigationPage Title="Desktop Config">
             <NavigationPage.Icon>
