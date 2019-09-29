@@ -25,5 +25,16 @@ namespace Rediscovery.Desktops
             base.OnAppearing();
             viewModel.Load();
         }
+
+        async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
+        {
+            Features.Authentication.Models.ConnectionManifestFeature item = args.SelectedItem as Features.Authentication.Models.ConnectionManifestFeature;
+            if (item == null)
+                return;
+
+            await Navigation.PushModalAsync(new NavigationPage(new DesktopFeaturePage.DesktopFeaturePageDetail(new DesktopFeaturePage.DesktopFeaturePageDetailViewModel(viewModel.Connection, item))));
+
+            FeatureControl.SelectedItem = null;
+        }
     }
 }

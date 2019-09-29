@@ -16,11 +16,12 @@
                 ItemsSource="{Binding ConnectionManifestFeaturesControl}"
                 VerticalOptions="FillAndExpand"
                  HasUnevenRows="true"
+                 ItemSelected="OnItemSelected"
                  CachingStrategy="RecycleElement">
                     <!--
                     RefreshCommand="{Binding LoadItemsCommand}"
                     IsPullToRefreshEnabled="true"
-                    ItemSelected="OnItemSelected"
+                    
                     -->
                     <ListView.ItemTemplate>
                         <DataTemplate>
