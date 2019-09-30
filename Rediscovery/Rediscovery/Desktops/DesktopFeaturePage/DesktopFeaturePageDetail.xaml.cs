@@ -19,6 +19,8 @@ namespace Rediscovery.Desktops.DesktopFeaturePage
             InitializeComponent();
 
             BindingContext = viewModel = model;
+
+            terminal.AddLines("test1", "test2", "test3");
         }
 
         private async void Back_Clicked(object sender, EventArgs e)

@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Grid xmlns="http://xamarin.com/schemas/2014/forms" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Class="Rediscovery.Desktops.DesktopFeaturePage.Controls.Terminal"
+      Margin="10">
+    <Grid.Resources>
+        <ResourceDictionary>
+            <Color x:Key="Primary">#2196F3</Color>
+            <Color x:Key="Accent">#96d1ff</Color>
+            <Color x:Key="LightTextColor">#ffffff</Color>
+            <Color x:Key="Dismiss">#840000</Color>
+        </ResourceDictionary>
+    </Grid.Resources>
+    <Grid.RowDefinitions>
+        <RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    <ScrollView Grid.Row="0">
+        <StackLayout x:Name="StackLines">
+            <!--<Label Text="{Binding TerminalText, Source={x:Reference this}}"/>-->
+            <!--<Label Text="Test\r\ntest2\r\ntest3\r\ntest4"/>
+            <Label Text="Test\r\ntest2\r\ntest3\r\ntest4"/>-->
+        </StackLayout>
+    </ScrollView>
+    <Grid Grid.Row="1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="50"/>
+        </Grid.ColumnDefinitions>
+        <Editor Grid.Column="0" Placeholder="Enter command" x:Name="CommandInput"></Editor>
+        <Button Grid.Column="1" Text="=>" x:Name="send" Clicked="send_Clicked"
+                BackgroundColor="{StaticResource Primary}"
+                TextColor="{StaticResource LightTextColor}"/>
+    </Grid>
+</Grid>
