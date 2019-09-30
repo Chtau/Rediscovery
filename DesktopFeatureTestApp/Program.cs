@@ -1,4 +1,5 @@
 ﻿using DesktopFeatureConsole;
+using SharedCoreModels.DeviceFeature;
 using System;
 
 namespace DesktopFeatureTestApp
@@ -10,13 +11,13 @@ namespace DesktopFeatureTestApp
             Console.WriteLine("Test");
 
             SharedCoreModels.DeviceFeature.IDeviceFeatureImplementation feature = new DeviceFeatureConsole();
-            feature.SendData += (object sender, object e) =>
+            feature.SendData += (object sender, DeviceFeatureData e) =>
             {
-                Console.WriteLine(e);
+                Console.WriteLine(e.Data);
             };
             feature.Init();
-            feature.ReceiveData("echo Hallo");
-            feature.ReceiveData("echo World");
+            feature.ReceiveData(new DeviceFeatureData { Data = "echo Hallo" });
+            feature.ReceiveData(new DeviceFeatureData { Data = "echo World" });
 
             Console.ReadLine();
         }

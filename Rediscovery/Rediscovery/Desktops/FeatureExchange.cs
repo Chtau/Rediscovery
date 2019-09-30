@@ -45,7 +45,7 @@ namespace Rediscovery.Desktops
         {
             if (model == null)
                 return null;
-
+            
             if (connections.ContainsKey(model.Id))
             {
                 if (connections[model.Id].State != HubConnectionState.Connected)
@@ -66,6 +66,7 @@ namespace Rediscovery.Desktops
                 connections.Add(model.Id, connection);
                 logger.Message($"try connect to {model.DisplayName} ({DateTime.Now})");
                 await connections[model.Id].StartAsync();
+                OnDesktopRespone(connections[model.Id], model);
             }
             return connections[model.Id];
         }

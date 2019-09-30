@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using SharedCoreModels.DeviceFeature;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,16 +12,12 @@ namespace DesktopService.Features.DeviceFeature
     public class DeviceFeatureHub : Hub
     {
         private readonly IFeatureService _featureService;
+        private readonly IHubContext<DeviceFeatureHub> _hubContext;
 
-        public DeviceFeatureHub(IFeatureService featureService)
+        public DeviceFeatureHub(IFeatureService featureService, IHubContext<DeviceFeatureHub> hubContext)
         {
+            _hubContext = hubContext;
             _featureService = featureService;
-            _featureService.FeatureResponse += _featureService_FeatureResponse;
-        }
-
-        private void _featureService_FeatureResponse(object sender, (Guid Id, object Data) e)
-        {
-            ResponseToClient(e.Id, e.Data);
         }
 
         public void ClientMessage(Guid featureId, object data)
@@ -28,13 +25,13 @@ namespace DesktopService.Features.DeviceFeature
             var feature = _featureService.GetFeature(featureId);
             if (feature != null)
             {
-                feature.ReceiveData(data);
+                var val = new DeviceFeatureData
+                {
+                    Data = data,
+                    DeviceId = Context.UserIdentifier
+                };
+                feature.ReceiveData(val);
             }
-        }
-
-        private void ResponseToClient(Guid featureId, object data)
-        {
-            Clients.Caller.SendAsync("ClientResponse", featureId, data);
         }
     }
 }

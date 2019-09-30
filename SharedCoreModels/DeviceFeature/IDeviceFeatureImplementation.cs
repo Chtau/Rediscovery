@@ -8,8 +8,8 @@ namespace SharedCoreModels.DeviceFeature
     {
         void Init();
         void Dispose();
-        event EventHandler<object> SendData;
-        void ReceiveData(object data);
+        event EventHandler<DeviceFeatureData> SendData;
+        void ReceiveData(DeviceFeatureData data);
         DeviceFeature GetDeviceFeatureInfo();
     }
 }

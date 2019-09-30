@@ -8,6 +8,7 @@ namespace DesktopFeatureConsole
     public class DeviceFeatureConsole : IDeviceFeatureImplementation
     {
         private readonly Terminal terminal;
+        private DeviceFeatureData currentDeviceFeatureData;
 
         public DeviceFeatureConsole()
         {
@@ -17,10 +18,15 @@ namespace DesktopFeatureConsole
 
         private void Terminal_Output(object sender, string e)
         {
-            SendData?.Invoke(this, e);
+            var data = new DeviceFeatureData
+            {
+                Data = e,
+                DeviceId = currentDeviceFeatureData?.DeviceId
+            };
+            SendData?.Invoke(this, data);
         }
 
-        public event EventHandler<object> SendData;
+        public event EventHandler<DeviceFeatureData> SendData;
 
         public DeviceFeature GetDeviceFeatureInfo()
         {
@@ -46,11 +52,12 @@ namespace DesktopFeatureConsole
             terminal.Close();
         }
 
-        public void ReceiveData(object data)
+        public void ReceiveData(DeviceFeatureData data)
         {
-            if (data != null && !string.IsNullOrWhiteSpace(data.ToString()))
+            if (data != null && !string.IsNullOrWhiteSpace(data.Data?.ToString()))
             {
-                terminal.WriteLine(data.ToString());
+                currentDeviceFeatureData = data;
+                terminal.WriteLine(data.Data.ToString());
             }
         }
     }

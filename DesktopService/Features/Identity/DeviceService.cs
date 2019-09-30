@@ -37,7 +37,6 @@ namespace DesktopService.Features.Identity
 
             user.AllowAccess = true; // update user db
             user.PasswordKeyValidTill = DateTime.MaxValue;
-            await OnUpdateUser(user);
 
             // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -54,6 +53,8 @@ namespace DesktopService.Features.Identity
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             user.Token = tokenHandler.WriteToken(token);
+
+            await OnUpdateUser(user);
 
             // remove password before returning
             user.PasswordKey = null;

@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using System.Text;
 using SharedCoreModels.DeviceFeature;
 using System.Linq;
+using Microsoft.AspNetCore.SignalR;
 
 namespace DesktopService.Features.DeviceFeature
 {
     public class FeatureService : IFeatureService
     {
-        public event EventHandler<(Guid Id, object Data)> FeatureResponse;
         private List<IDeviceFeatureImplementation> deviceFeatureImplementations = new List<IDeviceFeatureImplementation>();
+        private readonly IHubContext<DeviceFeatureHub> _hubContext;
 
-        public FeatureService()
+        public FeatureService(IHubContext<DeviceFeatureHub> hubContext)
         {
+            _hubContext = hubContext;
             Load();
         }
 
@@ -34,11 +36,18 @@ namespace DesktopService.Features.DeviceFeature
         public void Load()
         {
             var console = new DesktopFeatureConsole.DeviceFeatureConsole();
-            console.SendData += (object sender, object e) =>
+            console.SendData += (object sender, DeviceFeatureData e) =>
             {
-                FeatureResponse?.Invoke(this, (console.GetDeviceFeatureInfo().Id, e));
+                System.Diagnostics.Debug.Print("Feature response =>" + e.Data);
+                ResponseToClient(console.GetDeviceFeatureInfo().Id, e);
             };
             deviceFeatureImplementations.Add(console);
+        }
+
+        private void ResponseToClient(Guid featureId, DeviceFeatureData data)
+        {
+            _hubContext.Clients.User(data.DeviceId).SendAsync("ClientResponse", featureId, data.Data);
+            //Clients.Caller.SendAsync("ClientResponse", featureId, data);
         }
     }
 }
