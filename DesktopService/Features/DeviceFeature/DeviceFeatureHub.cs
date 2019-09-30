@@ -15,16 +15,26 @@ namespace DesktopService.Features.DeviceFeature
         public DeviceFeatureHub(IFeatureService featureService)
         {
             _featureService = featureService;
+            _featureService.FeatureResponse += _featureService_FeatureResponse;
         }
 
-        public async Task ClientMessage(Guid featureId, object data)
+        private void _featureService_FeatureResponse(object sender, (Guid Id, object Data) e)
         {
-            
+            ResponseToClient(e.Id, e.Data);
         }
 
-        private async Task ResponseToClient(Guid featureId, object data)
+        public void ClientMessage(Guid featureId, object data)
         {
-            await Clients.Caller.SendAsync("ClientResponse", featureId, data);
+            var feature = _featureService.GetFeature(featureId);
+            if (feature != null)
+            {
+                feature.ReceiveData(data);
+            }
+        }
+
+        private void ResponseToClient(Guid featureId, object data)
+        {
+            Clients.Caller.SendAsync("ClientResponse", featureId, data);
         }
     }
 }

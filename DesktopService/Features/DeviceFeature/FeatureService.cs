@@ -8,6 +8,7 @@ namespace DesktopService.Features.DeviceFeature
 {
     public class FeatureService : IFeatureService
     {
+        public event EventHandler<(Guid Id, object Data)> FeatureResponse;
         private List<IDeviceFeatureImplementation> deviceFeatureImplementations = new List<IDeviceFeatureImplementation>();
 
         public FeatureService()
@@ -32,7 +33,12 @@ namespace DesktopService.Features.DeviceFeature
 
         public void Load()
         {
-            deviceFeatureImplementations.Add(new DesktopFeatureConsole.DeviceFeatureConsole());
+            var console = new DesktopFeatureConsole.DeviceFeatureConsole();
+            console.SendData += (object sender, object e) =>
+            {
+                FeatureResponse?.Invoke(this, (console.GetDeviceFeatureInfo().Id, e));
+            };
+            deviceFeatureImplementations.Add(console);
         }
     }
 }
