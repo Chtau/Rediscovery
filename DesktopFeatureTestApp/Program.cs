@@ -9,8 +9,8 @@ namespace DesktopFeatureTestApp
         {
             Console.WriteLine("Test");
 
-            SharedCoreModels.DeviceFeature.IDeviceFeatureImplementation<string> feature = new DeviceFeatureConsole();
-            feature.SendData += (object sender, string e) =>
+            SharedCoreModels.DeviceFeature.IDeviceFeatureImplementation feature = new DeviceFeatureConsole();
+            feature.SendData += (object sender, object e) =>
             {
                 Console.WriteLine(e);
             };

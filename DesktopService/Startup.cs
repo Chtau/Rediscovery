@@ -1,4 +1,5 @@
 ﻿using DesktopService.Features.Authentication;
+using DesktopService.Features.DeviceFeature;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.SignalR;
@@ -97,6 +98,7 @@ namespace DesktopService
             services.AddSingleton<IPCPipe.IPipeResourceProvider, IPCPipe.PipeResourceProvider>();
             services.AddSingleton<Features.Pipes.IPipeIncomingConnection, Features.Pipes.PipeIncomingConnection>();
             services.AddSingleton<Features.Pipes.IPipeRepository, Features.Pipes.PipeRepository>();
+            services.AddSingleton<IFeatureService, FeatureService>();
         }
 
         // Use this method to configure the HTTP request pipeline.
@@ -110,6 +112,7 @@ namespace DesktopService
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<ConnectHub>("/hubs/connect");
+                endpoints.MapHub<DeviceFeatureHub>("/hubs/feature");
             });
         }
     }

@@ -5,7 +5,7 @@ using SharedCoreModels.DeviceFeature;
 
 namespace DesktopFeatureConsole
 {
-    public class DeviceFeatureConsole : IDeviceFeatureManifest, IDeviceFeatureImplementation<string>
+    public class DeviceFeatureConsole : IDeviceFeatureManifest, IDeviceFeatureImplementation
     {
         private readonly Terminal terminal;
 
@@ -20,7 +20,7 @@ namespace DesktopFeatureConsole
             SendData?.Invoke(this, e);
         }
 
-        public event EventHandler<string> SendData;
+        public event EventHandler<object> SendData;
 
         public DeviceFeature GetDeviceFeatureInfo()
         {
@@ -46,13 +46,11 @@ namespace DesktopFeatureConsole
             terminal.Close();
         }
 
-        public void ReceiveData(string data)
+        public void ReceiveData(object data)
         {
-            if (!string.IsNullOrWhiteSpace(data))
+            if (data != null && !string.IsNullOrWhiteSpace(data.ToString()))
             {
-                terminal.WriteLine(data);
-                //var result = terminal.WriteLine(data);
-                //SendData?.Invoke(this, result);
+                terminal.WriteLine(data.ToString());
             }
         }
     }

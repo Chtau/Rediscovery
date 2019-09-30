@@ -8,6 +8,12 @@ namespace DesktopService.Features.Authentication
     public class Manifest : IManifest
     {
         private SharedCoreModels.Manifest manifest;
+        private Features.DeviceFeature.IFeatureService _featureService;
+
+        public Manifest(Features.DeviceFeature.IFeatureService featureService)
+        {
+            _featureService = featureService;
+        }
 
         public bool BuildManifest()
         {
@@ -15,7 +21,7 @@ namespace DesktopService.Features.Authentication
             {
                 AppMinimumVersion = new SharedCoreModels.Version() { Major = 0, Minor = 0, Patch = 0, Label = null },
                 ClientVersion = new SharedCoreModels.Version() { Major = 0, Minor = 0, Patch = 0, Label = null },
-                SupportedFeatures = GetDeviceFeatures(),
+                SupportedFeatures = _featureService.GetFeaturesManifest(),
                 ClientName = "DEV-Desktop"
             };
             return true;
@@ -26,14 +32,6 @@ namespace DesktopService.Features.Authentication
             if (manifest == null)
                 BuildManifest();
             return manifest;
-        }
-
-        private List<SharedCoreModels.DeviceFeature.DeviceFeature> GetDeviceFeatures()
-        {
-            return new List<SharedCoreModels.DeviceFeature.DeviceFeature>
-            {
-                new DesktopFeatureConsole.DeviceFeatureConsole().GetDeviceFeatureInfo()
-            };
         }
     }
 }
