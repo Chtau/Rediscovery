@@ -24,16 +24,14 @@ namespace Rediscovery.Desktops.DesktopFeaturePage.Controls
         {
             if (lines != null)
             {
-                Label lastElement = null;
                 foreach (var line in lines)
                 {
-                    lastElement = new Label
+                    StackLines.Children.Add(new Label
                     {
                         Text = line,
                         LineBreakMode = LineBreakMode.NoWrap,
                         MaxLines = 1
-                    };
-                    StackLines.Children.Add(lastElement);
+                    });
                 }
                 scrollView.ScrollToAsync(0, StackLines.Height + 50, false);
             }

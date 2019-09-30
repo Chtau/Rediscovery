@@ -136,15 +136,6 @@ namespace Rediscovery.Features.Authentication
         {
             if (model == null)
                 return null;
-            /*
-             * TODO: signalr jwt token providing
-            var connection = new HubConnectionBuilder()
-            .WithUrl("https://example.com/myhub", options =>
-            { 
-                options.AccessTokenProvider = () => Task.FromResult(_myAccessToken);
-            })
-            .Build();
-            */
 
             if (connections.ContainsKey(model.Id))
             {

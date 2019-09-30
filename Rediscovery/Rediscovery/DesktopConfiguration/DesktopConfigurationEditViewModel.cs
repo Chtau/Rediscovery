@@ -52,23 +52,11 @@ namespace Rediscovery.DesktopConfiguration
                 };
             }
 
-            //HubConnection connection;
             Connect = new Command(async () =>
             {
                 Load.IsLoading = true;
 
                 await auth.TryConnect(Item.Id);
-                /*connection = new HubConnectionBuilder()
-                .WithUrl("http://" + Item.LastKnownAddress + "/connect")
-                .Build();
-                await connection.StartAsync();
-                connection.On<bool, string>("Hello", (status, info) =>
-                {
-                    Item.ConnectionState = Connection.OK;
-                    item.LastConnection = DateTime.Now;
-                });
-                await connection.InvokeAsync("Welcome", "dev1", Item.Id);
-                */
 
                 Load.IsLoading = false;
             });
