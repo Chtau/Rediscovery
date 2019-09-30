@@ -10,5 +10,6 @@ namespace SharedCoreModels.DeviceFeature
         void Dispose();
         event EventHandler<object> SendData;
         void ReceiveData(object data);
+        DeviceFeature GetDeviceFeatureInfo();
     }
 }

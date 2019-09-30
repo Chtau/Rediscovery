@@ -7,6 +7,7 @@ namespace DesktopService.Features.DeviceFeature
 {
     public interface IFeatureService
     {
+        void Load();
         IDeviceFeatureImplementation GetFeature(Guid featureId);
         List<SharedCoreModels.DeviceFeature.DeviceFeature> GetFeaturesManifest();
     }

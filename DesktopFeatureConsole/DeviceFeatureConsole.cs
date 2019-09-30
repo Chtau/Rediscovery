@@ -5,7 +5,7 @@ using SharedCoreModels.DeviceFeature;
 
 namespace DesktopFeatureConsole
 {
-    public class DeviceFeatureConsole : IDeviceFeatureManifest, IDeviceFeatureImplementation
+    public class DeviceFeatureConsole : IDeviceFeatureImplementation
     {
         private readonly Terminal terminal;
 
