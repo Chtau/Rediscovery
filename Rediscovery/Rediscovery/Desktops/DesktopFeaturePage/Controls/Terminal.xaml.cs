@@ -16,31 +16,33 @@ namespace Rediscovery.Desktops.DesktopFeaturePage.Controls
 
         public Terminal()
         {
-            InitializeComponent();
+            InitializeComponent();            
         }
+
 
         public void AddLines(params string[] lines)
         {
-            /*if (lines != null)
+            if (lines != null)
             {
+                Label lastElement = null;
                 foreach (var line in lines)
                 {
-                    StackLines.Children.Add(new Label 
-                    { 
-                        Text = line, 
-                        LineBreakMode = LineBreakMode.NoWrap, 
-                        HorizontalOptions = LayoutOptions.FillAndExpand, 
-                        MinimumWidthRequest = 750, 
-                        WidthRequest = 750,
+                    lastElement = new Label
+                    {
+                        Text = line,
+                        LineBreakMode = LineBreakMode.NoWrap,
                         MaxLines = 1
-                    });
+                    };
+                    StackLines.Children.Add(lastElement);
                 }
-            }*/
+                scrollView.ScrollToAsync(0, StackLines.Height + 50, false);
+            }
         }
 
         private void send_Clicked(object sender, EventArgs e)
         {
             SendCommand?.Invoke(this, CommandInput.Text);
+            CommandInput.Text = null;
         }
     }
 }

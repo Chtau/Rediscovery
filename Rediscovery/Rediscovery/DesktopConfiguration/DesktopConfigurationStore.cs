@@ -15,6 +15,11 @@ namespace Rediscovery.DesktopConfiguration
 
         private IDataStoreGuid<Features.Authentication.Models.Connection> connectionStore => DependencyService.Get<IDataStoreGuid<Features.Authentication.Models.Connection>>() ?? new Features.Authentication.ConnectionStore();
 
+        public bool AddItem(DesktopConfigurationModel item)
+        {
+            return AddItemAsync(item).GetAwaiter().GetResult();
+        }
+
         public async Task<bool> AddItemAsync(DesktopConfigurationModel item)
         {
             var con = await connectionStore.GetItemAsync(item.Id);
@@ -36,9 +41,19 @@ namespace Rediscovery.DesktopConfiguration
             });
         }
 
+        public bool DeleteItem(Guid id)
+        {
+            return DeleteItemAsync(id).GetAwaiter().GetResult();
+        }
+
         public async Task<bool> DeleteItemAsync(Guid id)
         {
             return await connectionStore.DeleteItemAsync(id);
+        }
+
+        public DesktopConfigurationModel GetItem(Guid id)
+        {
+            return GetItemAsync(id).GetAwaiter().GetResult();
         }
 
         public async Task<DesktopConfigurationModel> GetItemAsync(Guid id)
@@ -56,6 +71,11 @@ namespace Rediscovery.DesktopConfiguration
             };
         }
 
+        public IEnumerable<DesktopConfigurationModel> GetItems(bool forceRefresh = false)
+        {
+            return GetItemsAsync(forceRefresh).GetAwaiter().GetResult();
+        }
+
         public async Task<IEnumerable<DesktopConfigurationModel>> GetItemsAsync(bool forceRefresh = false)
         {
             return from x in await connectionStore.GetItemsAsync()
@@ -69,6 +89,11 @@ namespace Rediscovery.DesktopConfiguration
                        LastKnownAddress = x.LastKnownAddress,
                        DisplayName = x.DisplayName
                    };
+        }
+
+        public bool UpdateItem(DesktopConfigurationModel item)
+        {
+            return UpdateItemAsync(item).GetAwaiter().GetResult();
         }
 
         public async Task<bool> UpdateItemAsync(DesktopConfigurationModel item)

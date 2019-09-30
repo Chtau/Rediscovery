@@ -15,6 +15,12 @@ namespace Rediscovery.Services
 
     public interface IDataStoreGuid<T>
     {
+        bool AddItem(T item);
+        bool UpdateItem(T item);
+        bool DeleteItem(Guid id);
+        T GetItem(Guid id);
+        IEnumerable<T> GetItems(bool forceRefresh = false);
+
         Task<bool> AddItemAsync(T item);
         Task<bool> UpdateItemAsync(T item);
         Task<bool> DeleteItemAsync(Guid id);

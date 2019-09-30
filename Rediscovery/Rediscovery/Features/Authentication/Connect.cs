@@ -36,12 +36,10 @@ namespace Rediscovery.Features.Authentication
                 model.ConnectionState = state;
                 model.LastConnection = DateTime.Now;
                 model.Token = token;
-                //await connectionStore.UpdateItemAsync(model);
-                //HelloReceived?.Invoke(this, model);
                 Task.Run(async () =>
                 {
                     await connectionStore.UpdateItemAsync(model);
-                    //HelloReceived?.Invoke(this, model);
+                    HelloReceived?.Invoke(this, model);
                 });
             });
         }

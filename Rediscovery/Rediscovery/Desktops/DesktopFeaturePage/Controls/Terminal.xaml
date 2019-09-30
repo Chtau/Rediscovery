@@ -17,13 +17,9 @@
         <RowDefinition Height="*" />
         <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
-    <!--HorizontalScrollBarVisibility="Always" VerticalScrollBarVisibility="Always" HorizontalOptions="FillAndExpand" -->
-    <ScrollView Grid.Row="0" Orientation="Horizontal">
-        <!--HorizontalOptions="StartAndExpand" HorizontalOptions="FillAndExpand"-->
-        <StackLayout x:Name="StackLines"  WidthRequest="1400" MinimumHeightRequest="1400"
-                     Orientation="Horizontal" HorizontalOptions="Fill" VerticalOptions="Fill">
-            <!--<Label Text="Test\r\ntest2\r\ntest3\r\ntest4"/>-->
-            <Label MaxLines="1" Text="Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4"/>
+    <ScrollView Grid.Row="0" Orientation="Both" x:Name="scrollView">
+        <StackLayout x:Name="StackLines"  WidthRequest="800" MinimumHeightRequest="800"
+                      HorizontalOptions="Fill" VerticalOptions="Fill">
         </StackLayout>
     </ScrollView>
     <Grid Grid.Row="1">
