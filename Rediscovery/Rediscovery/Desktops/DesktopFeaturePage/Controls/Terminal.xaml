@@ -17,11 +17,13 @@
         <RowDefinition Height="*" />
         <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
-    <ScrollView Grid.Row="0">
-        <StackLayout x:Name="StackLines">
-            <!--<Label Text="{Binding TerminalText, Source={x:Reference this}}"/>-->
-            <!--<Label Text="Test\r\ntest2\r\ntest3\r\ntest4"/>
-            <Label Text="Test\r\ntest2\r\ntest3\r\ntest4"/>-->
+    <!--HorizontalScrollBarVisibility="Always" VerticalScrollBarVisibility="Always" HorizontalOptions="FillAndExpand" -->
+    <ScrollView Grid.Row="0" Orientation="Horizontal">
+        <!--HorizontalOptions="StartAndExpand" HorizontalOptions="FillAndExpand"-->
+        <StackLayout x:Name="StackLines"  WidthRequest="1400" MinimumHeightRequest="1400"
+                     Orientation="Horizontal" HorizontalOptions="Fill" VerticalOptions="Fill">
+            <!--<Label Text="Test\r\ntest2\r\ntest3\r\ntest4"/>-->
+            <Label MaxLines="1" Text="Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4Test\r\ntest2\r\ntest3\r\ntest4"/>
         </StackLayout>
     </ScrollView>
     <Grid Grid.Row="1">

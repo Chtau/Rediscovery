@@ -21,13 +21,21 @@ namespace Rediscovery.Desktops.DesktopFeaturePage.Controls
 
         public void AddLines(params string[] lines)
         {
-            if (lines != null)
+            /*if (lines != null)
             {
                 foreach (var line in lines)
                 {
-                    StackLines.Children.Add(new Label { Text = line });
+                    StackLines.Children.Add(new Label 
+                    { 
+                        Text = line, 
+                        LineBreakMode = LineBreakMode.NoWrap, 
+                        HorizontalOptions = LayoutOptions.FillAndExpand, 
+                        MinimumWidthRequest = 750, 
+                        WidthRequest = 750,
+                        MaxLines = 1
+                    });
                 }
-            }
+            }*/
         }
 
         private void send_Clicked(object sender, EventArgs e)
