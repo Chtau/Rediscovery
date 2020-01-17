@@ -52,6 +52,8 @@ namespace DesktopService
         {
             webBuilder.ConfigureKestrel(serverOptions =>
             {
+                serverOptions.Listen(System.Net.IPAddress.Parse("192.168.1.100"), 44341);
+                serverOptions.ListenLocalhost(44341);
                 serverOptions.ListenAnyIP(44341);
                 serverOptions.ConfigureEndpointDefaults(listenOptions =>
                 {
