@@ -9,15 +9,17 @@ namespace DesktopService.Features.Pipes
     public class PipeRepository : IPipeRepository
     {
         private readonly DAL.IDBContext _dBContext;
+        private readonly DeviceFeature.IFeatureService _featureService;
         private readonly IPCPipe.IPipeResourceProvider _resourceProvider;
         private readonly IPCPipe.IPipeServer _pipeServer;
 
         public PipeRepository(DAL.IDBContext dBContext, IPCPipe.IPipeResourceProvider resourceProvider,
-            IPCPipe.IPipeServer pipeServer)
+            IPCPipe.IPipeServer pipeServer, DeviceFeature.IFeatureService featureService)
         {
             _dBContext = dBContext;
             _resourceProvider = resourceProvider;
             _pipeServer = pipeServer;
+            _featureService = featureService;
         }
 
         public void Init()
@@ -64,6 +66,13 @@ namespace DesktopService.Features.Pipes
                                       AllowAccess = x.AllowAccess,
                                       Name = x.DeviceName
                                   }).ToList();
+                return Newtonsoft.Json.JsonConvert.SerializeObject(resource);
+            } else if (resourceName == "features")
+            {
+                var features = _featureService.GetFeaturesManifest();
+                var resource = new IPCPipe.Models.PipeResource<List<SharedCoreModels.DeviceFeature.DeviceFeature>>();
+                resource.ResourceName = resourceName;
+                resource.Entity = features;
                 return Newtonsoft.Json.JsonConvert.SerializeObject(resource);
             }
             return null;
