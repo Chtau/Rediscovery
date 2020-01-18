@@ -22,6 +22,7 @@ namespace Rediscovery.Features.Authentication
 
         public event EventHandler<Models.Connection> HelloReceived;
         public event EventHandler<Tuple<Models.Connection, List<Models.ConnectionManifestFeature>>> ManifestReceived;
+        public event EventHandler<Models.Connection> ConnectionChanged;
 
         public Connect()
         {
@@ -155,14 +156,30 @@ namespace Rediscovery.Features.Authentication
                 var connection = new HubConnectionBuilder()
                 .WithUrl("http://" + model.LastKnownAddress + "/hubs/connect")
                 .Build();
-                
-                connections.Add(model.Id, connection);
+
                 logger.Message($"try connect to {model.DisplayName} ({DateTime.Now})");
+                await connection.StartAsync();
+                OnHello(connection, model);
+                OnManifest(connection, model);
+
+
+                var tokenConnection = new HubConnectionBuilder()
+                .WithUrl("http://" + model.LastKnownAddress + "/hubs/feature", options =>
+                {
+                    options.AccessTokenProvider = () => Task.FromResult(model.Token);
+                })
+                .Build();
+                connections.Add(model.Id, tokenConnection);
+                logger.Message($"try token connect to {model.DisplayName} ({DateTime.Now})");
                 await connections[model.Id].StartAsync();
-                OnHello(connections[model.Id], model);
-                OnManifest(connections[model.Id], model);
+                ConnectionChanged?.Invoke(this, model);
             }
             return connections[model.Id];
+        }
+
+        public async Task<HubConnection> GetConnection(Models.Connection model)
+        {
+            return await OnGetConnection(model);
         }
     }
 }

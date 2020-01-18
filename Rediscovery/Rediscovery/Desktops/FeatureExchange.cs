@@ -13,18 +13,37 @@ namespace Rediscovery.Desktops
     public class FeatureExchange : IFeatureExchange
     {
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
-        private Dictionary<Guid, HubConnection> connections = new Dictionary<Guid, HubConnection>();
+        private Features.Authentication.IConnect connection => DependencyService.Get<Features.Authentication.IConnect>() ?? new Features.Authentication.Connect();
+        private Connection model;
 
         public event EventHandler<(Guid connectionId, Guid featureId, object data)> DesktopResponseReceived;
 
         public FeatureExchange()
         {
-
+            connection.ConnectionChanged += Connection_ConnectionChanged;
         }
 
-        public async Task Send(Connection model, ConnectionManifestFeature feature, object data)
+        private void Connection_ConnectionChanged(object sender, Connection e)
         {
-            var con = await OnGetConnection(model);
+            if (model != null && e.Id == model.Id)
+            {
+                Init(e).GetAwaiter();
+            }
+        }
+
+        public async Task Init(Connection model)
+        {
+            this.model = model;
+            var con = await connection.GetConnection(this.model);
+            if (con != null)
+            {
+                OnDesktopRespone(con, this.model);
+            }
+        }
+
+        public async Task Send(ConnectionManifestFeature feature, object data)
+        {
+            var con = await connection.GetConnection(this.model);
             if (con != null)
             {
                 logger.Message($"send feature message to {model.DisplayName} ({DateTime.Now})");
@@ -34,50 +53,12 @@ namespace Rediscovery.Desktops
 
         private void OnDesktopRespone(HubConnection con, Connection model)
         {
+            con.Remove("ClientResponse");
             con.On<Guid, object>("ClientResponse", (Guid featureId, object data) =>
             {
                 logger.Message($"Desktop response received from {model.DisplayName} ({DateTime.Now})");
                 DesktopResponseReceived?.Invoke(this, (model.Id, featureId, data));
             });
-        }
-
-        private async Task<HubConnection> OnGetConnection(Connection model)
-        {
-            if (model == null)
-                return null;
-            
-            if (connections.ContainsKey(model.Id))
-            {
-                if (connections[model.Id].State != HubConnectionState.Connected)
-                {
-                    logger.Message($"try connect to {model.DisplayName} ({DateTime.Now})");
-                    await connections[model.Id].StartAsync();
-                }
-            }
-            else
-            {
-                var connection = new HubConnectionBuilder()
-                .WithUrl("http://" + model.LastKnownAddress + "/hubs/feature", options =>
-                {
-                    options.AccessTokenProvider = () => Task.FromResult(model.Token);
-                })
-                .Build();
-
-                connections.Add(model.Id, connection);
-                logger.Message($"try connect to {model.DisplayName} ({DateTime.Now})");
-                await connections[model.Id].StartAsync();
-                OnDesktopRespone(connections[model.Id], model);
-            }
-            return connections[model.Id];
-        }
-
-        public async Task CloseConnections()
-        {
-            foreach (var item in connections)
-            {
-                await item.Value.StopAsync();
-            }
-            connections.Clear();
         }
     }
 }

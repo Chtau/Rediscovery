@@ -21,7 +21,7 @@ namespace Rediscovery.Desktops.DesktopFeaturePage
             InitializeComponent();
 
             BindingContext = viewModel = model;
-
+            featureExchange.Init(model.Connection);
             featureExchange.DesktopResponseReceived += FeatureExchange_DesktopResponseReceived;
             terminal.AddLines("Rediscovery Terminal Version " + model.ConnectionManifestFeature.FeatureVersion);
             terminal.SendCommand += Terminal_SendCommand;
@@ -42,7 +42,7 @@ namespace Rediscovery.Desktops.DesktopFeaturePage
 
         private void Terminal_SendCommand(object sender, string e)
         {
-            featureExchange.Send(viewModel.Connection, viewModel.ConnectionManifestFeature, e);
+            featureExchange.Send(viewModel.ConnectionManifestFeature, e);
         }
 
         private async void Back_Clicked(object sender, EventArgs e)

@@ -9,7 +9,7 @@ namespace Rediscovery.Desktops
     public interface IFeatureExchange
     {
         event EventHandler<(Guid connectionId, Guid featureId, object data)> DesktopResponseReceived;
-        Task Send(Connection model, ConnectionManifestFeature feature, object data);
-        Task CloseConnections();
+        Task Send(ConnectionManifestFeature feature, object data);
+        Task Init(Connection model);
     }
 }
