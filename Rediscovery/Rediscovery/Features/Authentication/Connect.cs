@@ -133,7 +133,7 @@ namespace Rediscovery.Features.Authentication
             }
         }
 
-        private async Task<HubConnection> OnGetConnection(Models.Connection model)
+        private async Task<Tuple<HubConnection, HubConnection>> OnGetConnection(Models.Connection model)
         {
             if (model == null)
                 return null;
