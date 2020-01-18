@@ -141,8 +141,13 @@ namespace Rediscovery.Features.Authentication
             {
                 if (connections[model.Id].State != HubConnectionState.Connected)
                 {
-                    logger.Message($"try connect to {model.DisplayName} ({DateTime.Now})");
-                    await connections[model.Id].StartAsync();
+                    logger.Message($"remove cached connection {model.DisplayName} ({DateTime.Now})");
+                    await connections[model.Id].StopAsync();
+                    connections.Remove(model.Id);
+                    return await OnGetConnection(model);
+                } else
+                {
+                    return connections[model.Id];
                 }
             }
             else
