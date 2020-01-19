@@ -42,6 +42,13 @@ namespace DesktopService.Features.DeviceFeature
                 ResponseToClient(console.GetDeviceFeatureInfo().Id, e);
             };
             deviceFeatureImplementations.Add(console);
+            var vlc = new DesktopFeatureConsole.DeviceFeatureConsole();
+            vlc.SendData += (object sender, DeviceFeatureData e) =>
+            {
+                System.Diagnostics.Debug.Print("Feature response =>" + e.Data);
+                //ResponseToClient(console.GetDeviceFeatureInfo().Id, e);
+            };
+            deviceFeatureImplementations.Add(vlc);
         }
 
         private void ResponseToClient(Guid featureId, DeviceFeatureData data)
