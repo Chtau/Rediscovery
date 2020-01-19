@@ -13,12 +13,16 @@ namespace DesktopHub.Connection
             get { return _viewModel; }
         }
 
-        public IncomingConnection(Connection.Models.IncomingConnectionViewModel viewModel)
+        public IncomingConnection()
         {
             this.InitializeComponent();
 #if DEBUG
             this.AttachDevTools();
 #endif
+        }
+
+        public IncomingConnection(Connection.Models.IncomingConnectionViewModel viewModel) : this()
+        {
             DataContext = _viewModel = viewModel;
         }
 
