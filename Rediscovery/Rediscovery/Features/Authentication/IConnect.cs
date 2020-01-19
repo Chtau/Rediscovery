@@ -15,6 +15,7 @@ namespace Rediscovery.Features.Authentication
         Task<HubConnection> GetConnection(Models.Connection model, Connect.HubTypes hubTypes);
         Task CloseConnections();
         Task ValidateKey(Guid connectionId, string key);
+        bool IsConnected(Models.Connection model, Connect.HubTypes hubType);
         event EventHandler<Models.Connection> HelloReceived;
         event EventHandler<Tuple<Models.Connection, List<Models.ConnectionManifestFeature>>> ManifestReceived;
         event EventHandler<Models.Connection> ConnectionChanged;

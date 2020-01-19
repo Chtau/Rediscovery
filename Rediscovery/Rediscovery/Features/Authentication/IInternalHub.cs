@@ -8,6 +8,7 @@ namespace Rediscovery.Features.Authentication
 {
     public interface IInternalHub
     {
+        bool IsConnected { get; }
         Task<HubConnection> GetConnection(Models.Connection model);
         Task CloseConnections();
         event EventHandler<Models.Connection> ConnectionChanged;

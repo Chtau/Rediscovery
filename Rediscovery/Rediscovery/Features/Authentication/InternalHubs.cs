@@ -19,6 +19,16 @@ namespace Rediscovery.Features.Authentication
 
         public event EventHandler<Models.Connection> ConnectionChanged;
 
+        public bool IsConnected
+        {
+            get
+            {
+                if (connection != null)
+                    return connection.State == HubConnectionState.Connected;
+                return false;
+            }
+        }
+
         public InternalHubs(string hubLink)
         {
             _hubLink = hubLink;
