@@ -10,7 +10,7 @@ using Xamarin.Forms;
 
 namespace Rediscovery.Features.Authentication
 {
-    public class AuthConnectinHub : InternalHubs
+    public class AuthConnectinHub : InternalHubs, IInternalHub
     {
         const string AuthHubLink = "/hubs/connect";
 

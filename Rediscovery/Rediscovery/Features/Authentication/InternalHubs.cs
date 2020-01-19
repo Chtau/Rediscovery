@@ -17,6 +17,8 @@ namespace Rediscovery.Features.Authentication
 
         private HubConnection connection;
 
+        public event EventHandler<Models.Connection> ConnectionChanged;
+
         public InternalHubs(string hubLink)
         {
             _hubLink = hubLink;
@@ -62,6 +64,7 @@ namespace Rediscovery.Features.Authentication
                 }
                 await connection.StartAsync();
                 AfterCreateNewConnection(connection, model);
+                ConnectionChanged?.Invoke(this, model);
             }
             return connection;
         }
