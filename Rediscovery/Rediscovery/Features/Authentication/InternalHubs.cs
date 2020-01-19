@@ -6,25 +6,23 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace Rediscovery.Features.Authentication.Models
+namespace Rediscovery.Features.Authentication
 {
     public abstract class InternalHubs
     {
         const string Protocol = "http://";
 
-        private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
+        internal ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private readonly string _hubLink;
 
         private HubConnection connection;
-
-        public event EventHandler<Models.Connection> ConnectionChanged;
 
         public InternalHubs(string hubLink)
         {
             _hubLink = hubLink;
         }
 
-        public async Task<HubConnection> GetConnection(Models.Connection model, bool shouldUseToken = true)
+        internal async Task<HubConnection> OnGetConnection(Models.Connection model, bool shouldUseToken = true)
         {
             if (model == null)
                 return null;
@@ -37,7 +35,7 @@ namespace Rediscovery.Features.Authentication.Models
                     await connection.StopAsync();
                     await connection.DisposeAsync();
                     connection = null;
-                    return await GetConnection(model);
+                    return await OnGetConnection(model, shouldUseToken);
                 }
                 else
                 {
@@ -64,7 +62,6 @@ namespace Rediscovery.Features.Authentication.Models
                 }
                 await connection.StartAsync();
                 AfterCreateNewConnection(connection, model);
-                ConnectionChanged?.Invoke(this, model);
             }
             return connection;
         }

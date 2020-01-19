@@ -15,8 +15,6 @@ namespace Rediscovery.Features.Authentication
     public class Connect : IConnect
     {
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
-        private IDataStoreGuid<Models.Connection> connectionStore => DependencyService.Get<IDataStoreGuid<Models.Connection>>() ?? new ConnectionStore();
-        private IDataStoreConnectionGuid<Models.ConnectionManifestFeature> connectionManifestFeatureStore => DependencyService.Get<IDataStoreConnectionGuid<Models.ConnectionManifestFeature>>() ?? new ConnectionManifestFeatureStore();
 
         private Dictionary<Guid, HubConnection> connections = new Dictionary<Guid, HubConnection>();
 
@@ -27,52 +25,6 @@ namespace Rediscovery.Features.Authentication
         public Connect()
         {
 
-        }
-
-        private void OnHello(HubConnection con, Models.Connection model)
-        {
-            con.On<Enums.ConnectionState, string>("Hello",(state, token) =>
-            {
-                logger.Message($"hello received from {model.DisplayName} ({DateTime.Now})");
-                model.ConnectionState = state;
-                model.LastConnection = DateTime.Now;
-                model.Token = token;
-                Task.Run(async () =>
-                {
-                    await connectionStore.UpdateItemAsync(model);
-                    HelloReceived?.Invoke(this, model);
-                });
-            });
-        }
-
-        private void OnManifest(HubConnection con, Models.Connection model)
-        {
-            con.On<Manifest>("Manifest",async (manifest) =>
-            {
-                logger.Message($"manifest received from {model.DisplayName} ({DateTime.Now})");
-                model.ManifestAppMinimumVersion = SharedCoreModels.Version.ConvertFrom(manifest.AppMinimumVersion);
-                model.ManifestClientName = manifest.ClientName;
-                model.ManifestClientVersion = SharedCoreModels.Version.ConvertFrom(manifest.ClientVersion);
-                await connectionStore.UpdateItemAsync(model);
-                var features = new List<Models.ConnectionManifestFeature>();
-                foreach (var item in manifest.SupportedFeatures)
-                {
-                    var feature = new Models.ConnectionManifestFeature
-                    {
-                        ConnectionId = model.Id,
-                        FeatureDisplayName = item.DisplayName,
-                        FeatureControlIntegrationPoint = item.ControlIntegrationPoint,
-                        FeatureFeatureIntegrationPoint = item.FeatureIntegrationPoint,
-                        FeatureId = item.Id,
-                        FeatureMinControlIntegrationPoint = SharedCoreModels.Version.ConvertFrom(item.MinControlIntegrationPoint),
-                        FeatureMinFeatureIntegrationPoint = SharedCoreModels.Version.ConvertFrom(item.MinFeatureIntegrationPoint),
-                        FeatureVersion = SharedCoreModels.Version.ConvertFrom(item.Version),
-                    };
-                    await connectionManifestFeatureStore.AddItemAsync(feature);
-                    features.Add(feature);
-                }
-                ManifestReceived?.Invoke(this, new Tuple<Models.Connection, List<Models.ConnectionManifestFeature>>(model, features));
-            });
         }
 
         public async Task TryConnect(Guid connectionId)
