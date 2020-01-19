@@ -69,7 +69,7 @@ namespace Rediscovery.Features.Authentication
             try
             {
                 var model = await connectionStore.GetItemAsync(connectionId);
-                var con = await OnGetHubConnection(OnGetHub(model, HubTypes.Auth), model);
+                var con = await OnGetHubConnection(await OnGetHub(model, HubTypes.Auth), model);
                 if (con != null)
                 {
                     logger.Message($"Send key verify to {model.DisplayName} ({DateTime.Now})");
@@ -84,7 +84,7 @@ namespace Rediscovery.Features.Authentication
 
         public async Task<HubConnection> GetConnection(Models.Connection model, HubTypes hubTypes)
         {
-            return await OnGetHubConnection(OnGetHub(model, hubTypes), model);
+            return await OnGetHubConnection(await OnGetHub(model, hubTypes), model);
         }
 
 
@@ -92,11 +92,16 @@ namespace Rediscovery.Features.Authentication
         {
             try
             {
-                var con = await OnGetHubConnection(OnGetHub(model, HubTypes.Auth), model);
+                var con = await OnGetHubConnection(await OnGetHub(model, HubTypes.Auth), model);
                 if (con != null)
                 {
                     logger.Message($"send welcome to {model.DisplayName} ({DateTime.Now})");
                     await con.InvokeAsync("Welcome", model.User);
+                    if (featureHubs.ContainsKey(model.Id))
+                    {
+                        await featureHubs[model.Id].CloseConnections();
+                        featureHubs.Remove(model.Id);
+                    }
                 }
             } catch (Exception ex)
             {
@@ -104,7 +109,7 @@ namespace Rediscovery.Features.Authentication
             }
         }
 
-        private IInternalHub OnGetHub(Models.Connection model, HubTypes hubTypes)
+        private async Task<IInternalHub> OnGetHub(Models.Connection model, HubTypes hubTypes)
         {
             if (model == null)
                 return null;
@@ -118,6 +123,11 @@ namespace Rediscovery.Features.Authentication
                         authHub.HelloReceived += HelloReceived;
                         authHub.ManifestReceived += ManifestReceived;
                         authHubs.Add(model.Id, authHub);
+                        if (featureHubs.ContainsKey(model.Id))
+                        {
+                            await featureHubs[model.Id].CloseConnections();
+                            featureHubs.Remove(model.Id);
+                        }
                     }
                     return authHubs[model.Id];
                 case HubTypes.Feature:
@@ -135,11 +145,13 @@ namespace Rediscovery.Features.Authentication
         private void FeatureHub_ConnectionChanged(object sender, Models.Connection e)
         {
             System.Diagnostics.Debug.Print($"FeatureHub_ConnectionChanged {e.LastKnownAddress}" + Environment.NewLine);
+            ConnectionChanged?.Invoke(this, e);
         }
 
         private void AuthHub_ConnectionChanged(object sender, Models.Connection e)
         {
             System.Diagnostics.Debug.Print($"AuthHub_ConnectionChanged {e.LastKnownAddress}" + Environment.NewLine);
+            ConnectionChanged?.Invoke(this, e);
         }
 
         private async Task<HubConnection> OnGetHubConnection(IInternalHub internalHub, Models.Connection model)
