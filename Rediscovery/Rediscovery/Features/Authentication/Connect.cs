@@ -14,9 +14,17 @@ namespace Rediscovery.Features.Authentication
 {
     public class Connect : IConnect
     {
-        private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
+        public enum HubTypes
+        {
+            Auth,
+            Feature,
+        }
 
-        private Dictionary<Guid, HubConnection> connections = new Dictionary<Guid, HubConnection>();
+        private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
+        private IDataStoreGuid<Models.Connection> connectionStore => DependencyService.Get<IDataStoreGuid<Models.Connection>>() ?? new ConnectionStore();
+
+        private Dictionary<Guid, IInternalHub> authHubs = new Dictionary<Guid, IInternalHub>();
+        private Dictionary<Guid, IInternalHub> featureHubs = new Dictionary<Guid, IInternalHub>();
 
         public event EventHandler<Models.Connection> HelloReceived;
         public event EventHandler<Tuple<Models.Connection, List<Models.ConnectionManifestFeature>>> ManifestReceived;
@@ -33,22 +41,6 @@ namespace Rediscovery.Features.Authentication
             await OnTryConnect(model);
         }
 
-        private async Task OnTryConnect(Models.Connection model)
-        {
-            try
-            {
-                var con = await OnGetConnection(model);
-                if (con != null)
-                {
-                    logger.Message($"send welcome to {model.DisplayName} ({DateTime.Now})");
-                    await con.InvokeAsync("Welcome", model.User);
-                }
-            } catch (Exception ex)
-            {
-                logger.Error(ex);
-            }
-        }
-
         public async Task AutoConnect()
         {
             var models = await connectionStore.GetItemsAsync();
@@ -60,11 +52,16 @@ namespace Rediscovery.Features.Authentication
 
         public async Task CloseConnections()
         {
-            foreach (var item in connections)
+            foreach (var item in authHubs)
             {
-                await item.Value.StopAsync();
+                await item.Value.CloseConnections();
             }
-            connections.Clear();
+            foreach (var item in featureHubs)
+            {
+                await item.Value.CloseConnections();
+            }
+            authHubs.Clear();
+            featureHubs.Clear();
         }
 
         public async Task ValidateKey(Guid connectionId, string key)
@@ -72,10 +69,10 @@ namespace Rediscovery.Features.Authentication
             try
             {
                 var model = await connectionStore.GetItemAsync(connectionId);
-                var con = await OnGetConnection(model);
+                var con = await OnGetHubConnection(OnGetHub(model, HubTypes.Auth), model);
                 if (con != null)
                 {
-                    logger.Message($"send key verify to {model.DisplayName} ({DateTime.Now})");
+                    logger.Message($"Send key verify to {model.DisplayName} ({DateTime.Now})");
                     await con.InvokeAsync("AuthorizeKey", model.User, key);
                 }
             }
@@ -85,53 +82,71 @@ namespace Rediscovery.Features.Authentication
             }
         }
 
-        private async Task<Tuple<HubConnection, HubConnection>> OnGetConnection(Models.Connection model)
+        public async Task<HubConnection> GetConnection(Models.Connection model, HubTypes hubTypes)
+        {
+            return await OnGetHubConnection(OnGetHub(model, hubTypes), model);
+        }
+
+
+        private async Task OnTryConnect(Models.Connection model)
+        {
+            try
+            {
+                var con = await OnGetHubConnection(OnGetHub(model, HubTypes.Auth), model);
+                if (con != null)
+                {
+                    logger.Message($"send welcome to {model.DisplayName} ({DateTime.Now})");
+                    await con.InvokeAsync("Welcome", model.User);
+                }
+            } catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+        }
+
+        private IInternalHub OnGetHub(Models.Connection model, HubTypes hubTypes)
         {
             if (model == null)
                 return null;
-
-            if (connections.ContainsKey(model.Id))
+            switch (hubTypes)
             {
-                if (connections[model.Id].State != HubConnectionState.Connected)
-                {
-                    logger.Message($"remove cached connection {model.DisplayName} ({DateTime.Now})");
-                    await connections[model.Id].StopAsync();
-                    connections.Remove(model.Id);
-                    return await OnGetConnection(model);
-                } else
-                {
-                    return connections[model.Id];
-                }
+                case HubTypes.Auth:
+                    if (!authHubs.ContainsKey(model.Id))
+                    {
+                        var authHub = new AuthConnectinHub();
+                        authHub.ConnectionChanged += AuthHub_ConnectionChanged;
+                        authHub.HelloReceived += HelloReceived;
+                        authHub.ManifestReceived += ManifestReceived;
+                        authHubs.Add(model.Id, authHub);
+                    }
+                    return authHubs[model.Id];
+                case HubTypes.Feature:
+                    if (!featureHubs.ContainsKey(model.Id))
+                    {
+                        var featureHub = new FeaturesConnectionHub();
+                        featureHub.ConnectionChanged += FeatureHub_ConnectionChanged;
+                        featureHubs.Add(model.Id, featureHub);
+                    }
+                    return featureHubs[model.Id];
             }
-            else
-            {
-                var connection = new HubConnectionBuilder()
-                .WithUrl("http://" + model.LastKnownAddress + "/hubs/connect")
-                .Build();
-
-                logger.Message($"try connect to {model.DisplayName} ({DateTime.Now})");
-                await connection.StartAsync();
-                OnHello(connection, model);
-                OnManifest(connection, model);
-
-
-                var tokenConnection = new HubConnectionBuilder()
-                .WithUrl("http://" + model.LastKnownAddress + "/hubs/feature", options =>
-                {
-                    options.AccessTokenProvider = () => Task.FromResult(model.Token);
-                })
-                .Build();
-                connections.Add(model.Id, tokenConnection);
-                logger.Message($"try token connect to {model.DisplayName} ({DateTime.Now})");
-                await connections[model.Id].StartAsync();
-                ConnectionChanged?.Invoke(this, model);
-            }
-            return connections[model.Id];
+            return null;
         }
 
-        public async Task<HubConnection> GetConnection(Models.Connection model)
+        private void FeatureHub_ConnectionChanged(object sender, Models.Connection e)
         {
-            return await OnGetConnection(model);
+            System.Diagnostics.Debug.Print($"FeatureHub_ConnectionChanged {e.LastKnownAddress}" + Environment.NewLine);
+        }
+
+        private void AuthHub_ConnectionChanged(object sender, Models.Connection e)
+        {
+            System.Diagnostics.Debug.Print($"AuthHub_ConnectionChanged {e.LastKnownAddress}" + Environment.NewLine);
+        }
+
+        private async Task<HubConnection> OnGetHubConnection(IInternalHub internalHub, Models.Connection model)
+        {
+            if (internalHub == null)
+                return null;
+            return await internalHub.GetConnection(model);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Rediscovery.Features.Authentication
     {
         Task AutoConnect();
         Task TryConnect(Guid connectionId);
-        Task<HubConnection> GetConnection(Models.Connection model);
+        Task<HubConnection> GetConnection(Models.Connection model, Connect.HubTypes hubTypes);
         Task CloseConnections();
         Task ValidateKey(Guid connectionId, string key);
         event EventHandler<Models.Connection> HelloReceived;

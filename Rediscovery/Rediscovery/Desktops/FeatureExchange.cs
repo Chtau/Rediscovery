@@ -34,7 +34,7 @@ namespace Rediscovery.Desktops
         public async Task Init(Connection model)
         {
             this.model = model;
-            var con = await connection.GetConnection(this.model);
+            var con = await connection.GetConnection(this.model, Features.Authentication.Connect.HubTypes.Feature);
             if (con != null)
             {
                 OnDesktopRespone(con, this.model);
@@ -43,7 +43,7 @@ namespace Rediscovery.Desktops
 
         public async Task Send(ConnectionManifestFeature feature, object data)
         {
-            var con = await connection.GetConnection(this.model);
+            var con = await connection.GetConnection(this.model, Features.Authentication.Connect.HubTypes.Feature);
             if (con != null)
             {
                 logger.Message($"send feature message to {model.DisplayName} ({DateTime.Now})");

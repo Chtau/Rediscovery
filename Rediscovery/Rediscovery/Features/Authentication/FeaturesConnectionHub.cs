@@ -17,7 +17,7 @@ namespace Rediscovery.Features.Authentication
 
         public async Task<HubConnection> GetConnection(Models.Connection model)
         {
-            return await base.OnGetConnection(model, false);
+            return await base.OnGetConnection(model, true);
         }
     }
 }
