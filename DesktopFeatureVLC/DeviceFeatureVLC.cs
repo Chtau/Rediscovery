@@ -5,14 +5,18 @@ namespace DesktopFeatureVLC
 {
     public class DeviceFeatureVLC : IDeviceFeatureImplementation
     {
+        // TODO: we should send key combinations to programs instead build a specific library
+
         private DeviceFeatureData currentDeviceFeatureData;
         private VLC vLC;
+        private VLCRemote VLCRemote;
 
         public event EventHandler<DeviceFeatureData> SendData;
 
         public DeviceFeatureVLC()
         {
-            vLC = new VLC();
+            //vLC = new VLC();
+            VLCRemote = new VLCRemote();
         }
 
         public void Dispose()
@@ -36,7 +40,8 @@ namespace DesktopFeatureVLC
 
         public void Init()
         {
-            vLC.Start();
+            VLCRemote.Play();
+            //vLC.Start();
         }
 
         public void ReceiveData(DeviceFeatureData data)
