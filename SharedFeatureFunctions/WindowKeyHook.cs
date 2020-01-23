@@ -10,6 +10,7 @@ namespace SharedFeatureFunctions
         // Resources
         // https://msdn.microsoft.com/en-us/vstudio/ms646360(v=vs.96)
         // https://msdn.microsoft.com/en-us/vstudio/ms646280(v=vs.96)
+        // https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-syskeydown?redirectedfrom=MSDN
 
         //
         // Summary:
@@ -857,12 +858,17 @@ namespace SharedFeatureFunctions
         [DllImport("user32.dll")]
         internal static extern IntPtr PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
-        public static void SendKeystroke(IntPtr windowHandle, Keys key, bool keyUp = false)
+        public static void SendKeystroke(IntPtr windowHandle, Keys key, bool keyUp = false, bool altKey = false, bool sendExtendedKey = false)
         {
             Command command = Command.WM_KEYDOWN;
             if (keyUp)
                 command = Command.WM_KEYUP;
-            IntPtr result = SendMessage(windowHandle, (uint)command, (IntPtr)key, (IntPtr)0);
+            int lParam = 0;
+            if (altKey)
+                lParam = (0x01 << 28);
+            if (sendExtendedKey)
+                lParam = (0x01 << 24);
+            IntPtr result = SendMessage(windowHandle, (uint)command, (IntPtr)key, (IntPtr)lParam);
         }
     }
 }

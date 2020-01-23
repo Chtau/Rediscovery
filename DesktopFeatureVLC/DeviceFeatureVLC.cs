@@ -38,7 +38,8 @@ namespace DesktopFeatureVLC
 
         public void Init()
         {
-            vLC.Start();
+            vLC.VolumneUp();
+            //vLC.PlayPause();
         }
 
         public void ReceiveData(DeviceFeatureData data)
