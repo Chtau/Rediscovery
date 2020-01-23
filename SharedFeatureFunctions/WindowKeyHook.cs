@@ -7,6 +7,10 @@ namespace SharedFeatureFunctions
 {
     public static class WindowKeyHook
     {
+        // Resources
+        // https://msdn.microsoft.com/en-us/vstudio/ms646360(v=vs.96)
+        // https://msdn.microsoft.com/en-us/vstudio/ms646280(v=vs.96)
+
         //
         // Summary:
         //     Specifies key codes and modifiers.
@@ -793,20 +797,72 @@ namespace SharedFeatureFunctions
             Alt = 262144
         }
 
-        [DllImport("user32.dll")]
-        public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
-        [DllImport("user32.dll")]
-        public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
-        [DllImport("user32.dll")]
-        public static extern IntPtr PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
-
-        public static void SendKeystroke(IntPtr windowHandle, Keys key)
+        [Flags]
+        public enum Command
         {
-            const uint WM_KEYDOWN = 0x100;
-            const uint WM_SYSCOMMAND = 0x018;
-            const uint SC_CLOSE = 0x053;
+            WM_KEYDOWN = 0x100,
+            WM_KEYUP = 0x101,
+            WM_SYSCOMMAND = 0x0112,
+            //WM_SYSCOMMAND = 0x018,
+            //SC_CLOSE = 0x053
+        }
 
-            IntPtr result = SendMessage(windowHandle, WM_KEYDOWN, (IntPtr)key, (IntPtr)0);
+        [Flags]
+        public enum SystemCommand
+        {
+            // Closes the window.
+            SC_CLOSE = 0xF060,
+            // Changes the cursor to a question mark with a pointer. If the user then clicks a control in the dialog box, the control receives a WM_HELP message.
+            SC_CONTEXTHELP = 0xF180,
+            // Selects the default item; the user double-clicked the window menu.
+            SC_DEFAULT = 0xF160,
+            // Activates the window associated with the application-specified hot key. The lParam parameter identifies the window to activate.
+            SC_HOTKEY = 0xF150,
+            // Scrolls horizontally.
+            SC_HSCROLL = 0xF080,
+            // Indicates whether the screen saver is secure.
+            SCF_ISSECURE = 0x00000001,
+            // Retrieves the window menu as a result of a keystroke. For more information, see the Remarks section.
+            SC_KEYMENU = 0xF100,
+            // Maximizes the window.
+            SC_MAXIMIZE = 0xF030,
+            // Minimizes the window.
+            SC_MINIMIZE = 0xF020,
+            // The lParam parameter can have the following values: -1 (the display is powering on) 1 (the display is going to low power) 2 (the display is being shut off)
+            SC_MONITORPOWER = 0xF170,
+            // Retrieves the window menu as a result of a mouse click.
+            SC_MOUSEMENU = 0xF090,
+            // Moves the window.
+            SC_MOVE = 0xF010,
+            // Moves to the next window.
+            SC_NEXTWINDOW = 0xF040,
+            // Moves to the previous window.
+            SC_PREVWINDOW = 0xF050,
+            // Restores the window to its normal position and size.
+            SC_RESTORE = 0xF120,
+            // Executes the screen saver application specified in the [boot] section of the System.ini file.
+            SC_SCREENSAVE = 0xF140,
+            // Sizes the window.
+            SC_SIZE = 0xF000,
+            // Activates the Start menu.
+            SC_TASKLIST = 0xF130,
+            // Scrolls vertically.
+            SC_VSCROLL = 0xF070,
+        }
+
+        [DllImport("user32.dll")]
+        internal static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+        [DllImport("user32.dll")]
+        internal static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+        [DllImport("user32.dll")]
+        internal static extern IntPtr PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+        public static void SendKeystroke(IntPtr windowHandle, Keys key, bool keyUp = false)
+        {
+            Command command = Command.WM_KEYDOWN;
+            if (keyUp)
+                command = Command.WM_KEYUP;
+            IntPtr result = SendMessage(windowHandle, (uint)command, (IntPtr)key, (IntPtr)0);
         }
     }
 }
