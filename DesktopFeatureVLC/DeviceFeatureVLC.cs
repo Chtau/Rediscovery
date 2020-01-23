@@ -9,14 +9,12 @@ namespace DesktopFeatureVLC
 
         private DeviceFeatureData currentDeviceFeatureData;
         private VLC vLC;
-        private VLCRemote VLCRemote;
 
         public event EventHandler<DeviceFeatureData> SendData;
 
         public DeviceFeatureVLC()
         {
             vLC = new VLC();
-            //VLCRemote = new VLCRemote();
         }
 
         public void Dispose()
@@ -40,7 +38,6 @@ namespace DesktopFeatureVLC
 
         public void Init()
         {
-            //VLCRemote.Play();
             vLC.Start();
         }
 
