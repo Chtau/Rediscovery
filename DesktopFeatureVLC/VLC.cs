@@ -79,7 +79,11 @@ namespace DesktopFeatureVLC
 
         public void Start()
         {
-            IntPtr hWnd = FindWindow("WindowClass", "WindowName");
+            var processes = Process.GetProcesses();
+            Process myProcess = processes.FirstOrDefault(p => p.ProcessName == "vlc");
+            SharedFeatureFunctions.WindowKeyHook.SendKeystroke(myProcess.MainWindowHandle, SharedFeatureFunctions.WindowKeyHook.Keys.Space);
+
+            /*IntPtr hWnd = FindWindow("WindowClass", "WindowName");
             if (hWnd.ToInt32() != 0)
             {
                 IntPtr hMenu = GetMenu(hWnd);
@@ -92,7 +96,7 @@ namespace DesktopFeatureVLC
                         //DeleteMenu(hMenu, i, MF_BYPOSITION);
                     }
                 }
-            }
+            }*/
 
             /*var processes = Process.GetProcesses();
             Process myProcess = processes.FirstOrDefault(p => p.ProcessName == "vlc");
@@ -107,66 +111,66 @@ namespace DesktopFeatureVLC
                 }
             }*/
 
-                /*using (var libVLC = new LibVLC())
+            /*using (var libVLC = new LibVLC())
+            {
+                var media = new Media(libVLC, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", FromType.FromLocation);
+                media.Parse(MediaParseOptions.ParseNetwork).GetAwaiter();
+                using (var mp = new MediaPlayer(media.SubItems.First()))
                 {
-                    var media = new Media(libVLC, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", FromType.FromLocation);
-                    media.Parse(MediaParseOptions.ParseNetwork).GetAwaiter();
-                    using (var mp = new MediaPlayer(media.SubItems.First()))
-                    {
-                        var r = mp.Play();
-                        Console.ReadKey();
-                    }
-                }*/
+                    var r = mp.Play();
+                    Console.ReadKey();
+                }
+            }*/
 
-                /*SetDllDirectory(@"C:\Program Files (x86)\VideoLAN\VLC");
+            /*SetDllDirectory(@"C:\Program Files (x86)\VideoLAN\VLC");
 
-                var processes = Process.GetProcesses();
-                Process myProcess = processes.FirstOrDefault(p => p.ProcessName == "vlc");
-                if (myProcess != null)
-                    LibVLCMediaPlayerSetPause(myProcess.Handle, true);
+            var processes = Process.GetProcesses();
+            Process myProcess = processes.FirstOrDefault(p => p.ProcessName == "vlc");
+            if (myProcess != null)
+                LibVLCMediaPlayerSetPause(myProcess.Handle, true);
 
-                return;*/
-                /*var libDirectory = new DirectoryInfo(Path.Combine(GetApplicationFolder(), "libvlc", IntPtr.Size == 4 ? "win-x86" : "win-x64"));
+            return;*/
+            /*var libDirectory = new DirectoryInfo(Path.Combine(GetApplicationFolder(), "libvlc", IntPtr.Size == 4 ? "win-x86" : "win-x64"));
 
-                var options = new string[]
-                {
-                    // VLC options can be given here. Please refer to the VLC command line documentation.
-                };
+            var options = new string[]
+            {
+                // VLC options can be given here. Please refer to the VLC command line documentation.
+            };
 
-                var mediaPlayer = new Vlc.DotNet.Core.VlcMediaPlayer(libDirectory);
+            var mediaPlayer = new Vlc.DotNet.Core.VlcMediaPlayer(libDirectory);
 
-                var mediaOptions = new string[]
-                {
-                    ":sout=#file{dst="+Path.Combine(Environment.CurrentDirectory, "output.mov")+"}",
-                    ":sout-keep"
-                };
+            var mediaOptions = new string[]
+            {
+                ":sout=#file{dst="+Path.Combine(Environment.CurrentDirectory, "output.mov")+"}",
+                ":sout-keep"
+            };
 
-                //mediaPlayer.SetMedia(new Uri("http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov"), mediaOptions);
-                mediaPlayer.SetMedia(new Uri(@"C:\DEV\Code\Workspaces\Repos\Rediscovery\DesktopFeatureTestApp\bin\x64\Debug\netcoreapp3.1\Ashley O – On a Roll _ Official Music Video (2019-06-13).mp4"));
-                mediaPlayer.Play();
-                bool playFinished = false;
-                mediaPlayer.PositionChanged += (sender, e) =>
-                {
-                    Console.Write("\r" + Math.Floor(e.NewPosition * 100) + "%");
-                };
+            //mediaPlayer.SetMedia(new Uri("http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov"), mediaOptions);
+            mediaPlayer.SetMedia(new Uri(@"C:\DEV\Code\Workspaces\Repos\Rediscovery\DesktopFeatureTestApp\bin\x64\Debug\netcoreapp3.1\Ashley O – On a Roll _ Official Music Video (2019-06-13).mp4"));
+            mediaPlayer.Play();
+            bool playFinished = false;
+            mediaPlayer.PositionChanged += (sender, e) =>
+            {
+                Console.Write("\r" + Math.Floor(e.NewPosition * 100) + "%");
+            };
 
-                mediaPlayer.EncounteredError += (sender, e) =>
-                {
-                    Console.Error.Write("An error occurred");
-                    playFinished = true;
-                };
+            mediaPlayer.EncounteredError += (sender, e) =>
+            {
+                Console.Error.Write("An error occurred");
+                playFinished = true;
+            };
 
-                mediaPlayer.EndReached += (sender, e) => {
-                    playFinished = true;
-                };
+            mediaPlayer.EndReached += (sender, e) => {
+                playFinished = true;
+            };
 
-                mediaPlayer.Play();
+            mediaPlayer.Play();
 
-                // Ugly, sorry, that's just an example...
-                while (!playFinished)
-                {
-                    Thread.Sleep(TimeSpan.FromMilliseconds(500));
-                }*/
-            }
+            // Ugly, sorry, that's just an example...
+            while (!playFinished)
+            {
+                Thread.Sleep(TimeSpan.FromMilliseconds(500));
+            }*/
+        }
     }
 }
