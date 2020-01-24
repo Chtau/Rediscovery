@@ -878,16 +878,25 @@ namespace SharedFeatureFunctions
         public static void Test(IntPtr windowHandle)
         {
             SetForegroundWindow(windowHandle);
+            WindowSendInput.SendKeyDown(KeyCode.CONTROL);
+            WindowSendInput.SendKeyPress(KeyCode.UP);
+            WindowSendInput.SendKeyUp(KeyCode.CONTROL);
 
+            /*System.Threading.Thread.Sleep(500);
             PostMessage(windowHandle, (uint)Command.WM_KEYDOWN, (IntPtr)0x00000011, (IntPtr)0x001D0001);
+            System.Threading.Thread.Sleep(500);
             PostMessage(windowHandle, (uint)Command.WM_KEYDOWN, (IntPtr)0x00000026, (IntPtr)0x01480001);
             PostMessage(windowHandle, (uint)Command.WM_KEYUP, (IntPtr)0x00000026, (IntPtr)0xC1480001);
-            PostMessage(windowHandle, (uint)Command.WM_KEYUP, (IntPtr)0x00000011, (IntPtr)0xC01D0001);
+            System.Threading.Thread.Sleep(500);
+            PostMessage(windowHandle, (uint)Command.WM_KEYDOWN, (IntPtr)0x00000026, (IntPtr)0x01480001);
+            PostMessage(windowHandle, (uint)Command.WM_KEYUP, (IntPtr)0x00000026, (IntPtr)0xC1480001);
+            System.Threading.Thread.Sleep(500);
+            PostMessage(windowHandle, (uint)Command.WM_KEYUP, (IntPtr)0x00000011, (IntPtr)0xC01D0001);*/
 
-            /*SendMessage(windowHandle, (uint)Command.WM_KEYDOWN, (IntPtr)Keys.ShiftKey, (IntPtr)0);
+            /*SendMessage(windowHandle, (uint)Command.WM_KEYDOWN, (IntPtr)Keys.ControlKey, (IntPtr)0);
             SendMessage(windowHandle, (uint)Command.WM_KEYDOWN, (IntPtr)Keys.Up, (IntPtr)0);
             SendMessage(windowHandle, (uint)Command.WM_KEYUP, (IntPtr)Keys.Up, (IntPtr)0);
-            SendMessage(windowHandle, (uint)Command.WM_KEYUP, (IntPtr)Keys.ShiftKey, (IntPtr)0);*/
+            SendMessage(windowHandle, (uint)Command.WM_KEYUP, (IntPtr)Keys.ControlKey, (IntPtr)0);*/
         }
     }
 }
