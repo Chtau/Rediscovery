@@ -39,6 +39,8 @@ namespace DesktopFeatureVLC
         public void Init()
         {
             vLC.VolumneUp();
+            //vLC.VolumneUp();
+            //vLC.VolumneUp();
             //vLC.PlayPause();
         }
 

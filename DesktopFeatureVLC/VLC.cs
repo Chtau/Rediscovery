@@ -29,7 +29,14 @@ namespace DesktopFeatureVLC
 
         public bool VolumneUp()
         {
-            return OnSendKeystrokeMultiDown(SharedFeatureFunctions.WindowKeyHook.Keys.Control, SharedFeatureFunctions.WindowKeyHook.Keys.Up);
+            var prc = OnGetProcess();
+            if (prc != null)
+            {
+                SharedFeatureFunctions.WindowKeyHook.Test(prc.MainWindowHandle);
+                return true;
+            }
+            return false;
+            //return OnSendKeystrokeMultiDown(SharedFeatureFunctions.WindowKeyHook.Keys.Control, SharedFeatureFunctions.WindowKeyHook.Keys.Up);
         }
 
         public bool Mute()

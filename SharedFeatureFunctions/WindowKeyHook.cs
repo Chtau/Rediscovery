@@ -858,6 +858,10 @@ namespace SharedFeatureFunctions
         [DllImport("user32.dll")]
         internal static extern IntPtr PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool SetForegroundWindow(IntPtr hWnd);
+
         public static void SendKeystroke(IntPtr windowHandle, Keys key, bool keyUp = false, bool altKey = false, bool sendExtendedKey = false)
         {
             Command command = Command.WM_KEYDOWN;
@@ -869,6 +873,21 @@ namespace SharedFeatureFunctions
             if (sendExtendedKey)
                 lParam = (0x01 << 24);
             IntPtr result = SendMessage(windowHandle, (uint)command, (IntPtr)key, (IntPtr)lParam);
+        }
+
+        public static void Test(IntPtr windowHandle)
+        {
+            SetForegroundWindow(windowHandle);
+
+            PostMessage(windowHandle, (uint)Command.WM_KEYDOWN, (IntPtr)0x00000011, (IntPtr)0x001D0001);
+            PostMessage(windowHandle, (uint)Command.WM_KEYDOWN, (IntPtr)0x00000026, (IntPtr)0x01480001);
+            PostMessage(windowHandle, (uint)Command.WM_KEYUP, (IntPtr)0x00000026, (IntPtr)0xC1480001);
+            PostMessage(windowHandle, (uint)Command.WM_KEYUP, (IntPtr)0x00000011, (IntPtr)0xC01D0001);
+
+            /*SendMessage(windowHandle, (uint)Command.WM_KEYDOWN, (IntPtr)Keys.ShiftKey, (IntPtr)0);
+            SendMessage(windowHandle, (uint)Command.WM_KEYDOWN, (IntPtr)Keys.Up, (IntPtr)0);
+            SendMessage(windowHandle, (uint)Command.WM_KEYUP, (IntPtr)Keys.Up, (IntPtr)0);
+            SendMessage(windowHandle, (uint)Command.WM_KEYUP, (IntPtr)Keys.ShiftKey, (IntPtr)0);*/
         }
     }
 }
