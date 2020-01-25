@@ -22,6 +22,26 @@ namespace DesktopFeatureVLC
             }
         }
 
+        public bool JumpBackward()
+        {
+            return OnSendKeystroke(SharedFeatureFunctions.RemoteProcessKeyCodes.KeyCode.LEFT, false, true);
+        }
+
+        public bool JumpForward()
+        {
+            return OnSendKeystroke(SharedFeatureFunctions.RemoteProcessKeyCodes.KeyCode.RIGHT, false, true);
+        }
+
+        public bool SpeedFaster()
+        {
+            return OnSendKeystroke(SharedFeatureFunctions.RemoteProcessKeyCodes.KeyCode.OEM_PLUS);
+        }
+
+        public bool SpeedSlower()
+        {
+            return OnSendKeystroke(SharedFeatureFunctions.RemoteProcessKeyCodes.KeyCode.OEM_MINUS);
+        }
+
         public bool VolumneDown()
         {
             return OnSendKeystroke(SharedFeatureFunctions.RemoteProcessKeyCodes.KeyCode.DOWN, false, true);
