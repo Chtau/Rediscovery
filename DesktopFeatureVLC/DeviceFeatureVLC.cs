@@ -5,8 +5,6 @@ namespace DesktopFeatureVLC
 {
     public class DeviceFeatureVLC : IDeviceFeatureImplementation
     {
-        // TODO: we should send key combinations to programs instead build a specific library
-
         private DeviceFeatureData currentDeviceFeatureData;
         private VLC vLC;
 
@@ -38,7 +36,7 @@ namespace DesktopFeatureVLC
 
         public void Init()
         {
-            vLC.VolumneUp();
+            //vLC.VolumneUp();
             //vLC.VolumneUp();
             //vLC.VolumneUp();
             //vLC.PlayPause();
@@ -49,6 +47,59 @@ namespace DesktopFeatureVLC
             if (data != null && !string.IsNullOrWhiteSpace(data.Data?.ToString()))
             {
                 currentDeviceFeatureData = data;
+                if (currentDeviceFeatureData.Data is SharedCoreModels.FeatureModels.VLC.VLCCommandModel commandModel && commandModel != null)
+                {
+                    OnHandleCommand(commandModel);
+                } else
+                {
+                    System.Diagnostics.Debug.Fail("VLC: Unknown object from Data received");
+                }
+            }
+        }
+
+        private void OnHandleCommand(SharedCoreModels.FeatureModels.VLC.VLCCommandModel model)
+        {
+            switch (model.Command)
+            {
+                case SharedCoreModels.FeatureModels.VLC.VLCCommandModel.CommandTypes.PlayPause:
+                    vLC.PlayPause();
+                    break;
+                case SharedCoreModels.FeatureModels.VLC.VLCCommandModel.CommandTypes.FullscreenExit:
+                    vLC.FullscreenExit();
+                    break;
+                case SharedCoreModels.FeatureModels.VLC.VLCCommandModel.CommandTypes.Fullscreen:
+                    vLC.Fullscreen();
+                    break;
+                case SharedCoreModels.FeatureModels.VLC.VLCCommandModel.CommandTypes.Next:
+                    vLC.Next();
+                    break;
+                case SharedCoreModels.FeatureModels.VLC.VLCCommandModel.CommandTypes.Previous:
+                    vLC.Previous();
+                    break;
+                case SharedCoreModels.FeatureModels.VLC.VLCCommandModel.CommandTypes.Stop:
+                    vLC.Stop();
+                    break;
+                case SharedCoreModels.FeatureModels.VLC.VLCCommandModel.CommandTypes.Mute:
+                    vLC.Mute();
+                    break;
+                case SharedCoreModels.FeatureModels.VLC.VLCCommandModel.CommandTypes.VolumneUp:
+                    vLC.VolumneUp();
+                    break;
+                case SharedCoreModels.FeatureModels.VLC.VLCCommandModel.CommandTypes.VolumneDown:
+                    vLC.VolumneDown();
+                    break;
+                case SharedCoreModels.FeatureModels.VLC.VLCCommandModel.CommandTypes.SpeedSlower:
+                    vLC.SpeedSlower();
+                    break;
+                case SharedCoreModels.FeatureModels.VLC.VLCCommandModel.CommandTypes.SpeedFaster:
+                    vLC.SpeedFaster();
+                    break;
+                case SharedCoreModels.FeatureModels.VLC.VLCCommandModel.CommandTypes.JumpForward:
+                    vLC.JumpForward();
+                    break;
+                case SharedCoreModels.FeatureModels.VLC.VLCCommandModel.CommandTypes.JumpBackward:
+                    vLC.JumpBackward();
+                    break;
             }
         }
     }
