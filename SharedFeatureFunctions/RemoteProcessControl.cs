@@ -14,7 +14,7 @@ namespace SharedFeatureFunctions
                 WindowSendInput.SendKeyDown(RemoteProcessKeyCodes.KeyCode.ALT);
             if (controlKeyPressed)
                 WindowSendInput.SendKeyDown(RemoteProcessKeyCodes.KeyCode.CONTROL);
-            if (controlKeyPressed)
+            if (shiftKeyPressed)
                 WindowSendInput.SendKeyDown(RemoteProcessKeyCodes.KeyCode.SHIFT);
             foreach (var key in keyCodes)
             {
@@ -24,7 +24,7 @@ namespace SharedFeatureFunctions
                 WindowSendInput.SendKeyUp(RemoteProcessKeyCodes.KeyCode.ALT);
             if (controlKeyPressed)
                 WindowSendInput.SendKeyUp(RemoteProcessKeyCodes.KeyCode.CONTROL);
-            if (controlKeyPressed)
+            if (shiftKeyPressed)
                 WindowSendInput.SendKeyUp(RemoteProcessKeyCodes.KeyCode.SHIFT);
         }
 

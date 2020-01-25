@@ -24,54 +24,47 @@ namespace DesktopFeatureVLC
 
         public bool VolumneDown()
         {
-            return OnSendKeystrokeMultiDown(SharedFeatureFunctions.WindowKeyHook.Keys.Control, SharedFeatureFunctions.WindowKeyHook.Keys.Down);
+            return OnSendKeystroke(SharedFeatureFunctions.RemoteProcessKeyCodes.KeyCode.DOWN, false, true);
         }
 
         public bool VolumneUp()
         {
-            var prc = OnGetProcess();
-            if (prc != null)
-            {
-                SharedFeatureFunctions.WindowKeyHook.Test(prc.MainWindowHandle);
-                return true;
-            }
-            return false;
-            //return OnSendKeystrokeMultiDown(SharedFeatureFunctions.WindowKeyHook.Keys.Control, SharedFeatureFunctions.WindowKeyHook.Keys.Up);
+            return OnSendKeystroke(SharedFeatureFunctions.RemoteProcessKeyCodes.KeyCode.UP, false, true);
         }
 
         public bool Mute()
         {
-            return OnSendKeystroke(SharedFeatureFunctions.WindowKeyHook.Keys.M);
+            return OnSendKeystroke(SharedFeatureFunctions.RemoteProcessKeyCodes.KeyCode.KEY_M);
         }
 
         public bool Stop()
         {
-            return OnSendKeystroke(SharedFeatureFunctions.WindowKeyHook.Keys.S);
+            return OnSendKeystroke(SharedFeatureFunctions.RemoteProcessKeyCodes.KeyCode.KEY_S);
         }
 
         public bool Previous()
         {
-            return OnSendKeystroke(SharedFeatureFunctions.WindowKeyHook.Keys.P);
+            return OnSendKeystroke(SharedFeatureFunctions.RemoteProcessKeyCodes.KeyCode.KEY_P);
         }
 
         public bool Next()
         {
-            return OnSendKeystroke(SharedFeatureFunctions.WindowKeyHook.Keys.N);
+            return OnSendKeystroke(SharedFeatureFunctions.RemoteProcessKeyCodes.KeyCode.KEY_N);
         }
 
         public bool Fullscreen()
         {
-            return OnSendKeystroke(SharedFeatureFunctions.WindowKeyHook.Keys.F);
+            return OnSendKeystroke(SharedFeatureFunctions.RemoteProcessKeyCodes.KeyCode.KEY_F);
         }
 
         public bool FullscreenExit()
         {
-            return OnSendKeystroke(SharedFeatureFunctions.WindowKeyHook.Keys.Escape);
+            return OnSendKeystroke(SharedFeatureFunctions.RemoteProcessKeyCodes.KeyCode.ESC);
         }
 
         public bool PlayPause()
         {
-            return OnSendKeystroke(SharedFeatureFunctions.WindowKeyHook.Keys.Space);
+            return OnSendKeystroke(SharedFeatureFunctions.RemoteProcessKeyCodes.KeyCode.SPACE_BAR);
         }
 
         private Process OnGetProcess()
@@ -79,30 +72,19 @@ namespace DesktopFeatureVLC
             return Process.GetProcesses().FirstOrDefault(p => p.ProcessName == ProcessName);
         }
 
-        private bool OnSendKeystroke(SharedFeatureFunctions.WindowKeyHook.Keys key)
+        private bool OnSendKeystroke(SharedFeatureFunctions.RemoteProcessKeyCodes.KeyCode keyCode,
+            bool altKeyPressed = false, bool controlKeyPressed = false, bool shiftKeyPressed = false)
         {
-            var prc = OnGetProcess();
-            if (prc != null)
-            {
-                SharedFeatureFunctions.WindowKeyHook.SendKeystroke(prc.MainWindowHandle, key);
-                SharedFeatureFunctions.WindowKeyHook.SendKeystroke(prc.MainWindowHandle, key, true);
-
-                return true;
-            }
-            return false;
+            return OnSendKeystroke(new SharedFeatureFunctions.RemoteProcessKeyCodes.KeyCode[] { keyCode }, altKeyPressed, controlKeyPressed, shiftKeyPressed);
         }
 
-        private bool OnSendKeystrokeMultiDown(params SharedFeatureFunctions.WindowKeyHook.Keys[] keys)
+        private bool OnSendKeystroke(SharedFeatureFunctions.RemoteProcessKeyCodes.KeyCode[] keyCodes,
+            bool altKeyPressed = false, bool controlKeyPressed = false, bool shiftKeyPressed = false)
         {
             var prc = OnGetProcess();
             if (prc != null)
             {
-                SharedFeatureFunctions.WindowKeyHook.SendKeystroke(prc.MainWindowHandle, keys[0], false, false, true);
-                SharedFeatureFunctions.WindowKeyHook.SendKeystroke(prc.MainWindowHandle, keys[1], false, false, true);
-                /*foreach (var key in keys)
-                    SharedFeatureFunctions.WindowKeyHook.SendKeystroke(prc.MainWindowHandle, key);*/
-                /*foreach (var key in keys)
-                    SharedFeatureFunctions.WindowKeyHook.SendKeystroke(prc.MainWindowHandle, key, true);*/
+                SharedFeatureFunctions.RemoteProcessControl.SendKeys(prc.MainWindowHandle, keyCodes, altKeyPressed, controlKeyPressed, shiftKeyPressed);
 
                 return true;
             }
