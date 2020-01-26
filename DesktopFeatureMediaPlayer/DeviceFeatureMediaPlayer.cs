@@ -2,6 +2,7 @@
 using SharedCoreModels.FeatureModels.MediaPlayer;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace DesktopFeatureMediaPlayer
@@ -9,13 +10,13 @@ namespace DesktopFeatureMediaPlayer
     public class DeviceFeatureMediaPlayer : IDeviceFeatureImplementation
     {
         private DeviceFeatureData currentDeviceFeatureData;
-        private List<ProfileConfiguration> profiles = new List<ProfileConfiguration>();
+        private List<MediaPlayerController> controllers = new List<MediaPlayerController>();
 
         public event EventHandler<DeviceFeatureData> SendData;
 
         public DeviceFeatureMediaPlayer()
         {
-            
+            OnAddDefaultControllers();
         }
 
         public void Dispose()
@@ -47,15 +48,58 @@ namespace DesktopFeatureMediaPlayer
             if (data != null && !string.IsNullOrWhiteSpace(data.Data?.ToString()))
             {
                 currentDeviceFeatureData = data;
-                if (currentDeviceFeatureData.Data is SharedCoreModels.FeatureModels.VLC.VLCCommandModel commandModel && commandModel != null)
+                if (currentDeviceFeatureData.Data is SharedCoreModels.FeatureModels.MediaPlayer.ClientCommandSendModel commandModel && commandModel != null)
                 {
-                    //OnHandleCommand(commandModel);
+                    OnHandleCommand(commandModel);
                 }
                 else
                 {
-                    System.Diagnostics.Debug.Fail("VLC: Unknown object from Data received");
+                    System.Diagnostics.Debug.Fail("MediaPlayer: Unknown object from Data received");
                 }
             }
+        }
+
+        private void OnHandleCommand(ClientCommandSendModel commandModel)
+        {
+            var controller = OnGetController(commandModel.ProfileId);
+            if (controller != null)
+            {
+                if (controller.ProcessRunning || !string.IsNullOrWhiteSpace(controller.ProfileConfiguration.ApplicationPath))
+                {
+                    if (!controller.ProcessRunning)
+                    {
+                        if (System.IO.File.Exists(controller.ProfileConfiguration.ApplicationPath))
+                        {
+                            // TODO: Start the process
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.Fail($"MediaPlayer: Can't start Process. ApplicationPath is invalid (Id:{commandModel.ProfileId})");
+                            return;
+                        }
+                    }
+                    controller.ExecuteCommand(commandModel.Command);
+                }
+                else
+                {
+                    System.Diagnostics.Debug.Fail($"MediaPlayer: Process not running and no ApplicationPath to start it (Id:{commandModel.ProfileId})");
+                }
+            } else
+            {
+                System.Diagnostics.Debug.Fail($"MediaPlayer: No Controller for Profile (Id:{commandModel.ProfileId})");
+            }
+        }
+
+        private void OnAddDefaultControllers()
+        {
+            if (controllers == null)
+                controllers = new List<MediaPlayerController>();
+
+        }
+
+        private MediaPlayerController OnGetController(Guid profileId)
+        {
+            return controllers.FirstOrDefault(x => x.ProfileConfiguration.Id == profileId);
         }
     }
 }

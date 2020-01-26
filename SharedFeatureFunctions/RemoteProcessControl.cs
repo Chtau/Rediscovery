@@ -1,46 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using static SharedCoreModels.FeatureModels.KeyCodes;
 
 namespace SharedFeatureFunctions
 {
     public static class RemoteProcessControl
     {
-        public static void SendKeys(IntPtr windowHandle, RemoteProcessKeyCodes.KeyCode[] keyCodes, 
+        public static void SendKeys(IntPtr windowHandle, KeyCode[] keyCodes, 
             bool altKeyPressed = false, bool controlKeyPressed = false, bool shiftKeyPressed = false)
         {
             Native.Windows.Native.SetForegroundWindow(windowHandle);
             if (altKeyPressed)
-                WindowSendInput.SendKeyDown(RemoteProcessKeyCodes.KeyCode.ALT);
+                WindowSendInput.SendKeyDown(KeyCode.ALT);
             if (controlKeyPressed)
-                WindowSendInput.SendKeyDown(RemoteProcessKeyCodes.KeyCode.CONTROL);
+                WindowSendInput.SendKeyDown(KeyCode.CONTROL);
             if (shiftKeyPressed)
-                WindowSendInput.SendKeyDown(RemoteProcessKeyCodes.KeyCode.SHIFT);
+                WindowSendInput.SendKeyDown(KeyCode.SHIFT);
             foreach (var key in keyCodes)
             {
                 WindowSendInput.SendKeyPress(key);
             }
             if (altKeyPressed)
-                WindowSendInput.SendKeyUp(RemoteProcessKeyCodes.KeyCode.ALT);
+                WindowSendInput.SendKeyUp(KeyCode.ALT);
             if (controlKeyPressed)
-                WindowSendInput.SendKeyUp(RemoteProcessKeyCodes.KeyCode.CONTROL);
+                WindowSendInput.SendKeyUp(KeyCode.CONTROL);
             if (shiftKeyPressed)
-                WindowSendInput.SendKeyUp(RemoteProcessKeyCodes.KeyCode.SHIFT);
+                WindowSendInput.SendKeyUp(KeyCode.SHIFT);
         }
 
-        public static void SendKeyDown(IntPtr windowHandle, RemoteProcessKeyCodes.KeyCode key)
+        public static void SendKeyDown(IntPtr windowHandle, KeyCode key)
         {
             Native.Windows.Native.SetForegroundWindow(windowHandle);
             WindowSendInput.SendKeyDown(key);
         }
 
-        public static void SendKeyUp(IntPtr windowHandle, RemoteProcessKeyCodes.KeyCode key)
+        public static void SendKeyUp(IntPtr windowHandle, KeyCode key)
         {
             Native.Windows.Native.SetForegroundWindow(windowHandle);
             WindowSendInput.SendKeyUp(key);
         }
 
-        public static void SendKeyPress(IntPtr windowHandle, RemoteProcessKeyCodes.KeyCode key)
+        public static void SendKeyPress(IntPtr windowHandle, KeyCode key)
         {
             Native.Windows.Native.SetForegroundWindow(windowHandle);
             WindowSendInput.SendKeyPress(key);
