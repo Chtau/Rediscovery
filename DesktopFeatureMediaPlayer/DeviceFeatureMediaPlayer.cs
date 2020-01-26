@@ -98,7 +98,14 @@ namespace DesktopFeatureMediaPlayer
         {
             if (controllers == null)
                 controllers = new List<MediaPlayerController>();
-
+            var profiles = MediaPlayerDefaultProfiles.GetProfileConfigurations();
+            if (profiles != null && profiles.Count > 0)
+            {
+                foreach (var item in profiles)
+                {
+                    controllers.Add(new MediaPlayerController(item));
+                }
+            }
         }
 
         private MediaPlayerController OnGetController(Guid profileId)
