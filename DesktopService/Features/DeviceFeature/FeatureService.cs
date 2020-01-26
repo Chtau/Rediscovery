@@ -42,13 +42,13 @@ namespace DesktopService.Features.DeviceFeature
                 ResponseToClient(console.GetDeviceFeatureInfo().Id, e);
             };
             deviceFeatureImplementations.Add(console);
-            var vlc = new DesktopFeatureConsole.DeviceFeatureConsole();
-            vlc.SendData += (object sender, DeviceFeatureData e) =>
+            var mediaPlayer = new DesktopFeatureMediaPlayer.DeviceFeatureMediaPlayer();
+            mediaPlayer.SendData += (object sender, DeviceFeatureData e) =>
             {
                 System.Diagnostics.Debug.Print("Feature response =>" + e.Data);
-                //ResponseToClient(console.GetDeviceFeatureInfo().Id, e);
+                ResponseToClient(console.GetDeviceFeatureInfo().Id, e);
             };
-            deviceFeatureImplementations.Add(vlc);
+            deviceFeatureImplementations.Add(mediaPlayer);
         }
 
         private void ResponseToClient(Guid featureId, DeviceFeatureData data)
