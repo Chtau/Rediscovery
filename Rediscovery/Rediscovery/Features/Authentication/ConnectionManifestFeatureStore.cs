@@ -17,15 +17,29 @@ namespace Rediscovery.Features.Authentication
 
         public async Task<bool> AddItemAsync(ConnectionManifestFeature item)
         {
-            if (await db.Store.Table<ConnectionManifestFeature>().Where(s => s.ConnectionId == item.ConnectionId && s.FeatureId == item.FeatureId).CountAsync() > 0)
+            try
             {
-                await UpdateItemAsync(item);
-            }
-            else
-            {
-                await db.Store.InsertAsync(item);
-            }
+                if (await db.Store.Table<ConnectionManifestFeature>().Where(s => s.ConnectionId == item.ConnectionId && s.FeatureId == item.FeatureId).CountAsync() > 0)
+                {
+                    if (item.Id == Guid.Empty)
+                    {
+                        item = await db.Store.Table<ConnectionManifestFeature>().FirstOrDefaultAsync(s => s.ConnectionId == item.ConnectionId && s.FeatureId == item.FeatureId);
+                        //item.Id = itemOld.Id;
+                    }
+                    await UpdateItemAsync(item);
+                }
+                else
+                {
+                    if (item.Id == Guid.Empty)
+                        item.Id = Guid.NewGuid();
+                    await db.Store.InsertAsync(item);
+                }
 
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
             return await Task.FromResult(true);
         }
 
@@ -51,7 +65,7 @@ namespace Rediscovery.Features.Authentication
         public async Task<ConnectionManifestFeature> GetItemAsync(Guid connectionId, Guid id)
         {
             return await Task.FromResult(
-                await db.Store.Table<ConnectionManifestFeature>().Where(s => s.ConnectionId == connectionId && s.FeatureId == id).FirstOrDefaultAsync()
+                await db.Store.Table<ConnectionManifestFeature>().Where(s => s.ConnectionId == connectionId && s.Id == id).FirstOrDefaultAsync()
                 );
         }
 

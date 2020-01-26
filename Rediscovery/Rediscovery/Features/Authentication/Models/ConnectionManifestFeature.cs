@@ -8,6 +8,7 @@ namespace Rediscovery.Features.Authentication.Models
 {
     public class ConnectionManifestFeature : BaseModel
     {
+        private Guid _id;
         private Guid _connectionId;
         private string _featureDisplayName;
         private Guid _featureId;
@@ -18,6 +19,12 @@ namespace Rediscovery.Features.Authentication.Models
         private SharedCoreModels.DeviceFeature.DeviceFeature.IntegrationPoint _featureControlIntegrationPoint;
 
         [PrimaryKey]
+        public Guid Id
+        {
+            get { return _id; }
+            set { SetProperty(ref _id, value); }
+        }
+
         public Guid ConnectionId
         {
             get { return _connectionId; }
