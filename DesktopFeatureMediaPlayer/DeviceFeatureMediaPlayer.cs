@@ -1,4 +1,5 @@
 ﻿using SharedCoreModels.DeviceFeature;
+using SharedCoreModels.FeatureModels.MediaPlayer;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,6 +9,7 @@ namespace DesktopFeatureMediaPlayer
     public class DeviceFeatureMediaPlayer : IDeviceFeatureImplementation
     {
         private DeviceFeatureData currentDeviceFeatureData;
+        private List<ProfileConfiguration> profiles = new List<ProfileConfiguration>();
 
         public event EventHandler<DeviceFeatureData> SendData;
 

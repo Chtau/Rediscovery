@@ -24,6 +24,20 @@ namespace SharedCoreModels.FeatureModels.MediaPlayer
         }
 
         public Guid ProfileId { get; set; }
-        public Dictionary<CommandTypes, KeyCodes.KeyCode> CommandKeys { get; set; }
+        public Dictionary<CommandTypes, KeyCodes.KeyCode[]> CommandKeys { get; set; }
+
+        public List<CommandTypes> GetConfiguratedCommands()
+        {
+            var retVal = new List<CommandTypes>();
+            if (CommandKeys != null && CommandKeys.Count > 0)
+            {
+                foreach (var item in CommandKeys)
+                {
+                    if (item.Value != null && item.Value.Length > 0)
+                        retVal.Add(item.Key);
+                }
+            }
+            return retVal;
+        }
     }
 }
