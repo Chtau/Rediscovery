@@ -29,6 +29,7 @@ namespace DesktopFeatureMediaPlayer
 
         public void InitWatcher()
         {
+            OnSetProcessRunning();
             if (tokenSource != null)
             {
                 tokenSource.Cancel();
@@ -36,15 +37,19 @@ namespace DesktopFeatureMediaPlayer
             }
             tokenSource = new CancellationTokenSource();
             CancellationToken cancellationToken = tokenSource.Token;
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 do
                 {
-                    Task.Delay(100);
-                    var prc = OnGetProcess();
-                    ProcessRunning = prc?.MainWindowHandle != null;
+                    OnSetProcessRunning();
+                    await Task.Delay(100);
                 } while (!cancellationToken.IsCancellationRequested);
             });
+        }
+
+        private void OnSetProcessRunning()
+        {
+            ProcessRunning = OnGetProcess()?.MainWindowHandle != null;
         }
 
         public bool StartProcess()

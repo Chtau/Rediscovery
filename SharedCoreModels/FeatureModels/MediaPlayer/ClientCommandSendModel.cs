@@ -9,5 +9,16 @@ namespace SharedCoreModels.FeatureModels.MediaPlayer
     {
         public Guid ProfileId { get; set; }
         public CommandTypes Command { get; set; }
+
+        public ClientCommandSendModel()
+        {
+
+        }
+
+        public ClientCommandSendModel(Guid profileId, CommandTypes command) : this()
+        {
+            ProfileId = profileId;
+            Command = command;
+        }
     }
 }

@@ -103,7 +103,9 @@ namespace DesktopFeatureMediaPlayer
             {
                 foreach (var item in profiles)
                 {
-                    controllers.Add(new MediaPlayerController(item));
+                    var controller = new MediaPlayerController(item);
+                    controller.InitWatcher();
+                    controllers.Add(controller);
                 }
             }
         }

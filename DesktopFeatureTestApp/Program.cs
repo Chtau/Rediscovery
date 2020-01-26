@@ -1,5 +1,5 @@
 ﻿using DesktopFeatureConsole;
-using DesktopFeatureVLC;
+using DesktopFeatureMediaPlayer;
 using SharedCoreModels.DeviceFeature;
 using System;
 
@@ -11,18 +11,35 @@ namespace DesktopFeatureTestApp
         {
             Console.WriteLine("Test");
 
-            /*SharedCoreModels.DeviceFeature.IDeviceFeatureImplementation feature = new DeviceFeatureConsole();
+            //ConsoleFeature();
+            MediaPlayerFeature();
+
+            Console.ReadLine();
+        }
+
+        static void ConsoleFeature()
+        {
+            SharedCoreModels.DeviceFeature.IDeviceFeatureImplementation feature = new DeviceFeatureConsole();
             feature.SendData += (object sender, DeviceFeatureData e) =>
             {
                 Console.WriteLine(e.Data);
             };
             feature.Init();
             feature.ReceiveData(new DeviceFeatureData { Data = "echo Hallo" });
-            feature.ReceiveData(new DeviceFeatureData { Data = "echo World" });*/
+            feature.ReceiveData(new DeviceFeatureData { Data = "echo World" });
+        }
 
-            SharedCoreModels.DeviceFeature.IDeviceFeatureImplementation feature = new DeviceFeatureVLC();
+        static void MediaPlayerFeature()
+        {
+            SharedCoreModels.DeviceFeature.IDeviceFeatureImplementation feature = new DeviceFeatureMediaPlayer();
+            feature.SendData += (object sender, DeviceFeatureData e) =>
+            {
+                Console.WriteLine(e.Data);
+            };
             feature.Init();
-            Console.ReadLine();
+            //System.Threading.Thread.Sleep(60000);
+            feature.ReceiveData(new DeviceFeatureData { Data = new SharedCoreModels.FeatureModels.MediaPlayer.ClientCommandSendModel(new Guid("4D7A3004-F4F7-4B43-8DF1-2B9CA73F8991"), SharedCoreModels.FeatureModels.MediaPlayer.CommandConfiguration.CommandTypes.VolumneUp) });
+            //feature.ReceiveData(new DeviceFeatureData { Data = "echo World" });
         }
     }
 }
