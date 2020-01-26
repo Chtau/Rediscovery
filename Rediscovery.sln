@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopFeatureTestApp", "De
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopFeatureVLC", "DesktopFeatureVLC\DesktopFeatureVLC.csproj", "{03C04A6D-50EC-4A38-89F3-A4B94A8772A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedFeatureFunctions", "SharedFeatureFunctions\SharedFeatureFunctions.csproj", "{1B545E83-6992-45F9-BCC2-2697398A8D84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedFeatureFunctions", "SharedFeatureFunctions\SharedFeatureFunctions.csproj", "{1B545E83-6992-45F9-BCC2-2697398A8D84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopFeatureMediaPlayer", "DesktopFeatureMediaPlayer\DesktopFeatureMediaPlayer.csproj", "{C734837E-B6D7-4CEB-81B5-03820CE2BA8F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -159,6 +161,18 @@ Global
 		{1B545E83-6992-45F9-BCC2-2697398A8D84}.Release|x64.Build.0 = Release|Any CPU
 		{1B545E83-6992-45F9-BCC2-2697398A8D84}.Release|x86.ActiveCfg = Release|Any CPU
 		{1B545E83-6992-45F9-BCC2-2697398A8D84}.Release|x86.Build.0 = Release|Any CPU
+		{C734837E-B6D7-4CEB-81B5-03820CE2BA8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C734837E-B6D7-4CEB-81B5-03820CE2BA8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C734837E-B6D7-4CEB-81B5-03820CE2BA8F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C734837E-B6D7-4CEB-81B5-03820CE2BA8F}.Debug|x64.Build.0 = Debug|Any CPU
+		{C734837E-B6D7-4CEB-81B5-03820CE2BA8F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C734837E-B6D7-4CEB-81B5-03820CE2BA8F}.Debug|x86.Build.0 = Debug|Any CPU
+		{C734837E-B6D7-4CEB-81B5-03820CE2BA8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C734837E-B6D7-4CEB-81B5-03820CE2BA8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C734837E-B6D7-4CEB-81B5-03820CE2BA8F}.Release|x64.ActiveCfg = Release|Any CPU
+		{C734837E-B6D7-4CEB-81B5-03820CE2BA8F}.Release|x64.Build.0 = Release|Any CPU
+		{C734837E-B6D7-4CEB-81B5-03820CE2BA8F}.Release|x86.ActiveCfg = Release|Any CPU
+		{C734837E-B6D7-4CEB-81B5-03820CE2BA8F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

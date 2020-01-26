@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+using static SharedCoreModels.FeatureModels.KeyCodes;
 using static SharedFeatureFunctions.Native.Windows.Native;
-using static SharedFeatureFunctions.RemoteProcessKeyCodes;
 
 namespace SharedFeatureFunctions
 {

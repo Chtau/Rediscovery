@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SharedCoreModels\SharedCoreModels.csproj" />
+    <ProjectReference Include="..\SharedFeatureFunctions\SharedFeatureFunctions.csproj" />
   </ItemGroup>
 
 </Project>

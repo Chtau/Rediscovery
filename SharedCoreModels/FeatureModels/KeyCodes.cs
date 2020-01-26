@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedFeatureFunctions
+namespace SharedCoreModels.FeatureModels
 {
-    public static class RemoteProcessKeyCodes
+    public static class KeyCodes
     {
         public enum KeyCode : ushort
         {
