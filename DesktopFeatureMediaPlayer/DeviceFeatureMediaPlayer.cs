@@ -70,7 +70,11 @@ namespace DesktopFeatureMediaPlayer
                     {
                         if (System.IO.File.Exists(controller.ProfileConfiguration.ApplicationPath))
                         {
-                            // TODO: Start the process
+                            if (!controller.StartProcess())
+                            {
+                                System.Diagnostics.Debug.Fail($"MediaPlayer: Could not start process (Id:{commandModel.ProfileId})");
+                                return;
+                            }
                         }
                         else
                         {
