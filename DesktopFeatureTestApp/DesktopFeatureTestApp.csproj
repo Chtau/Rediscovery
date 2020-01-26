@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DesktopFeatureConsole\DesktopFeatureConsole.csproj" />
-    <ProjectReference Include="..\DesktopFeatureVLC\DesktopFeatureVLC.csproj" />
   </ItemGroup>
 
 </Project>
