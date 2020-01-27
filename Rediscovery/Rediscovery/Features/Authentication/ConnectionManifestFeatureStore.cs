@@ -19,14 +19,18 @@ namespace Rediscovery.Features.Authentication
         {
             try
             {
-                if (await db.Store.Table<ConnectionManifestFeature>().Where(s => s.ConnectionId == item.ConnectionId && s.FeatureId == item.FeatureId).CountAsync() > 0)
+                if (await db.Store.Table<ConnectionManifestFeature>().Where(s => s.Id == item.Id).CountAsync() > 0)
                 {
-                    if (item.Id == Guid.Empty)
-                    {
-                        item = await db.Store.Table<ConnectionManifestFeature>().FirstOrDefaultAsync(s => s.ConnectionId == item.ConnectionId && s.FeatureId == item.FeatureId);
-                        //item.Id = itemOld.Id;
-                    }
-                    await UpdateItemAsync(item);
+                    ConnectionManifestFeature entity = await db.Store.Table<ConnectionManifestFeature>().FirstOrDefaultAsync(s => s.Id == item.Id);
+                    entity.FeatureVersion = item.FeatureVersion;
+                    entity.FeatureMinFeatureIntegrationPoint = item.FeatureMinFeatureIntegrationPoint;
+                    entity.FeatureMinControlIntegrationPoint = item.FeatureMinControlIntegrationPoint;
+                    entity.FeatureId = item.FeatureId;
+                    entity.FeatureFeatureIntegrationPoint = item.FeatureFeatureIntegrationPoint;
+                    entity.FeatureDisplayName = item.FeatureDisplayName;
+                    entity.FeatureControlIntegrationPoint = item.FeatureControlIntegrationPoint;
+                    entity.ConnectionId = item.ConnectionId;
+                    await UpdateItemAsync(entity);
                 }
                 else
                 {
@@ -34,7 +38,6 @@ namespace Rediscovery.Features.Authentication
                         item.Id = Guid.NewGuid();
                     await db.Store.InsertAsync(item);
                 }
-
             }
             catch (Exception ex)
             {
