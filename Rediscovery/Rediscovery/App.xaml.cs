@@ -16,9 +16,8 @@ namespace Rediscovery
             InitializeComponent();
 
             DependencyService.Register<Logger>();
-            DependencyService.Register<MockDataStore>();
             DependencyService.Register<DBStore>();
-            DependencyService.Register<DesktopConfiguration.DesktopConfigurationStore>();
+            DependencyService.Register<Features.DesktopConfiguration.DesktopConfigurationStore>();
             DependencyService.Register<Features.Authentication.Connect>();
             DependencyService.Register<Features.Authentication.ConnectionStore>();
             DependencyService.Register<Features.Authentication.ConnectionManifestFeatureStore>();

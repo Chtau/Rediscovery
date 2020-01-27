@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
-using Rediscovery.DesktopConfiguration;
 using Rediscovery.Services;
 using SharedCoreModels;
 using Xamarin.Forms;

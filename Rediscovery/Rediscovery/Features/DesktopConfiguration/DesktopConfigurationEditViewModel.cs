@@ -1,4 +1,5 @@
-﻿using Rediscovery.Models;
+﻿using Rediscovery.Features.Authentication;
+using Rediscovery.Models;
 using Rediscovery.Services;
 using Rediscovery.ViewModels;
 using System;

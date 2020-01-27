@@ -5,7 +5,7 @@
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             mc:Ignorable="d"
             xmlns:views="clr-namespace:Rediscovery.Views"
-            xmlns:desktopConfig="clr-namespace:Rediscovery.DesktopConfiguration"
+            xmlns:desktopConfig="clr-namespace:Rediscovery.Features.DesktopConfiguration"
             xmlns:desktops="clr-namespace:Rediscovery.Desktops"
             x:Class="Rediscovery.Views.MainPage">
 
@@ -29,17 +29,6 @@
             </NavigationPage.Icon>
             <x:Arguments>
                 <desktopConfig:DesktopConfigurationPage />
-            </x:Arguments>
-        </NavigationPage>
-
-        <NavigationPage Title="About">
-            <NavigationPage.Icon>
-                <OnPlatform x:TypeArguments="FileImageSource">
-                    <On Platform="iOS" Value="tab_about.png"/>
-                </OnPlatform>
-            </NavigationPage.Icon>
-            <x:Arguments>
-                <views:AboutPage />
             </x:Arguments>
         </NavigationPage>
     </TabbedPage.Children>
