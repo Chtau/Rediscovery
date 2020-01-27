@@ -3,12 +3,11 @@ using Rediscovery.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace Rediscovery.DesktopConfiguration
+namespace Rediscovery.Features.DesktopConfiguration
 {
     public class DesktopConfigurationViewModel : BaseViewModel
     {
@@ -28,28 +27,6 @@ namespace Rediscovery.DesktopConfiguration
             {
                 await ExecuteLoadDeviceItemsCommand();
             });
-
-            /*MessagingCenter.Subscribe<DesktopConfigurationEditPage, DesktopConfigurationModel>(this, "save_desktop_configuration", async (obj, item) =>
-            {
-                var _item = item as DesktopConfigurationModel;
-                await Store.AddItemAsync(_item);
-                await ExecuteLoadDeviceItemsCommand();
-            });
-
-            MessagingCenter.Subscribe<DesktopConfigurationEditPage, DesktopConfigurationModel>(this, "remove_desktop_configuration", async (obj, item) =>
-            {
-                DesktopConfigurationModel _item = Items.FirstOrDefault(x => x.Id == item.Id);
-                if (_item != null)
-                {
-                    await Store.DeleteItemAsync(_item.Id);
-                    await ExecuteLoadDeviceItemsCommand();
-                }
-            });*/
-
-            /*MessagingCenter.Subscribe<Connections>(this, GlobalVariableNames.MessagingAfterTryConnect, async (obj) =>
-            {
-                await ExecuteLoadDeviceItemsCommand();
-            });*/
         }
 
         async Task ExecuteLoadDeviceItemsCommand()

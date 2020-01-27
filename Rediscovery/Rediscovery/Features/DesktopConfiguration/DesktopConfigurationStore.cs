@@ -6,8 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-[assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.DesktopConfiguration.DesktopConfigurationStore))]
-namespace Rediscovery.DesktopConfiguration
+[assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.DesktopConfiguration.DesktopConfigurationStore))]
+namespace Rediscovery.Features.DesktopConfiguration
 {
     public class DesktopConfigurationStore : IDataStoreGuid<DesktopConfigurationModel>
     {

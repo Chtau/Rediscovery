@@ -1,5 +1,4 @@
-﻿using Rediscovery.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Rediscovery.DesktopConfiguration
+namespace Rediscovery.Features.DesktopConfiguration
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DesktopConfigurationEditPage : ContentPage
@@ -18,7 +17,6 @@ namespace Rediscovery.DesktopConfiguration
         public DesktopConfigurationEditPage(DesktopConfigurationModel item = null)
         {
             InitializeComponent();
-
             BindingContext = viewModel = new DesktopConfigurationEditViewModel(item);
         }
 

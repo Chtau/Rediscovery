@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Rediscovery.DesktopConfiguration
+namespace Rediscovery.Features.DesktopConfiguration
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DesktopConfigurationPage : ContentPage
@@ -19,7 +19,6 @@ namespace Rediscovery.DesktopConfiguration
             InitializeComponent();
             BindingContext = viewModel = new DesktopConfigurationViewModel();
         }
-
 
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
         {

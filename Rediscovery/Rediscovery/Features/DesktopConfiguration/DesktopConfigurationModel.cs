@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.DesktopConfiguration
+namespace Rediscovery.Features.DesktopConfiguration
 {
     public class DesktopConfigurationModel : BaseModel
     {

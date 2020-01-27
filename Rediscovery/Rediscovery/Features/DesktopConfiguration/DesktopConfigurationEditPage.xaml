@@ -4,7 +4,7 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="Rediscovery.DesktopConfiguration.DesktopConfigurationEditPage">
+             x:Class="Rediscovery.Features.DesktopConfiguration.DesktopConfigurationEditPage">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Save" Clicked="Save_Clicked" />
         <ToolbarItem Text="Remove" Clicked="Remove_Clicked" />

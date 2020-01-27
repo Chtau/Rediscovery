@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
-using Rediscovery.Features.Authentication;
-using Rediscovery.Models;
+﻿using Rediscovery.Models;
 using Rediscovery.Services;
 using Rediscovery.ViewModels;
 using System;
@@ -8,9 +6,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-using static Rediscovery.DesktopConfiguration.DesktopConfigurationModel;
 
-namespace Rediscovery.DesktopConfiguration
+namespace Rediscovery.Features.DesktopConfiguration
 {
     public class DesktopConfigurationEditViewModel : BaseViewModel
     {
