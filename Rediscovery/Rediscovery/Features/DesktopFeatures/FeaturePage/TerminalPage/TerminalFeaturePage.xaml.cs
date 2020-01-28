@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Rediscovery.Features.DesktopFeatures.FeaturePage
+namespace Rediscovery.Features.DesktopFeatures.FeaturePage.TerminalPage
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class DesktopFeaturePageDetail : ContentPage
+    public partial class TerminalFeaturePage : ContentPage
     {
         private IFeatureExchange featureExchange => DependencyService.Get<IFeatureExchange>() ?? new FeatureExchange();
         DesktopFeaturePageDetailViewModel viewModel;
 
-        public DesktopFeaturePageDetail(DesktopFeaturePageDetailViewModel model)
+        public TerminalFeaturePage(DesktopFeaturePageDetailViewModel model)
         {
             InitializeComponent();
 

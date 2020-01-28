@@ -33,6 +33,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Features\DesktopFeatures\FeaturePage\TerminalPage\TerminalFeaturePage.xaml.cs">
+      <DependentUpon>TerminalFeaturePage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Update="Controls\Terminal.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -48,7 +54,7 @@
     <EmbeddedResource Update="Features\DesktopFeatures\DesktopFeaturesPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Features\DesktopFeatures\FeaturePage\DesktopFeaturePageDetail.xaml">
+    <EmbeddedResource Update="Features\DesktopFeatures\FeaturePage\TerminalPage\TerminalFeaturePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

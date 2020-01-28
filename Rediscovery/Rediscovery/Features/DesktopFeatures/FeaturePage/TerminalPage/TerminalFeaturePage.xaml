@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:control="clr-namespace:Rediscovery.Controls"
-             x:Class="Rediscovery.Features.DesktopFeatures.FeaturePage.DesktopFeaturePageDetail">
+             x:Class="Rediscovery.Features.DesktopFeatures.FeaturePage.TerminalPage.TerminalFeaturePage">
     <ContentPage.ToolbarItems>
         <ToolbarItem x:Name="Back" Text="Back" Clicked="Back_Clicked" />
     </ContentPage.ToolbarItems>

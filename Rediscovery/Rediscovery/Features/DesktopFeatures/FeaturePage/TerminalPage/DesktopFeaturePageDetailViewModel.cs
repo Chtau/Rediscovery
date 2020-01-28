@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Features.DesktopFeatures.FeaturePage
+namespace Rediscovery.Features.DesktopFeatures.FeaturePage.TerminalPage
 {
     public class DesktopFeaturePageDetailViewModel : BaseViewModel
     {
