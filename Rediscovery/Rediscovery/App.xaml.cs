@@ -21,7 +21,7 @@ namespace Rediscovery
             DependencyService.Register<Features.Authentication.Connect>();
             DependencyService.Register<Features.Authentication.ConnectionStore>();
             DependencyService.Register<Features.Authentication.ConnectionManifestFeatureStore>();
-            DependencyService.Register<Desktops.FeatureExchange>();
+            DependencyService.Register<Features.DesktopFeatures.FeatureExchange>();
             MainPage = new MainPage();
         }
 

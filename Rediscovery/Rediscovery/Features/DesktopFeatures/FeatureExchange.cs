@@ -7,8 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-[assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Desktops.FeatureExchange))]
-namespace Rediscovery.Desktops
+[assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.DesktopFeatures.FeatureExchange))]
+namespace Rediscovery.Features.DesktopFeatures
 {
     public class FeatureExchange : IFeatureExchange
     {

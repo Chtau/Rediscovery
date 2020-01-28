@@ -7,13 +7,12 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Rediscovery.Desktops.DesktopFeaturePage
+namespace Rediscovery.Features.DesktopFeatures.FeaturePage
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DesktopFeaturePageDetail : ContentPage
     {
         private IFeatureExchange featureExchange => DependencyService.Get<IFeatureExchange>() ?? new FeatureExchange();
-
         DesktopFeaturePageDetailViewModel viewModel;
 
         public DesktopFeaturePageDetail(DesktopFeaturePageDetailViewModel model)
@@ -27,17 +26,9 @@ namespace Rediscovery.Desktops.DesktopFeaturePage
             terminal.SendCommand += Terminal_SendCommand;
         }
 
-        private void FeatureExchange_DesktopResponseReceived(object sender, (Guid connectionId, Guid featureId, object data) e)
+        private async void Back_Clicked(object sender, EventArgs e)
         {
-            if (viewModel.ConnectionManifestFeature.ConnectionId == e.connectionId && viewModel.ConnectionManifestFeature.FeatureId == e.featureId)
-            {
-                terminal.AddLines(e.data?.ToString());
-            }
-        }
-
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
+            await Navigation.PopModalAsync();
         }
 
         private void Terminal_SendCommand(object sender, string e)
@@ -45,9 +36,12 @@ namespace Rediscovery.Desktops.DesktopFeaturePage
             featureExchange.Send(viewModel.ConnectionManifestFeature, e);
         }
 
-        private async void Back_Clicked(object sender, EventArgs e)
+        private void FeatureExchange_DesktopResponseReceived(object sender, (Guid connectionId, Guid featureId, object data) e)
         {
-            await Navigation.PopModalAsync();
+            if (viewModel.ConnectionManifestFeature.ConnectionId == e.connectionId && viewModel.ConnectionManifestFeature.FeatureId == e.featureId)
+            {
+                terminal.AddLines(e.data?.ToString());
+            }
         }
     }
 }

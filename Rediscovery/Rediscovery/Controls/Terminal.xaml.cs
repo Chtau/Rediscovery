@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Rediscovery.Desktops.DesktopFeaturePage.Controls
+namespace Rediscovery.Controls
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Terminal : Grid
@@ -16,9 +16,8 @@ namespace Rediscovery.Desktops.DesktopFeaturePage.Controls
 
         public Terminal()
         {
-            InitializeComponent();            
+            InitializeComponent();
         }
-
 
         public void AddLines(params string[] lines)
         {

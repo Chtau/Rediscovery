@@ -21,26 +21,8 @@ namespace Rediscovery.Views
             InitializeComponent();
 
             BindingContext = viewModel = new MainPageViewModel();
-            viewModel.Items.CollectionChanged += Items_CollectionChanged;
             viewModel.Load();
             auth.HelloReceived += Auth_HelloReceived;
-        }
-
-        private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            if (e.NewItems != null)
-            {
-                foreach (var item in e.NewItems)
-                {
-                    var model = (Features.Authentication.Models.Connection)item;
-                    var navigationPage = new NavigationPage(new Desktops.DesktopPage(new Desktops.DesktopViewModel(model)))
-                    {
-                        IconImageSource = "tab_feed.png",
-                        Title = model.DisplayName
-                    };
-                    Children.Insert(0, navigationPage);
-                }
-            }
         }
 
         private void Auth_HelloReceived(object sender, Features.Authentication.Models.Connection e)

@@ -6,22 +6,23 @@
             mc:Ignorable="d"
             xmlns:views="clr-namespace:Rediscovery.Views"
             xmlns:desktopConfig="clr-namespace:Rediscovery.Features.DesktopConfiguration"
+            xmlns:desktopFeatures="clr-namespace:Rediscovery.Features.DesktopFeatures"
             xmlns:desktops="clr-namespace:Rediscovery.Desktops"
             x:Class="Rediscovery.Views.MainPage">
 
     <TabbedPage.Children>
-        <!--<NavigationPage Title="Desktop DEV">
+        <NavigationPage Title="Features">
             <NavigationPage.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
                     <On Platform="iOS" Value="tab_feed.png"/>
                 </OnPlatform>
             </NavigationPage.Icon>
             <x:Arguments>
-                <desktops:DesktopPage />
+                <desktopFeatures:DesktopFeaturesPage/>
             </x:Arguments>
-        </NavigationPage>-->
-
-        <NavigationPage Title="Desktop Config">
+        </NavigationPage>
+        
+        <NavigationPage Title="Desktop">
             <NavigationPage.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
                     <On Platform="iOS" Value="tab_feed.png"/>

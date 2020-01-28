@@ -7,17 +7,18 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Rediscovery.Desktops
+namespace Rediscovery.Features.DesktopFeatures
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class DesktopPage : ContentPage
+    public partial class DesktopFeaturesPage : ContentPage
     {
-        private DesktopViewModel viewModel;
+        DesktopFeaturesViewModel viewModel;
 
-        public DesktopPage(DesktopViewModel model)
+        public DesktopFeaturesPage()
         {
             InitializeComponent();
-            BindingContext = viewModel = model;
+
+            BindingContext = viewModel = new DesktopFeaturesViewModel();
         }
 
         protected override void OnAppearing()
@@ -32,7 +33,7 @@ namespace Rediscovery.Desktops
             if (item == null)
                 return;
 
-            await Navigation.PushModalAsync(new NavigationPage(new DesktopFeaturePage.DesktopFeaturePageDetail(new DesktopFeaturePage.DesktopFeaturePageDetailViewModel(viewModel.Connection, item))));
+            //await Navigation.PushModalAsync(new NavigationPage(new FeaturePage.DesktopFeaturePageDetail(new FeaturePage.DesktopFeaturePageDetailViewModel(viewModel.Connection, item))));
 
             FeatureControl.SelectedItem = null;
         }

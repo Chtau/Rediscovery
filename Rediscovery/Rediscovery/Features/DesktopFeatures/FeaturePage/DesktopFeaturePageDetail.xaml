@@ -3,18 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:control="clr-namespace:Rediscovery.Desktops.DesktopFeaturePage.Controls"
              mc:Ignorable="d"
-             x:Class="Rediscovery.Desktops.DesktopFeaturePage.DesktopFeaturePageDetail">
+             xmlns:control="clr-namespace:Rediscovery.Controls"
+             x:Class="Rediscovery.Features.DesktopFeatures.FeaturePage.DesktopFeaturePageDetail">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Back" Clicked="Back_Clicked" />
+        <ToolbarItem x:Name="Back" Text="Back" Clicked="Back_Clicked" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <control:Terminal x:Name="terminal"/>
-        <!--<StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>-->
     </ContentPage.Content>
 </ContentPage>

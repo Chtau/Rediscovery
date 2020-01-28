@@ -4,7 +4,7 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="Rediscovery.Desktops.DesktopPage">
+             x:Class="Rediscovery.Features.DesktopFeatures.DesktopFeaturesPage">
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
@@ -18,11 +18,6 @@
                  HasUnevenRows="true"
                  ItemSelected="OnItemSelected"
                  CachingStrategy="RecycleElement">
-                    <!--
-                    RefreshCommand="{Binding LoadItemsCommand}"
-                    IsPullToRefreshEnabled="true"
-                    
-                    -->
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>

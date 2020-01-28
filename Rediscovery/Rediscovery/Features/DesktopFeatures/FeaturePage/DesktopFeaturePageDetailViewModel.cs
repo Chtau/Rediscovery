@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Rediscovery.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Desktops.DesktopFeaturePage
+namespace Rediscovery.Features.DesktopFeatures.FeaturePage
 {
-    public class DesktopFeaturePageDetailViewModel
+    public class DesktopFeaturePageDetailViewModel : BaseViewModel
     {
         public Features.Authentication.Models.Connection Connection { get; private set; }
         public Features.Authentication.Models.ConnectionManifestFeature ConnectionManifestFeature { get; private set; }
