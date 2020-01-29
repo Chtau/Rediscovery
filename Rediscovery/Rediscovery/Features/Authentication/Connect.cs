@@ -64,11 +64,24 @@ namespace Rediscovery.Features.Authentication
 
         public async Task AutoConnect()
         {
-            var models = await connectionStore.GetItemsAsync();
-            foreach (var item in models.Where(x => x.AutoConnect))
-            {
-                await OnTryConnect(item);
-            }
+            var model = (await connectionStore.GetItemsAsync())?.FirstOrDefault(x => x.Active);
+            if (model != null)
+                await OnTryConnect(model);
+            return;
+        }
+
+        public async Task<HubConnection> GetConnectionAuth()
+        {
+            var model = await OnGetModel();
+            if (model != null)
+                return await OnGetHubConnection(await OnGetHub(model, HubTypes.Auth), model);
+            return null;
+        }
+
+        public async Task<HubConnection> GetConnectionFeature()
+        {
+            var model = await OnGetModel();
+            return await OnGetHubConnection(await OnGetHub(model, HubTypes.Feature), model);
         }
 
         public async Task CloseConnections()
@@ -103,7 +116,12 @@ namespace Rediscovery.Features.Authentication
             }
         }
 
-        public async Task<HubConnection> GetConnection(Models.Connection model, HubTypes hubTypes)
+        private async Task<Models.Connection> OnGetModel()
+        {
+            return (await connectionStore.GetItemsAsync())?.FirstOrDefault(x => x.Active);
+        }
+
+        private async Task<HubConnection> GetConnection(Models.Connection model, HubTypes hubTypes)
         {
             return await OnGetHubConnection(await OnGetHub(model, hubTypes), model);
         }

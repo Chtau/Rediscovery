@@ -86,5 +86,12 @@ namespace Rediscovery.Features.Authentication.Models
             get { return _token; }
             set { SetProperty(ref _token, value); }
         }
+
+        private bool active;
+        public bool Active
+        {
+            get { return active; }
+            set { SetProperty(ref active, value); }
+        }
     }
 }
