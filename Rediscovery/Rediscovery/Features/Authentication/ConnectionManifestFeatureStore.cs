@@ -14,6 +14,7 @@ namespace Rediscovery.Features.Authentication
     {
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private IDBStore db => DependencyService.Get<IDBStore>() ?? new DBStore();
+        private Features.Authentication.IConnect connection => DependencyService.Get<Features.Authentication.IConnect>() ?? new Features.Authentication.Connect();
 
         public async Task<bool> AddItemAsync(ConnectionManifestFeature item)
         {
@@ -34,9 +35,24 @@ namespace Rediscovery.Features.Authentication
                 }
                 else
                 {
-                    if (item.Id == Guid.Empty)
-                        item.Id = Guid.NewGuid();
-                    await db.Store.InsertAsync(item);
+                    var entity = await db.Store.Table<ConnectionManifestFeature>().FirstOrDefaultAsync(s => s.ConnectionId == item.ConnectionId && s.FeatureId == item.FeatureId);
+                    if (entity != null)
+                    {
+                        entity.FeatureVersion = item.FeatureVersion;
+                        entity.FeatureMinFeatureIntegrationPoint = item.FeatureMinFeatureIntegrationPoint;
+                        entity.FeatureMinControlIntegrationPoint = item.FeatureMinControlIntegrationPoint;
+                        entity.FeatureId = item.FeatureId;
+                        entity.FeatureFeatureIntegrationPoint = item.FeatureFeatureIntegrationPoint;
+                        entity.FeatureDisplayName = item.FeatureDisplayName;
+                        entity.FeatureControlIntegrationPoint = item.FeatureControlIntegrationPoint;
+                        entity.ConnectionId = item.ConnectionId;
+                        await UpdateItemAsync(entity);
+                    } else
+                    {
+                        if (item.Id == Guid.Empty)
+                            item.Id = Guid.NewGuid();
+                        await db.Store.InsertAsync(item);
+                    }
                 }
             }
             catch (Exception ex)
@@ -72,9 +88,12 @@ namespace Rediscovery.Features.Authentication
                 );
         }
 
-        public async Task<IEnumerable<ConnectionManifestFeature>> GetItemsAsync(Guid connectionId)
+        public async Task<IEnumerable<ConnectionManifestFeature>> GetItemsAsync()
         {
-            return await db.Store.Table<ConnectionManifestFeature>().Where(x => x.ConnectionId == connectionId).ToListAsync();
+            var conModel = await connection.GetModel();
+            if (conModel != null)
+                return await db.Store.Table<ConnectionManifestFeature>().Where(x => x.ConnectionId == conModel.Id).ToListAsync();
+            return null;
         }
 
         public async Task<bool> UpdateItemAsync(ConnectionManifestFeature item)

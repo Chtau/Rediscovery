@@ -21,10 +21,10 @@ namespace Rediscovery.Features.DesktopFeatures
             BindingContext = viewModel = new DesktopFeaturesViewModel();
         }
 
-        protected override void OnAppearing()
+        protected async override void OnAppearing()
         {
             base.OnAppearing();
-            viewModel.Load();
+            await viewModel.Load();
         }
 
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)

@@ -35,6 +35,6 @@ namespace Rediscovery.Services
         Task<bool> DeleteAllAsync(Guid connectionId);
         Task<bool> DeleteItemAsync(Guid connectionId, Guid id);
         Task<T> GetItemAsync(Guid connectionId, Guid id);
-        Task<IEnumerable<T>> GetItemsAsync(Guid connectionId);
+        Task<IEnumerable<T>> GetItemsAsync();
     }
 }
