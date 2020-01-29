@@ -20,7 +20,6 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.TerminalPage
             InitializeComponent();
 
             BindingContext = viewModel = model;
-            featureExchange.Init(model.Connection);
             featureExchange.DesktopResponseReceived += FeatureExchange_DesktopResponseReceived;
             terminal.AddLines("Rediscovery Terminal Version " + model.ConnectionManifestFeature.FeatureVersion);
             terminal.SendCommand += Terminal_SendCommand;

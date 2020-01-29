@@ -25,22 +25,22 @@ namespace Rediscovery
             MainPage = new MainPage();
         }
 
-        protected override void OnStart()
+        protected async override void OnStart()
         {
             // Handle when your app starts
-            connect.AutoConnect();
+            await connect.AutoConnect();
         }
 
-        protected override void OnSleep()
+        protected async override void OnSleep()
         {
             // Handle when your app sleeps
-            connect.CloseConnections();
+            await connect.CloseConnections();
         }
 
-        protected override void OnResume()
+        protected async override void OnResume()
         {
             // Handle when your app resumes
-            connect.AutoConnect();
+            await connect.AutoConnect();
         }
     }
 }

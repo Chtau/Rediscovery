@@ -64,7 +64,7 @@ namespace Rediscovery.Features.Authentication
 
         public async Task AutoConnect()
         {
-            var model = (await connectionStore.GetItemsAsync())?.FirstOrDefault(x => x.Active);
+            var model = await GetModel();
             if (model != null)
                 await OnTryConnect(model);
             return;
@@ -118,7 +118,25 @@ namespace Rediscovery.Features.Authentication
 
         public async Task<Models.Connection> GetModel()
         {
-            return (await connectionStore.GetItemsAsync())?.FirstOrDefault(x => x.Active);
+            try
+            {
+                var models = await connectionStore.GetItemsAsync();
+                var activeModel = models?.FirstOrDefault(x => x.Active);
+                if (activeModel != null)
+                    return activeModel;
+                if (models.Count() == 1)
+                {
+                    var newActiveModel = models.First();
+                    newActiveModel.Active = true;
+                    newActiveModel.AutoConnect = true;
+                    connectionStore.UpdateItem(newActiveModel);
+                    return newActiveModel;
+                }
+            } catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+            return null;
         }
 
         private async Task<HubConnection> GetConnection(Models.Connection model, HubTypes hubTypes)
