@@ -15,50 +15,57 @@ namespace Rediscovery.Features.DesktopFeatures
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private Features.Authentication.IConnect connection => DependencyService.Get<Features.Authentication.IConnect>() ?? new Features.Authentication.Connect();
         private Connection model;
+        private HubConnection featureHub;
 
         public event EventHandler<(Guid connectionId, Guid featureId, object data)> DesktopResponseReceived;
 
         public FeatureExchange()
         {
             connection.ConnectionChanged += Connection_ConnectionChanged;
+            Init().GetAwaiter();
         }
 
         private void Connection_ConnectionChanged(object sender, Connection e)
         {
             if (model != null && e.Id == model.Id)
             {
-                Init(e).GetAwaiter();
+                Init().GetAwaiter();
             }
         }
 
-        public async Task Init(Connection model)
+        private async Task Init()
         {
-            this.model = model;
-            var con = await connection.GetConnection(this.model, Features.Authentication.Connect.HubTypes.Feature);
-            if (con != null)
+            this.model = await connection.GetModel();
+            if (model != null)
             {
-                OnDesktopRespone(con, this.model);
+                if (featureHub != null)
+                    await connection.CloseConnections();
+                featureHub = await connection.GetConnectionFeature();
+                if (featureHub != null)
+                {
+                    featureHub.Remove("ClientResponse");
+                    featureHub.On<Guid, object>("ClientResponse", (Guid featureId, object data) =>
+                    {
+                        logger.Message($"Desktop response received ({DateTime.Now})");
+                        DesktopResponseReceived?.Invoke(this, (model.Id, featureId, data));
+                    });
+                }
+            } else
+            {
+                logger.Message("Feature exchange init without a connection model");
             }
         }
 
         public async Task Send(ConnectionManifestFeature feature, object data)
         {
-            var con = await connection.GetConnection(this.model, Features.Authentication.Connect.HubTypes.Feature);
-            if (con != null)
+            if (featureHub != null)
             {
                 logger.Message($"send feature message to {model.DisplayName} ({DateTime.Now})");
-                await con.InvokeAsync("ClientMessage", feature.FeatureId, data);
-            }
-        }
-
-        private void OnDesktopRespone(HubConnection con, Connection model)
-        {
-            con.Remove("ClientResponse");
-            con.On<Guid, object>("ClientResponse", (Guid featureId, object data) =>
+                await featureHub.InvokeAsync("ClientMessage", feature.FeatureId, data);
+            } else
             {
-                logger.Message($"Desktop response received from {model.DisplayName} ({DateTime.Now})");
-                DesktopResponseReceived?.Invoke(this, (model.Id, featureId, data));
-            });
+                logger.Message("Try to send feature exchange message without hub connection");
+            }
         }
     }
 }

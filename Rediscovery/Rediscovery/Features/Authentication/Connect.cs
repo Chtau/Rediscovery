@@ -72,7 +72,7 @@ namespace Rediscovery.Features.Authentication
 
         public async Task<HubConnection> GetConnectionAuth()
         {
-            var model = await OnGetModel();
+            var model = await GetModel();
             if (model != null)
                 return await OnGetHubConnection(await OnGetHub(model, HubTypes.Auth), model);
             return null;
@@ -80,7 +80,7 @@ namespace Rediscovery.Features.Authentication
 
         public async Task<HubConnection> GetConnectionFeature()
         {
-            var model = await OnGetModel();
+            var model = await GetModel();
             return await OnGetHubConnection(await OnGetHub(model, HubTypes.Feature), model);
         }
 
@@ -116,7 +116,7 @@ namespace Rediscovery.Features.Authentication
             }
         }
 
-        private async Task<Models.Connection> OnGetModel()
+        public async Task<Models.Connection> GetModel()
         {
             return (await connectionStore.GetItemsAsync())?.FirstOrDefault(x => x.Active);
         }
