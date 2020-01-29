@@ -71,6 +71,7 @@ namespace Rediscovery.Features.Authentication
                         FeatureDisplayName = item.DisplayName,
                         FeatureControlIntegrationPoint = item.ControlIntegrationPoint,
                         FeatureFeatureIntegrationPoint = item.FeatureIntegrationPoint,
+                        ControlIntegration = item.ControlIntegration,
                         FeatureId = item.Id,
                         FeatureMinControlIntegrationPoint = SharedCoreModels.Version.ConvertFrom(item.MinControlIntegrationPoint),
                         FeatureMinFeatureIntegrationPoint = SharedCoreModels.Version.ConvertFrom(item.MinFeatureIntegrationPoint),

@@ -36,6 +36,7 @@ namespace DesktopFeatureConsole
                 Id = new Guid("558AC5BD-5B76-433D-8CD7-BCBB7596AAA1"),
                 ControlIntegrationPoint = DeviceFeature.IntegrationPoint.Mobile,
                 FeatureIntegrationPoint = DeviceFeature.IntegrationPoint.Desktop,
+                ControlIntegration = DeviceFeature.ControlIntegrationType.Terminal,
                 MinControlIntegrationPoint = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
                 MinFeatureIntegrationPoint = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
                 Version = new SharedCoreModels.Version() { Major = 0, Minor = 0 },

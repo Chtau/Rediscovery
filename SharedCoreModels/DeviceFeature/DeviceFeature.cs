@@ -12,8 +12,15 @@ namespace SharedCoreModels.DeviceFeature
             Mobile = 1
         }
 
+        public enum ControlIntegrationType
+        {
+            None,
+            Terminal
+        }
+
         public IntegrationPoint FeatureIntegrationPoint { get; set; } = IntegrationPoint.Desktop;
         public IntegrationPoint ControlIntegrationPoint { get; set; } = IntegrationPoint.Mobile;
+        public ControlIntegrationType ControlIntegration { get; set; } = ControlIntegrationType.Terminal;
         public string DisplayName { get; set; }
         public Guid Id { get; set; }
         public Version Version { get; set; }

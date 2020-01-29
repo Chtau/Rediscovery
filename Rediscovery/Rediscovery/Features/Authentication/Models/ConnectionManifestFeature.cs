@@ -72,5 +72,12 @@ namespace Rediscovery.Features.Authentication.Models
             get { return _featureControlIntegrationPoint; }
             set { SetProperty(ref _featureControlIntegrationPoint, value); }
         }
+
+        private SharedCoreModels.DeviceFeature.DeviceFeature.ControlIntegrationType controlIntegration;
+        public SharedCoreModels.DeviceFeature.DeviceFeature.ControlIntegrationType ControlIntegration
+        {
+            get { return controlIntegration; }
+            set { SetProperty(ref controlIntegration, value); }
+        }
     }
 }

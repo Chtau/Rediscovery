@@ -32,8 +32,14 @@ namespace Rediscovery.Features.DesktopFeatures
             Features.Authentication.Models.ConnectionManifestFeature item = args.SelectedItem as Features.Authentication.Models.ConnectionManifestFeature;
             if (item == null)
                 return;
-
-            //await Navigation.PushModalAsync(new NavigationPage(new FeaturePage.DesktopFeaturePageDetail(new FeaturePage.DesktopFeaturePageDetailViewModel(viewModel.Connection, item))));
+            switch (item.ControlIntegration)
+            {
+                case SharedCoreModels.DeviceFeature.DeviceFeature.ControlIntegrationType.Terminal:
+                    await Navigation.PushModalAsync(new NavigationPage(new FeaturePage.TerminalPage.TerminalFeaturePage(new FeaturePage.TerminalPage.DesktopFeaturePageDetailViewModel(item))));
+                    break;
+                default:
+                    break;
+            }
 
             FeatureControl.SelectedItem = null;
         }

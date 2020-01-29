@@ -30,6 +30,7 @@ namespace Rediscovery.Features.Authentication
                     entity.FeatureFeatureIntegrationPoint = item.FeatureFeatureIntegrationPoint;
                     entity.FeatureDisplayName = item.FeatureDisplayName;
                     entity.FeatureControlIntegrationPoint = item.FeatureControlIntegrationPoint;
+                    entity.ControlIntegration = item.ControlIntegration;
                     entity.ConnectionId = item.ConnectionId;
                     await UpdateItemAsync(entity);
                 }
@@ -41,6 +42,7 @@ namespace Rediscovery.Features.Authentication
                         entity.FeatureVersion = item.FeatureVersion;
                         entity.FeatureMinFeatureIntegrationPoint = item.FeatureMinFeatureIntegrationPoint;
                         entity.FeatureMinControlIntegrationPoint = item.FeatureMinControlIntegrationPoint;
+                        entity.ControlIntegration = item.ControlIntegration;
                         entity.FeatureId = item.FeatureId;
                         entity.FeatureFeatureIntegrationPoint = item.FeatureFeatureIntegrationPoint;
                         entity.FeatureDisplayName = item.FeatureDisplayName;
