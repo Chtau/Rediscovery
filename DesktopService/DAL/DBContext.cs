@@ -24,8 +24,14 @@ namespace DesktopService.DAL
 
         public async Task Connect()
         {
-            DB = new SQLiteAsyncConnection(System.IO.Path.Combine(AppFolders.GetUserFolder(_appSettings.AppDataFolder), "rediscovery.db"));
-            await OnBuildModel();
+            try
+            {
+                DB = new SQLiteAsyncConnection(System.IO.Path.Combine(AppFolders.GetUserFolder(_appSettings.AppDataFolder), "rediscovery.db"));
+                await OnBuildModel();
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+            }
         }
 
         private async Task OnBuildModel()

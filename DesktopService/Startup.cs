@@ -99,7 +99,6 @@ namespace DesktopService
             services.AddSingleton<Features.Pipes.IPipeIncomingConnection, Features.Pipes.PipeIncomingConnection>();
             services.AddSingleton<Features.Pipes.IPipeRepository, Features.Pipes.PipeRepository>();
             services.AddSingleton<IFeatureService, FeatureService>();
-            services.AddSingleton<Services.ILogger, Services.Logger>();
         }
 
         // Use this method to configure the HTTP request pipeline.

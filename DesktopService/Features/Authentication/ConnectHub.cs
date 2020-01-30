@@ -1,6 +1,7 @@
 ﻿using DesktopService.Features.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,7 +18,7 @@ namespace DesktopService.Features.Authentication
         private readonly IDeviceService _deviceService;
         private readonly Pipes.IPipeIncomingConnection _pipeIncomingConnection;
 
-        public ConnectHub(Features.Authentication.IAuth auth, IManifest manifest, IDeviceService deviceService,
+        public ConnectHub(ILoggerFactory loggerFactory, Features.Authentication.IAuth auth, IManifest manifest, IDeviceService deviceService,
             Pipes.IPipeIncomingConnection pipeIncomingConnection)
         {
             _auth = auth;
