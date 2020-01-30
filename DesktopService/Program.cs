@@ -17,8 +17,9 @@ namespace DesktopService
 
         public static void Main(string[] args)
         {
+            //System.Threading.Thread.Sleep(30000);
             //CreateHostBuilder(args).Build().Run();
-            var isService = !(Debugger.IsAttached || args.Contains("--console"));
+            var isService = false;// !(Debugger.IsAttached || args.Contains("--console"));
 
             if (isService)
             {
