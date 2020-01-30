@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using DesktopService.Features.Identity.Models;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -15,12 +16,14 @@ namespace DesktopService.Features.Identity
     {
         public event EventHandler<Device> NewDeviceAdded;
 
+        private readonly ILogger<DeviceService> _logger;
         private readonly Models.IdentitySettings _identitySettings;
         private readonly Random _random;
         private readonly DAL.IDBContext _dBContext;
 
-        public DeviceService(IOptions<Models.IdentitySettings> identitySettings, DAL.IDBContext dBContext)
+        public DeviceService(ILoggerFactory loggerFactory, IOptions<Models.IdentitySettings> identitySettings, DAL.IDBContext dBContext)
         {
+            _logger = loggerFactory.CreateLogger<DeviceService>();
             _dBContext = dBContext;
             _identitySettings = identitySettings.Value;
             _random = new Random();
@@ -29,94 +32,130 @@ namespace DesktopService.Features.Identity
 
         public async Task<Device> Authenticate(string deviceName, string passwordKey)
         {
-            var user = await _dBContext.Instance.Table<Models.Device>().FirstOrDefaultAsync(x => x.DeviceName == deviceName && x.PasswordKey == passwordKey && x.PasswordKeyValidTill > DateTime.UtcNow);
-
-            // return null if user not found
-            if (user == null)
-                return null;
-
-            user.AllowAccess = true; // update user db
-            user.PasswordKeyValidTill = DateTime.MaxValue;
-
-            // authentication successful so generate jwt token
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_identitySettings.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
+            try
             {
-                Subject = new ClaimsIdentity(new Claim[]
+                var user = await _dBContext.Instance.Table<Models.Device>().FirstOrDefaultAsync(x => x.DeviceName == deviceName && x.PasswordKey == passwordKey && x.PasswordKeyValidTill > DateTime.UtcNow);
+
+                // return null if user not found
+                if (user == null)
+                    return null;
+
+                user.AllowAccess = true; // update user db
+                user.PasswordKeyValidTill = DateTime.MaxValue;
+
+                // authentication successful so generate jwt token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(_identitySettings.Secret);
+                var tokenDescriptor = new SecurityTokenDescriptor
                 {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
                     new Claim(ClaimTypes.Sid, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.DeviceName),
-                }),
-                Expires = DateTime.UtcNow.AddDays(180),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            user.Token = tokenHandler.WriteToken(token);
+                    }),
+                    Expires = DateTime.UtcNow.AddDays(180),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                user.Token = tokenHandler.WriteToken(token);
 
-            await OnUpdateUser(user);
+                await OnUpdateUser(user);
 
-            // remove password before returning
-            user.PasswordKey = null;
+                // remove password before returning
+                user.PasswordKey = null;
 
-            return user;
+                return user;
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return null;
+            }
         }
 
         public async Task<IEnumerable<Device>> GetAll()
         {
-            var users = await _dBContext.Instance.Table<Models.Device>().ToListAsync();
+            try
+            {
+                var users = await _dBContext.Instance.Table<Models.Device>().ToListAsync();
 
-            return users.Select(x => {
-                x.PasswordKey = null;
-                return x;
-            });
+                return users.Select(x => {
+                    x.PasswordKey = null;
+                    return x;
+                });
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return null;
+            }
         }
 
         public async Task<Device> GetById(Guid id)
         {
-            var user = await _dBContext.Instance.Table<Models.Device>().FirstOrDefaultAsync(x => x.Id == id);
-            if (user != null)
-                user.PasswordKey = null;
+            try
+            {
+                var user = await _dBContext.Instance.Table<Models.Device>().FirstOrDefaultAsync(x => x.Id == id);
+                if (user != null)
+                    user.PasswordKey = null;
 
-            return user;
+                return user;
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return null;
+            }
         }
 
         public async Task<Device> GetByName(string deviceName)
         {
+            try
+            {
 #pragma warning disable RCS1155 // Use StringComparison when comparing strings.
-            var user = await _dBContext.Instance.Table<Models.Device>().FirstOrDefaultAsync(x => x.DeviceName.ToLower() == deviceName.ToLower());
+                var user = await _dBContext.Instance.Table<Models.Device>().FirstOrDefaultAsync(x => x.DeviceName.ToLower() == deviceName.ToLower());
 #pragma warning restore RCS1155 // Use StringComparison when comparing strings.
-            if (user != null)
-                user.PasswordKey = null;
+                if (user != null)
+                    user.PasswordKey = null;
 
-            return user;
+                return user;
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return null;
+            }
         }
 
         public async Task<Device> AddDevice(string deviceName)
         {
-            Device user = await GetByName(deviceName);
-            if (user != null)
+            try
             {
-                user.Token = null;
-                if (user.PasswordKeyValidTill >= DateTime.UtcNow || string.IsNullOrWhiteSpace(user.PasswordKey))
+                Device user = await GetByName(deviceName);
+                if (user != null)
                 {
-                    user.PasswordKey = OnCreatePasswordKey();
-                    user.PasswordKeyValidTill = DateTime.UtcNow.AddMinutes(5);
+                    user.Token = null;
+                    if (user.PasswordKeyValidTill >= DateTime.UtcNow || string.IsNullOrWhiteSpace(user.PasswordKey))
+                    {
+                        user.PasswordKey = OnCreatePasswordKey();
+                        user.PasswordKeyValidTill = DateTime.UtcNow.AddMinutes(5);
+                    }
+                    await OnUpdateUser(user);
                 }
-                await OnUpdateUser(user);
-            } else
-            {
-                user = new Device
+                else
                 {
-                    Id = Guid.NewGuid(),
-                    PasswordKey = OnCreatePasswordKey(),
-                    DeviceName = deviceName,
-                    PasswordKeyValidTill = DateTime.UtcNow.AddMinutes(5)
-                };
-                await OnAddUser(user);
+                    user = new Device
+                    {
+                        Id = Guid.NewGuid(),
+                        PasswordKey = OnCreatePasswordKey(),
+                        DeviceName = deviceName,
+                        PasswordKeyValidTill = DateTime.UtcNow.AddMinutes(5)
+                    };
+                    await OnAddUser(user);
+                }
+                NewDeviceAdded?.Invoke(this, user);
+                return user;
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return null;
             }
-            NewDeviceAdded?.Invoke(this, user);
-            return user;
         }
 
         private async Task OnUpdateUser(Device device)
