@@ -11,12 +11,16 @@ namespace DesktopFeatureMediaPlayer
     {
         private DeviceFeatureData currentDeviceFeatureData;
         private List<MediaPlayerController> controllers = new List<MediaPlayerController>();
+        private ProfileConfiguration currentProfileConfiguration;
 
         public event EventHandler<DeviceFeatureData> SendData;
 
-        public DeviceFeatureMediaPlayer()
+        public DeviceFeatureMediaPlayer(ProfileConfiguration profileConfiguration)
         {
-            OnAddDefaultControllers();
+            currentProfileConfiguration = profileConfiguration;
+            var controller = new MediaPlayerController(currentProfileConfiguration);
+            controller.InitWatcher();
+            controllers.Add(controller);
         }
 
         public void Dispose()
@@ -28,13 +32,14 @@ namespace DesktopFeatureMediaPlayer
         {
             return new DeviceFeature
             {
-                DisplayName = "Media Player",
-                Id = new Guid("36CCEE18-583F-4ED9-82E9-3033495665DB"),
+                DisplayName = currentProfileConfiguration.DisplayName,
+                Id = currentProfileConfiguration.Id,
                 ControlIntegrationPoint = DeviceFeature.IntegrationPoint.Mobile,
                 FeatureIntegrationPoint = DeviceFeature.IntegrationPoint.Desktop,
                 ControlIntegration = DeviceFeature.ControlIntegrationType.MediaPlayer,
                 MinControlIntegrationPoint = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
                 MinFeatureIntegrationPoint = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
+                SettingsObject = currentProfileConfiguration.CommandAvailable,
                 Version = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
             };
         }
@@ -95,20 +100,9 @@ namespace DesktopFeatureMediaPlayer
             }
         }
 
-        private void OnAddDefaultControllers()
+        public static List<ProfileConfiguration> GetProfiles()
         {
-            if (controllers == null)
-                controllers = new List<MediaPlayerController>();
-            var profiles = MediaPlayerDefaultProfiles.GetProfileConfigurations();
-            if (profiles != null && profiles.Count > 0)
-            {
-                foreach (var item in profiles)
-                {
-                    var controller = new MediaPlayerController(item);
-                    controller.InitWatcher();
-                    controllers.Add(controller);
-                }
-            }
+            return MediaPlayerDefaultProfiles.GetProfileConfigurations();
         }
 
         private MediaPlayerController OnGetController(Guid profileId)

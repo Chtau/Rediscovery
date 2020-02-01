@@ -42,13 +42,16 @@ namespace DesktopService.Features.DeviceFeature
                 ResponseToClient(console.GetDeviceFeatureInfo().Id, e);
             };
             deviceFeatureImplementations.Add(console);
-            var mediaPlayer = new DesktopFeatureMediaPlayer.DeviceFeatureMediaPlayer();
-            mediaPlayer.SendData += (object sender, DeviceFeatureData e) =>
+            foreach (var item in DesktopFeatureMediaPlayer.DeviceFeatureMediaPlayer.GetProfiles())
             {
-                System.Diagnostics.Debug.Print("Feature response =>" + e.Data);
-                ResponseToClient(console.GetDeviceFeatureInfo().Id, e);
-            };
-            deviceFeatureImplementations.Add(mediaPlayer);
+                var mediaPlayer = new DesktopFeatureMediaPlayer.DeviceFeatureMediaPlayer(item);
+                mediaPlayer.SendData += (object sender, DeviceFeatureData e) =>
+                {
+                    System.Diagnostics.Debug.Print("Feature response =>" + e.Data);
+                    ResponseToClient(console.GetDeviceFeatureInfo().Id, e);
+                };
+                deviceFeatureImplementations.Add(mediaPlayer);
+            }
         }
 
         private void ResponseToClient(Guid featureId, DeviceFeatureData data)

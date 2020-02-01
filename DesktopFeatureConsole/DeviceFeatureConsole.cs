@@ -39,6 +39,7 @@ namespace DesktopFeatureConsole
                 ControlIntegration = DeviceFeature.ControlIntegrationType.Terminal,
                 MinControlIntegrationPoint = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
                 MinFeatureIntegrationPoint = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
+                SettingsObject = null,
                 Version = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
             };
         }
