@@ -22,7 +22,8 @@ namespace DesktopService
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _pipeRepository.Init();
-            Task.Run(() =>
+            // the Task.Run leads to a thread starvation
+            /*Task.Run(() =>
             {
                 Task.Delay(2000);
                 //_pipeIncomingConnection.ShowCode("999666", "internal-test");
@@ -31,7 +32,7 @@ namespace DesktopService
                     //Console.WriteLine($"{DateTime.Now}");
                     Task.Delay(500);
                 } while (!cancellationToken.IsCancellationRequested);
-            });
+            });*/
             return Task.CompletedTask;
         }
 
