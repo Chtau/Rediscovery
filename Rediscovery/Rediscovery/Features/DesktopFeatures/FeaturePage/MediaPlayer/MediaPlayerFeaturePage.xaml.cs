@@ -12,9 +12,12 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MediaPlayerFeaturePage : ContentPage
     {
-        public MediaPlayerFeaturePage()
+        MediaPlayerFeatureViewModel viewModel;
+
+        public MediaPlayerFeaturePage(MediaPlayerFeatureViewModel model)
         {
             InitializeComponent();
+            BindingContext = viewModel = model;
         }
 
         private async void Back_Clicked(object sender, EventArgs e)
