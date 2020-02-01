@@ -9,10 +9,14 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage
 {
     public class BaseFeatureViewModel : BaseViewModel
     {
+        public event EventHandler<object> ReceivedData;
+
         private IFeatureExchange featureExchange => DependencyService.Get<IFeatureExchange>() ?? new FeatureExchange();
 
         internal readonly Authentication.Models.ConnectionManifestFeature _connectionManifestFeature;
         internal ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
+
+        public string FeatureVersion => _connectionManifestFeature.FeatureVersion;
 
         public BaseFeatureViewModel(Authentication.Models.ConnectionManifestFeature connectionManifestFeature)
         {
@@ -25,15 +29,16 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage
             if (_connectionManifestFeature.ConnectionId == e.connectionId && _connectionManifestFeature.FeatureId == e.featureId)
             {
                 Receive(e.data);
+                ReceivedData?.Invoke(sender, e.data);
             }
         }
 
-        internal virtual void Send(object data)
+        public virtual void Send(object data)
         {
             featureExchange.Send(_connectionManifestFeature, data);
         }
 
-        internal virtual void Receive(object data)
+        public virtual void Receive(object data)
         {
 
         }

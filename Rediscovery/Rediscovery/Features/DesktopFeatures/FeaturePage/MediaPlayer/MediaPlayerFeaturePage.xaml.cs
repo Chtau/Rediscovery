@@ -17,7 +17,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             InitializeComponent();
         }
 
-        private void Back_Clicked(object sender, EventArgs e)
+        private async void Back_Clicked(object sender, EventArgs e)
         {
             await Navigation.PopModalAsync();
         }

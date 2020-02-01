@@ -38,7 +38,7 @@ namespace Rediscovery.Features.DesktopFeatures
                     await Navigation.PushModalAsync(new NavigationPage(new FeaturePage.MediaPlayer.MediaPlayerFeaturePage()));
                     break;
                 case SharedCoreModels.DeviceFeature.DeviceFeature.ControlIntegrationType.Terminal:
-                    await Navigation.PushModalAsync(new NavigationPage(new FeaturePage.TerminalPage.TerminalFeaturePage(new FeaturePage.TerminalPage.DesktopFeaturePageDetailViewModel(item))));
+                    await Navigation.PushModalAsync(new NavigationPage(new FeaturePage.TerminalPage.TerminalFeaturePage(new FeaturePage.TerminalPage.TerminalFeatureViewModel(item))));
                     break;
                 default:
                     break;

@@ -12,17 +12,21 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.TerminalPage
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class TerminalFeaturePage : ContentPage
     {
-        private IFeatureExchange featureExchange => DependencyService.Get<IFeatureExchange>() ?? new FeatureExchange();
-        DesktopFeaturePageDetailViewModel viewModel;
+        TerminalFeatureViewModel viewModel;
 
-        public TerminalFeaturePage(DesktopFeaturePageDetailViewModel model)
+        public TerminalFeaturePage(TerminalFeatureViewModel model)
         {
             InitializeComponent();
 
             BindingContext = viewModel = model;
-            featureExchange.DesktopResponseReceived += FeatureExchange_DesktopResponseReceived;
-            terminal.AddLines("Rediscovery Terminal Version " + model.ConnectionManifestFeature.FeatureVersion);
+            viewModel.ReceivedData += ViewModel_ReceivedData;
+            terminal.AddLines("Rediscovery Terminal Version " + model.FeatureVersion);
             terminal.SendCommand += Terminal_SendCommand;
+        }
+
+        private void ViewModel_ReceivedData(object sender, object e)
+        {
+            terminal.AddLines(e?.ToString());
         }
 
         private async void Back_Clicked(object sender, EventArgs e)
@@ -32,15 +36,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.TerminalPage
 
         private void Terminal_SendCommand(object sender, string e)
         {
-            featureExchange.Send(viewModel.ConnectionManifestFeature, e);
-        }
-
-        private void FeatureExchange_DesktopResponseReceived(object sender, (Guid connectionId, Guid featureId, object data) e)
-        {
-            if (viewModel.ConnectionManifestFeature.ConnectionId == e.connectionId && viewModel.ConnectionManifestFeature.FeatureId == e.featureId)
-            {
-                terminal.AddLines(e.data?.ToString());
-            }
+            viewModel.Send(e);
         }
     }
 }
