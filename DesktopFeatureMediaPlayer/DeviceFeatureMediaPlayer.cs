@@ -32,7 +32,7 @@ namespace DesktopFeatureMediaPlayer
                 Id = new Guid("36CCEE18-583F-4ED9-82E9-3033495665DB"),
                 ControlIntegrationPoint = DeviceFeature.IntegrationPoint.Mobile,
                 FeatureIntegrationPoint = DeviceFeature.IntegrationPoint.Desktop,
-                ControlIntegration = DeviceFeature.ControlIntegrationType.None,
+                ControlIntegration = DeviceFeature.ControlIntegrationType.MediaPlayer,
                 MinControlIntegrationPoint = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
                 MinFeatureIntegrationPoint = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
                 Version = new SharedCoreModels.Version() { Major = 0, Minor = 0 },

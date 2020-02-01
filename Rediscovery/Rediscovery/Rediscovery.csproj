@@ -54,12 +54,11 @@
     <EmbeddedResource Update="Features\DesktopFeatures\DesktopFeaturesPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Features\DesktopFeatures\FeaturePage\MediaPlayer\MediaPlayerFeaturePage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Features\DesktopFeatures\FeaturePage\TerminalPage\TerminalFeaturePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Features\DesktopFeatures\FeaturePage\MediaPlayer\" />
   </ItemGroup>
 </Project>

@@ -15,7 +15,8 @@ namespace SharedCoreModels.DeviceFeature
         public enum ControlIntegrationType
         {
             None,
-            Terminal
+            Terminal,
+            MediaPlayer
         }
 
         public IntegrationPoint FeatureIntegrationPoint { get; set; } = IntegrationPoint.Desktop;
