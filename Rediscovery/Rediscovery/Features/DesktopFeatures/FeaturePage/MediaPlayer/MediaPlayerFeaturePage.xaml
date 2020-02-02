@@ -21,6 +21,9 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+            <StackLayout>
+                <Button Command="{Binding PlayCommand}" Text="Play/Pause"/>
+            </StackLayout>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

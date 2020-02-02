@@ -75,6 +75,12 @@ namespace Rediscovery.Features.Authentication
                         .Build();
                     }
                     await connection.StartAsync();
+                    for (int i = 0; i < 50; i++)
+                    {
+                        await Task.Delay(50);
+                        if (connection.State == HubConnectionState.Connected)
+                            break;
+                    }
                     AfterCreateNewConnection(connection, model);
                     ConnectionChanged?.Invoke(this, model);
                 }
