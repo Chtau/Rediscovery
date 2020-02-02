@@ -16,23 +16,23 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             set { SetProperty(ref commands, value); }
         }
 
-        public ICommand PlayCommand;
-        public ICommand FullscreenExitCommand;
-        public ICommand FullscreenCommand;
-        public ICommand NextCommand;
-        public ICommand PreviousCommand;
-        public ICommand StopCommand;
-        public ICommand MuteCommand;
-        public ICommand VolumneUpCommand;
-        public ICommand VolumneDownCommand;
-        public ICommand SpeedSlowerCommand;
-        public ICommand SpeedFasterCommand;
-        public ICommand JumpForwardCommand;
-        public ICommand JumpBackwardCommand;
+        public ICommand PlayCommand { get; set; }
+        public ICommand FullscreenExitCommand { get; set; }
+        public ICommand FullscreenCommand { get; set; }
+        public ICommand NextCommand { get; set; }
+        public ICommand PreviousCommand { get; set; }
+        public ICommand StopCommand { get; set; }
+        public ICommand MuteCommand { get; set; }
+        public ICommand VolumneUpCommand { get; set; }
+        public ICommand VolumneDownCommand { get; set; }
+        public ICommand SpeedSlowerCommand { get; set; }
+        public ICommand SpeedFasterCommand { get; set; }
+        public ICommand JumpForwardCommand { get; set; }
+        public ICommand JumpBackwardCommand { get; set; }
 
         public MediaPlayerFeatureViewModel(Authentication.Models.ConnectionManifestFeature connectionManifestFeature) : base(connectionManifestFeature)
         {
-            Commands = connectionManifestFeature.SettingsObject as List<CommandTypes>;
+            Commands = System.Text.Json.JsonSerializer.Deserialize<List<CommandTypes>>(connectionManifestFeature.SettingsObject?.ToString());
             OnSetCommand();
         }
 
