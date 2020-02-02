@@ -27,10 +27,10 @@ namespace Rediscovery.Features.DesktopFeatures
 
         private void Connection_ConnectionChanged(object sender, Connection e)
         {
-            if (model != null && e.Id == model.Id)
+            /*if (model != null && e.Id == model.Id)
             {
                 Init().GetAwaiter();
-            }
+            }*/
         }
 
         private async Task Init()

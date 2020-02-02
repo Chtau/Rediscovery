@@ -14,15 +14,32 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <StackLayout>
+            <StackLayout Orientation="Horizontal" Grid.Row="0">
                 <Button Command="{Binding PlayCommand}" Text="Play/Pause"/>
+                <Button Command="{Binding VolumneDownCommand}" Text="Volume down"/>
+                <Button Command="{Binding VolumneUpCommand}" Text="Volume up"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" Grid.Row="1">
+                <Button Command="{Binding PreviousCommand}" Text="Previous"/>
+                <Button Command="{Binding NextCommand}" Text="Next"/>
+                <Button Command="{Binding StopCommand}" Text="Stop"/>
+                <Button Command="{Binding MuteCommand}" Text="Mute"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" Grid.Row="2">
+                <Button Command="{Binding SpeedSlowerCommand}" Text="Speed Slower"/>
+                <Button Command="{Binding SpeedFasterCommand}" Text="Speed Faster"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" Grid.Row="3">
+                <Button Command="{Binding JumpBackwardCommand}" Text="Jump Backward"/>
+                <Button Command="{Binding JumpForwardCommand}" Text="Jump Forward"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" Grid.Row="4">
+                <Button Command="{Binding FullscreenCommand}" Text="Fullscreen"/>
+                <Button Command="{Binding FullscreenExitCommand}" Text="Fullscreen Exit"/>
             </StackLayout>
         </Grid>
     </ContentPage.Content>

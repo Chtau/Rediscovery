@@ -142,6 +142,19 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             {
                 return Commands.Contains(CommandTypes.JumpBackward);
             });
+            (PlayCommand as Command).ChangeCanExecute();
+            (FullscreenExitCommand as Command).ChangeCanExecute();
+            (FullscreenCommand as Command).ChangeCanExecute();
+            (NextCommand as Command).ChangeCanExecute();
+            (PreviousCommand as Command).ChangeCanExecute();
+            (StopCommand as Command).ChangeCanExecute();
+            (MuteCommand as Command).ChangeCanExecute();
+            (VolumneUpCommand as Command).ChangeCanExecute();
+            (VolumneDownCommand as Command).ChangeCanExecute();
+            (SpeedSlowerCommand as Command).ChangeCanExecute();
+            (SpeedFasterCommand as Command).ChangeCanExecute();
+            (JumpForwardCommand as Command).ChangeCanExecute();
+            (JumpBackwardCommand as Command).ChangeCanExecute();
         }
 
         public void Send(CommandTypes cmd)

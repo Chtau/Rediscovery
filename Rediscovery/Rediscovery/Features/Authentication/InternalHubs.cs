@@ -42,6 +42,12 @@ namespace Rediscovery.Features.Authentication
             {
                 if (connection != null)
                 {
+                    for (int i = 0; i < 50; i++)
+                    {
+                        if (connection.State == HubConnectionState.Connected)
+                            break;
+                        await Task.Delay(50);
+                    }
                     if (connection.State != HubConnectionState.Connected)
                     {
                         logger.Message($"Reconnect to connection {model.DisplayName} ({DateTime.Now.ToString()})");
