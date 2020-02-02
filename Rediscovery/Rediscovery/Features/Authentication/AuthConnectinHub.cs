@@ -15,7 +15,7 @@ namespace Rediscovery.Features.Authentication
         const string AuthHubLink = "/hubs/connect";
 
         private IDataStoreGuid<Models.Connection> connectionStore => DependencyService.Get<IDataStoreGuid<Models.Connection>>() ?? new ConnectionStore();
-        private IDataStoreConnectionGuid<Models.ConnectionManifestFeature> connectionManifestFeatureStore => DependencyService.Get<IDataStoreConnectionGuid<Models.ConnectionManifestFeature>>() ?? new ConnectionManifestFeatureStore();
+        private IEntityManager entityManager => DependencyService.Get<IEntityManager>() ?? new EntityManager();
 
         public event EventHandler<Models.Connection> HelloReceived;
         public event EventHandler<Tuple<Models.Connection, List<Models.ConnectionManifestFeature>>> ManifestReceived;
@@ -77,8 +77,8 @@ namespace Rediscovery.Features.Authentication
                         FeatureMinFeatureIntegrationPoint = SharedCoreModels.Version.ConvertFrom(item.MinFeatureIntegrationPoint),
                         FeatureVersion = SharedCoreModels.Version.ConvertFrom(item.Version),
                     };
-                    await connectionManifestFeatureStore.AddItemAsync(feature);
                     features.Add(feature);
+                    entityManager.ConnectionManifestFeatures.Add(feature);
                 }
                 ManifestReceived?.Invoke(this, new Tuple<Models.Connection, List<Models.ConnectionManifestFeature>>(model, features));
             });
