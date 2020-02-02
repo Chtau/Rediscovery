@@ -38,20 +38,5 @@ namespace Rediscovery.Features.DesktopFeatures
                 ConnectionManifestFeaturesControl.Add(item);
             }
         }
-
-        public async Task Load()
-        {
-            /*if (ConnectionManifestFeaturesControl == null)
-                ConnectionManifestFeaturesControl = new ObservableCollection<ConnectionManifestFeature>();
-            ConnectionManifestFeaturesControl.Clear();
-            var items = await entityManager.GetConnectionManifestFeatureAsync();
-            if (items != null)
-            {
-                foreach (var item in items)
-                {
-                    ConnectionManifestFeaturesControl.Add(item);
-                }
-            }*/
-        }
     }
 }

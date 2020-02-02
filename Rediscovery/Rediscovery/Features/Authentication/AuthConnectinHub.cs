@@ -76,6 +76,7 @@ namespace Rediscovery.Features.Authentication
                         FeatureMinControlIntegrationPoint = SharedCoreModels.Version.ConvertFrom(item.MinControlIntegrationPoint),
                         FeatureMinFeatureIntegrationPoint = SharedCoreModels.Version.ConvertFrom(item.MinFeatureIntegrationPoint),
                         FeatureVersion = SharedCoreModels.Version.ConvertFrom(item.Version),
+                        SettingsObject = item.SettingsObject
                     };
                     features.Add(feature);
                     entityManager.ConnectionManifestFeatures.Add(feature);

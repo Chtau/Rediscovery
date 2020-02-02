@@ -79,5 +79,12 @@ namespace Rediscovery.Features.Authentication.Models
             get { return controlIntegration; }
             set { SetProperty(ref controlIntegration, value); }
         }
+
+        private object settingsObject;
+        public object SettingsObject
+        {
+            get { return settingsObject; }
+            set { SetProperty(ref settingsObject, value); }
+        }
     }
 }
