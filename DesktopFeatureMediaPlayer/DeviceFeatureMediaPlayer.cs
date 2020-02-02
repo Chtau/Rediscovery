@@ -54,7 +54,8 @@ namespace DesktopFeatureMediaPlayer
             if (data != null && !string.IsNullOrWhiteSpace(data.Data?.ToString()))
             {
                 currentDeviceFeatureData = data;
-                if (currentDeviceFeatureData.Data is SharedCoreModels.FeatureModels.MediaPlayer.ClientCommandSendModel commandModel && commandModel != null)
+                var commandModel = Newtonsoft.Json.JsonConvert.DeserializeObject<ClientCommandSendModel>(data.Data?.ToString());
+                if (commandModel != null)
                 {
                     OnHandleCommand(commandModel);
                 }
