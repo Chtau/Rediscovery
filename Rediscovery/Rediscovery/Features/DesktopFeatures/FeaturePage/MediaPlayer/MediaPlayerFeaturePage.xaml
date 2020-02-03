@@ -32,36 +32,6 @@
                 <Setter Property="HighlightForegroundColor" Value="#49516F" />
                 <Setter Property="HighlightBackgroundColor" Value="#8EA4D2" />
             </Style>
-            <Style x:Key="RoundLargeFlexButton" TargetType="flex:FlexButton">
-                <Setter Property="BackgroundColor" Value="#6279B8" />
-                <Setter Property="ForegroundColor" Value="#ffffff" />
-                <Setter Property="HighlightForegroundColor" Value="#49516F" />
-                <Setter Property="HighlightBackgroundColor" Value="#8EA4D2" />
-                <Setter Property="WidthRequest" Value="80" />
-                <Setter Property="HeightRequest" Value="80" />
-                <Setter Property="CornerRadius" Value="40" />
-                <Setter Property="VerticalOptions" Value="Start" />
-            </Style>
-            <Style x:Key="RoundSmallFlexButton" TargetType="flex:FlexButton">
-                <Setter Property="BackgroundColor" Value="#6279B8" />
-                <Setter Property="ForegroundColor" Value="#ffffff" />
-                <Setter Property="HighlightForegroundColor" Value="#49516F" />
-                <Setter Property="HighlightBackgroundColor" Value="#8EA4D2" />
-                <Setter Property="WidthRequest" Value="40" />
-                <Setter Property="HeightRequest" Value="40" />
-                <Setter Property="CornerRadius" Value="20" />
-                <Setter Property="VerticalOptions" Value="Start" />
-            </Style>
-            <Style x:Key="RoundMiddleFlexButton" TargetType="flex:FlexButton">
-                <Setter Property="BackgroundColor" Value="#6279B8" />
-                <Setter Property="ForegroundColor" Value="#ffffff" />
-                <Setter Property="HighlightForegroundColor" Value="#49516F" />
-                <Setter Property="HighlightBackgroundColor" Value="#8EA4D2" />
-                <Setter Property="WidthRequest" Value="60" />
-                <Setter Property="HeightRequest" Value="60" />
-                <Setter Property="CornerRadius" Value="30" />
-                <Setter Property="VerticalOptions" Value="Start" />
-            </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
 

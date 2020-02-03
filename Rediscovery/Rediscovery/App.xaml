@@ -3,16 +3,51 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:flex="clr-namespace:Flex.Controls;assembly=Flex"
              mc:Ignorable="d"
              x:Class="Rediscovery.App">
 
     <Application.Resources>
         <ResourceDictionary>
             <!--Global Styles-->
+            <Color x:Key="Primary">#2196F3</Color>
+            <Color x:Key="Foreground">#ffffff</Color>
+            <Color x:Key="PrimaryHighlight">#8EA4D2</Color>
+            <Color x:Key="ForegroundHighlight">#49516F</Color>
             <Color x:Key="NavigationPrimary">#2196F3</Color>
             <Style TargetType="NavigationPage">
                 <Setter Property="BarBackgroundColor" Value="{StaticResource NavigationPrimary}" />
                 <Setter Property="BarTextColor" Value="White" />
+            </Style>
+            <Style x:Key="RoundLargeFlexButton" TargetType="flex:FlexButton">
+                <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                <Setter Property="ForegroundColor" Value="{StaticResource Foreground}" />
+                <Setter Property="HighlightForegroundColor" Value="{StaticResource ForegroundHighlight}" />
+                <Setter Property="HighlightBackgroundColor" Value="{StaticResource PrimaryHighlight}" />
+                <Setter Property="WidthRequest" Value="80" />
+                <Setter Property="HeightRequest" Value="80" />
+                <Setter Property="CornerRadius" Value="40" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+            <Style x:Key="RoundSmallFlexButton" TargetType="flex:FlexButton">
+                <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                <Setter Property="ForegroundColor" Value="{StaticResource Foreground}" />
+                <Setter Property="HighlightForegroundColor" Value="{StaticResource ForegroundHighlight}" />
+                <Setter Property="HighlightBackgroundColor" Value="{StaticResource PrimaryHighlight}" />
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+            <Style x:Key="RoundMiddleFlexButton" TargetType="flex:FlexButton">
+                <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                <Setter Property="ForegroundColor" Value="{StaticResource Foreground}" />
+                <Setter Property="HighlightForegroundColor" Value="{StaticResource ForegroundHighlight}" />
+                <Setter Property="HighlightBackgroundColor" Value="{StaticResource PrimaryHighlight}" />
+                <Setter Property="WidthRequest" Value="60" />
+                <Setter Property="HeightRequest" Value="60" />
+                <Setter Property="CornerRadius" Value="30" />
+                <Setter Property="VerticalOptions" Value="Start" />
             </Style>
         </ResourceDictionary>
     </Application.Resources>
