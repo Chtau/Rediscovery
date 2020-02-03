@@ -6,7 +6,7 @@
              xmlns:flex="clr-namespace:Flex.Controls;assembly=Flex"
              mc:Ignorable="d"
              x:Class="Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer.MediaPlayerFeaturePage"
-             Title="Media Player">
+             Title="{Binding Title}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem x:Name="Back" Text="Back" Clicked="Back_Clicked" Icon="close_white.png"/>

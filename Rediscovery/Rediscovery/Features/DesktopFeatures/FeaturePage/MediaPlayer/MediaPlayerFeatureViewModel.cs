@@ -32,6 +32,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
 
         public MediaPlayerFeatureViewModel(Authentication.Models.ConnectionManifestFeature connectionManifestFeature) : base(connectionManifestFeature)
         {
+            Title = connectionManifestFeature.FeatureDisplayName;
             Commands = System.Text.Json.JsonSerializer.Deserialize<List<CommandTypes>>(connectionManifestFeature.SettingsObject?.ToString());
             OnSetCommand();
         }
