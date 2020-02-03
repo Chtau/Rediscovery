@@ -5,38 +5,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:flex="clr-namespace:Flex.Controls;assembly=Flex"
              mc:Ignorable="d"
-             x:Class="Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer.MediaPlayerFeaturePage">
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <Style x:Key="SmallButton" TargetType="Button">
-                <Setter Property="FontSize" Value="Micro" />
-                <Setter Property="HeightRequest">
-                    <Setter.Value>
-                        <OnPlatform x:TypeArguments="x:Double" Default="-1">
-                            <On Platform="iOS" Value="20" />
-                        </OnPlatform>
-                    </Setter.Value>
-                </Setter>
-                <Setter Property="TextColor">
-                    <Setter.Value>
-                        <OnPlatform x:TypeArguments="Color">
-                            <On Platform="iOS" Value="Gray" />
-                        </OnPlatform>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
-            <Style x:Key="DefaultFlexButton" TargetType="flex:FlexButton">
-                <Setter Property="BackgroundColor" Value="#6279B8" />
-                <Setter Property="ForegroundColor" Value="#ffffff" />
-                <Setter Property="HighlightForegroundColor" Value="#49516F" />
-                <Setter Property="HighlightBackgroundColor" Value="#8EA4D2" />
-            </Style>
-        </ResourceDictionary>
-    </ContentPage.Resources>
+             x:Class="Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer.MediaPlayerFeaturePage"
+             Title="Media Player">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem x:Name="Back" Text="Back" Clicked="Back_Clicked" />
+        <ToolbarItem x:Name="Back" Text="Back" Clicked="Back_Clicked" Icon="close_white.png"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid Margin="0,50" RowSpacing="25">
