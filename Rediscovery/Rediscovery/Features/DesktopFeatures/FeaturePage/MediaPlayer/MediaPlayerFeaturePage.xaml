@@ -3,43 +3,142 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:flex="clr-namespace:Flex.Controls;assembly=Flex"
              mc:Ignorable="d"
              x:Class="Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer.MediaPlayerFeaturePage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="SmallButton" TargetType="Button">
+                <Setter Property="FontSize" Value="Micro" />
+                <Setter Property="HeightRequest">
+                    <Setter.Value>
+                        <OnPlatform x:TypeArguments="x:Double" Default="-1">
+                            <On Platform="iOS" Value="20" />
+                        </OnPlatform>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="TextColor">
+                    <Setter.Value>
+                        <OnPlatform x:TypeArguments="Color">
+                            <On Platform="iOS" Value="Gray" />
+                        </OnPlatform>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="DefaultFlexButton" TargetType="flex:FlexButton">
+                <Setter Property="BackgroundColor" Value="#6279B8" />
+                <Setter Property="ForegroundColor" Value="#ffffff" />
+                <Setter Property="HighlightForegroundColor" Value="#49516F" />
+                <Setter Property="HighlightBackgroundColor" Value="#8EA4D2" />
+            </Style>
+            <Style x:Key="RoundLargeFlexButton" TargetType="flex:FlexButton">
+                <Setter Property="BackgroundColor" Value="#6279B8" />
+                <Setter Property="ForegroundColor" Value="#ffffff" />
+                <Setter Property="HighlightForegroundColor" Value="#49516F" />
+                <Setter Property="HighlightBackgroundColor" Value="#8EA4D2" />
+                <Setter Property="WidthRequest" Value="80" />
+                <Setter Property="HeightRequest" Value="80" />
+                <Setter Property="CornerRadius" Value="40" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+            <Style x:Key="RoundSmallFlexButton" TargetType="flex:FlexButton">
+                <Setter Property="BackgroundColor" Value="#6279B8" />
+                <Setter Property="ForegroundColor" Value="#ffffff" />
+                <Setter Property="HighlightForegroundColor" Value="#49516F" />
+                <Setter Property="HighlightBackgroundColor" Value="#8EA4D2" />
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+            <Style x:Key="RoundMiddleFlexButton" TargetType="flex:FlexButton">
+                <Setter Property="BackgroundColor" Value="#6279B8" />
+                <Setter Property="ForegroundColor" Value="#ffffff" />
+                <Setter Property="HighlightForegroundColor" Value="#49516F" />
+                <Setter Property="HighlightBackgroundColor" Value="#8EA4D2" />
+                <Setter Property="WidthRequest" Value="60" />
+                <Setter Property="HeightRequest" Value="60" />
+                <Setter Property="CornerRadius" Value="30" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <ContentPage.ToolbarItems>
         <ToolbarItem x:Name="Back" Text="Back" Clicked="Back_Clicked" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <Grid>
+        <Grid Margin="0,50" RowSpacing="25">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <StackLayout Orientation="Horizontal" Grid.Row="0">
-                <Button Command="{Binding PlayCommand}" Text="Play/Pause"/>
-                <Button Command="{Binding VolumneDownCommand}" Text="Volume down"/>
-                <Button Command="{Binding VolumneUpCommand}" Text="Volume up"/>
+            <StackLayout Orientation="Horizontal" Grid.Row="0" HorizontalOptions="Center" VerticalOptions="Start">
+                <flex:FlexButton                    
+                    Icon="skip_back_white.png"
+                    ClickedCommand="{Binding PreviousCommand}"
+                    Style="{StaticResource RoundLargeFlexButton}"/>
+                <flex:FlexButton                    
+                    Icon="stop_white.png"
+                    ClickedCommand="{Binding StopCommand}"
+                    Style="{StaticResource RoundLargeFlexButton}"/>
+                <flex:FlexButton                    
+                    Icon="play_white.png"
+                    ClickedCommand="{Binding PlayCommand}"
+                    Style="{StaticResource RoundLargeFlexButton}"/>
+                <flex:FlexButton                    
+                    Icon="skip_forward_white.png"
+                    ClickedCommand="{Binding NextCommand}"
+                    Style="{StaticResource RoundLargeFlexButton}"/>
             </StackLayout>
-            <StackLayout Orientation="Horizontal" Grid.Row="1">
-                <Button Command="{Binding PreviousCommand}" Text="Previous"/>
-                <Button Command="{Binding NextCommand}" Text="Next"/>
-                <Button Command="{Binding StopCommand}" Text="Stop"/>
-                <Button Command="{Binding MuteCommand}" Text="Mute"/>
+            <StackLayout Orientation="Horizontal" Grid.Row="1" HorizontalOptions="Center" VerticalOptions="Start">
+                <flex:FlexButton                    
+                    Icon="volume_down_white.png"
+                    ClickedCommand="{Binding VolumneDownCommand}"
+                    Style="{StaticResource RoundMiddleFlexButton}"/>
+                <flex:FlexButton                    
+                    Icon="volume_up_white.png"
+                    ClickedCommand="{Binding VolumneUpCommand}"
+                    Style="{StaticResource RoundMiddleFlexButton}"/>
+                <flex:FlexButton                    
+                    Icon="volume_mute_white.png"
+                    ClickedCommand="{Binding MuteCommand}"
+                    Style="{StaticResource RoundMiddleFlexButton}"/>
             </StackLayout>
-            <StackLayout Orientation="Horizontal" Grid.Row="2">
-                <Button Command="{Binding SpeedSlowerCommand}" Text="Speed Slower"/>
-                <Button Command="{Binding SpeedFasterCommand}" Text="Speed Faster"/>
+            <StackLayout Orientation="Horizontal" Grid.Row="2" HorizontalOptions="Center" VerticalOptions="Start">
+                <flex:FlexButton                    
+                    Icon="rewind_large_white.png"
+                    ClickedCommand="{Binding JumpBackwardCommand}"
+                    Style="{StaticResource RoundSmallFlexButton}"/>
+                <flex:FlexButton                    
+                    Icon="rewind_white.png"
+                    ClickedCommand="{Binding SpeedSlowerCommand}"
+                    Style="{StaticResource RoundSmallFlexButton}"/>
+                <flex:FlexButton                    
+                    Icon="speed_white.png"
+                    ClickedCommand="{Binding SpeedFasterCommand}"
+                    Style="{StaticResource RoundSmallFlexButton}"/>
+                <flex:FlexButton                    
+                    Icon="speed_large_white.png"
+                    ClickedCommand="{Binding JumpForwardCommand}"
+                    Style="{StaticResource RoundSmallFlexButton}"/>
             </StackLayout>
-            <StackLayout Orientation="Horizontal" Grid.Row="3">
-                <Button Command="{Binding JumpBackwardCommand}" Text="Jump Backward"/>
-                <Button Command="{Binding JumpForwardCommand}" Text="Jump Forward"/>
+            <StackLayout Grid.Row="3">
+                
             </StackLayout>
-            <StackLayout Orientation="Horizontal" Grid.Row="4">
-                <Button Command="{Binding FullscreenCommand}" Text="Fullscreen"/>
-                <Button Command="{Binding FullscreenExitCommand}" Text="Fullscreen Exit"/>
+            <StackLayout Orientation="Horizontal" Grid.Row="4" HorizontalOptions="Center" VerticalOptions="Start">
+                <flex:FlexButton                    
+                    Icon="fullscreen_white.png"
+                    ClickedCommand="{Binding FullscreenCommand}"
+                    Style="{StaticResource RoundMiddleFlexButton}"/>
+                <flex:FlexButton                    
+                    Icon="fullscreen_exit_white.png"
+                    ClickedCommand="{Binding FullscreenExitCommand}"
+                    Style="{StaticResource RoundMiddleFlexButton}"/>
             </StackLayout>
         </Grid>
     </ContentPage.Content>
