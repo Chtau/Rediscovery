@@ -15,6 +15,7 @@ namespace DesktopFeatureMediaPlayer
     {
         private CancellationTokenSource tokenSource;
 
+        public event EventHandler UpdateProcess;
         public ProfileConfiguration ProfileConfiguration { get; private set; }
         public bool ProcessRunning { get; private set; }
 
@@ -43,6 +44,7 @@ namespace DesktopFeatureMediaPlayer
                 {
                     OnSetProcessRunning();
                     await Task.Delay(100);
+                    UpdateProcess?.Invoke(this, EventArgs.Empty);
                 } while (!cancellationToken.IsCancellationRequested);
             });
         }

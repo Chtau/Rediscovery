@@ -12,6 +12,7 @@ namespace DesktopFeatureMediaPlayer
         private DeviceFeatureData currentDeviceFeatureData;
         private List<MediaPlayerController> controllers = new List<MediaPlayerController>();
         private ProfileConfiguration currentProfileConfiguration;
+        private DateTime updateTimer = DateTime.Now;
 
         public event EventHandler<DeviceFeatureData> SendData;
 
@@ -19,8 +20,28 @@ namespace DesktopFeatureMediaPlayer
         {
             currentProfileConfiguration = profileConfiguration;
             var controller = new MediaPlayerController(currentProfileConfiguration);
+            controller.UpdateProcess += Controller_UpdateProcess;
             controller.InitWatcher();
             controllers.Add(controller);
+        }
+
+        private void Controller_UpdateProcess(object sender, EventArgs e)
+        {
+            var newDate = DateTime.Now;
+            if ((newDate - updateTimer).TotalSeconds >= 1)
+            {
+                updateTimer = newDate;
+                var controller = OnGetController(currentProfileConfiguration.Id);
+                var data = new DeviceFeatureData
+                {
+                    Data = new MediaPlayerStateData
+                    {
+                        ProcessRunning = controller.ProcessRunning
+                    },
+                    DeviceId = currentDeviceFeatureData?.DeviceId
+                };
+                SendData?.Invoke(this, data);
+            }
         }
 
         public void Dispose()
