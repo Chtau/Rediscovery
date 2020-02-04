@@ -31,16 +31,19 @@ namespace DesktopFeatureMediaPlayer
             if ((newDate - updateTimer).TotalSeconds >= 1)
             {
                 updateTimer = newDate;
-                var controller = OnGetController(currentProfileConfiguration.Id);
-                var data = new DeviceFeatureData
+                if (currentDeviceFeatureData != null)
                 {
-                    Data = new MediaPlayerStateData
+                    var controller = OnGetController(currentProfileConfiguration.Id);
+                    var data = new DeviceFeatureData
                     {
-                        ProcessRunning = controller.ProcessRunning
-                    },
-                    DeviceId = currentDeviceFeatureData?.DeviceId
-                };
-                SendData?.Invoke(this, data);
+                        Data = new MediaPlayerStateData
+                        {
+                            ProcessRunning = controller.ProcessRunning
+                        },
+                        DeviceId = currentDeviceFeatureData?.DeviceId// currentProfileConfiguration.Id.ToString()
+                    };
+                    SendData?.Invoke(this, data);
+                }
             }
         }
 

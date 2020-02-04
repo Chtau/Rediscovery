@@ -48,7 +48,7 @@ namespace DesktopService.Features.DeviceFeature
                 mediaPlayer.SendData += (object sender, DeviceFeatureData e) =>
                 {
                     System.Diagnostics.Debug.Print("Feature response =>" + e.Data);
-                    ResponseToClient(console.GetDeviceFeatureInfo().Id, e);
+                    ResponseToClient(mediaPlayer.GetDeviceFeatureInfo().Id, e);
                 };
                 deviceFeatureImplementations.Add(mediaPlayer);
             }

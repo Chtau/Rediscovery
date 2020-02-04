@@ -32,6 +32,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
 
         public MediaPlayerFeatureViewModel(Authentication.Models.ConnectionManifestFeature connectionManifestFeature) : base(connectionManifestFeature)
         {
+            base.ReceivedData += MediaPlayerFeatureViewModel_ReceivedData;
             Title = connectionManifestFeature.FeatureDisplayName;
             Commands = System.Text.Json.JsonSerializer.Deserialize<List<CommandTypes>>(connectionManifestFeature.SettingsObject?.ToString());
             OnSetCommand();
@@ -161,6 +162,16 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
         public void Send(CommandTypes cmd)
         {
             base.Send(new SharedCoreModels.FeatureModels.MediaPlayer.ClientCommandSendModel(_connectionManifestFeature.FeatureId, cmd));
+        }
+
+
+        private void MediaPlayerFeatureViewModel_ReceivedData(object sender, object e)
+        {
+            SharedCoreModels.FeatureModels.MediaPlayer.MediaPlayerStateData stateData = System.Text.Json.JsonSerializer.Deserialize<SharedCoreModels.FeatureModels.MediaPlayer.MediaPlayerStateData>(e?.ToString());
+            if (stateData != null)
+            {
+
+            }
         }
     }
 }
