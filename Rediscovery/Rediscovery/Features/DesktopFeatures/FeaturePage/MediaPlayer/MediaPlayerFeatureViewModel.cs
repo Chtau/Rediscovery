@@ -9,6 +9,8 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
 {
     public class MediaPlayerFeatureViewModel : BaseFeatureViewModel
     {
+        private bool processIsRunning = false;
+
         List<CommandTypes> commands;
         public List<CommandTypes> Commands
         {
@@ -47,7 +49,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             },
             canExecute: () =>
             {
-                return Commands.Contains(CommandTypes.PlayPause);
+                return Commands.Contains(CommandTypes.PlayPause) && processIsRunning;
             });
             FullscreenExitCommand = new Command(execute: () =>
             {
@@ -55,7 +57,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             },
             canExecute: () =>
             {
-                return Commands.Contains(CommandTypes.FullscreenExit);
+                return Commands.Contains(CommandTypes.FullscreenExit) && processIsRunning;
             });
             FullscreenCommand = new Command(execute: () =>
             {
@@ -63,7 +65,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             },
             canExecute: () =>
             {
-                return Commands.Contains(CommandTypes.Fullscreen);
+                return Commands.Contains(CommandTypes.Fullscreen) && processIsRunning;
             });
             NextCommand = new Command(execute: () =>
             {
@@ -71,7 +73,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             },
             canExecute: () =>
             {
-                return Commands.Contains(CommandTypes.Next);
+                return Commands.Contains(CommandTypes.Next) && processIsRunning;
             });
             PreviousCommand = new Command(execute: () =>
             {
@@ -79,7 +81,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             },
             canExecute: () =>
             {
-                return Commands.Contains(CommandTypes.Previous);
+                return Commands.Contains(CommandTypes.Previous) && processIsRunning;
             });
             StopCommand = new Command(execute: () =>
             {
@@ -87,7 +89,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             },
             canExecute: () =>
             {
-                return Commands.Contains(CommandTypes.Stop);
+                return Commands.Contains(CommandTypes.Stop) && processIsRunning;
             });
             MuteCommand = new Command(execute: () =>
             {
@@ -95,7 +97,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             },
             canExecute: () =>
             {
-                return Commands.Contains(CommandTypes.Mute);
+                return Commands.Contains(CommandTypes.Mute) && processIsRunning;
             });
             VolumneUpCommand = new Command(execute: () =>
             {
@@ -103,7 +105,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             },
             canExecute: () =>
             {
-                return Commands.Contains(CommandTypes.VolumneUp);
+                return Commands.Contains(CommandTypes.VolumneUp) && processIsRunning;
             });
             VolumneDownCommand = new Command(execute: () =>
             {
@@ -111,7 +113,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             },
             canExecute: () =>
             {
-                return Commands.Contains(CommandTypes.VolumneDown);
+                return Commands.Contains(CommandTypes.VolumneDown) && processIsRunning;
             });
             SpeedSlowerCommand = new Command(execute: () =>
             {
@@ -119,7 +121,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             },
             canExecute: () =>
             {
-                return Commands.Contains(CommandTypes.SpeedSlower);
+                return Commands.Contains(CommandTypes.SpeedSlower) && processIsRunning;
             });
             SpeedFasterCommand = new Command(execute: () =>
             {
@@ -127,7 +129,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             },
             canExecute: () =>
             {
-                return Commands.Contains(CommandTypes.SpeedFaster);
+                return Commands.Contains(CommandTypes.SpeedFaster) && processIsRunning;
             });
             JumpForwardCommand = new Command(execute: () =>
             {
@@ -135,7 +137,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             },
             canExecute: () =>
             {
-                return Commands.Contains(CommandTypes.JumpForward);
+                return Commands.Contains(CommandTypes.JumpForward) && processIsRunning;
             });
             JumpBackwardCommand = new Command(execute: () =>
             {
@@ -143,8 +145,13 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             },
             canExecute: () =>
             {
-                return Commands.Contains(CommandTypes.JumpBackward);
+                return Commands.Contains(CommandTypes.JumpBackward) && processIsRunning;
             });
+            OnChangeCanExecute();
+        }
+
+        private void OnChangeCanExecute()
+        {
             (PlayCommand as Command).ChangeCanExecute();
             (FullscreenExitCommand as Command).ChangeCanExecute();
             (FullscreenCommand as Command).ChangeCanExecute();
@@ -171,7 +178,11 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             SharedCoreModels.FeatureModels.MediaPlayer.MediaPlayerStateData stateData = Newtonsoft.Json.JsonConvert.DeserializeObject<SharedCoreModels.FeatureModels.MediaPlayer.MediaPlayerStateData>(e?.ToString());
             if (stateData != null)
             {
-
+                if (processIsRunning != stateData.ProcessRunning)
+                {
+                    processIsRunning = stateData.ProcessRunning;
+                    OnChangeCanExecute();
+                }
             }
         }
     }
