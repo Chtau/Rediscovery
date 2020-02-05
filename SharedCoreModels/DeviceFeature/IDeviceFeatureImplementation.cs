@@ -11,5 +11,7 @@ namespace SharedCoreModels.DeviceFeature
         event EventHandler<DeviceFeatureData> SendData;
         void ReceiveData(DeviceFeatureData data);
         DeviceFeature GetDeviceFeatureInfo();
+        void Start();
+        void Stop();
     }
 }

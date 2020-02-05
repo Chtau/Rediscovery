@@ -62,5 +62,15 @@ namespace DesktopFeatureConsole
                 terminal.WriteLine(data.Data.ToString());
             }
         }
+
+        public void Start()
+        {
+            
+        }
+
+        public void Stop()
+        {
+            
+        }
     }
 }

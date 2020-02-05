@@ -30,23 +30,42 @@ namespace DesktopFeatureMediaPlayer
 
         public void InitWatcher()
         {
-            OnSetProcessRunning();
-            if (tokenSource != null)
+            try
             {
-                tokenSource.Cancel();
-                System.Threading.Thread.Sleep(500);
-            }
-            tokenSource = new CancellationTokenSource();
-            CancellationToken cancellationToken = tokenSource.Token;
-            Task.Run(async () =>
-            {
-                do
+                OnSetProcessRunning();
+                if (tokenSource != null)
                 {
-                    OnSetProcessRunning();
-                    await Task.Delay(100);
-                    UpdateProcess?.Invoke(this, EventArgs.Empty);
-                } while (!cancellationToken.IsCancellationRequested);
-            });
+                    tokenSource.Cancel();
+                    System.Threading.Thread.Sleep(500);
+                }
+                tokenSource = new CancellationTokenSource();
+                CancellationToken cancellationToken = tokenSource.Token;
+                Task.Run(async () =>
+                {
+                    do
+                    {
+                        OnSetProcessRunning();
+                        await Task.Delay(100);
+                        UpdateProcess?.Invoke(this, EventArgs.Empty);
+                    } while (!cancellationToken.IsCancellationRequested);
+                });
+            } catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Print(ex.ToString() + Environment.NewLine);
+            }
+        }
+
+        public void Stop()
+        {
+            try
+            {
+                if (tokenSource != null)
+                    tokenSource.Cancel();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Print(ex.ToString() + Environment.NewLine);
+            }
         }
 
         private void OnSetProcessRunning()

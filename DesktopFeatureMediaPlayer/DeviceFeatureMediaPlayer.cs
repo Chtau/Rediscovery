@@ -21,7 +21,6 @@ namespace DesktopFeatureMediaPlayer
             currentProfileConfiguration = profileConfiguration;
             var controller = new MediaPlayerController(currentProfileConfiguration);
             controller.UpdateProcess += Controller_UpdateProcess;
-            controller.InitWatcher();
             controllers.Add(controller);
         }
 
@@ -40,7 +39,7 @@ namespace DesktopFeatureMediaPlayer
                         {
                             ProcessRunning = controller.ProcessRunning
                         },
-                        DeviceId = currentDeviceFeatureData?.DeviceId// currentProfileConfiguration.Id.ToString()
+                        DeviceId = currentDeviceFeatureData?.DeviceId
                     };
                     SendData?.Invoke(this, data);
                 }
@@ -133,6 +132,18 @@ namespace DesktopFeatureMediaPlayer
         private MediaPlayerController OnGetController(Guid profileId)
         {
             return controllers.FirstOrDefault(x => x.ProfileConfiguration.Id == profileId);
+        }
+
+        public void Start()
+        {
+            var controller = OnGetController(currentProfileConfiguration.Id);
+            controller.InitWatcher();
+        }
+
+        public void Stop()
+        {
+            var controller = OnGetController(currentProfileConfiguration.Id);
+            controller.Stop();
         }
     }
 }
