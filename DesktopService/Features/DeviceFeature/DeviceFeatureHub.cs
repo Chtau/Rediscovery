@@ -33,5 +33,23 @@ namespace DesktopService.Features.DeviceFeature
                 feature.ReceiveData(val);
             }
         }
+
+        public void ClientFeatureStart(Guid featureId)
+        {
+            var feature = _featureService.GetFeature(featureId);
+            if (feature != null)
+            {
+                feature.Start();
+            }
+        }
+
+        public void ClientFeatureStop(Guid featureId)
+        {
+            var feature = _featureService.GetFeature(featureId);
+            if (feature != null)
+            {
+                feature.Stop();
+            }
+        }
     }
 }
