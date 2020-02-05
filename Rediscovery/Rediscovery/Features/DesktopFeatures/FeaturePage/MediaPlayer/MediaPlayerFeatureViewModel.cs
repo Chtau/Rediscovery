@@ -36,6 +36,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             Title = connectionManifestFeature.FeatureDisplayName;
             Commands = System.Text.Json.JsonSerializer.Deserialize<List<CommandTypes>>(connectionManifestFeature.SettingsObject?.ToString());
             OnSetCommand();
+            Send(CommandTypes.None);
         }
 
         private void OnSetCommand()
@@ -167,7 +168,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
 
         private void MediaPlayerFeatureViewModel_ReceivedData(object sender, object e)
         {
-            SharedCoreModels.FeatureModels.MediaPlayer.MediaPlayerStateData stateData = System.Text.Json.JsonSerializer.Deserialize<SharedCoreModels.FeatureModels.MediaPlayer.MediaPlayerStateData>(e?.ToString());
+            SharedCoreModels.FeatureModels.MediaPlayer.MediaPlayerStateData stateData = Newtonsoft.Json.JsonConvert.DeserializeObject<SharedCoreModels.FeatureModels.MediaPlayer.MediaPlayerStateData>(e?.ToString());
             if (stateData != null)
             {
 

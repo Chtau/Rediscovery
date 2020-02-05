@@ -8,6 +8,7 @@ namespace SharedCoreModels.FeatureModels.MediaPlayer
     {
         public enum CommandTypes
         {
+            None,
             PlayPause,
             FullscreenExit,
             Fullscreen,

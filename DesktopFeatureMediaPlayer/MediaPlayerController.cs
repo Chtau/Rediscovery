@@ -77,6 +77,8 @@ namespace DesktopFeatureMediaPlayer
 
         public void ExecuteCommand(CommandTypes commandType)
         {
+            if (commandType == CommandTypes.None)
+                return;
             if (ProfileConfiguration.CommandAvailable.Contains(commandType))
             {
                 if (ProfileConfiguration.CommandConfiguration.CommandKeys.TryGetValue(commandType, out KeyCode[] keys))

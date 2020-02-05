@@ -23,6 +23,7 @@ namespace DesktopFeatureMediaPlayer
                 ProfileId = vlcId,
                 CommandKeys = new Dictionary<CommandConfiguration.CommandTypes, SharedCoreModels.FeatureModels.KeyCodes.KeyCode[]>()
             };
+            vlcCmdConfig.CommandKeys.Add(CommandConfiguration.CommandTypes.None, null);
             vlcCmdConfig.CommandKeys.Add(CommandConfiguration.CommandTypes.Fullscreen, new KeyCode[] { KeyCode.KEY_F });
             vlcCmdConfig.CommandKeys.Add(CommandConfiguration.CommandTypes.PlayPause, new KeyCode[] { KeyCode.SPACE_BAR });
             vlcCmdConfig.CommandKeys.Add(CommandConfiguration.CommandTypes.FullscreenExit, new KeyCode[] { KeyCode.ESC });
