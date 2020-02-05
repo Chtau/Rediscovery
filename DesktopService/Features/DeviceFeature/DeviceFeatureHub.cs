@@ -22,6 +22,7 @@ namespace DesktopService.Features.DeviceFeature
 
         public void ClientMessage(Guid featureId, object data)
         {
+            System.Diagnostics.Debug.Print($"Feature (id: {featureId}) Message on Service received");
             var feature = _featureService.GetFeature(featureId);
             if (feature != null)
             {
@@ -36,6 +37,7 @@ namespace DesktopService.Features.DeviceFeature
 
         public void ClientFeatureStart(Guid featureId)
         {
+            System.Diagnostics.Debug.Print($"Feature (id: {featureId}) START on Service received");
             var feature = _featureService.GetFeature(featureId);
             if (feature != null)
             {
@@ -45,6 +47,7 @@ namespace DesktopService.Features.DeviceFeature
 
         public void ClientFeatureStop(Guid featureId)
         {
+            System.Diagnostics.Debug.Print($"Feature (id: {featureId}) STOP on Service received");
             var feature = _featureService.GetFeature(featureId);
             if (feature != null)
             {

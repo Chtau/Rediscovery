@@ -22,7 +22,16 @@ namespace Rediscovery.Features.DesktopFeatures
         public FeatureExchange()
         {
             connection.ConnectionChanged += Connection_ConnectionChanged;
+        }
+
+        public void InitConnection()
+        {
             Init().GetAwaiter();
+        }
+
+        public async Task InitConnectionAsync()
+        {
+            await Init();
         }
 
         private void Connection_ConnectionChanged(object sender, Connection e)

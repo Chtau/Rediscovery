@@ -7,6 +7,7 @@ using Rediscovery.Services;
 using SharedCoreModels;
 using Xamarin.Forms;
 using System.Linq;
+using Rediscovery.Features.DesktopFeatures;
 
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.Authentication.Connect))]
 namespace Rediscovery.Features.Authentication
@@ -21,6 +22,7 @@ namespace Rediscovery.Features.Authentication
 
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private IDataStoreGuid<Models.Connection> connectionStore => DependencyService.Get<IDataStoreGuid<Models.Connection>>() ?? new ConnectionStore();
+        private IFeatureExchange featureExchange => DependencyService.Get<IFeatureExchange>() ?? new FeatureExchange();
 
         private Dictionary<Guid, IInternalHub> authHubs = new Dictionary<Guid, IInternalHub>();
         private Dictionary<Guid, IInternalHub> featureHubs = new Dictionary<Guid, IInternalHub>();
@@ -154,7 +156,7 @@ namespace Rediscovery.Features.Authentication
                 {
                     logger.Message($"send welcome to {model.DisplayName} ({DateTime.Now})");
                     await con.InvokeAsync("Welcome", model.User);
-                    await OnAfterChangedAuthenticationConnection(model);
+                    //await OnAfterChangedAuthenticationConnection(model);
                 }
             } catch (Exception ex)
             {
@@ -176,7 +178,7 @@ namespace Rediscovery.Features.Authentication
                         authHub.HelloReceived += AuthHub_HelloReceived;
                         authHub.ManifestReceived += ManifestReceived;
                         authHubs.Add(model.Id, authHub);
-                        await OnAfterChangedAuthenticationConnection(model);
+                        //await OnAfterChangedAuthenticationConnection(model);
                     }
                     return authHubs[model.Id];
                 case HubTypes.Feature:
@@ -223,6 +225,7 @@ namespace Rediscovery.Features.Authentication
                 await featureHubs[model.Id].CloseConnections();
                 featureHubs.Remove(model.Id);
             }
+            await featureExchange.InitConnectionAsync();
         }
     }
 }

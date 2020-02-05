@@ -8,6 +8,9 @@ namespace Rediscovery.Features.DesktopFeatures
 {
     public interface IFeatureExchange
     {
+        void InitConnection();
+        Task InitConnectionAsync();
+
         event EventHandler<(Guid connectionId, Guid featureId, object data)> DesktopResponseReceived;
         Task Send(ConnectionManifestFeature feature, object data);
         Task Start(ConnectionManifestFeature feature);

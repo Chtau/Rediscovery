@@ -30,6 +30,7 @@ namespace DesktopFeatureMediaPlayer
             if ((newDate - updateTimer).TotalSeconds >= 1)
             {
                 updateTimer = newDate;
+                // TODO: we are missing device id
                 if (currentDeviceFeatureData != null)
                 {
                     var controller = OnGetController(currentProfileConfiguration.Id);

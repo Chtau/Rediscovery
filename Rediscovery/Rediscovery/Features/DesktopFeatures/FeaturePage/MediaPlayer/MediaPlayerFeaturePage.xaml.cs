@@ -20,8 +20,15 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             BindingContext = viewModel = model;
         }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            viewModel.Start();
+        }
+
         private async void Back_Clicked(object sender, EventArgs e)
         {
+            viewModel.Stop();
             await Navigation.PopModalAsync();
         }
     }

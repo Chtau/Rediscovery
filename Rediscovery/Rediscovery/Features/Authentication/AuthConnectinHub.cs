@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using Rediscovery.Features.Authentication.Models;
+using Rediscovery.Features.DesktopFeatures;
 using Rediscovery.Services;
 using SharedCoreModels;
 using System;

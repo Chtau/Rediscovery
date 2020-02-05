@@ -38,7 +38,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             Title = connectionManifestFeature.FeatureDisplayName;
             Commands = System.Text.Json.JsonSerializer.Deserialize<List<CommandTypes>>(connectionManifestFeature.SettingsObject?.ToString());
             OnSetCommand();
-            Send(CommandTypes.None);
+            //Send(CommandTypes.None);
         }
 
         private void OnSetCommand()
