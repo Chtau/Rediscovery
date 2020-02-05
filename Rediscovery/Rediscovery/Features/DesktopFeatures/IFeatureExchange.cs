@@ -10,5 +10,7 @@ namespace Rediscovery.Features.DesktopFeatures
     {
         event EventHandler<(Guid connectionId, Guid featureId, object data)> DesktopResponseReceived;
         Task Send(ConnectionManifestFeature feature, object data);
+        Task Start(ConnectionManifestFeature feature);
+        Task Stop(ConnectionManifestFeature feature);
     }
 }

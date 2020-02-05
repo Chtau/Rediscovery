@@ -67,5 +67,31 @@ namespace Rediscovery.Features.DesktopFeatures
                 logger.Message("Try to send feature exchange message without hub connection");
             }
         }
+
+        public async Task Start(ConnectionManifestFeature feature)
+        {
+            if (featureHub != null)
+            {
+                logger.Message($"Start feature {model.DisplayName} ({DateTime.Now})");
+                await featureHub.InvokeAsync("ClientFeatureStart", feature.FeatureId);
+            }
+            else
+            {
+                logger.Message("Try to START feature exchange message without hub connection");
+            }
+        }
+
+        public async Task Stop(ConnectionManifestFeature feature)
+        {
+            if (featureHub != null)
+            {
+                logger.Message($"Stop feature {model.DisplayName} ({DateTime.Now})");
+                await featureHub.InvokeAsync("ClientFeatureStop", feature.FeatureId);
+            }
+            else
+            {
+                logger.Message("Try to STOP feature exchange message without hub connection");
+            }
+        }
     }
 }
