@@ -42,5 +42,15 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage
         {
 
         }
+
+        public virtual void Start()
+        {
+            featureExchange.Start(_connectionManifestFeature);
+        }
+
+        public virtual void Stop()
+        {
+            featureExchange.Stop(_connectionManifestFeature);
+        }
     }
 }
