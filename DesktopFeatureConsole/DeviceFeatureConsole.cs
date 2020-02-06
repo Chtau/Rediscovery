@@ -5,7 +5,7 @@ using SharedCoreModels.DeviceFeature;
 
 namespace DesktopFeatureConsole
 {
-    public class DeviceFeatureConsole : IDeviceFeatureImplementation
+    public class DeviceFeatureConsole : BaseDeviceFeature
     {
         private readonly Terminal terminal;
         private DeviceFeatureData currentDeviceFeatureData;
@@ -23,12 +23,10 @@ namespace DesktopFeatureConsole
                 Data = e,
                 DeviceId = currentDeviceFeatureData?.DeviceId
             };
-            SendData?.Invoke(this, data);
+            OnSendData(this, data);
         }
 
-        public event EventHandler<DeviceFeatureData> SendData;
-
-        public DeviceFeature GetDeviceFeatureInfo()
+        public override DeviceFeature GetDeviceFeatureInfo()
         {
             return new DeviceFeature
             {
@@ -44,18 +42,20 @@ namespace DesktopFeatureConsole
             };
         }
 
-        public void Init()
+        public override void Init()
         {
-            
+            base.Init();
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
+            base.Dispose();
             terminal.Close();
         }
 
-        public void ReceiveData(DeviceFeatureData data)
+        public override void ReceiveData(DeviceFeatureData data)
         {
+            base.ReceiveData(data);
             if (data != null && !string.IsNullOrWhiteSpace(data.Data?.ToString()))
             {
                 currentDeviceFeatureData = data;
@@ -63,14 +63,14 @@ namespace DesktopFeatureConsole
             }
         }
 
-        public void Start(string deviceId)
+        public override void Start(string deviceId)
         {
-            
+            base.Start(deviceId);
         }
 
-        public void Stop(string deviceId)
+        public override void Stop(string deviceId)
         {
-            
+            base.Stop(deviceId);
         }
     }
 }

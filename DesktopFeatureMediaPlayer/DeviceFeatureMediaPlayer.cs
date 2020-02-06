@@ -7,14 +7,12 @@ using System.Text;
 
 namespace DesktopFeatureMediaPlayer
 {
-    public class DeviceFeatureMediaPlayer : IDeviceFeatureImplementation
+    public class DeviceFeatureMediaPlayer : BaseDeviceFeature
     {
         private DeviceFeatureData currentDeviceFeatureData;
         private List<MediaPlayerController> controllers = new List<MediaPlayerController>();
         private ProfileConfiguration currentProfileConfiguration;
         private DateTime updateTimer = DateTime.Now;
-
-        public event EventHandler<DeviceFeatureData> SendData;
 
         public DeviceFeatureMediaPlayer(ProfileConfiguration profileConfiguration)
         {
@@ -42,17 +40,17 @@ namespace DesktopFeatureMediaPlayer
                         },
                         DeviceId = currentDeviceFeatureData?.DeviceId
                     };
-                    SendData?.Invoke(this, data);
+                    OnSendData(this, data);
                 }
             }
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
-
+            base.Dispose();
         }
 
-        public DeviceFeature GetDeviceFeatureInfo()
+        public override DeviceFeature GetDeviceFeatureInfo()
         {
             return new DeviceFeature
             {
@@ -68,13 +66,14 @@ namespace DesktopFeatureMediaPlayer
             };
         }
 
-        public void Init()
+        public override void Init()
         {
-            
+            base.Init();
         }
 
-        public void ReceiveData(DeviceFeatureData data)
+        public override void ReceiveData(DeviceFeatureData data)
         {
+            base.ReceiveData(data);
             if (data != null && !string.IsNullOrWhiteSpace(data.Data?.ToString()))
             {
                 currentDeviceFeatureData = data;
@@ -135,14 +134,16 @@ namespace DesktopFeatureMediaPlayer
             return controllers.FirstOrDefault(x => x.ProfileConfiguration.Id == profileId);
         }
 
-        public void Start(string deviceId)
+        public override void Start(string deviceId)
         {
+            base.Start(deviceId);
             var controller = OnGetController(currentProfileConfiguration.Id);
             controller.InitWatcher();
         }
 
-        public void Stop(string deviceId)
+        public override void Stop(string deviceId)
         {
+            base.Stop(deviceId);
             var controller = OnGetController(currentProfileConfiguration.Id);
             controller.Stop();
         }
