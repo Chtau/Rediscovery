@@ -135,13 +135,13 @@ namespace DesktopFeatureMediaPlayer
             return controllers.FirstOrDefault(x => x.ProfileConfiguration.Id == profileId);
         }
 
-        public void Start()
+        public void Start(string deviceId)
         {
             var controller = OnGetController(currentProfileConfiguration.Id);
             controller.InitWatcher();
         }
 
-        public void Stop()
+        public void Stop(string deviceId)
         {
             var controller = OnGetController(currentProfileConfiguration.Id);
             controller.Stop();

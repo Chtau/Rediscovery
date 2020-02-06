@@ -63,12 +63,12 @@ namespace DesktopFeatureConsole
             }
         }
 
-        public void Start()
+        public void Start(string deviceId)
         {
             
         }
 
-        public void Stop()
+        public void Stop(string deviceId)
         {
             
         }
