@@ -134,16 +134,16 @@ namespace DesktopFeatureMediaPlayer
             return controllers.FirstOrDefault(x => x.ProfileConfiguration.Id == profileId);
         }
 
-        public override void Start(string deviceId)
+        public override void Register(string deviceId)
         {
-            base.Start(deviceId);
+            base.Register(deviceId);
             var controller = OnGetController(currentProfileConfiguration.Id);
             controller.InitWatcher();
         }
 
-        public override void Stop(string deviceId)
+        public override void Unregister(string deviceId)
         {
-            base.Stop(deviceId);
+            base.Unregister(deviceId);
             var controller = OnGetController(currentProfileConfiguration.Id);
             controller.Stop();
         }

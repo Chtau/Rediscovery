@@ -33,12 +33,12 @@ namespace SharedCoreModels.DeviceFeature
             
         }
 
-        public virtual void Start(string deviceId)
+        public virtual void Register(string deviceId)
         {
             
         }
 
-        public virtual void Stop(string deviceId)
+        public virtual void Unregister(string deviceId)
         {
             
         }
