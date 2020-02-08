@@ -22,6 +22,14 @@ namespace SharedCoreModels.DeviceFeature
 
         internal List<RegisteredDevice> registeredDevices = new List<RegisteredDevice>();
 
+        public IEnumerable<string> RegisteredDevices
+        {
+            get
+            {
+                return registeredDevices.Select(x => x.DeviceId);
+            }
+        }
+
         public bool IsRegister(string deviceId)
         {
             return registeredDevices.Any(x => string.Equals(x.DeviceId, deviceId, StringComparison.OrdinalIgnoreCase));

@@ -19,18 +19,25 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.TerminalPage
             InitializeComponent();
 
             BindingContext = viewModel = model;
-            viewModel.ReceivedData += ViewModel_ReceivedData;
+            viewModel.LineReceived += ViewModel_LineReceived;
             terminal.AddLines("Rediscovery Terminal Version " + model.FeatureVersion);
             terminal.SendCommand += Terminal_SendCommand;
         }
 
-        private void ViewModel_ReceivedData(object sender, object e)
+        private void ViewModel_LineReceived(object sender, string e)
         {
-            terminal.AddLines(e?.ToString());
+            terminal.AddLines(e);
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            viewModel.Start();
         }
 
         private async void Back_Clicked(object sender, EventArgs e)
         {
+            viewModel.Stop();
             await Navigation.PopModalAsync();
         }
 

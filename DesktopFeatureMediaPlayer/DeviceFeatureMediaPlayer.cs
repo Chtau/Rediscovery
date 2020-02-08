@@ -28,17 +28,16 @@ namespace DesktopFeatureMediaPlayer
             if ((newDate - updateTimer).TotalSeconds >= 1)
             {
                 updateTimer = newDate;
-                // TODO: we are missing device id
-                if (currentDeviceFeatureData != null)
+                var controller = OnGetController(currentProfileConfiguration.Id);
+                foreach (var deviceId in RegisteredDevices)
                 {
-                    var controller = OnGetController(currentProfileConfiguration.Id);
                     var data = new DeviceFeatureData
                     {
                         Data = new MediaPlayerStateData
                         {
                             ProcessRunning = controller.ProcessRunning
                         },
-                        DeviceId = currentDeviceFeatureData?.DeviceId
+                        DeviceId = deviceId
                     };
                     OnSendData(this, data);
                 }

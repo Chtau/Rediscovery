@@ -21,18 +21,27 @@ namespace Rediscovery.Controls
 
         public void AddLines(params string[] lines)
         {
-            if (lines != null)
+            try
             {
-                foreach (var line in lines)
+                if (lines != null)
                 {
-                    StackLines.Children.Add(new Label
+                    Device.BeginInvokeOnMainThread(() =>
                     {
-                        Text = line,
-                        LineBreakMode = LineBreakMode.NoWrap,
-                        MaxLines = 1
+                        foreach (var line in lines)
+                        {
+                            StackLines.Children.Add(new Label
+                            {
+                                Text = line,
+                                LineBreakMode = LineBreakMode.NoWrap,
+                                MaxLines = 1
+                            });
+                        }
+                        scrollView.ScrollToAsync(0, StackLines.Height + 50, false);
                     });
                 }
-                scrollView.ScrollToAsync(0, StackLines.Height + 50, false);
+            } catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Print(ex.ToString() + Environment.NewLine);
             }
         }
 
