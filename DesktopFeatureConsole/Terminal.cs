@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharedCoreModels.DeviceFeature;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -7,8 +8,9 @@ namespace DesktopFeatureConsole
 {
     public class Terminal
     {
-        public event EventHandler<string> Output;
+        public event EventHandler<CommandQueue<string, List<string>>> Output;
 
+        private CommandQueue<string, List<string>> commandQueue;
         private Process process;
 
         public Terminal()
@@ -35,13 +37,32 @@ namespace DesktopFeatureConsole
 
         private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Output?.Invoke(this, e.Data);
+            if (commandQueue != null)
+            {
+                if (commandQueue.OutgoingData == null)
+                    commandQueue.OutgoingData = new List<string>();
+                commandQueue.OutgoingData.Add(e.Data);
+                Output?.Invoke(this, commandQueue);
+            } else
+            {
+                System.Diagnostics.Debug.Print("Received process output data without having an active command queue");
+            }
         }
 
-        public void WriteLine(string input)
+        public void NewCommand(CommandQueue<string, List<string>> command)
         {
+            if (commandQueue == null)
+                commandQueue = command;
+            else
+            {
+                if (command.DeviceId != commandQueue.DeviceId)
+                {
+                    throw new ArgumentException("Not allowed to send a additional command for a different deviceId", "command");
+                }
+                commandQueue.IncomingData = command.IncomingData;
+            }
             InitTerminal();
-            process.StandardInput.WriteLine(input + Environment.NewLine);
+            process.StandardInput.WriteLine(commandQueue.IncomingData + Environment.NewLine);
         }
 
         public void Close()

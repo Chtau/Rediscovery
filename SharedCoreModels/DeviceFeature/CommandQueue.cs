@@ -11,12 +11,12 @@ namespace SharedCoreModels.DeviceFeature
         public O OutgoingData { get; set; }
         public DateTime Received { get; set; }
         public DateTime Send { get; set; }
-        public Exception Exception { get; set; }
+        public List<Exception> Exception { get; set; }
 
         public CommandQueue()
         {
             Received = DateTime.UtcNow;
-            Exception = null;
+            Exception = new List<Exception>();
         }
 
         public CommandQueue(string deviceId, I incomingData): this()
