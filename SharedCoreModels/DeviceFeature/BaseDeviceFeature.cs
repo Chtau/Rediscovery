@@ -7,11 +7,11 @@ namespace SharedCoreModels.DeviceFeature
 {
     public abstract class BaseDeviceFeature : IDeviceFeatureImplementation
     {
-        internal class RegisteredDevice
+        public class RegisteredDevice
         {
-            internal string DeviceId { get; set; }
+            public string DeviceId { get; set; }
 
-            internal DateTime RegisterDate { get; set; }
+            public DateTime RegisterDate { get; set; }
 
             public RegisteredDevice(string deviceId)
             {
@@ -22,7 +22,7 @@ namespace SharedCoreModels.DeviceFeature
 
         internal List<RegisteredDevice> registeredDevices = new List<RegisteredDevice>();
 
-        internal bool IsRegister(string deviceId)
+        public bool IsRegister(string deviceId)
         {
             return registeredDevices.Any(x => string.Equals(x.DeviceId, deviceId, StringComparison.OrdinalIgnoreCase));
         }

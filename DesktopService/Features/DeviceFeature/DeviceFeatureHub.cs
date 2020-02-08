@@ -41,7 +41,7 @@ namespace DesktopService.Features.DeviceFeature
             var feature = _featureService.GetFeature(featureId);
             if (feature != null)
             {
-                feature.Start();
+                feature.Register(Context.UserIdentifier);
             }
         }
 
@@ -51,7 +51,7 @@ namespace DesktopService.Features.DeviceFeature
             var feature = _featureService.GetFeature(featureId);
             if (feature != null)
             {
-                feature.Stop();
+                feature.Unregister(Context.UserIdentifier);
             }
         }
     }

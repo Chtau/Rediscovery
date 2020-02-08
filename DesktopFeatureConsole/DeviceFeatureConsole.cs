@@ -56,10 +56,13 @@ namespace DesktopFeatureConsole
         public override void ReceiveData(DeviceFeatureData data)
         {
             base.ReceiveData(data);
-            if (data != null && !string.IsNullOrWhiteSpace(data.Data?.ToString()))
+            if (data != null && IsRegister(data.DeviceId))
             {
-                currentDeviceFeatureData = data;
-                terminal.WriteLine(data.Data.ToString());
+                if (!string.IsNullOrWhiteSpace(data.Data?.ToString()))
+                {
+                    currentDeviceFeatureData = data;
+                    terminal.WriteLine(data.Data.ToString());
+                }
             }
         }
 

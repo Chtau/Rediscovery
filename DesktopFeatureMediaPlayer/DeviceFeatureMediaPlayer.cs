@@ -74,17 +74,20 @@ namespace DesktopFeatureMediaPlayer
         public override void ReceiveData(DeviceFeatureData data)
         {
             base.ReceiveData(data);
-            if (data != null && !string.IsNullOrWhiteSpace(data.Data?.ToString()))
+            if (data != null && IsRegister(data.DeviceId))
             {
-                currentDeviceFeatureData = data;
-                var commandModel = Newtonsoft.Json.JsonConvert.DeserializeObject<ClientCommandSendModel>(data.Data?.ToString());
-                if (commandModel != null)
+                if (!string.IsNullOrWhiteSpace(data.Data?.ToString()))
                 {
-                    OnHandleCommand(commandModel);
-                }
-                else
-                {
-                    System.Diagnostics.Debug.Fail("MediaPlayer: Unknown object from Data received");
+                    currentDeviceFeatureData = data;
+                    var commandModel = Newtonsoft.Json.JsonConvert.DeserializeObject<ClientCommandSendModel>(data.Data?.ToString());
+                    if (commandModel != null)
+                    {
+                        OnHandleCommand(commandModel);
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.Fail("MediaPlayer: Unknown object from Data received");
+                    }
                 }
             }
         }
