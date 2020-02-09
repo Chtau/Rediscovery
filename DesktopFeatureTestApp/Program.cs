@@ -2,6 +2,9 @@
 using DesktopFeatureMediaPlayer;
 using SharedCoreModels.DeviceFeature;
 using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
 
 namespace DesktopFeatureTestApp
 {
@@ -12,9 +15,25 @@ namespace DesktopFeatureTestApp
             Console.WriteLine("Test");
 
             //ConsoleFeature();
-            MediaPlayerFeature();
-
+            //MediaPlayerFeature();
+            OnDiscovery();
             Console.ReadLine();
+        }
+
+        private static void OnDiscovery()
+        {
+            var Client = new UdpClient();
+            var RequestData = Encoding.ASCII.GetBytes("SomeRequestData");
+            var ServerEp = new IPEndPoint(IPAddress.Any, 0);
+
+            Client.EnableBroadcast = true;
+            Client.Send(RequestData, RequestData.Length, new IPEndPoint(IPAddress.Broadcast, 8888));
+
+            var ServerResponseData = Client.Receive(ref ServerEp);
+            var ServerResponse = Encoding.ASCII.GetString(ServerResponseData);
+            System.Diagnostics.Debug.Print("Recived {0} from {1}", ServerResponse, ServerEp.Address.ToString() + Environment.NewLine);
+
+            Client.Close();
         }
 
         static void ConsoleFeature()
