@@ -11,6 +11,13 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
     {
         private bool processIsRunning = false;
 
+        private string currentTitle;
+        public string CurrentTitle
+        {
+            get { return currentTitle; }
+            set { SetProperty(ref currentTitle, value); }
+        }
+
         List<CommandTypes> commands;
         public List<CommandTypes> Commands
         {
@@ -183,6 +190,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
                     processIsRunning = stateData.ProcessRunning;
                     OnChangeCanExecute();
                 }
+                CurrentTitle = stateData.CurrentTitle;
             }
         }
     }

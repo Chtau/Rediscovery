@@ -18,6 +18,7 @@ namespace DesktopFeatureMediaPlayer
         public event EventHandler UpdateProcess;
         public ProfileConfiguration ProfileConfiguration { get; private set; }
         public bool ProcessRunning { get; private set; }
+        public string CurrentTitle { get; private set; }
 
         public MediaPlayerController(ProfileConfiguration profileConfiguration)
         {
@@ -33,6 +34,7 @@ namespace DesktopFeatureMediaPlayer
             try
             {
                 OnSetProcessRunning();
+                OnSetCurrentTitle();
                 if (tokenSource != null)
                 {
                     tokenSource.Cancel();
@@ -45,6 +47,7 @@ namespace DesktopFeatureMediaPlayer
                     do
                     {
                         OnSetProcessRunning();
+                        OnSetCurrentTitle();
                         await Task.Delay(100);
                         UpdateProcess?.Invoke(this, EventArgs.Empty);
                     } while (!cancellationToken.IsCancellationRequested);
@@ -71,6 +74,25 @@ namespace DesktopFeatureMediaPlayer
         private void OnSetProcessRunning()
         {
             ProcessRunning = OnGetProcess()?.MainWindowHandle != null;
+        }
+
+        private void OnSetCurrentTitle()
+        {
+            var title = OnGetProcess()?.MainWindowTitle;
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                if (title.Contains("- VLC"))
+                {
+                    var index = title.LastIndexOf("- VLC");
+                    title = title.Substring(0, index);
+                } else if (title.StartsWith("VLC"))
+                {
+                    title = null;
+                }
+                CurrentTitle = title;
+            }
+            else
+                CurrentTitle = "";
         }
 
         public bool StartProcess()

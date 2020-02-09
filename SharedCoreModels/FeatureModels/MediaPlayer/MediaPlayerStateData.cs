@@ -7,5 +7,7 @@ namespace SharedCoreModels.FeatureModels.MediaPlayer
     public class MediaPlayerStateData
     {
         public bool ProcessRunning { get; set; }
+
+        public string CurrentTitle { get; set; }
     }
 }

@@ -34,7 +34,8 @@ namespace DesktopFeatureMediaPlayer
                     {
                         Data = new MediaPlayerStateData
                         {
-                            ProcessRunning = controller.ProcessRunning
+                            ProcessRunning = controller.ProcessRunning,
+                            CurrentTitle = controller.CurrentTitle
                         },
                         DeviceId = deviceId
                     };

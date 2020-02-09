@@ -12,15 +12,19 @@
         <ToolbarItem x:Name="Back" Text="Back" Clicked="Back_Clicked" Icon="close_white.png"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <Grid Margin="0,50" RowSpacing="25">
+        <Grid Margin="0,10,0,50" RowSpacing="25">
             <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <StackLayout Orientation="Horizontal" Grid.Row="0" HorizontalOptions="Center" VerticalOptions="Start">
+            <StackLayout Orientation="Horizontal" Grid.Row="0" HorizontalOptions="Center" VerticalOptions="Start" Padding="10, 0, 10, 0">
+                <Label HorizontalOptions="Center" Text="{Binding CurrentTitle}" FontAttributes="Bold" FontSize="Title"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" Grid.Row="1" HorizontalOptions="Center" VerticalOptions="Start">
                 <flex:FlexButton                    
                     Icon="skip_back_white.png"
                     ClickedCommand="{Binding PreviousCommand}"
@@ -38,7 +42,7 @@
                     ClickedCommand="{Binding NextCommand}"
                     Style="{StaticResource RoundLargeFlexButton}"/>
             </StackLayout>
-            <StackLayout Orientation="Horizontal" Grid.Row="1" HorizontalOptions="Center" VerticalOptions="Start">
+            <StackLayout Orientation="Horizontal" Grid.Row="2" HorizontalOptions="Center" VerticalOptions="Start">
                 <flex:FlexButton                    
                     Icon="volume_down_white.png"
                     ClickedCommand="{Binding VolumneDownCommand}"
@@ -52,7 +56,7 @@
                     ClickedCommand="{Binding MuteCommand}"
                     Style="{StaticResource RoundMiddleFlexButton}"/>
             </StackLayout>
-            <StackLayout Orientation="Horizontal" Grid.Row="2" HorizontalOptions="Center" VerticalOptions="Start">
+            <StackLayout Orientation="Horizontal" Grid.Row="3" HorizontalOptions="Center" VerticalOptions="Start">
                 <flex:FlexButton                    
                     Icon="rewind_large_white.png"
                     ClickedCommand="{Binding JumpBackwardCommand}"
@@ -70,10 +74,10 @@
                     ClickedCommand="{Binding JumpForwardCommand}"
                     Style="{StaticResource RoundSmallFlexButton}"/>
             </StackLayout>
-            <StackLayout Grid.Row="3">
+            <StackLayout Grid.Row="4">
                 
             </StackLayout>
-            <StackLayout Orientation="Horizontal" Grid.Row="4" HorizontalOptions="Center" VerticalOptions="Start">
+            <StackLayout Orientation="Horizontal" Grid.Row="5" HorizontalOptions="Center" VerticalOptions="Start">
                 <flex:FlexButton                    
                     Icon="fullscreen_white.png"
                     ClickedCommand="{Binding FullscreenCommand}"
