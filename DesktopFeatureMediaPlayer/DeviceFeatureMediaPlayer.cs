@@ -9,7 +9,6 @@ namespace DesktopFeatureMediaPlayer
 {
     public class DeviceFeatureMediaPlayer : BaseDeviceFeature
     {
-        private DeviceFeatureData currentDeviceFeatureData;
         private List<MediaPlayerController> controllers = new List<MediaPlayerController>();
         private ProfileConfiguration currentProfileConfiguration;
         private DateTime updateTimer = DateTime.Now;
@@ -77,7 +76,6 @@ namespace DesktopFeatureMediaPlayer
             {
                 if (!string.IsNullOrWhiteSpace(data.Data?.ToString()))
                 {
-                    currentDeviceFeatureData = data;
                     var commandModel = Newtonsoft.Json.JsonConvert.DeserializeObject<ClientCommandSendModel>(data.Data?.ToString());
                     if (commandModel != null)
                     {
