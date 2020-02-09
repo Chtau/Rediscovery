@@ -88,6 +88,9 @@ namespace DesktopFeatureMediaPlayer
                 } else if (title.StartsWith("VLC"))
                 {
                     title = null;
+                } else if (title.StartsWith("Plex"))
+                {
+                    title = null;
                 }
                 CurrentTitle = title;
             }
