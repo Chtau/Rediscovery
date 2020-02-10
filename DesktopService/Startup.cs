@@ -98,6 +98,7 @@ namespace DesktopService
             services.AddSingleton<IPCPipe.IPipeResourceProvider, IPCPipe.PipeResourceProvider>();
             services.AddSingleton<Features.Pipes.IPipeIncomingConnection, Features.Pipes.PipeIncomingConnection>();
             services.AddSingleton<Features.Pipes.IPipeRepository, Features.Pipes.PipeRepository>();
+            services.AddSingleton<Features.Pipes.IPipeServiceInfo, Features.Pipes.PipeServiceInfo>();
             services.AddSingleton<IFeatureService, FeatureService>();
         }
 

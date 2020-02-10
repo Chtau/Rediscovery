@@ -43,7 +43,7 @@ namespace DesktopHub
             else if (args.Any(x => x.StartsWith(Connection.Models.IncomingConnectionViewModel.CodeArgStart, StringComparison.OrdinalIgnoreCase)))
                 app.Run(new Connection.IncomingConnection(new Connection.Models.IncomingConnectionViewModel(args)));
             else
-                app.Run(new Info.ServiceInfo()); //app.Run(new MainWindow());
+                app.Run(new MainWindow());
         }
 
     }
