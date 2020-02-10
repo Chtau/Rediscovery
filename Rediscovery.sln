@@ -23,8 +23,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedFeatureFunctions", "S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopFeatureMediaPlayer", "DesktopFeatureMediaPlayer\DesktopFeatureMediaPlayer.csproj", "{C734837E-B6D7-4CEB-81B5-03820CE2BA8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopDiscoveryService", "DesktopDiscoveryService\DesktopDiscoveryService.csproj", "{18906FC3-C007-4A15-83FF-C4E1B794EF8B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -161,18 +159,6 @@ Global
 		{C734837E-B6D7-4CEB-81B5-03820CE2BA8F}.Release|x64.Build.0 = Release|Any CPU
 		{C734837E-B6D7-4CEB-81B5-03820CE2BA8F}.Release|x86.ActiveCfg = Release|Any CPU
 		{C734837E-B6D7-4CEB-81B5-03820CE2BA8F}.Release|x86.Build.0 = Release|Any CPU
-		{18906FC3-C007-4A15-83FF-C4E1B794EF8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{18906FC3-C007-4A15-83FF-C4E1B794EF8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{18906FC3-C007-4A15-83FF-C4E1B794EF8B}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{18906FC3-C007-4A15-83FF-C4E1B794EF8B}.Debug|x64.Build.0 = Debug|Any CPU
-		{18906FC3-C007-4A15-83FF-C4E1B794EF8B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{18906FC3-C007-4A15-83FF-C4E1B794EF8B}.Debug|x86.Build.0 = Debug|Any CPU
-		{18906FC3-C007-4A15-83FF-C4E1B794EF8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{18906FC3-C007-4A15-83FF-C4E1B794EF8B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{18906FC3-C007-4A15-83FF-C4E1B794EF8B}.Release|x64.ActiveCfg = Release|Any CPU
-		{18906FC3-C007-4A15-83FF-C4E1B794EF8B}.Release|x64.Build.0 = Release|Any CPU
-		{18906FC3-C007-4A15-83FF-C4E1B794EF8B}.Release|x86.ActiveCfg = Release|Any CPU
-		{18906FC3-C007-4A15-83FF-C4E1B794EF8B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
