@@ -17,11 +17,13 @@
     <AvaloniaResource Remove="Devices\DevicesControl.xaml" />
     <AvaloniaResource Remove="Features\FeaturesControl.xaml" />
     <AvaloniaResource Remove="IncomingConnection.xaml" />
+    <AvaloniaResource Remove="Info\ServiceInfo.xaml" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Devices\DevicesControl.xaml" />
     <None Remove="Features\FeaturesControl.xaml" />
     <None Remove="IncomingConnection.xaml" />
+    <None Remove="Info\ServiceInfo.xaml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.9.1" />
@@ -54,6 +56,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Features\FeaturesControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Info\ServiceInfo.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
   </ItemGroup>
