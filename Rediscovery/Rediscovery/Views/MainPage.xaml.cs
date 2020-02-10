@@ -26,7 +26,6 @@ namespace Rediscovery.Views
             BindingContext = viewModel = new MainPageViewModel();
             viewModel.Load();
             auth.HelloReceived += Auth_HelloReceived;
-            OnDiscovery();
         }
 
         private void Auth_HelloReceived(object sender, Features.Authentication.Models.Connection e)
@@ -35,22 +34,6 @@ namespace Rediscovery.Views
             {
                 Navigation.PushModalAsync(new Features.Authentication.AuthenticationKey(e.Id));
             }
-        }
-
-        private void OnDiscovery()
-        {
-            var Client = new UdpClient();
-            var RequestData = Encoding.ASCII.GetBytes("SomeRequestData");
-            var ServerEp = new IPEndPoint(IPAddress.Any, 0);
-
-            Client.EnableBroadcast = true;
-            Client.Send(RequestData, RequestData.Length, new IPEndPoint(IPAddress.Broadcast, 8888));
-
-            var ServerResponseData = Client.Receive(ref ServerEp);
-            var ServerResponse = Encoding.ASCII.GetString(ServerResponseData);
-            System.Diagnostics.Debug.Print("Recived {0} from {1}", ServerResponse, ServerEp.Address.ToString() + Environment.NewLine);
-
-            Client.Close();
         }
     }
 }
