@@ -7,6 +7,8 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 
 namespace DesktopService
 {
@@ -15,8 +17,12 @@ namespace DesktopService
         // TODO: https://docs.microsoft.com/en-us/aspnet/core/signalr/dotnet-client?view=aspnetcore-2.2
         // TODO: https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/windows-service?view=aspnetcore-2.2&tabs=visual-studio
 
+        public static string HostIpAddress = "127.0.0.1";
+
         public static void Main(string[] args)
         {
+            HostIpAddress = OnGetIpAddr();
+
             //System.Threading.Thread.Sleep(30000);
             //CreateHostBuilder(args).Build().Run();
             var isService = false;// !(Debugger.IsAttached || args.Contains("--console"));
@@ -53,7 +59,8 @@ namespace DesktopService
         {
             webBuilder.ConfigureKestrel(serverOptions =>
             {
-                serverOptions.Listen(System.Net.IPAddress.Parse("192.168.1.100"), 44341);
+                //serverOptions.Listen(System.Net.IPAddress.Parse("192.168.1.100"), 44341);
+                serverOptions.Listen(System.Net.IPAddress.Parse(HostIpAddress), 44341);
                 serverOptions.ListenLocalhost(44341);
                 serverOptions.ListenAnyIP(44341);
                 serverOptions.ConfigureEndpointDefaults(listenOptions =>
@@ -64,5 +71,17 @@ namespace DesktopService
             })
             .UseStartup<Startup>();
         });
+
+        private static string OnGetIpAddr()
+        {
+            string localIP;
+            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+            {
+                socket.Connect("8.8.8.8", 65530);
+                IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
+                localIP = endPoint.Address.ToString();
+            }
+            return localIP;
+        }
     }
 }

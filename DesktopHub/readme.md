@@ -9,7 +9,7 @@ dotnet publish --configuration Release -r win-x64 --self-contained true
 
 This window requires the argument 
 
---serviceinfo
+--serviceinfo:192.168.1.100
 
 ### Show incomming connection Authentication window
 

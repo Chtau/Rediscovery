@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -8,7 +9,7 @@ namespace DesktopHub.Info
 {
     public class ServiceInfoViewModel : BaseViewModel
     {
-        public const string ServiceInfoArgStart = "--serviceinfo";
+        public const string ServiceInfoArgStart = "--serviceinfo:";
 
         string ipAddr = string.Empty;
         public string IpAddr
@@ -17,21 +18,17 @@ namespace DesktopHub.Info
             set { SetProperty(ref ipAddr, value); }
         }
 
-        public ServiceInfoViewModel()
+        public ServiceInfoViewModel(string[] args)
         {
-            OnGetIpAddr();
-        }
-
-        private void OnGetIpAddr()
-        {
-            string localIP;
-            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+            if (args != null)
             {
-                socket.Connect("8.8.8.8", 65530);
-                IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
-                localIP = endPoint.Address.ToString();
+                if (args.Any(x => x.StartsWith(ServiceInfoArgStart, StringComparison.OrdinalIgnoreCase)))
+                {
+                    var codeArg = args.First(x => x.StartsWith(ServiceInfoArgStart, StringComparison.OrdinalIgnoreCase));
+                    var vals = codeArg.Split(':');
+                    IpAddr = vals[1].Trim();
+                }
             }
-            IpAddr = localIP;
         }
     }
 }
