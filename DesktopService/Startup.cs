@@ -1,11 +1,13 @@
 ﻿using DesktopService.Features.Authentication;
 using DesktopService.Features.DeviceFeature;
+using DesktopService.Features.InternalLogger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -103,8 +105,20 @@ namespace DesktopService
         }
 
         // Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddInternalLogger();
+            loggerFactory.AddInternalLogger(new InternalLoggerConfiguration
+            {
+                LogLevel = LogLevel.Debug,
+                Color = ConsoleColor.Gray
+            });
+            loggerFactory.AddInternalLogger(c =>
+            {
+                c.LogLevel = LogLevel.Information;
+                c.Color = ConsoleColor.Blue;
+            });
+
             app.UseRouting();
 
             app.UseAuthentication();
