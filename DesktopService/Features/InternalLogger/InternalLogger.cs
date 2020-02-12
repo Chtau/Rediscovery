@@ -37,7 +37,7 @@ namespace DesktopService.Features.InternalLogger
             {
                 var color = Console.ForegroundColor;
                 Console.ForegroundColor = _config.Color;
-                Console.WriteLine($"{logLevel.ToString()} - {eventId.Id} - {_name} - {formatter(state, exception)}");
+                Console.WriteLine($"{logLevel.ToString()} - {eventId.Id} - {_name}{Environment.NewLine}{formatter(state, exception)}");
                 Console.ForegroundColor = color;
             }
         }
