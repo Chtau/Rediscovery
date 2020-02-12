@@ -14,7 +14,11 @@ namespace DesktopHub.Info
 #if DEBUG
             this.AttachDevTools();
 #endif
-            DataContext = viewModel = new ServiceInfoViewModel();
+        }
+
+        public ServiceInfo(string[] args) : this()
+        {
+            DataContext = viewModel = new ServiceInfoViewModel(args);
         }
 
         private void InitializeComponent()

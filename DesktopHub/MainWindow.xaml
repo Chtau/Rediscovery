@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:devices="clr-namespace:DesktopHub.Devices"
         xmlns:feat="clr-namespace:DesktopHub.Features"
+        xmlns:liveLogger="clr-namespace:DesktopHub.Features.LiveLogger"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         Width="800" Height="450"
         x:Class="DesktopHub.MainWindow"
@@ -23,6 +24,14 @@
       </TabItem.Header>
       <StackPanel>
         <feat:FeaturesControl></feat:FeaturesControl>
+      </StackPanel>
+    </TabItem>
+    <TabItem>
+      <TabItem.Header>
+        <TextBlock VerticalAlignment="Center">Live Logger</TextBlock>
+      </TabItem.Header>
+      <StackPanel>
+        <liveLogger:LiveLoggerControl></liveLogger:LiveLoggerControl>
       </StackPanel>
     </TabItem>
   </TabControl>

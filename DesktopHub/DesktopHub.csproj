@@ -16,12 +16,14 @@
   <ItemGroup>
     <AvaloniaResource Remove="Devices\DevicesControl.xaml" />
     <AvaloniaResource Remove="Features\FeaturesControl.xaml" />
+    <AvaloniaResource Remove="Features\LiveLogger\LiveLoggerControl.xaml" />
     <AvaloniaResource Remove="IncomingConnection.xaml" />
     <AvaloniaResource Remove="Info\ServiceInfo.xaml" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Devices\DevicesControl.xaml" />
     <None Remove="Features\FeaturesControl.xaml" />
+    <None Remove="Features\LiveLogger\LiveLoggerControl.xaml" />
     <None Remove="IncomingConnection.xaml" />
     <None Remove="Info\ServiceInfo.xaml" />
   </ItemGroup>
@@ -61,6 +63,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Info\ServiceInfo.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Features\LiveLogger\LiveLoggerControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
   </ItemGroup>

@@ -39,7 +39,7 @@ namespace DesktopHub
             var incomingConnectionService = (Connection.IIncomingConnectionService)Program.ServiceProvider.GetService(typeof(Connection.IIncomingConnectionService));
             incomingConnectionService.Init();
             if (args.Any(x => x.StartsWith(Info.ServiceInfoViewModel.ServiceInfoArgStart, StringComparison.OrdinalIgnoreCase)))
-                app.Run(new Info.ServiceInfo());
+                app.Run(new Info.ServiceInfo(args));
             else if (args.Any(x => x.StartsWith(Connection.Models.IncomingConnectionViewModel.CodeArgStart, StringComparison.OrdinalIgnoreCase)))
                 app.Run(new Connection.IncomingConnection(new Connection.Models.IncomingConnectionViewModel(args)));
             else
