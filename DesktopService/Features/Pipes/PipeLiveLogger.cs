@@ -15,6 +15,9 @@ namespace DesktopService.Features.Pipes
         private readonly ILogger<PipeLiveLogger> _logger;
         private readonly Models.PipeSettings _pipeSettings;
 
+        private DateTime lastFailedConnection = DateTime.MinValue;
+        private int connectionsFailed = 0;
+
         public PipeLiveLogger(IPCPipe.IPipeClient pipeClient, ILoggerFactory loggerFactory,
             IOptions<Models.PipeSettings> pipeSettings)
         {
@@ -27,10 +30,25 @@ namespace DesktopService.Features.Pipes
         {
             try
             {
-                if (_pipeClient.TryConnect(RediscoveryHub))
+                if (connectionsFailed > 15)
                 {
-                    var logData = Newtonsoft.Json.JsonConvert.SerializeObject(liveLoggerModel);
-                    _pipeClient.Send(RediscoveryHub, logData);
+                    if ((DateTime.UtcNow - lastFailedConnection).TotalMinutes > 5)
+                    {
+                        connectionsFailed = 0;
+                        lastFailedConnection = DateTime.MinValue;
+                    }
+                } else
+                {
+                    if (_pipeClient.TryConnect(RediscoveryHub))
+                    {
+                        var logData = Newtonsoft.Json.JsonConvert.SerializeObject(liveLoggerModel);
+                        _pipeClient.Send(RediscoveryHub, logData);
+                    }
+                    else
+                    {
+                        connectionsFailed++;
+                        lastFailedConnection = DateTime.UtcNow;
+                    }
                 }
             }
             catch (Exception ex)
