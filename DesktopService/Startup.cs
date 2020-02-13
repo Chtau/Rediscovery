@@ -120,8 +120,12 @@ namespace DesktopService
                 c.LogLevel = LogLevel.Information;
                 c.Color = ConsoleColor.Blue;
             });
-            loggerFactory.AddPipeLogger();
-
+            loggerFactory.AddPipeLogger(o =>
+            {
+                o.PipeLiveLogger = app.ApplicationServices.GetRequiredService<Features.Pipes.IPipeLiveLogger>();
+                o.LogLevel = LogLevel.Information;
+            });
+            
             app.UseRouting();
 
             app.UseAuthentication();

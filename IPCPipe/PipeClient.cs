@@ -40,6 +40,11 @@ namespace IPCPipe
                 client.Connect(timeoutMS);
                 return client;
             }
+            catch (TimeoutException)
+            {
+                if (raiseEvent)
+                    FailedToConnect?.Invoke(this, hub);
+            }
             catch (Exception)
             {
                 if (raiseEvent)

@@ -9,5 +9,6 @@ namespace DesktopService.Features.PipeLogger
     {
         public LogLevel LogLevel { get; set; } = LogLevel.Warning;
         public int EventId { get; set; } = 0;
+        public Features.Pipes.IPipeLiveLogger PipeLiveLogger { get; set; }
     }
 }

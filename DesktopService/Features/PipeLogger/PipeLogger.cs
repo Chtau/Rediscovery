@@ -23,7 +23,7 @@ namespace DesktopService.Features.PipeLogger
 
         public bool IsEnabled(LogLevel logLevel)
         {
-            return logLevel == _config.LogLevel;
+            return logLevel >= _config.LogLevel;
         }
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
@@ -35,7 +35,12 @@ namespace DesktopService.Features.PipeLogger
 
             if (_config.EventId == 0 || _config.EventId == eventId.Id)
             {
-                Console.WriteLine($"{logLevel.ToString()} - {eventId.Id} - {_name}{Environment.NewLine}{formatter(state, exception)}");
+                _config.PipeLiveLogger.Log(new SharedCoreModels.LiveLoggerModel
+                {
+                    EventId = eventId.Id,
+                    LogLevel = (int)logLevel,
+                    Message = formatter(state, exception)
+                });
             }
         }
     }
