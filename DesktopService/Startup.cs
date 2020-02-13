@@ -1,6 +1,7 @@
 ﻿using DesktopService.Features.Authentication;
 using DesktopService.Features.DeviceFeature;
 using DesktopService.Features.InternalLogger;
+using DesktopService.Features.PipeLogger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.SignalR;
@@ -101,6 +102,7 @@ namespace DesktopService
             services.AddSingleton<Features.Pipes.IPipeIncomingConnection, Features.Pipes.PipeIncomingConnection>();
             services.AddSingleton<Features.Pipes.IPipeRepository, Features.Pipes.PipeRepository>();
             services.AddSingleton<Features.Pipes.IPipeServiceInfo, Features.Pipes.PipeServiceInfo>();
+            services.AddSingleton<Features.Pipes.IPipeLiveLogger, Features.Pipes.PipeLiveLogger>();
             services.AddSingleton<IFeatureService, FeatureService>();
         }
 
@@ -118,6 +120,7 @@ namespace DesktopService
                 c.LogLevel = LogLevel.Information;
                 c.Color = ConsoleColor.Blue;
             });
+            loggerFactory.AddPipeLogger();
 
             app.UseRouting();
 
