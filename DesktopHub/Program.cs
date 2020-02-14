@@ -33,6 +33,7 @@ namespace DesktopHub
             service.AddSingleton<IPCPipe.IPipeClient, IPCPipe.PipeClient>();
             service.AddSingleton<IPCPipe.IPipeResourceProvider, IPCPipe.PipeResourceProvider>();
             service.AddSingleton<Connection.IIncomingConnectionPipe, Connection.IncomingConnectionPipe>();
+            service.AddSingleton<Connection.IIncomingConnectionPipeLiveLogger, Connection.IncomingConnectionPipeLiveLogger>();
             service.AddSingleton<Connection.IIncomingConnectionService, Connection.IncomingConnectionService>();
             ServiceProvider = service.BuildServiceProvider();
 

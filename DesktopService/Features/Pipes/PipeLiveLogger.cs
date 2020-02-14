@@ -10,7 +10,7 @@ namespace DesktopService.Features.Pipes
 {
     public class PipeLiveLogger : IPipeLiveLogger
     {
-        private const string RediscoveryHub = "rediscoveryhub";
+        private const string RediscoveryHub = "rediscoveryhublivelogger";
         private readonly IPCPipe.IPipeClient _pipeClient;
         private readonly ILogger<PipeLiveLogger> _logger;
         private readonly Models.PipeSettings _pipeSettings;
