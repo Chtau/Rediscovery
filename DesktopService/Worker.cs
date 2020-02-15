@@ -29,28 +29,6 @@ namespace DesktopService
             _pipeRepository.Init();
             _pipeServiceInfo.ShowInfoWindow();
 
-            Task.Run(() =>
-            {
-                //var localEndpoint = new IPEndPoint(IPAddress.Parse("192.168.1.100"), 8888);
-                //var Server = new UdpClient(localEndpoint);// "192.168.1.100", 8888);
-                var Server = new UdpClient(8888);
-                var ResponseData = Encoding.ASCII.GetBytes("SomeResponseData");
-
-                /*UdpClient udpClient = new UdpClient();
-                udpClient.Client.Bind(new IPEndPoint(IPAddress.Any, 8888));
-                var from = new IPEndPoint(IPAddress.Parse("255.255.255.255"), 0);*/
-                while (true)
-                {
-                    //var recvBuffer = udpClient.Receive(ref from);
-                    //Console.WriteLine(Encoding.UTF8.GetString(recvBuffer));
-                    var ClientEp = new IPEndPoint(IPAddress.Any, 0);
-                    var ClientRequestData = Server.Receive(ref ClientEp);
-                    var ClientRequest = Encoding.ASCII.GetString(ClientRequestData);
-
-                    Console.WriteLine("Recived {0} from {1}, sending response", ClientRequest, ClientEp.Address.ToString());
-                    //Server.Send(ResponseData, ResponseData.Length, ClientEp);*/
-                }
-            });
             // the Task.Run leads to a thread starvation
             /*Task.Run(() =>
             {
