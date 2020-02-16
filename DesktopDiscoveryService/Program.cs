@@ -10,10 +10,14 @@ namespace DesktopDiscoveryService
     {
         static void Main(string[] args)
         {
+            var fw = new Firewall.FirewallInfo();
+            var result = fw.RuleExists("Rediscovery discovery Service");
+
+
             // TODO: add firewall port rule
-            // netsh advfirewall firewall add rule name="Rediscovery discovery UDP Port 8888" dir=in action=allow protocol=UDP localport=8888
+            // netsh advfirewall firewall add rule name="Rediscovery discovery Service" dir=in action=allow protocol=UDP localport=8888
             // TODO: remove firewall port rule
-            // netsh advfirewall firewall delete rule name="Rediscovery discovery UDP Port 8888" protocol=UDP localport=8888
+            // netsh advfirewall firewall delete rule name="Rediscovery discovery Service" protocol=UDP localport=8888
 
 
             Task.Run(() =>
