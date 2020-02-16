@@ -8,39 +8,72 @@ namespace Firewall
 {
     public class FirewallInfo
     {
+        public class FirewallCommandResult
+        {
+            public bool Result { get; set; }
+
+            public bool RequiredAdministratorRights { get; set; }
+
+            public FirewallCommandResult(bool result, bool requiredAdministratorRights)
+            {
+                Result = result;
+                RequiredAdministratorRights = requiredAdministratorRights;
+            }
+        }
+
         private const string FirewallBaseCommand = "netsh advfirewall firewall ";
         private const string FirewallShowRuleCommand = "show rule name=\"{0}\"";
 
-        public FirewallInfo()
+
+        public FirewallCommandResult RuleExists(string ruleName)
         {
-            
+            string cmd = FirewallBaseCommand + string.Format(FirewallShowRuleCommand, ruleName);
+            return OnSendCommand(cmd);
         }
 
-
-        public bool RuleExists(string ruleName)
+        private FirewallCommandResult OnSendCommand(string cmd)
         {
             bool result = false;
             bool hasResult = false;
+            bool reqAdmin = false;
+            string lastOutput = "1";
             Task.Run(() =>
             {
-                var prc = GetProcess((object sender, DataReceivedEventArgs e) =>
+                var prc = OnGetProcess((object sender, DataReceivedEventArgs e) =>
                 {
-                    System.Diagnostics.Debug.Print(e.Data);
-
-                    hasResult = true;
+                    if (!hasResult)
+                    {
+                        System.Diagnostics.Debug.Print(e.Data);
+                        if (string.Equals(e.Data, "OK.", StringComparison.OrdinalIgnoreCase))
+                        {
+                            result = true;
+                            hasResult = true;
+                        }
+                        if (e.Data.IndexOf("ADMIN", StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            result = false;
+                            reqAdmin = true;
+                            hasResult = true;
+                        }
+                        // cmd finishes commands with double empty lines
+                        if (e.Data == "" && lastOutput == "")
+                        {
+                            hasResult = true;
+                        }
+                        lastOutput = e.Data;
+                    }
                 });
-                string cmd = FirewallBaseCommand + string.Format(FirewallShowRuleCommand, ruleName) + Environment.NewLine;
-                prc.StandardInput.WriteLine(cmd);
+                prc.StandardInput.WriteLine(cmd + Environment.NewLine);
             });
 
             do
             {
                 System.Threading.Thread.Sleep(10);
             } while (!hasResult);
-            return result;
+            return new FirewallCommandResult(result, reqAdmin);
         }
 
-        private Process GetProcess(DataReceivedEventHandler eventHandlerConsoleOutput)
+        private Process OnGetProcess(DataReceivedEventHandler eventHandlerConsoleOutput)
         {
             var process = new Process();
             process.StartInfo.FileName = "cmd.exe";
