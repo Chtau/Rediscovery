@@ -6,11 +6,11 @@ using WindowsFirewallHelper;
 
 namespace DesktopDiscoveryService
 {
-    public class FirewallRule
+    public static class FirewallRule
     {
         private const string DiscoveryServiceRuleName = "Rediscovery discovery Service";
 
-        public bool DiscoveryRuleExists()
+        public static bool DiscoveryRuleExists()
         {
             var rule = FirewallManager.Instance.Rules.FirstOrDefault(x => x.Name == DiscoveryServiceRuleName);
             if (rule.IsEnable && rule.LocalPorts.Any(x => x == DiscoveryClient.Port))
@@ -18,7 +18,7 @@ namespace DesktopDiscoveryService
             return false;
         }
 
-        public bool DiscoveryRuleCreate()
+        public static bool DiscoveryRuleCreate()
         {
             // netsh advfirewall firewall add rule name="Rediscovery discovery Service" dir=in action=allow protocol=UDP localport=8888
             try
@@ -38,7 +38,7 @@ namespace DesktopDiscoveryService
             }
         }
 
-        public bool DiscoveryRuleDelete()
+        public static bool DiscoveryRuleDelete()
         {
             // netsh advfirewall firewall delete rule name="Rediscovery discovery Service" protocol=UDP localport=8888
             try
