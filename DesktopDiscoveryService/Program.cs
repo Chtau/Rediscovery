@@ -22,6 +22,7 @@ namespace DesktopDiscoveryService
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Could not create Firewall rule (Restart with Administrator rights)");
+                        Console.WriteLine("Alternative you can create the Rule with the Command: " + FirewallRule.GetFWRuleCreate());
                         Console.ResetColor();
                     }
                 } else
@@ -39,6 +40,7 @@ namespace DesktopDiscoveryService
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Could not remove Firewall rule (Restart with Administrator rights)");
+                        Console.WriteLine("Alternative you can create the Rule with the Command: " + FirewallRule.GetFWRuleDelete());
                         Console.ResetColor();
                     }
                 } else

@@ -20,7 +20,6 @@ namespace DesktopDiscoveryService
 
         public static bool DiscoveryRuleCreate()
         {
-            // netsh advfirewall firewall add rule name="Rediscovery discovery Service" dir=in action=allow protocol=UDP localport=8888
             try
             {
                 var rule = FirewallManager.Instance.CreatePortRule(FirewallProfiles.Private | FirewallProfiles.Domain,
@@ -31,7 +30,13 @@ namespace DesktopDiscoveryService
 );
                 FirewallManager.Instance.Rules.Add(rule);
                 return true;
-            } catch (Exception ex)
+            }
+            catch (System.UnauthorizedAccessException)
+            {
+                // required admin
+                return false;
+            }
+            catch (Exception ex)
             {
                 System.Diagnostics.Debug.Print(ex.ToString() + Environment.NewLine);
                 return false;
@@ -40,7 +45,6 @@ namespace DesktopDiscoveryService
 
         public static bool DiscoveryRuleDelete()
         {
-            // netsh advfirewall firewall delete rule name="Rediscovery discovery Service" protocol=UDP localport=8888
             try
             {
                 var myRule = FirewallManager.Instance.Rules.SingleOrDefault(r => r.Name == DiscoveryServiceRuleName);
@@ -50,11 +54,26 @@ namespace DesktopDiscoveryService
                 }
                 return true;
             }
+            catch (System.UnauthorizedAccessException)
+            {
+                // required admin
+                return false;
+            }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.Print(ex.ToString() + Environment.NewLine);
                 return false;
             }
+        }
+
+        public static string GetFWRuleDelete()
+        {
+            return $"netsh advfirewall firewall delete rule name=\"{DiscoveryServiceRuleName}\" protocol=UDP localport={DiscoveryClient.Port}";
+        }
+
+        public static string GetFWRuleCreate()
+        {
+            return $"netsh advfirewall firewall add rule name=\"{DiscoveryServiceRuleName}\" dir=in action=allow protocol=UDP localport={DiscoveryClient.Port}";
         }
     }
 }
