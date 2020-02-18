@@ -9,4 +9,8 @@
     <PackageReference Include="WindowsFirewallHelper" Version="1.6.3.40" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SharedFeatureFunctions\SharedFeatureFunctions.csproj" />
+  </ItemGroup>
+
 </Project>

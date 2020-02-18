@@ -16,13 +16,15 @@ namespace DesktopDiscoveryService
             Task.Run(() =>
             {
                 var Server = new UdpClient(Port);
-                
+                var answer = Encoding.ASCII.GetBytes($"IP:{SharedFeatureFunctions.NetworkAddress.GetIpAddr()};");
+
                 while (true)
                 {
                     var ClientEp = new IPEndPoint(IPAddress.Any, 0);
                     var ClientRequestData = Server.Receive(ref ClientEp);
                     var ClientRequest = Encoding.ASCII.GetString(ClientRequestData);
                     callbackReceived?.Invoke(ClientEp.Address.ToString());
+                    Server.Send(answer, answer.Length, ClientEp);
                 }
             });
         }
