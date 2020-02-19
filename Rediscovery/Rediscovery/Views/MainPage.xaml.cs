@@ -42,7 +42,7 @@ namespace Rediscovery.Views
         {
             discoveryService.Boardcast((answer) =>
             {
-                Console.WriteLine("Anwser Recived {0} from {1}", answer);
+                Console.WriteLine("Anwser Recived from IPAddress:{0}", answer);
             });
             /*Task.Run(async () =>
             {

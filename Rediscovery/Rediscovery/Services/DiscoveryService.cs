@@ -12,36 +12,32 @@ namespace Rediscovery.Services
     {
         public void Boardcast(Action<string> callbackAnswer)
         {
-            
-            /*Task.Run(() =>
-            {
-                do
-                {
-                    var Client = new UdpClient();
-                    var ServerResponseData = Client.Receive(ref ServerEp);
-                    var ServerResponse = Encoding.ASCII.GetString(ServerResponseData);
-                    callbackAnswer?.Invoke(ServerEp.Address?.ToString() + " Response:" + ServerResponse);
-
-                    Client.Close();
-                } while (true);
-            });*/
             Task.Run(async () =>
             {
                 do
                 {
-                    await Task.Delay(1000);
-                    var ServerEp = new IPEndPoint(IPAddress.Any, 0);
-                    var Client = new UdpClient();
-                    var RequestData = Encoding.ASCII.GetBytes("RediscoveryClient");
+                    try
+                    {
+                        await Task.Delay(1000);
+                        var ServerEp = new IPEndPoint(IPAddress.Any, 0);
+                        var Client = new UdpClient();
+                        var RequestData = Encoding.ASCII.GetBytes("RediscoveryClient");
 
-                    Client.EnableBroadcast = true;
-                    Client.Send(RequestData, RequestData.Length, new IPEndPoint(IPAddress.Broadcast, 8888));
+                        Client.EnableBroadcast = true;
+                        Client.Send(RequestData, RequestData.Length, new IPEndPoint(IPAddress.Broadcast, 8888));
+                        await Task.Run(() =>
+                        {
+                            var ServerResponseData = Client.Receive(ref ServerEp);
+                            var ServerResponse = Encoding.ASCII.GetString(ServerResponseData);
+                            callbackAnswer?.Invoke(ServerEp.Address.ToString());
+                            Console.WriteLine("Recived {0} from {1}", ServerResponse, ServerEp.Address.ToString());
 
-                    var ServerResponseData = Client.Receive(ref ServerEp);
-                    var ServerResponse = Encoding.ASCII.GetString(ServerResponseData);
-                    Console.WriteLine("Recived {0} from {1}", ServerResponse, ServerEp.Address.ToString());
-
-                    Client.Close();
+                            Client.Close();
+                        });
+                    } catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.Print(ex.ToString());
+                    }
                 } while (true);
             });
         }
