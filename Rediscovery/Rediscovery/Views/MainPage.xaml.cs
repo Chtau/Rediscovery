@@ -18,7 +18,8 @@ namespace Rediscovery.Views
         private MainPageViewModel viewModel;
 
         private Features.Authentication.IConnect auth => DependencyService.Get<Features.Authentication.IConnect>() ?? new Features.Authentication.Connect();
-        
+        private Services.IDiscoveryService discoveryService => DependencyService.Get<Services.IDiscoveryService>() ?? new Services.DiscoveryService();
+
         public MainPage()
         {
             InitializeComponent();
@@ -39,7 +40,11 @@ namespace Rediscovery.Views
 
         private void OnSendDiscovery()
         {
-            Task.Run(async () =>
+            discoveryService.Boardcast((answer) =>
+            {
+                Console.WriteLine("Anwser Recived {0} from {1}", answer);
+            });
+            /*Task.Run(async () =>
             {
                 do
                 {
@@ -51,13 +56,13 @@ namespace Rediscovery.Views
                     Client.EnableBroadcast = true;
                     Client.Send(RequestData, RequestData.Length, new IPEndPoint(IPAddress.Broadcast, 8888));
 
-                    /*var ServerResponseData = Client.Receive(ref ServerEp);
-                    var ServerResponse = Encoding.ASCII.GetString(ServerResponseData);
-                    Console.WriteLine("Recived {0} from {1}", ServerResponse, ServerEp.Address.ToString());
-                    */
+                    //var ServerResponseData = Client.Receive(ref ServerEp);
+                    //var ServerResponse = Encoding.ASCII.GetString(ServerResponseData);
+                    //Console.WriteLine("Recived {0} from {1}", ServerResponse, ServerEp.Address.ToString());
+                    
                     Client.Close();
                 } while (true);
-            });
+            });*/
         }
     }
 }
