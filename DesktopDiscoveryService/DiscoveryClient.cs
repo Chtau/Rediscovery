@@ -25,7 +25,7 @@ namespace DesktopDiscoveryService
                     var ClientRequest = Encoding.ASCII.GetString(ClientRequestData);
                     callbackReceived?.Invoke(ClientEp.Address.ToString());
                     var answerEndPoint = new IPEndPoint(ClientEp.Address, Port);
-                    Server.Send(answer, answer.Length, answerEndPoint);
+                    Server.Send(answer, answer.Length, ClientEp);// answerEndPoint);
                 }
             });
         }

@@ -12,8 +12,8 @@ namespace Rediscovery.Services
     {
         public void Boardcast(Action<string> callbackAnswer)
         {
-            var ServerEp = new IPEndPoint(IPAddress.Any, 0);
-            Task.Run(() =>
+            
+            /*Task.Run(() =>
             {
                 do
                 {
@@ -24,17 +24,22 @@ namespace Rediscovery.Services
 
                     Client.Close();
                 } while (true);
-            });
+            });*/
             Task.Run(async () =>
             {
                 do
                 {
                     await Task.Delay(1000);
+                    var ServerEp = new IPEndPoint(IPAddress.Any, 0);
                     var Client = new UdpClient();
                     var RequestData = Encoding.ASCII.GetBytes("RediscoveryClient");
 
                     Client.EnableBroadcast = true;
                     Client.Send(RequestData, RequestData.Length, new IPEndPoint(IPAddress.Broadcast, 8888));
+
+                    var ServerResponseData = Client.Receive(ref ServerEp);
+                    var ServerResponse = Encoding.ASCII.GetString(ServerResponseData);
+                    Console.WriteLine("Recived {0} from {1}", ServerResponse, ServerEp.Address.ToString());
 
                     Client.Close();
                 } while (true);
