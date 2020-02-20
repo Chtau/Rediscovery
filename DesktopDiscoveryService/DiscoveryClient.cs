@@ -9,14 +9,12 @@ namespace DesktopDiscoveryService
 {
     public class DiscoveryClient
     {
-        public const int Port = 8888;
-
-        public void Start(Action<string> callbackReceived)
+        public void Start(string serviceIpAddress, string serviceMetaInfo, int discoveryPort, Action<string> callbackReceived)
         {
             Task.Run(() =>
             {
-                var Server = new UdpClient(Port);
-                var answer = Encoding.ASCII.GetBytes($"IP:{SharedFeatureFunctions.NetworkAddress.GetIpAddr()};");
+                var Server = new UdpClient(discoveryPort);
+                var answer = Encoding.ASCII.GetBytes($"IP:{serviceIpAddress};{serviceMetaInfo}");
 
                 while (true)
                 {

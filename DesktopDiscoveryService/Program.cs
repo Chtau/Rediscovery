@@ -66,9 +66,11 @@ namespace DesktopDiscoveryService
                     Console.WriteLine("Firewall rule: OK");
                 }
 
+                // TODO: parse arguments for Service IP Address, Service Meta Information and Port
+
                 Console.WriteLine("Waiting for Clients");
                 var dis = new DiscoveryClient();
-                dis.Start((client) =>
+                dis.Start(SharedFeatureFunctions.NetworkAddress.GetIpAddr(), "", 8888, (client) =>
                 {
                     Console.ForegroundColor = ConsoleColor.Blue;
                     Console.WriteLine($"Client discover message received from IP:{client}");
