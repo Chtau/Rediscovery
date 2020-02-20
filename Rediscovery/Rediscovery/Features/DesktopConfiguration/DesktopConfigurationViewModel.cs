@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Rediscovery.Features.DesktopConfiguration
@@ -17,12 +18,13 @@ namespace Rediscovery.Features.DesktopConfiguration
         public ObservableCollection<DesktopConfigurationModel> Items { get; set; }
         public Command LoadItemsCommand { get; set; }
 
+
         public DesktopConfigurationViewModel()
         {
             Title = "Desktop";
             Items = new ObservableCollection<DesktopConfigurationModel>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadDeviceItemsCommand());
-
+            
             MessagingCenter.Subscribe<DesktopConfigurationEditViewModel>(this, "refresh_desktop_configuration", async (obj) =>
             {
                 await ExecuteLoadDeviceItemsCommand();

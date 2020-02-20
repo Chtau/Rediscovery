@@ -19,6 +19,14 @@
                 <Setter Property="BarBackgroundColor" Value="{StaticResource NavigationPrimary}" />
                 <Setter Property="BarTextColor" Value="White" />
             </Style>
+            <Style x:Key="LargeFlexButton" TargetType="flex:FlexButton">
+                <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                <Setter Property="ForegroundColor" Value="{StaticResource Foreground}" />
+                <Setter Property="HighlightForegroundColor" Value="{StaticResource ForegroundHighlight}" />
+                <Setter Property="HighlightBackgroundColor" Value="{StaticResource PrimaryHighlight}" />
+                <Setter Property="CornerRadius" Value="2" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
             <Style x:Key="RoundLargeFlexButton" TargetType="flex:FlexButton">
                 <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
                 <Setter Property="ForegroundColor" Value="{StaticResource Foreground}" />
