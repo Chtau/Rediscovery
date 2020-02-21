@@ -11,7 +11,7 @@ namespace DesktopDiscoveryService
     {
         static void Main(string[] args)
         {
-            if (args.Any(x => x.StartsWith("-addfw", StringComparison.OrdinalIgnoreCase)))
+            if (args.Any(x => x.StartsWith("--addfw", StringComparison.OrdinalIgnoreCase)))
             {
                 if (!FirewallRule.DiscoveryRuleExists())
                 {
@@ -29,7 +29,7 @@ namespace DesktopDiscoveryService
                 {
                     Console.WriteLine("Firewall rule already exists");
                 }
-            } else if (args.Any(x => x.StartsWith("-removefw", StringComparison.OrdinalIgnoreCase)))
+            } else if (args.Any(x => x.StartsWith("--removefw", StringComparison.OrdinalIgnoreCase)))
             {
                 if (FirewallRule.DiscoveryRuleExists())
                 {
@@ -66,11 +66,41 @@ namespace DesktopDiscoveryService
                     Console.WriteLine("Firewall rule: OK");
                 }
 
-                // TODO: parse arguments for Service IP Address, Service Meta Information and Port
+                // parse arguments for Service IP Address, Service Meta Information and Port
+                string ipAddr = null;
+                int discoveryPort = 8888;
+                string serviceMetaInfo = "";
+                if (args != null)
+                {
+                    string serviceIPArg = "--serviceip:";
+                    if (args.Any(x => x.StartsWith(serviceIPArg, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        var valueArg = args.First(x => x.StartsWith(serviceIPArg, StringComparison.OrdinalIgnoreCase));
+                        var vals = valueArg.Split(':');
+                        ipAddr = vals[1].Trim();
+                    }
+                    string discoveryPortArg = "--discoveryport:";
+                    if (args.Any(x => x.StartsWith(discoveryPortArg, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        var valueArg = args.First(x => x.StartsWith(discoveryPortArg, StringComparison.OrdinalIgnoreCase));
+                        var vals = valueArg.Split(':');
+                        if (int.TryParse(vals[1].Trim(), out int port))
+                            discoveryPort = port;
+                    }
+                    string serviceMetaArg = "--servicemeta:";
+                    if (args.Any(x => x.StartsWith(serviceMetaArg, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        var valueArg = args.First(x => x.StartsWith(serviceMetaArg, StringComparison.OrdinalIgnoreCase));
+                        var vals = valueArg.Split(':');
+                        serviceMetaInfo = vals[1].Trim();
+                    }
+                }
+                if (string.IsNullOrWhiteSpace(ipAddr))
+                    ipAddr = SharedFeatureFunctions.NetworkAddress.GetIpAddr();
 
                 Console.WriteLine("Waiting for Clients");
                 var dis = new DiscoveryClient();
-                dis.Start(SharedFeatureFunctions.NetworkAddress.GetIpAddr(), "", 8888, (client) =>
+                dis.Start(ipAddr, serviceMetaInfo, discoveryPort, (client) =>
                 {
                     Console.ForegroundColor = ConsoleColor.Blue;
                     Console.WriteLine($"Client discover message received from IP:{client}");

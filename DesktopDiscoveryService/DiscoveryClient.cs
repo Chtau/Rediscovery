@@ -11,6 +11,8 @@ namespace DesktopDiscoveryService
     {
         public void Start(string serviceIpAddress, string serviceMetaInfo, int discoveryPort, Action<string> callbackReceived)
         {
+            if (serviceMetaInfo == null)
+                serviceMetaInfo = "";
             Task.Run(() =>
             {
                 var Server = new UdpClient(discoveryPort);
