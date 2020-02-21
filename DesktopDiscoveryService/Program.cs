@@ -9,9 +9,32 @@ namespace DesktopDiscoveryService
 {
     class Program
     {
+        private const string CommandAddFirewall = "--addfw";
+        private const string CommandRemoveFirewall = "--removefw";
+        private const string CommandServiceIPAddr = "--serviceip";
+        private const string CommandDiscoveryPort = "--discoveryport";
+        private const string CommandServiceMetaInfo = "--servicemeta";
+
         static void Main(string[] args)
         {
-            if (args.Any(x => x.StartsWith("--addfw", StringComparison.OrdinalIgnoreCase)))
+            int discoveryPort = 8888;
+            if (args.Any(x => x.StartsWith(CommandDiscoveryPort + ":", StringComparison.OrdinalIgnoreCase)))
+            {
+                var valueArg = args.First(x => x.StartsWith(CommandDiscoveryPort + ":", StringComparison.OrdinalIgnoreCase));
+                var vals = valueArg.Split(':');
+                if (int.TryParse(vals[1].Trim(), out int port))
+                    discoveryPort = port;
+            }
+            if (args.Any(x => x.StartsWith("?", StringComparison.OrdinalIgnoreCase) || x.StartsWith("help", StringComparison.OrdinalIgnoreCase)))
+            {
+                Console.WriteLine("Help for Rediscovery Discovery Service");
+                Console.WriteLine("Arguments");
+                Console.WriteLine($"    {CommandAddFirewall}    \"Creates Windows Firewall Rule\"");
+                Console.WriteLine($"    {CommandRemoveFirewall}    \"Removes Windows Firewall Rule\"");
+                Console.WriteLine($"    {CommandServiceIPAddr}    \"Service IP Address for discovery response\"");
+                Console.WriteLine($"    {CommandDiscoveryPort}    \"Port to use for the Discovery service\"");
+                Console.WriteLine($"    {CommandServiceMetaInfo}    \"Additional Service Metadata for the discovery response\"");
+            } else if (args.Any(x => x.StartsWith(CommandAddFirewall, StringComparison.OrdinalIgnoreCase)))
             {
                 if (!FirewallRule.DiscoveryRuleExists())
                 {
@@ -29,7 +52,7 @@ namespace DesktopDiscoveryService
                 {
                     Console.WriteLine("Firewall rule already exists");
                 }
-            } else if (args.Any(x => x.StartsWith("--removefw", StringComparison.OrdinalIgnoreCase)))
+            } else if (args.Any(x => x.StartsWith(CommandRemoveFirewall, StringComparison.OrdinalIgnoreCase)))
             {
                 if (FirewallRule.DiscoveryRuleExists())
                 {
@@ -68,29 +91,18 @@ namespace DesktopDiscoveryService
 
                 // parse arguments for Service IP Address, Service Meta Information and Port
                 string ipAddr = null;
-                int discoveryPort = 8888;
                 string serviceMetaInfo = "";
                 if (args != null)
                 {
-                    string serviceIPArg = "--serviceip:";
-                    if (args.Any(x => x.StartsWith(serviceIPArg, StringComparison.OrdinalIgnoreCase)))
+                    if (args.Any(x => x.StartsWith(CommandServiceIPAddr + ":", StringComparison.OrdinalIgnoreCase)))
                     {
-                        var valueArg = args.First(x => x.StartsWith(serviceIPArg, StringComparison.OrdinalIgnoreCase));
+                        var valueArg = args.First(x => x.StartsWith(CommandServiceIPAddr + ":", StringComparison.OrdinalIgnoreCase));
                         var vals = valueArg.Split(':');
                         ipAddr = vals[1].Trim();
                     }
-                    string discoveryPortArg = "--discoveryport:";
-                    if (args.Any(x => x.StartsWith(discoveryPortArg, StringComparison.OrdinalIgnoreCase)))
+                    if (args.Any(x => x.StartsWith(CommandServiceMetaInfo + ":", StringComparison.OrdinalIgnoreCase)))
                     {
-                        var valueArg = args.First(x => x.StartsWith(discoveryPortArg, StringComparison.OrdinalIgnoreCase));
-                        var vals = valueArg.Split(':');
-                        if (int.TryParse(vals[1].Trim(), out int port))
-                            discoveryPort = port;
-                    }
-                    string serviceMetaArg = "--servicemeta:";
-                    if (args.Any(x => x.StartsWith(serviceMetaArg, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        var valueArg = args.First(x => x.StartsWith(serviceMetaArg, StringComparison.OrdinalIgnoreCase));
+                        var valueArg = args.First(x => x.StartsWith(CommandServiceMetaInfo + ":", StringComparison.OrdinalIgnoreCase));
                         var vals = valueArg.Split(':');
                         serviceMetaInfo = vals[1].Trim();
                     }
