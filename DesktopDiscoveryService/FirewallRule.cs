@@ -10,22 +10,22 @@ namespace DesktopDiscoveryService
     {
         private const string DiscoveryServiceRuleName = "Rediscovery discovery Service";
 
-        public static bool DiscoveryRuleExists()
+        public static bool DiscoveryRuleExists(int port)
         {
             var rule = FirewallManager.Instance.Rules.FirstOrDefault(x => x.Name == DiscoveryServiceRuleName);
-            if (rule.IsEnable && rule.LocalPorts.Any(x => x == DiscoveryClient.Port))
+            if (rule.IsEnable && rule.LocalPorts.Any(x => x == port))
                 return true;
             return false;
         }
 
-        public static bool DiscoveryRuleCreate()
+        public static bool DiscoveryRuleCreate(int port)
         {
             try
             {
                 var rule = FirewallManager.Instance.CreatePortRule(FirewallProfiles.Private | FirewallProfiles.Domain,
     DiscoveryServiceRuleName,
     FirewallAction.Allow,
-    DiscoveryClient.Port,
+    port,
     FirewallProtocol.UDP
 );
                 FirewallManager.Instance.Rules.Add(rule);
@@ -66,14 +66,14 @@ namespace DesktopDiscoveryService
             }
         }
 
-        public static string GetFWRuleDelete()
+        public static string GetFWRuleDelete(int port)
         {
-            return $"netsh advfirewall firewall delete rule name=\"{DiscoveryServiceRuleName}\" protocol=UDP localport={DiscoveryClient.Port}";
+            return $"netsh advfirewall firewall delete rule name=\"{DiscoveryServiceRuleName}\" protocol=UDP localport={port}";
         }
 
-        public static string GetFWRuleCreate()
+        public static string GetFWRuleCreate(int port)
         {
-            return $"netsh advfirewall firewall add rule name=\"{DiscoveryServiceRuleName}\" dir=in action=allow protocol=UDP localport={DiscoveryClient.Port}";
+            return $"netsh advfirewall firewall add rule name=\"{DiscoveryServiceRuleName}\" dir=in action=allow protocol=UDP localport={port}";
         }
     }
 }
