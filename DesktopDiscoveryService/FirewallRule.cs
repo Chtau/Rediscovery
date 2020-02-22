@@ -25,7 +25,7 @@ namespace DesktopDiscoveryService
                 var rule = FirewallManager.Instance.CreatePortRule(FirewallProfiles.Private | FirewallProfiles.Domain,
     DiscoveryServiceRuleName,
     FirewallAction.Allow,
-    port,
+    (ushort)port,
     FirewallProtocol.UDP
 );
                 FirewallManager.Instance.Rules.Add(rule);
