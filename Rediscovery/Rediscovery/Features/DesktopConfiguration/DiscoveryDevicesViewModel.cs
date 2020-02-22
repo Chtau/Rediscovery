@@ -21,7 +21,7 @@ namespace Rediscovery.Features.DesktopConfiguration
             {
                 discoveryService.Boardcast((answer) =>
                 {
-                    Console.WriteLine("Anwser Recived from IPAddress:{0}", answer);
+                    Console.WriteLine("Answer Received from IPAddress:{0}", answer);
                 });
             }, () =>
             {

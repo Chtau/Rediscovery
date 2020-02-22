@@ -10,7 +10,7 @@ namespace Rediscovery.Services
 {
     public class DiscoveryService : IDiscoveryService
     {
-        public void Boardcast(Action<string> callbackAnswer)
+        public void Boardcast(Action<SharedCoreModels.DiscoveryServiceInfo> callbackAnswer)
         {
             Task.Run(async () =>
             {
@@ -29,8 +29,11 @@ namespace Rediscovery.Services
                         {
                             var ServerResponseData = Client.Receive(ref ServerEp);
                             var ServerResponse = Encoding.ASCII.GetString(ServerResponseData);
-                            callbackAnswer?.Invoke(ServerEp.Address.ToString());
-                            Console.WriteLine("Recived {0} from {1}", ServerResponse, ServerEp.Address.ToString());
+                            //callbackAnswer?.Invoke(ServerEp.Address.ToString());
+                            var serviceInfo = new SharedCoreModels.DiscoveryServiceInfo();
+                            serviceInfo.Parse(ServerResponse);
+                            callbackAnswer?.Invoke(serviceInfo);
+                            Console.WriteLine("Recived {0} from {1}", serviceInfo.ToString(), ServerEp.Address.ToString());
 
                             Client.Close();
                         });

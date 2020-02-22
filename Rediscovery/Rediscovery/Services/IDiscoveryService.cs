@@ -6,6 +6,6 @@ namespace Rediscovery.Services
 {
     public interface IDiscoveryService
     {
-        void Boardcast(Action<string> callbackAnswer);
+        void Boardcast(Action<SharedCoreModels.DiscoveryServiceInfo> callbackAnswer);
     }
 }

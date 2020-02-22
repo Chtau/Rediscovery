@@ -14,6 +14,8 @@ namespace DesktopDiscoveryService
         private const string CommandServiceIPAddr = "--serviceip";
         private const string CommandDiscoveryPort = "--discoveryport";
         private const string CommandServiceMetaInfo = "--servicemeta";
+        private const string CommandServicePort = "--serviceport";
+        private const string CommandServiceName = "--servicename";
 
         static void Main(string[] args)
         {
@@ -31,8 +33,10 @@ namespace DesktopDiscoveryService
                 Console.WriteLine("Arguments");
                 Console.WriteLine($"    {CommandAddFirewall}    \"Creates Windows Firewall Rule\"");
                 Console.WriteLine($"    {CommandRemoveFirewall}    \"Removes Windows Firewall Rule\"");
-                Console.WriteLine($"    {CommandServiceIPAddr}    \"Service IP Address for discovery response\"");
                 Console.WriteLine($"    {CommandDiscoveryPort}    \"Port to use for the Discovery service\"");
+                Console.WriteLine($"    {CommandServiceIPAddr}    \"Service IP Address for discovery response\"");
+                Console.WriteLine($"    {CommandServicePort}    \"Service Port for the discovery response\"");
+                Console.WriteLine($"    {CommandServiceName}    \"Service Name for the discovery response\"");
                 Console.WriteLine($"    {CommandServiceMetaInfo}    \"Additional Service Metadata for the discovery response\"");
             } else if (args.Any(x => x.StartsWith(CommandAddFirewall, StringComparison.OrdinalIgnoreCase)))
             {
@@ -90,29 +94,39 @@ namespace DesktopDiscoveryService
                 }
 
                 // parse arguments for Service IP Address, Service Meta Information and Port
-                string ipAddr = null;
-                string serviceMetaInfo = "";
+                var serviceInfo = new SharedCoreModels.DiscoveryServiceInfo();
                 if (args != null)
                 {
                     if (args.Any(x => x.StartsWith(CommandServiceIPAddr + ":", StringComparison.OrdinalIgnoreCase)))
                     {
                         var valueArg = args.First(x => x.StartsWith(CommandServiceIPAddr + ":", StringComparison.OrdinalIgnoreCase));
                         var vals = valueArg.Split(':');
-                        ipAddr = vals[1].Trim();
+                        serviceInfo.IPAddress = vals[1].Trim();
                     }
                     if (args.Any(x => x.StartsWith(CommandServiceMetaInfo + ":", StringComparison.OrdinalIgnoreCase)))
                     {
                         var valueArg = args.First(x => x.StartsWith(CommandServiceMetaInfo + ":", StringComparison.OrdinalIgnoreCase));
                         var vals = valueArg.Split(':');
-                        serviceMetaInfo = vals[1].Trim();
+                        serviceInfo.Metadata = vals[1].Trim();
+                    }
+                    if (args.Any(x => x.StartsWith(CommandServiceName + ":", StringComparison.OrdinalIgnoreCase)))
+                    {
+                        var valueArg = args.First(x => x.StartsWith(CommandServiceName + ":", StringComparison.OrdinalIgnoreCase));
+                        var vals = valueArg.Split(':');
+                        serviceInfo.Name = vals[1].Trim();
+                    }
+                    if (args.Any(x => x.StartsWith(CommandServicePort + ":", StringComparison.OrdinalIgnoreCase)))
+                    {
+                        var valueArg = args.First(x => x.StartsWith(CommandServicePort + ":", StringComparison.OrdinalIgnoreCase));
+                        var vals = valueArg.Split(':');
+                        if (ushort.TryParse(vals[1].Trim(), out ushort port))
+                            serviceInfo.Port = port;
                     }
                 }
-                if (string.IsNullOrWhiteSpace(ipAddr))
-                    ipAddr = SharedFeatureFunctions.NetworkAddress.GetIpAddr();
 
                 Console.WriteLine("Waiting for Clients");
                 var dis = new DiscoveryClient();
-                dis.Start(ipAddr, serviceMetaInfo, discoveryPort, (client) =>
+                dis.Start(serviceInfo, discoveryPort, (client) =>
                 {
                     Console.ForegroundColor = ConsoleColor.Blue;
                     Console.WriteLine($"Client discover message received from IP:{client}");
