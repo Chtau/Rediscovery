@@ -4,11 +4,14 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using SharedFeatureFunctions;
 
 namespace DesktopDiscoveryService
 {
     class Program
     {
+        private const string DiscoveryServiceRuleName = "Rediscovery discovery Service";
+
         private const string CommandAddFirewall = "--addfw";
         private const string CommandRemoveFirewall = "--removefw";
         private const string CommandServiceIPAddr = "--serviceip";
@@ -40,16 +43,16 @@ namespace DesktopDiscoveryService
                 Console.WriteLine($"    {CommandServiceMetaInfo}    \"Additional Service Metadata for the discovery response\"");
             } else if (args.Any(x => x.StartsWith(CommandAddFirewall, StringComparison.OrdinalIgnoreCase)))
             {
-                if (!FirewallRule.DiscoveryRuleExists(discoveryPort))
+                if (!FirewallRule.DiscoveryRuleExists(discoveryPort, DiscoveryServiceRuleName))
                 {
-                    if (FirewallRule.DiscoveryRuleCreate(discoveryPort))
+                    if (FirewallRule.DiscoveryRuleCreate(discoveryPort, DiscoveryServiceRuleName))
                     {
                         Console.WriteLine("Firewall rule created");
                     } else
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Could not create Firewall rule (Restart with Administrator rights)");
-                        Console.WriteLine("Alternative you can create the Rule with the Command: " + FirewallRule.GetFWRuleCreate(discoveryPort));
+                        Console.WriteLine("Alternative you can create the Rule with the Command: " + FirewallRule.GetFWRuleCreate(discoveryPort, DiscoveryServiceRuleName));
                         Console.ResetColor();
                     }
                 } else
@@ -58,16 +61,16 @@ namespace DesktopDiscoveryService
                 }
             } else if (args.Any(x => x.StartsWith(CommandRemoveFirewall, StringComparison.OrdinalIgnoreCase)))
             {
-                if (FirewallRule.DiscoveryRuleExists(discoveryPort))
+                if (FirewallRule.DiscoveryRuleExists(discoveryPort, DiscoveryServiceRuleName))
                 {
-                    if (FirewallRule.DiscoveryRuleDelete())
+                    if (FirewallRule.DiscoveryRuleDelete(DiscoveryServiceRuleName))
                     {
                         Console.WriteLine("Firewall rule removed");
                     } else
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Could not remove Firewall rule (Restart with Administrator rights)");
-                        Console.WriteLine("Alternative you can create the Rule with the Command: " + FirewallRule.GetFWRuleDelete(discoveryPort));
+                        Console.WriteLine("Alternative you can create the Rule with the Command: " + FirewallRule.GetFWRuleDelete(discoveryPort, DiscoveryServiceRuleName));
                         Console.ResetColor();
                     }
                 } else
@@ -76,10 +79,10 @@ namespace DesktopDiscoveryService
                 }
             } else
             {
-                if (!FirewallRule.DiscoveryRuleExists(discoveryPort))
+                if (!FirewallRule.DiscoveryRuleExists(discoveryPort, DiscoveryServiceRuleName))
                 {
                     Console.WriteLine("Firewall rule: Missing");
-                    if (!FirewallRule.DiscoveryRuleCreate(discoveryPort))
+                    if (!FirewallRule.DiscoveryRuleCreate(discoveryPort, DiscoveryServiceRuleName))
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Could not create Firewall rule");

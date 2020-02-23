@@ -4,26 +4,24 @@ using System.Linq;
 using System.Text;
 using WindowsFirewallHelper;
 
-namespace DesktopDiscoveryService
+namespace SharedFeatureFunctions
 {
     public static class FirewallRule
     {
-        private const string DiscoveryServiceRuleName = "Rediscovery discovery Service";
-
-        public static bool DiscoveryRuleExists(int port)
+        public static bool DiscoveryRuleExists(int port, string ruleName)
         {
-            var rule = FirewallManager.Instance.Rules.FirstOrDefault(x => x.Name == DiscoveryServiceRuleName);
+            var rule = FirewallManager.Instance.Rules.FirstOrDefault(x => x.Name == ruleName);
             if (rule.IsEnable && rule.LocalPorts.Any(x => x == port))
                 return true;
             return false;
         }
 
-        public static bool DiscoveryRuleCreate(int port)
+        public static bool DiscoveryRuleCreate(int port, string ruleName)
         {
             try
             {
                 var rule = FirewallManager.Instance.CreatePortRule(FirewallProfiles.Private | FirewallProfiles.Domain,
-    DiscoveryServiceRuleName,
+    ruleName,
     FirewallAction.Allow,
     (ushort)port,
     FirewallProtocol.UDP
@@ -43,11 +41,11 @@ namespace DesktopDiscoveryService
             }
         }
 
-        public static bool DiscoveryRuleDelete()
+        public static bool DiscoveryRuleDelete(string ruleName)
         {
             try
             {
-                var myRule = FirewallManager.Instance.Rules.SingleOrDefault(r => r.Name == DiscoveryServiceRuleName);
+                var myRule = FirewallManager.Instance.Rules.SingleOrDefault(r => r.Name == ruleName);
                 if (myRule != null)
                 {
                     FirewallManager.Instance.Rules.Remove(myRule);
@@ -66,14 +64,14 @@ namespace DesktopDiscoveryService
             }
         }
 
-        public static string GetFWRuleDelete(int port)
+        public static string GetFWRuleDelete(int port, string ruleName)
         {
-            return $"netsh advfirewall firewall delete rule name=\"{DiscoveryServiceRuleName}\" protocol=UDP localport={port}";
+            return $"netsh advfirewall firewall delete rule name=\"{ruleName}\" protocol=UDP localport={port}";
         }
 
-        public static string GetFWRuleCreate(int port)
+        public static string GetFWRuleCreate(int port, string ruleName)
         {
-            return $"netsh advfirewall firewall add rule name=\"{DiscoveryServiceRuleName}\" dir=in action=allow protocol=UDP localport={port}";
+            return $"netsh advfirewall firewall add rule name=\"{ruleName}\" dir=in action=allow protocol=UDP localport={port}";
         }
     }
 }
