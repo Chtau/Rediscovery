@@ -12,8 +12,6 @@ namespace DesktopDiscoveryService
     {
         private const string DiscoveryServiceRuleName = "Rediscovery discovery Service";
 
-        private const string CommandAddFirewall = "--addfw";
-        private const string CommandRemoveFirewall = "--removefw";
         private const string CommandServiceIPAddr = "--serviceip";
         private const string CommandDiscoveryPort = "--discoveryport";
         private const string CommandServiceMetaInfo = "--servicemeta";
@@ -22,67 +20,29 @@ namespace DesktopDiscoveryService
 
         static void Main(string[] args)
         {
-            int discoveryPort = 8888;
+            ushort discoveryPort = 8888;
             if (args.Any(x => x.StartsWith(CommandDiscoveryPort + ":", StringComparison.OrdinalIgnoreCase)))
             {
                 var valueArg = args.First(x => x.StartsWith(CommandDiscoveryPort + ":", StringComparison.OrdinalIgnoreCase));
                 var vals = valueArg.Split(':');
-                if (int.TryParse(vals[1].Trim(), out int port))
+                if (ushort.TryParse(vals[1].Trim(), out ushort port))
                     discoveryPort = port;
             }
             if (args.Any(x => x.StartsWith("?", StringComparison.OrdinalIgnoreCase) || x.StartsWith("help", StringComparison.OrdinalIgnoreCase)))
             {
                 Console.WriteLine("Help for Rediscovery Discovery Service");
                 Console.WriteLine("Arguments");
-                Console.WriteLine($"    {CommandAddFirewall}    \"Creates Windows Firewall Rule\"");
-                Console.WriteLine($"    {CommandRemoveFirewall}    \"Removes Windows Firewall Rule\"");
                 Console.WriteLine($"    {CommandDiscoveryPort}    \"Port to use for the Discovery service\"");
                 Console.WriteLine($"    {CommandServiceIPAddr}    \"Service IP Address for discovery response\"");
                 Console.WriteLine($"    {CommandServicePort}    \"Service Port for the discovery response\"");
                 Console.WriteLine($"    {CommandServiceName}    \"Service Name for the discovery response\"");
                 Console.WriteLine($"    {CommandServiceMetaInfo}    \"Additional Service Metadata for the discovery response\"");
-            } else if (args.Any(x => x.StartsWith(CommandAddFirewall, StringComparison.OrdinalIgnoreCase)))
-            {
-                if (!FirewallRule.DiscoveryRuleExists(discoveryPort, DiscoveryServiceRuleName))
-                {
-                    if (FirewallRule.DiscoveryRuleCreate(discoveryPort, DiscoveryServiceRuleName))
-                    {
-                        Console.WriteLine("Firewall rule created");
-                    } else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Could not create Firewall rule (Restart with Administrator rights)");
-                        Console.WriteLine("Alternative you can create the Rule with the Command: " + FirewallRule.GetFWRuleCreate(discoveryPort, DiscoveryServiceRuleName));
-                        Console.ResetColor();
-                    }
-                } else
-                {
-                    Console.WriteLine("Firewall rule already exists");
-                }
-            } else if (args.Any(x => x.StartsWith(CommandRemoveFirewall, StringComparison.OrdinalIgnoreCase)))
-            {
-                if (FirewallRule.DiscoveryRuleExists(discoveryPort, DiscoveryServiceRuleName))
-                {
-                    if (FirewallRule.DiscoveryRuleDelete(DiscoveryServiceRuleName))
-                    {
-                        Console.WriteLine("Firewall rule removed");
-                    } else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Could not remove Firewall rule (Restart with Administrator rights)");
-                        Console.WriteLine("Alternative you can create the Rule with the Command: " + FirewallRule.GetFWRuleDelete(discoveryPort, DiscoveryServiceRuleName));
-                        Console.ResetColor();
-                    }
-                } else
-                {
-                    Console.WriteLine("Firewall rule already removed");
-                }
             } else
             {
                 if (!FirewallRule.DiscoveryRuleExists(discoveryPort, DiscoveryServiceRuleName))
                 {
                     Console.WriteLine("Firewall rule: Missing");
-                    if (!FirewallRule.DiscoveryRuleCreate(discoveryPort, DiscoveryServiceRuleName))
+                    if (!FirewallRule.DiscoveryRuleCreate(discoveryPort, DiscoveryServiceRuleName, FirewallRule.ProtocolType.UDP))
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Could not create Firewall rule");
