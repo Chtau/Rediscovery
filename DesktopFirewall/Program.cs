@@ -46,7 +46,7 @@ namespace DesktopFirewall
                 Console.WriteLine($"    {CommandRemoveFirewall}    \"Removes Windows Firewall Rule\"");
                 Console.WriteLine($"    {CommandRuleName}    \"Name of the Firewall rule\"");
                 Console.WriteLine($"    {CommandRulePort}    \"Port for the Firewall rule\"");
-                Console.WriteLine($"    {CommandRuleType}    \"Firewall rule type\"");
+                Console.WriteLine($"    {CommandRuleType}    \"Firewall rule type\" ({string.Join(',', Enum.GetNames(typeof(ProtocolType)))})");
             }
             else if (args.Any(x => x.StartsWith(CommandAddFirewall, StringComparison.OrdinalIgnoreCase)))
             {
