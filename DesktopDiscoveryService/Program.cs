@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using SharedFeatureFunctions;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace DesktopDiscoveryService
 {
@@ -20,6 +22,12 @@ namespace DesktopDiscoveryService
 
         static void Main(string[] args)
         {
+            var builder = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            IConfigurationRoot configuration = builder.Build();
+
             ushort discoveryPort = 8888;
             if (args.Any(x => x.StartsWith(CommandDiscoveryPort + ":", StringComparison.OrdinalIgnoreCase)))
             {
