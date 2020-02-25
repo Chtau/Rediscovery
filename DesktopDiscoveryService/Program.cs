@@ -28,6 +28,10 @@ namespace DesktopDiscoveryService
 
             IConfigurationRoot configuration = builder.Build();
 
+            var sectionServiceInfo = configuration.GetSection("ServiceInfo");
+            var sectionDiscovery = configuration.GetSection("Discovery");
+
+
             ushort discoveryPort = 8888;
             if (args.Any(x => x.StartsWith(CommandDiscoveryPort + ":", StringComparison.OrdinalIgnoreCase)))
             {
