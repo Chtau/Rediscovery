@@ -18,10 +18,28 @@ namespace DesktopService
         // TODO: https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/windows-service?view=aspnetcore-2.2&tabs=visual-studio
 
         public static string HostIpAddress = "127.0.0.1";
+        public static ushort HostPort = 44341;
+
+        private const string CommandPort = "--port:";
+        private const string CommandIP = "--ip:";
 
         public static void Main(string[] args)
         {
             HostIpAddress = SharedFeatureFunctions.NetworkAddress.GetIpAddr();
+
+            if (args.Any(x => x.StartsWith(CommandPort, StringComparison.OrdinalIgnoreCase)))
+            {
+                var valueArg = args.First(x => x.StartsWith(CommandPort, StringComparison.OrdinalIgnoreCase));
+                var vals = valueArg.Split(':');
+                if (ushort.TryParse(vals[1].Trim(), out ushort port))
+                    HostPort = port;
+            }
+            if (args.Any(x => x.StartsWith(CommandIP, StringComparison.OrdinalIgnoreCase)))
+            {
+                var valueArg = args.First(x => x.StartsWith(CommandIP, StringComparison.OrdinalIgnoreCase));
+                var vals = valueArg.Split(':');
+                HostIpAddress = vals[1].Trim();
+            }
 
             //System.Threading.Thread.Sleep(30000);
             //CreateHostBuilder(args).Build().Run();
@@ -60,9 +78,9 @@ namespace DesktopService
             webBuilder.ConfigureKestrel(serverOptions =>
             {
                 //serverOptions.Listen(System.Net.IPAddress.Parse("192.168.1.100"), 44341);
-                serverOptions.Listen(System.Net.IPAddress.Parse(HostIpAddress), 44341);
-                serverOptions.ListenLocalhost(44341);
-                serverOptions.ListenAnyIP(44341);
+                serverOptions.Listen(System.Net.IPAddress.Parse(HostIpAddress), HostPort);
+                serverOptions.ListenLocalhost(HostPort);
+                serverOptions.ListenAnyIP(HostPort);
                 serverOptions.ConfigureEndpointDefaults(listenOptions =>
                 {
                     // Configure endpoint defaults
