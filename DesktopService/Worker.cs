@@ -14,19 +14,23 @@ namespace DesktopService
         private readonly Features.Pipes.IPipeIncomingConnection _pipeIncomingConnection;
         private readonly Features.Pipes.IPipeRepository _pipeRepository;
         private readonly Features.Pipes.IPipeServiceInfo _pipeServiceInfo;
+        private readonly Features.Configuration.IDistributeConfig _distributeConfig;
 
         public Worker(Features.Pipes.IPipeIncomingConnection pipeIncomingConnection,
             Features.Pipes.IPipeRepository pipeRepository,
-            Features.Pipes.IPipeServiceInfo pipeServiceInfo)
+            Features.Pipes.IPipeServiceInfo pipeServiceInfo,
+            Features.Configuration.IDistributeConfig distributeConfig)
         {
             _pipeIncomingConnection = pipeIncomingConnection;
             _pipeRepository = pipeRepository;
             _pipeServiceInfo = pipeServiceInfo;
+            _distributeConfig = distributeConfig;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _pipeRepository.Init();
+            _distributeConfig.Share();
             _pipeServiceInfo.ShowInfoWindow();
 
             // the Task.Run leads to a thread starvation
