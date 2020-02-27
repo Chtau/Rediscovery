@@ -8,10 +8,10 @@ namespace DesktopService.Features.Pipes
 {
     public class PipeServiceInfo : IPipeServiceInfo
     {
-        private readonly Models.PipeSettings _pipeSettings;
+        private readonly SharedConfigurations.DesktopService.Models.PipeConfiguration _pipeSettings;
         private readonly ILogger<PipeServiceInfo> _logger;
 
-        public PipeServiceInfo(ILoggerFactory loggerFactory, IOptions<Models.PipeSettings> pipeSettings)
+        public PipeServiceInfo(ILoggerFactory loggerFactory, IOptions<SharedConfigurations.DesktopService.Models.PipeConfiguration> pipeSettings)
         {
             _logger = loggerFactory.CreateLogger<PipeServiceInfo>();
             _pipeSettings = pipeSettings.Value;

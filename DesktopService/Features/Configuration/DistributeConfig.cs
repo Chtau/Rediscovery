@@ -8,10 +8,10 @@ namespace DesktopService.Features.Configuration
 {
     public class DistributeConfig : IDistributeConfig
     {
-        private readonly Pipes.Models.PipeSettings _pipeSettings;
+        private readonly SharedConfigurations.DesktopService.Models.PipeConfiguration _pipeSettings;
         private readonly ILogger<DistributeConfig> _logger;
 
-        public DistributeConfig(ILoggerFactory loggerFactory, IOptions<Pipes.Models.PipeSettings> pipeSettings)
+        public DistributeConfig(ILoggerFactory loggerFactory, IOptions<SharedConfigurations.DesktopService.Models.PipeConfiguration> pipeSettings)
         {
             _logger = loggerFactory.CreateLogger<DistributeConfig>();
             _pipeSettings = pipeSettings.Value;

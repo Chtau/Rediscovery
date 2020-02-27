@@ -17,11 +17,11 @@ namespace DesktopService.Features.Identity
         public event EventHandler<Device> NewDeviceAdded;
 
         private readonly ILogger<DeviceService> _logger;
-        private readonly Models.IdentitySettings _identitySettings;
+        private readonly SharedConfigurations.DesktopService.Models.IdentityConfiguration _identitySettings;
         private readonly Random _random;
         private readonly DAL.IDBContext _dBContext;
 
-        public DeviceService(ILoggerFactory loggerFactory, IOptions<Models.IdentitySettings> identitySettings, DAL.IDBContext dBContext)
+        public DeviceService(ILoggerFactory loggerFactory, IOptions<SharedConfigurations.DesktopService.Models.IdentityConfiguration> identitySettings, DAL.IDBContext dBContext)
         {
             _logger = loggerFactory.CreateLogger<DeviceService>();
             _dBContext = dBContext;

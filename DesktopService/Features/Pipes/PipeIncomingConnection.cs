@@ -12,10 +12,10 @@ namespace DesktopService.Features.Pipes
         private const string RediscoveryHub = "rediscoveryhub";
         private readonly IPCPipe.IPipeClient _pipeClient;
         private readonly ILogger<PipeIncomingConnection> _logger;
-        private readonly Models.PipeSettings _pipeSettings;
+        private readonly SharedConfigurations.DesktopService.Models.PipeConfiguration _pipeSettings;
 
         public PipeIncomingConnection(IPCPipe.IPipeClient pipeClient, ILoggerFactory loggerFactory,
-            IOptions<Models.PipeSettings> pipeSettings)
+            IOptions<SharedConfigurations.DesktopService.Models.PipeConfiguration> pipeSettings)
         {
             _pipeClient = pipeClient;
             _logger = loggerFactory.CreateLogger<PipeIncomingConnection>();
