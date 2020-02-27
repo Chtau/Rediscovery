@@ -20,8 +20,8 @@ namespace DesktopDiscoveryService
 
             IConfigurationRoot configuration = builder.Build();
 
-            var serviceInfoSettings = configuration.GetSection("ServiceInfo").Get<Settings.ServiceInfo>();
-            var discoverySettings = configuration.GetSection("Discovery").Get<Settings.Discovery>();
+            var serviceInfoSettings = configuration.GetSection("ServiceInfo").Get<SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration>();
+            var discoverySettings = configuration.GetSection("Discovery").Get< SharedConfigurations.DiscoveryService.Models.DiscoveryConfiguration> ();
 
             if (!FirewallRule.DiscoveryRuleExists(discoverySettings.Port, discoverySettings.FirewallRuleName))
             {

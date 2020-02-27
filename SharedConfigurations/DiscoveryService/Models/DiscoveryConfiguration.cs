@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopDiscoveryService.Settings
+namespace SharedConfigurations.DiscoveryService.Models
 {
-    public class Discovery
+    public class DiscoveryConfiguration
     {
         public ushort Port { get; set; }
 
