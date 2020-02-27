@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopService.Features.Identity.Models
+namespace SharedConfigurations.DesktopService.Models
 {
-    public class IdentitySettings
+    public class IdentityConfiguration
     {
         public string Secret { get; set; }
+
         public int PasswordKeyLength { get; set; }
     }
 }

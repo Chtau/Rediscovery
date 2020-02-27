@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopService.Features.Pipes.Models
+namespace SharedConfigurations.DesktopService.Models
 {
-    public class PipeSettings
+    public class PipeConfiguration
     {
         public string RediscoveryDesktopHubPath { get; set; }
 

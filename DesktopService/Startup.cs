@@ -40,13 +40,13 @@ namespace DesktopService
             });
 
             var identitySettingsSection = Configuration.GetSection("IdentitySettings");
-            services.Configure<Features.Identity.Models.IdentitySettings>(identitySettingsSection);
+            services.Configure<SharedConfigurations.DesktopService.Models.IdentityConfiguration>(identitySettingsSection);
             var pipeSettingsSection = Configuration.GetSection("PipeSettings");
-            services.Configure<Features.Pipes.Models.PipeSettings>(pipeSettingsSection);
+            services.Configure<SharedConfigurations.DesktopService.Models.PipeConfiguration>(pipeSettingsSection);
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
-            var appSettings = identitySettingsSection.Get<Features.Identity.Models.IdentitySettings>();
+            var appSettings = identitySettingsSection.Get<SharedConfigurations.DesktopService.Models.IdentityConfiguration>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             services.AddAuthentication(x =>
             {

@@ -47,6 +47,7 @@
     <ProjectReference Include="..\DesktopFeatureConsole\DesktopFeatureConsole.csproj" />
     <ProjectReference Include="..\DesktopFeatureMediaPlayer\DesktopFeatureMediaPlayer.csproj" />
     <ProjectReference Include="..\IPCPipe\IPCPipe.csproj" />
+    <ProjectReference Include="..\SharedConfigurations\SharedConfigurations.csproj" />
     <ProjectReference Include="..\SharedCoreModels\SharedCoreModels.csproj" />
   </ItemGroup>
 
