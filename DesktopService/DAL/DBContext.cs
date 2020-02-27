@@ -11,11 +11,11 @@ namespace DesktopService.DAL
     public class DBContext : IDBContext
     {
         private readonly ILogger<DBContext> _logger;
-        private readonly AppSettings _appSettings;
+        private readonly SharedConfigurations.DesktopService.Models.AppConfiguration _appSettings;
 
         internal SQLiteAsyncConnection DB = null;
 
-        public DBContext(ILoggerFactory loggerFactory, IOptions<AppSettings> options)
+        public DBContext(ILoggerFactory loggerFactory, IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> options)
         {
             _logger = loggerFactory.CreateLogger<DBContext>();
             _appSettings = options.Value;

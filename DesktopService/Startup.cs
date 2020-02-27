@@ -44,7 +44,7 @@ namespace DesktopService
             var pipeSettingsSection = Configuration.GetSection("PipeSettings");
             services.Configure<SharedConfigurations.DesktopService.Models.PipeConfiguration>(pipeSettingsSection);
             var appSettingsSection = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettingsSection);
+            services.Configure<SharedConfigurations.DesktopService.Models.AppConfiguration> (appSettingsSection);
 
             var appSettings = identitySettingsSection.Get<SharedConfigurations.DesktopService.Models.IdentityConfiguration>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);

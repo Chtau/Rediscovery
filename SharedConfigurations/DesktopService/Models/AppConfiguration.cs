@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopService
+namespace SharedConfigurations.DesktopService.Models
 {
-    public class AppSettings
+    public class AppConfiguration
     {
         public string AppDataFolder { get; set; }
     }
