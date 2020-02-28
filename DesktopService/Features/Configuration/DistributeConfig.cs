@@ -20,7 +20,7 @@ namespace DesktopService.Features.Configuration
 
         public void Share()
         {
-            string hubPath = System.IO.Path.GetFullPath(_pipeSettings.RediscoveryDesktopHubPath);
+            string hubPath = System.IO.Path.GetDirectoryName(_pipeSettings.RediscoveryDesktopHubPath);
             string discoveryPath = System.IO.Path.GetDirectoryName(_pipeSettings.RediscoveryDiscoveryService);
             var serviceInfo = new SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration
             {
@@ -29,7 +29,7 @@ namespace DesktopService.Features.Configuration
                 MetaInfo = null,
                 Name = "Rediscovery"
             };
-            AddOrUpdateConfiguration(Path.Combine(discoveryPath, "appsettings.json"), "ServiceInfo", serviceInfo);
+            UpdateRemoteConfiguration(Path.Combine(discoveryPath, "appsettings.json"), "ServiceInfo", serviceInfo);
             /*{
             Config:
                 {
@@ -39,7 +39,7 @@ namespace DesktopService.Features.Configuration
             //AddOrUpdateAppSetting("Config:IsConfig", true);
         }
 
-        private void AddOrUpdateConfiguration<T>(string filePath, string key, T value)
+        private void UpdateRemoteConfiguration<T>(string filePath, string key, T value)
         {
             try
             {
