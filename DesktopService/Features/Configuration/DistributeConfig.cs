@@ -20,10 +20,16 @@ namespace DesktopService.Features.Configuration
 
         public void Share()
         {
-            //Newtonsoft.Json.JsonConvert.DeserializeObject();
             string hubPath = System.IO.Path.GetFullPath(_pipeSettings.RediscoveryDesktopHubPath);
             string discoveryPath = System.IO.Path.GetFullPath(_pipeSettings.RediscoveryDiscoveryService);
-
+            var serviceInfo = new SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration
+            {
+                IP = Program.HostIpAddress,
+                Port = Program.HostPort,
+                MetaInfo = null,
+                Name = "Rediscovery"
+            };
+            AddOrUpdateConfiguration(discoveryPath, "ServiceInfo", serviceInfo);
             /*{
             Config:
                 {
@@ -33,11 +39,10 @@ namespace DesktopService.Features.Configuration
             //AddOrUpdateAppSetting("Config:IsConfig", true);
         }
 
-        private void AddOrUpdateAppSetting<T>(string key, T value)
+        private void AddOrUpdateConfiguration<T>(string filePath, string key, T value)
         {
             try
             {
-                var filePath = Path.Combine(AppContext.BaseDirectory, "appSettings.json");
                 string json = File.ReadAllText(filePath);
                 dynamic jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
 
@@ -53,7 +58,6 @@ namespace DesktopService.Features.Configuration
                 }
                 string output = Newtonsoft.Json.JsonConvert.SerializeObject(jsonObj, Newtonsoft.Json.Formatting.Indented);
                 File.WriteAllText(filePath, output);
-
             }
             catch (Exception ex)
             {
