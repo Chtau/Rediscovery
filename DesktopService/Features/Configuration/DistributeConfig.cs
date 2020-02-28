@@ -47,8 +47,8 @@ namespace DesktopService.Features.Configuration
                 dynamic jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
 
                 string sectionPath = key;
-                if (key.Contains(':'))
-                    sectionPath = key.Split(":")[0];
+                /*if (key.Contains(':'))
+                    sectionPath = key.Split(":")[0];*/
                 if (!string.IsNullOrEmpty(sectionPath))
                 {
                     var obj = jsonObj[sectionPath];
