@@ -21,7 +21,7 @@ namespace DesktopService.Features.Configuration
         public void Share()
         {
             string hubPath = System.IO.Path.GetFullPath(_pipeSettings.RediscoveryDesktopHubPath);
-            string discoveryPath = System.IO.Path.GetFullPath(_pipeSettings.RediscoveryDiscoveryService);
+            string discoveryPath = System.IO.Path.GetDirectoryName(_pipeSettings.RediscoveryDiscoveryService);
             var serviceInfo = new SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration
             {
                 IP = Program.HostIpAddress,
@@ -29,7 +29,7 @@ namespace DesktopService.Features.Configuration
                 MetaInfo = null,
                 Name = "Rediscovery"
             };
-            AddOrUpdateConfiguration(discoveryPath, "ServiceInfo", serviceInfo);
+            AddOrUpdateConfiguration(Path.Combine(discoveryPath, "appsettings.json"), "ServiceInfo", serviceInfo);
             /*{
             Config:
                 {
@@ -46,15 +46,19 @@ namespace DesktopService.Features.Configuration
                 string json = File.ReadAllText(filePath);
                 dynamic jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
 
-                var sectionPath = key.Split(":")[0];
+                string sectionPath = key;
+                if (key.Contains(':'))
+                    sectionPath = key.Split(":")[0];
                 if (!string.IsNullOrEmpty(sectionPath))
                 {
-                    var keyPath = key.Split(":")[1];
-                    jsonObj[sectionPath][keyPath] = value;
+                    var obj = jsonObj[sectionPath];
+                    var section = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(obj.ToString());
+                    if (section != null)
+                        section = value;
                 }
                 else
                 {
-                    jsonObj[sectionPath] = value; // if no sectionpath just set the value
+                    //jsonObj[sectionPath] = value; // if no sectionpath just set the value
                 }
                 string output = Newtonsoft.Json.JsonConvert.SerializeObject(jsonObj, Newtonsoft.Json.Formatting.Indented);
                 File.WriteAllText(filePath, output);
