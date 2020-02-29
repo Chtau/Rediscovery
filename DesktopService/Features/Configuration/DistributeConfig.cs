@@ -29,51 +29,15 @@ namespace DesktopService.Features.Configuration
                 MetaInfo = null,
                 Name = "Rediscovery"
             };
-            UpdateRemoteConfiguration(Path.Combine(discoveryPath, "appsettings.json"), "ServiceInfo", serviceInfo);
-            /*{
-            Config:
-                {
-                    IsConfig: false
-                }
-            }*/
-            //AddOrUpdateAppSetting("Config:IsConfig", true);
+            OnUpdateRemoteConfiguration(Path.Combine(discoveryPath, "appsettings.json"), "ServiceInfo", serviceInfo);
         }
 
-        private void UpdateRemoteConfiguration<T>(string filePath, string key, T value)
+        private void OnUpdateRemoteConfiguration<T>(string filePath, string key, T value)
         {
             try
             {
-                string json = File.ReadAllText(filePath);
-                dynamic jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
-
-                List<string> sections = new List<string>();
-                if (key.Contains(":"))
-                {
-                    sections.AddRange(key.Split(":"));
-                } else
-                {
-                    sections.Add(key);
-                }
-                if (sections.Count > 0)
-                {
-                    dynamic obj = jsonObj[sections[0]];
-                    for (int i = 1; i < sections.Count; i++)
-                    {
-                        obj = obj[sections[i]];
-                    }
-                    
-                    var section = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(obj.ToString());
-                    if (section != null)
-                        section = value;
-                }
-                else
-                {
-                    //jsonObj[sectionPath] = value; // if no sectionpath just set the value
-                }
-                string output = Newtonsoft.Json.JsonConvert.SerializeObject(jsonObj, Newtonsoft.Json.Formatting.Indented);
-                File.WriteAllText(filePath, output);
-            }
-            catch (Exception ex)
+                SharedConfigurations.RemoteConfiguration.UpdateRemoteConfiguration(filePath, key, value);
+            } catch (Exception ex)
             {
                 _logger.LogError(ex.ToString());
             }
