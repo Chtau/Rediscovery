@@ -16,9 +16,12 @@ namespace DesktopHub.Info
 #endif
         }
 
-        public ServiceInfo(string[] args) : this()
+        public ServiceInfo(SharedConfigurations.Hub.Models.ServiceInfoConfiguration serviceInfoConfiguration) : this()
         {
-            DataContext = viewModel = new ServiceInfoViewModel(args);
+            DataContext = viewModel = new ServiceInfoViewModel()
+            {
+                IpAddr = serviceInfoConfiguration.IP + ":" + serviceInfoConfiguration.Port
+            };
         }
 
         private void InitializeComponent()

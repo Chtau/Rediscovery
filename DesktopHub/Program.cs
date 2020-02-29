@@ -1,9 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Logging.Serilog;
 using Avalonia.Threading;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DesktopHub
@@ -28,6 +30,15 @@ namespace DesktopHub
         // container, etc.
         private static void AppMain(Application app, string[] args)
         {
+            var builder = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            IConfigurationRoot configuration = builder.Build();
+
+            var serviceInfoSettings = configuration.GetSection("ServiceInfo").Get<SharedConfigurations.Hub.Models.ServiceInfoConfiguration>();
+
+
             var service = new ServiceCollection();
             service.AddSingleton<IPCPipe.IPipeServer, IPCPipe.PipeServer>();
             service.AddSingleton<IPCPipe.IPipeClient, IPCPipe.PipeClient>();
@@ -40,7 +51,7 @@ namespace DesktopHub
             var incomingConnectionService = (Connection.IIncomingConnectionService)Program.ServiceProvider.GetService(typeof(Connection.IIncomingConnectionService));
             incomingConnectionService.Init();
             if (args.Any(x => x.StartsWith(Info.ServiceInfoViewModel.ServiceInfoArgStart, StringComparison.OrdinalIgnoreCase)))
-                app.Run(new Info.ServiceInfo(args));
+                app.Run(new Info.ServiceInfo(serviceInfoSettings));
             else if (args.Any(x => x.StartsWith(Connection.Models.IncomingConnectionViewModel.CodeArgStart, StringComparison.OrdinalIgnoreCase)))
                 app.Run(new Connection.IncomingConnection(new Connection.Models.IncomingConnectionViewModel(args)));
             else
