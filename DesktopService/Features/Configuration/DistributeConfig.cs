@@ -30,6 +30,12 @@ namespace DesktopService.Features.Configuration
                 Name = "Rediscovery"
             };
             OnUpdateRemoteConfiguration(Path.Combine(discoveryPath, "appsettings.json"), "ServiceInfo", serviceInfo);
+            var serviceInfoHub = new SharedConfigurations.Hub.Models.ServiceInfoConfiguration
+            {
+                IP = Program.HostIpAddress,
+                Port = Program.HostPort,
+            };
+            OnUpdateRemoteConfiguration(Path.Combine(hubPath, "appsettings.json"), "ServiceInfo", serviceInfoHub);
         }
 
         private void OnUpdateRemoteConfiguration<T>(string filePath, string key, T value)

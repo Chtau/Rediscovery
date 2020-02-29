@@ -10,11 +10,14 @@ namespace DesktopService.Features.Pipes
     {
         private readonly SharedConfigurations.DesktopService.Models.PipeConfiguration _pipeSettings;
         private readonly ILogger<PipeServiceInfo> _logger;
+        private readonly SharedConfigurations.DesktopService.Models.AppConfiguration _appSettings;
 
-        public PipeServiceInfo(ILoggerFactory loggerFactory, IOptions<SharedConfigurations.DesktopService.Models.PipeConfiguration> pipeSettings)
+        public PipeServiceInfo(ILoggerFactory loggerFactory, IOptions<SharedConfigurations.DesktopService.Models.PipeConfiguration> pipeSettings,
+            IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> appOptions)
         {
             _logger = loggerFactory.CreateLogger<PipeServiceInfo>();
             _pipeSettings = pipeSettings.Value;
+            _appSettings = appOptions.Value;
         }
 
         public void ShowInfoWindow(bool forceStart = false)
