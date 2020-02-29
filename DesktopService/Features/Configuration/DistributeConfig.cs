@@ -46,12 +46,22 @@ namespace DesktopService.Features.Configuration
                 string json = File.ReadAllText(filePath);
                 dynamic jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
 
-                string sectionPath = key;
-                /*if (key.Contains(':'))
-                    sectionPath = key.Split(":")[0];*/
-                if (!string.IsNullOrEmpty(sectionPath))
+                List<string> sections = new List<string>();
+                if (key.Contains(":"))
                 {
-                    var obj = jsonObj[sectionPath];
+                    sections.AddRange(key.Split(":"));
+                } else
+                {
+                    sections.Add(key);
+                }
+                if (sections.Count > 0)
+                {
+                    dynamic obj = jsonObj[sections[0]];
+                    for (int i = 1; i < sections.Count; i++)
+                    {
+                        obj = obj[sections[i]];
+                    }
+                    
                     var section = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(obj.ToString());
                     if (section != null)
                         section = value;
