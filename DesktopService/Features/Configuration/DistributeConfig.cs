@@ -29,13 +29,13 @@ namespace DesktopService.Features.Configuration
                 MetaInfo = null,
                 Name = "Rediscovery"
             };
-            OnUpdateRemoteConfiguration(Path.Combine(discoveryPath, "appsettings.json"), "ServiceInfo", serviceInfo);
+            OnUpdateRemoteConfiguration(Path.Combine(discoveryPath, SharedConfigurations.DiscoveryService.ConfigFileNames.AppSettings), SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration.SectionName, serviceInfo);
             var serviceInfoHub = new SharedConfigurations.Hub.Models.ServiceInfoConfiguration
             {
                 IP = Program.HostIpAddress,
                 Port = Program.HostPort,
             };
-            OnUpdateRemoteConfiguration(Path.Combine(hubPath, "appsettings.json"), "ServiceInfo", serviceInfoHub);
+            OnUpdateRemoteConfiguration(Path.Combine(hubPath, SharedConfigurations.Hub.ConfigFileNames.AppSettings), SharedConfigurations.Hub.Models.ServiceInfoConfiguration.SectionName, serviceInfoHub);
         }
 
         private void OnUpdateRemoteConfiguration<T>(string filePath, string key, T value)

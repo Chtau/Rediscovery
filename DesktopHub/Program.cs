@@ -32,11 +32,11 @@ namespace DesktopHub
         {
             var builder = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+        .AddJsonFile(SharedConfigurations.Hub.ConfigFileNames.AppSettings, optional: true, reloadOnChange: true);
 
             IConfigurationRoot configuration = builder.Build();
 
-            var serviceInfoSettings = configuration.GetSection("ServiceInfo").Get<SharedConfigurations.Hub.Models.ServiceInfoConfiguration>();
+            var serviceInfoSettings = configuration.GetSection(SharedConfigurations.Hub.Models.ServiceInfoConfiguration.SectionName).Get<SharedConfigurations.Hub.Models.ServiceInfoConfiguration>();
 
 
             var service = new ServiceCollection();

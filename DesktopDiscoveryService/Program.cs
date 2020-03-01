@@ -16,12 +16,12 @@ namespace DesktopDiscoveryService
         {
             var builder = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+        .AddJsonFile(SharedConfigurations.DiscoveryService.ConfigFileNames.AppSettings, optional: true, reloadOnChange: true);
 
             IConfigurationRoot configuration = builder.Build();
 
-            var serviceInfoSettings = configuration.GetSection("ServiceInfo").Get<SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration>();
-            var discoverySettings = configuration.GetSection("Discovery").Get< SharedConfigurations.DiscoveryService.Models.DiscoveryConfiguration> ();
+            var serviceInfoSettings = configuration.GetSection(SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration.SectionName).Get<SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration>();
+            var discoverySettings = configuration.GetSection(SharedConfigurations.DiscoveryService.Models.DiscoveryConfiguration.SectionName).Get<SharedConfigurations.DiscoveryService.Models.DiscoveryConfiguration>();
 
             if (!FirewallRule.DiscoveryRuleExists(discoverySettings.Port, discoverySettings.FirewallRuleName))
             {

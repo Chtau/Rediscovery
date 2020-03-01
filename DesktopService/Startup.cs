@@ -24,7 +24,7 @@ namespace DesktopService
         public Startup()
         {
             var builder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json");
+                .AddJsonFile(SharedConfigurations.DesktopService.ConfigFileNames.AppSettings, optional: false, reloadOnChange: true);
 
             Configuration = builder.Build();
             /*var host = new HostBuilder();
@@ -39,11 +39,11 @@ namespace DesktopService
                 options.EnableDetailedErrors = true;
             });
 
-            var identitySettingsSection = Configuration.GetSection("IdentitySettings");
+            var identitySettingsSection = Configuration.GetSection(SharedConfigurations.DesktopService.Models.IdentityConfiguration.SectionName);
             services.Configure<SharedConfigurations.DesktopService.Models.IdentityConfiguration>(identitySettingsSection);
-            var pipeSettingsSection = Configuration.GetSection("PipeSettings");
+            var pipeSettingsSection = Configuration.GetSection(SharedConfigurations.DesktopService.Models.PipeConfiguration.SectionName);
             services.Configure<SharedConfigurations.DesktopService.Models.PipeConfiguration>(pipeSettingsSection);
-            var appSettingsSection = Configuration.GetSection("AppSettings");
+            var appSettingsSection = Configuration.GetSection(SharedConfigurations.DesktopService.Models.AppConfiguration.SectionName);
             services.Configure<SharedConfigurations.DesktopService.Models.AppConfiguration> (appSettingsSection);
 
             var appSettings = identitySettingsSection.Get<SharedConfigurations.DesktopService.Models.IdentityConfiguration>();

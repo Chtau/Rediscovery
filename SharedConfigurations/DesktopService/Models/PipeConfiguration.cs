@@ -6,6 +6,8 @@ namespace SharedConfigurations.DesktopService.Models
 {
     public class PipeConfiguration
     {
+        public const string SectionName = "PipeSettings";
+
         public string RediscoveryDesktopHubPath { get; set; }
 
         public string RediscoveryDiscoveryService { get; set; }
