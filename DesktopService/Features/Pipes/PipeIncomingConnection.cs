@@ -45,7 +45,7 @@ namespace DesktopService.Features.Pipes
                             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                             {
                                 FileName = _pipeSettings.RediscoveryDesktopHubPath,
-                                Arguments = $"--code:{code} --device:{device} --valid:{validTill.Ticks}"
+                                Arguments = $"{SharedCommandArguments.Hub.Arguments.CodeArgStart}{code} {SharedCommandArguments.Hub.Arguments.DeviceArgStart}{device} {SharedCommandArguments.Hub.Arguments.ValidArgStart}{validTill.Ticks}"
                             });
                         } else
                         {

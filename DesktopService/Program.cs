@@ -20,23 +20,20 @@ namespace DesktopService
         public static string HostIpAddress = "127.0.0.1";
         public static ushort HostPort = 44341;
 
-        private const string CommandPort = "--port:";
-        private const string CommandIP = "--ip:";
-
         public static void Main(string[] args)
         {
             HostIpAddress = SharedFeatureFunctions.NetworkAddress.GetIpAddr();
 
-            if (args.Any(x => x.StartsWith(CommandPort, StringComparison.OrdinalIgnoreCase)))
+            if (args.Any(x => x.StartsWith(SharedCommandArguments.Service.Arguments.CommandPort, StringComparison.OrdinalIgnoreCase)))
             {
-                var valueArg = args.First(x => x.StartsWith(CommandPort, StringComparison.OrdinalIgnoreCase));
+                var valueArg = args.First(x => x.StartsWith(SharedCommandArguments.Service.Arguments.CommandPort, StringComparison.OrdinalIgnoreCase));
                 var vals = valueArg.Split(':');
                 if (ushort.TryParse(vals[1].Trim(), out ushort port))
                     HostPort = port;
             }
-            if (args.Any(x => x.StartsWith(CommandIP, StringComparison.OrdinalIgnoreCase)))
+            if (args.Any(x => x.StartsWith(SharedCommandArguments.Service.Arguments.CommandIP, StringComparison.OrdinalIgnoreCase)))
             {
-                var valueArg = args.First(x => x.StartsWith(CommandIP, StringComparison.OrdinalIgnoreCase));
+                var valueArg = args.First(x => x.StartsWith(SharedCommandArguments.Service.Arguments.CommandIP, StringComparison.OrdinalIgnoreCase));
                 var vals = valueArg.Split(':');
                 HostIpAddress = vals[1].Trim();
             }

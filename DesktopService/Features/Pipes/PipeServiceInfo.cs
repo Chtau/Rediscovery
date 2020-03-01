@@ -31,7 +31,7 @@ namespace DesktopService.Features.Pipes
                         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                         {
                             FileName = _pipeSettings.RediscoveryDesktopHubPath,
-                            Arguments = $"--serviceinfo"
+                            Arguments = SharedCommandArguments.Hub.Arguments.ServiceInfoStart
                         });
                     }
                     else

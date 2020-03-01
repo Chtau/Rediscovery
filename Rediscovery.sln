@@ -27,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopDiscoveryService", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopFirewall", "DesktopFirewall\DesktopFirewall.csproj", "{45CF8CDC-3832-4F01-97B3-E64379BFD3EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedConfigurations", "SharedConfigurations\SharedConfigurations.csproj", "{EF80B5C2-4413-48FA-B638-B2122E97F34B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedConfigurations", "SharedConfigurations\SharedConfigurations.csproj", "{EF80B5C2-4413-48FA-B638-B2122E97F34B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedCommandArguments", "SharedCommandArguments\SharedCommandArguments.csproj", "{A1A10784-1C3A-423B-96F3-E494D1047491}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -201,6 +203,18 @@ Global
 		{EF80B5C2-4413-48FA-B638-B2122E97F34B}.Release|x64.Build.0 = Release|Any CPU
 		{EF80B5C2-4413-48FA-B638-B2122E97F34B}.Release|x86.ActiveCfg = Release|Any CPU
 		{EF80B5C2-4413-48FA-B638-B2122E97F34B}.Release|x86.Build.0 = Release|Any CPU
+		{A1A10784-1C3A-423B-96F3-E494D1047491}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1A10784-1C3A-423B-96F3-E494D1047491}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1A10784-1C3A-423B-96F3-E494D1047491}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A1A10784-1C3A-423B-96F3-E494D1047491}.Debug|x64.Build.0 = Debug|Any CPU
+		{A1A10784-1C3A-423B-96F3-E494D1047491}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A1A10784-1C3A-423B-96F3-E494D1047491}.Debug|x86.Build.0 = Debug|Any CPU
+		{A1A10784-1C3A-423B-96F3-E494D1047491}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1A10784-1C3A-423B-96F3-E494D1047491}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1A10784-1C3A-423B-96F3-E494D1047491}.Release|x64.ActiveCfg = Release|Any CPU
+		{A1A10784-1C3A-423B-96F3-E494D1047491}.Release|x64.Build.0 = Release|Any CPU
+		{A1A10784-1C3A-423B-96F3-E494D1047491}.Release|x86.ActiveCfg = Release|Any CPU
+		{A1A10784-1C3A-423B-96F3-E494D1047491}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

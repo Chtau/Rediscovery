@@ -9,8 +9,6 @@ namespace DesktopHub.Info
 {
     public class ServiceInfoViewModel : BaseViewModel
     {
-        public const string ServiceInfoArgStart = "--serviceinfo";
-
         string ipAddr = string.Empty;
         public string IpAddr
         {
