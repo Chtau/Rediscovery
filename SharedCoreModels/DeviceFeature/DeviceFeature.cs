@@ -1,24 +1,13 @@
-﻿using System;
+﻿using SharedCoreModels.DesktopPlugins;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using static SharedCoreModels.Enums;
 
 namespace SharedCoreModels.DeviceFeature
 {
-    public class DeviceFeature
+    public class DeviceFeature : IDesktopPluginFeatureDefinition
     {
-        public enum IntegrationPoint
-        {
-            Desktop = 0,
-            Mobile = 1
-        }
-
-        public enum ControlIntegrationType
-        {
-            None,
-            Terminal,
-            MediaPlayer
-        }
-
         public IntegrationPoint FeatureIntegrationPoint { get; set; } = IntegrationPoint.Desktop;
         public IntegrationPoint ControlIntegrationPoint { get; set; } = IntegrationPoint.Mobile;
         public ControlIntegrationType ControlIntegration { get; set; } = ControlIntegrationType.Terminal;

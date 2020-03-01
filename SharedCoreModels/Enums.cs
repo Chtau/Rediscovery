@@ -16,5 +16,19 @@ namespace SharedCoreModels
             Denied = 5,
             WaitForApprovel = 6
         }
+
+        public enum IntegrationPoint
+        {
+            Desktop = 0,
+            Mobile = 1
+        }
+
+        public enum ControlIntegrationType
+        {
+            None,
+            Terminal,
+            MediaPlayer
+        }
+
     }
 }

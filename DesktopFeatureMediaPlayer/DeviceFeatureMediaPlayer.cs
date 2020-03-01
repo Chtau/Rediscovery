@@ -55,9 +55,9 @@ namespace DesktopFeatureMediaPlayer
             {
                 DisplayName = currentProfileConfiguration.DisplayName,
                 Id = currentProfileConfiguration.Id,
-                ControlIntegrationPoint = DeviceFeature.IntegrationPoint.Mobile,
-                FeatureIntegrationPoint = DeviceFeature.IntegrationPoint.Desktop,
-                ControlIntegration = DeviceFeature.ControlIntegrationType.MediaPlayer,
+                ControlIntegrationPoint = SharedCoreModels.Enums.IntegrationPoint.Mobile,
+                FeatureIntegrationPoint = SharedCoreModels.Enums.IntegrationPoint.Desktop,
+                ControlIntegration = SharedCoreModels.Enums.ControlIntegrationType.MediaPlayer,
                 MinControlIntegrationPoint = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
                 MinFeatureIntegrationPoint = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
                 SettingsObject = currentProfileConfiguration.CommandAvailable,

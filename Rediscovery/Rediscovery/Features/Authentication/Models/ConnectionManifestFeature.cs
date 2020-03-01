@@ -15,8 +15,8 @@ namespace Rediscovery.Features.Authentication.Models
         private string _featureVersion;
         private string _featureMinFeatureIntegrationPoint;
         private string _featureMinControlIntegrationPoint;
-        private SharedCoreModels.DeviceFeature.DeviceFeature.IntegrationPoint _featureFeatureIntegrationPoint;
-        private SharedCoreModels.DeviceFeature.DeviceFeature.IntegrationPoint _featureControlIntegrationPoint;
+        private SharedCoreModels.Enums.IntegrationPoint _featureFeatureIntegrationPoint;
+        private SharedCoreModels.Enums.IntegrationPoint _featureControlIntegrationPoint;
 
         [PrimaryKey]
         public Guid Id
@@ -61,20 +61,20 @@ namespace Rediscovery.Features.Authentication.Models
             set { SetProperty(ref _featureMinControlIntegrationPoint, value); }
         }
 
-        public SharedCoreModels.DeviceFeature.DeviceFeature.IntegrationPoint FeatureFeatureIntegrationPoint
+        public SharedCoreModels.Enums.IntegrationPoint FeatureFeatureIntegrationPoint
         {
             get { return _featureFeatureIntegrationPoint; }
             set { SetProperty(ref _featureFeatureIntegrationPoint, value); }
         }
 
-        public SharedCoreModels.DeviceFeature.DeviceFeature.IntegrationPoint FeatureControlIntegrationPoint
+        public SharedCoreModels.Enums.IntegrationPoint FeatureControlIntegrationPoint
         {
             get { return _featureControlIntegrationPoint; }
             set { SetProperty(ref _featureControlIntegrationPoint, value); }
         }
 
-        private SharedCoreModels.DeviceFeature.DeviceFeature.ControlIntegrationType controlIntegration;
-        public SharedCoreModels.DeviceFeature.DeviceFeature.ControlIntegrationType ControlIntegration
+        private SharedCoreModels.Enums.ControlIntegrationType controlIntegration;
+        public SharedCoreModels.Enums.ControlIntegrationType ControlIntegration
         {
             get { return controlIntegration; }
             set { SetProperty(ref controlIntegration, value); }
