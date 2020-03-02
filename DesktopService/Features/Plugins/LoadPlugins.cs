@@ -21,18 +21,13 @@ namespace DesktopService.Features.Plugins
     {
         public Assembly LoadPlugin(string path)
         {
-            // Navigate up to the solution root
-            /*string root = Path.GetFullPath(Path.Combine(
-                Path.GetDirectoryName(
-                    Path.GetDirectoryName(
-                        Path.GetDirectoryName(
-                            Path.GetDirectoryName(
-                                Path.GetDirectoryName(typeof(Program).Assembly.Location)))))));*/
-
-            string pluginLocation = path;// Path.GetFullPath(Path.Combine(root, relativePath.Replace('\\', Path.DirectorySeparatorChar)));
-            Console.WriteLine($"Loading commands from: {pluginLocation}");
-            PluginLoadContext loadContext = new PluginLoadContext(pluginLocation);
-            return loadContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(pluginLocation)));
+            if (System.IO.File.Exists(path))
+            {
+                Console.WriteLine($"Loading Plugin from: {path}");
+                PluginLoadContext loadContext = new PluginLoadContext(path);
+                return loadContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(path)));
+            }
+            return null;
         }
 
         public IEnumerable<IDeviceFeatureImplementation> CreateDesktopPluginFeature(Assembly assembly)
