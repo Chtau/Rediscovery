@@ -9,7 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SharedCoreModels\SharedCoreModels.csproj" />
+    <ProjectReference Include="..\SharedCoreModels\SharedCoreModels.csproj">
+      <Private>false</Private>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>

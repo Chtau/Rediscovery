@@ -105,6 +105,8 @@ namespace DesktopService
             services.AddSingleton<Features.Pipes.IPipeLiveLogger, Features.Pipes.PipeLiveLogger>();
             services.AddSingleton<IFeatureService, FeatureService>();
             services.AddSingleton<Features.Configuration.IDistributeConfig, Features.Configuration.DistributeConfig>();
+
+            services.AddSingleton<Features.Plugins.ILoadPlugins, Features.Plugins.LoadPlugins>();
         }
 
         // Use this method to configure the HTTP request pipeline.

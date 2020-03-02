@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopFirewall", "DesktopF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedConfigurations", "SharedConfigurations\SharedConfigurations.csproj", "{EF80B5C2-4413-48FA-B638-B2122E97F34B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedCommandArguments", "SharedCommandArguments\SharedCommandArguments.csproj", "{A1A10784-1C3A-423B-96F3-E494D1047491}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedCommandArguments", "SharedCommandArguments\SharedCommandArguments.csproj", "{A1A10784-1C3A-423B-96F3-E494D1047491}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

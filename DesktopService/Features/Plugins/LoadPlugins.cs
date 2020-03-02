@@ -9,33 +9,40 @@ namespace DesktopService.Features.Plugins
 {
     // TODO: https://docs.microsoft.com/en-us/dotnet/core/tutorials/creating-app-with-plugin-support
 
-    public class LoadPlugins
+    /*<ItemGroup>
+        <ProjectReference Include = "..\PluginBase\PluginBase.csproj" >
+            < Private > false </ Private >
+            < ExcludeAssets > runtime </ ExcludeAssets >
+        </ ProjectReference >
+    </ItemGroup >*/
+
+    public class LoadPlugins : ILoadPlugins
     {
-        public Assembly LoadPlugin(string relativePath)
+        public Assembly LoadPlugin(string path)
         {
             // Navigate up to the solution root
-            string root = Path.GetFullPath(Path.Combine(
+            /*string root = Path.GetFullPath(Path.Combine(
                 Path.GetDirectoryName(
                     Path.GetDirectoryName(
                         Path.GetDirectoryName(
                             Path.GetDirectoryName(
-                                Path.GetDirectoryName(typeof(Program).Assembly.Location)))))));
+                                Path.GetDirectoryName(typeof(Program).Assembly.Location)))))));*/
 
-            string pluginLocation = Path.GetFullPath(Path.Combine(root, relativePath.Replace('\\', Path.DirectorySeparatorChar)));
+            string pluginLocation = path;// Path.GetFullPath(Path.Combine(root, relativePath.Replace('\\', Path.DirectorySeparatorChar)));
             Console.WriteLine($"Loading commands from: {pluginLocation}");
             PluginLoadContext loadContext = new PluginLoadContext(pluginLocation);
             return loadContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(pluginLocation)));
         }
 
-        public IEnumerable<SharedCoreModels.DesktopPlugins.IDesktopPluginFeatureDefinition> CreateDesktopPluginFeatureDefinition(Assembly assembly)
+        public IEnumerable<SharedCoreModels.DeviceFeature.IDeviceFeatureImplementation> CreateDesktopPluginFeature(Assembly assembly)
         {
             int count = 0;
 
             foreach (Type type in assembly.GetTypes())
             {
-                if (typeof(SharedCoreModels.DesktopPlugins.IDesktopPluginFeatureDefinition).IsAssignableFrom(type))
+                if (typeof(SharedCoreModels.DeviceFeature.IDeviceFeatureImplementation).IsAssignableFrom(type))
                 {
-                    SharedCoreModels.DesktopPlugins.IDesktopPluginFeatureDefinition result = Activator.CreateInstance(type) as SharedCoreModels.DesktopPlugins.IDesktopPluginFeatureDefinition;
+                    SharedCoreModels.DeviceFeature.IDeviceFeatureImplementation result = Activator.CreateInstance(type) as SharedCoreModels.DeviceFeature.IDeviceFeatureImplementation;
                     if (result != null)
                     {
                         count++;
@@ -48,7 +55,7 @@ namespace DesktopService.Features.Plugins
             {
                 string availableTypes = string.Join(",", assembly.GetTypes().Select(t => t.FullName));
                 throw new ApplicationException(
-                    $"Can't find any type which implements IDesktopPluginFeatureDefinition in {assembly} from {assembly.Location}.\n" +
+                    $"Can't find any type which implements IDeviceFeatureImplementation in {assembly} from {assembly.Location}.\n" +
                     $"Available types: {availableTypes}");
             }
         }
