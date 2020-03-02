@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharedCoreModels.DesktopPlugins;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
@@ -8,6 +9,6 @@ namespace DesktopService.Features.Plugins
     public interface ILoadPlugins
     {
         Assembly LoadPlugin(string path);
-        IEnumerable<SharedCoreModels.DeviceFeature.IDeviceFeatureImplementation> CreateDesktopPluginFeature(Assembly assembly);
+        IEnumerable<IDeviceFeatureImplementation> CreateDesktopPluginFeature(Assembly assembly);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DesktopFeatureConsole;
 using DesktopFeatureMediaPlayer;
+using SharedCoreModels.DesktopPlugins;
 using SharedCoreModels.DeviceFeature;
 using System;
 using System.Net;
@@ -21,7 +22,7 @@ namespace DesktopFeatureTestApp
 
         static void ConsoleFeature()
         {
-            SharedCoreModels.DeviceFeature.IDeviceFeatureImplementation feature = new DeviceFeatureConsole();
+            IDeviceFeatureImplementation feature = new DeviceFeatureConsole();
             feature.SendData += (object sender, DeviceFeatureData e) =>
             {
                 Console.WriteLine(e.Data);
@@ -35,7 +36,7 @@ namespace DesktopFeatureTestApp
         {
             foreach (var item in DeviceFeatureMediaPlayer.GetProfiles())
             {
-                SharedCoreModels.DeviceFeature.IDeviceFeatureImplementation feature = new DeviceFeatureMediaPlayer(item);
+                IDeviceFeatureImplementation feature = new DeviceFeatureMediaPlayer(item);
                 feature.SendData += (object sender, DeviceFeatureData e) =>
                 {
                     Console.WriteLine(e.Data);

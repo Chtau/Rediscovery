@@ -25,9 +25,9 @@ namespace DesktopFeatureConsole
             OnSendData(this, data);
         }
 
-        public override DeviceFeature GetDeviceFeatureInfo()
+        public override DeviceFeatureDefinition GetDeviceFeatureInfo()
         {
-            return new DeviceFeature
+            return new DeviceFeatureDefinition
             {
                 DisplayName = "Console",
                 Id = new Guid("558AC5BD-5B76-433D-8CD7-BCBB7596AAA1"),

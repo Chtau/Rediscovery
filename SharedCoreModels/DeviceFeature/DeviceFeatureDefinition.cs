@@ -6,7 +6,7 @@ using static SharedCoreModels.Enums;
 
 namespace SharedCoreModels.DeviceFeature
 {
-    public class DeviceFeature : IDesktopPluginFeatureDefinition
+    public class DeviceFeatureDefinition
     {
         public IntegrationPoint FeatureIntegrationPoint { get; set; } = IntegrationPoint.Desktop;
         public IntegrationPoint ControlIntegrationPoint { get; set; } = IntegrationPoint.Mobile;

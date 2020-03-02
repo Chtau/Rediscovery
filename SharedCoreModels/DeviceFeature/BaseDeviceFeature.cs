@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharedCoreModels.DesktopPlugins;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -47,7 +48,7 @@ namespace SharedCoreModels.DeviceFeature
             
         }
 
-        public virtual DeviceFeature GetDeviceFeatureInfo()
+        public virtual DeviceFeatureDefinition GetDeviceFeatureInfo()
         {
             return null;
         }

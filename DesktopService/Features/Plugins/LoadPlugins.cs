@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharedCoreModels.DesktopPlugins;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -34,15 +35,15 @@ namespace DesktopService.Features.Plugins
             return loadContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(pluginLocation)));
         }
 
-        public IEnumerable<SharedCoreModels.DeviceFeature.IDeviceFeatureImplementation> CreateDesktopPluginFeature(Assembly assembly)
+        public IEnumerable<IDeviceFeatureImplementation> CreateDesktopPluginFeature(Assembly assembly)
         {
             int count = 0;
 
             foreach (Type type in assembly.GetTypes())
             {
-                if (typeof(SharedCoreModels.DeviceFeature.IDeviceFeatureImplementation).IsAssignableFrom(type))
+                if (typeof(IDeviceFeatureImplementation).IsAssignableFrom(type))
                 {
-                    SharedCoreModels.DeviceFeature.IDeviceFeatureImplementation result = Activator.CreateInstance(type) as SharedCoreModels.DeviceFeature.IDeviceFeatureImplementation;
+                    IDeviceFeatureImplementation result = Activator.CreateInstance(type) as IDeviceFeatureImplementation;
                     if (result != null)
                     {
                         count++;

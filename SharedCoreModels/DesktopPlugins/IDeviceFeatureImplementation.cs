@@ -1,8 +1,9 @@
-﻿using System;
+﻿using SharedCoreModels.DeviceFeature;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedCoreModels.DeviceFeature
+namespace SharedCoreModels.DesktopPlugins
 {
     public interface IDeviceFeatureImplementation
     {
@@ -10,7 +11,7 @@ namespace SharedCoreModels.DeviceFeature
         void Dispose();
         event EventHandler<DeviceFeatureData> SendData;
         void ReceiveData(DeviceFeatureData data);
-        DeviceFeature GetDeviceFeatureInfo();
+        DeviceFeatureDefinition GetDeviceFeatureInfo();
 
         /// <summary>
         /// Register a device id to send/receive data from the feature

@@ -49,9 +49,9 @@ namespace DesktopFeatureMediaPlayer
             base.Dispose();
         }
 
-        public override DeviceFeature GetDeviceFeatureInfo()
+        public override DeviceFeatureDefinition GetDeviceFeatureInfo()
         {
-            return new DeviceFeature
+            return new DeviceFeatureDefinition
             {
                 DisplayName = currentProfileConfiguration.DisplayName,
                 Id = currentProfileConfiguration.Id,

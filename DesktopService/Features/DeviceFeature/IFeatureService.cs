@@ -1,4 +1,5 @@
-﻿using SharedCoreModels.DeviceFeature;
+﻿using SharedCoreModels.DesktopPlugins;
+using SharedCoreModels.DeviceFeature;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,6 +10,6 @@ namespace DesktopService.Features.DeviceFeature
     {
         void Load();
         IDeviceFeatureImplementation GetFeature(Guid featureId);
-        List<SharedCoreModels.DeviceFeature.DeviceFeature> GetFeaturesManifest();
+        List<SharedCoreModels.DeviceFeature.DeviceFeatureDefinition> GetFeaturesManifest();
     }
 }

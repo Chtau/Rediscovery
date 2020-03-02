@@ -70,7 +70,7 @@ namespace DesktopService.Features.Pipes
             } else if (resourceName == "features")
             {
                 var features = _featureService.GetFeaturesManifest();
-                var resource = new IPCPipe.Models.PipeResource<List<SharedCoreModels.DeviceFeature.DeviceFeature>>();
+                var resource = new IPCPipe.Models.PipeResource<List<SharedCoreModels.DeviceFeature.DeviceFeatureDefinition>>();
                 resource.ResourceName = resourceName;
                 resource.Entity = features;
                 return Newtonsoft.Json.JsonConvert.SerializeObject(resource);

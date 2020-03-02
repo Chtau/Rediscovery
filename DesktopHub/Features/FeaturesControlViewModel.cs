@@ -13,7 +13,7 @@ namespace DesktopHub.Features
         private readonly IPCPipe.IPipeResourceProvider _resourceProvider;
         private readonly IPCPipe.IPipeClient _pipeClient;
 
-        public ObservableCollection<SharedCoreModels.DeviceFeature.DeviceFeature> Items { get; set; } = new ObservableCollection<SharedCoreModels.DeviceFeature.DeviceFeature>();
+        public ObservableCollection<SharedCoreModels.DeviceFeature.DeviceFeatureDefinition> Items { get; set; } = new ObservableCollection<SharedCoreModels.DeviceFeature.DeviceFeatureDefinition>();
 
         public FeaturesControlViewModel()
         {
@@ -23,10 +23,10 @@ namespace DesktopHub.Features
 
         public void Refresh()
         {
-            _resourceProvider.Receiver<List<SharedCoreModels.DeviceFeature.DeviceFeature>>("rediscoveryservice", "features", OnReceiveResource);
+            _resourceProvider.Receiver<List<SharedCoreModels.DeviceFeature.DeviceFeatureDefinition>>("rediscoveryservice", "features", OnReceiveResource);
         }
 
-        private void OnReceiveResource(PipeResource<List<DeviceFeature>> obj)
+        private void OnReceiveResource(PipeResource<List<DeviceFeatureDefinition>> obj)
         {
             Dispatcher.UIThread.Post(() =>
             {
