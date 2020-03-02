@@ -27,7 +27,8 @@ namespace SharedCoreModels
         {
             None,
             Terminal,
-            MediaPlayer
+            MediaPlayer,
+            Html
         }
 
     }

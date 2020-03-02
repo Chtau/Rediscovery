@@ -20,7 +20,7 @@ namespace DesktopService.Features.DeviceFeature
             _featureService = featureService;
         }
 
-        public void ClientMessage(Guid featureId, object data)
+        public void ClientMessage(Guid featureId, string profileId, object data)
         {
             System.Diagnostics.Debug.Print($"Feature (id: {featureId}) Message on Service received");
             var feature = _featureService.GetFeature(featureId);
@@ -29,7 +29,8 @@ namespace DesktopService.Features.DeviceFeature
                 var val = new DeviceFeatureData
                 {
                     Data = data,
-                    DeviceId = Context.UserIdentifier
+                    DeviceId = Context.UserIdentifier,
+                    ProfileId = profileId
                 };
                 feature.ReceiveData(val);
             }

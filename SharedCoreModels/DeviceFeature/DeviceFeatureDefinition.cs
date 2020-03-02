@@ -17,5 +17,6 @@ namespace SharedCoreModels.DeviceFeature
         public Version MinFeatureIntegrationPoint { get; set; }
         public Version MinControlIntegrationPoint { get; set; }
         public object SettingsObject { get; set; }
+        public List<DeviceFeatureProfil> Profiles { get; set; }
     }
 }

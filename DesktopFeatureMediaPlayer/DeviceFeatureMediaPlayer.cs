@@ -51,6 +51,15 @@ namespace DesktopFeatureMediaPlayer
 
         public override DeviceFeatureDefinition GetDeviceFeatureInfo()
         {
+            var profiles = new List<DeviceFeatureProfil>();
+            var pro = MediaPlayerDefaultProfiles.GetProfileConfigurations();
+            if (pro?.Count > 0)
+            {
+                foreach (var item in pro)
+                {
+                    profiles.Add(new DeviceFeatureProfil(item.Id.ToString(), item.DisplayName, item));
+                }
+            }
             return new DeviceFeatureDefinition
             {
                 DisplayName = currentProfileConfiguration.DisplayName,
@@ -62,6 +71,7 @@ namespace DesktopFeatureMediaPlayer
                 MinFeatureIntegrationPoint = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
                 SettingsObject = currentProfileConfiguration.CommandAvailable,
                 Version = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
+                Profiles = profiles
             };
         }
 
