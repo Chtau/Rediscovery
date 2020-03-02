@@ -70,7 +70,7 @@ namespace Rediscovery.Features.DesktopFeatures
             if (featureHub != null)
             {
                 logger.Message($"send feature message to {model.DisplayName} ({DateTime.Now})");
-                await featureHub.InvokeAsync("ClientMessage", feature.FeatureId, data);
+                await featureHub.InvokeAsync("ClientMessage", feature.FeatureId, "", data);
             } else
             {
                 logger.Message("Try to send feature exchange message without hub connection");
