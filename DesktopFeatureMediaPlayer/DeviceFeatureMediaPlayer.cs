@@ -10,15 +10,18 @@ namespace DesktopFeatureMediaPlayer
     public class DeviceFeatureMediaPlayer : BaseDeviceFeature
     {
         private List<MediaPlayerController> controllers = new List<MediaPlayerController>();
-        private ProfileConfiguration currentProfileConfiguration;
+        //private ProfileConfiguration currentProfileConfiguration;
         private DateTime updateTimer = DateTime.Now;
 
-        public DeviceFeatureMediaPlayer(ProfileConfiguration profileConfiguration)
+        public DeviceFeatureMediaPlayer()//ProfileConfiguration profileConfiguration
         {
-            currentProfileConfiguration = profileConfiguration;
-            var controller = new MediaPlayerController(currentProfileConfiguration);
-            controller.UpdateProcess += Controller_UpdateProcess;
-            controllers.Add(controller);
+            //currentProfileConfiguration = profileConfiguration;
+            foreach (var profile in MediaPlayerDefaultProfiles.GetProfileConfigurations())
+            {
+                var controller = new MediaPlayerController(profile);
+                controller.UpdateProcess += Controller_UpdateProcess;
+                controllers.Add(controller);
+            }
         }
 
         private void Controller_UpdateProcess(object sender, EventArgs e)
@@ -27,19 +30,22 @@ namespace DesktopFeatureMediaPlayer
             if ((newDate - updateTimer).TotalSeconds >= 1)
             {
                 updateTimer = newDate;
-                var controller = OnGetController(currentProfileConfiguration.Id);
-                foreach (var deviceId in RegisteredDevices)
+                foreach (var profile in MediaPlayerDefaultProfiles.GetProfileConfigurations())
                 {
-                    var data = new DeviceFeatureData
+                    var controller = OnGetController(profile.Id);
+                    foreach (var deviceId in RegisteredDevices)
                     {
-                        Data = new MediaPlayerStateData
+                        var data = new DeviceFeatureData
                         {
-                            ProcessRunning = controller.ProcessRunning,
-                            CurrentTitle = controller.CurrentTitle
-                        },
-                        DeviceId = deviceId
-                    };
-                    OnSendData(this, data);
+                            Data = new MediaPlayerStateData
+                            {
+                                ProcessRunning = controller.ProcessRunning,
+                                CurrentTitle = controller.CurrentTitle
+                            },
+                            DeviceId = deviceId
+                        };
+                        OnSendData(this, data);
+                    }
                 }
             }
         }
@@ -62,14 +68,14 @@ namespace DesktopFeatureMediaPlayer
             }
             return new DeviceFeatureDefinition
             {
-                DisplayName = currentProfileConfiguration.DisplayName,
-                Id = currentProfileConfiguration.Id,
+                DisplayName = "Mediaplayer",
+                Id = new Guid("D5B218BC-8F36-4100-9262-71155265DAD7"),
                 ControlIntegrationPoint = SharedCoreModels.Enums.IntegrationPoint.Mobile,
                 FeatureIntegrationPoint = SharedCoreModels.Enums.IntegrationPoint.Desktop,
                 ControlIntegration = SharedCoreModels.Enums.ControlIntegrationType.MediaPlayer,
                 MinControlIntegrationPoint = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
                 MinFeatureIntegrationPoint = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
-                SettingsObject = currentProfileConfiguration.CommandAvailable,
+                SettingsObject = null,
                 Version = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
                 Profiles = profiles
             };
@@ -148,15 +154,21 @@ namespace DesktopFeatureMediaPlayer
         public override void Register(string deviceId)
         {
             base.Register(deviceId);
-            var controller = OnGetController(currentProfileConfiguration.Id);
-            controller.InitWatcher();
+            foreach (var profile in MediaPlayerDefaultProfiles.GetProfileConfigurations())
+            {
+                var controller = OnGetController(profile.Id);
+                controller.InitWatcher();
+            }
         }
 
         public override void Unregister(string deviceId)
         {
             base.Unregister(deviceId);
-            var controller = OnGetController(currentProfileConfiguration.Id);
-            controller.Stop();
+            foreach (var profile in MediaPlayerDefaultProfiles.GetProfileConfigurations())
+            {
+                var controller = OnGetController(profile.Id);
+                controller.Stop();
+            }
         }
     }
 }
