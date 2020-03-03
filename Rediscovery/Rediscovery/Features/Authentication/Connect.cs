@@ -152,11 +152,15 @@ namespace Rediscovery.Features.Authentication
             try
             {
                 var con = await OnGetHubConnection(await OnGetHub(model, HubTypes.Auth), model);
-                if (con != null)
+                if (con != null && con.State == HubConnectionState.Connected)
                 {
-                    logger.Message($"send welcome to {model.DisplayName} ({DateTime.Now})");
-                    await con.InvokeAsync("Welcome", model.User);
+                    // we send the Welcome direct in the AuthConnectionHub
+                    //logger.Message($"send welcome to {model.DisplayName} ({DateTime.Now})");
+                    //await con.InvokeAsync("Welcome", model.User);
                     //await OnAfterChangedAuthenticationConnection(model);
+                } else
+                {
+                    logger.Message($"Could not create connection to {model.DisplayName} ({DateTime.Now})");
                 }
             } catch (Exception ex)
             {

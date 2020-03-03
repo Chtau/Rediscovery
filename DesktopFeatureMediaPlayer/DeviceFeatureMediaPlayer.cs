@@ -77,7 +77,7 @@ namespace DesktopFeatureMediaPlayer
                 MinFeatureIntegrationPoint = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
                 SettingsObject = null,
                 Version = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
-                Profiles = profiles
+                Profiles = Newtonsoft.Json.JsonConvert.SerializeObject(profiles)
             };
         }
 

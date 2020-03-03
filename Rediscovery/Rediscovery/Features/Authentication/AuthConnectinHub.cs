@@ -36,6 +36,8 @@ namespace Rediscovery.Features.Authentication
             base.AfterCreateNewConnection(connection, model);
             OnHello(connection, model);
             OnManifest(connection, model);
+            logger.Message($"Send Welcome to Service:{model.DisplayName} ({DateTime.Now})");
+            connection.InvokeAsync("Welcome", model.User);
         }
 
         private void OnHello(HubConnection con, Models.Connection model)

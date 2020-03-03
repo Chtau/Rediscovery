@@ -36,7 +36,7 @@ namespace DesktopFeatureTestApp
         {
             foreach (var item in DeviceFeatureMediaPlayer.GetProfiles())
             {
-                IDeviceFeatureImplementation feature = new DeviceFeatureMediaPlayer(item);
+                IDeviceFeatureImplementation feature = new DeviceFeatureMediaPlayer();
                 feature.SendData += (object sender, DeviceFeatureData e) =>
                 {
                     Console.WriteLine(e.Data);

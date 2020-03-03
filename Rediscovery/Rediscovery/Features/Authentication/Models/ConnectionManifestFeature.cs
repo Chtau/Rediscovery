@@ -1,4 +1,5 @@
 ﻿using Rediscovery.Models;
+using SharedCoreModels.DeviceFeature;
 using SQLite;
 using System;
 using System.Collections.Generic;

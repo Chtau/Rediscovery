@@ -82,11 +82,13 @@ namespace DesktopService.Features.Authentication
         private async Task OnLogin(string device, string token)
         {
             await OnSendHello(SharedCoreModels.Enums.ConnectionState.OK, token);
+            _logger.LogInformation("Send Manifest data to the Client");
             await Clients.Caller.SendAsync("Manifest", _manifest.GetManifest());
         }
 
         private async Task OnSendHello(SharedCoreModels.Enums.ConnectionState connectionState, string token)
         {
+            _logger.LogInformation("Send Hello information to the Client");
             await Clients.Caller.SendAsync("Hello", connectionState, token);
         }
     }

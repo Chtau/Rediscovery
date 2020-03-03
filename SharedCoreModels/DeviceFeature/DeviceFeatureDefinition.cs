@@ -17,6 +17,9 @@ namespace SharedCoreModels.DeviceFeature
         public Version MinFeatureIntegrationPoint { get; set; }
         public Version MinControlIntegrationPoint { get; set; }
         public object SettingsObject { get; set; }
-        public List<DeviceFeatureProfil> Profiles { get; set; }
+        /// <summary>
+        /// Profiles are in JSON format because of a serialize problem with SignalR
+        /// </summary>
+        public string Profiles { get; set; }
     }
 }

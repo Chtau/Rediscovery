@@ -48,48 +48,46 @@ namespace Rediscovery.Features.Authentication
                             break;
                         await Task.Delay(50);
                     }
-                    if (connection.State != HubConnectionState.Connected)
+                    if (connection.State == HubConnectionState.Connected)
+                    {
+                        return connection;
+                    }
+                    else
                     {
                         logger.Message($"Reconnect to connection {model.DisplayName} ({DateTime.Now.ToString()})");
                         await connection.StopAsync();
                         await connection.DisposeAsync();
                         connection = null;
-                        return await OnGetConnection(model, shouldUseToken);
+                        //return await OnGetConnection(model, shouldUseToken);
                     }
-                    else
+                }
+
+                string url = Protocol + model.LastKnownAddress + _hubLink;
+                logger.Message($"Try do connect to {model.DisplayName} with Address:{url} ({DateTime.Now.ToString()})");
+                if (shouldUseToken)
+                {
+                    connection = new HubConnectionBuilder()
+                    .WithUrl(url, options =>
                     {
-                        return connection;
-                    }
+                        options.AccessTokenProvider = () => Task.FromResult(model.Token);
+                    })
+                    .Build();
                 }
                 else
                 {
-                    string url = Protocol + model.LastKnownAddress + _hubLink;
-                    logger.Message($"Try do connect to {model.DisplayName} with Address:{url} ({DateTime.Now.ToString()})");
-                    if (shouldUseToken)
-                    {
-                        connection = new HubConnectionBuilder()
-                        .WithUrl(url, options =>
-                        {
-                            options.AccessTokenProvider = () => Task.FromResult(model.Token);
-                        })
-                        .Build();
-                    }
-                    else
-                    {
-                        connection = new HubConnectionBuilder()
-                        .WithUrl(url)
-                        .Build();
-                    }
-                    await connection.StartAsync();
-                    for (int i = 0; i < 50; i++)
-                    {
-                        await Task.Delay(50);
-                        if (connection.State == HubConnectionState.Connected)
-                            break;
-                    }
-                    AfterCreateNewConnection(connection, model);
-                    ConnectionChanged?.Invoke(this, model);
+                    connection = new HubConnectionBuilder()
+                    .WithUrl(url)
+                    .Build();
                 }
+                await connection.StartAsync();
+                for (int i = 0; i < 50; i++)
+                {
+                    await Task.Delay(50);
+                    if (connection.State == HubConnectionState.Connected)
+                        break;
+                }
+                AfterCreateNewConnection(connection, model);
+                ConnectionChanged?.Invoke(this, model);
                 return connection;
             } catch (Exception ex)
             {
