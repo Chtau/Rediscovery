@@ -29,6 +29,10 @@ namespace Rediscovery.Features.DesktopFeatures
 
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
         {
+            // TODO: test only
+            await Navigation.PushModalAsync(new NavigationPage(new FeaturePage.FeatureView.FeatureView()));
+            return;
+
             Features.Authentication.Models.ConnectionManifestFeature item = args.SelectedItem as Features.Authentication.Models.ConnectionManifestFeature;
             if (item == null)
                 return;

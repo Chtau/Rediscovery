@@ -46,7 +46,7 @@ namespace SharedFeatureFunctions
         public static bool DiscoveryRuleExists(int port, string ruleName)
         {
             var rule = FirewallManager.Instance.Rules.FirstOrDefault(x => x.Name == ruleName);
-            if (rule.IsEnable && rule.LocalPorts.Any(x => x == port))
+            if (rule != null && rule.IsEnable && rule.LocalPorts.Any(x => x == port))
                 return true;
             return false;
         }
