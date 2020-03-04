@@ -8,6 +8,7 @@ namespace SharedCoreModels.FeatureModels.MediaPlayer
     public class ClientCommandSendModel
     {
         public Guid ProfileId { get; set; }
+
         public CommandTypes Command { get; set; }
 
         public ClientCommandSendModel()
