@@ -12,81 +12,92 @@
         <ToolbarItem x:Name="Back" Text="Back" Clicked="Back_Clicked" Icon="close_white.png"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <Grid Margin="0,10,0,50" RowSpacing="25">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="100"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <StackLayout Orientation="Horizontal" Grid.Row="0" HorizontalOptions="Center" VerticalOptions="Start" Padding="10, 0, 10, 0">
-                <Label HorizontalOptions="Center" Text="{Binding CurrentTitle}" FontAttributes="Bold" FontSize="Title"/>
+        <StackLayout>
+            <StackLayout>
+                <Picker x:Name="profilePicker"
+                    Title="Select a profile"
+                    TitleColor="Blue"
+                    ItemsSource="{Binding Profiles}"
+                        SelectedItem="{Binding SelectedProfile}"
+                        ItemDisplayBinding="{Binding DisplayName}">
+                </Picker>
             </StackLayout>
-            <StackLayout Orientation="Horizontal" Grid.Row="1" HorizontalOptions="Center" VerticalOptions="Start">
-                <flex:FlexButton                    
+            <Grid Margin="0,10,0,50" RowSpacing="25">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <StackLayout Orientation="Horizontal" Grid.Row="0" HorizontalOptions="Center" VerticalOptions="Start" Padding="10, 0, 10, 0">
+                    <Label HorizontalOptions="Center" Text="{Binding CurrentTitle}" FontAttributes="Bold" FontSize="Title"/>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" Grid.Row="1" HorizontalOptions="Center" VerticalOptions="Start">
+                    <flex:FlexButton                    
                     Icon="skip_back_white.png"
                     ClickedCommand="{Binding PreviousCommand}"
                     Style="{StaticResource RoundLargeFlexButton}"/>
-                <flex:FlexButton                    
+                    <flex:FlexButton                    
                     Icon="stop_white.png"
                     ClickedCommand="{Binding StopCommand}"
                     Style="{StaticResource RoundLargeFlexButton}"/>
-                <flex:FlexButton                    
+                    <flex:FlexButton                    
                     Icon="play_white.png"
                     ClickedCommand="{Binding PlayCommand}"
                     Style="{StaticResource RoundLargeFlexButton}"/>
-                <flex:FlexButton                    
+                    <flex:FlexButton                    
                     Icon="skip_forward_white.png"
                     ClickedCommand="{Binding NextCommand}"
                     Style="{StaticResource RoundLargeFlexButton}"/>
-            </StackLayout>
-            <StackLayout Orientation="Horizontal" Grid.Row="2" HorizontalOptions="Center" VerticalOptions="Start">
-                <flex:FlexButton                    
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" Grid.Row="2" HorizontalOptions="Center" VerticalOptions="Start">
+                    <flex:FlexButton                    
                     Icon="volume_down_white.png"
                     ClickedCommand="{Binding VolumneDownCommand}"
                     Style="{StaticResource RoundMiddleFlexButton}"/>
-                <flex:FlexButton                    
+                    <flex:FlexButton                    
                     Icon="volume_up_white.png"
                     ClickedCommand="{Binding VolumneUpCommand}"
                     Style="{StaticResource RoundMiddleFlexButton}"/>
-                <flex:FlexButton                    
+                    <flex:FlexButton                    
                     Icon="volume_mute_white.png"
                     ClickedCommand="{Binding MuteCommand}"
                     Style="{StaticResource RoundMiddleFlexButton}"/>
-            </StackLayout>
-            <StackLayout Orientation="Horizontal" Grid.Row="3" HorizontalOptions="Center" VerticalOptions="Start">
-                <flex:FlexButton                    
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" Grid.Row="3" HorizontalOptions="Center" VerticalOptions="Start">
+                    <flex:FlexButton                    
                     Icon="rewind_large_white.png"
                     ClickedCommand="{Binding JumpBackwardCommand}"
                     Style="{StaticResource RoundSmallFlexButton}"/>
-                <flex:FlexButton                    
+                    <flex:FlexButton                    
                     Icon="rewind_white.png"
                     ClickedCommand="{Binding SpeedSlowerCommand}"
                     Style="{StaticResource RoundSmallFlexButton}"/>
-                <flex:FlexButton                    
+                    <flex:FlexButton                    
                     Icon="speed_white.png"
                     ClickedCommand="{Binding SpeedFasterCommand}"
                     Style="{StaticResource RoundSmallFlexButton}"/>
-                <flex:FlexButton                    
+                    <flex:FlexButton                    
                     Icon="speed_large_white.png"
                     ClickedCommand="{Binding JumpForwardCommand}"
                     Style="{StaticResource RoundSmallFlexButton}"/>
-            </StackLayout>
-            <StackLayout Grid.Row="4">
-                
-            </StackLayout>
-            <StackLayout Orientation="Horizontal" Grid.Row="5" HorizontalOptions="Center" VerticalOptions="Start">
-                <flex:FlexButton                    
+                </StackLayout>
+                <StackLayout Grid.Row="4">
+
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" Grid.Row="5" HorizontalOptions="Center" VerticalOptions="Start">
+                    <flex:FlexButton                    
                     Icon="fullscreen_white.png"
                     ClickedCommand="{Binding FullscreenCommand}"
                     Style="{StaticResource RoundMiddleFlexButton}"/>
-                <flex:FlexButton                    
+                    <flex:FlexButton                    
                     Icon="fullscreen_exit_white.png"
                     ClickedCommand="{Binding FullscreenExitCommand}"
                     Style="{StaticResource RoundMiddleFlexButton}"/>
-            </StackLayout>
-        </Grid>
+                </StackLayout>
+            </Grid>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>

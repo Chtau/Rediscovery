@@ -69,7 +69,19 @@ namespace Rediscovery.Features.Authentication
                 var features = new List<Models.ConnectionManifestFeature>();
                 foreach (var item in manifest.SupportedFeatures)
                 {
-                    var profiles = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SharedCoreModels.DeviceFeature.DeviceFeatureProfil>>(item.Profiles);
+                    System.Collections.ObjectModel.ObservableCollection<SharedCoreModels.DeviceFeature.DeviceFeatureProfil> profiles = new System.Collections.ObjectModel.ObservableCollection<SharedCoreModels.DeviceFeature.DeviceFeatureProfil>();
+                    try
+                    {
+                        if (!string.IsNullOrWhiteSpace(item.Profiles))
+                        {
+                            var profs = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SharedCoreModels.DeviceFeature.DeviceFeatureProfil>>(item.Profiles);
+                            if (profs != null)
+                                profiles = new System.Collections.ObjectModel.ObservableCollection<SharedCoreModels.DeviceFeature.DeviceFeatureProfil>(profs);
+                        }
+                    } catch (Exception ex)
+                    {
+                        logger.Error(ex);
+                    }
                     var feature = new Models.ConnectionManifestFeature
                     {
                         ConnectionId = model.Id,
@@ -82,7 +94,7 @@ namespace Rediscovery.Features.Authentication
                         FeatureMinFeatureIntegrationPoint = SharedCoreModels.Version.ConvertFrom(item.MinFeatureIntegrationPoint),
                         FeatureVersion = SharedCoreModels.Version.ConvertFrom(item.Version),
                         SettingsObject = item.SettingsObject,
-                        Profiles = new System.Collections.ObjectModel.ObservableCollection<SharedCoreModels.DeviceFeature.DeviceFeatureProfil>(profiles)
+                        Profiles = profiles
                     };
                     features.Add(feature);
                     entityManager.ConnectionManifestFeatures.Add(feature);

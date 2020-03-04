@@ -1,5 +1,9 @@
-﻿using System;
+﻿using SharedCoreModels.DeviceFeature;
+using SharedCoreModels.FeatureModels.MediaPlayer;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -10,6 +14,19 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
     public class MediaPlayerFeatureViewModel : BaseFeatureViewModel
     {
         private bool processIsRunning = false;
+
+        public ObservableCollection<DeviceFeatureProfil> Profiles { get; set; } = new ObservableCollection<DeviceFeatureProfil>();
+
+        private DeviceFeatureProfil selectedProfile;
+        public DeviceFeatureProfil SelectedProfile
+        {
+            get { return selectedProfile; }
+            set 
+            { 
+                SetProperty(ref selectedProfile, value);
+                OnProfileChanged();
+            }
+        }
 
         private string currentTitle;
         public string CurrentTitle
@@ -42,10 +59,19 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
         public MediaPlayerFeatureViewModel(Authentication.Models.ConnectionManifestFeature connectionManifestFeature) : base(connectionManifestFeature)
         {
             base.ReceivedData += MediaPlayerFeatureViewModel_ReceivedData;
-            Title = connectionManifestFeature.FeatureDisplayName;
-            Commands = System.Text.Json.JsonSerializer.Deserialize<List<CommandTypes>>(connectionManifestFeature.SettingsObject?.ToString());
             OnSetCommand();
-            //Send(CommandTypes.None);
+            if (connectionManifestFeature.Profiles?.Count > 0)
+            {
+                foreach (var item in connectionManifestFeature.Profiles)
+                {
+                    Profiles.Add(item);
+                }
+                SelectedProfile = connectionManifestFeature.Profiles.First();
+                OnProfileChanged();
+            } else
+            {
+                Title = connectionManifestFeature.FeatureDisplayName;
+            }
         }
 
         private void OnSetCommand()
@@ -182,8 +208,8 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
 
         private void MediaPlayerFeatureViewModel_ReceivedData(object sender, object e)
         {
-            SharedCoreModels.FeatureModels.MediaPlayer.MediaPlayerStateData stateData = Newtonsoft.Json.JsonConvert.DeserializeObject<SharedCoreModels.FeatureModels.MediaPlayer.MediaPlayerStateData>(e?.ToString());
-            if (stateData != null)
+            MediaPlayerStateData stateData = Newtonsoft.Json.JsonConvert.DeserializeObject<MediaPlayerStateData>(e?.ToString());
+            if (stateData != null && SelectedProfile != null && string.Equals(SelectedProfile.Id, stateData.ProfileId, StringComparison.OrdinalIgnoreCase))
             {
                 if (processIsRunning != stateData.ProcessRunning)
                 {
@@ -192,6 +218,25 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
                 }
                 CurrentTitle = stateData.CurrentTitle;
             }
+        }
+
+        private void OnProfileChanged()
+        {
+            processIsRunning = false;
+            CurrentTitle = "";
+            Title = SelectedProfile.DisplayName;
+            if (!string.IsNullOrWhiteSpace(SelectedProfile.ProfileData?.ToString()))
+            {
+                try
+                {
+                    Commands = System.Text.Json.JsonSerializer.Deserialize<List<CommandTypes>>(SelectedProfile.ProfileData?.ToString());
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                }
+            }
+            OnChangeCanExecute();
         }
     }
 }

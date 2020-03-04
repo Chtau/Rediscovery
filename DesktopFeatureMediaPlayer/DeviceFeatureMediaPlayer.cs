@@ -40,7 +40,8 @@ namespace DesktopFeatureMediaPlayer
                             Data = new MediaPlayerStateData
                             {
                                 ProcessRunning = controller.ProcessRunning,
-                                CurrentTitle = controller.CurrentTitle
+                                CurrentTitle = controller.CurrentTitle,
+                                ProfileId = profile.Id.ToString()
                             },
                             DeviceId = deviceId
                         };
@@ -63,7 +64,7 @@ namespace DesktopFeatureMediaPlayer
             {
                 foreach (var item in pro)
                 {
-                    profiles.Add(new DeviceFeatureProfil(item.Id.ToString(), item.DisplayName, item));
+                    profiles.Add(new DeviceFeatureProfil(item.Id.ToString(), item.DisplayName, item.CommandAvailable));
                 }
             }
             return new DeviceFeatureDefinition
