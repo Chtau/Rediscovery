@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedCoreModels
+namespace PluginFeature.Models
 {
     public class Version
     {

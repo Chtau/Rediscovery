@@ -1,5 +1,6 @@
 ﻿using Avalonia.Threading;
 using IPCPipe.Models;
+using PluginFeature.Models;
 using SharedCoreModels.DeviceFeature;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace DesktopHub.Features
         private readonly IPCPipe.IPipeResourceProvider _resourceProvider;
         private readonly IPCPipe.IPipeClient _pipeClient;
 
-        public ObservableCollection<SharedCoreModels.DeviceFeature.DeviceFeatureDefinition> Items { get; set; } = new ObservableCollection<SharedCoreModels.DeviceFeature.DeviceFeatureDefinition>();
+        public ObservableCollection<DeviceFeatureDefinition> Items { get; set; } = new ObservableCollection<DeviceFeatureDefinition>();
 
         public FeaturesControlViewModel()
         {
@@ -23,7 +24,7 @@ namespace DesktopHub.Features
 
         public void Refresh()
         {
-            _resourceProvider.Receiver<List<SharedCoreModels.DeviceFeature.DeviceFeatureDefinition>>("rediscoveryservice", "features", OnReceiveResource);
+            _resourceProvider.Receiver<List<DeviceFeatureDefinition>>("rediscoveryservice", "features", OnReceiveResource);
         }
 
         private void OnReceiveResource(PipeResource<List<DeviceFeatureDefinition>> obj)

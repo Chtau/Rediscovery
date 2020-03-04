@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedConfigurations", "Sha
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedCommandArguments", "SharedCommandArguments\SharedCommandArguments.csproj", "{A1A10784-1C3A-423B-96F3-E494D1047491}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginFeature", "PluginFeature\PluginFeature.csproj", "{D2FD1E6D-19D0-43DE-A3A5-376C7A83429A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -215,6 +217,18 @@ Global
 		{A1A10784-1C3A-423B-96F3-E494D1047491}.Release|x64.Build.0 = Release|Any CPU
 		{A1A10784-1C3A-423B-96F3-E494D1047491}.Release|x86.ActiveCfg = Release|Any CPU
 		{A1A10784-1C3A-423B-96F3-E494D1047491}.Release|x86.Build.0 = Release|Any CPU
+		{D2FD1E6D-19D0-43DE-A3A5-376C7A83429A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2FD1E6D-19D0-43DE-A3A5-376C7A83429A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2FD1E6D-19D0-43DE-A3A5-376C7A83429A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D2FD1E6D-19D0-43DE-A3A5-376C7A83429A}.Debug|x64.Build.0 = Debug|Any CPU
+		{D2FD1E6D-19D0-43DE-A3A5-376C7A83429A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D2FD1E6D-19D0-43DE-A3A5-376C7A83429A}.Debug|x86.Build.0 = Debug|Any CPU
+		{D2FD1E6D-19D0-43DE-A3A5-376C7A83429A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2FD1E6D-19D0-43DE-A3A5-376C7A83429A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2FD1E6D-19D0-43DE-A3A5-376C7A83429A}.Release|x64.ActiveCfg = Release|Any CPU
+		{D2FD1E6D-19D0-43DE-A3A5-376C7A83429A}.Release|x64.Build.0 = Release|Any CPU
+		{D2FD1E6D-19D0-43DE-A3A5-376C7A83429A}.Release|x86.ActiveCfg = Release|Any CPU
+		{D2FD1E6D-19D0-43DE-A3A5-376C7A83429A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

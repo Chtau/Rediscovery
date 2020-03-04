@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using PluginFeature.Models;
 using SharedCoreModels.DeviceFeature;
 using System;
 using System.Collections.Generic;

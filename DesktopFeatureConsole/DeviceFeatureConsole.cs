@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using SharedCoreModels.DeviceFeature;
+using PluginFeature;
+using PluginFeature.Models;
 
 namespace DesktopFeatureConsole
 {
@@ -31,13 +32,13 @@ namespace DesktopFeatureConsole
             {
                 DisplayName = "Console",
                 Id = new Guid("558AC5BD-5B76-433D-8CD7-BCBB7596AAA1"),
-                ControlIntegrationPoint = SharedCoreModels.Enums.IntegrationPoint.Mobile,
-                FeatureIntegrationPoint = SharedCoreModels.Enums.IntegrationPoint.Desktop,
-                ControlIntegration = SharedCoreModels.Enums.ControlIntegrationType.Terminal,
-                MinControlIntegrationPoint = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
-                MinFeatureIntegrationPoint = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
+                ControlIntegrationPoint = IntegrationPoint.Mobile,
+                FeatureIntegrationPoint = IntegrationPoint.Desktop,
+                ControlIntegration = ControlIntegrationType.Terminal,
+                MinControlIntegrationPoint = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
+                MinFeatureIntegrationPoint = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
                 SettingsObject = null,
-                Version = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
+                Version = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
             };
         }
 

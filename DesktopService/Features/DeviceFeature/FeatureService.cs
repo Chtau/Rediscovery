@@ -6,7 +6,8 @@ using System.Linq;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using System.Reflection;
-using SharedCoreModels.DesktopPlugins;
+using PluginFeature.Interfaces;
+using PluginFeature.Models;
 
 namespace DesktopService.Features.DeviceFeature
 {
@@ -32,9 +33,9 @@ namespace DesktopService.Features.DeviceFeature
             return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId);
         }
 
-        public List<SharedCoreModels.DeviceFeature.DeviceFeatureDefinition> GetFeaturesManifest()
+        public List<DeviceFeatureDefinition> GetFeaturesManifest()
         {
-            var manifest = new List<SharedCoreModels.DeviceFeature.DeviceFeatureDefinition>();
+            var manifest = new List<DeviceFeatureDefinition>();
             foreach (var item in deviceFeatureImplementations)
             {
                 manifest.Add(item.GetDeviceFeatureInfo());

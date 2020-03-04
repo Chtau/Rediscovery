@@ -45,6 +45,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IPCPipe\IPCPipe.csproj" />
+    <ProjectReference Include="..\PluginFeature\PluginFeature.csproj" />
     <ProjectReference Include="..\SharedCommandArguments\SharedCommandArguments.csproj" />
     <ProjectReference Include="..\SharedConfigurations\SharedConfigurations.csproj" />
     <ProjectReference Include="..\SharedCoreModels\SharedCoreModels.csproj" />

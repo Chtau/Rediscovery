@@ -19,8 +19,8 @@ namespace DesktopService.Features.Authentication
         {
             manifest = new SharedCoreModels.Manifest
             {
-                AppMinimumVersion = new SharedCoreModels.Version() { Major = 0, Minor = 0, Patch = 0, Label = null },
-                ClientVersion = new SharedCoreModels.Version() { Major = 0, Minor = 0, Patch = 0, Label = null },
+                AppMinimumVersion = new PluginFeature.Models.Version() { Major = 0, Minor = 0, Patch = 0, Label = null },
+                ClientVersion = new PluginFeature.Models.Version() { Major = 0, Minor = 0, Patch = 0, Label = null },
                 SupportedFeatures = _featureService.GetFeaturesManifest(),
                 ClientName = "DEV-Desktop"
             };

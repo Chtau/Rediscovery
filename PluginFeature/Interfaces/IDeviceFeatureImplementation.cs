@@ -1,9 +1,9 @@
-﻿using SharedCoreModels.DeviceFeature;
+﻿using PluginFeature.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedCoreModels.DesktopPlugins
+namespace PluginFeature.Interfaces
 {
     public interface IDeviceFeatureImplementation
     {

@@ -1,6 +1,7 @@
 ﻿using DesktopFeatureConsole;
 using DesktopFeatureMediaPlayer;
-using SharedCoreModels.DesktopPlugins;
+using PluginFeature.Interfaces;
+using PluginFeature.Models;
 using SharedCoreModels.DeviceFeature;
 using System;
 using System.Net;

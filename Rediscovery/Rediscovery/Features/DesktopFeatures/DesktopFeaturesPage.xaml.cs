@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PluginFeature;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,10 +34,10 @@ namespace Rediscovery.Features.DesktopFeatures
                 return;
             switch (item.ControlIntegration)
             {
-                case SharedCoreModels.Enums.ControlIntegrationType.MediaPlayer:
+                case ControlIntegrationType.MediaPlayer:
                     await Navigation.PushModalAsync(new NavigationPage(new FeaturePage.MediaPlayer.MediaPlayerFeaturePage(new FeaturePage.MediaPlayer.MediaPlayerFeatureViewModel(item))));
                     break;
-                case SharedCoreModels.Enums.ControlIntegrationType.Terminal:
+                case ControlIntegrationType.Terminal:
                     await Navigation.PushModalAsync(new NavigationPage(new FeaturePage.TerminalPage.TerminalFeaturePage(new FeaturePage.TerminalPage.TerminalFeatureViewModel(item))));
                     break;
                 default:

@@ -7,10 +7,10 @@ namespace SharedCoreModels
     {
         public string ClientName { get; set; }
 
-        public List<DeviceFeature.DeviceFeatureDefinition> SupportedFeatures { get; set; }
+        public List<PluginFeature.Models.DeviceFeatureDefinition> SupportedFeatures { get; set; }
 
-        public Version ClientVersion { get; set; }
+        public PluginFeature.Models.Version ClientVersion { get; set; }
 
-        public Version AppMinimumVersion { get; set; }
+        public PluginFeature.Models.Version AppMinimumVersion { get; set; }
     }
 }

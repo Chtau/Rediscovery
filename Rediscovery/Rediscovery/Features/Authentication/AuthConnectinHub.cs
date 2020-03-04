@@ -62,9 +62,9 @@ namespace Rediscovery.Features.Authentication
             con.On<Manifest>("Manifest", async (manifest) =>
             {
                 logger.Message($"manifest received from {model.DisplayName} ({DateTime.Now})");
-                model.ManifestAppMinimumVersion = SharedCoreModels.Version.ConvertFrom(manifest.AppMinimumVersion);
+                model.ManifestAppMinimumVersion = PluginFeature.Models.Version.ConvertFrom(manifest.AppMinimumVersion);
                 model.ManifestClientName = manifest.ClientName;
-                model.ManifestClientVersion = SharedCoreModels.Version.ConvertFrom(manifest.ClientVersion);
+                model.ManifestClientVersion = PluginFeature.Models.Version.ConvertFrom(manifest.ClientVersion);
                 await connectionStore.UpdateItemAsync(model);
                 var features = new List<Models.ConnectionManifestFeature>();
                 foreach (var item in manifest.SupportedFeatures)
@@ -90,9 +90,9 @@ namespace Rediscovery.Features.Authentication
                         FeatureFeatureIntegrationPoint = item.FeatureIntegrationPoint,
                         ControlIntegration = item.ControlIntegration,
                         FeatureId = item.Id,
-                        FeatureMinControlIntegrationPoint = SharedCoreModels.Version.ConvertFrom(item.MinControlIntegrationPoint),
-                        FeatureMinFeatureIntegrationPoint = SharedCoreModels.Version.ConvertFrom(item.MinFeatureIntegrationPoint),
-                        FeatureVersion = SharedCoreModels.Version.ConvertFrom(item.Version),
+                        FeatureMinControlIntegrationPoint = PluginFeature.Models.Version.ConvertFrom(item.MinControlIntegrationPoint),
+                        FeatureMinFeatureIntegrationPoint = PluginFeature.Models.Version.ConvertFrom(item.MinFeatureIntegrationPoint),
+                        FeatureVersion = PluginFeature.Models.Version.ConvertFrom(item.Version),
                         SettingsObject = item.SettingsObject,
                         Profiles = profiles
                     };

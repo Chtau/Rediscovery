@@ -1,12 +1,11 @@
-﻿using SharedCoreModels.DesktopPlugins;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SharedCoreModels.DeviceFeature
+namespace PluginFeature.Models
 {
-    public abstract class BaseDeviceFeature : IDeviceFeatureImplementation
+    public abstract class BaseDeviceFeature : PluginFeature.Interfaces.IDeviceFeatureImplementation
     {
         public class RegisteredDevice
         {
@@ -48,31 +47,31 @@ namespace SharedCoreModels.DeviceFeature
         }
 
 
-        public event EventHandler<DeviceFeatureData> SendData;
+        public event EventHandler<PluginFeature.Models.DeviceFeatureData> SendData;
 
-        public void OnSendData(object obj, DeviceFeatureData args)
+        public void OnSendData(object obj, PluginFeature.Models.DeviceFeatureData args)
         {
             SendData?.Invoke(obj, args);
         }
 
         public virtual void Dispose()
         {
-            
+
         }
 
-        public virtual DeviceFeatureDefinition GetDeviceFeatureInfo()
+        public virtual PluginFeature.Models.DeviceFeatureDefinition GetDeviceFeatureInfo()
         {
             return null;
         }
 
         public virtual void Init()
         {
-            
+
         }
 
-        public virtual void ReceiveData(DeviceFeatureData data)
+        public virtual void ReceiveData(PluginFeature.Models.DeviceFeatureData data)
         {
-            
+
         }
 
         public virtual void Register(string deviceId)

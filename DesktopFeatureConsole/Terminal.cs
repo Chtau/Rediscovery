@@ -1,4 +1,4 @@
-﻿using SharedCoreModels.DeviceFeature;
+﻿using PluginFeature.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

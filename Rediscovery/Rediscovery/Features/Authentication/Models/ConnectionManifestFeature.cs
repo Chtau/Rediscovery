@@ -1,4 +1,5 @@
-﻿using Rediscovery.Models;
+﻿using PluginFeature;
+using Rediscovery.Models;
 using SharedCoreModels.DeviceFeature;
 using SQLite;
 using System;
@@ -17,8 +18,8 @@ namespace Rediscovery.Features.Authentication.Models
         private string _featureVersion;
         private string _featureMinFeatureIntegrationPoint;
         private string _featureMinControlIntegrationPoint;
-        private SharedCoreModels.Enums.IntegrationPoint _featureFeatureIntegrationPoint;
-        private SharedCoreModels.Enums.IntegrationPoint _featureControlIntegrationPoint;
+        private IntegrationPoint _featureFeatureIntegrationPoint;
+        private IntegrationPoint _featureControlIntegrationPoint;
 
         [PrimaryKey]
         public Guid Id
@@ -63,20 +64,20 @@ namespace Rediscovery.Features.Authentication.Models
             set { SetProperty(ref _featureMinControlIntegrationPoint, value); }
         }
 
-        public SharedCoreModels.Enums.IntegrationPoint FeatureFeatureIntegrationPoint
+        public IntegrationPoint FeatureFeatureIntegrationPoint
         {
             get { return _featureFeatureIntegrationPoint; }
             set { SetProperty(ref _featureFeatureIntegrationPoint, value); }
         }
 
-        public SharedCoreModels.Enums.IntegrationPoint FeatureControlIntegrationPoint
+        public IntegrationPoint FeatureControlIntegrationPoint
         {
             get { return _featureControlIntegrationPoint; }
             set { SetProperty(ref _featureControlIntegrationPoint, value); }
         }
 
-        private SharedCoreModels.Enums.ControlIntegrationType controlIntegration;
-        public SharedCoreModels.Enums.ControlIntegrationType ControlIntegration
+        private ControlIntegrationType controlIntegration;
+        public ControlIntegrationType ControlIntegration
         {
             get { return controlIntegration; }
             set { SetProperty(ref controlIntegration, value); }

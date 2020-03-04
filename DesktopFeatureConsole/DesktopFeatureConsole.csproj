@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SharedCoreModels\SharedCoreModels.csproj">
+    <ProjectReference Include="..\PluginFeature\PluginFeature.csproj">
       <Private>false</Private>
       <ExcludeAssets>runtime</ExcludeAssets>
     </ProjectReference>

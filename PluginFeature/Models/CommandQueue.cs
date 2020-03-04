@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedCoreModels.DeviceFeature
+namespace PluginFeature.Models
 {
     public class CommandQueue<I, O>
     {
@@ -19,7 +19,7 @@ namespace SharedCoreModels.DeviceFeature
             Exception = new List<Exception>();
         }
 
-        public CommandQueue(string deviceId, I incomingData): this()
+        public CommandQueue(string deviceId, I incomingData) : this()
         {
             DeviceId = deviceId;
             IncomingData = incomingData;

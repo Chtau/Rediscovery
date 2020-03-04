@@ -1,4 +1,5 @@
 ﻿using DesktopService.Features.Identity.Models;
+using PluginFeature.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,7 +71,7 @@ namespace DesktopService.Features.Pipes
             } else if (resourceName == "features")
             {
                 var features = _featureService.GetFeaturesManifest();
-                var resource = new IPCPipe.Models.PipeResource<List<SharedCoreModels.DeviceFeature.DeviceFeatureDefinition>>();
+                var resource = new IPCPipe.Models.PipeResource<List<DeviceFeatureDefinition>>();
                 resource.ResourceName = resourceName;
                 resource.Entity = features;
                 return Newtonsoft.Json.JsonConvert.SerializeObject(resource);

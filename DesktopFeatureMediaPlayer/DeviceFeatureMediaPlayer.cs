@@ -1,4 +1,6 @@
-﻿using SharedCoreModels.DeviceFeature;
+﻿using PluginFeature;
+using PluginFeature.Models;
+using SharedCoreModels.DeviceFeature;
 using SharedCoreModels.FeatureModels.MediaPlayer;
 using System;
 using System.Collections.Generic;
@@ -71,13 +73,13 @@ namespace DesktopFeatureMediaPlayer
             {
                 DisplayName = "Mediaplayer",
                 Id = new Guid("D5B218BC-8F36-4100-9262-71155265DAD7"),
-                ControlIntegrationPoint = SharedCoreModels.Enums.IntegrationPoint.Mobile,
-                FeatureIntegrationPoint = SharedCoreModels.Enums.IntegrationPoint.Desktop,
-                ControlIntegration = SharedCoreModels.Enums.ControlIntegrationType.MediaPlayer,
-                MinControlIntegrationPoint = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
-                MinFeatureIntegrationPoint = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
+                ControlIntegrationPoint = IntegrationPoint.Mobile,
+                FeatureIntegrationPoint = IntegrationPoint.Desktop,
+                ControlIntegration = ControlIntegrationType.MediaPlayer,
+                MinControlIntegrationPoint = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
+                MinFeatureIntegrationPoint = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
                 SettingsObject = null,
-                Version = new SharedCoreModels.Version() { Major = 0, Minor = 0 },
+                Version = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
                 Profiles = Newtonsoft.Json.JsonConvert.SerializeObject(profiles)
             };
         }

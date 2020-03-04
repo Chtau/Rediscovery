@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DesktopFeatureConsole\DesktopFeatureConsole.csproj" />
     <ProjectReference Include="..\DesktopFeatureMediaPlayer\DesktopFeatureMediaPlayer.csproj" />
+    <ProjectReference Include="..\PluginFeature\PluginFeature.csproj" />
   </ItemGroup>
 
 </Project>
