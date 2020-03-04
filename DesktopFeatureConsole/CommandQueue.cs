@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PluginFeature.Models
+namespace DesktopFeatureConsole
 {
     public class CommandQueue<I, O>
     {
