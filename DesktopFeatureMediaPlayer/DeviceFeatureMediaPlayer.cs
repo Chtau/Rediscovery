@@ -109,7 +109,7 @@ namespace DesktopFeatureMediaPlayer
 
         private void OnHandleCommand(ClientCommandSendModel commandModel)
         {
-            var controller = OnGetController(commandModel.ProfileId);
+            var controller = OnGetController(new Guid(commandModel.ProfileId));
             if (controller != null)
             {
                 if (controller.ProcessRunning || !string.IsNullOrWhiteSpace(controller.ProfileConfiguration.ApplicationPath))

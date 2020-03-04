@@ -17,7 +17,7 @@ namespace Rediscovery.Features.DesktopFeatures
         private Connection model;
         private HubConnection featureHub;
 
-        public event EventHandler<(Guid connectionId, Guid featureId, object data)> DesktopResponseReceived;
+        public event EventHandler<(Guid connectionId, Guid featureId, string profileId, object data)> DesktopResponseReceived;
 
         public FeatureExchange()
         {
@@ -56,7 +56,7 @@ namespace Rediscovery.Features.DesktopFeatures
                     featureHub.On<Guid, object>("ClientResponse", (Guid featureId, object data) =>
                     {
                         logger.Message($"Desktop response received ({DateTime.Now})");
-                        DesktopResponseReceived?.Invoke(this, (model.Id, featureId, data));
+                        DesktopResponseReceived?.Invoke(this, (model.Id, featureId, null, data));
                     });
                 }
             } else
@@ -65,12 +65,12 @@ namespace Rediscovery.Features.DesktopFeatures
             }
         }
 
-        public async Task Send(ConnectionManifestFeature feature, object data)
+        public async Task Send(ConnectionManifestFeature feature, string profileId, object data)
         {
             if (featureHub != null)
             {
                 logger.Message($"send feature message to {model.DisplayName} ({DateTime.Now})");
-                await featureHub.InvokeAsync("ClientMessage", feature.FeatureId, "", data);
+                await featureHub.InvokeAsync("ClientMessage", feature.FeatureId, profileId, data);
             } else
             {
                 logger.Message("Try to send feature exchange message without hub connection");

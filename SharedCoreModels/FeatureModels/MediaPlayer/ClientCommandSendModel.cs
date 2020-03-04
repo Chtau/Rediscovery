@@ -7,7 +7,9 @@ namespace SharedCoreModels.FeatureModels.MediaPlayer
 {
     public class ClientCommandSendModel
     {
-        public Guid ProfileId { get; set; }
+        public Guid FeatureId { get; set; }
+
+        public string ProfileId { get; set; }
 
         public CommandTypes Command { get; set; }
 
@@ -16,8 +18,9 @@ namespace SharedCoreModels.FeatureModels.MediaPlayer
 
         }
 
-        public ClientCommandSendModel(Guid profileId, CommandTypes command) : this()
+        public ClientCommandSendModel(Guid featureId, string profileId, CommandTypes command) : this()
         {
+            FeatureId = featureId;
             ProfileId = profileId;
             Command = command;
         }

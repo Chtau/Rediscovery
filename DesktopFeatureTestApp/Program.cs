@@ -43,7 +43,7 @@ namespace DesktopFeatureTestApp
                 };
                 feature.Init();
                 //System.Threading.Thread.Sleep(60000);
-                feature.ReceiveData(new DeviceFeatureData { Data = new SharedCoreModels.FeatureModels.MediaPlayer.ClientCommandSendModel(new Guid("4D7A3004-F4F7-4B43-8DF1-2B9CA73F8991"), SharedCoreModels.FeatureModels.MediaPlayer.CommandConfiguration.CommandTypes.VolumneUp) });
+                feature.ReceiveData(new DeviceFeatureData { Data = new SharedCoreModels.FeatureModels.MediaPlayer.ClientCommandSendModel(new Guid("4D7A3004-F4F7-4B43-8DF1-2B9CA73F8991"), null, SharedCoreModels.FeatureModels.MediaPlayer.CommandConfiguration.CommandTypes.VolumneUp) });
                 //feature.ReceiveData(new DeviceFeatureData { Data = "echo World" });
             }
         }

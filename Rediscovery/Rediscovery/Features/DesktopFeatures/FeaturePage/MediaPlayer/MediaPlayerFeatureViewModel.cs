@@ -18,24 +18,27 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
         public ObservableCollection<DeviceFeatureProfil> Profiles { get; set; } = new ObservableCollection<DeviceFeatureProfil>();
 
         private DeviceFeatureProfil selectedProfile;
+
         public DeviceFeatureProfil SelectedProfile
         {
             get { return selectedProfile; }
-            set 
-            { 
+            set
+            {
                 SetProperty(ref selectedProfile, value);
                 OnProfileChanged();
             }
         }
 
         private string currentTitle;
+
         public string CurrentTitle
         {
             get { return currentTitle; }
             set { SetProperty(ref currentTitle, value); }
         }
 
-        List<CommandTypes> commands;
+        private List<CommandTypes> commands;
+
         public List<CommandTypes> Commands
         {
             get { return commands; }
@@ -76,133 +79,67 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
 
         private void OnSetCommand()
         {
-            PlayCommand = new Command(execute: () =>
-            {
-                Send(CommandTypes.PlayPause);
-            },
-            canExecute: () =>
-            {
-                return Commands.Contains(CommandTypes.PlayPause) && processIsRunning;
-            });
-            FullscreenExitCommand = new Command(execute: () =>
-            {
-                Send(CommandTypes.FullscreenExit);
-            },
-            canExecute: () =>
-            {
-                return Commands.Contains(CommandTypes.FullscreenExit) && processIsRunning;
-            });
-            FullscreenCommand = new Command(execute: () =>
-            {
-                Send(CommandTypes.Fullscreen);
-            },
-            canExecute: () =>
-            {
-                return Commands.Contains(CommandTypes.Fullscreen) && processIsRunning;
-            });
-            NextCommand = new Command(execute: () =>
-            {
-                Send(CommandTypes.Next);
-            },
-            canExecute: () =>
-            {
-                return Commands.Contains(CommandTypes.Next) && processIsRunning;
-            });
-            PreviousCommand = new Command(execute: () =>
-            {
-                Send(CommandTypes.Previous);
-            },
-            canExecute: () =>
-            {
-                return Commands.Contains(CommandTypes.Previous) && processIsRunning;
-            });
-            StopCommand = new Command(execute: () =>
-            {
-                Send(CommandTypes.Stop);
-            },
-            canExecute: () =>
-            {
-                return Commands.Contains(CommandTypes.Stop) && processIsRunning;
-            });
-            MuteCommand = new Command(execute: () =>
-            {
-                Send(CommandTypes.Mute);
-            },
-            canExecute: () =>
-            {
-                return Commands.Contains(CommandTypes.Mute) && processIsRunning;
-            });
-            VolumneUpCommand = new Command(execute: () =>
-            {
-                Send(CommandTypes.VolumneUp);
-            },
-            canExecute: () =>
-            {
-                return Commands.Contains(CommandTypes.VolumneUp) && processIsRunning;
-            });
-            VolumneDownCommand = new Command(execute: () =>
-            {
-                Send(CommandTypes.VolumneDown);
-            },
-            canExecute: () =>
-            {
-                return Commands.Contains(CommandTypes.VolumneDown) && processIsRunning;
-            });
-            SpeedSlowerCommand = new Command(execute: () =>
-            {
-                Send(CommandTypes.SpeedSlower);
-            },
-            canExecute: () =>
-            {
-                return Commands.Contains(CommandTypes.SpeedSlower) && processIsRunning;
-            });
-            SpeedFasterCommand = new Command(execute: () =>
-            {
-                Send(CommandTypes.SpeedFaster);
-            },
-            canExecute: () =>
-            {
-                return Commands.Contains(CommandTypes.SpeedFaster) && processIsRunning;
-            });
-            JumpForwardCommand = new Command(execute: () =>
-            {
-                Send(CommandTypes.JumpForward);
-            },
-            canExecute: () =>
-            {
-                return Commands.Contains(CommandTypes.JumpForward) && processIsRunning;
-            });
-            JumpBackwardCommand = new Command(execute: () =>
-            {
-                Send(CommandTypes.JumpBackward);
-            },
-            canExecute: () =>
-            {
-                return Commands.Contains(CommandTypes.JumpBackward) && processIsRunning;
-            });
+            PlayCommand = new Command(execute: () => Send(CommandTypes.PlayPause),
+                canExecute: () => Commands.Contains(CommandTypes.PlayPause) && processIsRunning);
+
+            FullscreenExitCommand = new Command(execute: () => Send(CommandTypes.FullscreenExit),
+                canExecute: () => Commands.Contains(CommandTypes.FullscreenExit) && processIsRunning);
+
+            FullscreenCommand = new Command(execute: () => Send(CommandTypes.Fullscreen),
+                canExecute: () => Commands.Contains(CommandTypes.Fullscreen) && processIsRunning);
+
+            NextCommand = new Command(execute: () => Send(CommandTypes.Next),
+                canExecute: () => Commands.Contains(CommandTypes.Next) && processIsRunning);
+
+            PreviousCommand = new Command(execute: () => Send(CommandTypes.Previous),
+                canExecute: () => Commands.Contains(CommandTypes.Previous) && processIsRunning);
+
+            StopCommand = new Command(execute: () => Send(CommandTypes.Stop),
+                canExecute: () => Commands.Contains(CommandTypes.Stop) && processIsRunning);
+
+            MuteCommand = new Command(execute: () => Send(CommandTypes.Mute),
+                canExecute: () => Commands.Contains(CommandTypes.Mute) && processIsRunning);
+
+            VolumneUpCommand = new Command(execute: () => Send(CommandTypes.VolumneUp),
+                canExecute: () => Commands.Contains(CommandTypes.VolumneUp) && processIsRunning);
+
+            VolumneDownCommand = new Command(execute: () => Send(CommandTypes.VolumneDown),
+                canExecute: () => Commands.Contains(CommandTypes.VolumneDown) && processIsRunning);
+
+            SpeedSlowerCommand = new Command(execute: () => Send(CommandTypes.SpeedSlower),
+                canExecute: () => Commands.Contains(CommandTypes.SpeedSlower) && processIsRunning);
+
+            SpeedFasterCommand = new Command(execute: () => Send(CommandTypes.SpeedFaster),
+                canExecute: () => Commands.Contains(CommandTypes.SpeedFaster) && processIsRunning);
+
+            JumpForwardCommand = new Command(execute: () => Send(CommandTypes.JumpForward),
+                canExecute: () => Commands.Contains(CommandTypes.JumpForward) && processIsRunning);
+
+            JumpBackwardCommand = new Command(execute: () => Send(CommandTypes.JumpBackward),
+                canExecute: () => Commands.Contains(CommandTypes.JumpBackward) && processIsRunning);
             OnChangeCanExecute();
         }
 
         private void OnChangeCanExecute()
         {
-            (PlayCommand as Command).ChangeCanExecute();
-            (FullscreenExitCommand as Command).ChangeCanExecute();
-            (FullscreenCommand as Command).ChangeCanExecute();
-            (NextCommand as Command).ChangeCanExecute();
-            (PreviousCommand as Command).ChangeCanExecute();
-            (StopCommand as Command).ChangeCanExecute();
-            (MuteCommand as Command).ChangeCanExecute();
-            (VolumneUpCommand as Command).ChangeCanExecute();
-            (VolumneDownCommand as Command).ChangeCanExecute();
-            (SpeedSlowerCommand as Command).ChangeCanExecute();
-            (SpeedFasterCommand as Command).ChangeCanExecute();
-            (JumpForwardCommand as Command).ChangeCanExecute();
-            (JumpBackwardCommand as Command).ChangeCanExecute();
+            (PlayCommand as Command)?.ChangeCanExecute();
+            (FullscreenExitCommand as Command)?.ChangeCanExecute();
+            (FullscreenCommand as Command)?.ChangeCanExecute();
+            (NextCommand as Command)?.ChangeCanExecute();
+            (PreviousCommand as Command)?.ChangeCanExecute();
+            (StopCommand as Command)?.ChangeCanExecute();
+            (MuteCommand as Command)?.ChangeCanExecute();
+            (VolumneUpCommand as Command)?.ChangeCanExecute();
+            (VolumneDownCommand as Command)?.ChangeCanExecute();
+            (SpeedSlowerCommand as Command)?.ChangeCanExecute();
+            (SpeedFasterCommand as Command)?.ChangeCanExecute();
+            (JumpForwardCommand as Command)?.ChangeCanExecute();
+            (JumpBackwardCommand as Command)?.ChangeCanExecute();
         }
 
         public void Send(CommandTypes cmd)
         {
-            base.Send(new SharedCoreModels.FeatureModels.MediaPlayer.ClientCommandSendModel(_connectionManifestFeature.FeatureId, cmd));
+            base.Send(SelectedProfile?.Id, new ClientCommandSendModel(_connectionManifestFeature.FeatureId, SelectedProfile.Id, cmd));
         }
 
 

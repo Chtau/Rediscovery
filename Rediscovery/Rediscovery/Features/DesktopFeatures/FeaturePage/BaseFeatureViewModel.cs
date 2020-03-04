@@ -24,7 +24,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage
             featureExchange.DesktopResponseReceived += FeatureExchange_DesktopResponseReceived;
         }
 
-        private void FeatureExchange_DesktopResponseReceived(object sender, (Guid connectionId, Guid featureId, object data) e)
+        private void FeatureExchange_DesktopResponseReceived(object sender, (Guid connectionId, Guid featureId, string profileId, object data) e)
         {
             if (_connectionManifestFeature.ConnectionId == e.connectionId && _connectionManifestFeature.FeatureId == e.featureId)
             {
@@ -33,9 +33,9 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage
             }
         }
 
-        public virtual void Send(object data)
+        public virtual void Send(string profileId, object data)
         {
-            featureExchange.Send(_connectionManifestFeature, data);
+            featureExchange.Send(_connectionManifestFeature, profileId, data);
         }
 
         public virtual void Receive(object data)

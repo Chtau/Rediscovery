@@ -43,7 +43,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.TerminalPage
 
         private void Terminal_SendCommand(object sender, string e)
         {
-            viewModel.Send(e);
+            viewModel.Send(null, e);
         }
     }
 }
