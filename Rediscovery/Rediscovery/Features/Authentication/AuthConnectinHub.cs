@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using System.Linq;
 
 namespace Rediscovery.Features.Authentication
 {
@@ -68,6 +69,7 @@ namespace Rediscovery.Features.Authentication
                 var features = new List<Models.ConnectionManifestFeature>();
                 foreach (var item in manifest.SupportedFeatures)
                 {
+                    var profiles = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SharedCoreModels.DeviceFeature.DeviceFeatureProfil>>(item.Profiles);
                     var feature = new Models.ConnectionManifestFeature
                     {
                         ConnectionId = model.Id,
@@ -79,7 +81,8 @@ namespace Rediscovery.Features.Authentication
                         FeatureMinControlIntegrationPoint = SharedCoreModels.Version.ConvertFrom(item.MinControlIntegrationPoint),
                         FeatureMinFeatureIntegrationPoint = SharedCoreModels.Version.ConvertFrom(item.MinFeatureIntegrationPoint),
                         FeatureVersion = SharedCoreModels.Version.ConvertFrom(item.Version),
-                        SettingsObject = item.SettingsObject
+                        SettingsObject = item.SettingsObject,
+                        Profiles = new System.Collections.ObjectModel.ObservableCollection<SharedCoreModels.DeviceFeature.DeviceFeatureProfil>(profiles)
                     };
                     features.Add(feature);
                     entityManager.ConnectionManifestFeatures.Add(feature);

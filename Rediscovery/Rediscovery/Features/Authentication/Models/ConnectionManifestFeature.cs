@@ -3,6 +3,7 @@ using SharedCoreModels.DeviceFeature;
 using SQLite;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace Rediscovery.Features.Authentication.Models
@@ -87,5 +88,7 @@ namespace Rediscovery.Features.Authentication.Models
             get { return settingsObject; }
             set { SetProperty(ref settingsObject, value); }
         }
+
+        public ObservableCollection<DeviceFeatureProfil> Profiles { get; set; }
     }
 }
