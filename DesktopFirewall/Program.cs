@@ -50,9 +50,9 @@ namespace DesktopFirewall
             }
             else if (args.Any(x => x.StartsWith(CommandAddFirewall, StringComparison.OrdinalIgnoreCase)))
             {
-                if (!FirewallRule.DiscoveryRuleExists(rulePort, ruleName))
+                if (FirewallRule.RuleExists(ruleName, rulePort) != RuleState.True)
                 {
-                    if (FirewallRule.DiscoveryRuleCreate(rulePort, ruleName, protocolType))
+                    if (FirewallRule.RuleCreate(rulePort, ruleName, protocolType) == RuleState.True)
                     {
                         Console.WriteLine("Firewall rule created");
                     }
@@ -71,9 +71,9 @@ namespace DesktopFirewall
             }
             else if (args.Any(x => x.StartsWith(CommandRemoveFirewall, StringComparison.OrdinalIgnoreCase)))
             {
-                if (FirewallRule.DiscoveryRuleExists(rulePort, ruleName))
+                if (FirewallRule.RuleExists(ruleName, rulePort) == RuleState.True)
                 {
-                    if (FirewallRule.DiscoveryRuleDelete(ruleName))
+                    if (FirewallRule.RuleDelete(ruleName) == RuleState.True)
                     {
                         Console.WriteLine("Firewall rule removed");
                     }

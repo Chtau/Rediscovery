@@ -23,10 +23,10 @@ namespace DesktopDiscoveryService
             var serviceInfoSettings = configuration.GetSection(SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration.SectionName).Get<SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration>();
             var discoverySettings = configuration.GetSection(SharedConfigurations.DiscoveryService.Models.DiscoveryConfiguration.SectionName).Get<SharedConfigurations.DiscoveryService.Models.DiscoveryConfiguration>();
 
-            if (!FirewallRule.DiscoveryRuleExists(discoverySettings.Port, discoverySettings.FirewallRuleName))
+            if (FirewallRule.RuleExists(discoverySettings.FirewallRuleName, discoverySettings.Port) != FirewallRule.RuleState.True)
             {
                 Console.WriteLine("Firewall rule: Missing");
-                if (!FirewallRule.DiscoveryRuleCreate(discoverySettings.Port, discoverySettings.FirewallRuleName, FirewallRule.ProtocolType.UDP))
+                if (FirewallRule.RuleCreate(discoverySettings.Port, discoverySettings.FirewallRuleName, FirewallRule.ProtocolType.UDP) != FirewallRule.RuleState.True)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Could not create Firewall rule");
