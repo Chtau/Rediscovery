@@ -19,10 +19,12 @@ namespace DesktopService
 
         public static string HostIpAddress = "127.0.0.1";
         public static ushort HostPort = 44341;
+        public static string ExePath = null;
 
         public static void Main(string[] args)
         {
             HostIpAddress = SharedFeatureFunctions.NetworkAddress.GetIpAddr();
+            ExePath = Process.GetCurrentProcess().MainModule.FileName;
 
             if (args.Any(x => x.StartsWith(SharedCommandArguments.Service.Arguments.CommandPort, StringComparison.OrdinalIgnoreCase)))
             {
