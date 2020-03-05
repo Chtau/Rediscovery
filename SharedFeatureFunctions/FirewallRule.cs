@@ -8,6 +8,13 @@ namespace SharedFeatureFunctions
 {
     public static class FirewallRule
     {
+        public enum RuleState
+        {
+            False,
+            True,
+            AdminRequired
+        }
+
         public enum ProtocolType
         {
             Any,
@@ -43,15 +50,35 @@ namespace SharedFeatureFunctions
             GRE
         }
 
-        public static bool DiscoveryRuleExists(int port, string ruleName)
+        public static RuleState RuleExists(string ruleName, int port = -1)
         {
             var rule = FirewallManager.Instance.Rules.FirstOrDefault(x => x.Name == ruleName);
-            if (rule != null && rule.IsEnable && rule.LocalPorts.Any(x => x == port))
-                return true;
-            return false;
+            if (rule != null && rule.IsEnable && (port == -1 || rule.LocalPorts.Any(x => x == port)))
+                return RuleState.True;
+            return RuleState.False;
         }
 
-        public static bool DiscoveryRuleCreate(ushort port, string ruleName, ProtocolType protocolType)
+        public static RuleState RuleCreate(string ruleName, string execFile)
+        {
+            try
+            {
+                var rule = FirewallManager.Instance.CreateApplicationRule(FirewallProfiles.Public, ruleName, execFile);
+                FirewallManager.Instance.Rules.Add(rule);
+                return RuleState.True;
+            }
+            catch (System.UnauthorizedAccessException)
+            {
+                // required admin
+                return RuleState.AdminRequired;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Print(ex.ToString() + Environment.NewLine);
+                return RuleState.False;
+            }
+        }
+
+        public static RuleState RuleCreate(ushort port, string ruleName, ProtocolType protocolType)
         {
             try
             {
@@ -62,21 +89,21 @@ namespace SharedFeatureFunctions
     GetFirewallProtocol(protocolType)
 );
                 FirewallManager.Instance.Rules.Add(rule);
-                return true;
+                return RuleState.True;
             }
             catch (System.UnauthorizedAccessException)
             {
                 // required admin
-                return false;
+                return RuleState.AdminRequired;
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.Print(ex.ToString() + Environment.NewLine);
-                return false;
+                return RuleState.False;
             }
         }
 
-        public static bool DiscoveryRuleDelete(string ruleName)
+        public static RuleState RuleDelete(string ruleName)
         {
             try
             {
@@ -85,17 +112,17 @@ namespace SharedFeatureFunctions
                 {
                     FirewallManager.Instance.Rules.Remove(myRule);
                 }
-                return true;
+                return RuleState.True;
             }
             catch (System.UnauthorizedAccessException)
             {
                 // required admin
-                return false;
+                return RuleState.AdminRequired;
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.Print(ex.ToString() + Environment.NewLine);
-                return false;
+                return RuleState.False;
             }
         }
 

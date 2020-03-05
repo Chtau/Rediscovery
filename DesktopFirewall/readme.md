@@ -1,1 +1,1 @@
-﻿DesktopFirewall.exe --addfw --name:RediscoveryService --port:44341 --type:udp
+﻿DesktopFirewall.exe --addfw --name:RediscoveryService --port:44341 --type:tcp
