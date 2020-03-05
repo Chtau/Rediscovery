@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="DesktopFirewall.manifest">
+    <None Update="DesktopFirewall.exe.manifest">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
