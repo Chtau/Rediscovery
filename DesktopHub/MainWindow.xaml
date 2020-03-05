@@ -5,6 +5,7 @@
         xmlns:devices="clr-namespace:DesktopHub.Devices"
         xmlns:feat="clr-namespace:DesktopHub.Features"
         xmlns:liveLogger="clr-namespace:DesktopHub.Features.LiveLogger"
+        xmlns:firewall="clr-namespace:DesktopHub.Features.Firewall"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         Width="800" Height="450"
         x:Class="DesktopHub.MainWindow"
@@ -32,6 +33,14 @@
       </TabItem.Header>
       <StackPanel>
         <liveLogger:LiveLoggerControl></liveLogger:LiveLoggerControl>
+      </StackPanel>
+    </TabItem>
+    <TabItem>
+      <TabItem.Header>
+        <TextBlock VerticalAlignment="Center">Firewall</TextBlock>
+      </TabItem.Header>
+      <StackPanel>
+        <firewall:FirewallControl></firewall:FirewallControl>
       </StackPanel>
     </TabItem>
   </TabControl>

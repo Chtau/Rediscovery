@@ -1,0 +1,24 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="DesktopHub.Features.Firewall.FirewallControl">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10, 10">
+      <CheckBox Margin="10,0" IsChecked="{Binding ServiceFWExists}" IsEnabled="False"></CheckBox>
+      <Button Command="{Binding CreateServiceFW}">Create Rule</Button>
+      <TextBlock Margin="10,0" VerticalAlignment="Center" Text="Service Firewall"/>
+    </StackPanel>
+    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10, 10">
+      <CheckBox Margin="10,0" IsChecked="{Binding DiscoveryFWExists}" IsEnabled="False"></CheckBox>
+      <Button Command="{Binding CreateDiscoveryFW}">Create Rule</Button>
+      <TextBlock Margin="10,0" VerticalAlignment="Center" Text="Discovery Firewall"/>
+    </StackPanel>
+  </Grid>
+</UserControl>
