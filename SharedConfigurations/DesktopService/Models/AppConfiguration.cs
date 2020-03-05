@@ -10,6 +10,8 @@ namespace SharedConfigurations.DesktopService.Models
 
         public string AppDataFolder { get; set; }
 
+        public string FirewallRuleName { get; set; }
+
         public string ServiceDisplayName { get; set; }
 
         public string[] Plugins { get; set; }
