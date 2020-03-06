@@ -1,6 +1,8 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Microsoft.Extensions.Options;
+using System.Collections.Generic;
 
 namespace DesktopHub.Features.Firewall
 {

@@ -13,6 +13,7 @@ namespace DesktopHub
     class Program
     {
         public static IServiceProvider ServiceProvider { get; private set; }
+        public static IConfigurationRoot Configuration { get; private set; }
 
 
         // Initialization code. Don't use any Avalonia, third-party APIs or any
@@ -34,9 +35,9 @@ namespace DesktopHub
         .SetBasePath(Directory.GetCurrentDirectory())
         .AddJsonFile(SharedConfigurations.Hub.ConfigFileNames.AppSettings, optional: true, reloadOnChange: true);
 
-            IConfigurationRoot configuration = builder.Build();
+            Configuration = builder.Build();
 
-            var serviceInfoSettings = configuration.GetSection(SharedConfigurations.Hub.Models.ServiceInfoConfiguration.SectionName).Get<SharedConfigurations.Hub.Models.ServiceInfoConfiguration>();
+            var serviceInfoSettings = Configuration.GetSection(SharedConfigurations.Hub.Models.ServiceInfoConfiguration.SectionName).Get<SharedConfigurations.Hub.Models.ServiceInfoConfiguration>();
 
 
             var service = new ServiceCollection();

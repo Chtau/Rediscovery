@@ -1,6 +1,9 @@
 ﻿using Avalonia;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text;
 
@@ -8,33 +11,32 @@ namespace DesktopHub.Features.Firewall
 {
     public class FirewallControlViewModel : BaseViewModel
     {
-        bool serviceFWExists = false;
-        public bool ServiceFWExists
-        {
-            get { return serviceFWExists; }
-            set { SetProperty(ref serviceFWExists, value); }
-        }
+        private readonly List<SharedConfigurations.Hub.Models.FirewallRulesConfiguration> _firewallRulesConfiguration;
 
-        bool discoveryFWExists = false;
-        public bool DiscoveryFWExists
-        {
-            get { return discoveryFWExists; }
-            set { SetProperty(ref discoveryFWExists, value); }
-        }
+        public ObservableCollection<FirewallRuleViewModel> Items { get; set; } = new ObservableCollection<FirewallRuleViewModel>();
 
         public FirewallControlViewModel()
         {
-
+            _firewallRulesConfiguration = Program.Configuration.GetSection(SharedConfigurations.Hub.Models.FirewallRulesConfiguration.SectionName).Get<List<SharedConfigurations.Hub.Models.FirewallRulesConfiguration>>();
+            if (_firewallRulesConfiguration?.Count > 0)
+            {
+                foreach (var item in _firewallRulesConfiguration)
+                {
+                    Items.Add(new FirewallRuleViewModel
+                    {
+                        ExePath = item.ExePath,
+                        RuleName = item.RuleName
+                    });
+                }
+            }
         }
 
-        public void CreateServiceFW()
+        public void TrySetFW(FirewallRuleViewModel item)
         {
-
-        }
-
-        public void CreateDiscoveryFW()
-        {
-
+            if (item != null)
+            {
+                
+            }
         }
 
         private static void Elevate(string filePath, string parameters)

@@ -7,18 +7,18 @@
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
-      <RowDefinition Height="Auto"/>
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
-    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10, 10">
-      <CheckBox Margin="10,0" IsChecked="{Binding ServiceFWExists}" IsEnabled="False"></CheckBox>
-      <Button Command="{Binding CreateServiceFW}">Create Rule</Button>
-      <TextBlock Margin="10,0" VerticalAlignment="Center" Text="Service Firewall"/>
-    </StackPanel>
-    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10, 10">
-      <CheckBox Margin="10,0" IsChecked="{Binding DiscoveryFWExists}" IsEnabled="False"></CheckBox>
-      <Button Command="{Binding CreateDiscoveryFW}">Create Rule</Button>
-      <TextBlock Margin="10,0" VerticalAlignment="Center" Text="Discovery Firewall"/>
-    </StackPanel>
+    <ListBox Grid.Row="0" Items="{Binding Items}">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10, 5">
+            <CheckBox Margin="10,0" IsChecked="{Binding RuleSet}" IsEnabled="False"></CheckBox>
+            <Button Command="{Binding $parent[UserControl].DataContext.TrySetFW}" CommandParameter="{Binding .}">Create Rule</Button>
+            <TextBlock Margin="10,0" VerticalAlignment="Center" Text="{Binding RuleName}"/>
+          </StackPanel>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
   </Grid>
 </UserControl>
