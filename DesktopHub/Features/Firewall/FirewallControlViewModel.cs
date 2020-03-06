@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text;
+using System.Linq;
 
 namespace DesktopHub.Features.Firewall
 {
@@ -43,11 +44,18 @@ namespace DesktopHub.Features.Firewall
         {
             if (item != null)
             {
-                Elevate(_hubConfiguration.FirewallApp, $"{SharedCommandArguments.Firewall.Arguments.CommandAddFirewall} {SharedCommandArguments.Firewall.Arguments.CommandRuleName}:{item.RuleName} {SharedCommandArguments.Firewall.Arguments.CommandRuleExePath}:\"{item.ExePath}\"");
+                Elevate(_hubConfiguration.FirewallApp, 
+                    $"{SharedCommandArguments.Firewall.Arguments.CommandAddFirewall} {SharedCommandArguments.Firewall.Arguments.CommandRuleName}:{item.RuleName} {SharedCommandArguments.Firewall.Arguments.CommandRuleExePath}:\"{item.ExePath}\"",
+                    () =>
+                    {
+                        var rule = Items.FirstOrDefault(x => string.Equals(x.RuleName, item.RuleName, StringComparison.OrdinalIgnoreCase));
+                        if (rule != null)
+                            rule.RuleSet = OnFWIsActive(item.RuleName);
+                    });
             }
         }
 
-        private void Elevate(string filePath, string parameters)
+        private void Elevate(string filePath, string parameters, Action exitCallback)
         {
             var SelfProc = new ProcessStartInfo
             {
@@ -59,7 +67,11 @@ namespace DesktopHub.Features.Firewall
             };
             try
             {
-                Process.Start(SelfProc);
+                var prc = Process.Start(SelfProc);
+                prc.Exited += (object sender, EventArgs e) =>
+                {
+                    exitCallback?.Invoke();
+                };
             }
             catch
             {

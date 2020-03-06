@@ -103,7 +103,7 @@ namespace DesktopFirewall
             {
                 Console.WriteLine("No valid command");
             }
-            Console.ReadKey();
+            //Console.ReadKey();
         }
     }
 }
