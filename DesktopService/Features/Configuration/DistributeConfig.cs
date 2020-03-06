@@ -42,7 +42,7 @@ namespace DesktopService.Features.Configuration
             OnUpdateRemoteConfiguration(Path.Combine(hubPath, SharedConfigurations.Hub.ConfigFileNames.AppSettings), SharedConfigurations.Hub.Models.ServiceInfoConfiguration.SectionName, serviceInfoHub);
 
             var fwRules = new List<SharedConfigurations.Hub.Models.FirewallRulesConfiguration>();
-            var fwDiscovery = OnReadRemoteConfiguration<SharedConfigurations.DiscoveryService.Models.DiscoveryConfiguration>(Path.Combine(hubPath, SharedConfigurations.DiscoveryService.ConfigFileNames.AppSettings), SharedConfigurations.DiscoveryService.Models.DiscoveryConfiguration.SectionName);
+            var fwDiscovery = OnReadRemoteConfiguration<SharedConfigurations.DiscoveryService.Models.DiscoveryConfiguration>(Path.Combine(discoveryPath, SharedConfigurations.DiscoveryService.ConfigFileNames.AppSettings), SharedConfigurations.DiscoveryService.Models.DiscoveryConfiguration.SectionName);
             if (fwDiscovery != null)
             {
                 fwRules.Add(new SharedConfigurations.Hub.Models.FirewallRulesConfiguration
@@ -57,7 +57,7 @@ namespace DesktopService.Features.Configuration
                 RuleName = _appSettings.FirewallRuleName
             });
 
-            OnUpdateRemoteConfiguration(Path.Combine(hubPath, SharedConfigurations.Hub.ConfigFileNames.AppSettings), SharedConfigurations.Hub.Models.FirewallRulesConfiguration.SectionName, fwRules);
+            OnUpdateRemoteConfiguration(Path.Combine(hubPath, SharedConfigurations.Hub.ConfigFileNames.AppSettings), SharedConfigurations.Hub.Models.FirewallRulesConfiguration.SectionName, fwRules.ToArray());
         }
 
         private void OnUpdateRemoteConfiguration<T>(string filePath, string key, T value)

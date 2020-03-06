@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Linq;
 
 namespace SharedConfigurations
 {
@@ -23,15 +24,19 @@ namespace SharedConfigurations
             }
             if (sections.Count > 0)
             {
-                dynamic obj = jsonObj[sections[0]];
-                for (int i = 1; i < sections.Count; i++)
+                if (value is System.Collections.IList list)
                 {
-                    obj = obj[sections[i]];
+                    var newVal = Newtonsoft.Json.JsonConvert.SerializeObject(list);
+                    var newJobj = Newtonsoft.Json.Linq.JArray.Parse(newVal);
+                    Newtonsoft.Json.Linq.JToken jToken = jsonObj.SelectToken(sections[0]);
+                    jToken.Replace(newJobj);
+                } else
+                {
+                    var newVal = Newtonsoft.Json.JsonConvert.SerializeObject(value);
+                    var newJobj = Newtonsoft.Json.Linq.JObject.Parse(newVal);
+                    Newtonsoft.Json.Linq.JToken jToken = jsonObj.SelectToken(sections[0]);
+                    jToken.Replace(newJobj);
                 }
-
-                var section = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(obj.ToString());
-                if (section != null)
-                    section = value;
             }
             else
             {
