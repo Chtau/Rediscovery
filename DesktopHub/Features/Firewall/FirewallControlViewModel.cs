@@ -12,11 +12,13 @@ namespace DesktopHub.Features.Firewall
     public class FirewallControlViewModel : BaseViewModel
     {
         private readonly List<SharedConfigurations.Hub.Models.FirewallRulesConfiguration> _firewallRulesConfiguration;
+        private readonly SharedConfigurations.Hub.Models.HubConfiguration _hubConfiguration;
 
         public ObservableCollection<FirewallRuleViewModel> Items { get; set; } = new ObservableCollection<FirewallRuleViewModel>();
 
         public FirewallControlViewModel()
         {
+            _hubConfiguration = Program.Configuration.GetSection(SharedConfigurations.Hub.Models.HubConfiguration.SectionName).Get<SharedConfigurations.Hub.Models.HubConfiguration>();
             _firewallRulesConfiguration = Program.Configuration.GetSection(SharedConfigurations.Hub.Models.FirewallRulesConfiguration.SectionName).Get<List<SharedConfigurations.Hub.Models.FirewallRulesConfiguration>>();
             if (_firewallRulesConfiguration?.Count > 0)
             {
@@ -25,21 +27,27 @@ namespace DesktopHub.Features.Firewall
                     Items.Add(new FirewallRuleViewModel
                     {
                         ExePath = item.ExePath,
-                        RuleName = item.RuleName
+                        RuleName = item.RuleName,
+                        RuleSet = OnFWIsActive(item.RuleName)
                     });
                 }
             }
+        }
+
+        private bool OnFWIsActive(string ruleName)
+        {
+            return SharedFeatureFunctions.FirewallRule.RuleExists(ruleName) == SharedFeatureFunctions.FirewallRule.RuleState.True;
         }
 
         public void TrySetFW(FirewallRuleViewModel item)
         {
             if (item != null)
             {
-                
+                Elevate(_hubConfiguration.FirewallApp, $"--addfw --name:{item.RuleName} --exepath:\"{item.ExePath}\"");
             }
         }
 
-        private static void Elevate(string filePath, string parameters)
+        private void Elevate(string filePath, string parameters)
         {
             var SelfProc = new ProcessStartInfo
             {

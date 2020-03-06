@@ -12,17 +12,19 @@ namespace DesktopFirewall
         private const string CommandRuleName = "--name:";
         private const string CommandRulePort = "--port:";
         private const string CommandRuleType = "--type:";
+        private const string CommandRuleExePath = "--exepath:";
 
         static void Main(string[] args)
         {
-            ushort rulePort = 8888;
+            short rulePort = -1;
             string ruleName = null;
+            string exePath = null;
             ProtocolType protocolType = ProtocolType.Any;
             if (args.Any(x => x.StartsWith(CommandRulePort, StringComparison.OrdinalIgnoreCase)))
             {
                 var valueArg = args.First(x => x.StartsWith(CommandRulePort, StringComparison.OrdinalIgnoreCase));
                 var vals = valueArg.Split(':');
-                if (ushort.TryParse(vals[1].Trim(), out ushort port))
+                if (short.TryParse(vals[1].Trim(), out short port))
                     rulePort = port;
             }
             if (args.Any(x => x.StartsWith(CommandRuleName, StringComparison.OrdinalIgnoreCase)))
@@ -30,6 +32,12 @@ namespace DesktopFirewall
                 var valueArg = args.First(x => x.StartsWith(CommandRuleName, StringComparison.OrdinalIgnoreCase));
                 var vals = valueArg.Split(':');
                 ruleName = vals[1].Trim();
+            }
+            if (args.Any(x => x.StartsWith(CommandRuleExePath, StringComparison.OrdinalIgnoreCase)))
+            {
+                var valueArg = args.First(x => x.StartsWith(CommandRuleExePath, StringComparison.OrdinalIgnoreCase));
+                var vals = valueArg.Split(':');
+                exePath = vals[1].Trim();
             }
             if (args.Any(x => x.StartsWith(CommandRuleType, StringComparison.OrdinalIgnoreCase)))
             {
@@ -47,12 +55,21 @@ namespace DesktopFirewall
                 Console.WriteLine($"    {CommandRuleName}    \"Name of the Firewall rule\"");
                 Console.WriteLine($"    {CommandRulePort}    \"Port for the Firewall rule\"");
                 Console.WriteLine($"    {CommandRuleType}    \"Firewall rule type\" ({string.Join(',', Enum.GetNames(typeof(ProtocolType)))})");
+                Console.WriteLine($"    {CommandRuleExePath}    \"App execution path for the Firewall rule\"");
             }
             else if (args.Any(x => x.StartsWith(CommandAddFirewall, StringComparison.OrdinalIgnoreCase)))
             {
                 if (FirewallRule.RuleExists(ruleName, rulePort) != RuleState.True)
                 {
-                    if (FirewallRule.RuleCreate(rulePort, ruleName, protocolType) == RuleState.True)
+                    RuleState result = RuleState.False;
+                    if (!string.IsNullOrWhiteSpace(exePath))
+                    {
+                        result = FirewallRule.RuleCreate(ruleName, exePath);
+                    } else
+                    {
+                        result = FirewallRule.RuleCreate((ushort)rulePort, ruleName, protocolType);
+                    }
+                    if (result == RuleState.True)
                     {
                         Console.WriteLine("Firewall rule created");
                     }
@@ -93,6 +110,7 @@ namespace DesktopFirewall
             {
                 Console.WriteLine("No valid command");
             }
+            Console.ReadKey();
         }
     }
 }
