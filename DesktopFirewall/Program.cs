@@ -7,41 +7,34 @@ namespace DesktopFirewall
 {
     class Program
     {
-        private const string CommandAddFirewall = "--addfw";
-        private const string CommandRemoveFirewall = "--removefw";
-        private const string CommandRuleName = "--name:";
-        private const string CommandRulePort = "--port:";
-        private const string CommandRuleType = "--type:";
-        private const string CommandRuleExePath = "--exepath:";
-
         static void Main(string[] args)
         {
             short rulePort = -1;
             string ruleName = null;
             string exePath = null;
             ProtocolType protocolType = ProtocolType.Any;
-            if (args.Any(x => x.StartsWith(CommandRulePort, StringComparison.OrdinalIgnoreCase)))
+            if (args.Any(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandRulePort, StringComparison.OrdinalIgnoreCase)))
             {
-                var valueArg = args.First(x => x.StartsWith(CommandRulePort, StringComparison.OrdinalIgnoreCase));
+                var valueArg = args.First(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandRulePort, StringComparison.OrdinalIgnoreCase));
                 var vals = valueArg.Split(':');
                 if (short.TryParse(vals[1].Trim(), out short port))
                     rulePort = port;
             }
-            if (args.Any(x => x.StartsWith(CommandRuleName, StringComparison.OrdinalIgnoreCase)))
+            if (args.Any(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandRuleName, StringComparison.OrdinalIgnoreCase)))
             {
-                var valueArg = args.First(x => x.StartsWith(CommandRuleName, StringComparison.OrdinalIgnoreCase));
+                var valueArg = args.First(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandRuleName, StringComparison.OrdinalIgnoreCase));
                 var vals = valueArg.Split(':');
                 ruleName = vals[1].Trim();
             }
-            if (args.Any(x => x.StartsWith(CommandRuleExePath, StringComparison.OrdinalIgnoreCase)))
+            if (args.Any(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandRuleExePath, StringComparison.OrdinalIgnoreCase)))
             {
-                var valueArg = args.First(x => x.StartsWith(CommandRuleExePath, StringComparison.OrdinalIgnoreCase));
+                var valueArg = args.First(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandRuleExePath, StringComparison.OrdinalIgnoreCase));
                 var vals = valueArg.Split(':');
                 exePath = vals[1].Trim();
             }
-            if (args.Any(x => x.StartsWith(CommandRuleType, StringComparison.OrdinalIgnoreCase)))
+            if (args.Any(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandRuleType, StringComparison.OrdinalIgnoreCase)))
             {
-                var valueArg = args.First(x => x.StartsWith(CommandRuleType, StringComparison.OrdinalIgnoreCase));
+                var valueArg = args.First(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandRuleType, StringComparison.OrdinalIgnoreCase));
                 var vals = valueArg.Split(':');
                 if (Enum.TryParse<ProtocolType>(vals[1].Trim(), true, out ProtocolType type))
                     protocolType = type;
@@ -50,14 +43,14 @@ namespace DesktopFirewall
             {
                 Console.WriteLine("Help for Desktop Firewall");
                 Console.WriteLine("Arguments");
-                Console.WriteLine($"    {CommandAddFirewall}    \"Creates Windows Firewall Rule\"");
-                Console.WriteLine($"    {CommandRemoveFirewall}    \"Removes Windows Firewall Rule\"");
-                Console.WriteLine($"    {CommandRuleName}    \"Name of the Firewall rule\"");
-                Console.WriteLine($"    {CommandRulePort}    \"Port for the Firewall rule\"");
-                Console.WriteLine($"    {CommandRuleType}    \"Firewall rule type\" ({string.Join(',', Enum.GetNames(typeof(ProtocolType)))})");
-                Console.WriteLine($"    {CommandRuleExePath}    \"App execution path for the Firewall rule\"");
+                Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandAddFirewall}    \"Creates Windows Firewall Rule\"");
+                Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandRemoveFirewall}    \"Removes Windows Firewall Rule\"");
+                Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandRuleName}    \"Name of the Firewall rule\"");
+                Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandRulePort}    \"Port for the Firewall rule\"");
+                Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandRuleType}    \"Firewall rule type\" ({string.Join(',', Enum.GetNames(typeof(ProtocolType)))})");
+                Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandRuleExePath}    \"App execution path for the Firewall rule\"");
             }
-            else if (args.Any(x => x.StartsWith(CommandAddFirewall, StringComparison.OrdinalIgnoreCase)))
+            else if (args.Any(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandAddFirewall, StringComparison.OrdinalIgnoreCase)))
             {
                 if (FirewallRule.RuleExists(ruleName, rulePort) != RuleState.True)
                 {
@@ -86,7 +79,7 @@ namespace DesktopFirewall
                     Console.WriteLine("Firewall rule already exists");
                 }
             }
-            else if (args.Any(x => x.StartsWith(CommandRemoveFirewall, StringComparison.OrdinalIgnoreCase)))
+            else if (args.Any(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandRemoveFirewall, StringComparison.OrdinalIgnoreCase)))
             {
                 if (FirewallRule.RuleExists(ruleName, rulePort) == RuleState.True)
                 {

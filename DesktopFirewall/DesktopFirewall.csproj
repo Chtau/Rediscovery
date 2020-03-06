@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SharedCommandArguments\SharedCommandArguments.csproj" />
     <ProjectReference Include="..\SharedFeatureFunctions\SharedFeatureFunctions.csproj" />
   </ItemGroup>
 

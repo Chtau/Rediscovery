@@ -43,7 +43,7 @@ namespace DesktopHub.Features.Firewall
         {
             if (item != null)
             {
-                Elevate(_hubConfiguration.FirewallApp, $"--addfw --name:{item.RuleName} --exepath:\"{item.ExePath}\"");
+                Elevate(_hubConfiguration.FirewallApp, $"{SharedCommandArguments.Firewall.Arguments.CommandAddFirewall} {SharedCommandArguments.Firewall.Arguments.CommandRuleName}:{item.RuleName} {SharedCommandArguments.Firewall.Arguments.CommandRuleExePath}:\"{item.ExePath}\"");
             }
         }
 
