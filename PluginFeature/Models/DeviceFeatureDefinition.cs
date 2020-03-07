@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Text;
 
 namespace PluginFeature.Models
@@ -28,5 +29,7 @@ namespace PluginFeature.Models
         /// Profiles are in JSON format because of a serialize problem with SignalR
         /// </summary>
         public string Profiles { get; set; }
+
+        public ZipArchive UIZipArchive { get; set; }
     }
 }

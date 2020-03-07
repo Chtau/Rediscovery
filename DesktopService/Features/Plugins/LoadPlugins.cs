@@ -30,7 +30,7 @@ namespace DesktopService.Features.Plugins
             return null;
         }
 
-        public IEnumerable<IDeviceFeatureImplementation> CreateDesktopPluginFeature(Assembly assembly)
+        public IEnumerable<IDeviceFeatureImplementation> CreateDesktopPluginFeature(Assembly assembly, string path)
         {
             int count = 0;
 
@@ -41,6 +41,7 @@ namespace DesktopService.Features.Plugins
                     IDeviceFeatureImplementation result = Activator.CreateInstance(type) as IDeviceFeatureImplementation;
                     if (result != null)
                     {
+                        result.Init(path);
                         count++;
                         yield return result;
                     }

@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace PluginFeature.Models
 {
     public abstract class BaseDeviceFeature : PluginFeature.Interfaces.IDeviceFeatureImplementation
     {
+        internal string pluginDirectory = null;
+
         public class RegisteredDevice
         {
             public string DeviceId { get; set; }
@@ -64,9 +69,9 @@ namespace PluginFeature.Models
             return null;
         }
 
-        public virtual void Init()
+        public virtual void Init(string pluginDirectory)
         {
-
+            this.pluginDirectory = pluginDirectory;
         }
 
         public virtual void ReceiveData(PluginFeature.Models.DeviceFeatureData data)
@@ -89,6 +94,14 @@ namespace PluginFeature.Models
                 registeredDevices.Remove(item);
             }
             System.Diagnostics.Debug.Print($"Unregister device (id:{deviceId})");
+        }
+
+        public virtual ZipArchive OnGetUIZip()
+        {
+            string archivePath = Path.Combine(pluginDirectory, "ui.zip");
+            
+            ZipFile.CreateFromDirectory(Path.Combine(pluginDirectory, "UI"), archivePath);
+            return ZipFile.OpenRead(archivePath);
         }
     }
 }

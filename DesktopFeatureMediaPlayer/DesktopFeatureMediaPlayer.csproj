@@ -16,4 +16,13 @@
     <ProjectReference Include="..\SharedFeatureFunctions\SharedFeatureFunctions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="UI\Index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="UI\jquery-2.1.4.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

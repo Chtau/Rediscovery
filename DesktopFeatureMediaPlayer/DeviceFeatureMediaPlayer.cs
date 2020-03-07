@@ -4,6 +4,7 @@ using SharedCoreModels.DeviceFeature;
 using SharedCoreModels.FeatureModels.MediaPlayer;
 using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 
@@ -80,13 +81,9 @@ namespace DesktopFeatureMediaPlayer
                 MinFeatureIntegrationPoint = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
                 SettingsObject = null,
                 Version = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
-                Profiles = Newtonsoft.Json.JsonConvert.SerializeObject(profiles)
+                Profiles = Newtonsoft.Json.JsonConvert.SerializeObject(profiles),
+                UIZipArchive = OnGetUIZip()
             };
-        }
-
-        public override void Init()
-        {
-            base.Init();
         }
 
         public override void ReceiveData(DeviceFeatureData data)

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using System.Reflection;
 using PluginFeature.Interfaces;
 using PluginFeature.Models;
+using System.IO;
 
 namespace DesktopService.Features.DeviceFeature
 {
@@ -45,12 +46,10 @@ namespace DesktopService.Features.DeviceFeature
 
         public void Load()
         {
-            // TODO: load plugins here
-            // TODO: client should handle multiple profiles
             IEnumerable<IDeviceFeatureImplementation> desktopPluginFeatures = _appSettings.Plugins?.SelectMany(pluginPath =>
             {
                 Assembly pluginAssembly = _loadPlugins.LoadPlugin(pluginPath);
-                return _loadPlugins.CreateDesktopPluginFeature(pluginAssembly);
+                return _loadPlugins.CreateDesktopPluginFeature(pluginAssembly, Path.GetDirectoryName(pluginPath));
             })?.ToList();
             if (desktopPluginFeatures?.Count() > 0)
             {
@@ -63,21 +62,6 @@ namespace DesktopService.Features.DeviceFeature
                     deviceFeatureImplementations.Add(item);
                 }
             }
-            /*var console = new DesktopFeatureConsole.DeviceFeatureConsole();
-            console.SendData += (object sender, DeviceFeatureData e) =>
-            {
-                ResponseToClient(console.GetDeviceFeatureInfo().Id, e);
-            };
-            deviceFeatureImplementations.Add(console);
-            foreach (var item in DesktopFeatureMediaPlayer.DeviceFeatureMediaPlayer.GetProfiles())
-            {
-                var mediaPlayer = new DesktopFeatureMediaPlayer.DeviceFeatureMediaPlayer(item);
-                mediaPlayer.SendData += (object sender, DeviceFeatureData e) =>
-                {
-                    ResponseToClient(mediaPlayer.GetDeviceFeatureInfo().Id, e);
-                };
-                deviceFeatureImplementations.Add(mediaPlayer);
-            }*/
         }
 
         private void ResponseToClient(Guid featureId, DeviceFeatureData data)
