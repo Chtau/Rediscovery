@@ -105,6 +105,7 @@ namespace DesktopService
             services.AddSingleton<Features.Pipes.IPipeLiveLogger, Features.Pipes.PipeLiveLogger>();
             services.AddSingleton<IFeatureService, FeatureService>();
             services.AddSingleton<Features.Configuration.IDistributeConfig, Features.Configuration.DistributeConfig>();
+            services.AddSingleton<PluginFeature.Interfaces.IPluginLogger, Features.PluginLogger.PluginLogger>();
 
             services.AddSingleton<Features.Plugins.ILoadPlugins, Features.Plugins.LoadPlugins>();
         }

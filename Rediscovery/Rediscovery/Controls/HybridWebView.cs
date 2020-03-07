@@ -5,6 +5,9 @@ using Xamarin.Forms;
 
 namespace Rediscovery.Controls
 {
+    // TODO: add baseUrl for multi file handling on websites
+    // https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/webview?tabs=windows
+
     public class HybridWebView : WebView
     {
         Action<string> action;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PluginFeature.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -11,6 +12,7 @@ namespace PluginFeature.Models
     public abstract class BaseDeviceFeature : PluginFeature.Interfaces.IDeviceFeatureImplementation
     {
         internal string pluginDirectory = null;
+        internal IPluginLogger pluginLogger = null;
 
         public class RegisteredDevice
         {
@@ -69,9 +71,10 @@ namespace PluginFeature.Models
             return null;
         }
 
-        public virtual void Init(string pluginDirectory)
+        public virtual void Init(string pluginDirectory, IPluginLogger pluginLogger)
         {
             this.pluginDirectory = pluginDirectory;
+            this.pluginLogger = pluginLogger;
         }
 
         public virtual void ReceiveData(PluginFeature.Models.DeviceFeatureData data)
@@ -99,9 +102,13 @@ namespace PluginFeature.Models
         public virtual ZipArchive OnGetUIZip()
         {
             string archivePath = Path.Combine(pluginDirectory, "ui.zip");
-            
-            ZipFile.CreateFromDirectory(Path.Combine(pluginDirectory, "UI"), archivePath);
-            return ZipFile.OpenRead(archivePath);
+            string uiDirectory = Path.Combine(pluginDirectory, "UI");
+            if (System.IO.Directory.Exists(uiDirectory))
+            {
+                ZipFile.CreateFromDirectory(uiDirectory, archivePath);
+                return ZipFile.OpenRead(archivePath);
+            }
+            return null;
         }
     }
 }

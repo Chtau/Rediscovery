@@ -7,7 +7,7 @@ namespace PluginFeature.Interfaces
 {
     public interface IDeviceFeatureImplementation
     {
-        void Init(string pluginDirectory);
+        void Init(string pluginDirectory, IPluginLogger pluginLogger);
         void Dispose();
         event EventHandler<DeviceFeatureData> SendData;
         void ReceiveData(DeviceFeatureData data);

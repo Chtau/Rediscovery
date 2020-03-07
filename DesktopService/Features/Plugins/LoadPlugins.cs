@@ -19,6 +19,13 @@ namespace DesktopService.Features.Plugins
 
     public class LoadPlugins : ILoadPlugins
     {
+        private readonly IPluginLogger _pluginLogger;
+
+        public LoadPlugins(IPluginLogger pluginLogger)
+        {
+            _pluginLogger = pluginLogger;
+        }
+
         public Assembly LoadPlugin(string path)
         {
             if (System.IO.File.Exists(path))
@@ -41,7 +48,7 @@ namespace DesktopService.Features.Plugins
                     IDeviceFeatureImplementation result = Activator.CreateInstance(type) as IDeviceFeatureImplementation;
                     if (result != null)
                     {
-                        result.Init(path);
+                        result.Init(path, _pluginLogger);
                         count++;
                         yield return result;
                     }
