@@ -1,4 +1,5 @@
-﻿using DesktopService.Features.Identity;
+﻿using DesktopService.Features.FeatureDefinitions;
+using DesktopService.Features.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;

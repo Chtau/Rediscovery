@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopService.Features.Authentication
+namespace DesktopService.Features.FeatureDefinitions
 {
     public interface IManifest
     {
-        bool BuildManifest();
         SharedCoreModels.Manifest GetManifest();
     }
 }

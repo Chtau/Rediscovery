@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SharedCoreModels;
 
-namespace DesktopService.Features.Authentication
+namespace DesktopService.Features.FeatureDefinitions
 {
     public class Manifest : IManifest
     {
@@ -15,7 +15,7 @@ namespace DesktopService.Features.Authentication
             _featureService = featureService;
         }
 
-        public bool BuildManifest()
+        private bool BuildManifest()
         {
             manifest = new SharedCoreModels.Manifest
             {

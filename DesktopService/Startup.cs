@@ -91,8 +91,7 @@ namespace DesktopService
             services.AddLogging();
             services.AddSingleton<IConfigurationRoot>(Configuration);
             services.AddSingleton<DAL.IDBContext, DAL.DBContext>();
-            services.AddSingleton<Features.Authentication.IManifest, Features.Authentication.Manifest>();
-            services.AddSingleton<Features.Authentication.IDiscovery, Features.Authentication.Discovery>();
+            services.AddSingleton<Features.FeatureDefinitions.IManifest, Features.FeatureDefinitions.Manifest>();
             services.AddSingleton<Features.Authentication.IAuth, Features.Authentication.Auth>();
             services.AddSingleton<Features.Identity.IDeviceService, Features.Identity.DeviceService>();
             services.AddSingleton<IUserIdProvider, Features.Identity.ClaimUserIdProvider>();
@@ -134,9 +133,9 @@ namespace DesktopService
 
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapHub<ConnectHub>("/hubs/connect");
                 endpoints.MapHub<DeviceFeatureHub>("/hubs/feature");
             });
