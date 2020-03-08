@@ -105,6 +105,8 @@ namespace PluginFeature.Models
             string uiDirectory = Path.Combine(pluginDirectory, "UI");
             if (System.IO.Directory.Exists(uiDirectory))
             {
+                if (File.Exists(archivePath))
+                    File.Delete(archivePath);
                 ZipFile.CreateFromDirectory(uiDirectory, archivePath);
                 return ZipFile.OpenRead(archivePath);
             }
