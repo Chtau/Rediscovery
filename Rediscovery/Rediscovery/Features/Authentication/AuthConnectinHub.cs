@@ -18,6 +18,7 @@ namespace Rediscovery.Features.Authentication
 
         private IDataStoreGuid<Models.Connection> connectionStore => DependencyService.Get<IDataStoreGuid<Models.Connection>>() ?? new ConnectionStore();
         private IEntityManager entityManager => DependencyService.Get<IEntityManager>() ?? new EntityManager();
+        private DesktopFeatures.IFeatureUIService featureUIService => DependencyService.Get<DesktopFeatures.IFeatureUIService>() ?? new DesktopFeatures.FeatureUIService();
 
         public event EventHandler<Models.Connection> HelloReceived;
         public event EventHandler<Tuple<Models.Connection, List<Models.ConnectionManifestFeature>>> ManifestReceived;
@@ -69,6 +70,15 @@ namespace Rediscovery.Features.Authentication
                 var features = new List<Models.ConnectionManifestFeature>();
                 foreach (var item in manifest.SupportedFeatures)
                 {
+                    try
+                    {
+                        if (item.UIZipArchive != null)
+                            featureUIService.SaveUI(item.UIZipArchive, item.Id);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex);
+                    }
                     System.Collections.ObjectModel.ObservableCollection<SharedCoreModels.DeviceFeature.DeviceFeatureProfil> profiles = new System.Collections.ObjectModel.ObservableCollection<SharedCoreModels.DeviceFeature.DeviceFeatureProfil>();
                     try
                     {
