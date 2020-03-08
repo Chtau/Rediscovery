@@ -1,6 +1,7 @@
 ﻿using PluginFeature.Models;
 using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Text;
 
 namespace PluginFeature.Interfaces
@@ -24,5 +25,7 @@ namespace PluginFeature.Interfaces
         /// </summary>
         /// <param name="deviceId">unique user connection id</param>
         void Unregister(string deviceId);
+
+        ZipArchive GetUIArchive();
     }
 }

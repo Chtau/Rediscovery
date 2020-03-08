@@ -9,6 +9,7 @@ using System.Reflection;
 using PluginFeature.Interfaces;
 using PluginFeature.Models;
 using System.IO;
+using System.IO.Compression;
 
 namespace DesktopService.Features.DeviceFeature
 {
@@ -32,6 +33,11 @@ namespace DesktopService.Features.DeviceFeature
         public IDeviceFeatureImplementation GetFeature(Guid featureId)
         {
             return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId);
+        }
+
+        public ZipArchive GetFeatureUIArchive(Guid featureId)
+        {
+            return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetUIArchive();
         }
 
         public List<DeviceFeatureDefinition> GetFeaturesManifest()

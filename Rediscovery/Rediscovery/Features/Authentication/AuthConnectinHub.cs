@@ -70,15 +70,6 @@ namespace Rediscovery.Features.Authentication
                 var features = new List<Models.ConnectionManifestFeature>();
                 foreach (var item in manifest.SupportedFeatures)
                 {
-                    try
-                    {
-                        if (item.UIZipArchive != null)
-                            featureUIService.SaveUI(item.UIZipArchive as System.IO.Compression.ZipArchive, item.Id);
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.Error(ex);
-                    }
                     System.Collections.ObjectModel.ObservableCollection<SharedCoreModels.DeviceFeature.DeviceFeatureProfil> profiles = new System.Collections.ObjectModel.ObservableCollection<SharedCoreModels.DeviceFeature.DeviceFeatureProfil>();
                     try
                     {

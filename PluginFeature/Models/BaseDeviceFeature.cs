@@ -112,5 +112,10 @@ namespace PluginFeature.Models
             }
             return null;
         }
+
+        public ZipArchive GetUIArchive()
+        {
+            return OnGetUIZip();
+        }
     }
 }

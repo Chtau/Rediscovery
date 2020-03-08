@@ -82,7 +82,6 @@ namespace DesktopFeatureMediaPlayer
                 SettingsObject = null,
                 Version = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
                 Profiles = Newtonsoft.Json.JsonConvert.SerializeObject(profiles),
-                UIZipArchive = null//(object)OnGetUIZip()
             };
         }
 

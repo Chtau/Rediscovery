@@ -3,6 +3,7 @@ using PluginFeature.Models;
 using SharedCoreModels.DeviceFeature;
 using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Text;
 
 namespace DesktopService.Features.DeviceFeature
@@ -12,5 +13,6 @@ namespace DesktopService.Features.DeviceFeature
         void Load();
         IDeviceFeatureImplementation GetFeature(Guid featureId);
         List<DeviceFeatureDefinition> GetFeaturesManifest();
+        ZipArchive GetFeatureUIArchive(Guid featureId);
     }
 }
