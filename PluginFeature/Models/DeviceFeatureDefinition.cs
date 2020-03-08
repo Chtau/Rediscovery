@@ -30,6 +30,6 @@ namespace PluginFeature.Models
         /// </summary>
         public string Profiles { get; set; }
 
-        public ZipArchive UIZipArchive { get; set; }
+        public object UIZipArchive { get; set; }
     }
 }

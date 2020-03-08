@@ -39,6 +39,8 @@ namespace DesktopFeatureConsole
                 MinFeatureIntegrationPoint = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
                 SettingsObject = null,
                 Version = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
+                UIZipArchive = null,
+                Profiles = null
             };
         }
 

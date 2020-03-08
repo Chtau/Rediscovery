@@ -73,7 +73,7 @@ namespace Rediscovery.Features.Authentication
                     try
                     {
                         if (item.UIZipArchive != null)
-                            featureUIService.SaveUI(item.UIZipArchive, item.Id);
+                            featureUIService.SaveUI(item.UIZipArchive as System.IO.Compression.ZipArchive, item.Id);
                     }
                     catch (Exception ex)
                     {
