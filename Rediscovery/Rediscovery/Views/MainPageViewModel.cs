@@ -13,9 +13,9 @@ namespace Rediscovery.Views
     {
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
 
-        private IDataStoreGuid<Features.Authentication.Models.Connection> connectionStore => DependencyService.Get<IDataStoreGuid<Features.Authentication.Models.Connection>>() ?? new Features.Authentication.ConnectionStore();
+        private IDataStoreGuid<Features.Connection.Models.ConnectionInfo> connectionStore => DependencyService.Get<IDataStoreGuid<Features.Connection.Models.ConnectionInfo>>() ?? new Features.Connection.ConnectionStore();
 
-        public ObservableCollection<Features.Authentication.Models.Connection> Items { get; set; } = new ObservableCollection<Features.Authentication.Models.Connection>();
+        public ObservableCollection<Features.Connection.Models.ConnectionInfo> Items { get; set; } = new ObservableCollection<Features.Connection.Models.ConnectionInfo>();
 
         public MainPageViewModel()
         {

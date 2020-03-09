@@ -12,8 +12,8 @@ namespace Rediscovery.Features.DesktopFeatures
         Task InitConnectionAsync();
 
         event EventHandler<(Guid connectionId, Guid featureId, string profileId, object data)> DesktopResponseReceived;
-        Task Send(ConnectionManifestFeature feature, string profileId, object data);
-        Task Start(ConnectionManifestFeature feature);
-        Task Stop(ConnectionManifestFeature feature);
+        Task Send(Connection.Models.ConnectionManifestFeature feature, string profileId, object data);
+        Task Start(Connection.Models.ConnectionManifestFeature feature);
+        Task Stop(Connection.Models.ConnectionManifestFeature feature);
     }
 }

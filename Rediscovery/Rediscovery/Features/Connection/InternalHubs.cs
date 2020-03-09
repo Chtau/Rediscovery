@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace Rediscovery.Features.Authentication
+namespace Rediscovery.Features.Connection
 {
     public abstract class InternalHubs
     {
@@ -17,7 +17,7 @@ namespace Rediscovery.Features.Authentication
 
         private HubConnection connection;
 
-        public event EventHandler<Models.Connection> ConnectionChanged;
+        public event EventHandler<Models.ConnectionInfo> ConnectionChanged;
 
         public bool IsConnected
         {
@@ -34,7 +34,7 @@ namespace Rediscovery.Features.Authentication
             _hubLink = hubLink;
         }
 
-        internal async Task<HubConnection> OnGetConnection(Models.Connection model, bool shouldUseToken = true)
+        internal async Task<HubConnection> OnGetConnection(Models.ConnectionInfo model, bool shouldUseToken = true)
         {
             if (model == null)
                 return null;
@@ -106,7 +106,7 @@ namespace Rediscovery.Features.Authentication
             }
         }
 
-        public virtual void AfterCreateNewConnection(HubConnection connection, Models.Connection model)
+        public virtual void AfterCreateNewConnection(HubConnection connection, Models.ConnectionInfo model)
         {
 
         }

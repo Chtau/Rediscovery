@@ -13,9 +13,9 @@ namespace Rediscovery.Features.DesktopFeatures
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private Services.IFileSystem fileSystem => DependencyService.Get<Services.IFileSystem>() ?? new Services.FileSystem();
 
-        public void SaveUI(ZipArchive zipArchive, Guid featureId)
+        public void SaveUI(Guid featureId)
         {
-            zipArchive.ExtractToDirectory(OnArchiveDirectory(featureId));
+            //zipArchive.ExtractToDirectory(OnArchiveDirectory(featureId));
         }
 
         public string UIDirectory(Guid featureId)

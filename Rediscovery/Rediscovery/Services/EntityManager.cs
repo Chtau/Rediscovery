@@ -11,13 +11,13 @@ namespace Rediscovery.Services
 {
     public class EntityManager : IEntityManager
     {
-        private Features.Authentication.IConnect connection => DependencyService.Get<Features.Authentication.IConnect>() ?? new Features.Authentication.Connect();
+        private Features.Connection.IConnect connection => DependencyService.Get<Features.Connection.IConnect>() ?? new Features.Connection.Connect();
 
-        public System.Collections.ObjectModel.ObservableCollection<ConnectionManifestFeature> ConnectionManifestFeatures { get; set; }
+        public System.Collections.ObjectModel.ObservableCollection<Features.Connection.Models.ConnectionManifestFeature> ConnectionManifestFeatures { get; set; }
 
         public EntityManager()
         {
-            ConnectionManifestFeatures = new System.Collections.ObjectModel.ObservableCollection<ConnectionManifestFeature>();
+            ConnectionManifestFeatures = new System.Collections.ObjectModel.ObservableCollection<Features.Connection.Models.ConnectionManifestFeature>();
         }
 
         public void Clear()
@@ -25,9 +25,9 @@ namespace Rediscovery.Services
             ConnectionManifestFeatures.Clear();
         }
 
-        public List<ConnectionManifestFeature> GetConnectionManifestFeature()
+        public List<Features.Connection.Models.ConnectionManifestFeature> GetConnectionManifestFeature()
         {
-            var result = new List<ConnectionManifestFeature>();
+            var result = new List<Features.Connection.Models.ConnectionManifestFeature>();
             var task = Task.Factory.StartNew(async () =>
             {
                 result = await GetConnectionManifestFeatureAsync();
@@ -36,12 +36,12 @@ namespace Rediscovery.Services
             return result;
         }
 
-        public async Task<List<ConnectionManifestFeature>> GetConnectionManifestFeatureAsync()
+        public async Task<List<Features.Connection.Models.ConnectionManifestFeature>> GetConnectionManifestFeatureAsync()
         {
             var conModel = await connection.GetModel();
             if (conModel != null)
                 return ConnectionManifestFeatures.Where(x => x.ConnectionId == conModel.Id).ToList();
-            return new List<ConnectionManifestFeature>();
+            return new List<Features.Connection.Models.ConnectionManifestFeature>();
         }
     }
 }

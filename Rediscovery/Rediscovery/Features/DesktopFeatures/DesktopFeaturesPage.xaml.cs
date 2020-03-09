@@ -33,7 +33,7 @@ namespace Rediscovery.Features.DesktopFeatures
             await Navigation.PushModalAsync(new NavigationPage(new FeaturePage.FeatureView.FeatureView()));
             return;
 
-            Features.Authentication.Models.ConnectionManifestFeature item = args.SelectedItem as Features.Authentication.Models.ConnectionManifestFeature;
+            Features.Connection.Models.ConnectionManifestFeature item = args.SelectedItem as Features.Connection.Models.ConnectionManifestFeature;
             if (item == null)
                 return;
             switch (item.ControlIntegration)

@@ -17,7 +17,7 @@ namespace Rediscovery.Views
     {
         private MainPageViewModel viewModel;
 
-        private Features.Authentication.IConnect auth => DependencyService.Get<Features.Authentication.IConnect>() ?? new Features.Authentication.Connect();
+        private Features.Connection.IConnect auth => DependencyService.Get<Features.Connection.IConnect>() ?? new Features.Connection.Connect();
 
         public MainPage()
         {
@@ -28,7 +28,7 @@ namespace Rediscovery.Views
             auth.HelloReceived += Auth_HelloReceived;
         }
 
-        private void Auth_HelloReceived(object sender, Features.Authentication.Models.Connection e)
+        private void Auth_HelloReceived(object sender, Features.Connection.Models.ConnectionInfo e)
         {
             if (e.ConnectionState == SharedCoreModels.Enums.ConnectionState.WaitForApprovel)
             {

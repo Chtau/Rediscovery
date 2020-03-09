@@ -14,12 +14,12 @@ namespace Rediscovery.Features.DesktopFeatures
     public class DesktopFeaturesViewModel : BaseViewModel
     {
         private IEntityManager entityManager => DependencyService.Get<IEntityManager>() ?? new EntityManager();
-        public ObservableCollection<Features.Authentication.Models.ConnectionManifestFeature> ConnectionManifestFeaturesControl { get; set; } = new ObservableCollection<Features.Authentication.Models.ConnectionManifestFeature>();
+        public ObservableCollection<Features.Connection.Models.ConnectionManifestFeature> ConnectionManifestFeaturesControl { get; set; } = new ObservableCollection<Features.Connection.Models.ConnectionManifestFeature>();
 
         public DesktopFeaturesViewModel()
         {
             if (ConnectionManifestFeaturesControl == null)
-                ConnectionManifestFeaturesControl = new ObservableCollection<ConnectionManifestFeature>();
+                ConnectionManifestFeaturesControl = new ObservableCollection<Features.Connection.Models.ConnectionManifestFeature>();
             var items = entityManager.GetConnectionManifestFeature();
             if (items != null)
             {
@@ -33,7 +33,7 @@ namespace Rediscovery.Features.DesktopFeatures
 
         private void ConnectionManifestFeatures_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            foreach (ConnectionManifestFeature item in e.NewItems)
+            foreach (Features.Connection.Models.ConnectionManifestFeature item in e.NewItems)
             {
                 ConnectionManifestFeaturesControl.Add(item);
             }

@@ -1,4 +1,5 @@
-﻿using Rediscovery.ViewModels;
+﻿using Rediscovery.Features.Connection;
+using Rediscovery.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,7 +11,7 @@ namespace Rediscovery.Features.Authentication.Models
     {
         public event EventHandler ShouldClose;
 
-        private Features.Authentication.IConnect auth => DependencyService.Get<Features.Authentication.IConnect>() ?? new Features.Authentication.Connect();
+        private IConnect auth => DependencyService.Get<IConnect>() ?? new Connect();
 
         public Command KeyVerify { get; }
 
@@ -31,7 +32,7 @@ namespace Rediscovery.Features.Authentication.Models
             });
         }
 
-        private void Auth_HelloReceived(object sender, Connection e)
+        private void Auth_HelloReceived(object sender, Features.Connection.Models.ConnectionInfo e)
         {
             if (e.ConnectionState != SharedCoreModels.Enums.ConnectionState.OK)
             {

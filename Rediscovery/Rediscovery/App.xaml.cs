@@ -3,13 +3,14 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Rediscovery.Services;
 using Rediscovery.Views;
+using Rediscovery.Features.Connection;
 
 namespace Rediscovery
 {
     public partial class App : Application
     {
 
-        private Features.Authentication.IConnect connect => DependencyService.Get<Features.Authentication.IConnect>() ?? new Features.Authentication.Connect();
+        private IConnect connect => DependencyService.Get<IConnect>() ?? new Connect();
 
         public App()
         {
@@ -18,8 +19,8 @@ namespace Rediscovery
             DependencyService.Register<Logger>();
             DependencyService.Register<DBStore>();
             DependencyService.Register<Features.DesktopConfiguration.DesktopConfigurationStore>();
-            DependencyService.Register<Features.Authentication.Connect>();
-            DependencyService.Register<Features.Authentication.ConnectionStore>();
+            DependencyService.Register<Connect>();
+            DependencyService.Register<ConnectionStore>();
             DependencyService.Register<EntityManager>();
             DependencyService.Register<Features.DesktopFeatures.FeatureExchange>();
             MainPage = new MainPage();

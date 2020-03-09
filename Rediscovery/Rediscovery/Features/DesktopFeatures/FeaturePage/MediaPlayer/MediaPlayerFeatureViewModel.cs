@@ -59,7 +59,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
         public ICommand JumpForwardCommand { get; set; }
         public ICommand JumpBackwardCommand { get; set; }
 
-        public MediaPlayerFeatureViewModel(Authentication.Models.ConnectionManifestFeature connectionManifestFeature) : base(connectionManifestFeature)
+        public MediaPlayerFeatureViewModel(Features.Connection.Models.ConnectionManifestFeature connectionManifestFeature) : base(connectionManifestFeature)
         {
             base.ReceivedData += MediaPlayerFeatureViewModel_ReceivedData;
             OnSetCommand();

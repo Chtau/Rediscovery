@@ -1,4 +1,5 @@
 ﻿using Rediscovery.Features.Authentication;
+using Rediscovery.Features.Connection;
 using Rediscovery.Models;
 using Rediscovery.Services;
 using Rediscovery.ViewModels;
@@ -14,8 +15,8 @@ namespace Rediscovery.Features.DesktopConfiguration
     {
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private IDataStoreGuid<DesktopConfigurationModel> Store => DependencyService.Get<IDataStoreGuid<DesktopConfigurationModel>>() ?? new DesktopConfigurationStore();
-        private IDataStoreGuid<Features.Authentication.Models.Connection> connectionStore => DependencyService.Get<IDataStoreGuid<Features.Authentication.Models.Connection>>() ?? new ConnectionStore();
-        private Features.Authentication.IConnect auth => DependencyService.Get<Features.Authentication.IConnect>() ?? new Features.Authentication.Connect();
+        private IDataStoreGuid<Features.Connection.Models.ConnectionInfo> connectionStore => DependencyService.Get<IDataStoreGuid<Features.Connection.Models.ConnectionInfo>>() ?? new ConnectionStore();
+        private IConnect auth => DependencyService.Get<IConnect>() ?? new Connect();
 
         public DesktopConfigurationModel Item { get; set; }
         public Command Connect { get; }
@@ -60,12 +61,12 @@ namespace Rediscovery.Features.DesktopConfiguration
             });
         }
 
-        private void Auth_ManifestReceived(object sender, Tuple<Features.Authentication.Models.Connection, List<Features.Authentication.Models.ConnectionManifestFeature>> e)
+        private void Auth_ManifestReceived(object sender, Tuple<Features.Connection.Models.ConnectionInfo, List<Features.Connection.Models.ConnectionManifestFeature>> e)
         {
             //throw new NotImplementedException();
         }
 
-        private void Auth_HelloReceived(object sender, Features.Authentication.Models.Connection e)
+        private void Auth_HelloReceived(object sender, Features.Connection.Models.ConnectionInfo e)
         {
             Item.ConnectionState = e.ConnectionState;
             Item.LastConnection = e.LastConnection;
@@ -74,7 +75,7 @@ namespace Rediscovery.Features.DesktopConfiguration
 
         public async Task Save()
         {
-            await connectionStore.AddItemAsync(new Features.Authentication.Models.Connection
+            await connectionStore.AddItemAsync(new Features.Connection.Models.ConnectionInfo
             {
                 AutoConnect = Item.AutoConnect,
                 ConnectionState = SharedCoreModels.Enums.ConnectionState.None,

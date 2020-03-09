@@ -13,12 +13,12 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage
 
         private IFeatureExchange featureExchange => DependencyService.Get<IFeatureExchange>() ?? new FeatureExchange();
 
-        internal readonly Authentication.Models.ConnectionManifestFeature _connectionManifestFeature;
+        internal readonly Features.Connection.Models.ConnectionManifestFeature _connectionManifestFeature;
         internal ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
 
         public string FeatureVersion => _connectionManifestFeature.FeatureVersion;
 
-        public BaseFeatureViewModel(Authentication.Models.ConnectionManifestFeature connectionManifestFeature)
+        public BaseFeatureViewModel(Features.Connection.Models.ConnectionManifestFeature connectionManifestFeature)
         {
             _connectionManifestFeature = connectionManifestFeature;
             featureExchange.DesktopResponseReceived += FeatureExchange_DesktopResponseReceived;

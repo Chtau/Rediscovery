@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Features.Authentication.Models
+namespace Rediscovery.Features.Connection.Models
 {
-    public class Connection : BaseModel
+    public class ConnectionInfo : BaseModel
     {
         private Guid _id;
         private string _displayName;

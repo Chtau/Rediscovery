@@ -7,7 +7,7 @@ namespace Rediscovery.Features.DesktopFeatures
 {
     public interface IFeatureUIService
     {
-        void SaveUI(ZipArchive zipArchive, Guid featureId);
+        void SaveUI(Guid featureId);
 
         string UIDirectory(Guid featureId);
     }

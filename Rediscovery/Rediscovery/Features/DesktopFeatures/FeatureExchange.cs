@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using Rediscovery.Features.Authentication.Models;
+using Rediscovery.Features.Connection;
 using Rediscovery.Services;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,8 @@ namespace Rediscovery.Features.DesktopFeatures
     public class FeatureExchange : IFeatureExchange
     {
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
-        private Features.Authentication.IConnect connection => DependencyService.Get<Features.Authentication.IConnect>() ?? new Features.Authentication.Connect();
-        private Connection model;
+        private IConnect connection => DependencyService.Get<IConnect>() ?? new Connect();
+        private Connection.Models.ConnectionInfo model;
         private HubConnection featureHub;
 
         public event EventHandler<(Guid connectionId, Guid featureId, string profileId, object data)> DesktopResponseReceived;
@@ -34,7 +35,7 @@ namespace Rediscovery.Features.DesktopFeatures
             await Init();
         }
 
-        private void Connection_ConnectionChanged(object sender, Connection e)
+        private void Connection_ConnectionChanged(object sender, Connection.Models.ConnectionInfo e)
         {
             /*if (model != null && e.Id == model.Id)
             {
@@ -65,7 +66,7 @@ namespace Rediscovery.Features.DesktopFeatures
             }
         }
 
-        public async Task Send(ConnectionManifestFeature feature, string profileId, object data)
+        public async Task Send(Connection.Models.ConnectionManifestFeature feature, string profileId, object data)
         {
             if (featureHub != null)
             {
@@ -77,7 +78,7 @@ namespace Rediscovery.Features.DesktopFeatures
             }
         }
 
-        public async Task Start(ConnectionManifestFeature feature)
+        public async Task Start(Connection.Models.ConnectionManifestFeature feature)
         {
             if (featureHub != null)
             {
@@ -90,7 +91,7 @@ namespace Rediscovery.Features.DesktopFeatures
             }
         }
 
-        public async Task Stop(ConnectionManifestFeature feature)
+        public async Task Stop(Connection.Models.ConnectionManifestFeature feature)
         {
             if (featureHub != null)
             {

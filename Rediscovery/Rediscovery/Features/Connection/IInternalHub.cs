@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rediscovery.Features.Authentication
+namespace Rediscovery.Features.Connection
 {
     public interface IInternalHub
     {
         bool IsConnected { get; }
-        Task<HubConnection> GetConnection(Models.Connection model);
+        Task<HubConnection> GetConnection(Models.ConnectionInfo model);
         Task CloseConnections();
-        event EventHandler<Models.Connection> ConnectionChanged;
+        event EventHandler<Models.ConnectionInfo> ConnectionChanged;
     }
 }

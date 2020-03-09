@@ -28,8 +28,8 @@ namespace Rediscovery.Services
 
         private async Task OnCreateTables()
         {
-            await Store.CreateTableAsync<Features.Authentication.Models.Connection>();
-            await Store.CreateTableAsync<Features.Authentication.Models.ConnectionManifestFeature>();
+            await Store.CreateTableAsync<Features.Connection.Models.ConnectionInfo>();
+            await Store.CreateTableAsync<Features.Connection.Models.ConnectionManifestFeature>();
         }
     }
 }

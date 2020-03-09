@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 
-namespace Rediscovery.Features.Authentication.Models
+namespace Rediscovery.Features.Connection.Models
 {
     public class ConnectionManifestFeature : BaseModel
     {

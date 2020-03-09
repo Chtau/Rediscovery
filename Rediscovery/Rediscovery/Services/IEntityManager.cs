@@ -8,9 +8,9 @@ namespace Rediscovery.Services
 {
     public interface IEntityManager
     {
-        System.Collections.ObjectModel.ObservableCollection<ConnectionManifestFeature> ConnectionManifestFeatures { get; set; }
-        List<ConnectionManifestFeature> GetConnectionManifestFeature();
-        Task<List<ConnectionManifestFeature>> GetConnectionManifestFeatureAsync();
+        System.Collections.ObjectModel.ObservableCollection<Features.Connection.Models.ConnectionManifestFeature> ConnectionManifestFeatures { get; set; }
+        List<Features.Connection.Models.ConnectionManifestFeature> GetConnectionManifestFeature();
+        Task<List<Features.Connection.Models.ConnectionManifestFeature>> GetConnectionManifestFeatureAsync();
         void Clear();
     }
 }

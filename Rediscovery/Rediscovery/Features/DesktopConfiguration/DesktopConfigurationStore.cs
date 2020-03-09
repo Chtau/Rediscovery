@@ -13,7 +13,7 @@ namespace Rediscovery.Features.DesktopConfiguration
     {
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
 
-        private IDataStoreGuid<Features.Authentication.Models.Connection> connectionStore => DependencyService.Get<IDataStoreGuid<Features.Authentication.Models.Connection>>() ?? new Features.Authentication.ConnectionStore();
+        private IDataStoreGuid<Features.Connection.Models.ConnectionInfo> connectionStore => DependencyService.Get<IDataStoreGuid<Features.Connection.Models.ConnectionInfo>>() ?? new Features.Connection.ConnectionStore();
 
         public bool AddItem(DesktopConfigurationModel item)
         {
@@ -31,7 +31,7 @@ namespace Rediscovery.Features.DesktopConfiguration
                 con.AutoConnect = item.AutoConnect;
                 return await connectionStore.UpdateItemAsync(con);
             }
-            return await connectionStore.AddItemAsync(new Features.Authentication.Models.Connection
+            return await connectionStore.AddItemAsync(new Features.Connection.Models.ConnectionInfo
             {
                 Id = Guid.NewGuid(),
                 AutoConnect = item.AutoConnect,

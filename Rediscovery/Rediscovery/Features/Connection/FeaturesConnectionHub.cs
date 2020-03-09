@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rediscovery.Features.Authentication
+namespace Rediscovery.Features.Connection
 {
     public class FeaturesConnectionHub : InternalHubs, IInternalHub
     {
@@ -15,7 +15,7 @@ namespace Rediscovery.Features.Authentication
 
         }
 
-        public async Task<HubConnection> GetConnection(Models.Connection model)
+        public async Task<HubConnection> GetConnection(Models.ConnectionInfo model)
         {
             return await base.OnGetConnection(model, true);
         }

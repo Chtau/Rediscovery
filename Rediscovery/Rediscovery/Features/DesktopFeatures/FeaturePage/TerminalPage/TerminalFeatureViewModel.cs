@@ -8,7 +8,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.TerminalPage
     {
         public event EventHandler<string> LineReceived;
 
-        public TerminalFeatureViewModel(Authentication.Models.ConnectionManifestFeature connectionManifestFeature) : base(connectionManifestFeature)
+        public TerminalFeatureViewModel(Features.Connection.Models.ConnectionManifestFeature connectionManifestFeature) : base(connectionManifestFeature)
         {
             base.ReceivedData += TerminalFeatureViewModel_ReceivedData;
         }
