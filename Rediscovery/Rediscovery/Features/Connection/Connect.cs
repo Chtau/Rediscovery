@@ -9,6 +9,8 @@ using Xamarin.Forms;
 using System.Linq;
 using Rediscovery.Features.DesktopFeatures;
 using Rediscovery.Features.Authentication;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.Connection.Connect))]
 namespace Rediscovery.Features.Connection
@@ -27,6 +29,7 @@ namespace Rediscovery.Features.Connection
 
         private Dictionary<Guid, IInternalHub> authHubs = new Dictionary<Guid, IInternalHub>();
         private Dictionary<Guid, IInternalHub> featureHubs = new Dictionary<Guid, IInternalHub>();
+        private HttpClient featureHttpClient = null;
 
         public event EventHandler<Models.ConnectionInfo> HelloReceived;
         public event EventHandler<Tuple<Models.ConnectionInfo, List<Models.ConnectionManifestFeature>>> ManifestReceived;
@@ -231,6 +234,18 @@ namespace Rediscovery.Features.Connection
                 featureHubs.Remove(model.Id);
             }
             await featureExchange.InitConnectionAsync();
+        }
+
+        public async Task<HttpClient> GetHttpClientFeature()
+        {
+            if (featureHttpClient == null)
+            {
+                var model = await GetModel();
+                featureHttpClient = new HttpClient();
+                featureHttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", model.Token);
+                featureHttpClient.BaseAddress = new Uri("http://" + model.LastKnownAddress);
+            }
+            return featureHttpClient;
         }
     }
 }
