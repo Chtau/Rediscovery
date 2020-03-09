@@ -26,6 +26,6 @@ namespace PluginFeature.Interfaces
         /// <param name="deviceId">unique user connection id</param>
         void Unregister(string deviceId);
 
-        ZipArchive GetUIArchive();
+        string GetUIArchivePath();
     }
 }

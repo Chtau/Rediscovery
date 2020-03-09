@@ -99,7 +99,7 @@ namespace PluginFeature.Models
             System.Diagnostics.Debug.Print($"Unregister device (id:{deviceId})");
         }
 
-        public virtual ZipArchive OnGetUIZip()
+        public virtual string OnGetUIZipPath()
         {
             string archivePath = Path.Combine(pluginDirectory, "ui.zip");
             string uiDirectory = Path.Combine(pluginDirectory, "UI");
@@ -108,14 +108,14 @@ namespace PluginFeature.Models
                 if (File.Exists(archivePath))
                     File.Delete(archivePath);
                 ZipFile.CreateFromDirectory(uiDirectory, archivePath);
-                return ZipFile.OpenRead(archivePath);
+                return archivePath;
             }
             return null;
         }
 
-        public ZipArchive GetUIArchive()
+        public string GetUIArchivePath()
         {
-            return OnGetUIZip();
+            return OnGetUIZipPath();
         }
     }
 }

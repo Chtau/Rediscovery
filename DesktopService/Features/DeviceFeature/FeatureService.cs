@@ -35,9 +35,9 @@ namespace DesktopService.Features.DeviceFeature
             return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId);
         }
 
-        public ZipArchive GetFeatureUIArchive(Guid featureId)
+        public string GetFeatureUIArchivePath(Guid featureId)
         {
-            return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetUIArchive();
+            return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetUIArchivePath();
         }
 
         public List<DeviceFeatureDefinition> GetFeaturesManifest()

@@ -39,6 +39,8 @@ namespace DesktopService
                 options.EnableDetailedErrors = true;
             });
 
+            services.AddControllers();
+
             var identitySettingsSection = Configuration.GetSection(SharedConfigurations.DesktopService.Models.IdentityConfiguration.SectionName);
             services.Configure<SharedConfigurations.DesktopService.Models.IdentityConfiguration>(identitySettingsSection);
             var pipeSettingsSection = Configuration.GetSection(SharedConfigurations.DesktopService.Models.PipeConfiguration.SectionName);

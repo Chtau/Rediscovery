@@ -13,6 +13,6 @@ namespace DesktopService.Features.DeviceFeature
         void Load();
         IDeviceFeatureImplementation GetFeature(Guid featureId);
         List<DeviceFeatureDefinition> GetFeaturesManifest();
-        ZipArchive GetFeatureUIArchive(Guid featureId);
+        string GetFeatureUIArchivePath(Guid featureId);
     }
 }
