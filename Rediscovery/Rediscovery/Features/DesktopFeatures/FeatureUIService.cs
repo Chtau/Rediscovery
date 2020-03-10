@@ -21,6 +21,16 @@ namespace Rediscovery.Features.DesktopFeatures
             {
                 try
                 {
+                    if (System.IO.Directory.Exists(OnArchiveDirectory(featureId)))
+                    {
+                        System.IO.Directory.Delete(OnArchiveDirectory(featureId));
+                    }
+                } catch (Exception ex)
+                {
+                    logger.Error(ex);
+                }
+                try
+                {
                     var archive = await connect.GetUIArchive(featureId);
                     if (archive != null)
                         archive.ExtractToDirectory(OnArchiveDirectory(featureId));

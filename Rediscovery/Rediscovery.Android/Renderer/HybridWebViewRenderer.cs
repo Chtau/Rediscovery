@@ -42,7 +42,10 @@ namespace Rediscovery.Droid.Renderer
             {
                 Control.SetWebViewClient(new JavascriptWebViewClient($"javascript: {JavascriptFunction}"));
                 Control.AddJavascriptInterface(new JSBridge(this), "jsBridge");
-                Control.LoadUrl($"file:///android_asset/Content/{((HybridWebView)Element).Uri}");
+                string baseUrl = ((HtmlWebViewSource)((HybridWebView)Element).Source).BaseUrl;
+                
+                //Control.LoadDataWithBaseURL(baseUrl)
+                //Control.LoadUrl($"file:///android_asset/Content/{((HybridWebView)Element).Uri}");
             }
         }
     }
