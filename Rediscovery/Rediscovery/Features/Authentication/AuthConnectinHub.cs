@@ -100,6 +100,7 @@ namespace Rediscovery.Features.Authentication
                     };
                     features.Add(feature);
                     entityManager.ConnectionManifestFeatures.Add(feature);
+                    featureUIService.SaveUI(feature.FeatureId);
                 }
                 ManifestReceived?.Invoke(this, new Tuple<Connection.Models.ConnectionInfo, List<Connection.Models.ConnectionManifestFeature>>(model, features));
             });

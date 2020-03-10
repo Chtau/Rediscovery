@@ -10,8 +10,6 @@ namespace Rediscovery.Features.Connection
 {
     public abstract class InternalHubs
     {
-        const string Protocol = "http://";
-
         internal ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private readonly string _hubLink;
 
@@ -62,7 +60,7 @@ namespace Rediscovery.Features.Connection
                     }
                 }
 
-                string url = Protocol + model.LastKnownAddress + _hubLink;
+                string url = Connect.Protocol + model.LastKnownAddress + _hubLink;
                 logger.Message($"Try do connect to {model.DisplayName} with Address:{url} ({DateTime.Now.ToString()})");
                 if (shouldUseToken)
                 {

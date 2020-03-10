@@ -2,6 +2,7 @@
 using SharedCoreModels;
 using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,6 @@ namespace Rediscovery.Features.Connection
         event EventHandler<Models.ConnectionInfo> HelloReceived;
         event EventHandler<Tuple<Models.ConnectionInfo, List<Models.ConnectionManifestFeature>>> ManifestReceived;
         event EventHandler<Models.ConnectionInfo> ConnectionChanged;
-        Task<HttpClient> GetHttpClientFeature();
+        Task<ZipArchive> GetUIArchive(Guid featureId);
     }
 }

@@ -11,12 +11,15 @@ using Rediscovery.Features.DesktopFeatures;
 using Rediscovery.Features.Authentication;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.IO.Compression;
 
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.Connection.Connect))]
 namespace Rediscovery.Features.Connection
 {
     public class Connect : IConnect
     {
+        internal const string Protocol = "http://";
+
         public enum HubTypes
         {
             Auth,
@@ -236,16 +239,32 @@ namespace Rediscovery.Features.Connection
             await featureExchange.InitConnectionAsync();
         }
 
-        public async Task<HttpClient> GetHttpClientFeature()
+        private async Task<HttpClient> GetHttpClientFeature()
         {
             if (featureHttpClient == null)
             {
                 var model = await GetModel();
                 featureHttpClient = new HttpClient();
                 featureHttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", model.Token);
-                featureHttpClient.BaseAddress = new Uri("http://" + model.LastKnownAddress);
             }
             return featureHttpClient;
+        }
+
+        public async Task<ZipArchive> GetUIArchive(Guid featureId)
+        {
+            var model = await GetModel();
+            var client = await GetHttpClientFeature();
+            var response = await client.GetAsync($"{Protocol}{model.LastKnownAddress}/features/ui/{featureId}");
+            if (response.IsSuccessStatusCode)
+            {
+                var file = await response.Content.ReadAsStreamAsync();
+                ZipArchive archive = new ZipArchive(file);
+                if (archive != null)
+                {
+                    return archive;
+                }
+            }
+            return null;
         }
     }
 }
