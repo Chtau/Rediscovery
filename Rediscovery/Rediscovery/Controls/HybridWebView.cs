@@ -24,6 +24,25 @@ namespace Rediscovery.Controls
             set { SetValue(UriProperty, value); }
         }
 
+        public void SetFolderSource(string directory)
+        {
+            var source = new HtmlWebViewSource();
+            source.BaseUrl = "file://" + directory + (!directory.EndsWith("/") ? "/" : "");
+            // find start file
+            string startFile = "";
+            if (System.IO.File.Exists(System.IO.Path.Combine(directory, "Index.html")))
+                startFile = System.IO.Path.Combine(directory, "Index.html");
+            else if (System.IO.File.Exists(System.IO.Path.Combine(directory, "index.html")))
+                startFile = System.IO.Path.Combine(directory, "index.html");
+            else if (System.IO.File.Exists(System.IO.Path.Combine(directory, "default.html")))
+                startFile = System.IO.Path.Combine(directory, "default.html");
+            else if (System.IO.File.Exists(System.IO.Path.Combine(directory, "Default.html")))
+                startFile = System.IO.Path.Combine(directory, "Default.html");
+            if (!string.IsNullOrWhiteSpace(startFile))
+                source.Html = System.IO.File.ReadAllText(startFile);
+            Source = source;
+        }
+
         public void RegisterAction(Action<string> callback)
         {
             action = callback;
