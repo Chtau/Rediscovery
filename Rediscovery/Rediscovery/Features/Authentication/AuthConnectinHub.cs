@@ -19,7 +19,6 @@ namespace Rediscovery.Features.Authentication
 
         private IDataStoreGuid<Connection.Models.ConnectionInfo> connectionStore => DependencyService.Get<IDataStoreGuid<Connection.Models.ConnectionInfo>>() ?? new ConnectionStore();
         private IEntityManager entityManager => DependencyService.Get<IEntityManager>() ?? new EntityManager();
-        private DesktopFeatures.IFeatureUIService featureUIService => DependencyService.Get<DesktopFeatures.IFeatureUIService>() ?? new DesktopFeatures.FeatureUIService();
 
         public event EventHandler<Connection.Models.ConnectionInfo> HelloReceived;
         public event EventHandler<Tuple<Connection.Models.ConnectionInfo, List<Connection.Models.ConnectionManifestFeature>>> ManifestReceived;
@@ -100,7 +99,6 @@ namespace Rediscovery.Features.Authentication
                     };
                     features.Add(feature);
                     entityManager.ConnectionManifestFeatures.Add(feature);
-                    featureUIService.SaveUI(feature.FeatureId);
                 }
                 ManifestReceived?.Invoke(this, new Tuple<Connection.Models.ConnectionInfo, List<Connection.Models.ConnectionManifestFeature>>(model, features));
             });

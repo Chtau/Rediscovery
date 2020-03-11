@@ -14,14 +14,23 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class FeatureView : ContentPage
     {
+        private FeatureViewViewModel viewModel;
+
         private Features.Connection.IConnect connect => DependencyService.Get<Features.Connection.IConnect>() ?? new Features.Connection.Connect();
         private IFeatureUIService featureUIService => DependencyService.Get<IFeatureUIService>() ?? new FeatureUIService();
 
-        public FeatureView()
+        public FeatureView(Features.Connection.Models.ConnectionManifestFeature connectionManifestFeature)
         {
             InitializeComponent();
 
-            hybridWebView.SetFolderSource(featureUIService.UIDirectory(new Guid("D5B218BC-8F36-4100-9262-71155265DAD7")));
+            BindingContext = viewModel = new FeatureViewViewModel(connectionManifestFeature);
+            viewModel.UIDataReady += ViewModel_UIDataReady;
+        }
+
+        private void ViewModel_UIDataReady(object sender, Tuple<Guid, string> e)
+        {
+            //hybridWebView.SetFolderSource(featureUIService.UIDirectory(new Guid("D5B218BC-8F36-4100-9262-71155265DAD7")));
+            hybridWebView.SetFolderSource(e.Item2);
             hybridWebView.RegisterAction(data => DisplayAlert("Alert", "Hello " + data, "OK"));
         }
 
