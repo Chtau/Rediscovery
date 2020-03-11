@@ -29,7 +29,6 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
 
         private void ViewModel_UIDataReady(object sender, Tuple<Guid, string> e)
         {
-            //hybridWebView.SetFolderSource(featureUIService.UIDirectory(new Guid("D5B218BC-8F36-4100-9262-71155265DAD7")));
             hybridWebView.SetFolderSource(e.Item2);
             hybridWebView.RegisterAction(data => DisplayAlert("Alert", "Hello " + data, "OK"));
         }

@@ -24,7 +24,7 @@ namespace Rediscovery.Features.DesktopFeatures
                 {
                     if (System.IO.Directory.Exists(directory))
                     {
-                        System.IO.Directory.Delete(directory);
+                        System.IO.Directory.Delete(directory, true);
                     }
                 } catch (Exception ex)
                 {

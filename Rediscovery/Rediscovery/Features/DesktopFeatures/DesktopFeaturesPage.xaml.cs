@@ -30,11 +30,13 @@ namespace Rediscovery.Features.DesktopFeatures
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
         {
             Features.Connection.Models.ConnectionManifestFeature item = args.SelectedItem as Features.Connection.Models.ConnectionManifestFeature;
-
-            // TODO: test only
-            await Navigation.PushModalAsync(new NavigationPage(new FeaturePage.FeatureView.FeatureView(item)));
+            if (item != null)
+            {
+                await Navigation.PushModalAsync(new NavigationPage(new FeaturePage.FeatureView.FeatureView(item)));
+                FeatureControl.SelectedItem = null;
+            }
             return;
-
+            /*
             if (item == null)
                 return;
             switch (item.ControlIntegration)
@@ -48,8 +50,7 @@ namespace Rediscovery.Features.DesktopFeatures
                 default:
                     break;
             }
-
-            FeatureControl.SelectedItem = null;
+            */
         }
     }
 }
