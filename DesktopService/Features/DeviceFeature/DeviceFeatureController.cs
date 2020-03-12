@@ -36,5 +36,27 @@ namespace DesktopService.Features.DeviceFeature
             }
             return NotFound();
         }
+
+        [HttpGet("profiles/{featureId}")]
+        public async Task<IActionResult> Profiles([FromRoute]Guid featureId)
+        {
+            /*var archivePath = _featureService.GetFeatureUIArchivePath(featureId);
+            if (!string.IsNullOrWhiteSpace(archivePath) && System.IO.File.Exists(archivePath))
+            {
+                return File(await System.IO.File.ReadAllBytesAsync(archivePath), MediaTypeNames.Application.Zip, $"ui.zip");
+            }*/
+            return NotFound();
+        }
+
+        [HttpGet("settings/{featureId}")]
+        public async Task<IActionResult> Settings([FromRoute]Guid featureId)
+        {
+            /*var archivePath = _featureService.GetFeatureUIArchivePath(featureId);
+            if (!string.IsNullOrWhiteSpace(archivePath) && System.IO.File.Exists(archivePath))
+            {
+                return File(await System.IO.File.ReadAllBytesAsync(archivePath), MediaTypeNames.Application.Zip, $"ui.zip");
+            }*/
+            return NotFound();
+        }
     }
 }
