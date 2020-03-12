@@ -37,9 +37,7 @@ namespace DesktopFeatureConsole
                 ControlIntegration = ControlIntegrationType.Terminal,
                 MinControlIntegrationPoint = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
                 MinFeatureIntegrationPoint = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
-                SettingsObject = null,
                 Version = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
-                Profiles = null
             };
         }
 
@@ -73,6 +71,16 @@ namespace DesktopFeatureConsole
         public override void Unregister(string deviceId)
         {
             base.Unregister(deviceId);
+        }
+
+        public override object GetSettingsObject()
+        {
+            return null;
+        }
+
+        public override List<DeviceFeatureProfil> GetProfiles()
+        {
+            return null;
         }
     }
 }

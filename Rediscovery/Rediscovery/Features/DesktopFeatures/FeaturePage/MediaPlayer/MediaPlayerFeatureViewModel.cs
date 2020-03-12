@@ -1,4 +1,4 @@
-﻿using SharedCoreModels.DeviceFeature;
+﻿using PluginFeature.Models;
 using SharedCoreModels.FeatureModels.MediaPlayer;
 using System;
 using System.Collections.Generic;

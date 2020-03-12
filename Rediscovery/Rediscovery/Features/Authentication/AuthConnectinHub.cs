@@ -70,19 +70,6 @@ namespace Rediscovery.Features.Authentication
                 var features = new List<Connection.Models.ConnectionManifestFeature>();
                 foreach (var item in manifest.SupportedFeatures)
                 {
-                    System.Collections.ObjectModel.ObservableCollection<SharedCoreModels.DeviceFeature.DeviceFeatureProfil> profiles = new System.Collections.ObjectModel.ObservableCollection<SharedCoreModels.DeviceFeature.DeviceFeatureProfil>();
-                    try
-                    {
-                        if (!string.IsNullOrWhiteSpace(item.Profiles))
-                        {
-                            var profs = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SharedCoreModels.DeviceFeature.DeviceFeatureProfil>>(item.Profiles);
-                            if (profs != null)
-                                profiles = new System.Collections.ObjectModel.ObservableCollection<SharedCoreModels.DeviceFeature.DeviceFeatureProfil>(profs);
-                        }
-                    } catch (Exception ex)
-                    {
-                        logger.Error(ex);
-                    }
                     var feature = new Connection.Models.ConnectionManifestFeature
                     {
                         ConnectionId = model.Id,
@@ -94,8 +81,6 @@ namespace Rediscovery.Features.Authentication
                         FeatureMinControlIntegrationPoint = PluginFeature.Models.Version.ConvertFrom(item.MinControlIntegrationPoint),
                         FeatureMinFeatureIntegrationPoint = PluginFeature.Models.Version.ConvertFrom(item.MinFeatureIntegrationPoint),
                         FeatureVersion = PluginFeature.Models.Version.ConvertFrom(item.Version),
-                        SettingsObject = item.SettingsObject,
-                        Profiles = profiles
                     };
                     features.Add(feature);
                     entityManager.ConnectionManifestFeatures.Add(feature);

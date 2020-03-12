@@ -1,7 +1,6 @@
 ﻿using Avalonia.Threading;
 using IPCPipe.Models;
 using PluginFeature.Models;
-using SharedCoreModels.DeviceFeature;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

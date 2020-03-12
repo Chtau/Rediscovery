@@ -1,6 +1,5 @@
 ﻿using PluginFeature;
 using PluginFeature.Models;
-using SharedCoreModels.DeviceFeature;
 using SharedCoreModels.FeatureModels.MediaPlayer;
 using System;
 using System.Collections.Generic;
@@ -61,15 +60,6 @@ namespace DesktopFeatureMediaPlayer
 
         public override DeviceFeatureDefinition GetDeviceFeatureInfo()
         {
-            var profiles = new List<DeviceFeatureProfil>();
-            var pro = MediaPlayerDefaultProfiles.GetProfileConfigurations();
-            if (pro?.Count > 0)
-            {
-                foreach (var item in pro)
-                {
-                    profiles.Add(new DeviceFeatureProfil(item.Id.ToString(), item.DisplayName, item.CommandAvailable));
-                }
-            }
             return new DeviceFeatureDefinition
             {
                 DisplayName = "Mediaplayer",
@@ -79,9 +69,7 @@ namespace DesktopFeatureMediaPlayer
                 ControlIntegration = ControlIntegrationType.MediaPlayer,
                 MinControlIntegrationPoint = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
                 MinFeatureIntegrationPoint = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
-                SettingsObject = null,
                 Version = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
-                Profiles = Newtonsoft.Json.JsonConvert.SerializeObject(profiles),
             };
         }
 
@@ -103,6 +91,20 @@ namespace DesktopFeatureMediaPlayer
                     }
                 }
             }
+        }
+
+        private List<DeviceFeatureProfil> OnGetDeviceFeatureProfiles()
+        {
+            var profiles = new List<DeviceFeatureProfil>();
+            var pro = MediaPlayerDefaultProfiles.GetProfileConfigurations();
+            if (pro?.Count > 0)
+            {
+                foreach (var item in pro)
+                {
+                    profiles.Add(new DeviceFeatureProfil(item.Id.ToString(), item.DisplayName, item.CommandAvailable));
+                }
+            }
+            return profiles;
         }
 
         private void OnHandleCommand(ClientCommandSendModel commandModel)
@@ -140,11 +142,6 @@ namespace DesktopFeatureMediaPlayer
             }
         }
 
-        public static List<ProfileConfiguration> GetProfiles()
-        {
-            return MediaPlayerDefaultProfiles.GetProfileConfigurations();
-        }
-
         private MediaPlayerController OnGetController(Guid profileId)
         {
             return controllers.FirstOrDefault(x => x.ProfileConfiguration.Id == profileId);
@@ -168,6 +165,16 @@ namespace DesktopFeatureMediaPlayer
                 var controller = OnGetController(profile.Id);
                 controller.Stop();
             }
+        }
+
+        public override List<DeviceFeatureProfil> GetProfiles()
+        {
+            return OnGetDeviceFeatureProfiles();
+        }
+
+        public override object GetSettingsObject()
+        {
+            return null;
         }
     }
 }
