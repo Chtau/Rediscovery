@@ -22,14 +22,5 @@ namespace PluginFeature.Models
         public Models.Version MinFeatureIntegrationPoint { get; set; }
 
         public Models.Version MinControlIntegrationPoint { get; set; }
-
-        [Obsolete("We should provide the settings object a api similar to UI")]
-        public object SettingsObject { get; set; }
-
-        /// <summary>
-        /// Profiles are in JSON format because of a serialize problem with SignalR
-        /// </summary>
-        [Obsolete("We should provide the settings object a api similar to UI")]
-        public string Profiles { get; set; }
     }
 }

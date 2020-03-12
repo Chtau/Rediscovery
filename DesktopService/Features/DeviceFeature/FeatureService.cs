@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using SharedCoreModels.DeviceFeature;
 using System.Linq;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
@@ -38,6 +37,16 @@ namespace DesktopService.Features.DeviceFeature
         public string GetFeatureUIArchivePath(Guid featureId)
         {
             return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetUIArchivePath();
+        }
+
+        public List<DeviceFeatureProfil> GetFeatureProfiles(Guid featureId)
+        {
+            return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetProfiles();
+        }
+
+        public object GetFeatureSettings(Guid featureId)
+        {
+            return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetSettingsObject();
         }
 
         public List<DeviceFeatureDefinition> GetFeaturesManifest()

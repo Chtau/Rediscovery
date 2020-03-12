@@ -38,25 +38,15 @@ namespace DesktopService.Features.DeviceFeature
         }
 
         [HttpGet("profiles/{featureId}")]
-        public async Task<IActionResult> Profiles([FromRoute]Guid featureId)
+        public IActionResult Profiles([FromRoute]Guid featureId)
         {
-            /*var archivePath = _featureService.GetFeatureUIArchivePath(featureId);
-            if (!string.IsNullOrWhiteSpace(archivePath) && System.IO.File.Exists(archivePath))
-            {
-                return File(await System.IO.File.ReadAllBytesAsync(archivePath), MediaTypeNames.Application.Zip, $"ui.zip");
-            }*/
-            return NotFound();
+            return Ok(_featureService.GetFeatureProfiles(featureId));
         }
 
         [HttpGet("settings/{featureId}")]
-        public async Task<IActionResult> Settings([FromRoute]Guid featureId)
+        public IActionResult Settings([FromRoute]Guid featureId)
         {
-            /*var archivePath = _featureService.GetFeatureUIArchivePath(featureId);
-            if (!string.IsNullOrWhiteSpace(archivePath) && System.IO.File.Exists(archivePath))
-            {
-                return File(await System.IO.File.ReadAllBytesAsync(archivePath), MediaTypeNames.Application.Zip, $"ui.zip");
-            }*/
-            return NotFound();
+            return Ok(_featureService.GetFeatureSettings(featureId));
         }
     }
 }
