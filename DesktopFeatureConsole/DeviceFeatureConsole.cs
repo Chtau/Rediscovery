@@ -73,7 +73,7 @@ namespace DesktopFeatureConsole
             base.Unregister(deviceId);
         }
 
-        public override object GetSettingsObject()
+        public override DeviceFeatureSetting GetSettingsObject()
         {
             return null;
         }

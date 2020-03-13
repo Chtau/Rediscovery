@@ -14,6 +14,6 @@ namespace DesktopService.Features.DeviceFeature
         List<DeviceFeatureDefinition> GetFeaturesManifest();
         string GetFeatureUIArchivePath(Guid featureId);
         List<DeviceFeatureProfil> GetFeatureProfiles(Guid featureId);
-        object GetFeatureSettings(Guid featureId);
+        DeviceFeatureSetting GetFeatureSettings(Guid featureId);
     }
 }

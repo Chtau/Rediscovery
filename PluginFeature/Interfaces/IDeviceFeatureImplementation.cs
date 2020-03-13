@@ -28,7 +28,7 @@ namespace PluginFeature.Interfaces
 
         string GetUIArchivePath();
 
-        object GetSettingsObject();
+        DeviceFeatureSetting GetSettingsObject();
 
         List<DeviceFeatureProfil> GetProfiles();
     }

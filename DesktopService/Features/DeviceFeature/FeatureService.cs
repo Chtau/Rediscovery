@@ -44,7 +44,7 @@ namespace DesktopService.Features.DeviceFeature
             return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetProfiles();
         }
 
-        public object GetFeatureSettings(Guid featureId)
+        public DeviceFeatureSetting GetFeatureSettings(Guid featureId)
         {
             return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetSettingsObject();
         }

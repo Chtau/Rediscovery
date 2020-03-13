@@ -118,7 +118,7 @@ namespace PluginFeature.Models
             return OnGetUIZipPath();
         }
 
-        public virtual object GetSettingsObject()
+        public virtual DeviceFeatureSetting GetSettingsObject()
         {
             return null;
         }

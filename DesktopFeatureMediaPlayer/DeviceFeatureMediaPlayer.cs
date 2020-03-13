@@ -172,7 +172,7 @@ namespace DesktopFeatureMediaPlayer
             return OnGetDeviceFeatureProfiles();
         }
 
-        public override object GetSettingsObject()
+        public override DeviceFeatureSetting GetSettingsObject()
         {
             return null;
         }
