@@ -12,6 +12,7 @@ using Rediscovery.Features.Authentication;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.IO.Compression;
+using PluginFeature.Models;
 
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.Connection.Connect))]
 namespace Rediscovery.Features.Connection
@@ -250,11 +251,16 @@ namespace Rediscovery.Features.Connection
             return featureHttpClient;
         }
 
-        public async Task<ZipArchive> GetUIArchive(Guid featureId)
+        private async Task<HttpResponseMessage> GetResponseMessage(Guid featureId, string subUrl)
         {
             var model = await GetModel();
             var client = await GetHttpClientFeature();
-            var response = await client.GetAsync($"{Protocol}{model.LastKnownAddress}/features/ui/{featureId}");
+            return await client.GetAsync($"{Protocol}{model.LastKnownAddress}{subUrl}{featureId}");
+        }
+
+        public async Task<ZipArchive> GetUIArchive(Guid featureId)
+        {
+            var response = await GetResponseMessage(featureId, "/features/ui/");
             if (response.IsSuccessStatusCode)
             {
                 var file = await response.Content.ReadAsStreamAsync();
@@ -262,6 +268,43 @@ namespace Rediscovery.Features.Connection
                 if (archive != null)
                 {
                     return archive;
+                }
+            }
+            return null;
+        }
+
+        public async Task<List<DeviceFeatureProfil>> GetDeviceFeatureProfils(Guid featureId)
+        {
+            var response = await GetResponseMessage(featureId, "/features/profiles/");
+            if (response.IsSuccessStatusCode)
+            {
+                try
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    if (!string.IsNullOrWhiteSpace(content))
+                        return Newtonsoft.Json.JsonConvert.DeserializeObject<List<DeviceFeatureProfil>>(content);
+                } catch (Exception ex)
+                {
+                    logger.Error(ex);
+                }
+            }
+            return null;
+        }
+
+        public async Task<DeviceFeatureSetting> GetDeviceFeatureSetting(Guid featureId)
+        {
+            var response = await GetResponseMessage(featureId, "/features/settings/");
+            if (response.IsSuccessStatusCode)
+            {
+                try
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    if (!string.IsNullOrWhiteSpace(content))
+                        return Newtonsoft.Json.JsonConvert.DeserializeObject<DeviceFeatureSetting>(content);
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
                 }
             }
             return null;

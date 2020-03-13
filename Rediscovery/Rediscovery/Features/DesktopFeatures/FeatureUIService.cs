@@ -1,4 +1,5 @@
-﻿using Rediscovery.Services;
+﻿using PluginFeature.Models;
+using Rediscovery.Services;
 using System;
 using System.Collections.Generic;
 using System.IO.Compression;
@@ -14,6 +15,62 @@ namespace Rediscovery.Features.DesktopFeatures
         private Features.Connection.IConnect connect => DependencyService.Get<Features.Connection.IConnect>() ?? new Features.Connection.Connect();
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private Services.IFileSystem fileSystem => DependencyService.Get<Services.IFileSystem>() ?? new Services.FileSystem();
+
+        public void GetProfil(Guid featureId, Action<bool, List<DeviceFeatureProfil>> callback)
+        {
+            Task.Run(async () =>
+            {
+                try
+                {
+                    var profiles = await connect.GetDeviceFeatureProfils(featureId);
+                    if (profiles != null)
+                    {
+                        callback?.Invoke(true, profiles);
+                    }
+                    else
+                    {
+                        logger.Message($"No Profiles received for Feature Id:{featureId}");
+                        callback?.Invoke(false, null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                }
+                finally
+                {
+                    callback?.Invoke(false, null);
+                }
+            });
+        }
+
+        public void GetSetting(Guid featureId, Action<bool, DeviceFeatureSetting> callback)
+        {
+            Task.Run(async () =>
+            {
+                try
+                {
+                    var settings = await connect.GetDeviceFeatureSetting(featureId);
+                    if (settings != null)
+                    {
+                        callback?.Invoke(true, settings);
+                    }
+                    else
+                    {
+                        logger.Message($"No Settings received for Feature Id:{featureId}");
+                        callback?.Invoke(false, null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                }
+                finally
+                {
+                    callback?.Invoke(false, null);
+                }
+            });
+        }
 
         public void SaveUI(Guid featureId, Action<bool, string> callback)
         {

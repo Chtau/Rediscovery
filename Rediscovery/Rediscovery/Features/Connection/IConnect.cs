@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using PluginFeature.Models;
 using SharedCoreModels;
 using System;
 using System.Collections.Generic;
@@ -23,5 +24,7 @@ namespace Rediscovery.Features.Connection
         event EventHandler<Tuple<Models.ConnectionInfo, List<Models.ConnectionManifestFeature>>> ManifestReceived;
         event EventHandler<Models.ConnectionInfo> ConnectionChanged;
         Task<ZipArchive> GetUIArchive(Guid featureId);
+        Task<List<DeviceFeatureProfil>> GetDeviceFeatureProfils(Guid featureId);
+        Task<DeviceFeatureSetting> GetDeviceFeatureSetting(Guid featureId);
     }
 }
