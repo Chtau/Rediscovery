@@ -67,10 +67,10 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
             }
         }
 
-        /*public void Send(CommandTypes cmd)
+        public void Send(object sendModel)
         {
-            base.Send(SelectedProfile?.Id, new ClientCommandSendModel(_connectionManifestFeature.FeatureId, SelectedProfile.Id, cmd));
-        }*/
+            base.Send(SelectedProfile?.Id, sendModel);
+        }
 
         private void FeatureViewViewModel_ReceivedData(object sender, object e)
         {
