@@ -22,6 +22,7 @@ namespace Rediscovery.Droid.Renderer
     public class HybridWebViewRenderer : WebViewRenderer
     {
         const string JavascriptFunction = "function invokeCSharpAction(data){jsBridge.invokeAction(data);}";
+        const string JavascriptSendCallbackFunction = "function featureSend(data){jsBridge.invokeAction(data);}";
         Context _context;
 
         public HybridWebViewRenderer(Context context) : base(context)
@@ -41,6 +42,7 @@ namespace Rediscovery.Droid.Renderer
             if (e.NewElement != null)
             {
                 Control.SetWebViewClient(new JavascriptWebViewClient($"javascript: {JavascriptFunction}"));
+                Control.SetWebViewClient(new JavascriptWebViewClient($"javascript: {JavascriptSendCallbackFunction}"));
                 Control.AddJavascriptInterface(new JSBridge(this), "jsBridge");
                 //string baseUrl = ((HtmlWebViewSource)((HybridWebView)Element).Source).BaseUrl;
                 
