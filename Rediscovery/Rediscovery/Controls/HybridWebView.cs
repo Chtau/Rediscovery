@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace Rediscovery.Controls
@@ -45,6 +46,11 @@ namespace Rediscovery.Controls
 
                 Source = source;
             });
+        }
+
+        public async Task SetModel(string data)
+        {
+            await this.EvaluateJavaScriptAsync($"let model = {data}");
         }
 
         public void RegisterAction(Action<string> callback)
