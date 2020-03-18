@@ -31,6 +31,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
         {
             hybridWebView.SetFolderSource(e.Item2);
             hybridWebView.RegisterAction(data => DisplayAlert("Alert", "Hello " + data, "OK"));
+            hybridWebView.SetModel(Newtonsoft.Json.JsonConvert.SerializeObject(DateTime.Now));
         }
 
         protected override void OnAppearing()
