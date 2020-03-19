@@ -4,6 +4,8 @@
     </script>
     <h1>Mediaplayer Test</h1>
     <br />
+    <p id="modelData"></p>
+    <br />
     Enter name: <input type="text" id="name" />
     <br />
     <br />
@@ -17,13 +19,15 @@
 
         function invokeCSCode(data) {
         try {
-        log("Sending Data:" + data);
-        invokeCSharpAction(data);
+            log("Sending Data:" + data);
+            //invokeCSharpAction(data);
+            featureSend(data);
         }
         catch (err) {
         log(err);
         }
         }
+        $("#modelData").text(JSON.stringify(model));
     </script>
 </body>
 </html>
