@@ -24,6 +24,7 @@ namespace Rediscovery.Droid.Renderer
         const string VueJS = "file:///android_asset/Content/vue.dev.js";
         const string JavascriptFunction = "function invokeCSharpAction(data){jsBridge.invokeAction(data);};";
         const string JavascriptSendCallbackFunction = "function featureSend(data){jsBridge.invokeAction(data);};";
+        const string JavascriptModel = "var model = ";
         Context _context;
         readonly string vueJSContent = "";
 
@@ -44,8 +45,8 @@ namespace Rediscovery.Droid.Renderer
             }
             if (e.NewElement != null)
             {
-                
-                Control.SetWebViewClient(new JavascriptWebViewClient($"javascript: {vueJSContent}{JavascriptFunction}{JavascriptSendCallbackFunction}"));
+                string modelValue = JavascriptModel + "'Hello Test';";
+                Control.SetWebViewClient(new JavascriptWebViewClient($"javascript: {vueJSContent}{JavascriptFunction}{JavascriptSendCallbackFunction}{modelValue}"));
                 Control.AddJavascriptInterface(new JSBridge(this), "jsBridge");
                 //string baseUrl = ((HtmlWebViewSource)((HybridWebView)Element).Source).BaseUrl;
                 
