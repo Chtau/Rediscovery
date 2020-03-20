@@ -21,17 +21,17 @@ namespace Rediscovery.Droid.Renderer
 {
     public class HybridWebViewRenderer : WebViewRenderer
     {
-        const string VueJS = "file:///android_asset/Content/vue.dev.js";
+        //const string VueJS = "file:///android_asset/Content/vue.dev.js";
         const string JavascriptFunction = "function invokeCSharpAction(data){jsBridge.invokeAction(data);};";
         const string JavascriptSendCallbackFunction = "function featureSend(data){jsBridge.invokeAction(data);};";
         const string JavascriptModel = "var model = ";
         Context _context;
-        readonly string vueJSContent = "";
+        //readonly string vueJSContent = "";
 
         public HybridWebViewRenderer(Context context) : base(context)
         {
             _context = context;
-            vueJSContent = System.IO.File.ReadAllText(VueJS);
+            //vueJSContent = System.IO.File.ReadAllText(VueJS);
         }
 
         protected override void OnElementChanged(ElementChangedEventArgs<Xamarin.Forms.WebView> e)
@@ -46,7 +46,8 @@ namespace Rediscovery.Droid.Renderer
             if (e.NewElement != null)
             {
                 string modelValue = JavascriptModel + "'Hello Test';";
-                Control.SetWebViewClient(new JavascriptWebViewClient($"javascript: {vueJSContent}{JavascriptFunction}{JavascriptSendCallbackFunction}{modelValue}"));
+                //{vueJSContent}
+                Control.SetWebViewClient(new JavascriptWebViewClient($"javascript: {JavascriptFunction}{JavascriptSendCallbackFunction}{modelValue}"));
                 Control.AddJavascriptInterface(new JSBridge(this), "jsBridge");
                 //string baseUrl = ((HtmlWebViewSource)((HybridWebView)Element).Source).BaseUrl;
                 
