@@ -14,7 +14,12 @@
     <p id="result">Result:</p>
     <script type="text/javascript">
         function log(str) {
-        $('#result').text($('#result').text() + " " + str);
+            $('#result').text($('#result').text() + " " + str);
+        }
+        if (changeModelListener) {
+            changeModelListener((val) => {
+                log("Received callback:" + val);
+            });
         }
 
         function invokeCSCode(data) {

@@ -1,4 +1,4 @@
-﻿var modelData = {};
+﻿var modelData = undefined;
 var callbackFunction = null;
 function internalChangeModel(model) {
     modelData = model;
@@ -9,6 +9,10 @@ function internalChangeModel(model) {
 
 function changeModelListener(callback) {
     callbackFunction = callback;
+}
+
+function currentModel() {
+    return modelData;
 }
 
 function featureSend(data) {
