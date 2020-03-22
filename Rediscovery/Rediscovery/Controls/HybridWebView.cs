@@ -50,7 +50,7 @@ namespace Rediscovery.Controls
 
         public async Task SetModel(string data)
         {
-            await this.EvaluateJavaScriptAsync($"let model = {data}");
+            await this.EvaluateJavaScriptAsync($"internalChangeModel({data})");
         }
 
         public void RegisterAction(Action<string> callback)
