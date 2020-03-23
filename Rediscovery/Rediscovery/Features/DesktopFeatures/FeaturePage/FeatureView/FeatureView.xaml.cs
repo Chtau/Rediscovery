@@ -30,10 +30,32 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
         private void ViewModel_UIDataReady(object sender, Tuple<Guid, string> e)
         {
             hybridWebView.SetFolderSource(e.Item2);
-            hybridWebView.RegisterAction(data => DisplayAlert("Alert", "Hello " + data, "OK"));
-            Task.Run(async () =>
+            hybridWebView.RegisterAction(async (data) =>
+            {
+                await DisplayAlert("Alert", "Hello " + data, "OK");
+                Dispatcher.BeginInvokeOnMainThread(async () =>
+                {
+                    var result = await hybridWebView.EvaluateJavaScriptAsync("document.body.innerHTML");
+                    System.Diagnostics.Debug.Print(result);
+                });
+            });
+            
+            hybridWebView.Navigated += async (obj, args) =>
+            {
+                //hybridWebView.SetModel(Newtonsoft.Json.JsonConvert.SerializeObject(DateTime.Now));
+            };
+            /*Task.Run(async () =>
             {
                 await hybridWebView.SetModel(Newtonsoft.Json.JsonConvert.SerializeObject(DateTime.Now));
+            });*/
+            hybridWebView.SetModel(Newtonsoft.Json.JsonConvert.SerializeObject(DateTime.Now));
+            Task.Run(async () =>
+            {
+                do
+                {
+                    await Task.Delay(30000);
+                    hybridWebView.SetModel(Newtonsoft.Json.JsonConvert.SerializeObject(DateTime.Now));
+                } while (true);
             });
         }
 

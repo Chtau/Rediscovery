@@ -48,9 +48,12 @@ namespace Rediscovery.Controls
             });
         }
 
-        public async Task SetModel(string data)
+        public void SetModel(string data)
         {
-            await this.EvaluateJavaScriptAsync($"internalChangeModel({data})");
+            Dispatcher.BeginInvokeOnMainThread(() =>
+            {
+                this.Eval($"internalChangeModel({data})");
+            });
         }
 
         public void RegisterAction(Action<string> callback)

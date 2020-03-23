@@ -4,7 +4,7 @@
     </script>
     <h1>Mediaplayer Test</h1>
     <br />
-    <p id="modelData"></p>
+    <p id="modelContent"></p>
     <br />
     Enter name: <input type="text" id="name" />
     <br />
@@ -13,26 +13,51 @@
     <br />
     <p id="result">Result:</p>
     <script type="text/javascript">
+        var modelData = undefined;
+        var callbackFunction = null;
+        function internalChangeModel(model) {
+            modelData = model;
+            if (callbackFunction) {
+                callbackFunction(modelData);
+            }
+        }
+
+        function changeModelListener(callback) {
+            callbackFunction = callback;
+        }
+
+        function currentModel() {
+            return modelData;
+        }
+
+        function featureSend(data) {
+            jsBridge.invokeAction(data);
+        }
+
         function log(str) {
             $('#result').text($('#result').text() + " " + str);
         }
-        if (changeModelListener) {
-            changeModelListener((val) => {
-                log("Received callback:" + val);
-            });
-        }
+        
 
         function invokeCSCode(data) {
-        try {
-            log("Sending Data:" + data);
-            //invokeCSharpAction(data);
-            featureSend(data);
+            try {
+                //log("Current Model:" + JSON.stringify(model));
+                log("Current Model:" + JSON.stringify(currentModel()));
+                if (changeModelListener) {
+                    changeModelListener((val) => {
+                        log("Received callback1:" + val);
+                    });
+                }
+
+                log("Sending Data1:" + data);
+                //invokeCSharpAction(data);
+                featureSend(data);
+            }
+            catch (err) {
+                log(err);
+            }
         }
-        catch (err) {
-        log(err);
-        }
-        }
-        $("#modelData").text(JSON.stringify(model));
+        //$("#modelData").text(JSON.stringify(model));
     </script>
 </body>
 </html>
