@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
 using Android.App;
 using Android.Content;
+using Android.Content.Res;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
@@ -25,14 +27,18 @@ namespace Rediscovery.Droid.Renderer
         const string JavascriptFunction = "function invokeCSharpAction(data){jsBridge.invokeAction(data);};";
         const string JavascriptSendCallbackFunction = "function featureSend(data){jsBridge.invokeAction(data);};";
         const string JavascriptModel = "var model = ";
-        const string JavascriptExchangeFile = "file:///android_asset/Content/exchange.js";
+        const string JavascriptExchangeFile = "Content/exchange.js";
         Context _context;
         readonly string exchangeJSContent = "";
 
         public HybridWebViewRenderer(Context context) : base(context)
         {
             _context = context;
-            exchangeJSContent = System.IO.File.ReadAllText(JavascriptExchangeFile);
+            AssetManager assets = context.Assets;
+            using (StreamReader sr = new StreamReader(assets.Open(JavascriptExchangeFile)))
+            {
+                exchangeJSContent = sr.ReadToEnd();
+            }
         }
 
         protected override void OnElementChanged(ElementChangedEventArgs<Xamarin.Forms.WebView> e)
