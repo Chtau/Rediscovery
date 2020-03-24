@@ -1,12 +1,16 @@
-﻿using System;
+﻿using Rediscovery.Services;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using Xamarin.Forms;
 
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.DesktopFeatures.HtmlUIService))]
 namespace Rediscovery.Features.DesktopFeatures
 {
     public class HtmlUIService : IHtmlUIService
     {
+        private IResourceProvider resourceProvider => DependencyService.Get<IResourceProvider>() ?? new ResourceProvider();
+
         public string GetIndexFile(string directory)
         {
             if (!string.IsNullOrWhiteSpace(directory) && System.IO.Directory.Exists(directory))
@@ -24,6 +28,20 @@ namespace Rediscovery.Features.DesktopFeatures
                 return startFile;
             }
             return null;
+        }
+
+        public enum DefaultFileType
+        {
+            JS,
+            LINK,
+            HTML
+        }
+
+        public List<(DefaultFileType type, string fileName, string fileContent)> GetDefaultFiles()
+        {
+            var ret = new List<(DefaultFileType type, string fileName, string fileContent)>();
+            ret.Add((DefaultFileType.JS, "exchange.js", resourceProvider.ReadResource("exchange.js")));
+            return ret;
         }
     }
 }

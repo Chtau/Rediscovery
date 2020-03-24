@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+
+[assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Services.ResourceProvider))]
+namespace Rediscovery.Services
+{
+    public class ResourceProvider : IResourceProvider
+    {
+        public string ReadResource(string name)
+        {
+            // Determine path
+            var assembly = Assembly.GetExecutingAssembly();
+            string resourcePath = name;
+            // Format: "{Namespace}.{Folder}.{filename}.{Extension}"
+            if (!name.StartsWith(nameof(Rediscovery)))
+            {
+                resourcePath = assembly.GetManifestResourceNames()
+                    .Single(str => str.EndsWith(name));
+            }
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourcePath))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
+    }
+}

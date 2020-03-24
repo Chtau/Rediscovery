@@ -129,8 +129,6 @@ namespace Rediscovery.Features.DesktopFeatures
 
         private async Task OnInjectUIDefaults(string directory)
         {
-            // TODO: inject default JS ...
-            // TODO: add defaults to inject
             if (System.IO.Directory.Exists(directory))
             {
                 string startFile = htmlUIService.GetIndexFile(directory);
@@ -140,10 +138,40 @@ namespace Rediscovery.Features.DesktopFeatures
                     var context = BrowsingContext.New(config);
                     var source = System.IO.File.ReadAllText(startFile);
                     var document = await context.OpenAsync(req => req.Content(source));
-                    var jsLink = document.CreateElement("script");
-                    jsLink.SetAttribute("src", "");
-                    document.Head.AppendChild(jsLink);
 
+                    var defaults = htmlUIService.GetDefaultFiles();
+                    if (defaults?.Count > 0)
+                    {
+                        foreach (var item in defaults)
+                        {
+                            AngleSharp.Dom.IElement element = null;
+                            string tmpFileName = null;
+                            switch (item.type)
+                            {
+                                case HtmlUIService.DefaultFileType.JS:
+                                    tmpFileName = System.IO.Path.Combine(directory, item.fileName);
+                                    System.IO.File.WriteAllText(tmpFileName, item.fileContent);
+                                    element = document.CreateElement("script");
+                                    element.SetAttribute("src", item.fileName);
+                                    document.Head.AppendChild(element);
+                                    break;
+                                case HtmlUIService.DefaultFileType.LINK:
+                                    tmpFileName = System.IO.Path.Combine(directory, item.fileName);
+                                    System.IO.File.WriteAllText(tmpFileName, item.fileContent);
+                                    element = document.CreateElement("link");
+                                    element.SetAttribute("href", item.fileName);
+                                    document.Head.AppendChild(element);
+                                    break;
+                                case HtmlUIService.DefaultFileType.HTML:
+                                    element = document.CreateElement("div");
+                                    element.InnerHtml = item.fileContent;
+                                    document.Body.AppendChild(element);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }
                     var result = document.DocumentElement.OuterHtml;
                     System.IO.File.WriteAllText(startFile, result);
                 } else
