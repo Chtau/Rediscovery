@@ -176,7 +176,8 @@ namespace Rediscovery.Features.DesktopFeatures
                     System.IO.File.WriteAllText(startFile, result);
                 } else
                 {
-                    // TODO: if we have no startFile we should add a default UI
+                    string defaultContent = htmlUIService.NoUIHtmlDefault();
+                    System.IO.File.WriteAllText(System.IO.Path.Combine(directory, "index.html"), defaultContent);
                 }
             } else
             {

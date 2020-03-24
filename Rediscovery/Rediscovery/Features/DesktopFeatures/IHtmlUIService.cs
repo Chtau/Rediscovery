@@ -8,5 +8,6 @@ namespace Rediscovery.Features.DesktopFeatures
     {
         string GetIndexFile(string directory);
         List<(HtmlUIService.DefaultFileType type, string fileName, string fileContent)> GetDefaultFiles();
+        string NoUIHtmlDefault();
     }
 }

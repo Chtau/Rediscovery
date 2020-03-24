@@ -43,5 +43,10 @@ namespace Rediscovery.Features.DesktopFeatures
             ret.Add((DefaultFileType.JS, "exchange.js", resourceProvider.ReadResource("exchange.js")));
             return ret;
         }
+
+        public string NoUIHtmlDefault()
+        {
+            return resourceProvider.ReadResource("index.html");
+        }
     }
 }
