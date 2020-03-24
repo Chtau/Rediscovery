@@ -16,6 +16,7 @@ namespace Rediscovery.Features.DesktopFeatures
         private Features.Connection.IConnect connect => DependencyService.Get<Features.Connection.IConnect>() ?? new Features.Connection.Connect();
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private Services.IFileSystem fileSystem => DependencyService.Get<Services.IFileSystem>() ?? new Services.FileSystem();
+        private IHtmlUIService htmlUIService => DependencyService.Get<IHtmlUIService>() ?? new HtmlUIService();
 
         public void GetProfil(Guid featureId, Action<bool, List<DeviceFeatureProfil>> callback)
         {
@@ -132,7 +133,7 @@ namespace Rediscovery.Features.DesktopFeatures
             // TODO: add defaults to inject
             if (System.IO.Directory.Exists(directory))
             {
-                string startFile = HtmlUIHelpers.GetIndexFile(directory);
+                string startFile = htmlUIService.GetIndexFile(directory);
                 if (!string.IsNullOrWhiteSpace(startFile))
                 {
                     var config = Configuration.Default;

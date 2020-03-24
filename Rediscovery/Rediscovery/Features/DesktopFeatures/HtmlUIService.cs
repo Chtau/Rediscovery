@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery
+[assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.DesktopFeatures.HtmlUIService))]
+namespace Rediscovery.Features.DesktopFeatures
 {
-    public static class HtmlUIHelpers
+    public class HtmlUIService : IHtmlUIService
     {
-        public static string GetIndexFile(string directory)
+        public string GetIndexFile(string directory)
         {
             if (!string.IsNullOrWhiteSpace(directory) && System.IO.Directory.Exists(directory))
             {

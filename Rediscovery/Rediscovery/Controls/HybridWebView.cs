@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rediscovery.Features.DesktopFeatures;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ namespace Rediscovery.Controls
 {
     public class HybridWebView : WebView
     {
+        private IHtmlUIService htmlUIService => DependencyService.Get<IHtmlUIService>() ?? new HtmlUIService();
+
         Action<string> action;
 
         public static readonly BindableProperty UriProperty = BindableProperty.Create(
@@ -31,7 +34,7 @@ namespace Rediscovery.Controls
                 {
                     source.BaseUrl = "file://" + directory + (!directory.EndsWith("/") ? "/" : "");
                     // find start file
-                    string startFile = HtmlUIHelpers.GetIndexFile(directory);
+                    string startFile = htmlUIService.GetIndexFile(directory);
                     if (!string.IsNullOrWhiteSpace(startFile))
                         source.Html = System.IO.File.ReadAllText(startFile);
                     else
