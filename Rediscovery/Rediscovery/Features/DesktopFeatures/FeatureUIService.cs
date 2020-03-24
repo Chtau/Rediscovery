@@ -1,4 +1,5 @@
-﻿using PluginFeature.Models;
+﻿using AngleSharp;
+using PluginFeature.Models;
 using Rediscovery.Services;
 using System;
 using System.Collections.Generic;
@@ -93,6 +94,7 @@ namespace Rediscovery.Features.DesktopFeatures
                     if (archive != null)
                     {
                         archive.ExtractToDirectory(directory);
+                        await OnInjectUIDefaults(directory);
                         callback?.Invoke(true, directory);
                     }
                     else
@@ -122,6 +124,35 @@ namespace Rediscovery.Features.DesktopFeatures
             if (!System.IO.Directory.Exists(dir))
                 System.IO.Directory.CreateDirectory(dir);
             return dir;
+        }
+
+        private async Task OnInjectUIDefaults(string directory)
+        {
+            // TODO: inject default JS ...
+            // TODO: add defaults to inject
+            if (System.IO.Directory.Exists(directory))
+            {
+                string startFile = HtmlUIHelpers.GetIndexFile(directory);
+                if (!string.IsNullOrWhiteSpace(startFile))
+                {
+                    var config = Configuration.Default;
+                    var context = BrowsingContext.New(config);
+                    var source = System.IO.File.ReadAllText(startFile);
+                    var document = await context.OpenAsync(req => req.Content(source));
+                    var jsLink = document.CreateElement("script");
+                    jsLink.SetAttribute("src", "");
+                    document.Head.AppendChild(jsLink);
+
+                    var result = document.DocumentElement.OuterHtml;
+                    System.IO.File.WriteAllText(startFile, result);
+                } else
+                {
+                    // TODO: if we have no startFile we should add a default UI
+                }
+            } else
+            {
+                throw new System.IO.DirectoryNotFoundException(directory);
+            }
         }
     }
 }

@@ -31,17 +31,15 @@ namespace Rediscovery.Controls
                 {
                     source.BaseUrl = "file://" + directory + (!directory.EndsWith("/") ? "/" : "");
                     // find start file
-                    string startFile = "";
-                    if (System.IO.File.Exists(System.IO.Path.Combine(directory, "Index.html")))
-                        startFile = System.IO.Path.Combine(directory, "Index.html");
-                    else if (System.IO.File.Exists(System.IO.Path.Combine(directory, "index.html")))
-                        startFile = System.IO.Path.Combine(directory, "index.html");
-                    else if (System.IO.File.Exists(System.IO.Path.Combine(directory, "default.html")))
-                        startFile = System.IO.Path.Combine(directory, "default.html");
-                    else if (System.IO.File.Exists(System.IO.Path.Combine(directory, "Default.html")))
-                        startFile = System.IO.Path.Combine(directory, "Default.html");
+                    string startFile = HtmlUIHelpers.GetIndexFile(directory);
                     if (!string.IsNullOrWhiteSpace(startFile))
                         source.Html = System.IO.File.ReadAllText(startFile);
+                    else
+                    {
+                        string msg = "No HTML file for the UI!";
+                        System.Diagnostics.Debug.Print(msg);
+                        throw new System.IO.FileNotFoundException(msg);
+                    }
                 }
 
                 Source = source;
