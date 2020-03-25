@@ -8,9 +8,8 @@ using Xamarin.Forms;
 
 namespace Rediscovery.Features.Connection
 {
-    public abstract class InternalHubs
+    public abstract class InternalHubs : BaseService
     {
-        internal ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private readonly string _hubLink;
 
         private HubConnection connection;
@@ -52,7 +51,7 @@ namespace Rediscovery.Features.Connection
                     }
                     else
                     {
-                        logger.Message($"Reconnect to connection {model.DisplayName} ({DateTime.Now.ToString()})");
+                        _logger.Message($"Reconnect to connection {model.DisplayName} ({DateTime.Now.ToString()})");
                         await connection.StopAsync();
                         await connection.DisposeAsync();
                         connection = null;
@@ -61,7 +60,7 @@ namespace Rediscovery.Features.Connection
                 }
 
                 string url = Connect.Protocol + model.LastKnownAddress + _hubLink;
-                logger.Message($"Try do connect to {model.DisplayName} with Address:{url} ({DateTime.Now.ToString()})");
+                _logger.Message($"Try do connect to {model.DisplayName} with Address:{url} ({DateTime.Now.ToString()})");
                 if (shouldUseToken)
                 {
                     connection = new HubConnectionBuilder()
@@ -89,7 +88,7 @@ namespace Rediscovery.Features.Connection
                 return connection;
             } catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
                 return null;
             }
         }

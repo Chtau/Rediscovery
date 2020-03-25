@@ -9,10 +9,8 @@ using Xamarin.Forms;
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.DesktopConfiguration.DesktopConfigurationStore))]
 namespace Rediscovery.Features.DesktopConfiguration
 {
-    public class DesktopConfigurationStore : IDataStoreGuid<DesktopConfigurationModel>
+    public class DesktopConfigurationStore : BaseService, IDataStoreGuid<DesktopConfigurationModel>
     {
-        private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
-
         private IDataStoreGuid<Features.Connection.Models.ConnectionInfo> connectionStore => DependencyService.Get<IDataStoreGuid<Features.Connection.Models.ConnectionInfo>>() ?? new Features.Connection.ConnectionStore();
 
         public bool AddItem(DesktopConfigurationModel item)

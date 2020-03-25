@@ -38,7 +38,7 @@ namespace Rediscovery.Features.Authentication
             base.AfterCreateNewConnection(connection, model);
             OnHello(connection, model);
             OnManifest(connection, model);
-            logger.Message($"Send Welcome to Service:{model.DisplayName} ({DateTime.Now})");
+            _logger.Message($"Send Welcome to Service:{model.DisplayName} ({DateTime.Now})");
             connection.InvokeAsync("Welcome", model.User);
         }
 
@@ -46,7 +46,7 @@ namespace Rediscovery.Features.Authentication
         {
             con.On<Enums.ConnectionState, string>("Hello", (state, token) =>
             {
-                logger.Message($"hello received from {model.DisplayName} ({DateTime.Now})");
+                _logger.Message($"hello received from {model.DisplayName} ({DateTime.Now})");
                 model.ConnectionState = state;
                 model.LastConnection = DateTime.Now;
                 model.Token = token;
@@ -62,7 +62,7 @@ namespace Rediscovery.Features.Authentication
         {
             con.On<Manifest>("Manifest", async (manifest) =>
             {
-                logger.Message($"manifest received from {model.DisplayName} ({DateTime.Now})");
+                _logger.Message($"manifest received from {model.DisplayName} ({DateTime.Now})");
                 model.ManifestAppMinimumVersion = PluginFeature.Models.Version.ConvertFrom(manifest.AppMinimumVersion);
                 model.ManifestClientName = manifest.ClientName;
                 model.ManifestClientVersion = PluginFeature.Models.Version.ConvertFrom(manifest.ClientVersion);

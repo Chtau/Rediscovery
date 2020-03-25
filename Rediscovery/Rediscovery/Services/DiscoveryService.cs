@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Services.DiscoveryService))]
 namespace Rediscovery.Services
 {
-    public class DiscoveryService : IDiscoveryService
+    public class DiscoveryService : BaseService, IDiscoveryService
     {
         public void Boardcast(Action<SharedCoreModels.DiscoveryServiceInfo> callbackAnswer)
         {
@@ -33,13 +33,13 @@ namespace Rediscovery.Services
                             var serviceInfo = new SharedCoreModels.DiscoveryServiceInfo();
                             serviceInfo.Parse(ServerResponse);
                             callbackAnswer?.Invoke(serviceInfo);
-                            Console.WriteLine("Recived {0} from {1}", serviceInfo.ToString(), ServerEp.Address.ToString());
+                            _logger.Message($"Received {serviceInfo.ToString()} from {ServerEp.Address.ToString()}");
 
                             Client.Close();
                         });
                     } catch (Exception ex)
                     {
-                        System.Diagnostics.Debug.Print(ex.ToString());
+                        _logger.Error(ex);
                     }
                 } while (true);
             });

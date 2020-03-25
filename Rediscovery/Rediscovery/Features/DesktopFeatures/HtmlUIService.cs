@@ -7,7 +7,7 @@ using Xamarin.Forms;
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.DesktopFeatures.HtmlUIService))]
 namespace Rediscovery.Features.DesktopFeatures
 {
-    public class HtmlUIService : IHtmlUIService
+    public class HtmlUIService : BaseService, IHtmlUIService
     {
         private IResourceProvider resourceProvider => DependencyService.Get<IResourceProvider>() ?? new ResourceProvider();
 

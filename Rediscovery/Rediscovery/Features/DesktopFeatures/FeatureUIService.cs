@@ -11,10 +11,9 @@ using Xamarin.Forms;
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.DesktopFeatures.FeatureUIService))]
 namespace Rediscovery.Features.DesktopFeatures
 {
-    public class FeatureUIService : IFeatureUIService
+    public class FeatureUIService : BaseService, IFeatureUIService
     {
         private Features.Connection.IConnect connect => DependencyService.Get<Features.Connection.IConnect>() ?? new Features.Connection.Connect();
-        private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private Services.IFileSystem fileSystem => DependencyService.Get<Services.IFileSystem>() ?? new Services.FileSystem();
         private IHtmlUIService htmlUIService => DependencyService.Get<IHtmlUIService>() ?? new HtmlUIService();
 
@@ -31,13 +30,13 @@ namespace Rediscovery.Features.DesktopFeatures
                     }
                     else
                     {
-                        logger.Message($"No Profiles received for Feature Id:{featureId}");
+                        _logger.Message($"No Profiles received for Feature Id:{featureId}");
                         callback?.Invoke(false, null);
                     }
                 }
                 catch (Exception ex)
                 {
-                    logger.Error(ex);
+                    _logger.Error(ex);
                 }
                 finally
                 {
@@ -59,13 +58,13 @@ namespace Rediscovery.Features.DesktopFeatures
                     }
                     else
                     {
-                        logger.Message($"No Settings received for Feature Id:{featureId}");
+                        _logger.Message($"No Settings received for Feature Id:{featureId}");
                         callback?.Invoke(false, null);
                     }
                 }
                 catch (Exception ex)
                 {
-                    logger.Error(ex);
+                    _logger.Error(ex);
                 }
                 finally
                 {
@@ -87,7 +86,7 @@ namespace Rediscovery.Features.DesktopFeatures
                     }
                 } catch (Exception ex)
                 {
-                    logger.Error(ex);
+                    _logger.Error(ex);
                 }
                 try
                 {
@@ -100,13 +99,13 @@ namespace Rediscovery.Features.DesktopFeatures
                     }
                     else
                     {
-                        logger.Message($"No UI Archive received for Feature Id:{featureId}");
+                        _logger.Message($"No UI Archive received for Feature Id:{featureId}");
                         callback?.Invoke(false, directory);
                     }
                 }
                 catch (Exception ex)
                 {
-                    logger.Error(ex);
+                    _logger.Error(ex);
                 } finally
                 {
                     callback?.Invoke(false, directory);

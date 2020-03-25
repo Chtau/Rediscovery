@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Services.EntityManager))]
 namespace Rediscovery.Services
 {
-    public class EntityManager : IEntityManager
+    public class EntityManager : BaseService, IEntityManager
     {
         private Features.Connection.IConnect connection => DependencyService.Get<Features.Connection.IConnect>() ?? new Features.Connection.Connect();
 

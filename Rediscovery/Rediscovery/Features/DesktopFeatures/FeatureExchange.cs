@@ -11,9 +11,8 @@ using Xamarin.Forms;
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.DesktopFeatures.FeatureExchange))]
 namespace Rediscovery.Features.DesktopFeatures
 {
-    public class FeatureExchange : IFeatureExchange
+    public class FeatureExchange : BaseService, IFeatureExchange
     {
-        private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private IConnect connection => DependencyService.Get<IConnect>() ?? new Connect();
         private Connection.Models.ConnectionInfo model;
         private HubConnection featureHub;
@@ -56,13 +55,13 @@ namespace Rediscovery.Features.DesktopFeatures
                     featureHub.Remove("ClientResponse");
                     featureHub.On<Guid, object>("ClientResponse", (Guid featureId, object data) =>
                     {
-                        logger.Message($"Desktop response received ({DateTime.Now})");
+                        _logger.Message($"Desktop response received ({DateTime.Now})");
                         DesktopResponseReceived?.Invoke(this, (model.Id, featureId, null, data));
                     });
                 }
             } else
             {
-                logger.Message("Feature exchange init without a connection model");
+                _logger.Message("Feature exchange init without a connection model");
             }
         }
 
@@ -70,11 +69,11 @@ namespace Rediscovery.Features.DesktopFeatures
         {
             if (featureHub != null)
             {
-                logger.Message($"send feature message to {model.DisplayName} ({DateTime.Now})");
+                _logger.Message($"send feature message to {model.DisplayName} ({DateTime.Now})");
                 await featureHub.InvokeAsync("ClientMessage", feature.FeatureId, profileId, data);
             } else
             {
-                logger.Message("Try to send feature exchange message without hub connection");
+                _logger.Message("Try to send feature exchange message without hub connection");
             }
         }
 
@@ -82,12 +81,12 @@ namespace Rediscovery.Features.DesktopFeatures
         {
             if (featureHub != null)
             {
-                logger.Message($"Start feature {model.DisplayName} ({DateTime.Now})");
+                _logger.Message($"Start feature {model.DisplayName} ({DateTime.Now})");
                 await featureHub.InvokeAsync("ClientFeatureStart", feature.FeatureId);
             }
             else
             {
-                logger.Message("Try to START feature exchange message without hub connection");
+                _logger.Message("Try to START feature exchange message without hub connection");
             }
         }
 
@@ -95,12 +94,12 @@ namespace Rediscovery.Features.DesktopFeatures
         {
             if (featureHub != null)
             {
-                logger.Message($"Stop feature {model.DisplayName} ({DateTime.Now})");
+                _logger.Message($"Stop feature {model.DisplayName} ({DateTime.Now})");
                 await featureHub.InvokeAsync("ClientFeatureStop", feature.FeatureId);
             }
             else
             {
-                logger.Message("Try to STOP feature exchange message without hub connection");
+                _logger.Message("Try to STOP feature exchange message without hub connection");
             }
         }
     }

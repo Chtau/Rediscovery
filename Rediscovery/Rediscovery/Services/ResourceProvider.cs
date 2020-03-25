@@ -8,7 +8,7 @@ using System.Text;
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Services.ResourceProvider))]
 namespace Rediscovery.Services
 {
-    public class ResourceProvider : IResourceProvider
+    public class ResourceProvider : BaseService, IResourceProvider
     {
         public string ReadResource(string name)
         {

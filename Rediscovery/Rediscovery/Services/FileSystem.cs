@@ -6,7 +6,7 @@ using System.Text;
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Services.FileSystem))]
 namespace Rediscovery.Services
 {
-    public class FileSystem : IFileSystem
+    public class FileSystem : BaseService, IFileSystem
     {
         public string FeatureHtmlUIDirectory()
         {

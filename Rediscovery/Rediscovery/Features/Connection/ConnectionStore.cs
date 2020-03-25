@@ -10,9 +10,8 @@ using Xamarin.Forms;
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.Connection.ConnectionStore))]
 namespace Rediscovery.Features.Connection
 {
-    public class ConnectionStore : IDataStoreGuid<Models.ConnectionInfo>
+    public class ConnectionStore : BaseService, IDataStoreGuid<Models.ConnectionInfo>
     {
-        private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private IDBStore db => DependencyService.Get<IDBStore>() ?? new DBStore();
 
         public bool AddItem(Models.ConnectionInfo item)

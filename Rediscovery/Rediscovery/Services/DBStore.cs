@@ -8,10 +8,8 @@ using Xamarin.Forms;
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Services.DBStore))]
 namespace Rediscovery.Services
 {
-    public class DBStore : IDBStore
+    public class DBStore : BaseService, IDBStore
     {
-        private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
-
         public SQLiteAsyncConnection Store { get; }
 
         public DBStore()
@@ -22,7 +20,7 @@ namespace Rediscovery.Services
                 OnCreateTables().GetAwaiter();
             } catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
             }
         }
 

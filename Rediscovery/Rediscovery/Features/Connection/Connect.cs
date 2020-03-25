@@ -17,7 +17,7 @@ using PluginFeature.Models;
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.Connection.Connect))]
 namespace Rediscovery.Features.Connection
 {
-    public class Connect : IConnect
+    public class Connect : BaseService, IConnect
     {
         internal const string Protocol = "http://";
 
@@ -27,7 +27,6 @@ namespace Rediscovery.Features.Connection
             Feature,
         }
 
-        private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private IDataStoreGuid<Models.ConnectionInfo> connectionStore => DependencyService.Get<IDataStoreGuid<Models.ConnectionInfo>>() ?? new ConnectionStore();
         private IFeatureExchange featureExchange => DependencyService.Get<IFeatureExchange>() ?? new FeatureExchange();
 
@@ -116,13 +115,13 @@ namespace Rediscovery.Features.Connection
                 var con = await OnGetHubConnection(await OnGetHub(model, HubTypes.Auth), model);
                 if (con != null)
                 {
-                    logger.Message($"Send key verify to {model.DisplayName} ({DateTime.Now})");
+                    _logger.Message($"Send key verify to {model.DisplayName} ({DateTime.Now})");
                     await con.InvokeAsync("AuthorizeKey", model.User, key);
                 }
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
             }
         }
 
@@ -144,7 +143,7 @@ namespace Rediscovery.Features.Connection
                 }
             } catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
             }
             return null;
         }
@@ -168,11 +167,11 @@ namespace Rediscovery.Features.Connection
                     //await OnAfterChangedAuthenticationConnection(model);
                 } else
                 {
-                    logger.Message($"Could not create connection to {model.DisplayName} ({DateTime.Now})");
+                    _logger.Message($"Could not create connection to {model.DisplayName} ({DateTime.Now})");
                 }
             } catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
             }
         }
 
@@ -285,7 +284,7 @@ namespace Rediscovery.Features.Connection
                         return Newtonsoft.Json.JsonConvert.DeserializeObject<List<DeviceFeatureProfil>>(content);
                 } catch (Exception ex)
                 {
-                    logger.Error(ex);
+                    _logger.Error(ex);
                 }
             }
             return null;
@@ -304,7 +303,7 @@ namespace Rediscovery.Features.Connection
                 }
                 catch (Exception ex)
                 {
-                    logger.Error(ex);
+                    _logger.Error(ex);
                 }
             }
             return null;
