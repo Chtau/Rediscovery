@@ -1,4 +1,6 @@
-﻿## Publish for Windows
+﻿## TODO: We should switch to Electron.Net for Desktop UI Plugin Support
+
+## Publish for Windows
 
 dotnet publish --configuration Release -r win-x64 --self-contained true
 
