@@ -22,7 +22,7 @@ namespace Rediscovery.Desktop.Hub
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>()
-                            .UseElectron(args);
+                              .UseElectron(args);
                 });
     }
 }
