@@ -1,6 +1,43 @@
 <body>
-  <app-nav-menu></app-nav-menu>
-  <div class="container">
+  <div class="main-container">
+    <!--<div class="alert alert-app-level">
+        ...
+    </div>-->
+    <header class="header-1">
+      <div class="branding">
+        <a [routerLink]="['/']" class="nav-link">
+          <clr-icon shape="vm-bug"></clr-icon>
+          <span class="title">Rediscovery Hub</span>
+        </a>  
+      </div>
+      <div class="header-nav">
+          <a [routerLink]="['/devices']" [routerLinkActive]="['link-active']" class="active nav-link nav-text">Devices</a>
+          <a href="javascript://" class="nav-link nav-text">Features</a>
+          <a href="javascript://" class="nav-link nav-text">Logging</a>
+      </div>
+      <div class="header-actions">
+        <clr-dropdown>
+          <button class="nav-icon" clrDropdownTrigger aria-label="toggle settings menu">
+              <clr-icon shape="cog"></clr-icon>
+              <clr-icon shape="caret down"></clr-icon>
+          </button>
+          <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+              <a href="..." clrDropdownItem>Info</a>
+              <a href="..." clrDropdownItem>Settings</a>
+              <a href="..." clrDropdownItem>Exit</a>
+          </clr-dropdown-menu>
+        </clr-dropdown>
+      </div>
+  </header>
+    <!--<nav class="subnav">
+        ...
+    </nav>-->
+    <div class="content-container">
+        <router-outlet></router-outlet>
+    </div>
+</div>
+  <!--<app-nav-menu></app-nav-menu>-->
+  <!--<div class="container">
     <router-outlet></router-outlet>
-  </div>
+  </div>-->
 </body>
