@@ -24,6 +24,16 @@ namespace Rediscovery.Desktop.Hub
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddSingleton<IPCPipe.IPipeServer, IPCPipe.PipeServer>();
+            services.AddSingleton<IPCPipe.IPipeClient, IPCPipe.PipeClient>();
+            services.AddSingleton<IPCPipe.IPipeResourceProvider, IPCPipe.PipeResourceProvider>();
+            //services.AddSingleton<Connection.IIncomingConnectionPipe, Connection.IncomingConnectionPipe>();
+            //services.AddSingleton<Connection.IIncomingConnectionPipeLiveLogger, Connection.IncomingConnectionPipeLiveLogger>();
+            //services.AddSingleton<Connection.IIncomingConnectionService, Connection.IncomingConnectionService>();
+
+            services.AddSingleton<Feature.Device.IDeviceService, Feature.Device.DeviceService>();
+
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
