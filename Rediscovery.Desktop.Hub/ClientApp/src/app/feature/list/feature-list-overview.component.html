@@ -1,0 +1,13 @@
+<clr-datagrid>
+  <clr-dg-column>ID</clr-dg-column>
+  <clr-dg-column>Name</clr-dg-column>
+  <clr-dg-column>Version</clr-dg-column>
+
+  <clr-dg-row *ngFor="let featureModel of featureModels">
+      <clr-dg-cell>{{featureModel.id}}</clr-dg-cell>
+      <clr-dg-cell>{{featureModel.displayName}}</clr-dg-cell>
+      <clr-dg-cell>{{featureModel.version}}</clr-dg-cell>
+  </clr-dg-row>
+
+  <clr-dg-footer>{{featureModels.length}} features</clr-dg-footer>
+</clr-datagrid>

@@ -11,8 +11,9 @@
         </a>  
       </div>
       <div class="header-nav">
-          <a [routerLink]="['/devices']" [routerLinkActive]="['link-active']" class="active nav-link nav-text">Devices</a>
-          <a href="javascript://" class="nav-link nav-text">Features</a>
+        <!--class="active nav-link nav-text"-->
+          <a [routerLink]="['/devices']" [routerLinkActive]="['active']" class="nav-link nav-text">Devices</a>
+          <a [routerLink]="['/features']" [routerLinkActive]="['active']" class="nav-link nav-text">Features</a>
           <a href="javascript://" class="nav-link nav-text">Logging</a>
       </div>
       <div class="header-actions">
@@ -32,9 +33,13 @@
     <!--<nav class="subnav">
         ...
     </nav>-->
-    <div class="content-container">
-        <router-outlet></router-outlet>
+    <div style="height: 100%;">
+      <router-outlet></router-outlet>  
     </div>
+    
+    <!--<div class="content-container">
+        
+    </div>-->
 </div>
   <!--<app-nav-menu></app-nav-menu>-->
   <!--<div class="container">
