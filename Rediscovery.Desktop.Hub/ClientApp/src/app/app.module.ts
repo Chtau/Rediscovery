@@ -16,6 +16,8 @@ import { DeviceListComponent } from './device/device-list.component';
 import { FeatureListComponent } from './feature/feature-list.component';
 import { FeatureListOverviewComponent } from './feature/list/feature-list-overview.component';
 import { LoggerComponent } from './logger/logger.component';
+import { LoggerService } from './logger/logger.service';
+import { FeatureService } from './feature/feature.service';
 
 const routes: Route[] = [
   { path: 'counter', component: CounterComponent },
@@ -55,7 +57,10 @@ const routes: Route[] = [
     BrowserAnimationsModule,
     ClarityModule
   ],
-  providers: [],
+  providers: [
+    LoggerService,
+    FeatureService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

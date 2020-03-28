@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FeatureService } from '../feature.service';
 
 @Component({
   selector: 'app-feature-list-overview',
@@ -8,5 +9,9 @@ import { Component } from '@angular/core';
 export class FeatureListOverviewComponent {
   
   public featureModels: IDeviceFeatureDefinition[] = [];
+
+  constructor(private featureService: FeatureService) {
+    this.featureModels = featureService.getFeatures();
+  }
 
 }

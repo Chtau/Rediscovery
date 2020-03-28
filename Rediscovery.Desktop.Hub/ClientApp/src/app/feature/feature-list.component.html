@@ -8,8 +8,7 @@
         <input id="tabexample1" type="checkbox">
         <label for="tabexample1">Features</label>
         <ul class="nav-list">
-            <li><a class="nav-link">Link 1</a></li>
-            <li><a class="nav-link">Link 2</a></li>
+            <li *ngFor="let featureModel of featureModels"><a class="nav-link">{{featureModel.displayName}}</a></li>
         </ul>
       </section>
     </section>
