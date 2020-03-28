@@ -18,6 +18,7 @@ import { FeatureListOverviewComponent } from './feature/list/feature-list-overvi
 import { LoggerComponent } from './logger/logger.component';
 import { LoggerService } from './logger/logger.service';
 import { FeatureService } from './feature/feature.service';
+import { FeatureDetailComponent } from './feature/detail/feature-detail.component';
 
 const routes: Route[] = [
   { path: 'counter', component: CounterComponent },
@@ -28,6 +29,10 @@ const routes: Route[] = [
     path: 'features',
     component: FeatureListComponent,
     children: [
+      {
+        path: ':id', 
+        component: FeatureDetailComponent,
+      },
       {
         path: '', 
         component: FeatureListOverviewComponent,
@@ -47,7 +52,8 @@ const routes: Route[] = [
     DeviceListComponent,
     FeatureListComponent,
     FeatureListOverviewComponent,
-    LoggerComponent
+    LoggerComponent,
+    FeatureDetailComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

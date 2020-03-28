@@ -1,14 +1,16 @@
 <div class="content-container">
   <nav class="sidenav">
     <section class="sidenav-content">
-      <a [routerLink]="['/features']" [routerLinkActive]="['active']" class="nav-link">
+      <a [routerLink]="['/features']" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">
           Feature list
       </a>
       <section class="nav-group collapsible">
         <input id="tabexample1" type="checkbox">
         <label for="tabexample1">Features</label>
         <ul class="nav-list">
-            <li *ngFor="let featureModel of featureModels"><a class="nav-link">{{featureModel.displayName}}</a></li>
+            <li *ngFor="let featureModel of featureModels">
+              <a [routerLink]="['/features/' + featureModel.id]" [routerLinkActive]="['active']" class="nav-link">{{featureModel.displayName}}</a>
+            </li>
         </ul>
       </section>
     </section>
