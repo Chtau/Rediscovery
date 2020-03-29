@@ -1,23 +1,26 @@
 import { Injectable } from "@angular/core";
+import { environment } from "src/environments/environment";
 
 @Injectable()
 export class DeviceService {
 
-  models: IDeviceInfo[] = [
-    {
-      name: "Test 1",
-      id: "0",
-      allowAccess: true
-    },
-    {
-      name: "Test 2",
-      id: "1",
-      allowAccess: true
-    }
-  ];
+  models: IDeviceInfo[] = [];
   
   constructor() {
-
+    if (environment.isElectron === false) {
+      this.models = [
+        {
+          name: "Test 1",
+          id: "0",
+          allowAccess: true
+        },
+        {
+          name: "Test 2",
+          id: "1",
+          allowAccess: true
+        }
+      ];
+    }
   }
 
   public getRegisteredDevices(): IDeviceInfo[] {
