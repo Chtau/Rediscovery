@@ -23,8 +23,8 @@
               <clr-icon shape="caret down"></clr-icon>
           </button>
           <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
-              <a href="..." clrDropdownItem>Info</a>
-              <a href="..." clrDropdownItem>Settings</a>
+              <a [routerLink]="['/info']" [routerLinkActive]="['active']" clrDropdownItem>Info</a>
+              <a [routerLink]="['/settings']" [routerLinkActive]="['active']" clrDropdownItem>Settings</a>
               <a (click)="onExit()" clrDropdownItem>Exit</a>
           </clr-dropdown-menu>
         </clr-dropdown>

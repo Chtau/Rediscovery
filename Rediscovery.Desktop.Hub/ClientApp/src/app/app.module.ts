@@ -23,11 +23,15 @@ import { DeviceService } from './device/device.service';
 import { DeviceOverviewComponent } from './device/overview/device-overview.component';
 import { DeviceDetailComponent } from './device/detail/device-detail.component';
 import { DeviceRegisteredComponent } from './device/registered/device-registered.component';
+import { InfoComponent } from './info/info.component';
+import { SettingComponent } from './setting/setting.component';
 
 const routes: Route[] = [
   { path: 'counter', component: CounterComponent },
   { path: 'fetch-data', component: FetchDataComponent },
   { path: 'logger', component: LoggerComponent },
+  { path: 'info', component: InfoComponent },
+  { path: 'settings', component: SettingComponent },
   { 
     path: 'devices', 
     component: DeviceListComponent,
@@ -77,7 +81,9 @@ const routes: Route[] = [
     FeatureDetailComponent,
     DeviceOverviewComponent,
     DeviceDetailComponent,
-    DeviceRegisteredComponent
+    DeviceRegisteredComponent,
+    InfoComponent,
+    SettingComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
