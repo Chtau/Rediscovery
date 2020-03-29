@@ -1,5 +1,18 @@
 <div class="content-container">
   <div class="content-area">
-    
+    <div class="shell-wrap">
+      <p class="shell-top-bar">Logger Terminal</p>
+      <ul class="shell-body" #terminalContainer>
+        <li tabindex="-1" class="shell-system-li" [ngClass]="{'shell-warning': entry.type === 2, 'shell-error': entry.type == 1}" *ngFor="let entry of entries">
+          {{ entry.text }}
+          <span *ngIf="entry.subText != null" class="col">{{entry.subText}}</span>
+        </li>
+        <!--<li>
+          <div style="display:flex;">
+              <input type="text" id="cmdUserInput" onkeyup="" autofocus />
+          </div>
+        </li>-->
+      </ul>
+    </div>
   </div>
 </div>
