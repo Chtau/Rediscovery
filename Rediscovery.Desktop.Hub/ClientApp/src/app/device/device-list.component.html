@@ -18,7 +18,7 @@
           <label for="tabexample2">Registered Devices</label>
           <ul class="nav-list">
             <li *ngFor="let model of registeredDeviceModels">
-              <a [routerLink]="['/devices/' + model.id]" [routerLinkActive]="['active']" class="nav-link">{{model.name}}</a>
+              <a [routerLink]="['/devices/registered/' + model.id]" [routerLinkActive]="['active']" class="nav-link">{{model.name}}</a>
             </li>
           </ul>
       </section>

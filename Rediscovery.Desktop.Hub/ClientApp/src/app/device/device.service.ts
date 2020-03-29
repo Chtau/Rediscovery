@@ -35,4 +35,12 @@ export class DeviceService {
       }
     });
   }
+
+  public getRegisteredDeviceDetail(id: string): IDeviceInfo {
+    return this.models.find(x => {
+      if (x.id == id) {
+        return x;
+      }
+    });
+  }
 }

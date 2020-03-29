@@ -20,12 +20,32 @@ import { LoggerService } from './logger/logger.service';
 import { FeatureService } from './feature/feature.service';
 import { FeatureDetailComponent } from './feature/detail/feature-detail.component';
 import { DeviceService } from './device/device.service';
+import { DeviceOverviewComponent } from './device/overview/device-overview.component';
+import { DeviceDetailComponent } from './device/detail/device-detail.component';
+import { DeviceRegisteredComponent } from './device/registered/device-registered.component';
 
 const routes: Route[] = [
   { path: 'counter', component: CounterComponent },
   { path: 'fetch-data', component: FetchDataComponent },
   { path: 'logger', component: LoggerComponent },
-  { path: 'devices', component: DeviceListComponent },
+  { 
+    path: 'devices', 
+    component: DeviceListComponent,
+    children: [
+      {
+        path: 'registered/:id', 
+        component: DeviceRegisteredComponent,
+      },
+      {
+        path: ':id', 
+        component: DeviceDetailComponent,
+      },
+      {
+        path: '', 
+        component: DeviceOverviewComponent,
+      }
+    ]
+  },
   { 
     path: 'features',
     component: FeatureListComponent,
@@ -54,7 +74,10 @@ const routes: Route[] = [
     FeatureListComponent,
     FeatureListOverviewComponent,
     LoggerComponent,
-    FeatureDetailComponent
+    FeatureDetailComponent,
+    DeviceOverviewComponent,
+    DeviceDetailComponent,
+    DeviceRegisteredComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
