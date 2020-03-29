@@ -1,6 +1,8 @@
 import { Injectable } from "@angular/core";
 import { environment } from "src/environments/environment";
 
+import * as dummyDevice from '../../../assets/dummy/device.json';
+
 @Injectable()
 export class DeviceService {
 
@@ -8,18 +10,7 @@ export class DeviceService {
   
   constructor() {
     if (environment.isElectron === false) {
-      this.models = [
-        {
-          name: "Test 1",
-          id: "0",
-          allowAccess: true
-        },
-        {
-          name: "Test 2",
-          id: "1",
-          allowAccess: true
-        }
-      ];
+      this.models = <IDeviceInfo[]>dummyDevice.default;
     }
   }
 
