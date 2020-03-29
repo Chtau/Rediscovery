@@ -19,6 +19,7 @@ import { LoggerComponent } from './logger/logger.component';
 import { LoggerService } from './logger/logger.service';
 import { FeatureService } from './feature/feature.service';
 import { FeatureDetailComponent } from './feature/detail/feature-detail.component';
+import { DeviceService } from './device/device.service';
 
 const routes: Route[] = [
   { path: 'counter', component: CounterComponent },
@@ -65,7 +66,8 @@ const routes: Route[] = [
   ],
   providers: [
     LoggerService,
-    FeatureService
+    FeatureService,
+    DeviceService
   ],
   bootstrap: [AppComponent]
 })

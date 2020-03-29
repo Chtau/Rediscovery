@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DeviceService } from './device.service';
 
 @Component({
   selector: 'app-device-list',
@@ -7,4 +8,12 @@ import { Component } from '@angular/core';
 })
 export class DeviceListComponent {
   
+  connectedDeviceModels: IDeviceInfo[] = [];
+  registeredDeviceModels: IDeviceInfo[] = [];
+
+  constructor(private deviceService: DeviceService) {
+    this.connectedDeviceModels = deviceService.getConnectedDevices();
+    this.registeredDeviceModels = deviceService.getRegisteredDevices();
+  }
+
 }
