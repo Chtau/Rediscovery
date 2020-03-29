@@ -49,6 +49,14 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true
+            },
+            "alone": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.alone.ts"
+                }
+              ]
             }
           }
         },
@@ -60,6 +68,9 @@
           "configurations": {
             "production": {
               "browserTarget": "Rediscovery.Desktop.Hub:build:production"
+            },
+            "alone": {
+              "browserTarget": "Rediscovery.Desktop.Hub:build:alone"
             }
           }
         },

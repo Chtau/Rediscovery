@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "startalone": "ng serve --configuration=alone",
     "start1": "ng serve",
     "start": "echo Starting... && ng serve",
     "build": "ng build",
