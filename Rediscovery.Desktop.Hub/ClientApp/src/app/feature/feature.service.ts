@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { environment } from "src/environments/environment";
 
-import * as dummyFeature from '../../../assets/dummy/feature.json';
+import * as dummyFeature from '../../assets/dummy/feature.json';
 
 @Injectable()
 export class FeatureService {

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { environment } from "src/environments/environment";
 
-import * as dummyDevice from '../../../assets/dummy/device.json';
+import * as dummyDevice from '../../assets/dummy/device.json';
 
 @Injectable()
 export class DeviceService {

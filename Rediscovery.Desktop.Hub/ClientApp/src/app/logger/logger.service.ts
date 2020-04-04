@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { ILoggerEntry, LoggerType } from "./logger.interface";
 import { environment } from "src/environments/environment";
 
-import * as dummyLoggerEntries from '../../../assets/dummy/logger.json';
+import * as dummyLoggerEntries from '../../assets/dummy/logger.json';
 
 @Injectable()
 export class LoggerService {
