@@ -70,7 +70,10 @@
               "browserTarget": "Rediscovery.Desktop.Hub:build:production"
             },
             "alone": {
-              "browserTarget": "Rediscovery.Desktop.Hub:build:alone"
+              "browserTarget": "Rediscovery.Desktop.Hub:build:alone",
+              "ssl": true,
+              "sslKey": "./angular.key",
+              "sslCert": "./angular.crt"
             }
           }
         },
