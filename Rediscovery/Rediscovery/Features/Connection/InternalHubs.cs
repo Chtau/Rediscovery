@@ -90,7 +90,6 @@ namespace Rediscovery.Features.Connection
                 return connection;
             } catch (Exception ex)
             {
-                _logger.Message($"OnGetConnection=>Error: Token={model?.Token} New Connection={createdNewConnection}");
                 _logger.Error(ex);
                 return null;
             }

@@ -78,15 +78,7 @@ namespace DesktopService
                             (path.StartsWithSegments("/hubs/") || (path.HasValue ? path.Value.StartsWith("/hubs/") : false)))
                         {
                             // Read the token out of the query string
-                            Console.ForegroundColor = ConsoleColor.Yellow;
-                            Console.WriteLine($"Token received:{accessToken}");
-                            Console.ResetColor();
                             context.Token = accessToken;
-                        } else
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine($"No valid Access Token Path={path} Token:{accessToken}");
-                            Console.ResetColor();
                         }
                         return Task.CompletedTask;
                     }
