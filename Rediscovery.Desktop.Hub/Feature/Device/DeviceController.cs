@@ -18,6 +18,16 @@ namespace Rediscovery.Desktop.Hub.Feature.Device
         {
             _logger = logger;
             _deviceService = deviceService;
+            _deviceService.DeviceInfoReceived += _deviceService_DeviceInfoReceived;
+        }
+
+        private void _deviceService_DeviceInfoReceived(object sender, List<DeviceInfo> e)
+        {
+            ElectronNET.API.Electron.IpcMain.On("async-msg", (args) =>
+            {
+                var mainWindow = ElectronNET.API.Electron.WindowManager.BrowserWindows.First();
+                ElectronNET.API.Electron.IpcMain.Send(mainWindow, "asynchronous-reply", e);
+            });
         }
 
         [HttpGet]

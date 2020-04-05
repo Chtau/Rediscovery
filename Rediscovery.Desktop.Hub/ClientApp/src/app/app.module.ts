@@ -25,6 +25,7 @@ import { DeviceDetailComponent } from './device/detail/device-detail.component';
 import { DeviceRegisteredComponent } from './device/registered/device-registered.component';
 import { InfoComponent } from './info/info.component';
 import { SettingComponent } from './setting/setting.component';
+import { IpcService } from './ipc.service';
 
 const routes: Route[] = [
   { path: 'counter', component: CounterComponent },
@@ -96,7 +97,8 @@ const routes: Route[] = [
   providers: [
     LoggerService,
     FeatureService,
-    DeviceService
+    DeviceService,
+    IpcService
   ],
   bootstrap: [AppComponent]
 })

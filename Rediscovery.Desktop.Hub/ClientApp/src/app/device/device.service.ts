@@ -1,16 +1,26 @@
 import { Injectable } from "@angular/core";
 import { environment } from "src/environments/environment";
 
+//const { ipcRenderer } = window.require("electron");
+//import { ipcRenderer } from "electron";
+
+
 import * as dummyDevice from '../../assets/dummy/device.json';
+import { IpcService } from "../ipc.service";
 
 @Injectable()
 export class DeviceService {
 
   models: IDeviceInfo[] = [];
   
-  constructor() {
+  constructor(private ipc: IpcService) {
     if (environment.isElectron === false) {
       this.models = <IDeviceInfo[]>dummyDevice.default;
+    } else {
+      ipc.on('asynchronous-reply', (event, arg) => {
+        console.log(arg);
+        this.models = arg;
+      });
     }
   }
 

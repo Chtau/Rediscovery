@@ -13,6 +13,8 @@ namespace Rediscovery.Desktop.Hub.Feature.Device
         private readonly IPCPipe.IPipeResourceProvider _resourceProvider;
         private readonly IPCPipe.IPipeClient _pipeClient;
 
+        public event EventHandler<List<DeviceInfo>> DeviceInfoReceived;
+
         public List<DeviceInfo> Items { get; set; } = new List<DeviceInfo>();
 
         public DeviceService(IPCPipe.IPipeResourceProvider pipeResourceProvider,
@@ -45,6 +47,7 @@ namespace Rediscovery.Desktop.Hub.Feature.Device
         {
             Items.Clear();
             Items.AddRange(resource.Entity);
+            DeviceInfoReceived?.Invoke(this, resource.Entity);
         }
     }
 }
