@@ -252,9 +252,29 @@ namespace Rediscovery.Features.Connection
 
         private async Task<HttpResponseMessage> GetResponseMessage(Guid featureId, string subUrl)
         {
-            var model = await GetModel();
-            var client = await GetHttpClientFeature();
-            return await client.GetAsync($"{Protocol}{model.LastKnownAddress}{subUrl}{featureId}");
+            try
+            {
+                var model = await GetModel();
+                var client = await GetHttpClientFeature();
+                var response = await client.GetAsync($"{Protocol}{model.LastKnownAddress}{subUrl}{featureId}");
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    featureHttpClient.CancelPendingRequests();
+                    featureHttpClient.Dispose();
+                    featureHttpClient = null;
+                    var clientRetry = await GetHttpClientFeature();
+                    return await clientRetry.GetAsync($"{Protocol}{model.LastKnownAddress}{subUrl}{featureId}");
+                } else
+                {
+                    return response;
+                }
+            } catch (Exception ex)
+            {
+                _logger.Error(ex);
+                featureHttpClient.CancelPendingRequests();
+                featureHttpClient.Dispose();
+                return new HttpResponseMessage(System.Net.HttpStatusCode.ExpectationFailed);
+            }
         }
 
         public async Task<ZipArchive> GetUIArchive(Guid featureId)

@@ -44,20 +44,7 @@ namespace DesktopService.Features.Identity
                 user.PasswordKeyValidTill = DateTime.MaxValue;
 
                 // authentication successful so generate jwt token
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(_identitySettings.Secret);
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    Subject = new ClaimsIdentity(new Claim[]
-                    {
-                    new Claim(ClaimTypes.Sid, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.DeviceName),
-                    }),
-                    Expires = DateTime.UtcNow.AddDays(180),
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-                };
-                var token = tokenHandler.CreateToken(tokenDescriptor);
-                user.Token = tokenHandler.WriteToken(token);
+                user.Token = CreateNewToken(user.Id.ToString(), user.DeviceName);
 
                 await OnUpdateUser(user);
 
@@ -70,6 +57,24 @@ namespace DesktopService.Features.Identity
                 _logger.LogError(ex.ToString());
                 return null;
             }
+        }
+
+        public string CreateNewToken(string sid, string name)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_identitySettings.Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Sid, sid),
+                    new Claim(ClaimTypes.Name, name),
+                }),
+                Expires = DateTime.UtcNow.AddDays(180),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
 
         public async Task<IEnumerable<Device>> GetAll()

@@ -50,6 +50,7 @@ namespace Rediscovery.Features.Authentication
                 model.ConnectionState = state;
                 model.LastConnection = DateTime.Now;
                 model.Token = token;
+                _logger.Message($"OnHello=>New Token received: Token={token}");
                 Task.Run(async () =>
                 {
                     await connectionStore.UpdateItemAsync(model);

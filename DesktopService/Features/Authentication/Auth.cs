@@ -35,7 +35,10 @@ namespace DesktopService.Features.Authentication
         {
             var u = await _deviceService.GetByName(device);
             if (u != null && u.AllowAccess)
+            {
+                u.Token = _deviceService.CreateNewToken(u.Id.ToString(), u.DeviceName);
                 return new Tuple<LoginState, Identity.Models.Device>(LoginState.OK, u);
+            }
             else
                 return new Tuple<LoginState, Identity.Models.Device>(LoginState.RequiredAuthorizeKey, null);
         }

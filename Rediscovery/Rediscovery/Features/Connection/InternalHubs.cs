@@ -35,6 +35,7 @@ namespace Rediscovery.Features.Connection
         {
             if (model == null)
                 return null;
+            bool createdNewConnection = false;
             try
             {
                 if (connection != null)
@@ -63,6 +64,7 @@ namespace Rediscovery.Features.Connection
                 _logger.Message($"Try do connect to {model.DisplayName} with Address:{url} ({DateTime.Now.ToString()})");
                 if (shouldUseToken)
                 {
+                    createdNewConnection = true;
                     connection = new HubConnectionBuilder()
                     .WithUrl(url, options =>
                     {
@@ -88,6 +90,7 @@ namespace Rediscovery.Features.Connection
                 return connection;
             } catch (Exception ex)
             {
+                _logger.Message($"OnGetConnection=>Error: Token={model?.Token} New Connection={createdNewConnection}");
                 _logger.Error(ex);
                 return null;
             }
