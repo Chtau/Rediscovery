@@ -14,13 +14,16 @@ namespace DesktopService.Features.Pipes
         private readonly DeviceFeature.IFeatureService _featureService;
         private readonly IPCPipe.IPipeResourceProvider _resourceProvider;
         private readonly IPCPipe.IPipeServer _pipeServer;
+        private readonly IPCPipe.IPipeClient _pipeClient;
 
         public PipeRepository(DAL.IDBContext dBContext, IPCPipe.IPipeResourceProvider resourceProvider,
-            IPCPipe.IPipeServer pipeServer, DeviceFeature.IFeatureService featureService)
+            IPCPipe.IPipeServer pipeServer, DeviceFeature.IFeatureService featureService,
+            IPCPipe.IPipeClient pipeClient)
         {
             _dBContext = dBContext;
             _resourceProvider = resourceProvider;
             _pipeServer = pipeServer;
+            _pipeClient = pipeClient;
             _featureService = featureService;
         }
 
@@ -89,7 +92,7 @@ namespace DesktopService.Features.Pipes
                 {
                     await Task.Delay(1000);
                     Console.WriteLine($"TODO: Heartbeat");
-                    _pipeServer.Send("rediscoveryheartbeathub", DateTime.Now.ToString());
+                    _pipeClient.Send("rediscoveryheartbeathub", DateTime.Now.ToString());
                 } catch (Exception ex)
                 {
                     Console.Write(ex.ToString());

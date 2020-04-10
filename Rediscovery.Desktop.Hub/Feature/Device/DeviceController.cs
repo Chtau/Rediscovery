@@ -13,15 +13,18 @@ namespace Rediscovery.Desktop.Hub.Feature.Device
         private readonly ILogger<DeviceController> _logger;
         private readonly IDeviceService _deviceService;
         private readonly IPCPipe.IPipeClient _pipeClient;
+        private readonly IPCPipe.IPipeServer _pipeServer;
 
         public DeviceController(ILogger<DeviceController> logger,
             IDeviceService deviceService,
-            IPCPipe.IPipeClient pipeClient)
+            IPCPipe.IPipeClient pipeClient,
+            IPCPipe.IPipeServer pipeServer)
         {
             _logger = logger;
             _deviceService = deviceService;
             _deviceService.DeviceInfoReceived += _deviceService_DeviceInfoReceived;
             _pipeClient = pipeClient;
+            _pipeServer = pipeServer;
         }
 
         private void _deviceService_DeviceInfoReceived(object sender, List<DeviceInfo> e)
@@ -52,7 +55,7 @@ namespace Rediscovery.Desktop.Hub.Feature.Device
             Console.WriteLine("Init Heartbeat listner");
             try
             {
-                _pipeClient.Listen("rediscoveryheartbeathub", (value) =>
+                _pipeServer.Listen("rediscoveryheartbeathub", (value) =>
                 {
                     System.Diagnostics.Debug.Print($"Heartbeat received:{value}");
                     Console.WriteLine($"Heartbeat received:{value}");
