@@ -17,6 +17,7 @@ namespace DesktopService
         private readonly Features.Pipes.IPipeIncomingConnection _pipeIncomingConnection;
         private readonly Features.Pipes.IPipeRepository _pipeRepository;
         private readonly Features.Pipes.IPipeServiceInfo _pipeServiceInfo;
+        private readonly IPCPipe.IPipeServer _pipeServer;
         private readonly Features.Configuration.IDistributeConfig _distributeConfig;
         private readonly SharedConfigurations.DesktopService.Models.AppConfiguration _appSettings;
         private readonly ILogger<Worker> _logger;
@@ -26,6 +27,7 @@ namespace DesktopService
             Features.Pipes.IPipeServiceInfo pipeServiceInfo,
             Features.Configuration.IDistributeConfig distributeConfig,
             IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> appOptions,
+            IPCPipe.IPipeServer pipeServer,
             ILoggerFactory loggerFactory)
         {
             _pipeIncomingConnection = pipeIncomingConnection;
@@ -34,6 +36,7 @@ namespace DesktopService
             _distributeConfig = distributeConfig;
             _appSettings = appOptions.Value;
             _logger = loggerFactory.CreateLogger<Worker>();
+            _pipeServer = pipeServer;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)

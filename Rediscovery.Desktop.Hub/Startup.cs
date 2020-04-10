@@ -25,6 +25,8 @@ namespace Rediscovery.Desktop.Hub
         {
             services.AddControllersWithViews();
 
+            services.AddHostedService<Worker>();
+
             services.AddSingleton<IPCPipe.IPipeServer, IPCPipe.PipeServer>();
             services.AddSingleton<IPCPipe.IPipeClient, IPCPipe.PipeClient>();
             services.AddSingleton<IPCPipe.IPipeResourceProvider, IPCPipe.PipeResourceProvider>();

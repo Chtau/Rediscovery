@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DesktopService.Features.Pipes
 {
@@ -28,6 +29,7 @@ namespace DesktopService.Features.Pipes
             _resourceProvider.Provide("rediscoveryservice", OnProvideResources);
             _pipeServer.DataReceived += _pipeServer_DataReceived;
             _pipeServer.Listen("sync_device_rediscoveryservice");
+            Task.Run(OnSendHeartbeat);
         }
 
         private void _pipeServer_DataReceived(object sender, string e)
@@ -77,6 +79,22 @@ namespace DesktopService.Features.Pipes
                 return Newtonsoft.Json.JsonConvert.SerializeObject(resource);
             }
             return null;
+        }
+
+        private async Task OnSendHeartbeat()
+        {
+            do
+            {
+                try
+                {
+                    await Task.Delay(1000);
+                    Console.WriteLine($"TODO: Heartbeat");
+                    _pipeServer.Send("rediscoveryheartbeathub", DateTime.Now.ToString());
+                } catch (Exception ex)
+                {
+                    Console.Write(ex.ToString());
+                }
+            } while (true);
         }
     }
 }
