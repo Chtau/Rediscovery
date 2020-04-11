@@ -17,13 +17,19 @@ export class DeviceService {
   registeredDeviceModels: IDeviceInfo[] = [];
   connectedDeviceModels: IDeviceInfo[] = [];
   
-  constructor(private ipc: IpcService, zone: NgZone) {
+  constructor(private ipc: IpcService,private zone: NgZone) {
+    
+  }
+
+  public initIPC(): void {
+    console.log("init IPC");
     if (environment.isElectron === false) {
       this.registeredDeviceModels = <IDeviceInfo[]>dummyDevice.default;
     } else {
-      ipc.on('registereddeviceinfo-ipc', (event, arg) => {
+      this.ipc.on('registereddeviceinfo-ipc', (event, arg) => {
+        console.log("IPC data received");
         // switch to angular zone for change detected events ...
-        zone.run(() => {
+        this.zone.run(() => {
           this.registeredDeviceModels = arg;
           this.registeredDevicesChanged.emit(this.registeredDeviceModels);
         });
