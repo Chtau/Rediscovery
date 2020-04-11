@@ -15,12 +15,14 @@ export class DeviceService {
   connectedDevicesChanged = new EventEmitter<IDeviceInfo[]>();
 
   registeredDeviceModels: IDeviceInfo[] = [];
+  connectedDeviceModels: IDeviceInfo[] = [];
   
   constructor(private ipc: IpcService, zone: NgZone) {
     if (environment.isElectron === false) {
       this.registeredDeviceModels = <IDeviceInfo[]>dummyDevice.default;
     } else {
       ipc.on('asynchronous-reply', (event, arg) => {
+        // switch to angular zone for change detected events ...
         zone.run(() => {
           console.log(arg);
           this.registeredDeviceModels = arg;
@@ -35,7 +37,7 @@ export class DeviceService {
   }
 
   public getConnectedDevices(): IDeviceInfo[] {
-    return this.registeredDeviceModels;
+    return this.connectedDeviceModels;
   }
 
   public getDeviceDetail(id: string): IDeviceInfo {

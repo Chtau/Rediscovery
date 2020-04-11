@@ -14,6 +14,10 @@ export class DeviceOverviewComponent {
   constructor(private deviceService: DeviceService) {
     this.connectedDeviceModels = deviceService.getConnectedDevices();
     this.registeredDeviceModels = deviceService.getRegisteredDevices();
+
+    this.deviceService.registeredDevicesChanged.subscribe(result => {
+      this.registeredDeviceModels = result;
+    });
   }
 
 }

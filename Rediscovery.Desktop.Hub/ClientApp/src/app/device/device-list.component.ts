@@ -13,8 +13,7 @@ export class DeviceListComponent {
   registeredDeviceModels: IDeviceInfo[] = [];
 
   constructor(private deviceService: DeviceService,
-    http: HttpClient, @Inject('BASE_URL') baseUrl: string,
-    private cdRef: ChangeDetectorRef) {
+    http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     this.connectedDeviceModels = this.deviceService.getConnectedDevices();
     this.registeredDeviceModels = this.deviceService.getRegisteredDevices();
 
@@ -24,9 +23,7 @@ export class DeviceListComponent {
     }, error => console.error(error));
 
     this.deviceService.registeredDevicesChanged.subscribe(result => {
-      console.log('Registered devices changed Items:' + result.length);
       this.registeredDeviceModels = result;
-      this.cdRef.detectChanges();
     });
   }
 
