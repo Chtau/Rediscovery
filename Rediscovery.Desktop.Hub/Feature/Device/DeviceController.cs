@@ -12,23 +12,26 @@ namespace Rediscovery.Desktop.Hub.Feature.Device
     {
         private readonly ILogger<DeviceController> _logger;
         private readonly IDeviceService _deviceService;
-        private readonly IPCPipe.IPipeClient _pipeClient;
-        private readonly IPCPipe.IPipeServer _pipeServer;
+        //private readonly IPCPipe.IPipeClient _pipeClient;
+        //private readonly IPCPipe.IPipeServer _pipeServer;
 
         public DeviceController(ILogger<DeviceController> logger,
-            IDeviceService deviceService,
-            IPCPipe.IPipeClient pipeClient,
-            IPCPipe.IPipeServer pipeServer)
+            IDeviceService deviceService//,
+            //IPCPipe.IPipeClient pipeClient,
+            //IPCPipe.IPipeServer pipeServer
+            )
         {
             _logger = logger;
             _deviceService = deviceService;
             _deviceService.DeviceInfoReceived += _deviceService_DeviceInfoReceived;
-            _pipeClient = pipeClient;
-            _pipeServer = pipeServer;
+            //_pipeClient = pipeClient;
+            //_pipeServer = pipeServer;
+            _deviceService.Init();
         }
 
         private void _deviceService_DeviceInfoReceived(object sender, List<DeviceInfo> e)
         {
+            Console.WriteLine($"DeviceInfoReceived");
             ElectronNET.API.Electron.IpcMain.On("async-msg", (args) =>
             {
                 var mainWindow = ElectronNET.API.Electron.WindowManager.BrowserWindows.First();
@@ -39,8 +42,9 @@ namespace Rediscovery.Desktop.Hub.Feature.Device
         [HttpGet]
         public bool Refresh()
         {
-            Task.Run(OnHeartbeatListener);
-            _deviceService.Refresh();
+            _deviceService.Init();
+            //Task.Run(OnHeartbeatListener);
+            //_deviceService.Refresh();
             return true;
         }
 
@@ -52,7 +56,7 @@ namespace Rediscovery.Desktop.Hub.Feature.Device
 
         private void OnHeartbeatListener()
         {
-            Console.WriteLine("Init Heartbeat listner");
+            /*Console.WriteLine("Init Heartbeat listner");
             try
             {
                 _pipeServer.Listen("rediscoveryheartbeathub", (value) =>
@@ -63,7 +67,7 @@ namespace Rediscovery.Desktop.Hub.Feature.Device
             } catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-            }
+            }*/
         }
     }
 }

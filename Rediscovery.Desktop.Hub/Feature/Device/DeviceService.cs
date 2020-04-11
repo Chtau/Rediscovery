@@ -11,20 +11,20 @@ namespace Rediscovery.Desktop.Hub.Feature.Device
     public class DeviceService : IDeviceService
     {
         private readonly IPCPipe.IPipeResourceProvider _resourceProvider;
-        private readonly IPCPipe.IPipeClient _pipeClient;
+        private readonly IPCPipe.IPipeServer _pipeServer;
 
         public event EventHandler<List<DeviceInfo>> DeviceInfoReceived;
 
         public List<DeviceInfo> Items { get; set; } = new List<DeviceInfo>();
 
         public DeviceService(IPCPipe.IPipeResourceProvider pipeResourceProvider,
-            IPCPipe.IPipeClient pipeClient)
+            IPCPipe.IPipeServer pipeServer)
         {
             _resourceProvider = pipeResourceProvider;
-            _pipeClient = pipeClient;
+            _pipeServer = pipeServer;
         }
 
-        public void Refresh()
+        public void Init()
         {
             _resourceProvider.Receiver<List<DeviceInfo>>("rediscoveryservice", "deviceinfo", OnReceiveResource);
         }
@@ -38,7 +38,7 @@ namespace Rediscovery.Desktop.Hub.Feature.Device
                     ActionType = SyncAction.Delete,
                     Entity = item
                 };
-                _pipeClient.Send("sync_device_rediscoveryservice", Newtonsoft.Json.JsonConvert.SerializeObject(sync));
+                //_pipeClient.Send("sync_device_rediscoveryservice", Newtonsoft.Json.JsonConvert.SerializeObject(sync));
                 Items.Remove(item);
             }
         }

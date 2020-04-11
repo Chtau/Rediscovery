@@ -10,7 +10,7 @@ namespace Rediscovery.Desktop.Hub.Feature.Device
     {
         event EventHandler<List<DeviceInfo>> DeviceInfoReceived;
         List<DeviceInfo> Items { get; set; }
-        void Refresh();
+        void Init();
         void RemoveItem(DeviceInfo item);
     }
 }

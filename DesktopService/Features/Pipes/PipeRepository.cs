@@ -32,7 +32,7 @@ namespace DesktopService.Features.Pipes
             _resourceProvider.Provide("rediscoveryservice", OnProvideResources);
             _pipeServer.DataReceived += _pipeServer_DataReceived;
             _pipeServer.Listen("sync_device_rediscoveryservice");
-            Task.Run(OnSendHeartbeat);
+            //Task.Run(OnSendHeartbeat);
         }
 
         private void _pipeServer_DataReceived(object sender, string e)
