@@ -21,10 +21,9 @@ export class DeviceService {
     if (environment.isElectron === false) {
       this.registeredDeviceModels = <IDeviceInfo[]>dummyDevice.default;
     } else {
-      ipc.on('asynchronous-reply', (event, arg) => {
+      ipc.on('registereddeviceinfo-ipc', (event, arg) => {
         // switch to angular zone for change detected events ...
         zone.run(() => {
-          console.log(arg);
           this.registeredDeviceModels = arg;
           this.registeredDevicesChanged.emit(this.registeredDeviceModels);
         });
