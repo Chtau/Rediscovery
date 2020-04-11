@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, EventEmitter, NgZone } from "@angular/core";
 import { environment } from "src/environments/environment";
 
 //const { ipcRenderer } = window.require("electron");
@@ -11,29 +11,35 @@ import { IpcService } from "../ipc.service";
 @Injectable()
 export class DeviceService {
 
-  models: IDeviceInfo[] = [];
+  registeredDevicesChanged = new EventEmitter<IDeviceInfo[]>();
+  connectedDevicesChanged = new EventEmitter<IDeviceInfo[]>();
+
+  registeredDeviceModels: IDeviceInfo[] = [];
   
-  constructor(private ipc: IpcService) {
+  constructor(private ipc: IpcService, zone: NgZone) {
     if (environment.isElectron === false) {
-      this.models = <IDeviceInfo[]>dummyDevice.default;
+      this.registeredDeviceModels = <IDeviceInfo[]>dummyDevice.default;
     } else {
       ipc.on('asynchronous-reply', (event, arg) => {
-        console.log(arg);
-        this.models = arg;
+        zone.run(() => {
+          console.log(arg);
+          this.registeredDeviceModels = arg;
+          this.registeredDevicesChanged.emit(this.registeredDeviceModels);
+        });
       });
     }
   }
 
   public getRegisteredDevices(): IDeviceInfo[] {
-    return this.models;
+    return this.registeredDeviceModels;
   }
 
   public getConnectedDevices(): IDeviceInfo[] {
-    return this.models;
+    return this.registeredDeviceModels;
   }
 
   public getDeviceDetail(id: string): IDeviceInfo {
-    return this.models.find(x => {
+    return this.registeredDeviceModels.find(x => {
       if (x.id == id) {
         return x;
       }
@@ -41,7 +47,7 @@ export class DeviceService {
   }
 
   public getRegisteredDeviceDetail(id: string): IDeviceInfo {
-    return this.models.find(x => {
+    return this.registeredDeviceModels.find(x => {
       if (x.id == id) {
         return x;
       }

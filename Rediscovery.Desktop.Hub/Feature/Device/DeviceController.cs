@@ -31,12 +31,14 @@ namespace Rediscovery.Desktop.Hub.Feature.Device
 
         private void _deviceService_DeviceInfoReceived(object sender, List<DeviceInfo> e)
         {
-            Console.WriteLine($"DeviceInfoReceived");
-            ElectronNET.API.Electron.IpcMain.On("async-msg", (args) =>
+            Console.WriteLine($"DeviceInfoReceived Items:{e?.Count}");
+            var mainWindow = ElectronNET.API.Electron.WindowManager.BrowserWindows.First();
+            ElectronNET.API.Electron.IpcMain.Send(mainWindow, "asynchronous-reply", e);
+            /*ElectronNET.API.Electron.IpcMain.On("async-msg", (args) =>
             {
                 var mainWindow = ElectronNET.API.Electron.WindowManager.BrowserWindows.First();
                 ElectronNET.API.Electron.IpcMain.Send(mainWindow, "asynchronous-reply", e);
-            });
+            });*/
         }
 
         [HttpGet]
