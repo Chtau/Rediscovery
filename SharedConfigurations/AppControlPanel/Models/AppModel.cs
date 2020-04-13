@@ -15,5 +15,6 @@ namespace SharedConfigurations.AppControlPanel.Models
         public string RunAs { get; set; }
         public bool HideShell { get; set; }
         public bool AutoStartWithPanel { get; set; }
+        public bool AutoStartWhenNotRunning { get; set; }
     }
 }

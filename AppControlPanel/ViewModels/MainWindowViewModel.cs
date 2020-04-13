@@ -49,12 +49,15 @@ namespace AppControlPanel.ViewModels
                     {
                         foreach (var item in Apps)
                         {
-
                             _applicationWatchService.Watch(item.AppModel, (state, prcId) =>
                             {
                                 item.AppLaunchState = state;
                                 item.ProcessId = prcId;
                             });
+                            if (item.AppModel.AutoStartWhenNotRunning && item.AppLaunchState == AppViewModel.LaunchState.NotRunning)
+                            {
+                                item.AppLaunchState = _applicationStartService.Start(item.AppModel);
+                            }
                         }
                         await Task.Delay(1000);
                     } catch (Exception ex)
