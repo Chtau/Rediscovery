@@ -10,7 +10,7 @@ namespace AppControlPanel.Services
 {
     public class ApplicationStartService : IApplicationStartService
     {
-        public bool Start(AppModel appViewModel)
+        public ViewModels.AppViewModel.LaunchState Start(AppModel appViewModel)
         {
             if (!string.IsNullOrWhiteSpace(appViewModel.ExecuteableName))
             {
@@ -32,10 +32,16 @@ namespace AppControlPanel.Services
 
                 if (!string.IsNullOrWhiteSpace(path))
                 {
-                    ProcessRun(path, appViewModel.ExecuteArguments, null, appViewModel.RunAs);
+                    if (ProcessRun(path, appViewModel.ExecuteArguments, null, appViewModel.RunAs))
+                        return ViewModels.AppViewModel.LaunchState.Running;
+                    else
+                        return ViewModels.AppViewModel.LaunchState.ErrorStarting;
+                } else
+                {
+                    return ViewModels.AppViewModel.LaunchState.NotFound;
                 }
             }
-            return false;
+            return ViewModels.AppViewModel.LaunchState.Error;
         }
 
         private string GetApplicationFolder()

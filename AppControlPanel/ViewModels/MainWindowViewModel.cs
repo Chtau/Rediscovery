@@ -46,8 +46,7 @@ namespace AppControlPanel.ViewModels
 
         public void StartItem(AppViewModel model)
         {
-            var result = _applicationStartService.Start(model.AppModel);
-            model.AppLaunchState = result ? AppViewModel.LaunchState.Running : AppViewModel.LaunchState.Error;
+            model.AppLaunchState = _applicationStartService.Start(model.AppModel);
         }
     }
 }

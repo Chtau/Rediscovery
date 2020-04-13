@@ -21,7 +21,7 @@
             <Button Foreground="{Binding AppLaunchState, Converter={StaticResource LaunchForeColor}}" 
                     Background="{Binding AppLaunchState, Converter={StaticResource LaunchBackColor}}" 
                     Command="{Binding $parent[Window].DataContext.StartItem}" CommandParameter="{Binding .}">Start</Button>
-            <!--Command="{Binding $parent[UserControl].DataContext.StartItem}" CommandParameter="{Binding .}"-->
+            <TextBlock Margin="10,0" Text="{Binding AppLaunchState, Converter={StaticResource LaunchTextColor}}" TextAlignment="Center" VerticalAlignment="Center"/>
           </StackPanel>
         </DataTemplate>
       </ItemsControl.ItemTemplate>

@@ -15,5 +15,6 @@
     <Application.Resources>
       <converter:LaunchStateBackColorConverter x:Key="LaunchBackColor"/>
       <converter:LaunchStateForeColorConverter x:Key="LaunchForeColor"/>
+      <converter:LaunchStateTextConverter x:Key="LaunchTextColor"/>
     </Application.Resources>
 </Application>

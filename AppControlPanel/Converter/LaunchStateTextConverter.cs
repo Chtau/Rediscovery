@@ -1,5 +1,4 @@
 ﻿using Avalonia.Data.Converters;
-using Avalonia.Media;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -7,7 +6,7 @@ using System.Text;
 
 namespace AppControlPanel.Converter
 {
-    public class LaunchStateBackColorConverter : IValueConverter
+    public class LaunchStateTextConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -16,20 +15,24 @@ namespace AppControlPanel.Converter
                 switch (state)
                 {
                     case ViewModels.AppViewModel.LaunchState.None:
-                        return Brushes.White;
+                        return "";
                     case ViewModels.AppViewModel.LaunchState.Running:
-                    case ViewModels.AppViewModel.LaunchState.Starting:
-                        return Brushes.Green;
+                        return "running";
                     case ViewModels.AppViewModel.LaunchState.Error:
+                        return "error";
                     case ViewModels.AppViewModel.LaunchState.NotFound:
+                        return "not found";
+                    case ViewModels.AppViewModel.LaunchState.Starting:
+                        return "starting";
                     case ViewModels.AppViewModel.LaunchState.ErrorStarting:
-                        return Brushes.Red;
+                        return "error starting";
                     default:
-                        return Brushes.White;
+                        return "";
                 }
-            } else
+            }
+            else
             {
-                return Brushes.White;
+                return "";
             }
         }
 

@@ -11,7 +11,10 @@ namespace AppControlPanel.ViewModels
         {
             None = 0,
             Running = 1,
-            Error = 2
+            Error = 2,
+            NotFound = 3,
+            Starting = 4,
+            ErrorStarting = 5
         }
 
         public SharedConfigurations.AppControlPanel.Models.AppModel AppModel { get; set; }
