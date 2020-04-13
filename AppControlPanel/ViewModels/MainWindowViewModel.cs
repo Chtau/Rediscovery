@@ -44,9 +44,10 @@ namespace AppControlPanel.ViewModels
             }
         }
 
-        public void StartItem(SharedConfigurations.AppControlPanel.Models.AppModel item)
+        public void StartItem(AppViewModel model)
         {
-            _applicationStartService.Start(item);
+            var result = _applicationStartService.Start(model.AppModel);
+            model.AppLaunchState = result ? AppViewModel.LaunchState.Running : AppViewModel.LaunchState.Error;
         }
     }
 }
