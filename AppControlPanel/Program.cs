@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using AppControlPanel.ViewModels;
 using AppControlPanel.Views;
 using Avalonia;
 using Avalonia.Controls;
@@ -38,7 +39,7 @@ namespace AppControlPanel
 
             Configuration = builder.Build();
 
-            var appsSettings = Configuration.GetSection(SharedConfigurations.AppControlPanel.Models.AppViewModel.SectionName).Get<SharedConfigurations.AppControlPanel.Models.AppViewModel>();
+            //var appsSettings = Configuration.GetSection(SharedConfigurations.AppControlPanel.Models.AppViewModel.SectionName).Get<SharedConfigurations.AppControlPanel.Models.AppViewModel>();
 
 
             var service = new ServiceCollection();
@@ -57,7 +58,10 @@ namespace AppControlPanel
             else if (args.Any(x => x.StartsWith(SharedCommandArguments.Hub.Arguments.CodeArgStart, StringComparison.OrdinalIgnoreCase)))
                 app.Run(new Connection.IncomingConnection(new Connection.Models.IncomingConnectionViewModel(args)));
             else*/
-            app.Run(new MainWindow());
+            app.Run(new MainWindow()
+            {
+                DataContext = new MainWindowViewModel()
+            });
         }
     }
 }

@@ -13,6 +13,16 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <ItemsControl Items="{Binding Apps}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <StackPanel Orientation="Horizontal">
+            <TextBlock Margin="10,0" Text="{Binding Name}" TextAlignment="Center" VerticalAlignment="Center"/>
+            <Button Foreground="White" Background="Green" Command="{Binding $parent[Window].DataContext.StartItem}" CommandParameter="{Binding .}">Start</Button>
+            <!--Command="{Binding $parent[UserControl].DataContext.StartItem}" CommandParameter="{Binding .}"-->
+          </StackPanel>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
 
 </Window>
