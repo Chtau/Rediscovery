@@ -6,6 +6,6 @@ namespace AppControlPanel.Services
 {
     public interface IApplicationStartService
     {
-        bool Start(SharedConfigurations.AppControlPanel.Models.AppViewModel appViewModel);
+        bool Start(SharedConfigurations.AppControlPanel.Models.AppModel appViewModel);
     }
 }

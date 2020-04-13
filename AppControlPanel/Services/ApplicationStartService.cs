@@ -10,7 +10,7 @@ namespace AppControlPanel.Services
 {
     public class ApplicationStartService : IApplicationStartService
     {
-        public bool Start(AppViewModel appViewModel)
+        public bool Start(AppModel appViewModel)
         {
             if (!string.IsNullOrWhiteSpace(appViewModel.ExecuteableName))
             {

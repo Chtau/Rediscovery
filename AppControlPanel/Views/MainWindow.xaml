@@ -17,8 +17,8 @@
       <ItemsControl.ItemTemplate>
         <DataTemplate>
           <StackPanel Orientation="Horizontal">
-            <TextBlock Margin="10,0" Text="{Binding Name}" TextAlignment="Center" VerticalAlignment="Center"/>
-            <Button Foreground="White" Background="Green" Command="{Binding $parent[Window].DataContext.StartItem}" CommandParameter="{Binding .}">Start</Button>
+            <TextBlock Margin="10,0" Text="{Binding AppModel.Name}" TextAlignment="Center" VerticalAlignment="Center"/>
+            <Button Foreground="White" Background="Green" Command="{Binding $parent[Window].DataContext.StartItem}" CommandParameter="{Binding AppModel}">Start</Button>
             <!--Command="{Binding $parent[UserControl].DataContext.StartItem}" CommandParameter="{Binding .}"-->
           </StackPanel>
         </DataTemplate>

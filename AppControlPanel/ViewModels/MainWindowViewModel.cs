@@ -14,7 +14,7 @@ namespace AppControlPanel.ViewModels
 
         public string Greeting => "Welcome to Avalonia!";
 
-        public System.Collections.ObjectModel.ObservableCollection<SharedConfigurations.AppControlPanel.Models.AppViewModel> Apps { get; set; } = new System.Collections.ObjectModel.ObservableCollection<SharedConfigurations.AppControlPanel.Models.AppViewModel>();
+        public System.Collections.ObjectModel.ObservableCollection<AppViewModel> Apps { get; set; } = new System.Collections.ObjectModel.ObservableCollection<AppViewModel>();
 
         public MainWindowViewModel()
         {
@@ -30,17 +30,21 @@ namespace AppControlPanel.ViewModels
 
         private void SetAppsCollection()
         {
-            var appsSettings = Program.Configuration.GetSection(SharedConfigurations.AppControlPanel.Models.AppViewModel.SectionName).Get<SharedConfigurations.AppControlPanel.Models.AppViewModel[]>();
+            var appsSettings = Program.Configuration.GetSection(SharedConfigurations.AppControlPanel.Models.AppModel.SectionName).Get<SharedConfigurations.AppControlPanel.Models.AppModel[]>();
             if (appsSettings != null)
             {
-                Apps = new System.Collections.ObjectModel.ObservableCollection<SharedConfigurations.AppControlPanel.Models.AppViewModel>(appsSettings);
+                Apps.Clear();
+                foreach (var item in appsSettings)
+                {
+                    Apps.Add(new AppViewModel(item));
+                }
             } else
             {
                 Apps.Clear();
             }
         }
 
-        public void StartItem(SharedConfigurations.AppControlPanel.Models.AppViewModel item)
+        public void StartItem(SharedConfigurations.AppControlPanel.Models.AppModel item)
         {
             _applicationStartService.Start(item);
         }

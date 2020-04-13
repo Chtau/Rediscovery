@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SharedConfigurations.AppControlPanel.Models
 {
-    public class AppViewModel
+    public class AppModel
     {
         public const string SectionName = "Apps";
 
