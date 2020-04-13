@@ -27,6 +27,20 @@ namespace AppControlPanel.ViewModels
             {
                 SetAppsCollection();
             }, null);
+            try
+            {
+                if (Apps.Any(x => x.AppModel.AutoStartWithPanel))
+                {
+                    foreach (var item in Apps.Where(x => x.AppModel.AutoStartWithPanel))
+                    {
+                        item.AppLaunchState = _applicationStartService.Start(item.AppModel);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Print("Auto start Apps with Panel Exception:" + ex.ToString());
+            }
             Task.Run(async () =>
             {
                 do
@@ -45,7 +59,7 @@ namespace AppControlPanel.ViewModels
                         await Task.Delay(1000);
                     } catch (Exception ex)
                     {
-                        System.Diagnostics.Debug.Print("Watch loop:" + ex.ToString());
+                        System.Diagnostics.Debug.Print("Watch loop Exception:" + ex.ToString());
                     }
                 } while (true);
             });
@@ -70,15 +84,6 @@ namespace AppControlPanel.ViewModels
         public void StartItem(AppViewModel model)
         {
             model.AppLaunchState = _applicationStartService.Start(model.AppModel);
-            Task.Run(async () =>
-            {
-                await Task.Delay(1000);
-                _applicationWatchService.Watch(model.AppModel, (state, prcId) =>
-                {
-                    model.AppLaunchState = state;
-                    model.ProcessId = prcId;
-                });
-            });
         }
     }
 }

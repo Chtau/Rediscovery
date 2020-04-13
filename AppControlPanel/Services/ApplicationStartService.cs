@@ -32,7 +32,7 @@ namespace AppControlPanel.Services
 
                 if (!string.IsNullOrWhiteSpace(path))
                 {
-                    if (ProcessRun(path, appViewModel.ExecuteArguments, null, appViewModel.RunAs))
+                    if (ProcessRun(path, appViewModel.ExecuteArguments, null, appViewModel.RunAs, appViewModel.HideShell))
                         return ViewModels.AppViewModel.LaunchState.Starting;
                     else
                         return ViewModels.AppViewModel.LaunchState.ErrorStarting;
@@ -52,15 +52,20 @@ namespace AppControlPanel.Services
             return Path.GetDirectoryName(path);
         }
 
-        private bool ProcessRun(string filePath, string parameters, Action exitCallback, string runAs = null)
+        private bool ProcessRun(string filePath, string parameters, Action exitCallback, string runAs = null, bool hideShell = false)
         {
             var SelfProc = new ProcessStartInfo
             {
-                UseShellExecute = true,
+                UseShellExecute = !hideShell,
                 //WorkingDirectory = Environment.CurrentDirectory,
                 FileName = filePath,
-                Arguments = parameters
+                Arguments = parameters,
+                CreateNoWindow = hideShell,
             };
+            if (hideShell)
+            {
+                SelfProc.WindowStyle = ProcessWindowStyle.Hidden;
+            }
             if (!string.IsNullOrWhiteSpace(runAs))
                 SelfProc.Verb = runAs;
             // use "runas" for admin rights
