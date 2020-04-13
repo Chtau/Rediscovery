@@ -88,5 +88,38 @@ namespace AppControlPanel.ViewModels
         {
             model.AppLaunchState = _applicationStartService.Start(model.AppModel);
         }
+
+        public void StopItem(AppViewModel model)
+        {
+            _applicationWatchService.Watch(model.AppModel, (state, prcId) =>
+            {
+                model.AppLaunchState = state;
+                model.ProcessId = prcId;
+                if (model.AppLaunchState == AppViewModel.LaunchState.Running)
+                {
+                    try
+                    {
+                        var prc = System.Diagnostics.Process.GetProcessById(model.ProcessId.Value);
+                        prc.Kill(true);
+                    } catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.Print("Stop Process Exception:" + ex.ToString());
+                    }
+                }
+            });
+        }
+
+        public void OpenSettings()
+        {
+            try
+            {
+                string path = System.IO.Path.Combine(Shared.GetApplicationFolder(), SharedConfigurations.AppControlPanel.ConfigFileNames.AppSettings);
+                Shared.OpenWithDefaultProgram(path);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Print("Open Settings Exception:" + ex.ToString());
+            }
+        }
     }
 }

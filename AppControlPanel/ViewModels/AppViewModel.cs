@@ -24,7 +24,11 @@ namespace AppControlPanel.ViewModels
         public LaunchState AppLaunchState
         {
             get => appLaunchState;
-            set => this.RaiseAndSetIfChanged(ref appLaunchState, value);
+            set
+            {
+                this.RaiseAndSetIfChanged(ref appLaunchState, value);
+                IsRunning = appLaunchState == LaunchState.Running;
+            }
         }
 
         private int? processId = null;
@@ -32,6 +36,13 @@ namespace AppControlPanel.ViewModels
         {
             get => processId;
             set => this.RaiseAndSetIfChanged(ref processId, value);
+        }
+
+        private bool isRunning = false;
+        public bool IsRunning
+        {
+            get => isRunning;
+            set => this.RaiseAndSetIfChanged(ref isRunning, value);
         }
 
         public AppViewModel()

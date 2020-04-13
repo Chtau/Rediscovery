@@ -24,7 +24,7 @@ namespace AppControlPanel.Services
                 else
                 {
                     // search in parent and all child folders from the parent
-                    var parentDirInfo = System.IO.Directory.GetParent(GetApplicationFolder());
+                    var parentDirInfo = System.IO.Directory.GetParent(Shared.GetApplicationFolder());
                     var foundPaths = System.IO.Directory.GetFiles(parentDirInfo.FullName, appViewModel.ExecuteableName, System.IO.SearchOption.AllDirectories);
                     if (foundPaths?.Length > 0)
                         path = foundPaths[0];
@@ -32,7 +32,7 @@ namespace AppControlPanel.Services
 
                 if (!string.IsNullOrWhiteSpace(path))
                 {
-                    if (ProcessRun(path, appViewModel.ExecuteArguments, null, appViewModel.RunAs, appViewModel.HideShell))
+                    if (Shared.ProcessRun(path, appViewModel.ExecuteArguments, null, appViewModel.RunAs, appViewModel.HideShell))
                         return ViewModels.AppViewModel.LaunchState.Starting;
                     else
                         return ViewModels.AppViewModel.LaunchState.ErrorStarting;
@@ -42,47 +42,6 @@ namespace AppControlPanel.Services
                 }
             }
             return ViewModels.AppViewModel.LaunchState.Error;
-        }
-
-        private string GetApplicationFolder()
-        {
-            string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-            UriBuilder uri = new UriBuilder(codeBase);
-            string path = Uri.UnescapeDataString(uri.Path);
-            return Path.GetDirectoryName(path);
-        }
-
-        private bool ProcessRun(string filePath, string parameters, Action exitCallback, string runAs = null, bool hideShell = false)
-        {
-            var SelfProc = new ProcessStartInfo
-            {
-                UseShellExecute = !hideShell,
-                //WorkingDirectory = Environment.CurrentDirectory,
-                FileName = filePath,
-                Arguments = parameters,
-                CreateNoWindow = hideShell,
-            };
-            if (hideShell)
-            {
-                SelfProc.WindowStyle = ProcessWindowStyle.Hidden;
-            }
-            if (!string.IsNullOrWhiteSpace(runAs))
-                SelfProc.Verb = runAs;
-            // use "runas" for admin rights
-            try
-            {
-                var prc = Process.Start(SelfProc);
-                prc.Exited += (object sender, EventArgs e) =>
-                {
-                    exitCallback?.Invoke();
-                };
-                return true;
-            }
-            catch
-            {
-                System.Diagnostics.Debug.Print("Unable to run process!" + Environment.NewLine);
-                return false;
-            }
         }
     }
 }
