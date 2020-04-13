@@ -44,6 +44,7 @@ namespace AppControlPanel
 
             var service = new ServiceCollection();
             service.AddSingleton<Services.IApplicationStartService, Services.ApplicationStartService>();
+            service.AddSingleton<Services.IApplicationWatchService, Services.ApplicationWatchService>();
             ServiceProvider = service.BuildServiceProvider();
 
             /*var incomingConnectionService = (Connection.IIncomingConnectionService)Program.ServiceProvider.GetService(typeof(Connection.IIncomingConnectionService));

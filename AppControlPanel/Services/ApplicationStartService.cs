@@ -33,7 +33,7 @@ namespace AppControlPanel.Services
                 if (!string.IsNullOrWhiteSpace(path))
                 {
                     if (ProcessRun(path, appViewModel.ExecuteArguments, null, appViewModel.RunAs))
-                        return ViewModels.AppViewModel.LaunchState.Running;
+                        return ViewModels.AppViewModel.LaunchState.Starting;
                     else
                         return ViewModels.AppViewModel.LaunchState.ErrorStarting;
                 } else

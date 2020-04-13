@@ -22,6 +22,7 @@ namespace AppControlPanel.Converter
                     case ViewModels.AppViewModel.LaunchState.Error:
                     case ViewModels.AppViewModel.LaunchState.NotFound:
                     case ViewModels.AppViewModel.LaunchState.ErrorStarting:
+                    case ViewModels.AppViewModel.LaunchState.NotRunning:
                         return Brushes.White;
                     default:
                         return Brushes.Black;

@@ -14,7 +14,8 @@ namespace AppControlPanel.ViewModels
             Error = 2,
             NotFound = 3,
             Starting = 4,
-            ErrorStarting = 5
+            ErrorStarting = 5,
+            NotRunning = 6,
         }
 
         public SharedConfigurations.AppControlPanel.Models.AppModel AppModel { get; set; }
@@ -24,6 +25,13 @@ namespace AppControlPanel.ViewModels
         {
             get => appLaunchState;
             set => this.RaiseAndSetIfChanged(ref appLaunchState, value);
+        }
+
+        private int? processId = null;
+        public int? ProcessId
+        {
+            get => processId;
+            set => this.RaiseAndSetIfChanged(ref processId, value);
         }
 
         public AppViewModel()

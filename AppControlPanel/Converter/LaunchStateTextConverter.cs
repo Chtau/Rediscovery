@@ -26,6 +26,8 @@ namespace AppControlPanel.Converter
                         return "starting";
                     case ViewModels.AppViewModel.LaunchState.ErrorStarting:
                         return "error starting";
+                    case ViewModels.AppViewModel.LaunchState.NotRunning:
+                        return "not running";
                     default:
                         return "";
                 }

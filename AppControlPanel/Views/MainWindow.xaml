@@ -22,6 +22,8 @@
                     Background="{Binding AppLaunchState, Converter={StaticResource LaunchBackColor}}" 
                     Command="{Binding $parent[Window].DataContext.StartItem}" CommandParameter="{Binding .}">Start</Button>
             <TextBlock Margin="10,0" Text="{Binding AppLaunchState, Converter={StaticResource LaunchTextColor}}" TextAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Margin="10,0" Text="Process Id:" TextAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Margin="10,0" Text="{Binding ProcessId}" TextAlignment="Center" VerticalAlignment="Center"/>
           </StackPanel>
         </DataTemplate>
       </ItemsControl.ItemTemplate>
