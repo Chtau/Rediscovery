@@ -10,12 +10,16 @@ namespace AppControlPanel.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
+        private readonly Services.IApplicationStartService _applicationStartService;
+
         public string Greeting => "Welcome to Avalonia!";
 
         public System.Collections.ObjectModel.ObservableCollection<SharedConfigurations.AppControlPanel.Models.AppViewModel> Apps { get; set; } = new System.Collections.ObjectModel.ObservableCollection<SharedConfigurations.AppControlPanel.Models.AppViewModel>();
 
         public MainWindowViewModel()
         {
+            _applicationStartService = (Services.IApplicationStartService)Program.ServiceProvider.GetService(typeof(Services.IApplicationStartService));
+
             SetAppsCollection();
             var token = Program.Configuration.GetReloadToken();
             token.RegisterChangeCallback(changed =>
@@ -38,10 +42,7 @@ namespace AppControlPanel.ViewModels
 
         public void StartItem(SharedConfigurations.AppControlPanel.Models.AppViewModel item)
         {
-            if (item != null)
-            {
-                
-            }
+            _applicationStartService.Start(item);
         }
     }
 }

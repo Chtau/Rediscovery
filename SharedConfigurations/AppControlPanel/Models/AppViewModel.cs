@@ -11,5 +11,7 @@ namespace SharedConfigurations.AppControlPanel.Models
         public string Name { get; set; }
         public string ExecuteableName { get; set; }
         public string SearchDirectory { get; set; }
+        public string ExecuteArguments { get; set; }
+        public string RunAs { get; set; }
     }
 }
