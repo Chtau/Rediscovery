@@ -29,9 +29,9 @@ namespace AppControlPanel.ViewModels
             }, null);
             try
             {
-                if (Apps.Any(x => x.AppModel.AutoStartWithPanel))
+                if (Apps.Any(x => x.AppModel.AutoStartWithPanel.HasValue && x.AppModel.AutoStartWithPanel.Value))
                 {
-                    foreach (var item in Apps.Where(x => x.AppModel.AutoStartWithPanel))
+                    foreach (var item in Apps.Where(x => x.AppModel.AutoStartWithPanel.HasValue && x.AppModel.AutoStartWithPanel.Value))
                     {
                         item.AppLaunchState = _applicationStartService.Start(item.AppModel);
                     }
@@ -54,7 +54,7 @@ namespace AppControlPanel.ViewModels
                                 item.AppLaunchState = state;
                                 item.ProcessId = prcId;
                             });
-                            if (item.AppModel.AutoStartWhenNotRunning && item.AppLaunchState == AppViewModel.LaunchState.NotRunning)
+                            if (item.AppModel.AutoStartWhenNotRunning.HasValue && item.AppModel.AutoStartWhenNotRunning.Value && item.AppLaunchState == AppViewModel.LaunchState.NotRunning)
                             {
                                 item.AppLaunchState = _applicationStartService.Start(item.AppModel);
                             }

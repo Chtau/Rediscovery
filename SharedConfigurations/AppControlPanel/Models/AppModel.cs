@@ -13,8 +13,12 @@ namespace SharedConfigurations.AppControlPanel.Models
         public string SearchDirectory { get; set; }
         public string ExecuteArguments { get; set; }
         public string RunAs { get; set; }
-        public bool HideShell { get; set; }
-        public bool AutoStartWithPanel { get; set; }
-        public bool AutoStartWhenNotRunning { get; set; }
+        public bool? HideShell { get; set; }
+        public bool? AutoStartWithPanel { get; set; }
+        public bool? AutoStartWhenNotRunning { get; set; }
+        public bool? UseCommandLine { get; set; }
+        public string CommandLineCommand { get; set; }
+        public string CommandLineWorkingDirectory { get; set; }
+        public string ProcessName { get; set; }
     }
 }

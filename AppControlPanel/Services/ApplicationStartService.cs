@@ -32,7 +32,7 @@ namespace AppControlPanel.Services
 
                 if (!string.IsNullOrWhiteSpace(path))
                 {
-                    if (Shared.ProcessRun(path, appViewModel.ExecuteArguments, null, appViewModel.RunAs, appViewModel.HideShell))
+                    if (Shared.ProcessRun(path, appViewModel.ExecuteArguments, null, appViewModel.RunAs, appViewModel.HideShell.HasValue ? appViewModel.HideShell.Value : false))
                         return ViewModels.AppViewModel.LaunchState.Starting;
                     else
                         return ViewModels.AppViewModel.LaunchState.ErrorStarting;
