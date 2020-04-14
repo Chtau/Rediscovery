@@ -13,10 +13,13 @@ namespace AppControlPanel.Services
         public void Watch(AppModel appViewModel, Action<AppViewModel.LaunchState, int?> callback)
         {
             string name = null;
-            if (appViewModel.ExecuteableName.Contains('.'))
-                name = appViewModel.ExecuteableName.Substring(0, appViewModel.ExecuteableName.LastIndexOf('.'));
+            string tmpName = appViewModel.ExecuteableName;
+            if (!string.IsNullOrWhiteSpace(appViewModel.ProcessName))
+                tmpName = appViewModel.ProcessName;
+            if (tmpName.Contains('.'))
+                name = tmpName.Substring(0, tmpName.LastIndexOf('.'));
             else
-                name = appViewModel.ExecuteableName;
+                name = tmpName;
             Process prc = Process.GetProcessesByName(name).FirstOrDefault();
             if (prc != null)
             {

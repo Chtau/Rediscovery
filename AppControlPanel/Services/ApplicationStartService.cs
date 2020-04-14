@@ -12,33 +12,52 @@ namespace AppControlPanel.Services
     {
         public ViewModels.AppViewModel.LaunchState Start(AppModel appViewModel)
         {
-            if (!string.IsNullOrWhiteSpace(appViewModel.ExecuteableName))
+            if (appViewModel.UseCommandLine.HasValue && appViewModel.UseCommandLine.Value)
             {
-                string path = null;
-                if (!string.IsNullOrWhiteSpace(appViewModel.SearchDirectory) && System.IO.Directory.Exists(appViewModel.SearchDirectory))
+                if (!string.IsNullOrWhiteSpace(appViewModel.CommandLineCommand) && !string.IsNullOrWhiteSpace(appViewModel.CommandLineWorkingDirectory))
                 {
-                    var foundPaths = System.IO.Directory.GetFiles(appViewModel.SearchDirectory, appViewModel.ExecuteableName, System.IO.SearchOption.AllDirectories);
-                    if (foundPaths?.Length > 0)
-                        path = foundPaths[0];
+                    if (System.IO.Directory.Exists(appViewModel.CommandLineWorkingDirectory))
+                    {
+                        if (Shared.ProcessRunCommandLine(appViewModel.CommandLineCommand, appViewModel.CommandLineWorkingDirectory, null, appViewModel.RunAs, appViewModel.HideShell.HasValue ? appViewModel.HideShell.Value : false))
+                            return ViewModels.AppViewModel.LaunchState.Starting;
+                        else
+                            return ViewModels.AppViewModel.LaunchState.ErrorStarting;
+                    } else
+                    {
+                        return ViewModels.AppViewModel.LaunchState.NotFound;
+                    }
                 }
-                else
+            } else
+            {
+                if (!string.IsNullOrWhiteSpace(appViewModel.ExecuteableName))
                 {
-                    // search in parent and all child folders from the parent
-                    var parentDirInfo = System.IO.Directory.GetParent(Shared.GetApplicationFolder());
-                    var foundPaths = System.IO.Directory.GetFiles(parentDirInfo.FullName, appViewModel.ExecuteableName, System.IO.SearchOption.AllDirectories);
-                    if (foundPaths?.Length > 0)
-                        path = foundPaths[0];
-                }
-
-                if (!string.IsNullOrWhiteSpace(path))
-                {
-                    if (Shared.ProcessRun(path, appViewModel.ExecuteArguments, null, appViewModel.RunAs, appViewModel.HideShell.HasValue ? appViewModel.HideShell.Value : false))
-                        return ViewModels.AppViewModel.LaunchState.Starting;
+                    string path = null;
+                    if (!string.IsNullOrWhiteSpace(appViewModel.SearchDirectory) && System.IO.Directory.Exists(appViewModel.SearchDirectory))
+                    {
+                        var foundPaths = System.IO.Directory.GetFiles(appViewModel.SearchDirectory, appViewModel.ExecuteableName, System.IO.SearchOption.AllDirectories);
+                        if (foundPaths?.Length > 0)
+                            path = foundPaths[0];
+                    }
                     else
-                        return ViewModels.AppViewModel.LaunchState.ErrorStarting;
-                } else
-                {
-                    return ViewModels.AppViewModel.LaunchState.NotFound;
+                    {
+                        // search in parent and all child folders from the parent
+                        var parentDirInfo = System.IO.Directory.GetParent(Shared.GetApplicationFolder());
+                        var foundPaths = System.IO.Directory.GetFiles(parentDirInfo.FullName, appViewModel.ExecuteableName, System.IO.SearchOption.AllDirectories);
+                        if (foundPaths?.Length > 0)
+                            path = foundPaths[0];
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(path))
+                    {
+                        if (Shared.ProcessRun(path, appViewModel.ExecuteArguments, null, appViewModel.RunAs, appViewModel.HideShell.HasValue ? appViewModel.HideShell.Value : false))
+                            return ViewModels.AppViewModel.LaunchState.Starting;
+                        else
+                            return ViewModels.AppViewModel.LaunchState.ErrorStarting;
+                    }
+                    else
+                    {
+                        return ViewModels.AppViewModel.LaunchState.NotFound;
+                    }
                 }
             }
             return ViewModels.AppViewModel.LaunchState.Error;
