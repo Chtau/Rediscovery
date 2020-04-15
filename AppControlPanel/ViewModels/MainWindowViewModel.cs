@@ -129,7 +129,6 @@ namespace AppControlPanel.ViewModels
                             }
                             model.AdditionalProcesses.Clear();
                         }
-                        //model.ProcessId = null;
                     } catch (Exception ex)
                     {
                         System.Diagnostics.Debug.Print("Stop Process Exception:" + ex.ToString());
