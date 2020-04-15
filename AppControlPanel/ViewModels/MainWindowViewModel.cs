@@ -52,7 +52,7 @@ namespace AppControlPanel.ViewModels
                     {
                         foreach (var item in Apps)
                         {
-                            _applicationWatchService.Watch(item.AppModel, (state, prcId) =>
+                            _applicationWatchService.Watch(item, (state, prcId) =>
                             {
                                 item.AppLaunchState = state;
                                 item.ProcessId = prcId;
@@ -101,7 +101,7 @@ namespace AppControlPanel.ViewModels
 
         public void StopItem(AppViewModel model)
         {
-            _applicationWatchService.Watch(model.AppModel, (state, prcId) =>
+            _applicationWatchService.Watch(model, (state, prcId) =>
             {
                 model.AppLaunchState = state;
                 model.ProcessId = prcId;
@@ -127,7 +127,9 @@ namespace AppControlPanel.ViewModels
                                     System.Diagnostics.Debug.Print("Stop additional Process Exception:" + ex.ToString());
                                 }
                             }
+                            model.AdditionalProcesses.Clear();
                         }
+                        //model.ProcessId = null;
                     } catch (Exception ex)
                     {
                         System.Diagnostics.Debug.Print("Stop Process Exception:" + ex.ToString());
