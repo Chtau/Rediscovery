@@ -45,6 +45,8 @@ namespace AppControlPanel.ViewModels
             set => this.RaiseAndSetIfChanged(ref isRunning, value);
         }
 
+        public List<int> AdditionalProcesses { get; set; } = new List<int>();
+
         public AppViewModel()
         {
 

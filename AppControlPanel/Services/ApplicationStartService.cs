@@ -10,7 +10,7 @@ namespace AppControlPanel.Services
 {
     public class ApplicationStartService : IApplicationStartService
     {
-        public ViewModels.AppViewModel.LaunchState Start(AppModel appViewModel)
+        public ViewModels.AppViewModel.LaunchState Start(AppModel appViewModel, Action<int> processIdCallback = null)
         {
             if (appViewModel.UseCommandLine.HasValue && appViewModel.UseCommandLine.Value)
             {
@@ -18,7 +18,7 @@ namespace AppControlPanel.Services
                 {
                     if (System.IO.Directory.Exists(appViewModel.CommandLineWorkingDirectory))
                     {
-                        if (Shared.ProcessRunCommandLine(appViewModel.CommandLineCommand, appViewModel.CommandLineWorkingDirectory, null, appViewModel.RunAs, appViewModel.HideShell.HasValue ? appViewModel.HideShell.Value : false))
+                        if (Shared.ProcessRunCommandLine(appViewModel.CommandLineCommand, appViewModel.CommandLineWorkingDirectory, null, appViewModel.RunAs, appViewModel.HideShell.HasValue ? appViewModel.HideShell.Value : false, processIdCallback))
                             return ViewModels.AppViewModel.LaunchState.Starting;
                         else
                             return ViewModels.AppViewModel.LaunchState.ErrorStarting;
@@ -49,7 +49,7 @@ namespace AppControlPanel.Services
 
                     if (!string.IsNullOrWhiteSpace(path))
                     {
-                        if (Shared.ProcessRun(path, appViewModel.ExecuteArguments, null, appViewModel.RunAs, appViewModel.HideShell.HasValue ? appViewModel.HideShell.Value : false))
+                        if (Shared.ProcessRun(path, appViewModel.ExecuteArguments, null, appViewModel.RunAs, appViewModel.HideShell.HasValue ? appViewModel.HideShell.Value : false, null, processIdCallback))
                             return ViewModels.AppViewModel.LaunchState.Starting;
                         else
                             return ViewModels.AppViewModel.LaunchState.ErrorStarting;

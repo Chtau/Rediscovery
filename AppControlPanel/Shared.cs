@@ -17,7 +17,7 @@ namespace AppControlPanel
             return Path.GetDirectoryName(path);
         }
 
-        public static bool ProcessRun(string filePath, string parameters, Action exitCallback, string runAs = null, bool hideShell = false, string workingDirectory = null)
+        public static bool ProcessRun(string filePath, string parameters, Action exitCallback, string runAs = null, bool hideShell = false, string workingDirectory = null, Action<int> processIdCallback = null)
         {
             var SelfProc = new ProcessStartInfo
             {
@@ -39,6 +39,7 @@ namespace AppControlPanel
             try
             {
                 var prc = Process.Start(SelfProc);
+                processIdCallback?.Invoke(prc.Id);
                 prc.Exited += (object sender, EventArgs e) =>
                 {
                     exitCallback?.Invoke();
@@ -52,11 +53,11 @@ namespace AppControlPanel
             }
         }
 
-        public static bool ProcessRunCommandLine(string command, string workingDirectory, Action exitCallback, string runAs = null, bool hideShell = false)
+        public static bool ProcessRunCommandLine(string command, string workingDirectory, Action exitCallback, string runAs = null, bool hideShell = false, Action<int> processIdCallback = null)
         {
             if (!command.StartsWith("/C"))
                 command = "/C " + command;
-            return ProcessRun("cmd.exe", command, exitCallback, runAs, hideShell, workingDirectory);
+            return ProcessRun("cmd.exe", command, exitCallback, runAs, hideShell, workingDirectory, processIdCallback);
         }
 
         public static void OpenWithDefaultProgram(string path)

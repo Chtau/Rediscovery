@@ -33,7 +33,10 @@ namespace AppControlPanel.ViewModels
                 {
                     foreach (var item in Apps.Where(x => x.AppModel.AutoStartWithPanel.HasValue && x.AppModel.AutoStartWithPanel.Value))
                     {
-                        item.AppLaunchState = _applicationStartService.Start(item.AppModel);
+                        item.AppLaunchState = _applicationStartService.Start(item.AppModel, proc =>
+                        {
+                            item.AdditionalProcesses.Add(proc);
+                        });
                     }
                 }
             }
@@ -56,7 +59,10 @@ namespace AppControlPanel.ViewModels
                             });
                             if (item.AppModel.AutoStartWhenNotRunning.HasValue && item.AppModel.AutoStartWhenNotRunning.Value && item.AppLaunchState == AppViewModel.LaunchState.NotRunning)
                             {
-                                item.AppLaunchState = _applicationStartService.Start(item.AppModel);
+                                item.AppLaunchState = _applicationStartService.Start(item.AppModel, proc =>
+                                {
+                                    item.AdditionalProcesses.Add(proc);
+                                });
                             }
                         }
                         await Task.Delay(1000);
@@ -86,7 +92,11 @@ namespace AppControlPanel.ViewModels
 
         public void StartItem(AppViewModel model)
         {
-            model.AppLaunchState = _applicationStartService.Start(model.AppModel);
+            model.AppLaunchState = _applicationStartService.Start(model.AppModel,
+                proc =>
+                {
+                    model.AdditionalProcesses.Add(proc);
+                });
         }
 
         public void StopItem(AppViewModel model)
@@ -100,7 +110,24 @@ namespace AppControlPanel.ViewModels
                     try
                     {
                         var prc = System.Diagnostics.Process.GetProcessById(model.ProcessId.Value);
-                        prc.Kill(true);
+                        if (prc != null)
+                            prc.Kill(true);
+                        if (model.AdditionalProcesses.Count > 0)
+                        {
+                            for (int i = 0; i < model.AdditionalProcesses.Count; i++)
+                            {
+                                try
+                                {
+                                    var prcTmp = System.Diagnostics.Process.GetProcessById(model.AdditionalProcesses[i]);
+                                    if (prcTmp != null)
+                                        prcTmp.Kill(true);
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.Print("Stop additional Process Exception:" + ex.ToString());
+                                }
+                            }
+                        }
                     } catch (Exception ex)
                     {
                         System.Diagnostics.Debug.Print("Stop Process Exception:" + ex.ToString());

@@ -6,6 +6,6 @@ namespace AppControlPanel.Services
 {
     public interface IApplicationStartService
     {
-        ViewModels.AppViewModel.LaunchState Start(SharedConfigurations.AppControlPanel.Models.AppModel appViewModel);
+        ViewModels.AppViewModel.LaunchState Start(SharedConfigurations.AppControlPanel.Models.AppModel appViewModel, Action<int> processIdCallback = null);
     }
 }
