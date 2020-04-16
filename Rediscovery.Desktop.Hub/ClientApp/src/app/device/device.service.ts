@@ -22,7 +22,7 @@ export class DeviceService {
   }
 
   public initIPC(): void {
-    console.log("init IPC");
+    console.log("init Device IPC");
     if (environment.isElectron === false) {
       this.registeredDeviceModels = <IDeviceInfo[]>dummyDevice.default;
     } else {

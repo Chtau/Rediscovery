@@ -1,4 +1,5 @@
 ﻿using DesktopService.Features.Identity.Models;
+using Microsoft.Extensions.Logging;
 using PluginFeature.Models;
 using System;
 using System.Collections.Generic;
@@ -16,15 +17,19 @@ namespace DesktopService.Features.Pipes
         private readonly IPCPipe.IPipeServer _pipeServer;
         private readonly IPCPipe.IPipeClient _pipeClient;
 
+        private readonly ILogger<PipeRepository> _logger;
+
         public PipeRepository(DAL.IDBContext dBContext, IPCPipe.IPipeResourceProvider resourceProvider,
             IPCPipe.IPipeServer pipeServer, DeviceFeature.IFeatureService featureService,
-            IPCPipe.IPipeClient pipeClient)
+            IPCPipe.IPipeClient pipeClient,
+            ILoggerFactory loggerFactory)
         {
             _dBContext = dBContext;
             _resourceProvider = resourceProvider;
             _pipeServer = pipeServer;
             _pipeClient = pipeClient;
             _featureService = featureService;
+            _logger = loggerFactory.CreateLogger<PipeRepository>();
         }
 
         public void Init()
@@ -32,6 +37,16 @@ namespace DesktopService.Features.Pipes
             _resourceProvider.Provide("rediscoveryservice", OnProvideResources);
             _pipeServer.DataReceived += _pipeServer_DataReceived;
             _pipeServer.Listen("sync_device_rediscoveryservice");
+
+            // TODO: test function only
+            Task.Run(async () =>
+            {
+                do
+                {
+                    await Task.Delay(1000);
+                    _logger.LogInformation("Test At:" + DateTime.Now.ToShortTimeString());
+                } while (true);
+            });
         }
 
         private void _pipeServer_DataReceived(object sender, string e)

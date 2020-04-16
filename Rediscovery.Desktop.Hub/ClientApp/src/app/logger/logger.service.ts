@@ -1,21 +1,38 @@
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone, EventEmitter } from "@angular/core";
 import { ILoggerEntry, LoggerType } from "./logger.interface";
 import { environment } from "src/environments/environment";
 
 import * as dummyLoggerEntries from '../../assets/dummy/logger.json';
+import { IpcService } from "../ipc.service";
 
 @Injectable()
 export class LoggerService {
-  models: ILoggerEntry[] = [];
+
+  entriesChanged = new EventEmitter<ILoggerEntry[]>();
+
+  entries: ILoggerEntry[] = [];
   
-  constructor() {
+  constructor(private ipc: IpcService,private zone: NgZone) {
+  }
+
+  public initIPC(): void {
+    console.log("init Logger IPC");
     if (environment.isElectron === false) {
-      this.models = <ILoggerEntry[]>dummyLoggerEntries.default;
+      this.entries = <ILoggerEntry[]>dummyLoggerEntries.default;
+    } else {
+      this.ipc.on('loggermessage-ipc', (event, arg) => {
+        console.log("IPC data received");
+        // switch to angular zone for change detected events ...
+        this.zone.run(() => {
+          this.entries.push(arg);
+          this.entriesChanged.emit(this.entries);
+        });
+      });
     }
   }
 
   public getEntries(): ILoggerEntry[] {
-    return this.models;
+    return this.entries;
   }
 
 }
