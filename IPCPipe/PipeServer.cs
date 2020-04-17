@@ -30,12 +30,18 @@ namespace IPCPipe
                     {
                         while (true)
                         {
-                            var server = (NamedPipeServerStream)OnCreateHub(hub);
-                            System.Diagnostics.Debug.Print("Wait for Client connection");
-                            server.WaitForConnection();
-                            OnReadStream(server, callback);
-                            if (server.IsConnected)
-                                server.Disconnect();
+                            try
+                            {
+                                var server = (NamedPipeServerStream)OnCreateHub(hub);
+                                System.Diagnostics.Debug.Print("Wait for Client connection");
+                                server.WaitForConnection();
+                                OnReadStream(server, callback);
+                                if (server.IsConnected)
+                                    server.Disconnect();
+                            } catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.Print("IPC Listen Server Loop Exception:" + ex.ToString());
+                            }
                         }
                         
                     }
@@ -46,6 +52,26 @@ namespace IPCPipe
                     }
                 });
             }
+
+            /*Task.Run(() =>
+            {
+                while (true)
+                {
+                    var server = (NamedPipeServerStream)OnCreateServerHub(hub);
+                    System.Diagnostics.Debug.Print("Wait for Client connection");
+                    server.WaitForConnection();
+                    StreamReader reader = new StreamReader(server);
+                    StreamWriter writer = new StreamWriter(server);
+                    System.Diagnostics.Debug.Print("Provider start listen");
+
+                    var requestedResource = reader.ReadLine();
+                    var resourceValues = resourceCallback.Invoke(requestedResource);
+                    System.Diagnostics.Debug.Print("Provider send requested resource => " + requestedResource);
+                    writer.Write(resourceValues + Environment.NewLine);
+                    writer.Flush();
+                    server.Dispose();
+                }
+            });*/
         }
     }
 }
