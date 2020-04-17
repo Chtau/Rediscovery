@@ -39,7 +39,19 @@ namespace DesktopService.Features.Pipes
                     }
                 } else
                 {
-                    if (_pipeClient.TryConnect(RediscoveryHub))
+                    try
+                    {
+                        var logData = Newtonsoft.Json.JsonConvert.SerializeObject(liveLoggerModel);
+                        _pipeClient.Send(RediscoveryHub, logData);
+                    } catch (Exception ex)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"LiveLogger PipeClient failed ({connectionsFailed}) Exception:" + ex.ToString());
+                        Console.ResetColor();
+                        connectionsFailed++;
+                        lastFailedConnection = DateTime.UtcNow;
+                    }
+                    /*if (_pipeClient.TryConnect(RediscoveryHub))
                     {
                         var logData = Newtonsoft.Json.JsonConvert.SerializeObject(liveLoggerModel);
                         _pipeClient.Send(RediscoveryHub, logData);
@@ -48,7 +60,7 @@ namespace DesktopService.Features.Pipes
                     {
                         connectionsFailed++;
                         lastFailedConnection = DateTime.UtcNow;
-                    }
+                    }*/
                 }
             }
             catch (Exception ex)

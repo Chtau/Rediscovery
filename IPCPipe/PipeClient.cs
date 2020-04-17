@@ -40,13 +40,15 @@ namespace IPCPipe
                 client.Connect(timeoutMS);
                 return client;
             }
-            catch (TimeoutException)
+            catch (TimeoutException tex)
             {
+                System.Diagnostics.Debug.Print("IPC Client OnCreate TimeoutException:" + tex.ToString());
                 if (raiseEvent)
                     FailedToConnect?.Invoke(this, hub);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.Print("IPC Client OnCreate Exception:" + ex.ToString());
                 if (raiseEvent)
                     FailedToConnect?.Invoke(this, hub);
             }
