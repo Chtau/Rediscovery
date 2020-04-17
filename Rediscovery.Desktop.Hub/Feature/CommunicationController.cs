@@ -61,7 +61,8 @@ namespace Rediscovery.Desktop.Hub.Feature
         [HttpGet]
         public bool InitServiceConnection()
         {
-            _deviceService.Init();
+            // TODO: only for tests removed
+            //_deviceService.Init();
             _loggerService.Init();
             return true;
         }
