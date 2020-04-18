@@ -14,10 +14,9 @@ export class AppComponent {
   private loggerService: LoggerService) {
     this.deviceService.initIPC();
     this.loggerService.initIPC();
-    // TODO: only for tests removed
-    /*http.get<boolean>(baseUrl + 'communication').subscribe(result => {
+    http.get<boolean>(baseUrl + 'communication').subscribe(result => {
       console.log('Communication to Service init');
-    }, error => console.error(error));*/
+    }, error => console.error(error));
   }
 
   private onExit():void {

@@ -6,7 +6,7 @@
     <header class="header-1">
       <div class="branding">
         <a [routerLink]="['/']" class="nav-link">
-          <clr-icon shape="vm-bug"></clr-icon>
+          <clr-icon shape="grid-view"></clr-icon>
           <span class="title">Rediscovery Hub</span>
         </a>  
       </div>
@@ -17,7 +17,10 @@
           <a [routerLink]="['/logger']" [routerLinkActive]="['active']" class="nav-link nav-text">Logger</a>
       </div>
       <div class="header-actions">
-        <button (click)="onServiceConnection()" class="nav-link nav-text">Service Connection</button>
+        <a (click)="onServiceConnection()" class="nav-link nav-icon" aria-label="settings">
+          <clr-icon shape="connect"></clr-icon>
+          <clr-icon *ngIf="false" shape="disconnect"></clr-icon>
+        </a>
         <clr-dropdown>
           <button class="nav-icon" clrDropdownTrigger aria-label="toggle settings menu">
               <clr-icon shape="cog"></clr-icon>
