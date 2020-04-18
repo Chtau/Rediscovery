@@ -9,6 +9,7 @@ import { IpcService } from "../ipc.service";
 export class LoggerService {
 
   entriesChanged = new EventEmitter<ILoggerEntry[]>();
+  entryAddedChanged = new EventEmitter<ILoggerEntry>();
 
   entries: ILoggerEntry[] = [];
   
@@ -21,11 +22,12 @@ export class LoggerService {
       this.entries = <ILoggerEntry[]>dummyLoggerEntries.default;
     } else {
       this.ipc.on('loggermessage-ipc', (event, arg) => {
-        console.log("IPC data received");
+        console.log("IPC Logger data received");
         // switch to angular zone for change detected events ...
         this.zone.run(() => {
           this.entries.push(arg);
           this.entriesChanged.emit(this.entries);
+          this.entryAddedChanged.emit(arg);
         });
       });
     }

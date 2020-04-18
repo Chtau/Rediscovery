@@ -16,8 +16,8 @@ export class LoggerComponent implements OnInit, AfterViewChecked, AfterViewInit 
   constructor(private loggerService: LoggerService) {
     this.entries = loggerService.getEntries();
     this.scrollToBottom();
-    this.loggerService.entriesChanged.subscribe(result => {
-      this.entries = result;
+    this.loggerService.entryAddedChanged.subscribe(result => {
+      this.entries.push(result);
       this.scrollToBottom();
     });
   }
