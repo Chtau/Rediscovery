@@ -35,13 +35,32 @@ namespace DesktopService.Features.PipeLogger
 
             if (_config.EventId == 0 || _config.EventId == eventId.Id)
             {
-                _config.PipeLiveLogger.Log(new SharedCoreModels.LiveLoggerModel
+                _config.PipeLiveLogger.Log(new SharedCoreModels.LoggerEntryModel
                 {
-                    EventId = eventId.Id,
-                    LogLevel = (int)logLevel,
-                    Message = formatter(state, exception)
+                    Id = eventId.Id.ToString(),
+                    LogLevel = GetLoggerType(logLevel),
+                    Text = formatter(state, exception),
+                    Time = DateTime.Now
                 });
             }
+        }
+
+        private SharedCoreModels.LoggerEntryModel.LoggerType GetLoggerType(LogLevel logLevel)
+        {
+            switch (logLevel)
+            {
+                case LogLevel.Trace:
+                case LogLevel.Debug:
+                case LogLevel.Information:
+                case LogLevel.None:
+                    return SharedCoreModels.LoggerEntryModel.LoggerType.Normal;
+                case LogLevel.Warning:
+                    return SharedCoreModels.LoggerEntryModel.LoggerType.Warning;
+                case LogLevel.Error:
+                case LogLevel.Critical:
+                    return SharedCoreModels.LoggerEntryModel.LoggerType.Error;
+            }
+            return SharedCoreModels.LoggerEntryModel.LoggerType.Normal;
         }
     }
 }

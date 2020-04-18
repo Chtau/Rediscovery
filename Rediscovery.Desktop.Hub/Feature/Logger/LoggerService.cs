@@ -9,7 +9,7 @@ namespace Rediscovery.Desktop.Hub.Feature.Logger
     public class LoggerService : ILoggerService
     {
         private readonly IPCPipe.IPipeServer _pipeServer;
-        public event EventHandler<LiveLoggerModel> LoggerDataReceived;
+        public event EventHandler<LoggerEntryModel> LoggerDataReceived;
 
         public LoggerService(IPCPipe.IPipeServer pipeServer)
         {
@@ -20,7 +20,7 @@ namespace Rediscovery.Desktop.Hub.Feature.Logger
         {
             _pipeServer.Listen("rediscoveryhublivelogger", data =>
             {
-                var model = Newtonsoft.Json.JsonConvert.DeserializeObject<LiveLoggerModel>(data);
+                var model = Newtonsoft.Json.JsonConvert.DeserializeObject<LoggerEntryModel>(data);
                 LoggerDataReceived?.Invoke(this, model);
             });
         }

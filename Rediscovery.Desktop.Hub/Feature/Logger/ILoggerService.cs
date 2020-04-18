@@ -8,7 +8,7 @@ namespace Rediscovery.Desktop.Hub.Feature.Logger
 {
     public interface ILoggerService
     {
-        event EventHandler<LiveLoggerModel> LoggerDataReceived;
+        event EventHandler<LoggerEntryModel> LoggerDataReceived;
         void Init();
     }
 }

@@ -6,7 +6,7 @@ namespace DesktopHub.Connection
 {
     public class IncomingConnectionPipeLiveLogger : IIncomingConnectionPipeLiveLogger
     {
-        public event EventHandler<SharedCoreModels.LiveLoggerModel> LiveLoggerEntry;
+        public event EventHandler<SharedCoreModels.LoggerEntryModel> LiveLoggerEntry;
 
         private readonly IPCPipe.IPipeServer _pipeServer;
 
@@ -21,7 +21,7 @@ namespace DesktopHub.Connection
             {
                 if (!string.IsNullOrWhiteSpace(data))
                 {
-                    var model = Newtonsoft.Json.JsonConvert.DeserializeObject<SharedCoreModels.LiveLoggerModel>(data);
+                    var model = Newtonsoft.Json.JsonConvert.DeserializeObject<SharedCoreModels.LoggerEntryModel>(data);
                     LiveLoggerEntry?.Invoke(this, model);
                 }
             });

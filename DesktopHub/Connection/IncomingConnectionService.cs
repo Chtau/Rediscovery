@@ -50,7 +50,7 @@ namespace DesktopHub.Connection
             });
         }
 
-        private void _incomingConnectionPipeLiveLogger_LiveLoggerEntry(object sender, SharedCoreModels.LiveLoggerModel e)
+        private void _incomingConnectionPipeLiveLogger_LiveLoggerEntry(object sender, SharedCoreModels.LoggerEntryModel e)
         {
             
         }

@@ -28,7 +28,7 @@ namespace Rediscovery.Desktop.Hub.Feature
             _loggerService.LoggerDataReceived += _loggerService_LoggerDataReceived;
         }
 
-        private void _loggerService_LoggerDataReceived(object sender, LiveLoggerModel e)
+        private void _loggerService_LoggerDataReceived(object sender, LoggerEntryModel e)
         {
             try
             {

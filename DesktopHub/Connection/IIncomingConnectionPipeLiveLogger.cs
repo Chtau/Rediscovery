@@ -6,7 +6,7 @@ namespace DesktopHub.Connection
 {
     public interface IIncomingConnectionPipeLiveLogger
     {
-        event EventHandler<SharedCoreModels.LiveLoggerModel> LiveLoggerEntry;
+        event EventHandler<SharedCoreModels.LoggerEntryModel> LiveLoggerEntry;
         void ListenForConnections();
     }
 }

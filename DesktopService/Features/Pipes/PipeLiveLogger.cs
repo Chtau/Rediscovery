@@ -26,7 +26,7 @@ namespace DesktopService.Features.Pipes
             _pipeSettings = pipeSettings.Value;
         }
 
-        public void Log(LiveLoggerModel liveLoggerModel)
+        public void Log(LoggerEntryModel liveLoggerModel)
         {
             try
             {

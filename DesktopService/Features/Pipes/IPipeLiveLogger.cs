@@ -7,6 +7,6 @@ namespace DesktopService.Features.Pipes
 {
     public interface IPipeLiveLogger
     {
-        void Log(LiveLoggerModel liveLoggerModel);
+        void Log(LoggerEntryModel liveLoggerModel);
     }
 }
