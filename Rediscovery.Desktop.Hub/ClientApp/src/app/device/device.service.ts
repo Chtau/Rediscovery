@@ -27,7 +27,6 @@ export class DeviceService {
       this.registeredDeviceModels = <IDeviceInfo[]>dummyDevice.default;
     } else {
       this.ipc.on('registereddeviceinfo-ipc', (event, arg) => {
-        console.log("IPC Device data received");
         // switch to angular zone for change detected events ...
         this.zone.run(() => {
           this.registeredDeviceModels = arg;

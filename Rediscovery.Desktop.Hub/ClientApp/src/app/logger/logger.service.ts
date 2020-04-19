@@ -22,7 +22,6 @@ export class LoggerService {
       this.entries = <ILoggerEntry[]>dummyLoggerEntries.default;
     } else {
       this.ipc.on('loggermessage-ipc', (event, arg) => {
-        console.log("IPC Logger data received");
         // switch to angular zone for change detected events ...
         this.zone.run(() => {
           this.entries.push(arg);
