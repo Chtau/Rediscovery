@@ -13,6 +13,13 @@ export class LoggerComponent implements OnInit, AfterViewChecked, AfterViewInit 
   autoscroll: boolean = true;
   entries: ILoggerEntry[] = [];
 
+  showTrace: boolean = true;
+  showDebug: boolean = true;
+  showInformation: boolean = true;
+  showWarning: boolean = true;
+  showError: boolean = true;
+  showCritical: boolean = true;
+
   constructor(private loggerService: LoggerService) {
     this.entries = loggerService.getEntries();
     this.scrollToBottom();

@@ -98,14 +98,67 @@
   color: #ff0000;
 }
 
-.shell-information {
-  /*color: #e0a910;*/
-}
-
 .shell-debug {
   color: #10e050;
 }
 
 .shell-trace {
   color: #35b4ff;
+}
+
+.vl {
+  border-left: 2px solid #333333;
+  margin-right: 10px;
+  height: 36px;
+  margin-top: 6px;
+}
+
+.filter-debug {
+  background-color: #10e050;
+  border-color: #10e050;
+}
+
+.filter-debug-outline {
+  color: #10e050;
+  border-color: #10e050;
+}
+
+.filter-trace {
+  background-color: #35b4ff;
+  border-color: #35b4ff;
+}
+
+.filter-trace-outline {
+  color: #35b4ff;
+  border-color: #35b4ff;
+}
+
+.filter-critical {
+  background-color: #ff0000;
+  border-color: #ff0000;
+}
+
+.filter-critical-outline {
+  color: #ff0000;
+  border-color: #ff0000;
+}
+
+.filter-warning {
+  background-color: #ffcb38;
+  border-color: #ffcb38;
+}
+
+.filter-warning-outline {
+  color: #ffcb38;
+  border-color: #ffcb38;
+}
+
+.filter-error {
+  background-color: #ff0000;
+  border-color: #ff0000;
+}
+
+.filter-error-outline {
+  color: #ff0000;
+  border-color: #ff0000;
 }
