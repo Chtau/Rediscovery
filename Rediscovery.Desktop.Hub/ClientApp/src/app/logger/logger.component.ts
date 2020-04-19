@@ -10,7 +10,7 @@ import { ILoggerEntry } from './logger.interface';
 export class LoggerComponent implements OnInit, AfterViewChecked, AfterViewInit {
   @ViewChild('terminalContainer', {static: true}) private terminalContainer: ElementRef;
 
-
+  autoscroll: boolean = true;
   entries: ILoggerEntry[] = [];
 
   constructor(private loggerService: LoggerService) {
@@ -39,8 +39,18 @@ export class LoggerComponent implements OnInit, AfterViewChecked, AfterViewInit 
 
   scrollToBottom(): void {
     try {
+      if (this.autoscroll === true) {
         this.terminalContainer.nativeElement.scrollTop = this.terminalContainer.nativeElement.scrollHeight;
+      }
     } catch(err) { }                 
+  }
+
+  clearConsole(): void {
+    this.entries = [];
+  }
+
+  changeAutoscroll(): void {
+    this.autoscroll = !this.autoscroll;
   }
 
 }

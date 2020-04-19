@@ -1,7 +1,15 @@
 <div class="content-container">
   <div class="content-area">
+    <div>
+      <button type="button" class="btn btn-icon" [ngClass]="{'btn-primary': !autoscroll, 'btn-primary-outline': autoscroll}" aria-label="autoscroll" (click)="changeAutoscroll()" title="Autoscroll Text">
+        <clr-icon shape="collapse-card"></clr-icon>
+      </button>
+      <button type="button" class="btn btn-icon btn-warning" aria-label="clear console" (click)="clearConsole()" title="Clear Console">
+        <clr-icon shape="times-circle"></clr-icon>
+      </button>
+    </div>
     <div class="shell-wrap">
-      <p class="shell-top-bar">Logger Terminal</p>
+      <div class="shell-top-bar">Logger Terminal</div>
       <ul class="shell-body" #terminalContainer>
         <li tabindex="-1" class="shell-system-li" [ngClass]="{'shell-warning': entry.type === 2, 'shell-error': entry.type == 1}" *ngFor="let entry of entries">
           {{ entry.text }}
