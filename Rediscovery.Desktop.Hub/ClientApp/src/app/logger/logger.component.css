@@ -83,13 +83,29 @@
 
 
 .shell-system-li {
-  color: #e6fade;
+  color: #ffffff;
 }
 
 .shell-error {
-  color: #ad0a0a;
+  color: #ff0000;
 }
 
 .shell-warning {
-  color: #e0a910;
+  color: #ffcb38;
+}
+
+.shell-critical {
+  color: #ff0000;
+}
+
+.shell-information {
+  /*color: #e0a910;*/
+}
+
+.shell-debug {
+  color: #10e050;
+}
+
+.shell-trace {
+  color: #35b4ff;
 }

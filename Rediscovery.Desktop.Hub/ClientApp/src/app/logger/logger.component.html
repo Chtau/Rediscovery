@@ -11,7 +11,9 @@
     <div class="shell-wrap">
       <div class="shell-top-bar">Logger Terminal</div>
       <ul class="shell-body" #terminalContainer>
-        <li tabindex="-1" class="shell-system-li" [ngClass]="{'shell-warning': entry.type === 2, 'shell-error': entry.type == 1}" *ngFor="let entry of entries">
+        <li tabindex="-1" class="shell-system-li" 
+        [ngClass]="{'shell-critical': entry.type === 5, 'shell-error': entry.type == 4, 'shell-warning': entry.type == 3, 'shell-information': entry.type == 2, 'shell-debug': entry.type == 1, 'shell-trace': entry.type == 0}" 
+        *ngFor="let entry of entries">
           {{ entry.text }}
           <span *ngIf="entry.subText != null" class="col">{{entry.subText}}</span>
         </li>

@@ -1,212 +1,296 @@
 [
   {
     "id": "0",
-    "text": "Test",
+    "text": "Test Trace",
     "subText": null,
     "time": "2020-04-01T18:01:43.511Z",
     "type": 0
   },
   {
     "id": "1",
-    "text": "Test 1",
+    "text": "Test Debug",
     "subText": null,
     "time": "2020-04-01T18:01:43.511Z",
-    "type": 0
+    "type": 1
   },
   {
     "id": "2",
-    "text": "Test 2",
+    "text": "Test Information",
     "subText": "Additional Text",
     "time": "2020-04-01T18:01:43.511Z",
-    "type": 0
+    "type": 2
   },
   {
     "id": "3",
     "text": "Test Warning",
     "subText": null,
     "time": "2020-04-01T18:01:43.511Z",
-    "type": 2
+    "type": 3
   },
   {
     "id": "4",
     "text": "Test Error",
     "subText": null,
     "time": "2020-04-01T18:01:43.511Z",
-    "type": 1
+    "type": 4
   },
   {
     "id": "0",
-    "text": "Test",
+    "text": "Test Critical",
     "subText": null,
     "time": "2020-04-01T18:01:43.511Z",
-    "type": 0
-  },
-  {
-    "id": "1",
-    "text": "Test 1",
-    "subText": null,
-    "time": "2020-04-01T18:01:43.511Z",
-    "type": 0
-  },
-  {
-    "id": "2",
-    "text": "Test 2",
-    "subText": "Additional Text",
-    "time": "2020-04-01T18:01:43.511Z",
-    "type": 0
-  },
-  {
-    "id": "3",
-    "text": "Test Warning",
-    "subText": null,
-    "time": "2020-04-01T18:01:43.511Z",
-    "type": 2
-  },
-  {
-    "id": "4",
-    "text": "Test Error",
-    "subText": null,
-    "time": "2020-04-01T18:01:43.511Z",
-    "type": 1
+    "type": 5
   },
   {
     "id": "0",
-    "text": "Test",
+    "text": "Test Trace",
     "subText": null,
     "time": "2020-04-01T18:01:43.511Z",
     "type": 0
   },
   {
     "id": "1",
-    "text": "Test 1",
+    "text": "Test Debug",
     "subText": null,
     "time": "2020-04-01T18:01:43.511Z",
-    "type": 0
+    "type": 1
   },
   {
     "id": "2",
-    "text": "Test 2",
+    "text": "Test Information",
     "subText": "Additional Text",
     "time": "2020-04-01T18:01:43.511Z",
-    "type": 0
+    "type": 2
   },
   {
     "id": "3",
     "text": "Test Warning",
     "subText": null,
     "time": "2020-04-01T18:01:43.511Z",
-    "type": 2
+    "type": 3
   },
   {
     "id": "4",
     "text": "Test Error",
     "subText": null,
     "time": "2020-04-01T18:01:43.511Z",
-    "type": 1
+    "type": 4
   },
   {
     "id": "0",
-    "text": "Test",
+    "text": "Test Critical",
     "subText": null,
     "time": "2020-04-01T18:01:43.511Z",
-    "type": 0
-  },
-  {
-    "id": "1",
-    "text": "Test 1",
-    "subText": null,
-    "time": "2020-04-01T18:01:43.511Z",
-    "type": 0
-  },
-  {
-    "id": "2",
-    "text": "Test 2",
-    "subText": "Additional Text",
-    "time": "2020-04-01T18:01:43.511Z",
-    "type": 0
-  },
-  {
-    "id": "3",
-    "text": "Test Warning",
-    "subText": null,
-    "time": "2020-04-01T18:01:43.511Z",
-    "type": 2
-  },
-  {
-    "id": "4",
-    "text": "Test Error",
-    "subText": null,
-    "time": "2020-04-01T18:01:43.511Z",
-    "type": 1
+    "type": 5
   },
   {
     "id": "0",
-    "text": "Test",
+    "text": "Test Trace",
     "subText": null,
     "time": "2020-04-01T18:01:43.511Z",
     "type": 0
   },
   {
     "id": "1",
-    "text": "Test 1",
+    "text": "Test Debug",
     "subText": null,
     "time": "2020-04-01T18:01:43.511Z",
-    "type": 0
+    "type": 1
   },
   {
     "id": "2",
-    "text": "Test 2",
+    "text": "Test Information",
     "subText": "Additional Text",
     "time": "2020-04-01T18:01:43.511Z",
-    "type": 0
+    "type": 2
   },
   {
     "id": "3",
     "text": "Test Warning",
     "subText": null,
     "time": "2020-04-01T18:01:43.511Z",
-    "type": 2
+    "type": 3
   },
   {
     "id": "4",
     "text": "Test Error",
     "subText": null,
     "time": "2020-04-01T18:01:43.511Z",
-    "type": 1
+    "type": 4
   },
   {
     "id": "0",
-    "text": "Test",
+    "text": "Test Critical",
+    "subText": null,
+    "time": "2020-04-01T18:01:43.511Z",
+    "type": 5
+  },
+  {
+    "id": "0",
+    "text": "Test Trace",
     "subText": null,
     "time": "2020-04-01T18:01:43.511Z",
     "type": 0
   },
   {
     "id": "1",
-    "text": "Test 1",
+    "text": "Test Debug",
     "subText": null,
     "time": "2020-04-01T18:01:43.511Z",
-    "type": 0
+    "type": 1
   },
   {
     "id": "2",
-    "text": "Test 2",
+    "text": "Test Information",
     "subText": "Additional Text",
     "time": "2020-04-01T18:01:43.511Z",
-    "type": 0
+    "type": 2
   },
   {
     "id": "3",
     "text": "Test Warning",
     "subText": null,
     "time": "2020-04-01T18:01:43.511Z",
-    "type": 2
+    "type": 3
   },
   {
     "id": "4",
     "text": "Test Error",
     "subText": null,
     "time": "2020-04-01T18:01:43.511Z",
+    "type": 4
+  },
+  {
+    "id": "0",
+    "text": "Test Critical",
+    "subText": null,
+    "time": "2020-04-01T18:01:43.511Z",
+    "type": 5
+  },
+  {
+    "id": "0",
+    "text": "Test Trace",
+    "subText": null,
+    "time": "2020-04-01T18:01:43.511Z",
+    "type": 0
+  },
+  {
+    "id": "1",
+    "text": "Test Debug",
+    "subText": null,
+    "time": "2020-04-01T18:01:43.511Z",
     "type": 1
+  },
+  {
+    "id": "2",
+    "text": "Test Information",
+    "subText": "Additional Text",
+    "time": "2020-04-01T18:01:43.511Z",
+    "type": 2
+  },
+  {
+    "id": "3",
+    "text": "Test Warning",
+    "subText": null,
+    "time": "2020-04-01T18:01:43.511Z",
+    "type": 3
+  },
+  {
+    "id": "4",
+    "text": "Test Error",
+    "subText": null,
+    "time": "2020-04-01T18:01:43.511Z",
+    "type": 4
+  },
+  {
+    "id": "0",
+    "text": "Test Critical",
+    "subText": null,
+    "time": "2020-04-01T18:01:43.511Z",
+    "type": 5
+  },
+  {
+    "id": "0",
+    "text": "Test Trace",
+    "subText": null,
+    "time": "2020-04-01T18:01:43.511Z",
+    "type": 0
+  },
+  {
+    "id": "1",
+    "text": "Test Debug",
+    "subText": null,
+    "time": "2020-04-01T18:01:43.511Z",
+    "type": 1
+  },
+  {
+    "id": "2",
+    "text": "Test Information",
+    "subText": "Additional Text",
+    "time": "2020-04-01T18:01:43.511Z",
+    "type": 2
+  },
+  {
+    "id": "3",
+    "text": "Test Warning",
+    "subText": null,
+    "time": "2020-04-01T18:01:43.511Z",
+    "type": 3
+  },
+  {
+    "id": "4",
+    "text": "Test Error",
+    "subText": null,
+    "time": "2020-04-01T18:01:43.511Z",
+    "type": 4
+  },
+  {
+    "id": "0",
+    "text": "Test Critical",
+    "subText": null,
+    "time": "2020-04-01T18:01:43.511Z",
+    "type": 5
+  },
+  {
+    "id": "0",
+    "text": "Test Trace",
+    "subText": null,
+    "time": "2020-04-01T18:01:43.511Z",
+    "type": 0
+  },
+  {
+    "id": "1",
+    "text": "Test Debug",
+    "subText": null,
+    "time": "2020-04-01T18:01:43.511Z",
+    "type": 1
+  },
+  {
+    "id": "2",
+    "text": "Test Information",
+    "subText": "Additional Text",
+    "time": "2020-04-01T18:01:43.511Z",
+    "type": 2
+  },
+  {
+    "id": "3",
+    "text": "Test Warning",
+    "subText": null,
+    "time": "2020-04-01T18:01:43.511Z",
+    "type": 3
+  },
+  {
+    "id": "4",
+    "text": "Test Error",
+    "subText": null,
+    "time": "2020-04-01T18:01:43.511Z",
+    "type": 4
+  },
+  {
+    "id": "0",
+    "text": "Test Critical",
+    "subText": null,
+    "time": "2020-04-01T18:01:43.511Z",
+    "type": 5
   }
 ]
