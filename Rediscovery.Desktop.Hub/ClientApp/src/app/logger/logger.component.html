@@ -10,42 +10,42 @@
       <div class="vl"></div>
       <button type="button" class="btn btn-icon"
       [ngClass]="{'btn-primary': !showInformation, 'btn-primary-outline': showInformation}"
-       aria-label="Filter Information messages" (click)="showInformation = !showInformation" title="Filter Information messages">
+       aria-label="Filter Information messages" (click)="filterInformation()" title="Filter Information messages">
        <clr-icon *ngIf="showInformation" shape="filter"></clr-icon>
        <clr-icon *ngIf="!showInformation" shape="filter-off"></clr-icon>
         Information
       </button>
       <button type="button" class="btn btn-icon"
       [ngClass]="{'btn-primary filter-trace': !showTrace, 'btn-primary-outline filter-trace-outline': showTrace}"
-       aria-label="Filter Trace messages" (click)="showTrace = !showTrace" title="Filter Trace messages">
+       aria-label="Filter Trace messages" (click)="filterTrace()" title="Filter Trace messages">
        <clr-icon *ngIf="showTrace" shape="filter"></clr-icon>
        <clr-icon *ngIf="!showTrace" shape="filter-off"></clr-icon>
         Trace
       </button>
       <button type="button" class="btn btn-icon"
       [ngClass]="{'btn-primary filter-debug': !showDebug, 'btn-primary-outline filter-debug-outline': showDebug}"
-       aria-label="Filter Debug messages" (click)="showDebug = !showDebug" title="Filter Debug messages">
+       aria-label="Filter Debug messages" (click)="filterDebug()" title="Filter Debug messages">
        <clr-icon *ngIf="showDebug" shape="filter"></clr-icon>
        <clr-icon *ngIf="!showDebug" shape="filter-off"></clr-icon>
         Debug
       </button>
       <button type="button" class="btn btn-icon"
       [ngClass]="{'btn-primary filter-warning': !showWarning, 'btn-primary-outline filter-warning-outline': showWarning}"
-       aria-label="Filter Warning messages" (click)="showWarning = !showWarning" title="Filter Warning messages">
+       aria-label="Filter Warning messages" (click)="filterWarning()" title="Filter Warning messages">
        <clr-icon *ngIf="showWarning" shape="filter"></clr-icon>
        <clr-icon *ngIf="!showWarning" shape="filter-off"></clr-icon>
         Warning
       </button>
       <button type="button" class="btn btn-icon"
       [ngClass]="{'btn-primary filter-error': !showError, 'btn-primary-outline filter-error-outline': showError}"
-       aria-label="Filter Error messages" (click)="showError = !showError" title="Filter Error messages">
+       aria-label="Filter Error messages" (click)="filterError()" title="Filter Error messages">
        <clr-icon *ngIf="showError" shape="filter"></clr-icon>
        <clr-icon *ngIf="!showError" shape="filter-off"></clr-icon>
         Error
       </button>
       <button type="button" class="btn btn-icon"
       [ngClass]="{'btn-primary filter-critical': !showCritical, 'btn-primary-outline filter-critical-outline': showCritical}"
-       aria-label="Filter Critical messages" (click)="showCritical = !showCritical" title="Filter Critical messages">
+       aria-label="Filter Critical messages" (click)="filterCritical()" title="Filter Critical messages">
        <clr-icon *ngIf="showCritical" shape="filter"></clr-icon>
        <clr-icon *ngIf="!showCritical" shape="filter-off"></clr-icon>
         Critical
