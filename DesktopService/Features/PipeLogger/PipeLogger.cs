@@ -50,17 +50,20 @@ namespace DesktopService.Features.PipeLogger
             switch (logLevel)
             {
                 case LogLevel.Trace:
+                    return SharedCoreModels.LoggerEntryModel.LoggerType.Trace;
                 case LogLevel.Debug:
+                    return SharedCoreModels.LoggerEntryModel.LoggerType.Debug;
                 case LogLevel.Information:
                 case LogLevel.None:
-                    return SharedCoreModels.LoggerEntryModel.LoggerType.Normal;
+                    return SharedCoreModels.LoggerEntryModel.LoggerType.Information;
                 case LogLevel.Warning:
                     return SharedCoreModels.LoggerEntryModel.LoggerType.Warning;
                 case LogLevel.Error:
-                case LogLevel.Critical:
                     return SharedCoreModels.LoggerEntryModel.LoggerType.Error;
+                case LogLevel.Critical:
+                    return SharedCoreModels.LoggerEntryModel.LoggerType.Critical;
             }
-            return SharedCoreModels.LoggerEntryModel.LoggerType.Normal;
+            return SharedCoreModels.LoggerEntryModel.LoggerType.Information;
         }
     }
 }
