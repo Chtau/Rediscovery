@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DeviceService } from './device/device.service';
 import { LoggerService } from './logger/logger.service';
+import { FeatureService } from './feature/feature.service';
 
 @Component({
   selector: 'app-root',
@@ -11,9 +12,11 @@ export class AppComponent {
   
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string,
   private deviceService: DeviceService,
-  private loggerService: LoggerService) {
+  private loggerService: LoggerService,
+  private featuerService: FeatureService) {
     this.deviceService.initIPC();
     this.loggerService.initIPC();
+    this.featuerService.initIPC();
     http.get<boolean>(baseUrl + 'communication').subscribe(result => {
       console.log('Communication to Service init');
     }, error => console.error(error));

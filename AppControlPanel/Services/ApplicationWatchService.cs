@@ -34,6 +34,7 @@ namespace AppControlPanel.Services
                 if (appViewModel.AdditionalProcesses.Count > 0)
                 {
                     bool running = false;
+                    List<int> processIdsToRemove = new List<int>();
                     foreach (var item in appViewModel.AdditionalProcesses)
                     {
                         try
@@ -45,11 +46,20 @@ namespace AppControlPanel.Services
                                 running = true;
                                 break;
                             }
-                        } catch (ArgumentException) 
+                        } catch (ArgumentException)
                         {
+                            // if the process by id throws the argument exception the process no longer exists
+                            processIdsToRemove.Add(item);
                         } catch (Exception ex)
                         {
                             System.Diagnostics.Debug.Print("Process Watch additional Processes Exception:" + ex.ToString());
+                        }
+                    }
+                    if (processIdsToRemove.Count > 0)
+                    {
+                        foreach (var item in processIdsToRemove)
+                        {
+                            appViewModel.AdditionalProcesses.Remove(item);
                         }
                     }
                     if (!running)
