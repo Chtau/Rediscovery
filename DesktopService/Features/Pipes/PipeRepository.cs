@@ -37,16 +37,6 @@ namespace DesktopService.Features.Pipes
             _resourceProvider.Provide("rediscoveryservice", OnProvideResources);
             _pipeServer.DataReceived += _pipeServer_DataReceived;
             _pipeServer.Listen("sync_device_rediscoveryservice");
-
-            // TODO: test function only
-            Task.Run(async () =>
-            {
-                do
-                {
-                    await Task.Delay(1000);
-                    _logger.LogInformation("Test At:" + DateTime.Now.ToShortTimeString());
-                } while (true);
-            });
         }
 
         private void _pipeServer_DataReceived(object sender, string e)
