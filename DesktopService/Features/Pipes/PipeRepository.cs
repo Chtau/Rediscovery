@@ -80,9 +80,17 @@ namespace DesktopService.Features.Pipes
             } else if (resourceName == "features")
             {
                 var features = _featureService.GetFeaturesManifest();
-                var resource = new IPCPipe.Models.PipeResource<List<DeviceFeatureDefinition>>();
+                var resource = new IPCPipe.Models.PipeResource<List<SharedCoreModels.DeviceFeature>>();
                 resource.ResourceName = resourceName;
-                resource.Entity = features;
+                resource.Entity = (from x in features
+                                   select new SharedCoreModels.DeviceFeature
+                                   {
+                                       Id = x.Id,
+                                       DisplayName = x.DisplayName,
+                                       MinControlIntegrationPoint = x.MinControlIntegrationPoint.ToString(),
+                                       MinFeatureIntegrationPoint = x.MinFeatureIntegrationPoint.ToString(),
+                                       Version = x.Version.ToString()
+                                   }).ToList();
                 return Newtonsoft.Json.JsonConvert.SerializeObject(resource);
             }
             return null;

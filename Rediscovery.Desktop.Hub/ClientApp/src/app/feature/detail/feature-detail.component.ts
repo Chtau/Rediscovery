@@ -9,7 +9,7 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 })
 export class FeatureDetailComponent implements AfterViewInit {
   
-  model: IDeviceFeatureDefinition = null;
+  model: IDeviceFeature = null;
 
   constructor(private featureService: FeatureService,
     private route: ActivatedRoute,

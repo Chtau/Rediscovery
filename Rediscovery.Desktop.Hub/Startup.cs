@@ -36,6 +36,7 @@ namespace Rediscovery.Desktop.Hub
 
             services.AddSingleton<Feature.Device.IDeviceService, Feature.Device.DeviceService>();
             services.AddSingleton<Feature.Logger.ILoggerService, Feature.Logger.LoggerService>();
+            services.AddSingleton<Feature.Features.IFeatureService, Feature.Features.FeatureService>();
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

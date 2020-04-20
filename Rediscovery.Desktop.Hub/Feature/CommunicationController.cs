@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Rediscovery.Desktop.Hub.Feature.Device;
+using Rediscovery.Desktop.Hub.Feature.Features;
 using Rediscovery.Desktop.Hub.Feature.Logger;
 using SharedCoreModels;
 using System;
@@ -15,17 +16,34 @@ namespace Rediscovery.Desktop.Hub.Feature
         private readonly ILogger<CommunicationController> _logger;
         private readonly IDeviceService _deviceService;
         private readonly ILoggerService _loggerService;
+        private readonly IFeatureService _featureService;
 
         public CommunicationController(ILogger<CommunicationController> logger,
             IDeviceService deviceService,
-            ILoggerService loggerService
+            ILoggerService loggerService,
+            IFeatureService featureService
             )
         {
             _logger = logger;
             _deviceService = deviceService;
             _loggerService = loggerService;
+            _featureService = featureService;
             _deviceService.DeviceInfoReceived += _deviceService_DeviceInfoReceived;
             _loggerService.LoggerDataReceived += _loggerService_LoggerDataReceived;
+            _featureService.DeviceFeatureReceived += _featureService_DeviceFeatureReceived;
+        }
+
+        private void _featureService_DeviceFeatureReceived(object sender, List<DeviceFeature> e)
+        {
+            try
+            {
+                var mainWindow = ElectronNET.API.Electron.WindowManager.BrowserWindows.First();
+                ElectronNET.API.Electron.IpcMain.Send(mainWindow, "features-ipc", e);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "DeviceFeatureReceived via IPC from Service");
+            }
         }
 
         private void _loggerService_LoggerDataReceived(object sender, LoggerEntryModel e)
@@ -61,9 +79,9 @@ namespace Rediscovery.Desktop.Hub.Feature
         [HttpGet]
         public bool InitServiceConnection()
         {
-            // TODO: only for tests removed
-            //_deviceService.Init();
+            _deviceService.Init();
             _loggerService.Init();
+            _featureService.Init();
             return true;
         }
     }

@@ -8,10 +8,14 @@ import { FeatureService } from '../feature.service';
 })
 export class FeatureListOverviewComponent {
   
-  public featureModels: IDeviceFeatureDefinition[] = [];
+  public featureModels: IDeviceFeature[] = [];
 
   constructor(private featureService: FeatureService) {
     this.featureModels = featureService.getFeatures();
+
+    this.featureService.featuresChanged.subscribe(result => {
+      this.featureModels = result;
+    });
   }
 
 }
