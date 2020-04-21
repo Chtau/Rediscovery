@@ -11,5 +11,7 @@ namespace SharedConfigurations.DesktopService.Models
         public string Secret { get; set; }
 
         public int PasswordKeyLength { get; set; }
+
+        public bool AnonymousLogin { get; set; }
     }
 }
