@@ -16,6 +16,9 @@ namespace DesktopService.Features.Identity
     {
         public event EventHandler<Device> NewDeviceAdded;
 
+        private readonly Guid anonymouseId = new Guid("3D2AF409-6809-4ED1-B86A-451C94165E38");
+        private readonly string anonymouseDeviceName = "Anonymous";
+
         private readonly ILogger<DeviceService> _logger;
         private readonly SharedConfigurations.DesktopService.Models.IdentityConfiguration _identitySettings;
         private readonly Random _random;
@@ -38,7 +41,23 @@ namespace DesktopService.Features.Identity
 
                 // return null if user not found
                 if (user == null)
+                {
+                    if (_identitySettings.AnonymousLogin)
+                    {
+                        user = new Device
+                        {
+                            AllowAccess = true,
+                            DeviceName = anonymouseDeviceName,
+                            Id = anonymouseId,
+                            PasswordKey = null,
+                            PasswordKeyValidTill = DateTime.MaxValue,
+                        };
+                        user.Token = CreateNewToken(user.Id.ToString(), user.DeviceName);
+                        return user;
+                    }
                     return null;
+                }
+
 
                 user.AllowAccess = true; // update user db
                 user.PasswordKeyValidTill = DateTime.MaxValue;
@@ -119,7 +138,20 @@ namespace DesktopService.Features.Identity
 #pragma warning restore RCS1155 // Use StringComparison when comparing strings.
                 if (user != null)
                     user.PasswordKey = null;
-
+                else
+                {
+                    if (_identitySettings.AnonymousLogin)
+                    {
+                        user = new Device
+                        {
+                            AllowAccess = true,
+                            DeviceName = anonymouseDeviceName,
+                            Id = anonymouseId,
+                            PasswordKey = null,
+                            PasswordKeyValidTill = DateTime.MaxValue,
+                        };
+                    }
+                }
                 return user;
             } catch (Exception ex)
             {
@@ -165,12 +197,14 @@ namespace DesktopService.Features.Identity
 
         private async Task OnUpdateUser(Device device)
         {
-            await _dBContext.Instance.UpdateAsync(device);
+            if (device.Id != anonymouseId)
+                await _dBContext.Instance.UpdateAsync(device);
         }
 
         private async Task OnAddUser(Device device)
         {
-            await _dBContext.Instance.InsertOrReplaceAsync(device);
+            if (device.Id != anonymouseId)
+                await _dBContext.Instance.InsertOrReplaceAsync(device);
         }
 
         private string OnCreatePasswordKey()
