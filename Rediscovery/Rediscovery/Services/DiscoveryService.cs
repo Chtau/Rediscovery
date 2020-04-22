@@ -24,19 +24,25 @@ namespace Rediscovery.Services
                         var RequestData = Encoding.ASCII.GetBytes("RediscoveryClient");
 
                         Client.EnableBroadcast = true;
-                        Client.Send(RequestData, RequestData.Length, new IPEndPoint(IPAddress.Broadcast, 8888));
-                        await Task.Run(() =>
+                        int sendBytes = Client.Send(RequestData, RequestData.Length, new IPEndPoint(IPAddress.Broadcast, 8888));
+                        if (sendBytes == RequestData.Length)
                         {
-                            var ServerResponseData = Client.Receive(ref ServerEp);
-                            var ServerResponse = Encoding.ASCII.GetString(ServerResponseData);
-                            //callbackAnswer?.Invoke(ServerEp.Address.ToString());
-                            var serviceInfo = new SharedCoreModels.DiscoveryServiceInfo();
-                            serviceInfo.Parse(ServerResponse);
-                            callbackAnswer?.Invoke(serviceInfo);
-                            _logger.Message($"Received {serviceInfo.ToString()} from {ServerEp.Address.ToString()}");
+                            await Task.Run(() =>
+                            {
+                                var ServerResponseData = Client.Receive(ref ServerEp);
+                                var ServerResponse = Encoding.ASCII.GetString(ServerResponseData);
+                                //callbackAnswer?.Invoke(ServerEp.Address.ToString());
+                                var serviceInfo = new SharedCoreModels.DiscoveryServiceInfo();
+                                serviceInfo.Parse(ServerResponse);
+                                callbackAnswer?.Invoke(serviceInfo);
+                                _logger.Message($"Received {serviceInfo.ToString()} from {ServerEp.Address.ToString()}");
 
-                            Client.Close();
-                        });
+                                Client.Close();
+                            });
+                        } else
+                        {
+                            _logger.Message($"No valid Broadcast send (byte miss match Expected bytes:{RequestData.Length} send bytes:{sendBytes})");
+                        }
                     } catch (Exception ex)
                     {
                         _logger.Error(ex);
