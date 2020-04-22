@@ -18,7 +18,7 @@ namespace AppControlPanel.Services
                 {
                     if (System.IO.Directory.Exists(appViewModel.CommandLineWorkingDirectory))
                     {
-                        if (Shared.ProcessRunCommandLine(appViewModel.CommandLineCommand, appViewModel.CommandLineWorkingDirectory, null, appViewModel.RunAs, appViewModel.HideShell.HasValue ? appViewModel.HideShell.Value : false, processIdCallback))
+                        if (Shared.ProcessRunCommandLine(appViewModel.CommandLineCommand, appViewModel.CommandLineWorkingDirectory ?? appViewModel.WorkingDirectory, null, appViewModel.RunAs, appViewModel.HideShell.HasValue ? appViewModel.HideShell.Value : false, processIdCallback))
                             return ViewModels.AppViewModel.LaunchState.Starting;
                         else
                             return ViewModels.AppViewModel.LaunchState.ErrorStarting;
@@ -49,7 +49,7 @@ namespace AppControlPanel.Services
 
                     if (!string.IsNullOrWhiteSpace(path))
                     {
-                        if (Shared.ProcessRun(path, appViewModel.ExecuteArguments, null, appViewModel.RunAs, appViewModel.HideShell.HasValue ? appViewModel.HideShell.Value : false, null, processIdCallback))
+                        if (Shared.ProcessRun(path, appViewModel.ExecuteArguments, null, appViewModel.RunAs, appViewModel.HideShell.HasValue ? appViewModel.HideShell.Value : false, appViewModel.WorkingDirectory, processIdCallback))
                             return ViewModels.AppViewModel.LaunchState.Starting;
                         else
                             return ViewModels.AppViewModel.LaunchState.ErrorStarting;

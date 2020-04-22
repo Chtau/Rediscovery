@@ -12,6 +12,7 @@ namespace SharedConfigurations.AppControlPanel.Models
         public string ExecuteableName { get; set; }
         public string SearchDirectory { get; set; }
         public string ExecuteArguments { get; set; }
+        public string WorkingDirectory { get; set; }
         public string RunAs { get; set; }
         public bool? HideShell { get; set; }
         public bool? AutoStartWithPanel { get; set; }
