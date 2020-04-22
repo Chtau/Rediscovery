@@ -24,6 +24,8 @@ namespace Rediscovery.Services
                         var RequestData = Encoding.ASCII.GetBytes("RediscoveryClient");
 
                         Client.EnableBroadcast = true;
+                        // broadcast don't work in the vs android emulator due to virtual network problems... 
+                        // TODO: need to add configuration for Discovery Port Setting
                         int sendBytes = Client.Send(RequestData, RequestData.Length, new IPEndPoint(IPAddress.Broadcast, 8888));
                         if (sendBytes == RequestData.Length)
                         {
