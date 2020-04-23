@@ -8,6 +8,7 @@ using Xamarin.Forms;
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Services.DBStore))]
 namespace Rediscovery.Services
 {
+    [Obsolete("replace with JSON store")]
     public class DBStore : BaseService, IDBStore
     {
         public SQLiteAsyncConnection Store { get; }
@@ -16,6 +17,7 @@ namespace Rediscovery.Services
         {
             try
             {
+                // TODO: remove SQLite we should replace it if a simple JSON
                 Store = new SQLiteAsyncConnection(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "rediscovery.db3"));
                 OnCreateTables().GetAwaiter();
             } catch (Exception ex)
