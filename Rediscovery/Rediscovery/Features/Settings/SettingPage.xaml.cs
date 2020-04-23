@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
+
+namespace Rediscovery.Features.Settings
+{
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class SettingPage : ContentPage
+    {
+        SettingViewModel viewModel;
+
+        public SettingPage()
+        {
+            InitializeComponent();
+            BindingContext = viewModel = new SettingViewModel();
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            viewModel.LoadCommand.Execute(null);
+        }
+    }
+}

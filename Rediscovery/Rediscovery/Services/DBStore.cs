@@ -28,6 +28,7 @@ namespace Rediscovery.Services
         {
             await Store.CreateTableAsync<Features.Connection.Models.ConnectionInfo>();
             await Store.CreateTableAsync<Features.Connection.Models.ConnectionManifestFeature>();
+            await Store.CreateTableAsync<Features.Settings.Models.SettingModel>();
         }
     }
 }
