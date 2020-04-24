@@ -15,5 +15,13 @@ namespace Rediscovery.Services
                 Directory.CreateDirectory(dir);
             return dir;
         }
+
+        public string AppSettingsDirectory()
+        {
+            var dir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "settings");
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+            return dir;
+        }
     }
 }

@@ -4,9 +4,7 @@ using System.Text;
 
 namespace Rediscovery.Services
 {
-    public interface IFileSystem
+    public interface IJSONStore
     {
-        string FeatureHtmlUIDirectory();
-        string AppSettingsDirectory();
     }
 }

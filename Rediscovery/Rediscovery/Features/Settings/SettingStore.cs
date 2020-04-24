@@ -11,7 +11,45 @@ namespace Rediscovery.Features.Settings
 {
     public class SettingStore : BaseService, IDataStoreGuid<SettingModel>
     {
-        private IDBStore db => DependencyService.Get<IDBStore>() ?? new DBStore();
+        private IFileSystem fs => DependencyService.Get<IFileSystem>() ?? new FileSystem();
+
+        public string FilePath
+        {
+            get
+            {
+                return System.IO.Path.Combine(fs.AppSettingsDirectory(), "appsettings.json");
+            }
+        }
+
+        private SettingModel OnGetFileContent()
+        {
+            try
+            {
+                var content = System.IO.File.ReadAllText(FilePath);
+                if (!string.IsNullOrWhiteSpace(content))
+                    return Newtonsoft.Json.JsonConvert.DeserializeObject<SettingModel>(content);
+                return new SettingModel();
+            } catch (Exception ex)
+            {
+                _logger.Error(ex);
+                return new SettingModel();
+            }
+        }
+
+        private bool OnSetFileContent(SettingModel value)
+        {
+            try
+            {
+                var content = Newtonsoft.Json.JsonConvert.SerializeObject(value);
+                System.IO.File.WriteAllText(FilePath, content);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+                return false;
+            }
+        }
 
         public bool AddItem(SettingModel item)
         {
@@ -20,15 +58,12 @@ namespace Rediscovery.Features.Settings
 
         public async Task<bool> AddItemAsync(SettingModel item)
         {
-            if (await db.Store.Table<SettingModel>().Where(s => s.Id == item.Id).CountAsync() > 0)
-            {
-                await UpdateItemAsync(item);
-            }
-            else
-            {
-                await db.Store.InsertAsync(item);
-            }
-
+            var srcItem = OnGetFileContent();
+            srcItem.DeviceIdentifier = item.DeviceIdentifier;
+            if (item.Id == Guid.Empty)
+                item.Id = Guid.NewGuid();
+            srcItem.Id = item.Id;
+            OnSetFileContent(srcItem);
             return await Task.FromResult(true);
         }
 
