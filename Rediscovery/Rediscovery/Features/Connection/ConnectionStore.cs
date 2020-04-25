@@ -30,7 +30,7 @@ namespace Rediscovery.Features.Connection
         public async Task<bool> AddItemAsync(Models.ConnectionInfo item)
         {
             var items = json.GetFileContent<Models.ConnectionInfo[]>(filePath())?.ToList();
-            int index = 0;
+            int index = -1;
             if (items == null)
             {
                 items = new List<ConnectionInfo>();
@@ -50,7 +50,7 @@ namespace Rediscovery.Features.Connection
             {
                 items.Add(srcItem);
                 index = items.IndexOf(x => x.Id == srcItem.Id);
-            }    
+            } 
 
             items[index].LastConnection = item.LastConnection;
             items[index].LastKnownAddress = item.LastKnownAddress;
