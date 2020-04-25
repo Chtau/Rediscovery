@@ -17,7 +17,6 @@ namespace Rediscovery
             InitializeComponent();
 
             DependencyService.Register<Logger>();
-            DependencyService.Register<DBStore>();
             DependencyService.Register<Features.DesktopConfiguration.DesktopConfigurationStore>();
             DependencyService.Register<Connect>();
             DependencyService.Register<ConnectionStore>();

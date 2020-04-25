@@ -20,7 +20,6 @@ namespace Rediscovery.Features.Connection.Models
         private string _manifestAppMinimumVersion;
         private string _token;
 
-        [PrimaryKey]
         public Guid Id
         {
             get { return _id; }
