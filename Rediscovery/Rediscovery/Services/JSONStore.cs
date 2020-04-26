@@ -11,9 +11,12 @@ namespace Rediscovery.Services
         {
             try
             {
-                var content = System.IO.File.ReadAllText(filePath);
-                if (!string.IsNullOrWhiteSpace(content))
-                    return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(content);
+                if (System.IO.File.Exists(filePath))
+                {
+                    var content = System.IO.File.ReadAllText(filePath);
+                    if (!string.IsNullOrWhiteSpace(content))
+                        return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(content);
+                }
                 return default;
             }
             catch (Exception ex)

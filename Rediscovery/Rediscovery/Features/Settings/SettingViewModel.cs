@@ -17,7 +17,12 @@ namespace Rediscovery.Features.Settings
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private IDataStoreGuid<SettingModel> Store => DependencyService.Get<IDataStoreGuid<SettingModel>>() ?? new SettingStore();
 
-        public Models.SettingModel Setting { get; set; } = new SettingModel();
+        Models.SettingModel setting = new SettingModel();
+        public Models.SettingModel Setting
+        {
+            get { return setting; }
+            set { SetProperty(ref setting, value); }
+        }
         public LoadBinding Load { get; set; }
         public Command LoadCommand { get; set; }
         public Command SaveCommand { get; set; }

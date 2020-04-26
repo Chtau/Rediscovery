@@ -7,7 +7,7 @@
              x:Class="Rediscovery.Features.DesktopConfiguration.DesktopConfigurationPage">
     <ContentPage.ToolbarItems>
         <ToolbarItem x:Name="Discovery" Text="Discovery" Clicked="Discovery_Clicked" Icon="focus_white.png"/>
-        <ToolbarItem x:Name="Add" Text="Add" Clicked="AddItem_Clicked" Icon="add.png"/>
+        <ToolbarItem x:Name="Add" Text="Add" Clicked="AddItem_Clicked" Icon="add_circle_fill.png"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid>

@@ -6,7 +6,7 @@
              mc:Ignorable="d"
              x:Class="Rediscovery.Features.Settings.SettingPage">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Save" Command="{Binding SaveCommand}"/>
+        <ToolbarItem Text="Save" Command="{Binding SaveCommand}" Icon="save_fill.png"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid>
@@ -16,11 +16,11 @@
             </Grid.RowDefinitions>
             <ScrollView Grid.Row="0">
                 <StackLayout Spacing="20" Padding="15">
-                    <Label Text="Display Name" FontSize="Medium" />
+                    <Label Text="Device Name" FontSize="Medium" />
                     <Entry Text="{Binding Setting.DeviceIdentifier}" FontSize="Small" />
                 </StackLayout>
             </ScrollView>
-            <StackLayout Grid.Row="1">
+            <StackLayout Grid.Row="1" Margin="10">
                 <Label Text="Rediscovery Mobile Client by Christoph Taucher"/>
             </StackLayout>
         </Grid>

@@ -27,6 +27,8 @@ namespace Rediscovery.Features.Settings
         public async Task<bool> AddItemAsync(SettingModel item)
         {
             var srcItem = json.GetFileContent<SettingModel>(filePath());
+            if (srcItem == null)
+                srcItem = new SettingModel();
             srcItem.DeviceIdentifier = item.DeviceIdentifier;
             if (item.Id == Guid.Empty)
                 item.Id = Guid.NewGuid();
