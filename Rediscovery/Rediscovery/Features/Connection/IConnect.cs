@@ -18,11 +18,11 @@ namespace Rediscovery.Features.Connection
         Task<HubConnection> GetConnectionFeature();
         Task CloseConnections();
         Task ValidateKey(Guid connectionId, string key);
-        bool IsConnected(Models.ConnectionInfo model, Connect.HubTypes hubType);
-        Task<Models.ConnectionInfo> GetModel();
-        event EventHandler<Models.ConnectionInfo> HelloReceived;
-        event EventHandler<Tuple<Models.ConnectionInfo, List<Models.ConnectionManifestFeature>>> ManifestReceived;
-        event EventHandler<Models.ConnectionInfo> ConnectionChanged;
+        bool IsConnected(DesktopConfiguration.DesktopConfigurationModel model, Connect.HubTypes hubType);
+        Task<DesktopConfiguration.DesktopConfigurationModel> GetModel();
+        event EventHandler<DesktopConfiguration.DesktopConfigurationModel> HelloReceived;
+        event EventHandler<Tuple<DesktopConfiguration.DesktopConfigurationModel, List<Models.ConnectionManifestFeature>>> ManifestReceived;
+        event EventHandler<DesktopConfiguration.DesktopConfigurationModel> ConnectionChanged;
         Task<ZipArchive> GetUIArchive(Guid featureId);
         Task<List<DeviceFeatureProfil>> GetDeviceFeatureProfils(Guid featureId);
         Task<DeviceFeatureSetting> GetDeviceFeatureSetting(Guid featureId);

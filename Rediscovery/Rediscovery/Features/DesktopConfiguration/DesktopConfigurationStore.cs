@@ -11,7 +11,13 @@ namespace Rediscovery.Features.DesktopConfiguration
 {
     public class DesktopConfigurationStore : BaseService, IDataStoreGuid<DesktopConfigurationModel>
     {
-        private IDataStoreGuid<Features.Connection.Models.ConnectionInfo> connectionStore => DependencyService.Get<IDataStoreGuid<Features.Connection.Models.ConnectionInfo>>() ?? new Features.Connection.ConnectionStore();
+        private IFileSystem fs => DependencyService.Get<IFileSystem>() ?? new FileSystem();
+        private IJSONStore json => DependencyService.Get<IJSONStore>() ?? new JSONStore();
+
+        private string filePath()
+        {
+            return System.IO.Path.Combine(fs.AppSettingsDirectory(), "desktopconfiguration.json");
+        }
 
         public bool AddItem(DesktopConfigurationModel item)
         {
@@ -20,23 +26,41 @@ namespace Rediscovery.Features.DesktopConfiguration
 
         public async Task<bool> AddItemAsync(DesktopConfigurationModel item)
         {
-            var con = await connectionStore.GetItemAsync(item.Id);
-            if (con != null)
+            var items = json.GetFileContent<DesktopConfigurationModel[]>(filePath())?.ToList();
+            int index = -1;
+            if (items == null)
             {
-                con.User = item.User;
-                con.DisplayName = item.DisplayName;
-                con.LastKnownAddress = item.LastKnownAddress;
-                con.AutoConnect = item.AutoConnect;
-                return await connectionStore.UpdateItemAsync(con);
+                items = new List<DesktopConfigurationModel>();
             }
-            return await connectionStore.AddItemAsync(new Features.Connection.Models.ConnectionInfo
+            var srcItem = items?.FirstOrDefault(x => x.Id == item.Id);
+            if (srcItem == null)
             {
-                Id = Guid.NewGuid(),
-                AutoConnect = item.AutoConnect,
-                LastKnownAddress = item.LastKnownAddress,
-                User = item.User,
-                DisplayName = item.DisplayName
-            });
+                srcItem = new DesktopConfigurationModel();
+                srcItem.Id = Guid.NewGuid();
+            }
+            else if (srcItem.Id == Guid.Empty)
+            {
+                if (item.Id == Guid.Empty)
+                    srcItem.Id = Guid.NewGuid();
+            }
+            index = items.FindIndex(x => x.Id == srcItem.Id);
+            if (index == -1)
+            {
+                items.Add(srcItem);
+                index = items.FindIndex(x => x.Id == srcItem.Id);
+            }
+
+            items[index].LastConnection = item.LastConnection;
+            items[index].LastKnownAddress = item.LastKnownAddress;
+            items[index].ManifestAppMinimumVersion = item.ManifestAppMinimumVersion;
+            items[index].ManifestClientName = item.ManifestClientName;
+            items[index].ManifestClientVersion = item.ManifestClientVersion;
+            items[index].Token = item.Token;
+            items[index].AutoConnect = item.AutoConnect;
+            items[index].ConnectionState = item.ConnectionState;
+            items[index].DisplayName = item.DisplayName;
+            var result = json.SetFileContent(items, filePath());
+            return await Task.FromResult(result);
         }
 
         public bool DeleteItem(Guid id)
@@ -46,7 +70,15 @@ namespace Rediscovery.Features.DesktopConfiguration
 
         public async Task<bool> DeleteItemAsync(Guid id)
         {
-            return await connectionStore.DeleteItemAsync(id);
+            var items = json.GetFileContent<DesktopConfigurationModel[]>(filePath())?.ToList();
+            if (items?.Any(x => x.Id == id) == true)
+            {
+                var index = items.FindIndex(x => x.Id == id);
+                items.RemoveAt(index);
+                var result = json.SetFileContent(items, filePath());
+                return await Task.FromResult(result);
+            }
+            return await Task.FromResult(true);
         }
 
         public DesktopConfigurationModel GetItem(Guid id)
@@ -56,17 +88,7 @@ namespace Rediscovery.Features.DesktopConfiguration
 
         public async Task<DesktopConfigurationModel> GetItemAsync(Guid id)
         {
-            var con = await connectionStore.GetItemAsync(id);
-            return new DesktopConfigurationModel
-            {
-                Id = con.Id,
-                AutoConnect = con.AutoConnect,
-                ConnectionState = con.ConnectionState,
-                User = con.User,
-                LastConnection = con.LastConnection,
-                LastKnownAddress = con.LastKnownAddress,
-                DisplayName = con.DisplayName
-            };
+            return await Task.FromResult(json.GetFileContent<DesktopConfigurationModel[]>(filePath())?.FirstOrDefault(x => x.Id == id));
         }
 
         public IEnumerable<DesktopConfigurationModel> GetItems(bool forceRefresh = false)
@@ -76,17 +98,7 @@ namespace Rediscovery.Features.DesktopConfiguration
 
         public async Task<IEnumerable<DesktopConfigurationModel>> GetItemsAsync(bool forceRefresh = false)
         {
-            return from x in await connectionStore.GetItemsAsync()
-                   select new DesktopConfigurationModel
-                   {
-                       Id = x.Id,
-                       AutoConnect = x.AutoConnect,
-                       ConnectionState = x.ConnectionState,
-                       User = x.User,
-                       LastConnection = x.LastConnection,
-                       LastKnownAddress = x.LastKnownAddress,
-                       DisplayName = x.DisplayName
-                   };
+            return await Task.FromResult(json.GetFileContent<DesktopConfigurationModel[]>(filePath())?.ToList());
         }
 
         public bool UpdateItem(DesktopConfigurationModel item)
@@ -96,16 +108,7 @@ namespace Rediscovery.Features.DesktopConfiguration
 
         public async Task<bool> UpdateItemAsync(DesktopConfigurationModel item)
         {
-            var con = await connectionStore.GetItemAsync(item.Id);
-            if (con != null)
-            {
-                con.User = item.User;
-                con.DisplayName = item.DisplayName;
-                con.LastKnownAddress = item.LastKnownAddress;
-                con.AutoConnect = item.AutoConnect;
-                return await connectionStore.UpdateItemAsync(con);
-            }
-            return await Task.FromResult(false);
+            return await AddItemAsync(item);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Rediscovery.Features.Authentication.Models
             });
         }
 
-        private void Auth_HelloReceived(object sender, Features.Connection.Models.ConnectionInfo e)
+        private void Auth_HelloReceived(object sender, DesktopConfiguration.DesktopConfigurationModel e)
         {
             if (e.ConnectionState != SharedCoreModels.Enums.ConnectionState.OK)
             {

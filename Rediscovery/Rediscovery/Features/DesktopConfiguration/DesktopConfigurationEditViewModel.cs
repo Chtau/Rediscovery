@@ -14,8 +14,7 @@ namespace Rediscovery.Features.DesktopConfiguration
     public class DesktopConfigurationEditViewModel : BaseViewModel
     {
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
-        private IDataStoreGuid<DesktopConfigurationModel> Store => DependencyService.Get<IDataStoreGuid<DesktopConfigurationModel>>() ?? new DesktopConfigurationStore();
-        private IDataStoreGuid<Features.Connection.Models.ConnectionInfo> connectionStore => DependencyService.Get<IDataStoreGuid<Features.Connection.Models.ConnectionInfo>>() ?? new ConnectionStore();
+        private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
         private IConnect auth => DependencyService.Get<IConnect>() ?? new Connect();
 
         public DesktopConfigurationModel Item { get; set; }
@@ -38,13 +37,13 @@ namespace Rediscovery.Features.DesktopConfiguration
             }
             else
             {
+                // TODO: change default Values for new connection
                 Title = "New Device";
                 Item = new DesktopConfigurationModel
                 {
                     Id = Guid.NewGuid(),
-                    DisplayName = "Device Name",
-                    LastKnownAddress = "192.168.1.160:44341",
-                    User = "dev5",
+                    DisplayName = "New",
+                    LastKnownAddress = "192.168.1.100:44341",
                     AutoConnect = true,
                     ConnectionState = SharedCoreModels.Enums.ConnectionState.None,
                     LastConnection = null
@@ -61,12 +60,12 @@ namespace Rediscovery.Features.DesktopConfiguration
             });
         }
 
-        private void Auth_ManifestReceived(object sender, Tuple<Features.Connection.Models.ConnectionInfo, List<Features.Connection.Models.ConnectionManifestFeature>> e)
+        private void Auth_ManifestReceived(object sender, Tuple<DesktopConfiguration.DesktopConfigurationModel, List<Features.Connection.Models.ConnectionManifestFeature>> e)
         {
             //throw new NotImplementedException();
         }
 
-        private void Auth_HelloReceived(object sender, Features.Connection.Models.ConnectionInfo e)
+        private void Auth_HelloReceived(object sender, DesktopConfiguration.DesktopConfigurationModel e)
         {
             Item.ConnectionState = e.ConnectionState;
             Item.LastConnection = e.LastConnection;
@@ -75,12 +74,11 @@ namespace Rediscovery.Features.DesktopConfiguration
 
         public async Task Save()
         {
-            await connectionStore.AddItemAsync(new Features.Connection.Models.ConnectionInfo
+            await desktopStore.AddItemAsync(new DesktopConfiguration.DesktopConfigurationModel
             {
                 AutoConnect = Item.AutoConnect,
                 ConnectionState = SharedCoreModels.Enums.ConnectionState.None,
                 Id = Item.Id,
-                User = Item.User,
                 LastConnection = Item.LastConnection,
                 LastKnownAddress = Item.LastKnownAddress,
                 DisplayName = Item.DisplayName
@@ -90,7 +88,7 @@ namespace Rediscovery.Features.DesktopConfiguration
 
         public async Task Remove()
         {
-            await connectionStore.DeleteItemAsync(Item.Id);
+            await desktopStore.DeleteItemAsync(Item.Id);
             MessagingCenter.Send(this, "refresh_desktop_configuration", Item);
         }
     }

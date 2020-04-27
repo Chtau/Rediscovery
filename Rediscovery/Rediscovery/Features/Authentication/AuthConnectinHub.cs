@@ -17,32 +17,34 @@ namespace Rediscovery.Features.Authentication
     {
         const string AuthHubLink = "/hubs/connect";
 
-        private IDataStoreGuid<Connection.Models.ConnectionInfo> connectionStore => DependencyService.Get<IDataStoreGuid<Connection.Models.ConnectionInfo>>() ?? new ConnectionStore();
+        private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
+        private IDataStoreGuid<Settings.Models.SettingModel> settingStore => DependencyService.Get<IDataStoreGuid<Settings.Models.SettingModel>>() ?? new Settings.SettingStore();
         private IEntityManager entityManager => DependencyService.Get<IEntityManager>() ?? new EntityManager();
 
-        public event EventHandler<Connection.Models.ConnectionInfo> HelloReceived;
-        public event EventHandler<Tuple<Connection.Models.ConnectionInfo, List<Connection.Models.ConnectionManifestFeature>>> ManifestReceived;
+        public event EventHandler<DesktopConfiguration.DesktopConfigurationModel> HelloReceived;
+        public event EventHandler<Tuple<DesktopConfiguration.DesktopConfigurationModel, List<Connection.Models.ConnectionManifestFeature>>> ManifestReceived;
 
         public AuthConnectinHub(): base(AuthHubLink)
         {
 
         }
 
-        public async Task<HubConnection> GetConnection(Connection.Models.ConnectionInfo model)
+        public async Task<HubConnection> GetConnection(DesktopConfiguration.DesktopConfigurationModel model)
         {
             return await base.OnGetConnection(model, false);
         }
 
-        public override void AfterCreateNewConnection(HubConnection connection, Connection.Models.ConnectionInfo model)
+        public override void AfterCreateNewConnection(HubConnection connection, DesktopConfiguration.DesktopConfigurationModel model)
         {
             base.AfterCreateNewConnection(connection, model);
             OnHello(connection, model);
             OnManifest(connection, model);
             _logger.Message($"Send Welcome to Service:{model.DisplayName} ({DateTime.Now})");
-            connection.InvokeAsync("Welcome", model.User);
+            var setting = settingStore.GetItem(Guid.Empty);
+            connection.InvokeAsync("Welcome", setting.DeviceIdentifier);
         }
 
-        private void OnHello(HubConnection con, Connection.Models.ConnectionInfo model)
+        private void OnHello(HubConnection con, DesktopConfiguration.DesktopConfigurationModel model)
         {
             con.On<Enums.ConnectionState, string>("Hello", (state, token) =>
             {
@@ -52,13 +54,13 @@ namespace Rediscovery.Features.Authentication
                 model.Token = token;
                 Task.Run(async () =>
                 {
-                    await connectionStore.UpdateItemAsync(model);
+                    await desktopStore.UpdateItemAsync(model);
                     HelloReceived?.Invoke(this, model);
                 });
             });
         }
 
-        private void OnManifest(HubConnection con, Connection.Models.ConnectionInfo model)
+        private void OnManifest(HubConnection con, DesktopConfiguration.DesktopConfigurationModel model)
         {
             con.On<Manifest>("Manifest", async (manifest) =>
             {
@@ -66,7 +68,7 @@ namespace Rediscovery.Features.Authentication
                 model.ManifestAppMinimumVersion = PluginFeature.Models.Version.ConvertFrom(manifest.AppMinimumVersion);
                 model.ManifestClientName = manifest.ClientName;
                 model.ManifestClientVersion = PluginFeature.Models.Version.ConvertFrom(manifest.ClientVersion);
-                await connectionStore.UpdateItemAsync(model);
+                await desktopStore.UpdateItemAsync(model);
                 var features = new List<Connection.Models.ConnectionManifestFeature>();
                 foreach (var item in manifest.SupportedFeatures)
                 {
@@ -85,7 +87,7 @@ namespace Rediscovery.Features.Authentication
                     features.Add(feature);
                     entityManager.ConnectionManifestFeatures.Add(feature);
                 }
-                ManifestReceived?.Invoke(this, new Tuple<Connection.Models.ConnectionInfo, List<Connection.Models.ConnectionManifestFeature>>(model, features));
+                ManifestReceived?.Invoke(this, new Tuple<DesktopConfiguration.DesktopConfigurationModel, List<Connection.Models.ConnectionManifestFeature>>(model, features));
             });
         }
     }

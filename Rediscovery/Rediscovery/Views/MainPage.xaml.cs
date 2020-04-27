@@ -28,7 +28,7 @@ namespace Rediscovery.Views
             auth.HelloReceived += Auth_HelloReceived;
         }
 
-        private void Auth_HelloReceived(object sender, Features.Connection.Models.ConnectionInfo e)
+        private void Auth_HelloReceived(object sender, Features.DesktopConfiguration.DesktopConfigurationModel e)
         {
             if (e.ConnectionState == SharedCoreModels.Enums.ConnectionState.WaitForApprovel)
             {

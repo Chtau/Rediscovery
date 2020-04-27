@@ -27,23 +27,24 @@ namespace Rediscovery.Features.Connection
             Feature,
         }
 
-        private IDataStoreGuid<Models.ConnectionInfo> connectionStore => DependencyService.Get<IDataStoreGuid<Models.ConnectionInfo>>() ?? new ConnectionStore();
+        private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
+        private IDataStoreGuid<Settings.Models.SettingModel> settingStore => DependencyService.Get<IDataStoreGuid<Settings.Models.SettingModel>>() ?? new Settings.SettingStore();
         private IFeatureExchange featureExchange => DependencyService.Get<IFeatureExchange>() ?? new FeatureExchange();
 
         private Dictionary<Guid, IInternalHub> authHubs = new Dictionary<Guid, IInternalHub>();
         private Dictionary<Guid, IInternalHub> featureHubs = new Dictionary<Guid, IInternalHub>();
         private HttpClient featureHttpClient = null;
 
-        public event EventHandler<Models.ConnectionInfo> HelloReceived;
-        public event EventHandler<Tuple<Models.ConnectionInfo, List<Models.ConnectionManifestFeature>>> ManifestReceived;
-        public event EventHandler<Models.ConnectionInfo> ConnectionChanged;
+        public event EventHandler<DesktopConfiguration.DesktopConfigurationModel> HelloReceived;
+        public event EventHandler<Tuple<DesktopConfiguration.DesktopConfigurationModel, List<Models.ConnectionManifestFeature>>> ManifestReceived;
+        public event EventHandler<DesktopConfiguration.DesktopConfigurationModel> ConnectionChanged;
 
         public Connect()
         {
 
         }
 
-        public bool IsConnected(Models.ConnectionInfo model, HubTypes hubType)
+        public bool IsConnected(DesktopConfiguration.DesktopConfigurationModel model, HubTypes hubType)
         {
             if (model == null)
                 return false;
@@ -67,7 +68,7 @@ namespace Rediscovery.Features.Connection
 
         public async Task TryConnect(Guid connectionId)
         {
-            var model = await connectionStore.GetItemAsync(connectionId);
+            var model = await desktopStore.GetItemAsync(connectionId);
             await OnTryConnect(model);
         }
 
@@ -111,12 +112,13 @@ namespace Rediscovery.Features.Connection
         {
             try
             {
-                var model = await connectionStore.GetItemAsync(connectionId);
+                var model = await desktopStore.GetItemAsync(connectionId);
                 var con = await OnGetHubConnection(await OnGetHub(model, HubTypes.Auth), model);
                 if (con != null)
                 {
                     _logger.Message($"Send key verify to {model.DisplayName} ({DateTime.Now})");
-                    await con.InvokeAsync("AuthorizeKey", model.User, key);
+                    var setting = await settingStore.GetItemAsync(Guid.Empty);
+                    await con.InvokeAsync("AuthorizeKey", setting.DeviceIdentifier, key);
                 }
             }
             catch (Exception ex)
@@ -125,21 +127,14 @@ namespace Rediscovery.Features.Connection
             }
         }
 
-        public async Task<Models.ConnectionInfo> GetModel()
+        public async Task<DesktopConfiguration.DesktopConfigurationModel> GetModel()
         {
             try
             {
-                var models = await connectionStore.GetItemsAsync();
-                var activeModel = models?.FirstOrDefault(x => x.Active);
-                if (activeModel != null)
-                    return activeModel;
+                var models = await desktopStore.GetItemsAsync();
                 if (models.Count() == 1)
                 {
-                    var newActiveModel = models.First();
-                    newActiveModel.Active = true;
-                    newActiveModel.AutoConnect = true;
-                    connectionStore.UpdateItem(newActiveModel);
-                    return newActiveModel;
+                    return models.First();
                 }
             } catch (Exception ex)
             {
@@ -148,13 +143,13 @@ namespace Rediscovery.Features.Connection
             return null;
         }
 
-        private async Task<HubConnection> GetConnection(Models.ConnectionInfo model, HubTypes hubTypes)
+        private async Task<HubConnection> GetConnection(DesktopConfiguration.DesktopConfigurationModel model, HubTypes hubTypes)
         {
             return await OnGetHubConnection(await OnGetHub(model, hubTypes), model);
         }
 
 
-        private async Task OnTryConnect(Models.ConnectionInfo model)
+        private async Task OnTryConnect(DesktopConfiguration.DesktopConfigurationModel model)
         {
             try
             {
@@ -175,7 +170,7 @@ namespace Rediscovery.Features.Connection
             }
         }
 
-        private async Task<IInternalHub> OnGetHub(Models.ConnectionInfo model, HubTypes hubTypes)
+        private async Task<IInternalHub> OnGetHub(DesktopConfiguration.DesktopConfigurationModel model, HubTypes hubTypes)
         {
             if (model == null)
                 return null;
@@ -204,32 +199,32 @@ namespace Rediscovery.Features.Connection
             return null;
         }
 
-        private async void AuthHub_HelloReceived(object sender, Models.ConnectionInfo e)
+        private async void AuthHub_HelloReceived(object sender, DesktopConfiguration.DesktopConfigurationModel e)
         {
             HelloReceived?.Invoke(this, e);
             await OnAfterChangedAuthenticationConnection(e);
         }
 
-        private void FeatureHub_ConnectionChanged(object sender, Models.ConnectionInfo e)
+        private void FeatureHub_ConnectionChanged(object sender, DesktopConfiguration.DesktopConfigurationModel e)
         {
             System.Diagnostics.Debug.Print($"FeatureHub_ConnectionChanged {e.LastKnownAddress}" + Environment.NewLine);
             ConnectionChanged?.Invoke(this, e);
         }
 
-        private void AuthHub_ConnectionChanged(object sender, Models.ConnectionInfo e)
+        private void AuthHub_ConnectionChanged(object sender, DesktopConfiguration.DesktopConfigurationModel e)
         {
             System.Diagnostics.Debug.Print($"AuthHub_ConnectionChanged {e.LastKnownAddress}" + Environment.NewLine);
             ConnectionChanged?.Invoke(this, e);
         }
 
-        private async Task<HubConnection> OnGetHubConnection(IInternalHub internalHub, Models.ConnectionInfo model)
+        private async Task<HubConnection> OnGetHubConnection(IInternalHub internalHub, DesktopConfiguration.DesktopConfigurationModel model)
         {
             if (internalHub == null)
                 return null;
             return await internalHub.GetConnection(model);
         }
 
-        private async Task OnAfterChangedAuthenticationConnection(Models.ConnectionInfo model)
+        private async Task OnAfterChangedAuthenticationConnection(DesktopConfiguration.DesktopConfigurationModel model)
         {
             if (featureHubs.ContainsKey(model.Id))
             {

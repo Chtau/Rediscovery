@@ -14,7 +14,7 @@ namespace Rediscovery.Features.Connection
 
         private HubConnection connection;
 
-        public event EventHandler<Models.ConnectionInfo> ConnectionChanged;
+        public event EventHandler<DesktopConfiguration.DesktopConfigurationModel> ConnectionChanged;
 
         public bool IsConnected
         {
@@ -31,7 +31,7 @@ namespace Rediscovery.Features.Connection
             _hubLink = hubLink;
         }
 
-        internal async Task<HubConnection> OnGetConnection(Models.ConnectionInfo model, bool shouldUseToken = true)
+        internal async Task<HubConnection> OnGetConnection(DesktopConfiguration.DesktopConfigurationModel model, bool shouldUseToken = true)
         {
             if (model == null)
                 return null;
@@ -103,7 +103,7 @@ namespace Rediscovery.Features.Connection
             }
         }
 
-        public virtual void AfterCreateNewConnection(HubConnection connection, Models.ConnectionInfo model)
+        public virtual void AfterCreateNewConnection(HubConnection connection, DesktopConfiguration.DesktopConfigurationModel model)
         {
 
         }

@@ -21,7 +21,6 @@ namespace Rediscovery.Features.Connection.Models
         private IntegrationPoint _featureFeatureIntegrationPoint;
         private IntegrationPoint _featureControlIntegrationPoint;
 
-        [PrimaryKey]
         public Guid Id
         {
             get { return _id; }

@@ -15,7 +15,7 @@ namespace Rediscovery.Features.Connection
 
         }
 
-        public async Task<HubConnection> GetConnection(Models.ConnectionInfo model)
+        public async Task<HubConnection> GetConnection(DesktopConfiguration.DesktopConfigurationModel model)
         {
             return await base.OnGetConnection(model, true);
         }

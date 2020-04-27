@@ -13,9 +13,9 @@ namespace Rediscovery.Views
     {
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
 
-        private IDataStoreGuid<Features.Connection.Models.ConnectionInfo> connectionStore => DependencyService.Get<IDataStoreGuid<Features.Connection.Models.ConnectionInfo>>() ?? new Features.Connection.ConnectionStore();
+        private IDataStoreGuid<Features.DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<Features.DesktopConfiguration.DesktopConfigurationModel>>() ?? new Features.DesktopConfiguration.DesktopConfigurationStore();
 
-        public ObservableCollection<Features.Connection.Models.ConnectionInfo> Items { get; set; } = new ObservableCollection<Features.Connection.Models.ConnectionInfo>();
+        public ObservableCollection<Features.DesktopConfiguration.DesktopConfigurationModel> Items { get; set; } = new ObservableCollection<Features.DesktopConfiguration.DesktopConfigurationModel>();
 
         public MainPageViewModel()
         {
@@ -27,7 +27,7 @@ namespace Rediscovery.Views
             Items.Clear();
             Task.Run(async () =>
             {
-                var items = await connectionStore.GetItemsAsync();
+                var items = await desktopStore.GetItemsAsync();
                 foreach (var item in items)
                 {
                     Items.Add(item);

@@ -9,8 +9,8 @@ namespace Rediscovery.Features.Connection
     public interface IInternalHub
     {
         bool IsConnected { get; }
-        Task<HubConnection> GetConnection(Models.ConnectionInfo model);
+        Task<HubConnection> GetConnection(DesktopConfiguration.DesktopConfigurationModel model);
         Task CloseConnections();
-        event EventHandler<Models.ConnectionInfo> ConnectionChanged;
+        event EventHandler<DesktopConfiguration.DesktopConfigurationModel> ConnectionChanged;
     }
 }

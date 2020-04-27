@@ -19,12 +19,10 @@
                 </Grid.RowDefinitions>
                 <ScrollView Grid.Row="0">
                     <StackLayout Spacing="20" Padding="15">
-                        <Label Text="Display Name" FontSize="Medium" />
+                        <Label Text="Connection Name" FontSize="Medium" />
                         <Entry Text="{Binding Item.DisplayName}" FontSize="Small" />
                         <Label Text="IP Address" FontSize="Medium" />
                         <Editor Text="{Binding Item.LastKnownAddress}" FontSize="Small" Margin="0" />
-                        <Label Text="User" FontSize="Medium" />
-                        <Editor Text="{Binding Item.User}" FontSize="Small" Margin="0" />
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>

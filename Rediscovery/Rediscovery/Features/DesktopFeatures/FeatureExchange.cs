@@ -14,7 +14,7 @@ namespace Rediscovery.Features.DesktopFeatures
     public class FeatureExchange : BaseService, IFeatureExchange
     {
         private IConnect connection => DependencyService.Get<IConnect>() ?? new Connect();
-        private Connection.Models.ConnectionInfo model;
+        private DesktopConfiguration.DesktopConfigurationModel model;
         private HubConnection featureHub;
 
         public event EventHandler<(Guid connectionId, Guid featureId, string profileId, object data)> DesktopResponseReceived;
@@ -34,7 +34,7 @@ namespace Rediscovery.Features.DesktopFeatures
             await Init();
         }
 
-        private void Connection_ConnectionChanged(object sender, Connection.Models.ConnectionInfo e)
+        private void Connection_ConnectionChanged(object sender, DesktopConfiguration.DesktopConfigurationModel e)
         {
             /*if (model != null && e.Id == model.Id)
             {

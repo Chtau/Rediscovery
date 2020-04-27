@@ -1,5 +1,4 @@
 ﻿using Rediscovery.Models;
-using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,13 +9,15 @@ namespace Rediscovery.Features.DesktopConfiguration
     {
         private Guid _id;
         private string _displayName;
-        private string _user;
         private string _lastKnownAddress;
         private DateTime? _lastConnection = null;
         private bool _autoConnect;
         private SharedCoreModels.Enums.ConnectionState _connectionState;
+        private string _manifestClientName;
+        private string _manifestClientVersion;
+        private string _manifestAppMinimumVersion;
+        private string _token;
 
-        [PrimaryKey]
         public Guid Id
         {
             get { return _id; }
@@ -27,12 +28,6 @@ namespace Rediscovery.Features.DesktopConfiguration
         {
             get { return _displayName; }
             set { SetProperty(ref _displayName, value); }
-        }
-
-        public string User
-        {
-            get { return _user; }
-            set { SetProperty(ref _user, value); }
         }
 
         public string LastKnownAddress
@@ -57,6 +52,30 @@ namespace Rediscovery.Features.DesktopConfiguration
         {
             get { return _connectionState; }
             set { SetProperty(ref _connectionState, value); }
+        }
+
+        public string ManifestClientName
+        {
+            get { return _manifestClientName; }
+            set { SetProperty(ref _manifestClientName, value); }
+        }
+
+        public string ManifestClientVersion
+        {
+            get { return _manifestClientVersion; }
+            set { SetProperty(ref _manifestClientVersion, value); }
+        }
+
+        public string ManifestAppMinimumVersion
+        {
+            get { return _manifestAppMinimumVersion; }
+            set { SetProperty(ref _manifestAppMinimumVersion, value); }
+        }
+
+        public string Token
+        {
+            get { return _token; }
+            set { SetProperty(ref _token, value); }
         }
     }
 }
