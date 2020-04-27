@@ -21,16 +21,29 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <StackLayout Padding="10">
-                                    <Label Text="{Binding FeatureDisplayName}" 
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <StackLayout Padding="10, 10, 10, 0" Grid.Row="0" Orientation="Horizontal">
+                                        <Label Text="{Binding FeatureDisplayName}" 
                        LineBreakMode="NoWrap" 
                        Style="{DynamicResource ListItemTextStyle}" 
                        FontSize="16" />
-                                    <Label Text="{Binding FeatureVersion}" 
+                                        <Label Text="{Binding FeatureVersion}" 
+                       LineBreakMode="NoWrap"
+                       Style="{DynamicResource ListItemDetailTextStyle}"
+                       FontSize="13"
+                                               VerticalTextAlignment="End"/>
+                                    </StackLayout>
+                                    <StackLayout Padding="10, 0" Grid.Row="1" Orientation="Horizontal">
+                                        <Label Text="{Binding ConnectionDisplayName}" 
                        LineBreakMode="NoWrap"
                        Style="{DynamicResource ListItemDetailTextStyle}"
                        FontSize="13" />
-                                </StackLayout>
+                                    </StackLayout>
+                                </Grid>
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>

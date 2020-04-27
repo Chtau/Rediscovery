@@ -13,6 +13,7 @@ namespace Rediscovery.Features.Connection.Models
     {
         private Guid _id;
         private Guid _connectionId;
+        private string _connectionDisplayName;
         private string _featureDisplayName;
         private Guid _featureId;
         private string _featureVersion;
@@ -34,6 +35,12 @@ namespace Rediscovery.Features.Connection.Models
         {
             get { return _connectionId; }
             set { SetProperty(ref _connectionId, value); }
+        }
+
+        public string ConnectionDisplayName
+        {
+            get { return _connectionDisplayName; }
+            set { SetProperty(ref _connectionDisplayName, value); }
         }
 
         public string FeatureDisplayName

@@ -75,6 +75,7 @@ namespace Rediscovery.Features.Authentication
                     var feature = new Connection.Models.ConnectionManifestFeature
                     {
                         ConnectionId = model.Id,
+                        ConnectionDisplayName = model.DisplayName,
                         FeatureDisplayName = item.DisplayName,
                         FeatureControlIntegrationPoint = item.ControlIntegrationPoint,
                         FeatureFeatureIntegrationPoint = item.FeatureIntegrationPoint,
