@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rediscovery.Services
+namespace Rediscovery.Features.Connection
 {
-    public interface IEntityManager
+    public interface IManifestFeatureEntityManager
     {
         System.Collections.ObjectModel.ObservableCollection<Features.Connection.Models.ConnectionManifestFeature> ConnectionManifestFeatures { get; set; }
         List<Features.Connection.Models.ConnectionManifestFeature> GetConnectionManifestFeature(Guid modelId);

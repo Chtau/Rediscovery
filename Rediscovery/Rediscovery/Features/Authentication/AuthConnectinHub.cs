@@ -19,7 +19,7 @@ namespace Rediscovery.Features.Authentication
 
         private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
         private IDataStoreGuid<Settings.Models.SettingModel> settingStore => DependencyService.Get<IDataStoreGuid<Settings.Models.SettingModel>>() ?? new Settings.SettingStore();
-        private IEntityManager entityManager => DependencyService.Get<IEntityManager>() ?? new EntityManager();
+        private IManifestFeatureEntityManager entityManager => DependencyService.Get<IManifestFeatureEntityManager>() ?? new ManifestFeatureEntityManager();
 
         public event EventHandler<DesktopConfiguration.DesktopConfigurationModel> HelloReceived;
         public event EventHandler<Tuple<DesktopConfiguration.DesktopConfigurationModel, List<Connection.Models.ConnectionManifestFeature>>> ManifestReceived;

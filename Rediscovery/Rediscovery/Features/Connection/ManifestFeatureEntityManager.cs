@@ -5,17 +5,18 @@ using System.Text;
 using System.Linq;
 using Xamarin.Forms;
 using System.Threading.Tasks;
+using Rediscovery.Services;
 
-[assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Services.EntityManager))]
-namespace Rediscovery.Services
+[assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.Connection.ManifestFeatureEntityManager))]
+namespace Rediscovery.Features.Connection
 {
-    public class EntityManager : BaseService, IEntityManager
+    public class ManifestFeatureEntityManager : BaseService, IManifestFeatureEntityManager
     {
         private Features.Connection.IConnect connection => DependencyService.Get<Features.Connection.IConnect>() ?? new Features.Connection.Connect();
 
         public System.Collections.ObjectModel.ObservableCollection<Features.Connection.Models.ConnectionManifestFeature> ConnectionManifestFeatures { get; set; }
 
-        public EntityManager()
+        public ManifestFeatureEntityManager()
         {
             ConnectionManifestFeatures = new System.Collections.ObjectModel.ObservableCollection<Features.Connection.Models.ConnectionManifestFeature>();
         }

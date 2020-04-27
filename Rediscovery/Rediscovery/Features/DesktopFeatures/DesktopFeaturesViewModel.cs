@@ -1,5 +1,6 @@
 ﻿using Rediscovery.Features.Authentication;
 using Rediscovery.Features.Authentication.Models;
+using Rediscovery.Features.Connection;
 using Rediscovery.Services;
 using Rediscovery.ViewModels;
 using System;
@@ -13,14 +14,13 @@ namespace Rediscovery.Features.DesktopFeatures
 {
     public class DesktopFeaturesViewModel : BaseViewModel
     {
-        private IEntityManager entityManager => DependencyService.Get<IEntityManager>() ?? new EntityManager();
+        private IManifestFeatureEntityManager entityManager => DependencyService.Get<IManifestFeatureEntityManager>() ?? new ManifestFeatureEntityManager();
         public ObservableCollection<Features.Connection.Models.ConnectionManifestFeature> ConnectionManifestFeaturesControl { get; set; } = new ObservableCollection<Features.Connection.Models.ConnectionManifestFeature>();
 
         public DesktopFeaturesViewModel()
         {
             if (ConnectionManifestFeaturesControl == null)
                 ConnectionManifestFeaturesControl = new ObservableCollection<Features.Connection.Models.ConnectionManifestFeature>();
-            // TODO: show for every feature from all connected desktops
             var items = entityManager.GetConnectedConnectionManifestFeature();
             if (items != null)
             {
