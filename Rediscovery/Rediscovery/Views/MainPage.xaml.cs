@@ -32,6 +32,7 @@ namespace Rediscovery.Views
         {
             if (e.ConnectionState == SharedCoreModels.Enums.ConnectionState.WaitForApprovel)
             {
+                // TODO: change how we show Authentication key required per connection
                 Navigation.PushModalAsync(new Features.Authentication.AuthenticationKey(e.Id));
             }
         }

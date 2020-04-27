@@ -19,11 +19,11 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
         private Features.Connection.IConnect connect => DependencyService.Get<Features.Connection.IConnect>() ?? new Features.Connection.Connect();
         private IFeatureUIService featureUIService => DependencyService.Get<IFeatureUIService>() ?? new FeatureUIService();
 
-        public FeatureView(Features.Connection.Models.ConnectionManifestFeature connectionManifestFeature)
+        public FeatureView(Guid desktopConfigId, Features.Connection.Models.ConnectionManifestFeature connectionManifestFeature)
         {
             InitializeComponent();
 
-            BindingContext = viewModel = new FeatureViewViewModel(connectionManifestFeature);
+            BindingContext = viewModel = new FeatureViewViewModel(desktopConfigId, connectionManifestFeature);
             viewModel.UIDataReady += ViewModel_UIDataReady;
         }
 

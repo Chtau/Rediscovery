@@ -30,6 +30,7 @@ namespace Rediscovery.Features.Connection
         private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
         private IDataStoreGuid<Settings.Models.SettingModel> settingStore => DependencyService.Get<IDataStoreGuid<Settings.Models.SettingModel>>() ?? new Settings.SettingStore();
         private IFeatureExchange featureExchange => DependencyService.Get<IFeatureExchange>() ?? new FeatureExchange();
+        private IEntityManager entityManager => DependencyService.Get<IEntityManager>() ?? new EntityManager();
 
         private Dictionary<Guid, IInternalHub> authHubs = new Dictionary<Guid, IInternalHub>();
         private Dictionary<Guid, IInternalHub> featureHubs = new Dictionary<Guid, IInternalHub>();
@@ -74,23 +75,28 @@ namespace Rediscovery.Features.Connection
 
         public async Task AutoConnect()
         {
-            var model = await GetModel();
+            var models = await desktopStore.GetItemsAsync();
+            DesktopConfiguration.DesktopConfigurationModel model = null;
+            if (models?.Any(x => x.AutoConnect) == true)
+            {
+                model = models.FirstOrDefault(x => x.AutoConnect);
+            }
             if (model != null)
                 await OnTryConnect(model);
             return;
         }
 
-        public async Task<HubConnection> GetConnectionAuth()
+        public async Task<HubConnection> GetConnectionAuth(Guid modelId)
         {
-            var model = await GetModel();
+            var model = await GetModel(modelId);
             if (model != null)
                 return await OnGetHubConnection(await OnGetHub(model, HubTypes.Auth), model);
             return null;
         }
 
-        public async Task<HubConnection> GetConnectionFeature()
+        public async Task<HubConnection> GetConnectionFeature(Guid modelId)
         {
-            var model = await GetModel();
+            var model = await GetModel(modelId);
             return await OnGetHubConnection(await OnGetHub(model, HubTypes.Feature), model);
         }
 
@@ -102,6 +108,7 @@ namespace Rediscovery.Features.Connection
             }
             foreach (var item in featureHubs)
             {
+                entityManager.Clear(item.Key);
                 await item.Value.CloseConnections();
             }
             authHubs.Clear();
@@ -127,16 +134,33 @@ namespace Rediscovery.Features.Connection
             }
         }
 
-        public async Task<DesktopConfiguration.DesktopConfigurationModel> GetModel()
+        public async Task<DesktopConfiguration.DesktopConfigurationModel> GetModel(Guid id)
+        {
+            try
+            {
+                var model = await desktopStore.GetItemAsync(id);
+                if (model != null)
+                {
+                    return model;
+                }
+            } catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+            return null;
+        }
+
+        public async Task<List<DesktopConfiguration.DesktopConfigurationModel>> GetConnectedModels()
         {
             try
             {
                 var models = await desktopStore.GetItemsAsync();
-                if (models.Count() == 1)
+                if (models?.Any(x => x.ConnectionState == Enums.ConnectionState.OK) == true)
                 {
-                    return models.First();
+                    return models.Where(x => x.ConnectionState == Enums.ConnectionState.OK).ToList();
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.Error(ex);
             }
@@ -231,33 +255,33 @@ namespace Rediscovery.Features.Connection
                 await featureHubs[model.Id].CloseConnections();
                 featureHubs.Remove(model.Id);
             }
-            await featureExchange.InitConnectionAsync();
+            await featureExchange.InitConnectionAsync(model.Id);
         }
 
-        private async Task<HttpClient> GetHttpClientFeature()
+        private async Task<HttpClient> GetHttpClientFeature(Guid modelId)
         {
             if (featureHttpClient == null)
             {
-                var model = await GetModel();
+                var model = await GetModel(modelId);
                 featureHttpClient = new HttpClient();
                 featureHttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", model.Token);
             }
             return featureHttpClient;
         }
 
-        private async Task<HttpResponseMessage> GetResponseMessage(Guid featureId, string subUrl)
+        private async Task<HttpResponseMessage> GetResponseMessage(Guid modelId, Guid featureId, string subUrl)
         {
             try
             {
-                var model = await GetModel();
-                var client = await GetHttpClientFeature();
+                var model = await GetModel(modelId);
+                var client = await GetHttpClientFeature(modelId);
                 var response = await client.GetAsync($"{Protocol}{model.LastKnownAddress}{subUrl}{featureId}");
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     featureHttpClient.CancelPendingRequests();
                     featureHttpClient.Dispose();
                     featureHttpClient = null;
-                    var clientRetry = await GetHttpClientFeature();
+                    var clientRetry = await GetHttpClientFeature(modelId);
                     return await clientRetry.GetAsync($"{Protocol}{model.LastKnownAddress}{subUrl}{featureId}");
                 } else
                 {
@@ -272,9 +296,9 @@ namespace Rediscovery.Features.Connection
             }
         }
 
-        public async Task<ZipArchive> GetUIArchive(Guid featureId)
+        public async Task<ZipArchive> GetUIArchive(Guid modelId, Guid featureId)
         {
-            var response = await GetResponseMessage(featureId, "/features/ui/");
+            var response = await GetResponseMessage(modelId, featureId, "/features/ui/");
             if (response.IsSuccessStatusCode)
             {
                 var file = await response.Content.ReadAsStreamAsync();
@@ -287,9 +311,9 @@ namespace Rediscovery.Features.Connection
             return null;
         }
 
-        public async Task<List<DeviceFeatureProfil>> GetDeviceFeatureProfils(Guid featureId)
+        public async Task<List<DeviceFeatureProfil>> GetDeviceFeatureProfils(Guid modelId, Guid featureId)
         {
-            var response = await GetResponseMessage(featureId, "/features/profiles/");
+            var response = await GetResponseMessage(modelId, featureId, "/features/profiles/");
             if (response.IsSuccessStatusCode)
             {
                 try
@@ -305,9 +329,9 @@ namespace Rediscovery.Features.Connection
             return null;
         }
 
-        public async Task<DeviceFeatureSetting> GetDeviceFeatureSetting(Guid featureId)
+        public async Task<DeviceFeatureSetting> GetDeviceFeatureSetting(Guid modelId, Guid featureId)
         {
-            var response = await GetResponseMessage(featureId, "/features/settings/");
+            var response = await GetResponseMessage(modelId, featureId, "/features/settings/");
             if (response.IsSuccessStatusCode)
             {
                 try

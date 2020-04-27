@@ -18,6 +18,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
         public event EventHandler<Tuple<Guid, string>> UIDataReady;
 
         public readonly Features.Connection.Models.ConnectionManifestFeature ConnectionManifestFeature;
+        public readonly Guid DesktopConfigId;
 
         public ObservableCollection<DeviceFeatureProfil> Profiles { get; set; } = new ObservableCollection<DeviceFeatureProfil>();
 
@@ -41,10 +42,11 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
             set { SetProperty(ref currentTitle, value); }
         }
 
-        public FeatureViewViewModel(Features.Connection.Models.ConnectionManifestFeature connectionManifestFeature): base(connectionManifestFeature)
+        public FeatureViewViewModel(Guid desktopConfigId, Features.Connection.Models.ConnectionManifestFeature connectionManifestFeature): base(connectionManifestFeature)
         {
             ConnectionManifestFeature = connectionManifestFeature;
-            featureUIService.SaveUI(ConnectionManifestFeature.FeatureId, (state, directory) =>
+            DesktopConfigId = desktopConfigId;
+            featureUIService.SaveUI(DesktopConfigId, ConnectionManifestFeature.FeatureId, (state, directory) =>
             {
                 if (state)
                 {

@@ -17,13 +17,13 @@ namespace Rediscovery.Features.DesktopFeatures
         private Services.IFileSystem fileSystem => DependencyService.Get<Services.IFileSystem>() ?? new Services.FileSystem();
         private IHtmlUIService htmlUIService => DependencyService.Get<IHtmlUIService>() ?? new HtmlUIService();
 
-        public void GetProfil(Guid featureId, Action<bool, List<DeviceFeatureProfil>> callback)
+        public void GetProfil(Guid modelId, Guid featureId, Action<bool, List<DeviceFeatureProfil>> callback)
         {
             Task.Run(async () =>
             {
                 try
                 {
-                    var profiles = await connect.GetDeviceFeatureProfils(featureId);
+                    var profiles = await connect.GetDeviceFeatureProfils(modelId, featureId);
                     if (profiles != null)
                     {
                         callback?.Invoke(true, profiles);
@@ -45,13 +45,13 @@ namespace Rediscovery.Features.DesktopFeatures
             });
         }
 
-        public void GetSetting(Guid featureId, Action<bool, DeviceFeatureSetting> callback)
+        public void GetSetting(Guid modelId, Guid featureId, Action<bool, DeviceFeatureSetting> callback)
         {
             Task.Run(async () =>
             {
                 try
                 {
-                    var settings = await connect.GetDeviceFeatureSetting(featureId);
+                    var settings = await connect.GetDeviceFeatureSetting(modelId, featureId);
                     if (settings != null)
                     {
                         callback?.Invoke(true, settings);
@@ -73,7 +73,7 @@ namespace Rediscovery.Features.DesktopFeatures
             });
         }
 
-        public void SaveUI(Guid featureId, Action<bool, string> callback)
+        public void SaveUI(Guid modelId, Guid featureId, Action<bool, string> callback)
         {
             Task.Run(async () =>
             {
@@ -90,7 +90,7 @@ namespace Rediscovery.Features.DesktopFeatures
                 }
                 try
                 {
-                    var archive = await connect.GetUIArchive(featureId);
+                    var archive = await connect.GetUIArchive(modelId, featureId);
                     if (archive != null)
                     {
                         archive.ExtractToDirectory(directory);

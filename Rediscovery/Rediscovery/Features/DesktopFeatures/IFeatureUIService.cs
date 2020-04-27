@@ -9,10 +9,10 @@ namespace Rediscovery.Features.DesktopFeatures
 {
     public interface IFeatureUIService
     {
-        void SaveUI(Guid featureId, Action<bool, string> callback);
+        void SaveUI(Guid modelId, Guid featureId, Action<bool, string> callback);
 
         string UIDirectory(Guid featureId);
-        void GetProfil(Guid featureId, Action<bool, List<DeviceFeatureProfil>> callback);
-        void GetSetting(Guid featureId, Action<bool, DeviceFeatureSetting> callback);
+        void GetProfil(Guid modelId, Guid featureId, Action<bool, List<DeviceFeatureProfil>> callback);
+        void GetSetting(Guid modelId, Guid featureId, Action<bool, DeviceFeatureSetting> callback);
     }
 }

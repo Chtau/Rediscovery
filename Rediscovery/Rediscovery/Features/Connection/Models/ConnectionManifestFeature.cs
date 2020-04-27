@@ -27,6 +27,9 @@ namespace Rediscovery.Features.Connection.Models
             set { SetProperty(ref _id, value); }
         }
 
+        /// <summary>
+        /// Desktop Configuration Model Id for the Connection
+        /// </summary>
         public Guid ConnectionId
         {
             get { return _connectionId; }

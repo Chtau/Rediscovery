@@ -15,12 +15,6 @@ namespace Rediscovery
         public App()
         {
             InitializeComponent();
-
-            //DependencyService.Register<Logger>();
-            //DependencyService.Register<Features.DesktopConfiguration.DesktopConfigurationStore>();
-            //DependencyService.Register<Connect>();
-            //DependencyService.Register<EntityManager>();
-            //DependencyService.Register<Features.DesktopFeatures.FeatureExchange>();
             MainPage = new MainPage();
         }
 

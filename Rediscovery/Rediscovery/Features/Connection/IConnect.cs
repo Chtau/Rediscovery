@@ -14,17 +14,18 @@ namespace Rediscovery.Features.Connection
     {
         Task AutoConnect();
         Task TryConnect(Guid connectionId);
-        Task<HubConnection> GetConnectionAuth();
-        Task<HubConnection> GetConnectionFeature();
+        Task<HubConnection> GetConnectionAuth(Guid modelId);
+        Task<HubConnection> GetConnectionFeature(Guid modelId);
         Task CloseConnections();
         Task ValidateKey(Guid connectionId, string key);
         bool IsConnected(DesktopConfiguration.DesktopConfigurationModel model, Connect.HubTypes hubType);
-        Task<DesktopConfiguration.DesktopConfigurationModel> GetModel();
+        Task<DesktopConfiguration.DesktopConfigurationModel> GetModel(Guid id);
+        Task<List<DesktopConfiguration.DesktopConfigurationModel>> GetConnectedModels();
         event EventHandler<DesktopConfiguration.DesktopConfigurationModel> HelloReceived;
         event EventHandler<Tuple<DesktopConfiguration.DesktopConfigurationModel, List<Models.ConnectionManifestFeature>>> ManifestReceived;
         event EventHandler<DesktopConfiguration.DesktopConfigurationModel> ConnectionChanged;
-        Task<ZipArchive> GetUIArchive(Guid featureId);
-        Task<List<DeviceFeatureProfil>> GetDeviceFeatureProfils(Guid featureId);
-        Task<DeviceFeatureSetting> GetDeviceFeatureSetting(Guid featureId);
+        Task<ZipArchive> GetUIArchive(Guid modelId, Guid featureId);
+        Task<List<DeviceFeatureProfil>> GetDeviceFeatureProfils(Guid modelId, Guid featureId);
+        Task<DeviceFeatureSetting> GetDeviceFeatureSetting(Guid modelId, Guid featureId);
     }
 }

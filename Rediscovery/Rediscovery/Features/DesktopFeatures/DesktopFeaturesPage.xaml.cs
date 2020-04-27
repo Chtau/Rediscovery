@@ -32,7 +32,7 @@ namespace Rediscovery.Features.DesktopFeatures
             Features.Connection.Models.ConnectionManifestFeature item = args.SelectedItem as Features.Connection.Models.ConnectionManifestFeature;
             if (item != null)
             {
-                await Navigation.PushModalAsync(new NavigationPage(new FeaturePage.FeatureView.FeatureView(item)));
+                await Navigation.PushModalAsync(new NavigationPage(new FeaturePage.FeatureView.FeatureView(item.ConnectionId, item)));
                 FeatureControl.SelectedItem = null;
             }
             return;

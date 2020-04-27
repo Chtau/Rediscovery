@@ -24,14 +24,14 @@ namespace Rediscovery.Features.DesktopFeatures
             connection.ConnectionChanged += Connection_ConnectionChanged;
         }
 
-        public void InitConnection()
+        public void InitConnection(Guid modelId)
         {
-            Init().GetAwaiter();
+            InitConnectionAsync(modelId).GetAwaiter();
         }
 
-        public async Task InitConnectionAsync()
+        public async Task InitConnectionAsync(Guid modelId)
         {
-            await Init();
+            await Init(modelId);
         }
 
         private void Connection_ConnectionChanged(object sender, DesktopConfiguration.DesktopConfigurationModel e)
@@ -42,14 +42,14 @@ namespace Rediscovery.Features.DesktopFeatures
             }*/
         }
 
-        private async Task Init()
+        private async Task Init(Guid modelId)
         {
-            this.model = await connection.GetModel();
+            this.model = await connection.GetModel(modelId);
             if (model != null)
             {
                 if (featureHub != null)
                     await connection.CloseConnections();
-                featureHub = await connection.GetConnectionFeature();
+                featureHub = await connection.GetConnectionFeature(modelId);
                 if (featureHub != null)
                 {
                     featureHub.Remove("ClientResponse");

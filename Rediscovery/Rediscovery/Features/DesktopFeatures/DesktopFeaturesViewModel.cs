@@ -20,7 +20,8 @@ namespace Rediscovery.Features.DesktopFeatures
         {
             if (ConnectionManifestFeaturesControl == null)
                 ConnectionManifestFeaturesControl = new ObservableCollection<Features.Connection.Models.ConnectionManifestFeature>();
-            var items = entityManager.GetConnectionManifestFeature();
+            // TODO: show for every feature from all connected desktops
+            var items = entityManager.GetConnectedConnectionManifestFeature();
             if (items != null)
             {
                 foreach (var item in items)
