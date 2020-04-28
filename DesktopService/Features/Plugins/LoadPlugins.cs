@@ -8,15 +8,6 @@ using System.Text;
 
 namespace DesktopService.Features.Plugins
 {
-    // TODO: https://docs.microsoft.com/en-us/dotnet/core/tutorials/creating-app-with-plugin-support
-
-    /*<ItemGroup>
-        <ProjectReference Include = "..\PluginBase\PluginBase.csproj" >
-            < Private > false </ Private >
-            < ExcludeAssets > runtime </ ExcludeAssets >
-        </ ProjectReference >
-    </ItemGroup >*/
-
     public class LoadPlugins : ILoadPlugins
     {
         private readonly IPluginLogger _pluginLogger;
