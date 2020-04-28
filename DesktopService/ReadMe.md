@@ -89,7 +89,7 @@ This change will make sure that the Plugin dosen't copy the `PluginBase.dll` to 
 
 ```xml
 <ItemGroup>
-    <ProjectReference Include = "..\PluginBase\PluginBase.csproj">
+    <ProjectReference Include="..\PluginBase\PluginBase.csproj">
         <Private>false</Private>
         <ExcludeAssets>runtime</ExcludeAssets>
     </ProjectReference>
