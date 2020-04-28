@@ -44,4 +44,20 @@
 |`Hello(ConnectionState connectionState, string token)`|This function will be invoked to inform the Client about the Authentication state and `Bearer` Token if successful|
 
 
+### IPC
+
+#### Provider
+
+|Hub|Type|Info|
+|-----|-----|----|
+|`rediscoveryhub`|`IncomingConnectionInfo`|Data for a new incoming connection|
+|`rediscoveryhublivelogger`|`LoggerEntryModel`|Logger data|
+|`rediscoveryservice`|`PipeResource<T>`|Provide requested Resource pipe data object|
+
+#### Receiver
+
+|Hub|Type|Info|
+|-----|-----|----|
+|`rediscoveryservice`|`string`|Expect `deviceinfo` or `features` to provide the requested resource type|
+|`sync_device_rediscoveryservice`|`IPCPipe.Models.Sync<SharedCoreModels.DeviceInfo>`|Handle model changes from an IPC Client|
 

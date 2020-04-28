@@ -22,6 +22,7 @@ namespace DesktopService.Features.Pipes
 
         public void ShowInfoWindow(bool forceStart = false)
         {
+            // TODO: add pipe or refactor for service startup info
             if (_pipeSettings.ShowServiceInfoOnStart || forceStart)
             {
                 if (!string.IsNullOrWhiteSpace(_pipeSettings.RediscoveryDesktopHubPath))
