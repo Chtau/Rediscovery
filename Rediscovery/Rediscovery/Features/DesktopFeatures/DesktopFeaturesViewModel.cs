@@ -17,6 +17,14 @@ namespace Rediscovery.Features.DesktopFeatures
         private IManifestFeatureEntityManager entityManager => DependencyService.Get<IManifestFeatureEntityManager>() ?? new ManifestFeatureEntityManager();
         public ObservableCollection<Features.Connection.Models.ConnectionManifestFeature> ConnectionManifestFeaturesControl { get; set; } = new ObservableCollection<Features.Connection.Models.ConnectionManifestFeature>();
 
+        private string filterIcon = "filter_empty.png";
+
+        public string FilterIcon
+        {
+            get { return filterIcon; }
+            set { SetProperty(ref filterIcon, value); }
+        }
+
         public DesktopFeaturesViewModel()
         {
             if (ConnectionManifestFeaturesControl == null)

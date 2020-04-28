@@ -5,13 +5,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="Rediscovery.Features.DesktopFeatures.DesktopFeaturesPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem x:Name="Filter" Text="Filter" Clicked="Filter_Clicked" Icon="{Binding FilterIcon}"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <StackLayout Grid.Row="0">
-                <Label Text="Features" FontSize="22"/>
                 <ListView x:Name="FeatureControl" 
                 ItemsSource="{Binding ConnectionManifestFeaturesControl}"
                 VerticalOptions="FillAndExpand"

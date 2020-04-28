@@ -52,5 +52,10 @@ namespace Rediscovery.Features.DesktopFeatures
             }
             */
         }
+
+        private void Filter_Clicked(object sender, EventArgs e)
+        {
+
+        }
     }
 }
