@@ -12,7 +12,9 @@
 |`features/profiles/{featureId}`|`List<DeviceFeatureProfil>`|Collection of all Profiles for this Feature|
 |`features/settings/{featureId}`|`DeviceFeatureSetting`|Settings for this Feature|
 
-#### Real time communication to the Service (SignalR Hub)
+#### SignalR Hub Endpoint `/hubs/feature`
+
+##### Real time communication to the Service (SignalR Hub)
 
 |Function|Info|
 |-----|----|
@@ -20,7 +22,7 @@
 |`ClientFeatureStart(Guid featureId)`|The Client is required to invoke this function before the feature starts the real time communication|
 |`ClientFeatureStop(Guid featureId)`|When invoked the feature will stop all real time communication|
 
-#### Real time communication from the Service (SignalR Hub)
+##### Real time communication from the Service (SignalR Hub)
 
 |Function|Info|
 |-----|----|
@@ -29,14 +31,16 @@
 
 ### Authentication
 
-#### Real time communication to the Service (SignalR Hub)
+#### SignalR Hub Endpoint `/hubs/connect`
+
+##### Real time communication to the Service (SignalR Hub)
 
 |Function|Info|
 |-----|----|
 |`Welcome(string device)`|Starts the authorization flow for a Device|
 |`AuthorizeKey(string device, string key)`|Authenticates the Device with a key|
 
-#### Real time communication from the Service (SignalR Hub)
+##### Real time communication from the Service (SignalR Hub)
 
 |Function|Info|
 |-----|----|
@@ -61,3 +65,13 @@
 |`rediscoveryservice`|`string`|Expect `deviceinfo` or `features` to provide the requested resource type|
 |`sync_device_rediscoveryservice`|`IPCPipe.Models.Sync<SharedCoreModels.DeviceInfo>`|Handle model changes from an IPC Client|
 
+
+## Authentication Flow
+
+The Client invokes the `Welcome` function on the Service to start the Authentication.
+If the Client is already authenticated or the Service has the Authentication deactivated the Service will invoke the Client function `Hello`with a new `Bearer` Token, after this the Service invokes the `Manifest` Client function to complete the Authentication.
+
+When the Client is unknown to the Service and required authentication the Service will respond after the `Welcome` with the call of the Client `Hello` function for further Client actions.
+* `WaitForApprovel` Service creates a short Key which the Client is required to send with the function `AuthorizeKey`
+* `Denied` Service denied access
+* `Failed` Internal Service error
