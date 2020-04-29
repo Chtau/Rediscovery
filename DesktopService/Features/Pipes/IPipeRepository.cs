@@ -7,5 +7,8 @@ namespace DesktopService.Features.Pipes
     public interface IPipeRepository
     {
         void Init();
+        void ActiveDeviceInfoChanged();
+        void DeviceInfoChanged();
+        void FeatureChanged();
     }
 }

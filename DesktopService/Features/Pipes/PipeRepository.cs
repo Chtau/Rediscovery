@@ -67,53 +67,102 @@ namespace DesktopService.Features.Pipes
 
         private string OnProvideResources(string resourceName)
         {
-            // TODO: we need the ability to send changes for this resources from anywhere and not only per request
             if (resourceName == "deviceinfo")
             {
-                var users = _dBContext.Instance.Table<Device>().ToListAsync().GetAwaiter().GetResult();
-                var resource = new IPCPipe.Models.PipeResource<List<SharedCoreModels.DeviceInfo>>();
-                resource.ResourceName = resourceName;
-                resource.Entity = (from x in users
-                                  select new SharedCoreModels.DeviceInfo
-                                  {
-                                      Id = x.Id,
-                                      AllowAccess = x.AllowAccess,
-                                      Name = x.DeviceName
-                                  }).ToList();
-                return Newtonsoft.Json.JsonConvert.SerializeObject(resource);
+                return Newtonsoft.Json.JsonConvert.SerializeObject(OnGetResourceDeviceInfo());
             } else if (resourceName == "features")
             {
-                var features = _featureService.GetFeaturesManifest();
-                var resource = new IPCPipe.Models.PipeResource<List<SharedCoreModels.DeviceFeature>>();
-                resource.ResourceName = resourceName;
-                resource.Entity = (from x in features
-                                   select new SharedCoreModels.DeviceFeature
-                                   {
-                                       Id = x.Id,
-                                       DisplayName = x.DisplayName,
-                                       MinControlIntegrationPoint = x.MinControlIntegrationPoint.ToString(),
-                                       MinFeatureIntegrationPoint = x.MinFeatureIntegrationPoint.ToString(),
-                                       Version = x.Version.ToString()
-                                   }).ToList();
-                return Newtonsoft.Json.JsonConvert.SerializeObject(resource);
+                return Newtonsoft.Json.JsonConvert.SerializeObject(OnGetResourceDeviceFeature());
             }
             else if (resourceName == "activedeviceinfo")
             {
-                var allUsers = from x in ActiveUserHandler.UserIds select new Guid(x);
-                var users = _dBContext.Instance.Table<Device>().ToListAsync().GetAwaiter().GetResult();
-                var resource = new IPCPipe.Models.PipeResource<List<SharedCoreModels.DeviceInfo>>();
-                resource.ResourceName = resourceName;
-                resource.Entity = (from x in users
-                                   join y in allUsers on x.Id equals y
-                                   select new SharedCoreModels.DeviceInfo
-                                   {
-                                       Id = x.Id,
-                                       AllowAccess = x.AllowAccess,
-                                       Name = x.DeviceName
-                                   }).ToList();
-                return Newtonsoft.Json.JsonConvert.SerializeObject(resource);
+                return Newtonsoft.Json.JsonConvert.SerializeObject(OnGetResourceActiveDeviceInfo());
             }
             return null;
+        }
+
+        private IPCPipe.Models.PipeResource<List<SharedCoreModels.DeviceFeature>> OnGetResourceDeviceFeature()
+        {
+            var features = _featureService.GetFeaturesManifest();
+            var resource = new IPCPipe.Models.PipeResource<List<SharedCoreModels.DeviceFeature>>();
+            resource.ResourceName = "features";
+            resource.Entity = (from x in features
+                               select new SharedCoreModels.DeviceFeature
+                               {
+                                   Id = x.Id,
+                                   DisplayName = x.DisplayName,
+                                   MinControlIntegrationPoint = x.MinControlIntegrationPoint.ToString(),
+                                   MinFeatureIntegrationPoint = x.MinFeatureIntegrationPoint.ToString(),
+                                   Version = x.Version.ToString()
+                               }).ToList();
+            return resource;
+        }
+
+        private IPCPipe.Models.PipeResource<List<SharedCoreModels.DeviceInfo>> OnGetResourceDeviceInfo()
+        {
+            var users = _dBContext.Instance.Table<Device>().ToListAsync().GetAwaiter().GetResult();
+            var resource = new IPCPipe.Models.PipeResource<List<SharedCoreModels.DeviceInfo>>();
+            resource.ResourceName = "deviceinfo";
+            resource.Entity = (from x in users
+                               select new SharedCoreModels.DeviceInfo
+                               {
+                                   Id = x.Id,
+                                   AllowAccess = x.AllowAccess,
+                                   Name = x.DeviceName
+                               }).ToList();
+            return resource;
+        }
+
+        private IPCPipe.Models.PipeResource<List<SharedCoreModels.DeviceInfo>> OnGetResourceActiveDeviceInfo()
+        {
+            var allUsers = from x in ActiveUserHandler.UserIds select new Guid(x);
+            var users = _dBContext.Instance.Table<Device>().ToListAsync().GetAwaiter().GetResult();
+            var resource = new IPCPipe.Models.PipeResource<List<SharedCoreModels.DeviceInfo>>();
+            resource.ResourceName = "activedeviceinfo";
+            resource.Entity = (from x in users
+                               join y in allUsers on x.Id equals y
+                               select new SharedCoreModels.DeviceInfo
+                               {
+                                   Id = x.Id,
+                                   AllowAccess = x.AllowAccess,
+                                   Name = x.DeviceName
+                               }).ToList();
+            return resource;
+        }
+
+        public void ActiveDeviceInfoChanged()
+        {
+            try
+            {
+                _pipeClient.Send("rediscoveryserviceresourcechanged", "activedeviceinfo");
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex, "ActiveDeviceInfoChanged IPC");
+            }
+        }
+
+        public void DeviceInfoChanged()
+        {
+            try
+            {
+                _pipeClient.Send("rediscoveryserviceresourcechanged", "deviceinfo");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "DeviceInfoChanged IPC");
+            }
+        }
+
+        public void FeatureChanged()
+        {
+            try
+            {
+                _pipeClient.Send("rediscoveryserviceresourcechanged", "features");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "FeatureChanged IPC");
+            }
         }
     }
 }
