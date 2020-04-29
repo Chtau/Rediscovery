@@ -62,7 +62,7 @@
 
 |Hub|Type|Info|
 |-----|-----|----|
-|`rediscoveryservice`|`string`|Expect `deviceinfo` or `features` to provide the requested resource type|
+|`rediscoveryservice`|`string`|Expect `deviceinfo`, `features` or `activedeviceinfo` to provide the requested resource type|
 |`sync_device_rediscoveryservice`|`IPCPipe.Models.Sync<SharedCoreModels.DeviceInfo>`|Handle model changes from an IPC Client|
 
 

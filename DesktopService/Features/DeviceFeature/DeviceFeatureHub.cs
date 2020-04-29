@@ -11,6 +11,19 @@ namespace DesktopService.Features.DeviceFeature
     [Authorize]
     public class DeviceFeatureHub : Hub
     {
+        public override Task OnConnectedAsync()
+        {
+            ActiveUserHandler.ConnectedIds.Add(Context.ConnectionId);
+
+            return base.OnConnectedAsync();
+        }
+
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            ActiveUserHandler.ConnectedIds.Remove(Context.ConnectionId);
+            return base.OnDisconnectedAsync(exception);
+        }
+
         private readonly IFeatureService _featureService;
         private readonly IHubContext<DeviceFeatureHub> _hubContext;
 
