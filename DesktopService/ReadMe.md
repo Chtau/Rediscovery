@@ -62,8 +62,17 @@
 
 |Hub|Type|Info|
 |-----|-----|----|
-|`rediscoveryservice`|`string`|Expect `deviceinfo`, `features` or `activedeviceinfo` to provide the requested resource type|
+|`rediscoveryservice`|`string`|Expect `deviceinfo`, `features` or `activedeviceinfo` to provide the requested resource type (*1)|
 |`sync_device_rediscoveryservice`|`IPCPipe.Models.Sync<SharedCoreModels.DeviceInfo>`|Handle model changes from an IPC Client|
+
+
+##### Rediscovery Service `PipeResource<T>` data (*1)
+
+|Key|Type|Info|
+|-----|-----|----|
+|`deviceinfo`|`PipeResource<List<DeviceInfo>>`|All known devices to the service|
+|`features`|`PipeResource<List<SharedCoreModels.DeviceFeature>>`|Features available on the service|
+|`activedeviceinfo`|`PipeResource<List<DeviceInfo>>`|Devices which active use a feature on the service|
 
 
 ## Authentication Flow
