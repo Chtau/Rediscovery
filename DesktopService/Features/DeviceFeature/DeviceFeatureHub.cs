@@ -13,14 +13,15 @@ namespace DesktopService.Features.DeviceFeature
     {
         public override Task OnConnectedAsync()
         {
-            ActiveUserHandler.ConnectedIds.Add(Context.ConnectionId);
-
+            if (!ActiveUserHandler.UserIds.Contains(Context.UserIdentifier))
+                ActiveUserHandler.UserIds.Add(Context.UserIdentifier);
             return base.OnConnectedAsync();
         }
 
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            ActiveUserHandler.ConnectedIds.Remove(Context.ConnectionId);
+            if (ActiveUserHandler.UserIds.Contains(Context.UserIdentifier))
+                ActiveUserHandler.UserIds.Remove(Context.UserIdentifier);
             return base.OnDisconnectedAsync(exception);
         }
 

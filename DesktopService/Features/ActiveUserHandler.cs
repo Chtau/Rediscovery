@@ -6,6 +6,6 @@ namespace DesktopService.Features
 {
     public static class ActiveUserHandler
     {
-        public static HashSet<string> ConnectedIds = new HashSet<string>();
+        public static HashSet<string> UserIds = new HashSet<string>();
     }
 }

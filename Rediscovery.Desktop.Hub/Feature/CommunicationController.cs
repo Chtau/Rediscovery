@@ -29,8 +29,22 @@ namespace Rediscovery.Desktop.Hub.Feature
             _loggerService = loggerService;
             _featureService = featureService;
             _deviceService.DeviceInfoReceived += _deviceService_DeviceInfoReceived;
+            _deviceService.ActiveDeviceInfoReceived += _deviceService_ActiveDeviceInfoReceived;
             _loggerService.LoggerDataReceived += _loggerService_LoggerDataReceived;
             _featureService.DeviceFeatureReceived += _featureService_DeviceFeatureReceived;
+        }
+
+        private void _deviceService_ActiveDeviceInfoReceived(object sender, List<DeviceInfo> e)
+        {
+            try
+            {
+                var mainWindow = ElectronNET.API.Electron.WindowManager.BrowserWindows.First();
+                ElectronNET.API.Electron.IpcMain.Send(mainWindow, "activedeviceinfo-ipc", e);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "ActiveDeviceInfoReceived via IPC from Service");
+            }
         }
 
         private void _featureService_DeviceFeatureReceived(object sender, List<DeviceFeature> e)

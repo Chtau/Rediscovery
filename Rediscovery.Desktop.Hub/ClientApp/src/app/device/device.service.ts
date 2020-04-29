@@ -6,6 +6,7 @@ import { environment } from "src/environments/environment";
 
 
 import * as dummyDevice from '../../assets/dummy/device.json';
+import * as dummyConnectedDevice from '../../assets/dummy/connecteddevice.json';
 import { IpcService } from "../ipc.service";
 
 @Injectable()
@@ -25,12 +26,20 @@ export class DeviceService {
     console.log("init Device IPC");
     if (environment.isElectron === false) {
       this.registeredDeviceModels = <IDeviceInfo[]>dummyDevice.default;
+      this.connectedDeviceModels = <IDeviceInfo[]>dummyConnectedDevice.default;
     } else {
       this.ipc.on('registereddeviceinfo-ipc', (event, arg) => {
         // switch to angular zone for change detected events ...
         this.zone.run(() => {
           this.registeredDeviceModels = arg;
           this.registeredDevicesChanged.emit(this.registeredDeviceModels);
+        });
+      });
+      this.ipc.on('activedeviceinfo-ipc', (event, arg) => {
+        // switch to angular zone for change detected events ...
+        this.zone.run(() => {
+          this.connectedDeviceModels = arg;
+          this.connectedDevicesChanged.emit(this.connectedDeviceModels);
         });
       });
     }
@@ -46,6 +55,14 @@ export class DeviceService {
 
   public getDeviceDetail(id: string): IDeviceInfo {
     return this.registeredDeviceModels.find(x => {
+      if (x.id == id) {
+        return x;
+      }
+    });
+  }
+
+  public getConnectedDeviceDetail(id: string): IDeviceInfo {
+    return this.connectedDeviceModels.find(x => {
       if (x.id == id) {
         return x;
       }

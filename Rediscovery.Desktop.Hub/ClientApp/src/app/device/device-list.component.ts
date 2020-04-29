@@ -18,6 +18,10 @@ export class DeviceListComponent {
     this.deviceService.registeredDevicesChanged.subscribe(result => {
       this.registeredDeviceModels = result;
     });
+
+    this.deviceService.connectedDevicesChanged.subscribe(result => {
+      this.connectedDeviceModels = result;
+    });
   }
 
 }

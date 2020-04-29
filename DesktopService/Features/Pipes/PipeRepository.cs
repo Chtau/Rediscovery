@@ -67,6 +67,7 @@ namespace DesktopService.Features.Pipes
 
         private string OnProvideResources(string resourceName)
         {
+            // TODO: we need the ability to send changes for this resources from anywhere and not only per request
             if (resourceName == "deviceinfo")
             {
                 var users = _dBContext.Instance.Table<Device>().ToListAsync().GetAwaiter().GetResult();
@@ -98,7 +99,7 @@ namespace DesktopService.Features.Pipes
             }
             else if (resourceName == "activedeviceinfo")
             {
-                var allUsers = from x in ActiveUserHandler.ConnectedIds select new Guid(x);
+                var allUsers = from x in ActiveUserHandler.UserIds select new Guid(x);
                 var users = _dBContext.Instance.Table<Device>().ToListAsync().GetAwaiter().GetResult();
                 var resource = new IPCPipe.Models.PipeResource<List<SharedCoreModels.DeviceInfo>>();
                 resource.ResourceName = resourceName;
