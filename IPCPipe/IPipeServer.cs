@@ -4,6 +4,7 @@ using System.Text;
 
 namespace IPCPipe
 {
+    [Obsolete("Replace with SignalR")]
     public interface IPipeServer
     {
         event EventHandler<string> DataReceived;
