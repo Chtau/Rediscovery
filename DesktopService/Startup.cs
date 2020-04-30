@@ -1,7 +1,7 @@
 ﻿using DesktopService.Features.Authentication;
 using DesktopService.Features.DeviceFeature;
 using DesktopService.Features.InternalLogger;
-using DesktopService.Features.PipeLogger;
+using DesktopService.Features.Logger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.SignalR;
@@ -100,10 +100,10 @@ namespace DesktopService
             services.AddSingleton<IPCPipe.IPipeClient, IPCPipe.PipeClient>();
             services.AddSingleton<IPCPipe.IPipeServer, IPCPipe.PipeServer>();
             services.AddSingleton<IPCPipe.IPipeResourceProvider, IPCPipe.PipeResourceProvider>();
-            services.AddSingleton<Features.Pipes.IPipeIncomingConnection, Features.Pipes.PipeIncomingConnection>();
-            services.AddSingleton<Features.Pipes.IPipeRepository, Features.Pipes.PipeRepository>();
-            services.AddSingleton<Features.Pipes.IPipeServiceInfo, Features.Pipes.PipeServiceInfo>();
-            services.AddSingleton<Features.Pipes.IPipeLiveLogger, Features.Pipes.PipeLiveLogger>();
+            services.AddSingleton<Features.RemoteResources.IRemoteResourcesIncomingConnection, Features.RemoteResources.RemoteResourcesIncomingConnection>();
+            services.AddSingleton<Features.RemoteResources.IRemoteResourcesRepository, Features.RemoteResources.RemoteResourcesRepository>();
+            services.AddSingleton<Features.RemoteResources.IRemoteResourcesServiceInfo, Features.RemoteResources.RemoteResourcesServiceInfo>();
+            services.AddSingleton<Features.RemoteResources.IRemoteResourcesLiveLogger, Features.RemoteResources.RemoteResourcesLiveLogger>();
             services.AddSingleton<IFeatureService, FeatureService>();
             services.AddSingleton<Features.Configuration.IDistributeConfig, Features.Configuration.DistributeConfig>();
             services.AddSingleton<PluginFeature.Interfaces.IPluginLogger, Features.PluginLogger.PluginLogger>();
@@ -125,9 +125,9 @@ namespace DesktopService
                 c.LogLevel = LogLevel.Information;
                 c.Color = ConsoleColor.Blue;
             });
-            loggerFactory.AddPipeLogger(o =>
+            loggerFactory.AddRemoteLogger(o =>
             {
-                o.PipeLiveLogger = app.ApplicationServices.GetRequiredService<Features.Pipes.IPipeLiveLogger>();
+                o.RemoteResourcesLiveLogger = app.ApplicationServices.GetRequiredService<Features.RemoteResources.IRemoteResourcesLiveLogger>();
                 o.LogLevel = LogLevel.Information;
             });
             

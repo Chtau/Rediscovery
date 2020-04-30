@@ -4,18 +4,18 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopService.Features.Pipes
+namespace DesktopService.Features.RemoteResources
 {
-    public class PipeServiceInfo : IPipeServiceInfo
+    public class RemoteResourcesServiceInfo : IRemoteResourcesServiceInfo
     {
         private readonly SharedConfigurations.DesktopService.Models.PipeConfiguration _pipeSettings;
-        private readonly ILogger<PipeServiceInfo> _logger;
+        private readonly ILogger<RemoteResourcesServiceInfo> _logger;
         private readonly SharedConfigurations.DesktopService.Models.AppConfiguration _appSettings;
 
-        public PipeServiceInfo(ILoggerFactory loggerFactory, IOptions<SharedConfigurations.DesktopService.Models.PipeConfiguration> pipeSettings,
+        public RemoteResourcesServiceInfo(ILoggerFactory loggerFactory, IOptions<SharedConfigurations.DesktopService.Models.PipeConfiguration> pipeSettings,
             IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> appOptions)
         {
-            _logger = loggerFactory.CreateLogger<PipeServiceInfo>();
+            _logger = loggerFactory.CreateLogger<RemoteResourcesServiceInfo>();
             _pipeSettings = pipeSettings.Value;
             _appSettings = appOptions.Value;
         }

@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopService.Features.Pipes
+namespace DesktopService.Features.RemoteResources
 {
-    public interface IPipeLiveLogger
+    public interface IRemoteResourcesLiveLogger
     {
         void Log(LoggerEntryModel liveLoggerModel);
     }

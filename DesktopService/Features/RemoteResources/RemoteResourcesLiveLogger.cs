@@ -6,23 +6,23 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DesktopService.Features.Pipes
+namespace DesktopService.Features.RemoteResources
 {
-    public class PipeLiveLogger : IPipeLiveLogger
+    public class RemoteResourcesLiveLogger : IRemoteResourcesLiveLogger
     {
         private const string RediscoveryHub = "rediscoveryhublivelogger";
         private readonly IPCPipe.IPipeClient _pipeClient;
-        private readonly ILogger<PipeLiveLogger> _logger;
+        private readonly ILogger<RemoteResourcesLiveLogger> _logger;
         private readonly SharedConfigurations.DesktopService.Models.PipeConfiguration _pipeSettings;
 
         private DateTime lastFailedConnection = DateTime.MinValue;
         private int connectionsFailed = 0;
 
-        public PipeLiveLogger(IPCPipe.IPipeClient pipeClient, ILoggerFactory loggerFactory,
+        public RemoteResourcesLiveLogger(IPCPipe.IPipeClient pipeClient, ILoggerFactory loggerFactory,
             IOptions<SharedConfigurations.DesktopService.Models.PipeConfiguration> pipeSettings)
         {
             _pipeClient = pipeClient;
-            _logger = loggerFactory.CreateLogger<PipeLiveLogger>();
+            _logger = loggerFactory.CreateLogger<RemoteResourcesLiveLogger>();
             _pipeSettings = pipeSettings.Value;
         }
 

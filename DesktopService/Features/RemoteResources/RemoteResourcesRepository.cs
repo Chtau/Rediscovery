@@ -10,9 +10,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DesktopService.Features.Pipes
+namespace DesktopService.Features.RemoteResources
 {
-    public class PipeRepository : IPipeRepository
+    public class RemoteResourcesRepository : IRemoteResourcesRepository
     {
         private readonly DAL.IDBContext _dBContext;
         private readonly DeviceFeature.IFeatureService _featureService;
@@ -20,9 +20,9 @@ namespace DesktopService.Features.Pipes
         private readonly IPCPipe.IPipeServer _pipeServer;
         private readonly IPCPipe.IPipeClient _pipeClient;
 
-        private readonly ILogger<PipeRepository> _logger;
+        private readonly ILogger<RemoteResourcesRepository> _logger;
 
-        public PipeRepository(DAL.IDBContext dBContext, IPCPipe.IPipeResourceProvider resourceProvider,
+        public RemoteResourcesRepository(DAL.IDBContext dBContext, IPCPipe.IPipeResourceProvider resourceProvider,
             IPCPipe.IPipeServer pipeServer, DeviceFeature.IFeatureService featureService,
             IPCPipe.IPipeClient pipeClient,
             ILoggerFactory loggerFactory)
@@ -32,7 +32,7 @@ namespace DesktopService.Features.Pipes
             _pipeServer = pipeServer;
             _pipeClient = pipeClient;
             _featureService = featureService;
-            _logger = loggerFactory.CreateLogger<PipeRepository>();
+            _logger = loggerFactory.CreateLogger<RemoteResourcesRepository>();
         }
 
         public void Init()

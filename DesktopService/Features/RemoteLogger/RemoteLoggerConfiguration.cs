@@ -3,12 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopService.Features.PipeLogger
+namespace DesktopService.Features.Logger
 {
-    public class PipeLoggerConfiguration
+    public class RemoteLoggerConfiguration
     {
         public LogLevel LogLevel { get; set; } = LogLevel.Warning;
         public int EventId { get; set; } = 0;
-        public Features.Pipes.IPipeLiveLogger PipeLiveLogger { get; set; }
+        public Features.RemoteResources.IRemoteResourcesLiveLogger RemoteResourcesLiveLogger { get; set; }
     }
 }

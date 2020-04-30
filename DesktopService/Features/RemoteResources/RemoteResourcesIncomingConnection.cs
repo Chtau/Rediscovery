@@ -5,20 +5,20 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DesktopService.Features.Pipes
+namespace DesktopService.Features.RemoteResources
 {
-    public class PipeIncomingConnection : IPipeIncomingConnection
+    public class RemoteResourcesIncomingConnection : IRemoteResourcesIncomingConnection
     {
         private const string RediscoveryHub = "rediscoveryhub";
         private readonly IPCPipe.IPipeClient _pipeClient;
-        private readonly ILogger<PipeIncomingConnection> _logger;
+        private readonly ILogger<RemoteResourcesIncomingConnection> _logger;
         private readonly SharedConfigurations.DesktopService.Models.PipeConfiguration _pipeSettings;
 
-        public PipeIncomingConnection(IPCPipe.IPipeClient pipeClient, ILoggerFactory loggerFactory,
+        public RemoteResourcesIncomingConnection(IPCPipe.IPipeClient pipeClient, ILoggerFactory loggerFactory,
             IOptions<SharedConfigurations.DesktopService.Models.PipeConfiguration> pipeSettings)
         {
             _pipeClient = pipeClient;
-            _logger = loggerFactory.CreateLogger<PipeIncomingConnection>();
+            _logger = loggerFactory.CreateLogger<RemoteResourcesIncomingConnection>();
             _pipeSettings = pipeSettings.Value;
         }
 

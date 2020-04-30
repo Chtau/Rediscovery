@@ -17,16 +17,16 @@ namespace DesktopService.Features.Authentication
         private readonly Features.Authentication.IAuth _auth;
         private readonly IManifest _manifest;
         private readonly IDeviceService _deviceService;
-        private readonly Pipes.IPipeIncomingConnection _pipeIncomingConnection;
+        private readonly RemoteResources.IRemoteResourcesIncomingConnection _remoteResourcesIncomingConnection;
 
         public ConnectHub(ILoggerFactory loggerFactory, Features.Authentication.IAuth auth, IManifest manifest, IDeviceService deviceService,
-            Pipes.IPipeIncomingConnection pipeIncomingConnection)
+            RemoteResources.IRemoteResourcesIncomingConnection remoteResourcesIncomingConnection)
         {
             _logger = loggerFactory.CreateLogger<ConnectHub>();
             _auth = auth;
             _manifest = manifest;
             _deviceService = deviceService;
-            _pipeIncomingConnection = pipeIncomingConnection;
+            _remoteResourcesIncomingConnection = remoteResourcesIncomingConnection;
         }
         
         public async Task Welcome(string device)
@@ -46,7 +46,7 @@ namespace DesktopService.Features.Authentication
                 {
                     var userInfo = await _deviceService.AddDevice(device);
                     await OnSendHello(SharedCoreModels.Enums.ConnectionState.WaitForApprovel, null);
-                    await _pipeIncomingConnection.ShowCode(userInfo.PasswordKey, userInfo.DeviceName, userInfo.PasswordKeyValidTill);
+                    await _remoteResourcesIncomingConnection.ShowCode(userInfo.PasswordKey, userInfo.DeviceName, userInfo.PasswordKeyValidTill);
                 }
                 else if (result.Item1 == Auth.LoginState.OK)
                 {
@@ -71,7 +71,7 @@ namespace DesktopService.Features.Authentication
                 {
                     var userInfo = await _deviceService.AddDevice(device);
                     await OnSendHello(SharedCoreModels.Enums.ConnectionState.Denied, null);
-                    await _pipeIncomingConnection.ShowCode(userInfo.PasswordKey, userInfo.DeviceName, userInfo.PasswordKeyValidTill);
+                    await _remoteResourcesIncomingConnection.ShowCode(userInfo.PasswordKey, userInfo.DeviceName, userInfo.PasswordKeyValidTill);
                 }
             } catch (Exception ex)
             {

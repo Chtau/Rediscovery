@@ -3,14 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopService.Features.PipeLogger
+namespace DesktopService.Features.Logger
 {
-    public class PipeLogger : ILogger
+    public class RemoteLogger : ILogger
     {
         private readonly string _name;
-        private readonly PipeLoggerConfiguration _config;
+        private readonly RemoteLoggerConfiguration _config;
 
-        public PipeLogger(string name, PipeLoggerConfiguration config)
+        public RemoteLogger(string name, RemoteLoggerConfiguration config)
         {
             _name = name;
             _config = config;
@@ -35,7 +35,7 @@ namespace DesktopService.Features.PipeLogger
 
             if (_config.EventId == 0 || _config.EventId == eventId.Id)
             {
-                _config.PipeLiveLogger.Log(new SharedCoreModels.LoggerEntryModel
+                _config.RemoteResourcesLiveLogger.Log(new SharedCoreModels.LoggerEntryModel
                 {
                     Id = eventId.Id.ToString(),
                     LogLevel = GetLoggerType(logLevel),

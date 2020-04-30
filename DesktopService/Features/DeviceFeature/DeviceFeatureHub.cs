@@ -1,4 +1,4 @@
-﻿using DesktopService.Features.Pipes;
+﻿using DesktopService.Features.RemoteResources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using PluginFeature.Models;
@@ -16,7 +16,7 @@ namespace DesktopService.Features.DeviceFeature
         {
             if (!ActiveUserHandler.UserIds.Contains(Context.UserIdentifier))
                 ActiveUserHandler.UserIds.Add(Context.UserIdentifier);
-            _pipeRepository.ActiveDeviceInfoChanged();
+            _remoteResourcesRepository.ActiveDeviceInfoChanged();
             return base.OnConnectedAsync();
         }
 
@@ -24,20 +24,20 @@ namespace DesktopService.Features.DeviceFeature
         {
             if (ActiveUserHandler.UserIds.Contains(Context.UserIdentifier))
                 ActiveUserHandler.UserIds.Remove(Context.UserIdentifier);
-            _pipeRepository.ActiveDeviceInfoChanged();
+            _remoteResourcesRepository.ActiveDeviceInfoChanged();
             return base.OnDisconnectedAsync(exception);
         }
 
         private readonly IFeatureService _featureService;
         private readonly IHubContext<DeviceFeatureHub> _hubContext;
-        private readonly IPipeRepository _pipeRepository;
+        private readonly IRemoteResourcesRepository _remoteResourcesRepository;
 
         public DeviceFeatureHub(IFeatureService featureService, IHubContext<DeviceFeatureHub> hubContext,
-            IPipeRepository pipeRepository)
+            IRemoteResourcesRepository remoteResourcesRepository)
         {
             _hubContext = hubContext;
             _featureService = featureService;
-            _pipeRepository = pipeRepository;
+            _remoteResourcesRepository = remoteResourcesRepository;
         }
 
         public void ClientMessage(Guid featureId, string profileId, object data)

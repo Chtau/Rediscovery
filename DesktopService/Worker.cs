@@ -14,25 +14,25 @@ namespace DesktopService
 {
     public class Worker : IHostedService, IDisposable
     {
-        private readonly Features.Pipes.IPipeIncomingConnection _pipeIncomingConnection;
-        private readonly Features.Pipes.IPipeRepository _pipeRepository;
-        private readonly Features.Pipes.IPipeServiceInfo _pipeServiceInfo;
+        private readonly Features.RemoteResources.IRemoteResourcesIncomingConnection _remoteResourcesIncomingConnection;
+        private readonly Features.RemoteResources.IRemoteResourcesRepository _remoteResourcesRepository;
+        private readonly Features.RemoteResources.IRemoteResourcesServiceInfo _remoteResourcesServiceInfo;
         private readonly IPCPipe.IPipeServer _pipeServer;
         private readonly Features.Configuration.IDistributeConfig _distributeConfig;
         private readonly SharedConfigurations.DesktopService.Models.AppConfiguration _appSettings;
         private readonly ILogger<Worker> _logger;
 
-        public Worker(Features.Pipes.IPipeIncomingConnection pipeIncomingConnection,
-            Features.Pipes.IPipeRepository pipeRepository,
-            Features.Pipes.IPipeServiceInfo pipeServiceInfo,
+        public Worker(Features.RemoteResources.IRemoteResourcesIncomingConnection remoteResourcesIncomingConnection,
+            Features.RemoteResources.IRemoteResourcesRepository remoteResourcesRepository,
+            Features.RemoteResources.IRemoteResourcesServiceInfo remoteResourcesServiceInfo,
             Features.Configuration.IDistributeConfig distributeConfig,
             IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> appOptions,
             IPCPipe.IPipeServer pipeServer,
             ILoggerFactory loggerFactory)
         {
-            _pipeIncomingConnection = pipeIncomingConnection;
-            _pipeRepository = pipeRepository;
-            _pipeServiceInfo = pipeServiceInfo;
+            _remoteResourcesIncomingConnection = remoteResourcesIncomingConnection;
+            _remoteResourcesRepository = remoteResourcesRepository;
+            _remoteResourcesServiceInfo = remoteResourcesServiceInfo;
             _distributeConfig = distributeConfig;
             _appSettings = appOptions.Value;
             _logger = loggerFactory.CreateLogger<Worker>();
@@ -41,7 +41,7 @@ namespace DesktopService
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _pipeRepository.Init();
+            _remoteResourcesRepository.Init();
 
             // check exec firewall rule
             if (!string.IsNullOrWhiteSpace(_appSettings.FirewallRuleName))
@@ -67,7 +67,7 @@ namespace DesktopService
             }
 
             _distributeConfig.Share();
-            _pipeServiceInfo.ShowInfoWindow();
+            _remoteResourcesServiceInfo.ShowInfoWindow();
 
             // the Task.Run leads to a thread starvation
             /*Task.Run(() =>

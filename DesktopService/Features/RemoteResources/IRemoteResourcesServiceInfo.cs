@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopService.Features.Pipes
+namespace DesktopService.Features.RemoteResources
 {
-    public interface IPipeServiceInfo
+    public interface IRemoteResourcesServiceInfo
     {
         void ShowInfoWindow(bool forceStart = false);
     }
