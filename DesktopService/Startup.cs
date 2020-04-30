@@ -98,9 +98,6 @@ namespace DesktopService
             services.AddSingleton<Features.Authentication.IAuth, Features.Authentication.Auth>();
             services.AddSingleton<Features.Identity.IDeviceService, Features.Identity.DeviceService>();
             services.AddSingleton<IUserIdProvider, Features.Identity.ClaimUserIdProvider>();
-            services.AddSingleton<IPCPipe.IPipeClient, IPCPipe.PipeClient>();
-            services.AddSingleton<IPCPipe.IPipeServer, IPCPipe.PipeServer>();
-            services.AddSingleton<IPCPipe.IPipeResourceProvider, IPCPipe.PipeResourceProvider>();
             services.AddSingleton<Features.RemoteResources.IRemoteResourcesIncomingConnection, Features.RemoteResources.RemoteResourcesIncomingConnection>();
             services.AddSingleton<Features.RemoteResources.IRemoteResourcesRepository, Features.RemoteResources.RemoteResourcesRepository>();
             services.AddSingleton<Features.RemoteResources.IRemoteResourcesServiceInfo, Features.RemoteResources.RemoteResourcesServiceInfo>();

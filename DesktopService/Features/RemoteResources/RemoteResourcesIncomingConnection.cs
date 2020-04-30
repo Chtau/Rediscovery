@@ -9,15 +9,12 @@ namespace DesktopService.Features.RemoteResources
 {
     public class RemoteResourcesIncomingConnection : IRemoteResourcesIncomingConnection
     {
-        private const string RediscoveryHub = "rediscoveryhub";
-        private readonly IPCPipe.IPipeClient _pipeClient;
         private readonly ILogger<RemoteResourcesIncomingConnection> _logger;
         private readonly SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration _remoteResourceSettings;
 
-        public RemoteResourcesIncomingConnection(IPCPipe.IPipeClient pipeClient, ILoggerFactory loggerFactory,
+        public RemoteResourcesIncomingConnection(ILoggerFactory loggerFactory,
             IOptions<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration> remoteResourceSettings)
         {
-            _pipeClient = pipeClient;
             _logger = loggerFactory.CreateLogger<RemoteResourcesIncomingConnection>();
             _remoteResourceSettings = remoteResourceSettings.Value;
         }
@@ -26,15 +23,16 @@ namespace DesktopService.Features.RemoteResources
         {
             try
             {
-                if (_pipeClient.TryConnect(RediscoveryHub))
+                if (false)//_pipeClient.TryConnect(RediscoveryHub))
                 {
-                    var infoData = Newtonsoft.Json.JsonConvert.SerializeObject(new SharedCoreModels.IncomingConnectionInfo
+                    // TODO: show code signalr integration
+                    /*var infoData = Newtonsoft.Json.JsonConvert.SerializeObject(new SharedCoreModels.IncomingConnectionInfo
                     {
                         Code = code,
                         Device = device,
                         ValidTill = validTill
                     });
-                    _pipeClient.Send(RediscoveryHub, infoData);
+                    _pipeClient.Send(RediscoveryHub, infoData);*/
                 }
                 else
                 {
