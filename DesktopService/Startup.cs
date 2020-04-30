@@ -2,6 +2,7 @@
 using DesktopService.Features.DeviceFeature;
 using DesktopService.Features.InternalLogger;
 using DesktopService.Features.Logger;
+using DesktopService.Features.RemoteResources;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.SignalR;
@@ -140,6 +141,8 @@ namespace DesktopService
                 endpoints.MapControllers();
                 endpoints.MapHub<ConnectHub>("/hubs/connect");
                 endpoints.MapHub<DeviceFeatureHub>("/hubs/feature");
+                endpoints.MapHub<DesktopHubRemoteResourceHub>("/remote/resource/hub");
+                endpoints.MapHub<DiscoveryServiceRemoteResourceHub>("/remote/resource/discovery");
             });
         }
     }

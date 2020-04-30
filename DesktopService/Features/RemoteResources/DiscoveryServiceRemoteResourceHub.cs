@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 namespace DesktopService.Features.RemoteResources
 {
     [AllowAnonymous]
-    public class RemoteResourceHub : Hub
+    public class DiscoveryServiceRemoteResourceHub : Hub
     {
-        private readonly ILogger<RemoteResourceHub> _logger;
+        private readonly ILogger<DesktopHubRemoteResourceHub> _logger;
         private readonly SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration _remoteResourceSettings;
 
-        public RemoteResourceHub(ILoggerFactory loggerFactory, IOptions<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration> remoteResourceSettings)
+        public DiscoveryServiceRemoteResourceHub(ILoggerFactory loggerFactory, IOptions<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration> remoteResourceSettings)
         {
-            _logger = loggerFactory.CreateLogger<RemoteResourceHub>();
+            _logger = loggerFactory.CreateLogger<DesktopHubRemoteResourceHub>();
             _remoteResourceSettings = remoteResourceSettings.Value;
         }
 
@@ -25,7 +25,7 @@ namespace DesktopService.Features.RemoteResources
         {
             try
             {
-                if (_remoteResourceSettings.RediscoveryDesktopHubApplicationKey == applicationKey)
+                if (_remoteResourceSettings.RediscoveryDiscoveryServiceApplicationKey == applicationKey)
                 {
 
                 }
