@@ -21,13 +21,18 @@ namespace DesktopService.Features.RemoteResources
             _remoteResourceSettings = remoteResourceSettings.Value;
         }
 
-        public async Task A(string applicationKey)
+        public async Task Hello(string applicationKey)
         {
             try
             {
                 if (_remoteResourceSettings.RediscoveryDiscoveryServiceApplicationKey == applicationKey)
                 {
-
+                    _logger.LogInformation($"DiscoveryService => Hello received from Application (Key:{applicationKey})");
+                    await Clients.Caller.SendAsync("Hello", "ok");
+                } else
+                {
+                    _logger.LogInformation($"DiscoveryService => Hello received from unknown Application (Key:{applicationKey})");
+                    await Clients.Caller.SendAsync("Hello", "unknown");
                 }
             }
             catch (Exception ex)
