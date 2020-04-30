@@ -16,7 +16,7 @@ namespace DesktopService.Features.DeviceFeature
         {
             if (!ActiveUserHandler.UserIds.Contains(Context.UserIdentifier))
                 ActiveUserHandler.UserIds.Add(Context.UserIdentifier);
-            _remoteResourcesRepository.ActiveDeviceInfoChanged();
+            _remoteResourcesRepository.SendActiveDeviceInfo();
             return base.OnConnectedAsync();
         }
 
@@ -24,7 +24,7 @@ namespace DesktopService.Features.DeviceFeature
         {
             if (ActiveUserHandler.UserIds.Contains(Context.UserIdentifier))
                 ActiveUserHandler.UserIds.Remove(Context.UserIdentifier);
-            _remoteResourcesRepository.ActiveDeviceInfoChanged();
+            _remoteResourcesRepository.SendActiveDeviceInfo();
             return base.OnDisconnectedAsync(exception);
         }
 

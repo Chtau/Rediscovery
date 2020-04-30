@@ -17,7 +17,6 @@ namespace DesktopService
         private readonly Features.RemoteResources.IRemoteResourcesIncomingConnection _remoteResourcesIncomingConnection;
         private readonly Features.RemoteResources.IRemoteResourcesRepository _remoteResourcesRepository;
         private readonly Features.RemoteResources.IRemoteResourcesServiceInfo _remoteResourcesServiceInfo;
-        private readonly IPCPipe.IPipeServer _pipeServer;
         private readonly Features.Configuration.IDistributeConfig _distributeConfig;
         private readonly SharedConfigurations.DesktopService.Models.AppConfiguration _appSettings;
         private readonly ILogger<Worker> _logger;
@@ -27,7 +26,6 @@ namespace DesktopService
             Features.RemoteResources.IRemoteResourcesServiceInfo remoteResourcesServiceInfo,
             Features.Configuration.IDistributeConfig distributeConfig,
             IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> appOptions,
-            IPCPipe.IPipeServer pipeServer,
             ILoggerFactory loggerFactory)
         {
             _remoteResourcesIncomingConnection = remoteResourcesIncomingConnection;
@@ -36,13 +34,10 @@ namespace DesktopService
             _distributeConfig = distributeConfig;
             _appSettings = appOptions.Value;
             _logger = loggerFactory.CreateLogger<Worker>();
-            _pipeServer = pipeServer;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _remoteResourcesRepository.Init();
-
             // check exec firewall rule
             if (!string.IsNullOrWhiteSpace(_appSettings.FirewallRuleName))
             {

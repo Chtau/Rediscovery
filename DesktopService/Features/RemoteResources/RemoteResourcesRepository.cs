@@ -16,152 +16,106 @@ namespace DesktopService.Features.RemoteResources
     {
         private readonly DAL.IDBContext _dBContext;
         private readonly DeviceFeature.IFeatureService _featureService;
-        private readonly IPCPipe.IPipeResourceProvider _resourceProvider;
-        private readonly IPCPipe.IPipeServer _pipeServer;
-        private readonly IPCPipe.IPipeClient _pipeClient;
-
+        private readonly IHubContext<DesktopHubRemoteResourceHub> _hubContext;
         private readonly ILogger<RemoteResourcesRepository> _logger;
 
-        public RemoteResourcesRepository(DAL.IDBContext dBContext, IPCPipe.IPipeResourceProvider resourceProvider,
-            IPCPipe.IPipeServer pipeServer, DeviceFeature.IFeatureService featureService,
-            IPCPipe.IPipeClient pipeClient,
+        public RemoteResourcesRepository(DAL.IDBContext dBContext,
+            DeviceFeature.IFeatureService featureService,
+            IHubContext<DesktopHubRemoteResourceHub> hubContext,
             ILoggerFactory loggerFactory)
         {
             _dBContext = dBContext;
-            _resourceProvider = resourceProvider;
-            _pipeServer = pipeServer;
-            _pipeClient = pipeClient;
+            _hubContext = hubContext;
             _featureService = featureService;
             _logger = loggerFactory.CreateLogger<RemoteResourcesRepository>();
         }
 
-        public void Init()
-        {
-            _resourceProvider.Provide("rediscoveryservice", OnProvideResources);
-            _pipeServer.DataReceived += _pipeServer_DataReceived;
-            _pipeServer.Listen("sync_device_rediscoveryservice");
-        }
-
-        private void _pipeServer_DataReceived(object sender, string e)
-        {
-            if (!string.IsNullOrWhiteSpace(e))
-            {
-                var item = Newtonsoft.Json.JsonConvert.DeserializeObject<IPCPipe.Models.Sync<SharedCoreModels.DeviceInfo>>(e);
-                if (item != null)
-                {
-                    switch (item.ActionType)
-                    {
-                        case IPCPipe.Models.SyncAction.None:
-                            break;
-                        case IPCPipe.Models.SyncAction.Add:
-                            break;
-                        case IPCPipe.Models.SyncAction.Delete:
-                            _dBContext.Instance.Table<Device>().DeleteAsync(x => x.Id == item.Entity.Id);
-                            break;
-                        case IPCPipe.Models.SyncAction.Update:
-                            break;
-                    }
-                }
-            }
-        }
-
-        private string OnProvideResources(string resourceName)
-        {
-            if (resourceName == "deviceinfo")
-            {
-                return Newtonsoft.Json.JsonConvert.SerializeObject(OnGetResourceDeviceInfo());
-            } else if (resourceName == "features")
-            {
-                return Newtonsoft.Json.JsonConvert.SerializeObject(OnGetResourceDeviceFeature());
-            }
-            else if (resourceName == "activedeviceinfo")
-            {
-                return Newtonsoft.Json.JsonConvert.SerializeObject(OnGetResourceActiveDeviceInfo());
-            }
-            return null;
-        }
-
-        private IPCPipe.Models.PipeResource<List<SharedCoreModels.DeviceFeature>> OnGetResourceDeviceFeature()
+        private List<SharedCoreModels.DeviceFeature> GetResourceDeviceFeature()
         {
             var features = _featureService.GetFeaturesManifest();
-            var resource = new IPCPipe.Models.PipeResource<List<SharedCoreModels.DeviceFeature>>();
-            resource.ResourceName = "features";
-            resource.Entity = (from x in features
-                               select new SharedCoreModels.DeviceFeature
-                               {
-                                   Id = x.Id,
-                                   DisplayName = x.DisplayName,
-                                   MinControlIntegrationPoint = x.MinControlIntegrationPoint.ToString(),
-                                   MinFeatureIntegrationPoint = x.MinFeatureIntegrationPoint.ToString(),
-                                   Version = x.Version.ToString()
-                               }).ToList();
-            return resource;
+            return (from x in features
+                    select new SharedCoreModels.DeviceFeature
+                    {
+                        Id = x.Id,
+                        DisplayName = x.DisplayName,
+                        MinControlIntegrationPoint = x.MinControlIntegrationPoint.ToString(),
+                        MinFeatureIntegrationPoint = x.MinFeatureIntegrationPoint.ToString(),
+                        Version = x.Version.ToString()
+                    }).ToList();
         }
 
-        private IPCPipe.Models.PipeResource<List<SharedCoreModels.DeviceInfo>> OnGetResourceDeviceInfo()
+        private List<SharedCoreModels.DeviceInfo> GetResourceDeviceInfo()
         {
             var users = _dBContext.Instance.Table<Device>().ToListAsync().GetAwaiter().GetResult();
-            var resource = new IPCPipe.Models.PipeResource<List<SharedCoreModels.DeviceInfo>>();
-            resource.ResourceName = "deviceinfo";
-            resource.Entity = (from x in users
-                               select new SharedCoreModels.DeviceInfo
-                               {
-                                   Id = x.Id,
-                                   AllowAccess = x.AllowAccess,
-                                   Name = x.DeviceName
-                               }).ToList();
-            return resource;
+            return (from x in users
+                    select new SharedCoreModels.DeviceInfo
+                    {
+                        Id = x.Id,
+                        AllowAccess = x.AllowAccess,
+                        Name = x.DeviceName
+                    }).ToList();
         }
 
-        private IPCPipe.Models.PipeResource<List<SharedCoreModels.DeviceInfo>> OnGetResourceActiveDeviceInfo()
+        private List<SharedCoreModels.DeviceInfo> GetResourceActiveDeviceInfo()
         {
             var allUsers = from x in ActiveUserHandler.UserIds select new Guid(x);
             var users = _dBContext.Instance.Table<Device>().ToListAsync().GetAwaiter().GetResult();
-            var resource = new IPCPipe.Models.PipeResource<List<SharedCoreModels.DeviceInfo>>();
-            resource.ResourceName = "activedeviceinfo";
-            resource.Entity = (from x in users
-                               join y in allUsers on x.Id equals y
-                               select new SharedCoreModels.DeviceInfo
-                               {
-                                   Id = x.Id,
-                                   AllowAccess = x.AllowAccess,
-                                   Name = x.DeviceName
-                               }).ToList();
-            return resource;
+            return (from x in users
+                    join y in allUsers on x.Id equals y
+                    select new SharedCoreModels.DeviceInfo
+                    {
+                        Id = x.Id,
+                        AllowAccess = x.AllowAccess,
+                        Name = x.DeviceName
+                    }).ToList();
         }
 
-        public void ActiveDeviceInfoChanged()
+        public void DeleteDeviceInfo(SharedCoreModels.DeviceInfo deviceInfo)
         {
             try
             {
-                _pipeClient.Send("rediscoveryserviceresourcechanged", "activedeviceinfo");
+                _dBContext.Instance.Table<Device>().DeleteAsync(x => x.Id == deviceInfo.Id);
+                SendDeviceInfo();
+                SendActiveDeviceInfo();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"DeleteDeviceInfo error for Id:{deviceInfo?.Id} Name:{deviceInfo?.Name}");
+            }
+        }
+
+        public void SendActiveDeviceInfo()
+        {
+            try
+            {
+                _hubContext.Clients.Group(DesktopHubRemoteResourceHub.GroupName).SendAsync("ActiveDeviceInfo", GetResourceActiveDeviceInfo());
             } catch (Exception ex)
             {
-                _logger.LogError(ex, "ActiveDeviceInfoChanged IPC");
+                _logger.LogError(ex, "SendActiveDeviceInfo send remote resource");
             }
         }
 
-        public void DeviceInfoChanged()
+        public void SendDeviceInfo()
         {
             try
             {
-                _pipeClient.Send("rediscoveryserviceresourcechanged", "deviceinfo");
+                _hubContext.Clients.Group(DesktopHubRemoteResourceHub.GroupName).SendAsync("DeviceInfo", GetResourceDeviceInfo());
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "DeviceInfoChanged IPC");
+                _logger.LogError(ex, "SendDeviceInfo send remote resource");
             }
         }
 
-        public void FeatureChanged()
+        public void SendServiceFeature()
         {
             try
             {
-                _pipeClient.Send("rediscoveryserviceresourcechanged", "features");
+                _hubContext.Clients.Group(DesktopHubRemoteResourceHub.GroupName).SendAsync("ServiceFeature", GetResourceDeviceFeature());
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "FeatureChanged IPC");
+                _logger.LogError(ex, "SendServiceFeature send remote resource");
             }
         }
     }

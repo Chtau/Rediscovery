@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SharedCoreModels;
 using System;
@@ -10,20 +11,19 @@ namespace DesktopService.Features.RemoteResources
 {
     public class RemoteResourcesLiveLogger : IRemoteResourcesLiveLogger
     {
-        private const string RediscoveryHub = "rediscoveryhublivelogger";
-        private readonly IPCPipe.IPipeClient _pipeClient;
         private readonly ILogger<RemoteResourcesLiveLogger> _logger;
         private readonly SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration _remoteResourceSettings;
+        private readonly IHubContext<DesktopHubRemoteResourceHub> _hubContext;
 
         private DateTime lastFailedConnection = DateTime.MinValue;
         private int connectionsFailed = 0;
 
-        public RemoteResourcesLiveLogger(IPCPipe.IPipeClient pipeClient, ILoggerFactory loggerFactory,
+        public RemoteResourcesLiveLogger(IHubContext<DesktopHubRemoteResourceHub> hubContext, ILoggerFactory loggerFactory,
             IOptions<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration> remoteResourceSettings)
         {
-            _pipeClient = pipeClient;
             _logger = loggerFactory.CreateLogger<RemoteResourcesLiveLogger>();
             _remoteResourceSettings = remoteResourceSettings.Value;
+            _hubContext = hubContext;
         }
 
         public void Log(LoggerEntryModel liveLoggerModel)
@@ -42,7 +42,7 @@ namespace DesktopService.Features.RemoteResources
                     try
                     {
                         var logData = Newtonsoft.Json.JsonConvert.SerializeObject(liveLoggerModel);
-                        _pipeClient.Send(RediscoveryHub, logData);
+                        _hubContext.Clients.Group(DesktopHubRemoteResourceHub.GroupName).SendAsync("LogEntry", logData);
                     } catch (Exception ex)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
@@ -51,16 +51,6 @@ namespace DesktopService.Features.RemoteResources
                         connectionsFailed++;
                         lastFailedConnection = DateTime.UtcNow;
                     }
-                    /*if (_pipeClient.TryConnect(RediscoveryHub))
-                    {
-                        var logData = Newtonsoft.Json.JsonConvert.SerializeObject(liveLoggerModel);
-                        _pipeClient.Send(RediscoveryHub, logData);
-                    }
-                    else
-                    {
-                        connectionsFailed++;
-                        lastFailedConnection = DateTime.UtcNow;
-                    }*/
                 }
             }
             catch (Exception ex)

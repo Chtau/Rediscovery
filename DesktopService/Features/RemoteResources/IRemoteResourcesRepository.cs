@@ -6,9 +6,9 @@ namespace DesktopService.Features.RemoteResources
 {
     public interface IRemoteResourcesRepository
     {
-        void Init();
-        void ActiveDeviceInfoChanged();
-        void DeviceInfoChanged();
-        void FeatureChanged();
+        void SendActiveDeviceInfo();
+        void SendDeviceInfo();
+        void SendServiceFeature();
+        void DeleteDeviceInfo(SharedCoreModels.DeviceInfo deviceInfo);
     }
 }
