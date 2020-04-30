@@ -43,8 +43,8 @@ namespace DesktopService
 
             var identitySettingsSection = Configuration.GetSection(SharedConfigurations.DesktopService.Models.IdentityConfiguration.SectionName);
             services.Configure<SharedConfigurations.DesktopService.Models.IdentityConfiguration>(identitySettingsSection);
-            var pipeSettingsSection = Configuration.GetSection(SharedConfigurations.DesktopService.Models.PipeConfiguration.SectionName);
-            services.Configure<SharedConfigurations.DesktopService.Models.PipeConfiguration>(pipeSettingsSection);
+            var remoteResourceSettingsSection = Configuration.GetSection(SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration.SectionName);
+            services.Configure<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration>(remoteResourceSettingsSection);
             var appSettingsSection = Configuration.GetSection(SharedConfigurations.DesktopService.Models.AppConfiguration.SectionName);
             services.Configure<SharedConfigurations.DesktopService.Models.AppConfiguration> (appSettingsSection);
 

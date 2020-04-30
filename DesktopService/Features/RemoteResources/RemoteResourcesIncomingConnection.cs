@@ -12,14 +12,14 @@ namespace DesktopService.Features.RemoteResources
         private const string RediscoveryHub = "rediscoveryhub";
         private readonly IPCPipe.IPipeClient _pipeClient;
         private readonly ILogger<RemoteResourcesIncomingConnection> _logger;
-        private readonly SharedConfigurations.DesktopService.Models.PipeConfiguration _pipeSettings;
+        private readonly SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration _remoteResourceSettings;
 
         public RemoteResourcesIncomingConnection(IPCPipe.IPipeClient pipeClient, ILoggerFactory loggerFactory,
-            IOptions<SharedConfigurations.DesktopService.Models.PipeConfiguration> pipeSettings)
+            IOptions<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration> remoteResourceSettings)
         {
             _pipeClient = pipeClient;
             _logger = loggerFactory.CreateLogger<RemoteResourcesIncomingConnection>();
-            _pipeSettings = pipeSettings.Value;
+            _remoteResourceSettings = remoteResourceSettings.Value;
         }
 
         public async Task ShowCode(string code, string device, DateTime validTill)
@@ -38,18 +38,18 @@ namespace DesktopService.Features.RemoteResources
                 }
                 else
                 {
-                    if (!string.IsNullOrWhiteSpace(_pipeSettings.RediscoveryDesktopHubPath))
+                    if (!string.IsNullOrWhiteSpace(_remoteResourceSettings.RediscoveryDesktopHubPath))
                     {
-                        if (System.IO.File.Exists(_pipeSettings.RediscoveryDesktopHubPath))
+                        if (System.IO.File.Exists(_remoteResourceSettings.RediscoveryDesktopHubPath))
                         {
                             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                             {
-                                FileName = _pipeSettings.RediscoveryDesktopHubPath,
+                                FileName = _remoteResourceSettings.RediscoveryDesktopHubPath,
                                 Arguments = $"{SharedCommandArguments.Hub.Arguments.CodeArgStart}{code} {SharedCommandArguments.Hub.Arguments.DeviceArgStart}{device} {SharedCommandArguments.Hub.Arguments.ValidArgStart}{validTill.Ticks}"
                             });
                         } else
                         {
-                            _logger.LogWarning($"Could not find Rediscovery Hub application file @{_pipeSettings.RediscoveryDesktopHubPath}");
+                            _logger.LogWarning($"Could not find Rediscovery Hub application file @{_remoteResourceSettings.RediscoveryDesktopHubPath}");
                         }
                     }
                 }

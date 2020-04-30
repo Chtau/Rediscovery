@@ -13,17 +13,17 @@ namespace DesktopService.Features.RemoteResources
         private const string RediscoveryHub = "rediscoveryhublivelogger";
         private readonly IPCPipe.IPipeClient _pipeClient;
         private readonly ILogger<RemoteResourcesLiveLogger> _logger;
-        private readonly SharedConfigurations.DesktopService.Models.PipeConfiguration _pipeSettings;
+        private readonly SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration _remoteResourceSettings;
 
         private DateTime lastFailedConnection = DateTime.MinValue;
         private int connectionsFailed = 0;
 
         public RemoteResourcesLiveLogger(IPCPipe.IPipeClient pipeClient, ILoggerFactory loggerFactory,
-            IOptions<SharedConfigurations.DesktopService.Models.PipeConfiguration> pipeSettings)
+            IOptions<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration> remoteResourceSettings)
         {
             _pipeClient = pipeClient;
             _logger = loggerFactory.CreateLogger<RemoteResourcesLiveLogger>();
-            _pipeSettings = pipeSettings.Value;
+            _remoteResourceSettings = remoteResourceSettings.Value;
         }
 
         public void Log(LoggerEntryModel liveLoggerModel)

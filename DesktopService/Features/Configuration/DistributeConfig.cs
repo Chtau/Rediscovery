@@ -9,23 +9,23 @@ namespace DesktopService.Features.Configuration
 {
     public class DistributeConfig : IDistributeConfig
     {
-        private readonly SharedConfigurations.DesktopService.Models.PipeConfiguration _pipeSettings;
+        private readonly SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration _remoteResourceSettings;
         private readonly ILogger<DistributeConfig> _logger;
         private readonly SharedConfigurations.DesktopService.Models.AppConfiguration _appSettings;
 
         public DistributeConfig(ILoggerFactory loggerFactory, 
-            IOptions<SharedConfigurations.DesktopService.Models.PipeConfiguration> pipeSettings,
+            IOptions<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration> remoteResourceSettings,
             IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> appOptions)
         {
             _logger = loggerFactory.CreateLogger<DistributeConfig>();
-            _pipeSettings = pipeSettings.Value;
+            _remoteResourceSettings = remoteResourceSettings.Value;
             _appSettings = appOptions.Value;
         }
 
         public void Share()
         {
-            string hubPath = System.IO.Path.GetDirectoryName(_pipeSettings.RediscoveryDesktopHubPath);
-            string discoveryPath = System.IO.Path.GetDirectoryName(_pipeSettings.RediscoveryDiscoveryService);
+            string hubPath = System.IO.Path.GetDirectoryName(_remoteResourceSettings.RediscoveryDesktopHubPath);
+            string discoveryPath = System.IO.Path.GetDirectoryName(_remoteResourceSettings.RediscoveryDiscoveryServicePath);
             var serviceInfo = new SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration
             {
                 IP = Program.HostIpAddress,
@@ -47,7 +47,7 @@ namespace DesktopService.Features.Configuration
             {
                 fwRules.Add(new SharedConfigurations.Hub.Models.FirewallRulesConfiguration
                 {
-                    ExePath = _pipeSettings.RediscoveryDiscoveryService,
+                    ExePath = _remoteResourceSettings.RediscoveryDiscoveryServicePath,
                     RuleName = fwDiscovery.FirewallRuleName
                 });
             }
