@@ -140,6 +140,7 @@ namespace DesktopService
                 endpoints.MapHub<DeviceFeatureHub>("/hubs/feature");
                 endpoints.MapHub<DesktopHubRemoteResourceHub>("/remote/resource/hub");
                 endpoints.MapHub<DiscoveryServiceRemoteResourceHub>("/remote/resource/discovery");
+                endpoints.MapHub<DesktopInfoHubRemoteResourceHub>("/remote/resource/info");
             });
         }
     }

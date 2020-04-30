@@ -9,15 +9,22 @@ using System.Threading.Tasks;
 
 namespace DesktopService.Features.RemoteResources
 {
-    [AllowAnonymous]
-    public class DiscoveryServiceRemoteResourceHub : Hub
+    public static class ActiveDesktopInfoHandler
     {
-        public static string GroupName = "discoveryservice";
+        public static HashSet<string> ConnectionIds = new HashSet<string>();
+    }
+
+    [AllowAnonymous]
+    public class DesktopInfoHubRemoteResourceHub : Hub
+    {
+        public static string GroupName = "infohub";
 
         public override Task OnDisconnectedAsync(Exception exception)
         {
             try
             {
+                if (ActiveDesktopInfoHandler.ConnectionIds.Contains(Context.ConnectionId))
+                    ActiveDesktopInfoHandler.ConnectionIds.Add(Context.ConnectionId);
                 Groups.RemoveFromGroupAsync(Context.ConnectionId, GroupName);
             }
             catch (Exception ex)
@@ -27,12 +34,12 @@ namespace DesktopService.Features.RemoteResources
             return base.OnDisconnectedAsync(exception);
         }
 
-        private readonly ILogger<DesktopHubRemoteResourceHub> _logger;
+        private readonly ILogger<DesktopInfoHubRemoteResourceHub> _logger;
         private readonly SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration _remoteResourceSettings;
 
-        public DiscoveryServiceRemoteResourceHub(ILoggerFactory loggerFactory, IOptions<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration> remoteResourceSettings)
+        public DesktopInfoHubRemoteResourceHub(ILoggerFactory loggerFactory, IOptions<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration> remoteResourceSettings)
         {
-            _logger = loggerFactory.CreateLogger<DesktopHubRemoteResourceHub>();
+            _logger = loggerFactory.CreateLogger<DesktopInfoHubRemoteResourceHub>();
             _remoteResourceSettings = remoteResourceSettings.Value;
         }
 
@@ -40,14 +47,17 @@ namespace DesktopService.Features.RemoteResources
         {
             try
             {
-                if (_remoteResourceSettings.RediscoveryDiscoveryServiceApplicationKey == applicationKey)
+                if (_remoteResourceSettings.RediscoveryDesktopInfoHubApplicationKey == applicationKey)
                 {
+                    if (!ActiveDesktopInfoHandler.ConnectionIds.Contains(Context.ConnectionId))
+                        ActiveDesktopInfoHandler.ConnectionIds.Add(Context.ConnectionId);
                     await Groups.AddToGroupAsync(Context.ConnectionId, GroupName);
-                    _logger.LogInformation($"DiscoveryService => Hello received from Application (Key:{applicationKey})");
+                    _logger.LogInformation($"DesktopInfoHub => Hello received from Application (Key:{applicationKey})");
                     await Clients.Caller.SendAsync("Hello", "ok");
-                } else
+                }
+                else
                 {
-                    _logger.LogInformation($"DiscoveryService => Hello received from unknown Application (Key:{applicationKey})");
+                    _logger.LogInformation($"DesktopInfoHub => Hello received from unknown Application (Key:{applicationKey})");
                     await Clients.Caller.SendAsync("Hello", "unknown");
                 }
             }
