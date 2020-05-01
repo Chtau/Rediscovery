@@ -9,11 +9,10 @@ namespace Rediscovery.Desktop.Hub
 {
     public class Worker : IHostedService, IDisposable
     {
-        private readonly IPCPipe.IPipeClient _pipeClient;
 
-        public Worker(IPCPipe.IPipeClient pipeClient)
+        public Worker()
         {
-            _pipeClient = pipeClient;
+            
         }
 
         public Task StartAsync(CancellationToken cancellationToken)

@@ -27,13 +27,6 @@ namespace Rediscovery.Desktop.Hub
 
             services.AddHostedService<Worker>();
 
-            services.AddSingleton<IPCPipe.IPipeServer, IPCPipe.PipeServer>();
-            services.AddSingleton<IPCPipe.IPipeClient, IPCPipe.PipeClient>();
-            services.AddSingleton<IPCPipe.IPipeResourceProvider, IPCPipe.PipeResourceProvider>();
-            //services.AddSingleton<Connection.IIncomingConnectionPipe, Connection.IncomingConnectionPipe>();
-            //services.AddSingleton<Connection.IIncomingConnectionPipeLiveLogger, Connection.IncomingConnectionPipeLiveLogger>();
-            //services.AddSingleton<Connection.IIncomingConnectionService, Connection.IncomingConnectionService>();
-
             services.AddSingleton<Feature.Device.IDeviceService, Feature.Device.DeviceService>();
             services.AddSingleton<Feature.Logger.ILoggerService, Feature.Logger.LoggerService>();
             services.AddSingleton<Feature.Features.IFeatureService, Feature.Features.FeatureService>();
