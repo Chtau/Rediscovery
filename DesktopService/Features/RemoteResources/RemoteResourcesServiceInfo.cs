@@ -31,19 +31,19 @@ namespace DesktopService.Features.RemoteResources
                 if (ActiveDesktopInfoHandler.ConnectionIds.Count > 0)
                 {
                     _hubContext.Clients.Group(DesktopInfoHubRemoteResourceHub.GroupName).SendAsync("ApplicationInfo", SharedCommandArguments.Hub.Arguments.ServiceInfoStart);
-                } else if (!string.IsNullOrWhiteSpace(_remoteResourceSettings.RediscoveryDesktopHubPath))
+                } else if (!string.IsNullOrWhiteSpace(_remoteResourceSettings.RediscoveryDesktopInfoHubPath))
                 {
-                    if (System.IO.File.Exists(_remoteResourceSettings.RediscoveryDesktopHubPath))
+                    if (System.IO.File.Exists(_remoteResourceSettings.RediscoveryDesktopInfoHubPath))
                     {
                         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                         {
-                            FileName = _remoteResourceSettings.RediscoveryDesktopHubPath,
+                            FileName = _remoteResourceSettings.RediscoveryDesktopInfoHubPath,
                             Arguments = SharedCommandArguments.Hub.Arguments.ServiceInfoStart
                         });
                     }
                     else
                     {
-                        _logger.LogWarning($"Could not find Rediscovery Hub application file @{_remoteResourceSettings.RediscoveryDesktopHubPath}");
+                        _logger.LogWarning($"Could not find Rediscovery Hub application file @{_remoteResourceSettings.RediscoveryDesktopInfoHubPath}");
                     }
                 }
             }
