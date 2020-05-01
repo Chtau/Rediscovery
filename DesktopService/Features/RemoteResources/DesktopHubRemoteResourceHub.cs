@@ -14,11 +14,6 @@ namespace DesktopService.Features.RemoteResources
     {
         public static string GroupName = "desktophub";
 
-        public override Task OnConnectedAsync()
-        {
-            return base.OnConnectedAsync();
-        }
-
         public override Task OnDisconnectedAsync(Exception exception)
         {
             try

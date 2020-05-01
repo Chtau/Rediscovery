@@ -48,31 +48,69 @@
 |`Hello(ConnectionState connectionState, string token)`|This function will be invoked to inform the Client about the Authentication state and `Bearer` Token if successful|
 
 
-### IPC
+### Remote resource
 
-#### Provider
+#### SignalR Hub Endpoint `/remote/resource/hub`
 
-|Hub|Type|Info|
-|-----|-----|----|
-|`rediscoveryhub`|`IncomingConnectionInfo`|Data for a new incoming connection|
-|`rediscoveryhublivelogger`|`LoggerEntryModel`|Logger data|
-|`rediscoveryservice`|`PipeResource<T>`|Provide requested Resource pipe data object|
-
-#### Receiver
-
-|Hub|Type|Info|
-|-----|-----|----|
-|`rediscoveryservice`|`string`|Expect `deviceinfo`, `features` or `activedeviceinfo` to provide the requested resource type (*1)|
-|`sync_device_rediscoveryservice`|`IPCPipe.Models.Sync<SharedCoreModels.DeviceInfo>`|Handle model changes from an IPC Client|
+Do receive data the Client has to call `Hello` with the correct application key.
 
 
-##### Rediscovery Service `PipeResource<T>` data (*1)
+##### Receiver
 
-|Key|Type|Info|
-|-----|-----|----|
-|`deviceinfo`|`PipeResource<List<DeviceInfo>>`|All known devices to the service|
-|`features`|`PipeResource<List<SharedCoreModels.DeviceFeature>>`|Features available on the service|
-|`activedeviceinfo`|`PipeResource<List<DeviceInfo>>`|Devices which active use a feature on the service|
+|Function|Info|
+|-----|----|
+|`Hello(string applicationKey)`|Adds the device to the Group which can receive resources|
+|`RequestActiveDeviceInfo()`|Request all active devices connected to the service|
+|`RequestDeviceInfo()`|Request all known devices to the service|
+|`RequestServiceFeature()`|Request all supported service features|
+|`RequestDeleteDeviceInfo(SharedCoreModels.DeviceInfo deviceInfo)`|Request deletion of a device|
+
+###### Sender
+
+|Function|Info|
+|-----|----|
+|`Hello(string result)`|Sends a hello response result `ok` (if valid application key) or `unknown` (application key is unknown to the service)|
+|`ActiveDeviceInfo(List<SharedCoreModels.DeviceInfo> deviceInfos)`|Sends all active devices which are connected to the service|
+|`DeviceInfo(List<SharedCoreModels.DeviceInfo> deviceInfos)`|Sends all devices known by the service|
+|`ServiceFeature(List<SharedCoreModels.DeviceFeature> deviceInfos)`|Sends all supported feature by the service|
+|`LogEntry(LoggerEntryModel loggerModel)`|Sends new logger entry|
+
+
+#### SignalR Hub Endpoint `/remote/resource/discovery`
+
+Do receive data the Client has to call `Hello` with the correct application key.
+
+
+##### Receiver
+
+|Function|Info|
+|-----|----|
+|`Hello(string applicationKey)`|Adds the device to the Group which can receive resources|
+
+###### Sender
+
+|Function|Info|
+|-----|----|
+|`Hello(string result)`|Sends a hello response result `ok` (if valid application key) or `unknown` (application key is unknown to the service)|
+
+#### SignalR Hub Endpoint `/remote/resource/info`
+
+Do receive data the Client has to call `Hello` with the correct application key.
+
+
+##### Receiver
+
+|Function|Info|
+|-----|----|
+|`Hello(string applicationKey)`|Adds the device to the Group which can receive resources|
+
+###### Sender
+
+|Function|Info|
+|-----|----|
+|`Hello(string result)`|Sends a hello response result `ok` (if valid application key) or `unknown` (application key is unknown to the service)|
+|`NewValidationCode(SharedCoreModels.IncomingConnectionInfo connectionInfo)`|Sends connection validation data|
+|`ApplicationInfo(string serviceInfo)`|Sends service info|
 
 
 ## Authentication Flow

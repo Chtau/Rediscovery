@@ -41,8 +41,7 @@ namespace DesktopService.Features.RemoteResources
                 {
                     try
                     {
-                        var logData = Newtonsoft.Json.JsonConvert.SerializeObject(liveLoggerModel);
-                        _hubContext.Clients.Group(DesktopHubRemoteResourceHub.GroupName).SendAsync("LogEntry", logData);
+                        _hubContext.Clients.Group(DesktopHubRemoteResourceHub.GroupName).SendAsync("LogEntry", liveLoggerModel);
                     } catch (Exception ex)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
