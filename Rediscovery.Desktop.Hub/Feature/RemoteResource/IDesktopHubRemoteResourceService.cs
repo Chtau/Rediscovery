@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Rediscovery.Desktop.Hub.Feature.RemoteResource
 {
-    public interface IRemoteResourceService
+    public interface IDesktopHubRemoteResourceService
     {
         Task Connect();
         event EventHandler<List<SharedCoreModels.DeviceInfo>> ActiveDeviceInfoReceived;

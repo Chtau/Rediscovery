@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Rediscovery.Desktop.Hub.Feature.RemoteResource
 {
-    public class RemoteResourceService : IRemoteResourceService
+    public class DesktopHubRemoteResourceService : IDesktopHubRemoteResourceService
     {
         private readonly HubConnection connection;
 
@@ -15,7 +15,7 @@ namespace Rediscovery.Desktop.Hub.Feature.RemoteResource
         public event EventHandler<List<SharedCoreModels.DeviceInfo>> DeviceInfoReceived;
         public event EventHandler<List<SharedCoreModels.DeviceFeature>> ServiceFeatureReceived;
 
-        public RemoteResourceService()
+        public DesktopHubRemoteResourceService()
         {
             connection = new HubConnectionBuilder()
                 .WithUrl("http://localhost:53353/ChatHub")
@@ -54,6 +54,7 @@ namespace Rediscovery.Desktop.Hub.Feature.RemoteResource
         public async Task Connect()
         {
             await connection.StartAsync();
+            await connection.InvokeAsync("Hello", "hub");
         }
     }
 }
