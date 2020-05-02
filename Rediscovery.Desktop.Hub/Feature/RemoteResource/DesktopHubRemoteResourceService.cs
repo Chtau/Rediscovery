@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,16 +10,21 @@ namespace Rediscovery.Desktop.Hub.Feature.RemoteResource
 {
     public class DesktopHubRemoteResourceService : IDesktopHubRemoteResourceService
     {
+        private readonly SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration _remoteResourceSettings;
         private readonly HubConnection connection;
 
         public event EventHandler<List<SharedCoreModels.DeviceInfo>> ActiveDeviceInfoReceived;
         public event EventHandler<List<SharedCoreModels.DeviceInfo>> DeviceInfoReceived;
         public event EventHandler<List<SharedCoreModels.DeviceFeature>> ServiceFeatureReceived;
 
-        public DesktopHubRemoteResourceService()
+        public DesktopHubRemoteResourceService(IOptions<SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration> remoteResourceSettings)
         {
+            _remoteResourceSettings = remoteResourceSettings.Value;
+            var baseUrl = _remoteResourceSettings.ConnectionAddress;
+            if (!_remoteResourceSettings.ConnectionAddress.EndsWith("/"))
+                baseUrl += "/";
             connection = new HubConnectionBuilder()
-                .WithUrl("http://localhost:53353/ChatHub")
+                .WithUrl($"{baseUrl}remote/resource/hub")
                 .WithAutomaticReconnect()
                 .Build();
 
@@ -54,7 +60,7 @@ namespace Rediscovery.Desktop.Hub.Feature.RemoteResource
         public async Task Connect()
         {
             await connection.StartAsync();
-            await connection.InvokeAsync("Hello", "hub");
+            await connection.InvokeAsync("Hello", _remoteResourceSettings.DesktopHubApplicationKey);
         }
     }
 }
