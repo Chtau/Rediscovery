@@ -1,4 +1,5 @@
-﻿using SharedCoreModels;
+﻿using Rediscovery.Desktop.Hub.Feature.RemoteResource;
+using SharedCoreModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,21 +9,23 @@ namespace Rediscovery.Desktop.Hub.Feature.Logger
 {
     public class LoggerService : ILoggerService
     {
-        private readonly IPCPipe.IPipeServer _pipeServer;
+        private readonly IDesktopHubRemoteResourceService _desktopHubRemoteResourceService;
         public event EventHandler<LoggerEntryModel> LoggerDataReceived;
 
-        public LoggerService(IPCPipe.IPipeServer pipeServer)
+        public LoggerService(IDesktopHubRemoteResourceService desktopHubRemoteResourceService)
         {
-            _pipeServer = pipeServer;
+            _desktopHubRemoteResourceService = desktopHubRemoteResourceService;
+            _desktopHubRemoteResourceService.LogEntryReceived += _desktopHubRemoteResourceService_LogEntryReceived;
+        }
+
+        private void _desktopHubRemoteResourceService_LogEntryReceived(object sender, LoggerEntryModel e)
+        {
+            LoggerDataReceived?.Invoke(this, e);
         }
 
         public void Init()
         {
-            _pipeServer.Listen("rediscoveryhublivelogger", data =>
-            {
-                var model = Newtonsoft.Json.JsonConvert.DeserializeObject<LoggerEntryModel>(data);
-                LoggerDataReceived?.Invoke(this, model);
-            });
+            _desktopHubRemoteResourceService.Connect();
         }
     }
 }

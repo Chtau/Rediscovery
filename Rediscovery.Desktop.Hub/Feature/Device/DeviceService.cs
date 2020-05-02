@@ -1,4 +1,5 @@
 ﻿using IPCPipe.Models;
+using Rediscovery.Desktop.Hub.Feature.RemoteResource;
 using SharedCoreModels;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,7 @@ namespace Rediscovery.Desktop.Hub.Feature.Device
 {
     public class DeviceService : IDeviceService
     {
-        private readonly IPCPipe.IPipeResourceProvider _resourceProvider;
-        private readonly IPCPipe.IPipeServer _pipeServer;
+        private readonly IDesktopHubRemoteResourceService _desktopHubRemoteResourceService;
 
         public event EventHandler<List<DeviceInfo>> DeviceInfoReceived;
         public event EventHandler<List<DeviceInfo>> ActiveDeviceInfoReceived;
@@ -19,17 +19,30 @@ namespace Rediscovery.Desktop.Hub.Feature.Device
         public List<DeviceInfo> Items { get; set; } = new List<DeviceInfo>();
         public List<DeviceInfo> ItemsActiveDeviceInfo { get; set; } = new List<DeviceInfo>();
 
-        public DeviceService(IPCPipe.IPipeResourceProvider pipeResourceProvider,
-            IPCPipe.IPipeServer pipeServer)
+        public DeviceService(IDesktopHubRemoteResourceService desktopHubRemoteResourceService)
         {
-            _resourceProvider = pipeResourceProvider;
-            _pipeServer = pipeServer;
+            _desktopHubRemoteResourceService = desktopHubRemoteResourceService;
+            _desktopHubRemoteResourceService.ActiveDeviceInfoReceived += _desktopHubRemoteResourceService_ActiveDeviceInfoReceived;
+            _desktopHubRemoteResourceService.DeviceInfoReceived += _desktopHubRemoteResourceService_DeviceInfoReceived;
+        }
+
+        private void _desktopHubRemoteResourceService_DeviceInfoReceived(object sender, List<DeviceInfo> e)
+        {
+            Items.Clear();
+            Items.AddRange(e);
+            DeviceInfoReceived?.Invoke(this, e);
+        }
+
+        private void _desktopHubRemoteResourceService_ActiveDeviceInfoReceived(object sender, List<DeviceInfo> e)
+        {
+            ItemsActiveDeviceInfo.Clear();
+            ItemsActiveDeviceInfo.AddRange(e);
+            ActiveDeviceInfoReceived?.Invoke(this, e);
         }
 
         public void Init()
         {
-            _resourceProvider.Receiver<List<DeviceInfo>>("rediscoveryservice", "deviceinfo", OnReceiveResource);
-            _resourceProvider.Receiver<List<DeviceInfo>>("rediscoveryservice", "activedeviceinfo", OnReceiveResourceActiveDevice);
+            _desktopHubRemoteResourceService.Connect();
         }
 
         public void RemoveItem(DeviceInfo item)
@@ -44,20 +57,6 @@ namespace Rediscovery.Desktop.Hub.Feature.Device
                 //_pipeClient.Send("sync_device_rediscoveryservice", Newtonsoft.Json.JsonConvert.SerializeObject(sync));
                 Items.Remove(item);
             }
-        }
-
-        private void OnReceiveResource(PipeResource<List<DeviceInfo>> resource)
-        {
-            Items.Clear();
-            Items.AddRange(resource.Entity);
-            DeviceInfoReceived?.Invoke(this, resource.Entity);
-        }
-
-        private void OnReceiveResourceActiveDevice(PipeResource<List<DeviceInfo>> resource)
-        {
-            ItemsActiveDeviceInfo.Clear();
-            ItemsActiveDeviceInfo.AddRange(resource.Entity);
-            ActiveDeviceInfoReceived?.Invoke(this, resource.Entity);
         }
     }
 }

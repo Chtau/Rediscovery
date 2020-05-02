@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Options;
+using SharedCoreModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,6 +17,7 @@ namespace Rediscovery.Desktop.Hub.Feature.RemoteResource
         public event EventHandler<List<SharedCoreModels.DeviceInfo>> ActiveDeviceInfoReceived;
         public event EventHandler<List<SharedCoreModels.DeviceInfo>> DeviceInfoReceived;
         public event EventHandler<List<SharedCoreModels.DeviceFeature>> ServiceFeatureReceived;
+        public event EventHandler<LoggerEntryModel> LogEntryReceived;
 
         public DesktopHubRemoteResourceService(IOptions<SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration> remoteResourceSettings)
         {
@@ -55,11 +57,18 @@ namespace Rediscovery.Desktop.Hub.Feature.RemoteResource
             {
                 ServiceFeatureReceived?.Invoke(this, deviceInfos);
             });
+            connection.On<LoggerEntryModel>("LogEntry", (entry) =>
+            {
+                LogEntryReceived?.Invoke(this, entry);
+            });
         }
 
         public async Task Connect()
         {
-            await connection.StartAsync();
+            if (connection.State != HubConnectionState.Connected)
+            {
+                await connection.StartAsync();
+            }
             await connection.InvokeAsync("Hello", _remoteResourceSettings.DesktopHubApplicationKey);
         }
     }
