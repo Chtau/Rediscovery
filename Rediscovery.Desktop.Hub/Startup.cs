@@ -15,7 +15,11 @@ namespace Rediscovery.Desktop.Hub
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .AddJsonFile(SharedConfigurations.DesktopHub.ConfigFileNames.AppSettings, optional: false, reloadOnChange: true);
+
+            Configuration = builder.Build();
+            //Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -23,6 +27,9 @@ namespace Rediscovery.Desktop.Hub
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var remoteResourceSection = Configuration.GetSection(SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration.SectionName);
+            services.Configure<SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration>(remoteResourceSection);
+
             services.AddControllersWithViews();
 
             services.AddHostedService<Worker>();
