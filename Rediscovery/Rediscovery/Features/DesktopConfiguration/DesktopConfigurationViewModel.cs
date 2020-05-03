@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using System.Linq;
 
 namespace Rediscovery.Features.DesktopConfiguration
 {
@@ -42,9 +43,12 @@ namespace Rediscovery.Features.DesktopConfiguration
             {
                 Items.Clear();
                 var items = await Store.GetItemsAsync(true);
-                foreach (var item in items)
+                if (items != null && items.Count() > 0)
                 {
-                    Items.Add(item);
+                    foreach (var item in items)
+                    {
+                        Items.Add(item);
+                    }
                 }
             }
             catch (Exception ex)

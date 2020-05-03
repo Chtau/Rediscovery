@@ -38,7 +38,7 @@ namespace Rediscovery.Services
                         Thread.Sleep(100);
                         result = OnGetFileContent<T>(filePath);
                         count++;
-                    } while (count < 5 || result.Item1);
+                    } while (count < 5 || !result.Item1);
                 }
                 if (!result.Item1)
                 {
@@ -56,7 +56,7 @@ namespace Rediscovery.Services
 
         public bool SetFileContent<T>(T value, string filePath)
         {
-            return OnSetFileContent(value, filePath);
+            return OnSetFileContent(value, filePath, true);
         }
 
         private bool OnSetFileContent<T>(T value, string filePath, bool repeat = false)
@@ -78,7 +78,7 @@ namespace Rediscovery.Services
                         Thread.Sleep(100);
                         result = SetFileContent(value, filePath);
                         count++;
-                    } while (count < 5 || result);
+                    } while (count < 5 || !result);
                 }
                 if (!result)
                 {
