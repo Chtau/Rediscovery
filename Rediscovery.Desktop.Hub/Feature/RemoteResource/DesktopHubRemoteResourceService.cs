@@ -22,11 +22,11 @@ namespace Rediscovery.Desktop.Hub.Feature.RemoteResource
         public DesktopHubRemoteResourceService(IOptions<SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration> remoteResourceSettings)
         {
             _remoteResourceSettings = remoteResourceSettings.Value;
-            var baseUrl = _remoteResourceSettings.ConnectionAddress;
-            if (!_remoteResourceSettings.ConnectionAddress.EndsWith("/"))
-                baseUrl += "/";
+            var baseUrl = "https://" + _remoteResourceSettings.IP;
+            if (_remoteResourceSettings.Port != null)
+                baseUrl += ":" + _remoteResourceSettings.Port;
             connection = new HubConnectionBuilder()
-                .WithUrl($"{baseUrl}remote/resource/hub")
+                .WithUrl($"{baseUrl}/remote/resource/hub")
                 .WithAutomaticReconnect()
                 .Build();
 

@@ -8,7 +8,8 @@ namespace SharedConfigurations.DesktopHub.Models
     {
         public const string SectionName = "RemoteResourceSettings";
 
-        public string ConnectionAddress { get; set; }
+        public string IP { get; set; }
+        public int? Port { get; set; }
         public string DesktopHubApplicationKey { get; set; }
     }
 }

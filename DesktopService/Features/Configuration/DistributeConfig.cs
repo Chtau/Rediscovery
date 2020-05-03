@@ -34,13 +34,13 @@ namespace DesktopService.Features.Configuration
                 Name = "Rediscovery"
             };
             OnUpdateRemoteConfiguration(Path.Combine(discoveryPath, SharedConfigurations.DiscoveryService.ConfigFileNames.AppSettings), SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration.SectionName, serviceInfo);
-            var serviceInfoHub = new SharedConfigurations.Hub.Models.ServiceInfoConfiguration
+            /*var serviceInfoHub = new SharedConfigurations.Hub.Models.ServiceInfoConfiguration
             {
                 IP = Program.HostIpAddress,
                 Port = Program.HostPort,
             };
             OnUpdateRemoteConfiguration(Path.Combine(hubPath, SharedConfigurations.Hub.ConfigFileNames.AppSettings), SharedConfigurations.Hub.Models.ServiceInfoConfiguration.SectionName, serviceInfoHub);
-
+            */
             var fwRules = new List<SharedConfigurations.Hub.Models.FirewallRulesConfiguration>();
             var fwDiscovery = OnReadRemoteConfiguration<SharedConfigurations.DiscoveryService.Models.DiscoveryConfiguration>(Path.Combine(discoveryPath, SharedConfigurations.DiscoveryService.ConfigFileNames.AppSettings), SharedConfigurations.DiscoveryService.Models.DiscoveryConfiguration.SectionName);
             if (fwDiscovery != null)
@@ -56,8 +56,13 @@ namespace DesktopService.Features.Configuration
                 ExePath = Program.ExePath,
                 RuleName = _appSettings.FirewallRuleName
             });
-
-            OnUpdateRemoteConfiguration(Path.Combine(hubPath, SharedConfigurations.Hub.ConfigFileNames.AppSettings), SharedConfigurations.Hub.Models.FirewallRulesConfiguration.SectionName, fwRules.ToArray());
+            var hubConfig = new SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration
+            {
+                IP = Program.HostIpAddress,
+                Port = Program.HostPort
+            };
+            OnUpdateRemoteConfiguration(Path.Combine(hubPath, SharedConfigurations.DesktopHub.ConfigFileNames.AppSettings), SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration.SectionName, hubConfig);
+            //OnUpdateRemoteConfiguration(Path.Combine(hubPath, SharedConfigurations.Hub.ConfigFileNames.AppSettings), SharedConfigurations.Hub.Models.FirewallRulesConfiguration.SectionName, fwRules.ToArray());
         }
 
         private void OnUpdateRemoteConfiguration<T>(string filePath, string key, T value)
