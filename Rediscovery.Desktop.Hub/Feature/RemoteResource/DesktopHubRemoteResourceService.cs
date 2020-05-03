@@ -21,6 +21,7 @@ namespace Rediscovery.Desktop.Hub.Feature.RemoteResource
 
         public DesktopHubRemoteResourceService(IOptions<SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration> remoteResourceSettings)
         {
+            // TODO: user should be informed if we can't connect or no valid configuration is set
             _remoteResourceSettings = remoteResourceSettings.Value;
             var baseUrl = "http://" + _remoteResourceSettings.IP;
             if (_remoteResourceSettings.Port != null)

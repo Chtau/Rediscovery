@@ -27,7 +27,6 @@ namespace Rediscovery.Desktop.Hub
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // TODO: we need to check if the configuration is already updated from the service
             var remoteResourceSection = Configuration.GetSection(SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration.SectionName);
             services.Configure<SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration>(remoteResourceSection);
 
