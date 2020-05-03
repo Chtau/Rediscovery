@@ -54,8 +54,14 @@ namespace Rediscovery.Features.Authentication
                 model.Token = token;
                 Task.Run(async () =>
                 {
-                    await desktopStore.UpdateItemAsync(model);
-                    HelloReceived?.Invoke(this, model);
+                    try
+                    {
+                        await desktopStore.UpdateItemAsync(model);
+                        HelloReceived?.Invoke(this, model);
+                    } catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.Print(ex.ToString());
+                    }
                 });
             });
         }

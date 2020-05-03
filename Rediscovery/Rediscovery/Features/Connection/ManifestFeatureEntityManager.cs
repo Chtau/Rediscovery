@@ -23,10 +23,20 @@ namespace Rediscovery.Features.Connection
 
         public void Clear(Guid modelId)
         {
-            var removeFeatures = ConnectionManifestFeatures.Where(x => x.ConnectionId == modelId);
-            foreach (var item in removeFeatures)
+            try
             {
-                ConnectionManifestFeatures.Remove(item);
+                var removeFeatures = ConnectionManifestFeatures.Where(x => x.ConnectionId == modelId);
+                if (removeFeatures != null)
+                {
+                    foreach (var item in removeFeatures)
+                    {
+                        if (ConnectionManifestFeatures.Contains(item))
+                            ConnectionManifestFeatures.Remove(item);
+                    }
+                }
+            } catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Print(ex.ToString());
             }
         }
 

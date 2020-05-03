@@ -23,7 +23,6 @@ namespace Rediscovery.Features.DesktopConfiguration
         async void Save_Clicked(object sender, EventArgs e)
         {
             await viewModel.Save();
-            await Navigation.PopModalAsync();
         }
 
         async void Remove_Clicked(object sender, EventArgs e)

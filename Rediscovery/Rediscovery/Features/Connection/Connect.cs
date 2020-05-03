@@ -67,10 +67,9 @@ namespace Rediscovery.Features.Connection
             return false;
         }
 
-        public async Task TryConnect(Guid connectionId)
+        public async Task TryConnect(DesktopConfiguration.DesktopConfigurationModel desktopConfigurationModel)
         {
-            var model = await desktopStore.GetItemAsync(connectionId);
-            await OnTryConnect(model);
+            await OnTryConnect(desktopConfigurationModel);
         }
 
         public async Task AutoConnect()
@@ -225,8 +224,14 @@ namespace Rediscovery.Features.Connection
 
         private async void AuthHub_HelloReceived(object sender, DesktopConfiguration.DesktopConfigurationModel e)
         {
-            HelloReceived?.Invoke(this, e);
-            await OnAfterChangedAuthenticationConnection(e);
+            try
+            {
+                HelloReceived?.Invoke(this, e);
+                await OnAfterChangedAuthenticationConnection(e);
+            } catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Print(ex.ToString());
+            }
         }
 
         private void FeatureHub_ConnectionChanged(object sender, DesktopConfiguration.DesktopConfigurationModel e)

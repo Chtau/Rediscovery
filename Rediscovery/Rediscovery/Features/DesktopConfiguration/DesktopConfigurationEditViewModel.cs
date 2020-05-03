@@ -17,7 +17,13 @@ namespace Rediscovery.Features.DesktopConfiguration
         private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
         private IConnect auth => DependencyService.Get<IConnect>() ?? new Connect();
 
-        public DesktopConfigurationModel Item { get; set; }
+        DesktopConfigurationModel item;
+        public DesktopConfigurationModel Item
+        {
+            get { return item; }
+            set { SetProperty(ref item, value); }
+        }
+
         public Command Connect { get; }
         public LoadBinding Load { get; set; }
 
@@ -52,11 +58,18 @@ namespace Rediscovery.Features.DesktopConfiguration
 
             Connect = new Command(async () =>
             {
-                Load.IsLoading = true;
-
-                await auth.TryConnect(Item.Id);
-
-                Load.IsLoading = false;
+                try
+                {
+                    Load.IsLoading = true;
+                    await auth.TryConnect(Item);
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                } finally
+                {
+                    Load.IsLoading = false;
+                }
             });
         }
 
@@ -67,29 +80,53 @@ namespace Rediscovery.Features.DesktopConfiguration
 
         private void Auth_HelloReceived(object sender, DesktopConfiguration.DesktopConfigurationModel e)
         {
-            Item.ConnectionState = e.ConnectionState;
-            Item.LastConnection = e.LastConnection;
+            try
+            {
+                Item.ConnectionState = e.ConnectionState;
+                Item.LastConnection = e.LastConnection;
+            } catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
         }
 
 
         public async Task Save()
         {
-            await desktopStore.AddItemAsync(new DesktopConfiguration.DesktopConfigurationModel
+            try
             {
-                AutoConnect = Item.AutoConnect,
-                ConnectionState = SharedCoreModels.Enums.ConnectionState.None,
-                Id = Item.Id,
-                LastConnection = Item.LastConnection,
-                LastKnownAddress = Item.LastKnownAddress,
-                DisplayName = Item.DisplayName
-            });
-            MessagingCenter.Send(this, "refresh_desktop_configuration", Item);
+                var result = await desktopStore.AddItemAsync(new DesktopConfiguration.DesktopConfigurationModel
+                {
+                    AutoConnect = Item.AutoConnect,
+                    ConnectionState = SharedCoreModels.Enums.ConnectionState.None,
+                    Id = Item.Id,
+                    LastConnection = Item.LastConnection,
+                    LastKnownAddress = Item.LastKnownAddress,
+                    DisplayName = Item.DisplayName
+                });
+                if (result.Item1)
+                {
+                    Item = result.Item2;
+                    MessagingCenter.Send(this, "refresh_desktop_configuration", Item);
+                }
+            } catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
         }
 
         public async Task Remove()
         {
-            await desktopStore.DeleteItemAsync(Item.Id);
-            MessagingCenter.Send(this, "refresh_desktop_configuration", Item);
+            try
+            {
+                await desktopStore.DeleteItemAsync(Item.Id);
+                // TODO: clear all cache for this device (manifest, ui ...)
+                MessagingCenter.Send(this, "refresh_desktop_configuration", Item);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
         }
     }
 }

@@ -19,12 +19,12 @@ namespace Rediscovery.Features.DesktopConfiguration
             return System.IO.Path.Combine(fs.AppSettingsDirectory(), "desktopconfiguration.json");
         }
 
-        public bool AddItem(DesktopConfigurationModel item)
+        public Tuple<bool, DesktopConfigurationModel> AddItem(DesktopConfigurationModel item)
         {
             return AddItemAsync(item).GetAwaiter().GetResult();
         }
 
-        public async Task<bool> AddItemAsync(DesktopConfigurationModel item)
+        public async Task<Tuple<bool, DesktopConfigurationModel>> AddItemAsync(DesktopConfigurationModel item)
         {
             var items = json.GetFileContent<DesktopConfigurationModel[]>(filePath())?.ToList();
             int index = -1;
@@ -60,7 +60,7 @@ namespace Rediscovery.Features.DesktopConfiguration
             items[index].ConnectionState = item.ConnectionState;
             items[index].DisplayName = item.DisplayName;
             var result = json.SetFileContent(items, filePath());
-            return await Task.FromResult(result);
+            return await Task.FromResult(new Tuple<bool, DesktopConfigurationModel>(result, items[index]));
         }
 
         public bool DeleteItem(Guid id)
@@ -101,12 +101,12 @@ namespace Rediscovery.Features.DesktopConfiguration
             return await Task.FromResult(json.GetFileContent<DesktopConfigurationModel[]>(filePath())?.ToList());
         }
 
-        public bool UpdateItem(DesktopConfigurationModel item)
+        public Tuple<bool, DesktopConfigurationModel> UpdateItem(DesktopConfigurationModel item)
         {
             return UpdateItemAsync(item).GetAwaiter().GetResult();
         }
 
-        public async Task<bool> UpdateItemAsync(DesktopConfigurationModel item)
+        public async Task<Tuple<bool, DesktopConfigurationModel>> UpdateItemAsync(DesktopConfigurationModel item)
         {
             return await AddItemAsync(item);
         }

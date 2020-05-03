@@ -42,9 +42,27 @@ namespace Rediscovery.Features.DesktopFeatures
 
         private void ConnectionManifestFeatures_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            foreach (Features.Connection.Models.ConnectionManifestFeature item in e.NewItems)
+            try
             {
-                ConnectionManifestFeaturesControl.Add(item);
+                if (e.OldItems != null)
+                {
+                    foreach (Features.Connection.Models.ConnectionManifestFeature item in e.OldItems)
+                    {
+                        if (ConnectionManifestFeaturesControl.Contains(item))
+                            ConnectionManifestFeaturesControl.Remove(item);
+                    }
+                }
+                if (e.NewItems != null)
+                {
+                    foreach (Features.Connection.Models.ConnectionManifestFeature item in e.NewItems)
+                    {
+                        ConnectionManifestFeaturesControl.Add(item);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Print(ex.ToString());
             }
         }
     }

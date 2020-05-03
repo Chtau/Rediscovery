@@ -13,7 +13,7 @@ namespace Rediscovery.Features.Connection
     public interface IConnect
     {
         Task AutoConnect();
-        Task TryConnect(Guid connectionId);
+        Task TryConnect(DesktopConfiguration.DesktopConfigurationModel desktopConfigurationModel);
         Task<HubConnection> GetConnectionAuth(Guid modelId);
         Task<HubConnection> GetConnectionFeature(Guid modelId);
         Task CloseConnections();

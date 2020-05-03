@@ -19,12 +19,12 @@ namespace Rediscovery.Features.Settings
             return System.IO.Path.Combine(fs.AppSettingsDirectory(), "appsettings.json");
         }
 
-        public bool AddItem(SettingModel item)
+        public Tuple<bool, SettingModel> AddItem(SettingModel item)
         {
             return AddItemAsync(item).GetAwaiter().GetResult();
         }
 
-        public async Task<bool> AddItemAsync(SettingModel item)
+        public async Task<Tuple<bool, SettingModel>> AddItemAsync(SettingModel item)
         {
             var srcItem = json.GetFileContent<SettingModel>(filePath());
             if (srcItem == null)
@@ -34,7 +34,7 @@ namespace Rediscovery.Features.Settings
                 item.Id = Guid.NewGuid();
             srcItem.Id = item.Id;
             var result = json.SetFileContent(srcItem, filePath());
-            return await Task.FromResult(result);
+            return await Task.FromResult(new Tuple<bool, SettingModel>(result, srcItem));
         }
 
         public bool DeleteItem(Guid id)
@@ -67,12 +67,12 @@ namespace Rediscovery.Features.Settings
             return await Task.FromResult(new List<SettingModel> { json.GetFileContent<SettingModel>(filePath()) });
         }
 
-        public bool UpdateItem(SettingModel item)
+        public Tuple<bool, SettingModel> UpdateItem(SettingModel item)
         {
             return UpdateItemAsync(item).GetAwaiter().GetResult();
         }
 
-        public async Task<bool> UpdateItemAsync(SettingModel item)
+        public async Task<Tuple<bool, SettingModel>> UpdateItemAsync(SettingModel item)
         {
             var srcItem = json.GetFileContent<SettingModel>(filePath());
             srcItem.DeviceIdentifier = item.DeviceIdentifier;
@@ -80,7 +80,7 @@ namespace Rediscovery.Features.Settings
                 item.Id = Guid.NewGuid();
             srcItem.Id = item.Id;
             var result = json.SetFileContent(srcItem, filePath());
-            return await Task.FromResult(result);
+            return await Task.FromResult(new Tuple<bool, SettingModel>(result, srcItem));
         }
     }
 }
