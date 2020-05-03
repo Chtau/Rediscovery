@@ -22,7 +22,7 @@ namespace Rediscovery.Desktop.Hub.Feature.RemoteResource
         public DesktopHubRemoteResourceService(IOptions<SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration> remoteResourceSettings)
         {
             _remoteResourceSettings = remoteResourceSettings.Value;
-            var baseUrl = "https://" + _remoteResourceSettings.IP;
+            var baseUrl = "http://" + _remoteResourceSettings.IP;
             if (_remoteResourceSettings.Port != null)
                 baseUrl += ":" + _remoteResourceSettings.Port;
             connection = new HubConnectionBuilder()
@@ -61,6 +61,13 @@ namespace Rediscovery.Desktop.Hub.Feature.RemoteResource
             {
                 LogEntryReceived?.Invoke(this, entry);
             });
+            connection.On<string>("Hello", async (result) =>
+            {
+                if (result?.ToLower() == "ok")
+                {
+                    await Request();
+                }
+            });
         }
 
         public async Task Connect()
@@ -70,6 +77,13 @@ namespace Rediscovery.Desktop.Hub.Feature.RemoteResource
                 await connection.StartAsync();
             }
             await connection.InvokeAsync("Hello", _remoteResourceSettings.DesktopHubApplicationKey);
+        }
+
+        public async Task Request()
+        {
+            await connection.InvokeAsync("RequestDeviceInfo");
+            await connection.InvokeAsync("RequestServiceFeature");
+            await connection.InvokeAsync("RequestActiveDeviceInfo");
         }
     }
 }

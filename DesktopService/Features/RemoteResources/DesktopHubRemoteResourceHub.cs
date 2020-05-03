@@ -44,7 +44,7 @@ namespace DesktopService.Features.RemoteResources
         {
             try
             {
-                if (_remoteResourceSettings.RediscoveryDiscoveryServiceApplicationKey == applicationKey)
+                if (_remoteResourceSettings.RediscoveryDesktopHubApplicationKey.Equals(applicationKey, StringComparison.OrdinalIgnoreCase))
                 {
                     await Groups.AddToGroupAsync(Context.ConnectionId, GroupName);
                     _logger.LogInformation($"DesktopHub => Hello received from Application (Key:{applicationKey})");

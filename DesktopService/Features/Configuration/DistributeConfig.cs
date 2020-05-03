@@ -59,7 +59,8 @@ namespace DesktopService.Features.Configuration
             var hubConfig = new SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration
             {
                 IP = Program.HostIpAddress,
-                Port = Program.HostPort
+                Port = Program.HostPort,
+                DesktopHubApplicationKey = _remoteResourceSettings.RediscoveryDesktopHubApplicationKey
             };
             OnUpdateRemoteConfiguration(Path.Combine(hubPath, SharedConfigurations.DesktopHub.ConfigFileNames.AppSettings), SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration.SectionName, hubConfig);
             //OnUpdateRemoteConfiguration(Path.Combine(hubPath, SharedConfigurations.Hub.ConfigFileNames.AppSettings), SharedConfigurations.Hub.Models.FirewallRulesConfiguration.SectionName, fwRules.ToArray());

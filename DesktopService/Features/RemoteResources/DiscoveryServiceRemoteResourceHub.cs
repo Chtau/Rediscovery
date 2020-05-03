@@ -40,7 +40,7 @@ namespace DesktopService.Features.RemoteResources
         {
             try
             {
-                if (_remoteResourceSettings.RediscoveryDiscoveryServiceApplicationKey == applicationKey)
+                if (_remoteResourceSettings.RediscoveryDiscoveryServiceApplicationKey.Equals(applicationKey, StringComparison.OrdinalIgnoreCase))
                 {
                     await Groups.AddToGroupAsync(Context.ConnectionId, GroupName);
                     _logger.LogInformation($"DiscoveryService => Hello received from Application (Key:{applicationKey})");

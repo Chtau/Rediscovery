@@ -47,7 +47,7 @@ namespace DesktopService.Features.RemoteResources
         {
             try
             {
-                if (_remoteResourceSettings.RediscoveryDesktopInfoHubApplicationKey == applicationKey)
+                if (_remoteResourceSettings.RediscoveryDesktopInfoHubApplicationKey.Equals(applicationKey, StringComparison.OrdinalIgnoreCase))
                 {
                     if (!ActiveDesktopInfoHandler.ConnectionIds.Contains(Context.ConnectionId))
                         ActiveDesktopInfoHandler.ConnectionIds.Add(Context.ConnectionId);

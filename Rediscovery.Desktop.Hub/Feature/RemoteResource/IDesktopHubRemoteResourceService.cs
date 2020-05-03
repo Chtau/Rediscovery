@@ -9,6 +9,7 @@ namespace Rediscovery.Desktop.Hub.Feature.RemoteResource
     public interface IDesktopHubRemoteResourceService
     {
         Task Connect();
+        Task Request();
         event EventHandler<List<SharedCoreModels.DeviceInfo>> ActiveDeviceInfoReceived;
         event EventHandler<List<SharedCoreModels.DeviceInfo>> DeviceInfoReceived;
         event EventHandler<List<SharedCoreModels.DeviceFeature>> ServiceFeatureReceived;
