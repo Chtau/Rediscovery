@@ -1,19 +1,30 @@
-﻿using System;
+﻿using Rediscovery.Features.Settings;
+using Rediscovery.Features.Settings.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Services.DiscoveryService))]
 namespace Rediscovery.Services
 {
     public class DiscoveryService : BaseService, IDiscoveryService
     {
+        private IDataStoreGuid<SettingModel> Store => DependencyService.Get<IDataStoreGuid<SettingModel>>() ?? new SettingStore();
+
         public void Boardcast(Action<SharedCoreModels.DiscoveryServiceInfo> callbackAnswer)
         {
             Task.Run(async () =>
             {
+                SettingModel setting = (await Store.GetItemsAsync()).FirstOrDefault();
+                if (setting != null)
+                {
+                    setting = new SettingModel();
+                }
                 do
                 {
                     try
@@ -25,8 +36,7 @@ namespace Rediscovery.Services
 
                         Client.EnableBroadcast = true;
                         // broadcast don't work in the vs android emulator due to virtual network problems... 
-                        // TODO: need to add configuration for Discovery Port Setting
-                        int sendBytes = Client.Send(RequestData, RequestData.Length, new IPEndPoint(IPAddress.Broadcast, 8888));
+                        int sendBytes = Client.Send(RequestData, RequestData.Length, new IPEndPoint(IPAddress.Broadcast, setting.DiscoveryPort));
                         if (sendBytes == RequestData.Length)
                         {
                             await Task.Run(() =>

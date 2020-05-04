@@ -9,6 +9,7 @@ namespace Rediscovery.Features.Settings.Models
     {
         private Guid _id;
         private string _deviceIdentifier;
+        private int _discoveryPort;
 
         public Guid Id
         {
@@ -22,9 +23,16 @@ namespace Rediscovery.Features.Settings.Models
             set { SetProperty(ref _deviceIdentifier, value); }
         }
 
+        public int DiscoveryPort
+        {
+            get { return _discoveryPort; }
+            set { SetProperty(ref _discoveryPort, value); }
+        }
+
         public SettingModel()
         {
             Id = Guid.Empty;
+            DiscoveryPort = 8888;
         }
     }
 }

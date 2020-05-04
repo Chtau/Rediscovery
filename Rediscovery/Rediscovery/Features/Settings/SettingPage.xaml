@@ -16,8 +16,14 @@
             </Grid.RowDefinitions>
             <ScrollView Grid.Row="0">
                 <StackLayout Spacing="20" Padding="15">
-                    <Label Text="Device Name" FontSize="Medium" />
-                    <Entry Text="{Binding Setting.DeviceIdentifier}" FontSize="Small" />
+                    <StackLayout>
+                        <Label Text="Device Name" FontSize="Medium" />
+                        <Entry Text="{Binding Setting.DeviceIdentifier}" FontSize="Small" />
+                    </StackLayout>
+                    <StackLayout>
+                        <Label Text="Discovery Port" FontSize="Medium" />
+                        <Entry Text="{Binding Setting.DiscoveryPort}" Keyboard="Numeric" FontSize="Small" />
+                    </StackLayout>
                 </StackLayout>
             </ScrollView>
             <StackLayout Grid.Row="1" Margin="10">
