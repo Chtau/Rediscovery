@@ -207,7 +207,6 @@ namespace Rediscovery.Features.Connection
                         authHub.HelloReceived += AuthHub_HelloReceived;
                         authHub.ManifestReceived += ManifestReceived;
                         authHubs.Add(model.Id, authHub);
-                        //await OnAfterChangedAuthenticationConnection(model);
                     }
                     return authHubs[model.Id];
                 case HubTypes.Feature:
@@ -226,6 +225,17 @@ namespace Rediscovery.Features.Connection
         {
             try
             {
+                try
+                {
+                    var model = await desktopStore.GetItemAsync(e.Id);
+                    model.ConnectionState = e.ConnectionState;
+                    model.LastConnection = e.LastConnection;
+                    model.Token = e.Token;
+                    await desktopStore.UpdateItemAsync(model);
+                } catch (Exception exUpdate)
+                {
+                    _logger.Error(exUpdate);
+                }
                 HelloReceived?.Invoke(this, e);
                 await OnAfterChangedAuthenticationConnection(e);
             } catch (Exception ex)
