@@ -11,6 +11,9 @@ namespace Rediscovery.Controls
     {
         private IHtmlUIService htmlUIService => DependencyService.Get<IHtmlUIService>() ?? new HtmlUIService();
 
+        public event EventHandler SourceFolderSet;
+        public event EventHandler SourceFolderNoHtml;
+
         Action<string> action;
 
         public static readonly BindableProperty UriProperty = BindableProperty.Create(
@@ -25,6 +28,18 @@ namespace Rediscovery.Controls
             set { SetValue(UriProperty, value); }
         }
 
+        public void SetDefaultHtml()
+        {
+            Dispatcher.BeginInvokeOnMainThread(() =>
+            {
+                var source = new HtmlWebViewSource
+                {
+                    Html = htmlUIService.NoUIHtmlDefault()
+                };
+                Source = source;
+            });
+        }
+
         public void SetFolderSource(string directory)
         {
             Dispatcher.BeginInvokeOnMainThread(() =>
@@ -36,11 +51,16 @@ namespace Rediscovery.Controls
                     // find start file
                     string startFile = htmlUIService.GetIndexFile(directory);
                     if (!string.IsNullOrWhiteSpace(startFile))
+                    {
                         source.Html = System.IO.File.ReadAllText(startFile);
+                        SourceFolderSet?.Invoke(this, EventArgs.Empty);
+                    }
                     else
                     {
                         string msg = "No HTML file for the UI!";
                         System.Diagnostics.Debug.Print(msg);
+                        SourceFolderSet?.Invoke(this, EventArgs.Empty);
+                        SourceFolderNoHtml?.Invoke(this, EventArgs.Empty);
                         throw new System.IO.FileNotFoundException(msg);
                     }
                 }

@@ -64,6 +64,19 @@
             <Style x:Key="ListItemDetailTextStyle" TargetType="Label">
                 <Setter Property="FontSize" Value="12" />
             </Style>
+            <Style x:Key="ActivityIndicatorLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="HorizontalOptions" Value="CenterAndExpand" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+            </Style>
+            <Style x:Key="ActivityIndicator" TargetType="ActivityIndicator">
+                <Setter Property="Color" Value="Red" />
+                <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+                <Setter Property="HorizontalOptions" Value="CenterAndExpand" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
     

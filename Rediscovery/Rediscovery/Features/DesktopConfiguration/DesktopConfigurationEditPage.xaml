@@ -56,8 +56,10 @@
                          HorizontalOptions="FillAndExpand" 
                          VerticalOptions="FillAndExpand"
                          >
-                <ActivityIndicator IsVisible="True" IsRunning="True" x:Name="busyActivity" Color="Red" VerticalOptions="CenterAndExpand"
-                                   HorizontalOptions="CenterAndExpand"/>
+                <StackLayout>
+                    <ActivityIndicator IsVisible="True" IsRunning="True" x:Name="busyActivity" Style="{DynamicResource ActivityIndicator}"/>
+                    <Label Style="{DynamicResource ActivityIndicatorLabel}" Text="Connecting to Desktop" />
+                </StackLayout>
             </ContentView>
         </Grid>
     </ContentPage.Content>

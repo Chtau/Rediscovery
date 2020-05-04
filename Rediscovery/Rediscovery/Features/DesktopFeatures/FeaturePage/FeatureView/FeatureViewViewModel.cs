@@ -1,4 +1,5 @@
 ﻿using PluginFeature.Models;
+using Rediscovery.Models;
 using Rediscovery.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
         private DesktopFeatures.IFeatureUIService featureUIService => DependencyService.Get<DesktopFeatures.IFeatureUIService>() ?? new DesktopFeatures.FeatureUIService();
 
         public event EventHandler<Tuple<Guid, string>> UIDataReady;
+        public event EventHandler<Tuple<Guid, Guid>> UIDataNoArchive;
 
         public readonly Features.Connection.Models.ConnectionManifestFeature ConnectionManifestFeature;
         public readonly Guid DesktopConfigId;
@@ -42,8 +44,14 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
             set { SetProperty(ref currentTitle, value); }
         }
 
+        public LoadBinding Load { get; set; }
+
         public FeatureViewViewModel(Guid desktopConfigId, Features.Connection.Models.ConnectionManifestFeature connectionManifestFeature): base(connectionManifestFeature)
         {
+            Load = new LoadBinding
+            {
+                IsLoading = false
+            };
             ConnectionManifestFeature = connectionManifestFeature;
             DesktopConfigId = desktopConfigId;
             featureUIService.SaveUI(DesktopConfigId, ConnectionManifestFeature.FeatureId, (state, directory) =>
@@ -51,6 +59,9 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
                 if (state)
                 {
                     UIDataReady?.Invoke(this, new Tuple<Guid, string>(ConnectionManifestFeature.FeatureId, directory));
+                } else
+                {
+                    UIDataNoArchive?.Invoke(this, new Tuple<Guid, Guid>(DesktopConfigId, ConnectionManifestFeature.FeatureId));
                 }
             });
             base.ReceivedData += FeatureViewViewModel_ReceivedData;

@@ -24,11 +24,29 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
             InitializeComponent();
 
             BindingContext = viewModel = new FeatureViewViewModel(desktopConfigId, connectionManifestFeature);
+            viewModel.Load.IsLoading = true;
             viewModel.UIDataReady += ViewModel_UIDataReady;
+            viewModel.UIDataNoArchive += ViewModel_UIDataNoArchive;
+        }
+
+        private void ViewModel_UIDataNoArchive(object sender, Tuple<Guid, Guid> e)
+        {
+            Dispatcher.BeginInvokeOnMainThread(() =>
+            {
+                viewModel.Load.IsLoading = false;
+            });
+            hybridWebView.SetDefaultHtml();
         }
 
         private void ViewModel_UIDataReady(object sender, Tuple<Guid, string> e)
         {
+            hybridWebView.SourceFolderSet += (obj, args) =>
+            {
+                Dispatcher.BeginInvokeOnMainThread(() =>
+                {
+                    viewModel.Load.IsLoading = false;
+                });
+            };
             hybridWebView.SetFolderSource(e.Item2);
             hybridWebView.RegisterAction(async (data) =>
             {

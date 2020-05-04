@@ -8,11 +8,16 @@
              x:Class="Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView.FeatureView"
              Title="Feature View"
              Padding="0,40,0,0">
-    <ctrl:HybridWebView x:Name="hybridWebView"/>
-    <!--Uri="index.html"-->
-    <!--<ContentPage.Content>
-        <StackLayout Margin="0, 40, 0, 0">
-            <ctrl:HybridWebView x:Name="hybridWebView" Uri="index.html" />
-        </StackLayout>
-    </ContentPage.Content>-->
+    <Grid>
+        <ctrl:HybridWebView x:Name="hybridWebView"/>
+        <ContentView x:Name="actOverlay" IsVisible="{Binding Load.IsLoading}" 
+                         HorizontalOptions="FillAndExpand" 
+                         VerticalOptions="FillAndExpand"
+                         >
+            <StackLayout>
+                <ActivityIndicator IsVisible="True" IsRunning="True" x:Name="busyActivity" Style="{DynamicResource ActivityIndicator}"/>
+                <Label Style="{DynamicResource ActivityIndicatorLabel}" Text="Loading feature UI" />
+            </StackLayout>
+        </ContentView>
+    </Grid>
 </ContentPage>

@@ -106,8 +106,6 @@ namespace Rediscovery.Features.DesktopFeatures
                 catch (Exception ex)
                 {
                     _logger.Error(ex);
-                } finally
-                {
                     callback?.Invoke(false, directory);
                 }
             });
