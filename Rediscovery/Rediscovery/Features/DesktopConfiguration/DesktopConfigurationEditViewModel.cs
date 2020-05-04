@@ -24,6 +24,13 @@ namespace Rediscovery.Features.DesktopConfiguration
             set { SetProperty(ref item, value); }
         }
 
+        bool isConnectEnabled = false;
+        public bool IsConnectEnabled
+        {
+            get { return isConnectEnabled; }
+            set { SetProperty(ref isConnectEnabled, value); }
+        }
+
         public Command Connect { get; }
         public LoadBinding Load { get; set; }
 
@@ -40,10 +47,12 @@ namespace Rediscovery.Features.DesktopConfiguration
             {
                 Title = "Edit Device";
                 Item = item;
+                IsConnectEnabled = true;
             }
             else
             {
                 // TODO: change default Values for new connection
+                IsConnectEnabled = false;
                 Title = "New Device";
                 Item = new DesktopConfigurationModel
                 {
@@ -70,7 +79,11 @@ namespace Rediscovery.Features.DesktopConfiguration
                 {
                     Load.IsLoading = false;
                 }
+            }, () =>
+            {
+                return IsConnectEnabled;
             });
+            Connect.ChangeCanExecute();
         }
 
         private void Auth_ManifestReceived(object sender, Tuple<DesktopConfiguration.DesktopConfigurationModel, List<Features.Connection.Models.ConnectionManifestFeature>> e)
@@ -106,6 +119,8 @@ namespace Rediscovery.Features.DesktopConfiguration
                 });
                 if (result.Item1)
                 {
+                    IsConnectEnabled = true;
+                    Connect.ChangeCanExecute();
                     Item = result.Item2;
                     MessagingCenter.Send(this, "refresh_desktop_configuration", Item);
                 }
