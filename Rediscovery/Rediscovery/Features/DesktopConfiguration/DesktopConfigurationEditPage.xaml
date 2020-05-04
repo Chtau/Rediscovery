@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:flex="clr-namespace:Flex.Controls;assembly=Flex"
              mc:Ignorable="d"
              x:Class="Rediscovery.Features.DesktopConfiguration.DesktopConfigurationEditPage">
     <ContentPage.ToolbarItems>
@@ -22,7 +23,7 @@
                         <Label Text="Connection Name" FontSize="Medium" />
                         <Entry Text="{Binding Item.DisplayName}" FontSize="Small" />
                         <Label Text="IP Address" FontSize="Medium" />
-                        <Editor Text="{Binding Item.LastKnownAddress}" FontSize="Small" Margin="0" />
+                        <Editor Text="{Binding Item.LastKnownAddress}" Keyboard="Url" FontSize="Small" Margin="0" />
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -43,7 +44,12 @@
                     </StackLayout>
                 </ScrollView>
                 <StackLayout Grid.Row="1">
-                    <Button Text="Connect" Command="{Binding Connect}" />
+                    <flex:FlexButton 
+                        Icon="remote_control_fill.png"
+                    Text="Connect"
+                    Margin="5"
+                    ClickedCommand="{Binding Connect}"
+                    Style="{StaticResource LargeFlexButton}"/>
                 </StackLayout>
             </Grid>
             <ContentView x:Name="actOverlay" IsVisible="{Binding Load.IsLoading}" 

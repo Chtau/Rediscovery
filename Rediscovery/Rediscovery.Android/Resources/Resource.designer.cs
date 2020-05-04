@@ -6470,49 +6470,52 @@ namespace Rediscovery.Droid
 			public const int play_white = 2131165506;
 			
 			// aapt resource value: 0x7F070143
-			public const int rewind_large_white = 2131165507;
+			public const int remote_control_fill = 2131165507;
 			
 			// aapt resource value: 0x7F070144
-			public const int rewind_white = 2131165508;
+			public const int rewind_large_white = 2131165508;
 			
 			// aapt resource value: 0x7F070145
-			public const int save_fill = 2131165509;
+			public const int rewind_white = 2131165509;
 			
 			// aapt resource value: 0x7F070146
-			public const int save_fill_green = 2131165510;
+			public const int save_fill = 2131165510;
 			
 			// aapt resource value: 0x7F070147
-			public const int skip_back_white = 2131165511;
+			public const int save_fill_green = 2131165511;
 			
 			// aapt resource value: 0x7F070148
-			public const int skip_forward_white = 2131165512;
+			public const int skip_back_white = 2131165512;
 			
 			// aapt resource value: 0x7F070149
-			public const int speed_large_white = 2131165513;
+			public const int skip_forward_white = 2131165513;
 			
 			// aapt resource value: 0x7F07014A
-			public const int speed_white = 2131165514;
+			public const int speed_large_white = 2131165514;
 			
 			// aapt resource value: 0x7F07014B
-			public const int stop_white = 2131165515;
+			public const int speed_white = 2131165515;
 			
 			// aapt resource value: 0x7F07014C
-			public const int tooltip_frame_dark = 2131165516;
+			public const int stop_white = 2131165516;
 			
 			// aapt resource value: 0x7F07014D
-			public const int tooltip_frame_light = 2131165517;
+			public const int tooltip_frame_dark = 2131165517;
 			
 			// aapt resource value: 0x7F07014E
-			public const int volume_down_white = 2131165518;
+			public const int tooltip_frame_light = 2131165518;
 			
 			// aapt resource value: 0x7F07014F
-			public const int volume_mute_white = 2131165519;
+			public const int volume_down_white = 2131165519;
 			
 			// aapt resource value: 0x7F070150
-			public const int volume_up_white = 2131165520;
+			public const int volume_mute_white = 2131165520;
 			
 			// aapt resource value: 0x7F070151
-			public const int xamarin_logo = 2131165521;
+			public const int volume_up_white = 2131165521;
+			
+			// aapt resource value: 0x7F070152
+			public const int xamarin_logo = 2131165522;
 			
 			static Drawable()
 			{
