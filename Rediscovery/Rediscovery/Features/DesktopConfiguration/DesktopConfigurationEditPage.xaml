@@ -6,9 +6,9 @@
              mc:Ignorable="d"
              x:Class="Rediscovery.Features.DesktopConfiguration.DesktopConfigurationEditPage">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Save" Clicked="Save_Clicked" />
-        <ToolbarItem Text="Remove" Clicked="Remove_Clicked" />
-        <ToolbarItem Text="Back" Clicked="Back_Clicked" />
+        <ToolbarItem Text="Save" Clicked="Save_Clicked" Icon="save_fill_green.png"/>
+        <ToolbarItem Text="Remove" Clicked="Remove_Clicked" Icon="delete_bin_fill_red.png"/>
+        <ToolbarItem Text="Back" Clicked="Back_Clicked" Icon="close_white.png"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid>

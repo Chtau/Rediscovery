@@ -6,7 +6,7 @@
              mc:Ignorable="d"
              x:Class="Rediscovery.Features.Settings.SettingPage">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Save" Command="{Binding SaveCommand}" Icon="save_fill.png"/>
+        <ToolbarItem Text="Save" Command="{Binding SaveCommand}" Icon="save_fill_green.png"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid>
