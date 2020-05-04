@@ -1,6 +1,7 @@
 ﻿using Rediscovery.Features.Authentication;
 using Rediscovery.Features.Authentication.Models;
 using Rediscovery.Features.Connection;
+using Rediscovery.Features.DesktopConfiguration;
 using Rediscovery.Services;
 using Rediscovery.ViewModels;
 using System;
@@ -27,6 +28,12 @@ namespace Rediscovery.Features.DesktopFeatures
 
         public DesktopFeaturesViewModel()
         {
+            OnLoadFeatures();
+            entityManager.ConnectionManifestFeatures.CollectionChanged += ConnectionManifestFeatures_CollectionChanged;
+        }
+
+        private void OnLoadFeatures()
+        {
             if (ConnectionManifestFeaturesControl == null)
                 ConnectionManifestFeaturesControl = new ObservableCollection<Features.Connection.Models.ConnectionManifestFeature>();
             var items = entityManager.GetConnectedConnectionManifestFeature();
@@ -37,7 +44,6 @@ namespace Rediscovery.Features.DesktopFeatures
                     ConnectionManifestFeaturesControl.Add(item);
                 }
             }
-            entityManager.ConnectionManifestFeatures.CollectionChanged += ConnectionManifestFeatures_CollectionChanged;
         }
 
         private void ConnectionManifestFeatures_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

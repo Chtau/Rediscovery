@@ -16,6 +16,7 @@ namespace Rediscovery.Features.DesktopConfiguration
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
         private IConnect auth => DependencyService.Get<IConnect>() ?? new Connect();
+        private IManifestFeatureEntityManager entityManager => DependencyService.Get<IManifestFeatureEntityManager>() ?? new ManifestFeatureEntityManager();
 
         DesktopConfigurationModel item;
         public DesktopConfigurationModel Item
@@ -134,9 +135,12 @@ namespace Rediscovery.Features.DesktopConfiguration
         {
             try
             {
-                await desktopStore.DeleteItemAsync(Item.Id);
-                // TODO: clear all cache for this device (manifest, ui ...)
-                MessagingCenter.Send(this, "refresh_desktop_configuration", Item);
+                var result = await desktopStore.DeleteItemAsync(Item.Id);
+                if (result)
+                {
+                    entityManager.Clear(Item.Id);
+                    MessagingCenter.Send(this, "refresh_desktop_configuration", Item);
+                }
             }
             catch (Exception ex)
             {
