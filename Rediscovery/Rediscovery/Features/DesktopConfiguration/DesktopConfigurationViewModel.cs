@@ -25,8 +25,7 @@ namespace Rediscovery.Features.DesktopConfiguration
             Title = "Desktop";
             Items = new ObservableCollection<DesktopConfigurationModel>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadDeviceItemsCommand());
-            
-            MessagingCenter.Subscribe<DesktopConfigurationEditViewModel>(this, "refresh_desktop_configuration", async (obj) =>
+            MessagingCenter.Subscribe<DesktopConfigurationEditViewModel, DesktopConfigurationModel>(this, "refresh_desktop_configuration", async (obj, args) =>
             {
                 await ExecuteLoadDeviceItemsCommand();
             });
