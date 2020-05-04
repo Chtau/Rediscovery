@@ -230,7 +230,7 @@ namespace Rediscovery.Features.Connection
                 await OnAfterChangedAuthenticationConnection(e);
             } catch (Exception ex)
             {
-                System.Diagnostics.Debug.Print(ex.ToString());
+                _logger.Error(ex);
             }
         }
 

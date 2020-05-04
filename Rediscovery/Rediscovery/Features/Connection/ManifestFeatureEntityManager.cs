@@ -28,7 +28,7 @@ namespace Rediscovery.Features.Connection
                 var removeFeatures = ConnectionManifestFeatures.Where(x => x.ConnectionId == modelId);
                 if (removeFeatures != null)
                 {
-                    foreach (var item in removeFeatures)
+                    foreach (var item in removeFeatures.ToList())
                     {
                         if (ConnectionManifestFeatures.Contains(item))
                             ConnectionManifestFeatures.Remove(item);
@@ -36,7 +36,7 @@ namespace Rediscovery.Features.Connection
                 }
             } catch (Exception ex)
             {
-                System.Diagnostics.Debug.Print(ex.ToString());
+                _logger.Error(ex);
             }
         }
 

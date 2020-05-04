@@ -60,7 +60,7 @@ namespace Rediscovery.Features.Authentication
                         HelloReceived?.Invoke(this, model);
                     } catch (Exception ex)
                     {
-                        System.Diagnostics.Debug.Print(ex.ToString());
+                        _logger.Error(ex);
                     }
                 });
             });
