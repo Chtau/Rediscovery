@@ -109,15 +109,7 @@ namespace Rediscovery.Features.DesktopConfiguration
         {
             try
             {
-                var result = await desktopStore.AddItemAsync(new DesktopConfiguration.DesktopConfigurationModel
-                {
-                    AutoConnect = Item.AutoConnect,
-                    ConnectionState = SharedCoreModels.Enums.ConnectionState.None,
-                    Id = Item.Id,
-                    LastConnection = Item.LastConnection,
-                    LastKnownAddress = Item.LastKnownAddress,
-                    DisplayName = Item.DisplayName
-                });
+                var result = await desktopStore.AddItemAsync(Item);
                 if (result.Item1)
                 {
                     IsConnectEnabled = true;
