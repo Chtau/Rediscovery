@@ -1,63 +1,38 @@
 ﻿<html>
 <body>
-    <script src="./jquery-2.1.4.min.js">
-    </script>
-    <h1>Mediaplayer Test</h1>
-    <br />
-    <p id="modelContent"></p>
-    <br />
-    Enter name: <input type="text" id="name" />
-    <br />
-    <br />
-    <button type="button" onclick="javascript: invokeCSCode($('#name').val());">Invoke C# Code</button>
-    <br />
-    <p id="result">Result:</p>
-    <script type="text/javascript">
-        var modelData = undefined;
-        var callbackFunction = null;
-        function internalChangeModel(model) {
-            modelData = model;
-            if (callbackFunction) {
-                callbackFunction(modelData);
-            }
-        }
+    <link href="materialize.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <div class="wrapper">
+        <div class="card player">
+            <div class="z-depth-1 close"><i class="material-icons">close</i></div>
+            <div class="image">
+                <div class="bottom-content">
+                    <div class="repeat"><i class="material-icons">repeat</i></div>
+                    <div class="title">
+                        <h6 class="song-name">Someone</h6><span class="artist-name">Hozier</span>
+                    </div>
+                    <div class="shuffle"><i class="material-icons">shuffle</i></div>
+                </div>
+            </div>
+            <div class="controls">
+                <div class="player-controls_btn player-controls__btn_add" id="player-controls__btn_add"><i class="material-icons">add</i></div>
 
-        function changeModelListener(callback) {
-            callbackFunction = callback;
-        }
-
-        function currentModel() {
-            return modelData;
-        }
-
-        function featureSend(data) {
-            jsBridge.invokeAction(data);
-        }
-
-        function log(str) {
-            $('#result').text($('#result').text() + " " + str);
-        }
-        
-
-        function invokeCSCode(data) {
-            try {
-                //log("Current Model:" + JSON.stringify(model));
-                log("Current Model:" + JSON.stringify(currentModel()));
-                if (changeModelListener) {
-                    changeModelListener((val) => {
-                        log("Received callback1:" + val);
-                    });
-                }
-
-                log("Sending Data1:" + data);
-                //invokeCSharpAction(data);
-                featureSend(data);
-            }
-            catch (err) {
-                log(err);
-            }
-        }
-        //$("#modelData").text(JSON.stringify(model));
-    </script>
+                <div class="player-controls_btn player-controls__btn_prev" id="player-controls__btn_prev"><i class="material-icons">skip_previous</i></div>
+                <div class="player-controls_btn player-controls__btn_play"><i class="material-icons">play_arrow</i></div>
+                <div class="player-controls_btn  player-controls__btn_next  player-controls__btn_disabled" title=""><i class="material-icons">skip_next</i></div>
+                <div class="player-controls_btn  player-controls__btn_share" title=""><i class="material-icons">share</i></div>
+            </div>
+            <div class="next-song">
+                <div class="cover"></div>
+                <div class="title">
+                    <span class="next-title">
+                        Next
+                    </span>
+                    <br /> Silver Moon
+                </div>
+                <div class="playlist"><i class="material-icons">queue_music</i></div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
