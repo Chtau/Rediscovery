@@ -4,11 +4,13 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:flex="clr-namespace:Flex.Controls;assembly=Flex"
+             xmlns:converter="clr-namespace:Rediscovery.Converter"
              mc:Ignorable="d"
              x:Class="Rediscovery.App">
 
     <Application.Resources>
         <ResourceDictionary>
+            <converter:ConnectionStateConverter x:Key="connectionStateConverter"/>
             <!--Global Styles-->
             <Color x:Key="Primary">#2196F3</Color>
             <Color x:Key="Foreground">#ffffff</Color>
