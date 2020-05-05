@@ -6,8 +6,12 @@
              xmlns:ctrl="clr-namespace:Rediscovery.Controls"
              mc:Ignorable="d"
              x:Class="Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView.FeatureView"
-             Title="Feature View"
-             Padding="0,40,0,0">
+             Title="{Binding Title}"
+             Padding="0,0,0,0">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem x:Name="Setting" Text="Setting" Clicked="Setting_Clicked" Icon="settings_fill.png"/>
+        <ToolbarItem x:Name="Back" Text="Back" Clicked="Back_Clicked" Icon="close_white.png"/>
+    </ContentPage.ToolbarItems>
     <Grid>
         <ctrl:HybridWebView x:Name="hybridWebView"/>
         <ContentView x:Name="actOverlay" IsVisible="{Binding Load.IsLoading}" 

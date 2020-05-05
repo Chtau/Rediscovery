@@ -81,5 +81,15 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
         {
             base.OnAppearing();
         }
+
+        private async void Back_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PopModalAsync();
+        }
+
+        private void Setting_Clicked(object sender, EventArgs e)
+        {
+
+        }
     }
 }
