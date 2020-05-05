@@ -33,7 +33,9 @@ html, body {
 }
 
 .top-content {
-    flex:auto;
+    flex: auto;
+    /*background: linear-gradient(to top right, rgba(126, 197, 49, 0.55), rgba(0, 140, 255, 0.7)), url('https://images.unsplash.com/photo-1461770354136-8f58567b617a?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&s=f0c8c34fe56f9669d1c6d129f597f895') center center;*/
+    background: linear-gradient(to top right, rgba(126, 197, 49, 0.55), rgba(0, 140, 255, 0.7)), center center;
 }
 
 .center-content {
