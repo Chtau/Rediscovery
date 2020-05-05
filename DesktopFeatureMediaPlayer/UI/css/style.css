@@ -34,17 +34,19 @@ html, body {
 
 .top-content {
     flex:auto;
-    border: 1px solid red;
 }
 
 .center-content {
-    flex: 1 1 0;
-    border: 1px solid green;
+    flex: 0 1;
 }
 
 .footer-content {
     flex: 0 1;
-    border: 1px solid blue;
+}
+
+.footer-content-wrapper {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .list {
@@ -56,33 +58,29 @@ html, body {
 }
 
 .content-info {
-    padding-right: 2rem;
-    padding-left: 2rem;
     padding-top: 1.5rem;
     padding-bottom: 1.25rem;
     text-align: center;
 }
 
 .content-buttons {
-    padding-right: 2rem;
-    padding-left: 2rem;
     padding-bottom: 2rem;
     padding-top: 1rem;
 }
 
-.info-artist, .info-album {
-    font-size: 0.75rem;
-    font-weight: 300;
-    color: #666;
+.info-artist {
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 .info-album {
+    font-size: 0.75rem;
     margin-bottom: 0.5rem;
 }
 
 .info-song {
     font-size: 1.15rem;
-    font-weight: 400;
+    font-weight: 700;
     color: #d30320;
     margin-bottom: 0.5rem;
 }
@@ -93,10 +91,27 @@ html, body {
     margin-right: auto;
 }
 
-    .list-main-buttons li:first-of-type {
-        opacity: .8;
+    .list-main-buttons li:first-of-type, .list-main-buttons li:last-of-type {
+        opacity: .6;
     }
 
-    .list-main-buttons li:last-of-type {
-        opacity: .8;
+.list-footer-buttons {
+    justify-content: center;
+}
+
+.list-footer-buttons li {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+    .list-footer-buttons li:first-of-type {
+        margin-left: 0px;
+    }
+
+    .list-footer-buttons li:last-of-type {
+        margin-right: 0px;
+    }
+
+    .list-footer-buttons li .btn-floating i {
+        color: black;
     }
