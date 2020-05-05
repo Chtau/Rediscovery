@@ -1,38 +1,41 @@
-﻿<html>
-<body>
-    <link href="materialize.min.css" rel="stylesheet">
-    <link href="style.css" rel="stylesheet">
-    <div class="wrapper">
-        <div class="card player">
-            <div class="z-depth-1 close"><i class="material-icons">close</i></div>
-            <div class="image">
-                <div class="bottom-content">
-                    <div class="repeat"><i class="material-icons">repeat</i></div>
-                    <div class="title">
-                        <h6 class="song-name">Someone</h6><span class="artist-name">Hozier</span>
-                    </div>
-                    <div class="shuffle"><i class="material-icons">shuffle</i></div>
-                </div>
-            </div>
-            <div class="controls">
-                <div class="player-controls_btn player-controls__btn_add" id="player-controls__btn_add"><i class="material-icons">add</i></div>
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+    <link type="text/css" rel="stylesheet" href="css/style.css">
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
 
-                <div class="player-controls_btn player-controls__btn_prev" id="player-controls__btn_prev"><i class="material-icons">skip_previous</i></div>
-                <div class="player-controls_btn player-controls__btn_play"><i class="material-icons">play_arrow</i></div>
-                <div class="player-controls_btn  player-controls__btn_next  player-controls__btn_disabled" title=""><i class="material-icons">skip_next</i></div>
-                <div class="player-controls_btn  player-controls__btn_share" title=""><i class="material-icons">share</i></div>
+<body>
+    <div class="wrapper">
+        <div class="top-content">
+
+        </div>
+        <div class="center-content">
+            <div class="content-info">
+                <div class="info-album">The Hunting Party</div>
+                <div class="info-song">Final Masquerade</div>
+                <div class="info-artist">Linkin Park</div>
             </div>
-            <div class="next-song">
-                <div class="cover"></div>
-                <div class="title">
-                    <span class="next-title">
-                        Next
-                    </span>
-                    <br /> Silver Moon
-                </div>
-                <div class="playlist"><i class="material-icons">queue_music</i></div>
+
+            <div class="content-buttons">
+                <ul class="list list-main-buttons">
+                    <li><a class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">skip_previous</i></a></li>
+                    <li><a class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">play_arrow</i></a></li>
+                    <li><a class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">skip_next</i></a></li>
+                </ul>
             </div>
         </div>
+        <div class="footer-content">
+            <ul class="list">
+                <li><a class="btn-floating btn-small waves-effect waves-light red"><i class="material-icons">skip_previous</i></a></li>
+                <li><a class="btn-floating btn-small waves-effect waves-light red"><i class="material-icons">skip_previous</i></a></li>
+                <li><a class="btn-floating btn-small waves-effect waves-light red"><i class="material-icons">skip_previous</i></a></li>
+                <li><a class="btn-floating btn-small waves-effect waves-light red"><i class="material-icons">skip_previous</i></a></li>
+            </ul>
+        </div>
     </div>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
 </body>
 </html>
