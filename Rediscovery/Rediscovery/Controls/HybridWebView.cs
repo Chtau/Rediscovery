@@ -47,6 +47,8 @@ namespace Rediscovery.Controls
                 var source = new HtmlWebViewSource();
                 if (!string.IsNullOrWhiteSpace(directory) && System.IO.Directory.Exists(directory))
                 {
+                    //var files = System.IO.Directory.GetFiles(directory);
+                    //var dirs = System.IO.Directory.GetDirectories(directory);
                     source.BaseUrl = "file://" + directory + (!directory.EndsWith("/") ? "/" : "");
                     // find start file
                     string startFile = htmlUIService.GetIndexFile(directory);
@@ -73,6 +75,7 @@ namespace Rediscovery.Controls
         {
             Dispatcher.BeginInvokeOnMainThread(() =>
             {
+                System.Diagnostics.Debug.Print("Invoke JS model change with data:" + data);
                 this.Eval($"internalChangeModel({data})");
             });
         }
