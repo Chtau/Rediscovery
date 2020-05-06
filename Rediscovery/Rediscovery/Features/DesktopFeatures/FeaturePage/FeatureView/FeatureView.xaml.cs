@@ -57,36 +57,19 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
             hybridWebView.RegisterAction((data) =>
             {
                 viewModel.Send(data);
-                /*await DisplayAlert("Alert", "Hello " + data, "OK");
-                Dispatcher.BeginInvokeOnMainThread(async () =>
-                {
-                    var result = await hybridWebView.EvaluateJavaScriptAsync("document.body.innerHTML");
-                    System.Diagnostics.Debug.Print(result);
-                });*/
             });
-            
-            hybridWebView.Navigated += async (obj, args) =>
-            {
-                //hybridWebView.SetModel(Newtonsoft.Json.JsonConvert.SerializeObject(DateTime.Now));
-            };
-            /*Task.Run(async () =>
-            {
-                await hybridWebView.SetModel(Newtonsoft.Json.JsonConvert.SerializeObject(DateTime.Now));
-            });*/
-            /*hybridWebView.SetModel(Newtonsoft.Json.JsonConvert.SerializeObject(DateTime.Now));
-            Task.Run(async () =>
-            {
-                do
-                {
-                    await Task.Delay(30000);
-                    hybridWebView.SetModel(Newtonsoft.Json.JsonConvert.SerializeObject(DateTime.Now));
-                } while (true);
-            });*/
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            viewModel.Start();
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            viewModel.Stop();
         }
 
         private async void Back_Clicked(object sender, EventArgs e)
