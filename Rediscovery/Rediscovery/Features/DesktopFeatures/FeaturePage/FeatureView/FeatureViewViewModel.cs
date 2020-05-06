@@ -44,6 +44,14 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
             set { SetProperty(ref currentTitle, value); }
         }
 
+        private DeviceFeatureSetting featureSetting;
+
+        public DeviceFeatureSetting FeatureSetting
+        {
+            get { return featureSetting; }
+            set { SetProperty(ref featureSetting, value); }
+        }
+
         public LoadBinding Load { get; set; }
 
         public FeatureViewViewModel(Guid desktopConfigId, Features.Connection.Models.ConnectionManifestFeature connectionManifestFeature): base(connectionManifestFeature)
@@ -64,8 +72,31 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
                     UIDataNoArchive?.Invoke(this, new Tuple<Guid, Guid>(DesktopConfigId, ConnectionManifestFeature.FeatureId));
                 }
             });
+            featureUIService.GetProfil(DesktopConfigId, ConnectionManifestFeature.FeatureId, (result, profiles) =>
+            {
+                if (result)
+                {
+                    if (profiles?.Count > 0)
+                    {
+                        foreach (var item in profiles)
+                        {
+                            Profiles.Add(item);
+                        }
+                        SelectedProfile = connectionManifestFeature.Profiles.First();
+                        OnProfileChanged();
+                    }
+                }
+            });
+            featureUIService.GetSetting(DesktopConfigId, ConnectionManifestFeature.FeatureId, (result, settings) =>
+            {
+                if (result)
+                {
+                    FeatureSetting = settings;
+                }
+            });
+
             //base.ReceivedData += FeatureViewViewModel_ReceivedData;
-            if (connectionManifestFeature.Profiles?.Count > 0)
+            /*if (connectionManifestFeature.Profiles?.Count > 0)
             {
                 foreach (var item in connectionManifestFeature.Profiles)
                 {
@@ -77,7 +108,8 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
             else
             {
                 Title = connectionManifestFeature.FeatureDisplayName;
-            }
+            }*/
+            Title = connectionManifestFeature.FeatureDisplayName;
         }
 
         public void Send(object sendModel)

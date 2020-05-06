@@ -72,6 +72,9 @@
     <EmbeddedResource Update="Features\DesktopFeatures\DesktopFeaturesPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Features\DesktopFeatures\FeaturePage\FeatureView\FeatureSettingPopup.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Features\DesktopFeatures\FeaturePage\FeatureView\FeatureView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

@@ -46,7 +46,7 @@
 
         function log(str) {
             var div = document.getElementById('result');
-            div.innerHTML += + " " + str;
+            div.innerHTML = JSON.stringify(str);
         }
         function playClick() {
             featureSend("1");
