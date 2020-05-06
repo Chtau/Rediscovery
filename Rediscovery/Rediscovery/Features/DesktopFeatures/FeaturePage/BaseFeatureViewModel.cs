@@ -26,6 +26,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage
 
         private void FeatureExchange_DesktopResponseReceived(object sender, (Guid connectionId, Guid featureId, string profileId, object data) e)
         {
+            _logger.Message($"{DateTime.Now.ToShortTimeString()} Feature exchange received. (connectionId:{e.connectionId} featureId:{e.featureId} profileId:{e.profileId} data:{e.data})");
             if (_connectionManifestFeature.ConnectionId == e.connectionId && _connectionManifestFeature.FeatureId == e.featureId)
             {
                 Receive(e.data);
@@ -35,6 +36,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage
 
         public virtual void Send(string profileId, object data)
         {
+            _logger.Message($"{DateTime.Now.ToShortTimeString()} Try to send from Feature. (profileId:{profileId} data:{data})");
             featureExchange.Send(_connectionManifestFeature, profileId, data);
         }
 

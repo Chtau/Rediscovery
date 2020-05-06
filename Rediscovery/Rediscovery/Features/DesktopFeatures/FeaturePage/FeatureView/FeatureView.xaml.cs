@@ -27,6 +27,12 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
             viewModel.Load.IsLoading = true;
             viewModel.UIDataReady += ViewModel_UIDataReady;
             viewModel.UIDataNoArchive += ViewModel_UIDataNoArchive;
+            viewModel.ReceivedData += ViewModel_ReceivedData;
+        }
+
+        private void ViewModel_ReceivedData(object sender, object e)
+        {
+            hybridWebView.SetModel(e?.ToString());
         }
 
         private void ViewModel_UIDataNoArchive(object sender, Tuple<Guid, Guid> e)
@@ -48,14 +54,15 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
                 });
             };
             hybridWebView.SetFolderSource(e.Item2);
-            hybridWebView.RegisterAction(async (data) =>
+            hybridWebView.RegisterAction((data) =>
             {
-                await DisplayAlert("Alert", "Hello " + data, "OK");
+                viewModel.Send(data);
+                /*await DisplayAlert("Alert", "Hello " + data, "OK");
                 Dispatcher.BeginInvokeOnMainThread(async () =>
                 {
                     var result = await hybridWebView.EvaluateJavaScriptAsync("document.body.innerHTML");
                     System.Diagnostics.Debug.Print(result);
-                });
+                });*/
             });
             
             hybridWebView.Navigated += async (obj, args) =>
@@ -66,7 +73,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
             {
                 await hybridWebView.SetModel(Newtonsoft.Json.JsonConvert.SerializeObject(DateTime.Now));
             });*/
-            hybridWebView.SetModel(Newtonsoft.Json.JsonConvert.SerializeObject(DateTime.Now));
+            /*hybridWebView.SetModel(Newtonsoft.Json.JsonConvert.SerializeObject(DateTime.Now));
             Task.Run(async () =>
             {
                 do
@@ -74,7 +81,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
                     await Task.Delay(30000);
                     hybridWebView.SetModel(Newtonsoft.Json.JsonConvert.SerializeObject(DateTime.Now));
                 } while (true);
-            });
+            });*/
         }
 
         protected override void OnAppearing()

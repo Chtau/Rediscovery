@@ -64,7 +64,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
                     UIDataNoArchive?.Invoke(this, new Tuple<Guid, Guid>(DesktopConfigId, ConnectionManifestFeature.FeatureId));
                 }
             });
-            base.ReceivedData += FeatureViewViewModel_ReceivedData;
+            //base.ReceivedData += FeatureViewViewModel_ReceivedData;
             if (connectionManifestFeature.Profiles?.Count > 0)
             {
                 foreach (var item in connectionManifestFeature.Profiles)
