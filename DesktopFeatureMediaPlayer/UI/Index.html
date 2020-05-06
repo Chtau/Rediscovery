@@ -40,8 +40,13 @@
     </div>
     <script type="text/javascript" src="./js/materialize.min.js"></script>
     <script>
+        function featureReceive(data) {
+            log(data);
+        }
+
         function log(str) {
-            $('#result').text($('#result').text() + " " + str);
+            var div = document.getElementById('result');
+            div.innerHTML += + " " + str;
         }
         function playClick() {
             featureSend("1");
@@ -50,12 +55,7 @@
         (function () {
             // your page initialization code here
             // the DOM will be available here
-            changeModelListener((val) => {
-                log("Received callback at " + val + ";");
-            });
-            /*changeModelListener((data) => {
-                alert(data);
-            });*/
+
         })();
     </script>
 </body>

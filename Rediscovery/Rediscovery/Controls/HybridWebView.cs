@@ -76,7 +76,9 @@ namespace Rediscovery.Controls
             Dispatcher.BeginInvokeOnMainThread(() =>
             {
                 System.Diagnostics.Debug.Print("Invoke JS model change with data:" + data);
-                this.Eval($"internalChangeModel({data})");
+                //this.Eval($"internalChangeModel({data})");
+                //this.Eval($"log({data})");
+                this.Eval($"featureReceive({data})");
             });
         }
 
