@@ -1,5 +1,6 @@
 ﻿using DesktopFeatureMediaPlayer.Models;
 using PluginFeature;
+using PluginFeature.Interfaces;
 using PluginFeature.Models;
 using System;
 using System.Collections.Generic;
@@ -12,17 +13,27 @@ namespace DesktopFeatureMediaPlayer
     public class DeviceFeatureMediaPlayer : BaseDeviceFeature
     {
         private List<MediaPlayerController> controllers = new List<MediaPlayerController>();
-        //private ProfileConfiguration currentProfileConfiguration;
         private DateTime updateTimer = DateTime.Now;
 
-        public DeviceFeatureMediaPlayer()//ProfileConfiguration profileConfiguration
+        public DeviceFeatureMediaPlayer()
         {
-            //currentProfileConfiguration = profileConfiguration;
             foreach (var profile in MediaPlayerDefaultProfiles.GetProfileConfigurations())
             {
                 var controller = new MediaPlayerController(profile);
                 controller.UpdateProcess += Controller_UpdateProcess;
                 controllers.Add(controller);
+            }
+        }
+
+        public override void Init(string pluginDirectory, IPluginLogger pluginLogger)
+        {
+            base.Init(pluginDirectory, pluginLogger);
+            if (controllers?.Count > 0)
+            {
+                foreach (var item in controllers)
+                {
+                    item.InitLogger(pluginLogger);
+                }
             }
         }
 
@@ -83,7 +94,7 @@ namespace DesktopFeatureMediaPlayer
                     }
                     else
                     {
-                        System.Diagnostics.Debug.Fail("MediaPlayer: Unknown object from Data received");
+                        pluginLogger?.LogCritical("MediaPlayer: Unknown object from Data received");
                     }
                 }
             }
@@ -116,13 +127,13 @@ namespace DesktopFeatureMediaPlayer
                         {
                             if (!controller.StartProcess())
                             {
-                                System.Diagnostics.Debug.Fail($"MediaPlayer: Could not start process (Id:{profileId})");
+                                pluginLogger?.LogCritical($"MediaPlayer: Could not start process (Id:{profileId})");
                                 return;
                             }
                         }
                         else
                         {
-                            System.Diagnostics.Debug.Fail($"MediaPlayer: Can't start Process. ApplicationPath is invalid (Id:{profileId})");
+                            pluginLogger?.LogCritical($"MediaPlayer: Can't start Process. ApplicationPath is invalid (Id:{profileId})");
                             return;
                         }
                     }
@@ -130,11 +141,11 @@ namespace DesktopFeatureMediaPlayer
                 }
                 else
                 {
-                    System.Diagnostics.Debug.Fail($"MediaPlayer: Process not running and no ApplicationPath to start it (Id:{profileId})");
+                    pluginLogger?.LogCritical($"MediaPlayer: Process not running and no ApplicationPath to start it (Id:{profileId})");
                 }
             } else
             {
-                System.Diagnostics.Debug.Fail($"MediaPlayer: No Controller for Profile (Id:{profileId})");
+                pluginLogger?.LogCritical($"MediaPlayer: No Controller for Profile (Id:{profileId})");
             }
         }
 

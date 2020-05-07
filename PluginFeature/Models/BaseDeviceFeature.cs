@@ -12,7 +12,7 @@ namespace PluginFeature.Models
     public abstract class BaseDeviceFeature : PluginFeature.Interfaces.IDeviceFeatureImplementation
     {
         internal string pluginDirectory = null;
-        internal IPluginLogger pluginLogger = null;
+        public IPluginLogger pluginLogger = null;
 
         public class RegisteredDevice
         {

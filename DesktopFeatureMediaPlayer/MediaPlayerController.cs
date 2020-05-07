@@ -1,4 +1,5 @@
 ﻿using DesktopFeatureMediaPlayer.Models;
+using PluginFeature.Interfaces;
 using SharedFeatureFunctions.Models;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace DesktopFeatureMediaPlayer
 {
     public class MediaPlayerController : IDisposable
     {
+        private IPluginLogger _pluginLogger;
         private CancellationTokenSource tokenSource;
 
         public event EventHandler UpdateProcess;
@@ -26,6 +28,11 @@ namespace DesktopFeatureMediaPlayer
                 throw new ArgumentNullException("ProfileConfiguration.ProcessName", "Require Process name for Media Player controller");
             if (ProfileConfiguration.CommandAvailable.Count < 1)
                 throw new ArgumentNullException("ProfileConfiguration.CommandAvailable", "Require commands to be configured Media Player controller");
+        }
+
+        public void InitLogger(IPluginLogger pluginLogger)
+        {
+            _pluginLogger = pluginLogger;
         }
 
         public void InitWatcher()
@@ -53,7 +60,7 @@ namespace DesktopFeatureMediaPlayer
                 });
             } catch (Exception ex)
             {
-                System.Diagnostics.Debug.Print(ex.ToString() + Environment.NewLine);
+                _pluginLogger?.LogError(ex.ToString());
             }
         }
 
@@ -66,7 +73,7 @@ namespace DesktopFeatureMediaPlayer
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.Print(ex.ToString() + Environment.NewLine);
+                _pluginLogger?.LogError(ex.ToString());
             }
         }
 
@@ -111,7 +118,7 @@ namespace DesktopFeatureMediaPlayer
                     return OnGetProcess()?.MainWindowHandle != null;
                 } else
                 {
-                    Debug.Fail($"MediaPlayer: Can't start Process. ApplicationPath is invalid (Path:{ProfileConfiguration.ApplicationPath})");
+                    _pluginLogger?.LogCritical($"MediaPlayer: Can't start Process. ApplicationPath is invalid (Path:{ProfileConfiguration.ApplicationPath})");
                 }
                 return false;
             }
@@ -137,11 +144,11 @@ namespace DesktopFeatureMediaPlayer
                     OnSendKeystroke(useKeys?.ToArray(), altKey, ctrlKey, shiftKey);
                 } else
                 {
-                    System.Diagnostics.Debug.Fail("Can't load Command KeyCode");
+                    _pluginLogger?.LogCritical("Can't load Command KeyCode");
                 }
             } else
             {
-                System.Diagnostics.Debug.Fail("Can't execute Command (Command not available in the Profile)");
+                _pluginLogger?.LogCritical("Can't execute Command (Command not available in the Profile)");
             }
         }
 
