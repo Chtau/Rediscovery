@@ -1,8 +1,8 @@
-﻿using SharedCoreModels.FeatureModels.MediaPlayer;
+﻿using DesktopFeatureMediaPlayer.Models;
+using SharedFeatureFunctions.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using static SharedCoreModels.FeatureModels.KeyCodes;
 
 namespace DesktopFeatureMediaPlayer
 {
@@ -22,7 +22,7 @@ namespace DesktopFeatureMediaPlayer
             var vlcCmdConfig = new CommandConfiguration
             {
                 ProfileId = vlcId,
-                CommandKeys = new Dictionary<CommandConfiguration.CommandTypes, SharedCoreModels.FeatureModels.KeyCodes.KeyCode[]>()
+                CommandKeys = new Dictionary<CommandConfiguration.CommandTypes, KeyCode[]>()
             };
             vlcCmdConfig.CommandKeys.Add(CommandConfiguration.CommandTypes.None, null);
             vlcCmdConfig.CommandKeys.Add(CommandConfiguration.CommandTypes.Fullscreen, new KeyCode[] { KeyCode.KEY_F });
@@ -56,7 +56,7 @@ namespace DesktopFeatureMediaPlayer
             var vlcCmdConfig = new CommandConfiguration
             {
                 ProfileId = vlcId,
-                CommandKeys = new Dictionary<CommandConfiguration.CommandTypes, SharedCoreModels.FeatureModels.KeyCodes.KeyCode[]>()
+                CommandKeys = new Dictionary<CommandConfiguration.CommandTypes, KeyCode[]>()
             };
             vlcCmdConfig.CommandKeys.Add(CommandConfiguration.CommandTypes.None, null);
             vlcCmdConfig.CommandKeys.Add(CommandConfiguration.CommandTypes.Fullscreen, new KeyCode[] { KeyCode.SHIFT, KeyCode.F11 });

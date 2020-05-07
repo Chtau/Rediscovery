@@ -40,16 +40,20 @@
     </div>
     <script type="text/javascript" src="./js/materialize.min.js"></script>
     <script>
-        function featureReceive(data) {
-            log(data);
-        }
-
         function log(str) {
             var div = document.getElementById('result');
             div.innerHTML = JSON.stringify(str);
         }
+        function featureReceive(data) {
+            log(data);
+        }
+        function send(index) {
+            var model = { commandIndex: index };
+            log(model);
+            featureSend(JSON.stringify(model));
+        }
         function playClick() {
-            featureSend("1");
+            send(1);
         };
 
         (function () {

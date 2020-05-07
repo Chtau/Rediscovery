@@ -1,5 +1,4 @@
 ﻿using PluginFeature.Models;
-using SharedCoreModels.FeatureModels.MediaPlayer;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
-using static SharedCoreModels.FeatureModels.MediaPlayer.CommandConfiguration;
 
 namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
 {
@@ -37,13 +35,13 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             set { SetProperty(ref currentTitle, value); }
         }
 
-        private List<CommandTypes> commands;
+        /*private List<CommandTypes> commands;
 
         public List<CommandTypes> Commands
         {
             get { return commands; }
             set { SetProperty(ref commands, value); }
-        }
+        }*/
 
         public ICommand PlayCommand { get; set; }
         public ICommand FullscreenExitCommand { get; set; }
@@ -61,7 +59,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
 
         public MediaPlayerFeatureViewModel(Features.Connection.Models.ConnectionManifestFeature connectionManifestFeature) : base(connectionManifestFeature)
         {
-            base.ReceivedData += MediaPlayerFeatureViewModel_ReceivedData;
+            //base.ReceivedData += MediaPlayerFeatureViewModel_ReceivedData;
             OnSetCommand();
             if (connectionManifestFeature.Profiles?.Count > 0)
             {
@@ -79,7 +77,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
 
         private void OnSetCommand()
         {
-            PlayCommand = new Command(execute: () => Send(CommandTypes.PlayPause),
+            /*PlayCommand = new Command(execute: () => Send(CommandTypes.PlayPause),
                 canExecute: () => Commands.Contains(CommandTypes.PlayPause) && processIsRunning);
 
             FullscreenExitCommand = new Command(execute: () => Send(CommandTypes.FullscreenExit),
@@ -117,7 +115,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
 
             JumpBackwardCommand = new Command(execute: () => Send(CommandTypes.JumpBackward),
                 canExecute: () => Commands.Contains(CommandTypes.JumpBackward) && processIsRunning);
-            OnChangeCanExecute();
+            OnChangeCanExecute();*/
         }
 
         private void OnChangeCanExecute()
@@ -137,7 +135,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             (JumpBackwardCommand as Command)?.ChangeCanExecute();
         }
 
-        public void Send(CommandTypes cmd)
+        /*public void Send(CommandTypes cmd)
         {
             base.Send(SelectedProfile?.Id, new ClientCommandSendModel(_connectionManifestFeature.FeatureId, SelectedProfile.Id, cmd));
         }
@@ -155,7 +153,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
                 }
                 CurrentTitle = stateData.CurrentTitle;
             }
-        }
+        }*/
 
         private void OnProfileChanged()
         {
@@ -166,7 +164,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
             {
                 try
                 {
-                    Commands = System.Text.Json.JsonSerializer.Deserialize<List<CommandTypes>>(SelectedProfile.ProfileData?.ToString());
+                    //Commands = System.Text.Json.JsonSerializer.Deserialize<List<CommandTypes>>(SelectedProfile.ProfileData?.ToString());
                 }
                 catch (Exception ex)
                 {

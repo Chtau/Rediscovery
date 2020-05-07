@@ -9,8 +9,4 @@
     <ProjectReference Include="..\PluginFeature\PluginFeature.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DeviceFeature\" />
-  </ItemGroup>
-
 </Project>

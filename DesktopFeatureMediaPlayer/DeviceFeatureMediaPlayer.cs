@@ -1,6 +1,6 @@
-﻿using PluginFeature;
+﻿using DesktopFeatureMediaPlayer.Models;
+using PluginFeature;
 using PluginFeature.Models;
-using SharedCoreModels.FeatureModels.MediaPlayer;
 using System;
 using System.Collections.Generic;
 using System.IO.Compression;
@@ -37,7 +37,7 @@ namespace DesktopFeatureMediaPlayer
                     var controller = OnGetController(profile.Id);
                     foreach (var deviceId in RegisteredDevices)
                     {
-                        var dataObj = new MediaPlayerStateData
+                        var dataObj = new Models.MediaPlayerStateData
                         {
                             ProcessRunning = controller.ProcessRunning,
                             CurrentTitle = controller.CurrentTitle
@@ -76,10 +76,10 @@ namespace DesktopFeatureMediaPlayer
             {
                 if (!string.IsNullOrWhiteSpace(data.Data?.ToString()))
                 {
-                    var commandModel = Newtonsoft.Json.JsonConvert.DeserializeObject<ClientCommandSendModel>(data.Data?.ToString());
+                    var commandModel = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.CommandModel>(data.Data?.ToString());
                     if (commandModel != null)
                     {
-                        OnHandleCommand(commandModel);
+                        OnHandleCommand(data.ProfileId, commandModel);
                     }
                     else
                     {
@@ -103,9 +103,9 @@ namespace DesktopFeatureMediaPlayer
             return profiles;
         }
 
-        private void OnHandleCommand(ClientCommandSendModel commandModel)
+        private void OnHandleCommand(string profileId, Models.CommandModel commandModel)
         {
-            var controller = OnGetController(new Guid(commandModel.ProfileId));
+            var controller = OnGetController(new Guid(profileId));
             if (controller != null)
             {
                 if (controller.ProcessRunning || !string.IsNullOrWhiteSpace(controller.ProfileConfiguration.ApplicationPath))
@@ -116,25 +116,25 @@ namespace DesktopFeatureMediaPlayer
                         {
                             if (!controller.StartProcess())
                             {
-                                System.Diagnostics.Debug.Fail($"MediaPlayer: Could not start process (Id:{commandModel.ProfileId})");
+                                System.Diagnostics.Debug.Fail($"MediaPlayer: Could not start process (Id:{profileId})");
                                 return;
                             }
                         }
                         else
                         {
-                            System.Diagnostics.Debug.Fail($"MediaPlayer: Can't start Process. ApplicationPath is invalid (Id:{commandModel.ProfileId})");
+                            System.Diagnostics.Debug.Fail($"MediaPlayer: Can't start Process. ApplicationPath is invalid (Id:{profileId})");
                             return;
                         }
                     }
-                    controller.ExecuteCommand(commandModel.Command);
+                    controller.ExecuteCommand((CommandConfiguration.CommandTypes)commandModel.CommandIndex);
                 }
                 else
                 {
-                    System.Diagnostics.Debug.Fail($"MediaPlayer: Process not running and no ApplicationPath to start it (Id:{commandModel.ProfileId})");
+                    System.Diagnostics.Debug.Fail($"MediaPlayer: Process not running and no ApplicationPath to start it (Id:{profileId})");
                 }
             } else
             {
-                System.Diagnostics.Debug.Fail($"MediaPlayer: No Controller for Profile (Id:{commandModel.ProfileId})");
+                System.Diagnostics.Debug.Fail($"MediaPlayer: No Controller for Profile (Id:{profileId})");
             }
         }
 

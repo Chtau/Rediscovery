@@ -1,4 +1,5 @@
-﻿using SharedCoreModels.FeatureModels.MediaPlayer;
+﻿using DesktopFeatureMediaPlayer.Models;
+using SharedFeatureFunctions.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,8 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using static SharedCoreModels.FeatureModels.KeyCodes;
-using static SharedCoreModels.FeatureModels.MediaPlayer.CommandConfiguration;
 
 namespace DesktopFeatureMediaPlayer
 {
@@ -119,9 +118,9 @@ namespace DesktopFeatureMediaPlayer
             return true;
         }
 
-        public void ExecuteCommand(CommandTypes commandType)
+        public void ExecuteCommand(CommandConfiguration.CommandTypes commandType)
         {
-            if (commandType == CommandTypes.None)
+            if (commandType == CommandConfiguration.CommandTypes.None)
                 return;
             if (ProfileConfiguration.CommandAvailable.Contains(commandType))
             {

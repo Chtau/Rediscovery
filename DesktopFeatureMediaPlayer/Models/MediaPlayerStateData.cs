@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedCoreModels.FeatureModels.MediaPlayer
+namespace DesktopFeatureMediaPlayer.Models
 {
     public class MediaPlayerStateData
     {

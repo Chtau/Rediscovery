@@ -1,8 +1,8 @@
-﻿using System;
+﻿using SharedFeatureFunctions.Models;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
-using static SharedCoreModels.FeatureModels.KeyCodes;
 using static SharedFeatureFunctions.Native.Windows.Native;
 
 namespace SharedFeatureFunctions

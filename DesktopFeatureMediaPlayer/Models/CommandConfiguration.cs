@@ -1,8 +1,9 @@
-﻿using System;
+﻿using SharedFeatureFunctions.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedCoreModels.FeatureModels.MediaPlayer
+namespace DesktopFeatureMediaPlayer.Models
 {
     public class CommandConfiguration
     {
@@ -25,7 +26,7 @@ namespace SharedCoreModels.FeatureModels.MediaPlayer
         }
 
         public Guid ProfileId { get; set; }
-        public Dictionary<CommandTypes, KeyCodes.KeyCode[]> CommandKeys { get; set; }
+        public Dictionary<CommandTypes, KeyCode[]> CommandKeys { get; set; }
 
         public List<CommandTypes> GetConfiguratedCommands()
         {
