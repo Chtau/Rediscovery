@@ -37,16 +37,12 @@ namespace DesktopFeatureMediaPlayer
                     var controller = OnGetController(profile.Id);
                     foreach (var deviceId in RegisteredDevices)
                     {
-                        var data = new DeviceFeatureData
+                        var dataObj = new MediaPlayerStateData
                         {
-                            Data = new MediaPlayerStateData
-                            {
-                                ProcessRunning = controller.ProcessRunning,
-                                CurrentTitle = controller.CurrentTitle
-                            },
-                            DeviceId = deviceId,
-                            ProfileId = profile.Id.ToString()
+                            ProcessRunning = controller.ProcessRunning,
+                            CurrentTitle = controller.CurrentTitle
                         };
+                        var data = new DeviceFeatureData(deviceId, GetDeviceFeatureInfo().Id, profile.Id.ToString(), dataObj);
                         OnSendData(this, data);
                     }
                 }

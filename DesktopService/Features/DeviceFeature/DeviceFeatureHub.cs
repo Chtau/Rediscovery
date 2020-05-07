@@ -46,12 +46,7 @@ namespace DesktopService.Features.DeviceFeature
             var feature = _featureService.GetFeature(featureId);
             if (feature != null)
             {
-                var val = new DeviceFeatureData
-                {
-                    Data = data,
-                    DeviceId = Context.UserIdentifier,
-                    ProfileId = profileId
-                };
+                var val = new DeviceFeatureData(Context.UserIdentifier, featureId, profileId, data);
                 feature.ReceiveData(val);
             }
         }

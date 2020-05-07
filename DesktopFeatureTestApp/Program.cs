@@ -28,8 +28,8 @@ namespace DesktopFeatureTestApp
                 Console.WriteLine(e.Data);
             };
             feature.Init(null, null);
-            feature.ReceiveData(new DeviceFeatureData { Data = "echo Hallo" });
-            feature.ReceiveData(new DeviceFeatureData { Data = "echo World" });
+            //feature.ReceiveData(new DeviceFeatureData { Data = "echo Hallo" });
+            //feature.ReceiveData(new DeviceFeatureData { Data = "echo World" });
         }
 
         static void MediaPlayerFeature()

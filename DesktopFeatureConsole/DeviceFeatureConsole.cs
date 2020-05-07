@@ -18,11 +18,7 @@ namespace DesktopFeatureConsole
 
         private void Terminal_Output(object sender, CommandQueue<string, List<string>> e)
         {
-            var data = new DeviceFeatureData
-            {
-                Data = e.OutgoingData[e.OutgoingData.Count - 1],
-                DeviceId = e.DeviceId
-            };
+            var data = new DeviceFeatureData(e.DeviceId, GetDeviceFeatureInfo().Id, null, e.OutgoingData[e.OutgoingData.Count - 1]);
             OnSendData(this, data);
         }
 
