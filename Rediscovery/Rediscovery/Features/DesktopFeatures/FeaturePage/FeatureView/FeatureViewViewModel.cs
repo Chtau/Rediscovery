@@ -35,14 +35,6 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
             }
         }
 
-        private string currentTitle;
-
-        public string CurrentTitle
-        {
-            get { return currentTitle; }
-            set { SetProperty(ref currentTitle, value); }
-        }
-
         private DeviceFeatureSetting featureSetting;
 
         public DeviceFeatureSetting FeatureSetting
@@ -99,7 +91,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
 
         private void FeatureViewViewModel_ReceivedData(object sender, Tuple<string, object> e)
         {
-            if (SelectedProfile == null || SelectedProfile.Id == e.Item1)
+            if (SelectedProfile == null || string.Equals(SelectedProfile.Id, e.Item1, StringComparison.OrdinalIgnoreCase))
                 ReceivedProfilData?.Invoke(this, e.Item2);
         }
 
@@ -110,7 +102,6 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
 
         private void OnProfileChanged()
         {
-            CurrentTitle = "";
             Title = SelectedProfile.DisplayName;
         }
     }
