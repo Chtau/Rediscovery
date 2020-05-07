@@ -146,7 +146,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.MediaPlayer
         private void MediaPlayerFeatureViewModel_ReceivedData(object sender, object e)
         {
             MediaPlayerStateData stateData = Newtonsoft.Json.JsonConvert.DeserializeObject<MediaPlayerStateData>(e?.ToString());
-            if (stateData != null && SelectedProfile != null && string.Equals(SelectedProfile.Id, stateData.ProfileId, StringComparison.OrdinalIgnoreCase))
+            if (stateData != null)// && SelectedProfile != null && string.Equals(SelectedProfile.Id, stateData.ProfileId, StringComparison.OrdinalIgnoreCase))
             {
                 if (processIsRunning != stateData.ProcessRunning)
                 {

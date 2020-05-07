@@ -53,10 +53,10 @@ namespace Rediscovery.Features.DesktopFeatures
                 if (featureHub != null)
                 {
                     featureHub.Remove("ClientResponse");
-                    featureHub.On<Guid, object>("ClientResponse", (Guid featureId, object data) =>
+                    featureHub.On<Guid, string, object>("ClientResponse", (Guid featureId, string profileId, object data) =>
                     {
                         _logger.Message($"Desktop response received ({DateTime.Now})");
-                        DesktopResponseReceived?.Invoke(this, (model.Id, featureId, null, data));
+                        DesktopResponseReceived?.Invoke(this, (model.Id, featureId, profileId, data));
                     });
                 }
             } else

@@ -42,10 +42,10 @@ namespace DesktopFeatureMediaPlayer
                             Data = new MediaPlayerStateData
                             {
                                 ProcessRunning = controller.ProcessRunning,
-                                CurrentTitle = controller.CurrentTitle,
-                                ProfileId = profile.Id.ToString()
+                                CurrentTitle = controller.CurrentTitle
                             },
-                            DeviceId = deviceId
+                            DeviceId = deviceId,
+                            ProfileId = profile.Id.ToString()
                         };
                         OnSendData(this, data);
                     }

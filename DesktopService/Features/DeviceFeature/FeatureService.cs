@@ -81,8 +81,8 @@ namespace DesktopService.Features.DeviceFeature
 
         private void ResponseToClient(Guid featureId, DeviceFeatureData data)
         {
-            System.Diagnostics.Debug.Print($"Feature (id: {featureId}) response =>" + data.Data);
-            _hubContext.Clients.User(data.DeviceId).SendAsync("ClientResponse", featureId, data.Data);
+            System.Diagnostics.Debug.Print($"Feature (id: {featureId} profile: {data.ProfileId}) response =>" + data.Data);
+            _hubContext.Clients.User(data.DeviceId).SendAsync("ClientResponse", featureId, data.ProfileId, data.Data);
         }
     }
 }
