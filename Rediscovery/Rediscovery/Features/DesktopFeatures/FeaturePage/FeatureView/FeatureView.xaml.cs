@@ -27,10 +27,10 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
             viewModel.Load.IsLoading = true;
             viewModel.UIDataReady += ViewModel_UIDataReady;
             viewModel.UIDataNoArchive += ViewModel_UIDataNoArchive;
-            viewModel.ReceivedData += ViewModel_ReceivedData;
+            viewModel.ReceivedProfilData += ViewModel_ReceivedProfilData;
         }
 
-        private void ViewModel_ReceivedData(object sender, object e)
+        private void ViewModel_ReceivedProfilData(object sender, object e)
         {
             hybridWebView.SetModel(e?.ToString());
         }

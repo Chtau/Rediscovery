@@ -9,7 +9,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage
 {
     public class BaseFeatureViewModel : BaseViewModel
     {
-        public event EventHandler<object> ReceivedData;
+        public event EventHandler<Tuple<string, object>> ReceivedData;
 
         private IFeatureExchange featureExchange => DependencyService.Get<IFeatureExchange>() ?? new FeatureExchange();
 
@@ -30,7 +30,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage
             if (_connectionManifestFeature.ConnectionId == e.connectionId && _connectionManifestFeature.FeatureId == e.featureId)
             {
                 Receive(e.data);
-                ReceivedData?.Invoke(sender, e.data);
+                ReceivedData?.Invoke(sender, new Tuple<string, object>(e.profileId, e.data));
             }
         }
 

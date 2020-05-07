@@ -16,6 +16,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
 
         public event EventHandler<Tuple<Guid, string>> UIDataReady;
         public event EventHandler<Tuple<Guid, Guid>> UIDataNoArchive;
+        public event EventHandler<object> ReceivedProfilData;
 
         public readonly Features.Connection.Models.ConnectionManifestFeature ConnectionManifestFeature;
         public readonly Guid DesktopConfigId;
@@ -93,6 +94,13 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
                     FeatureSetting = settings;
                 }
             });
+            base.ReceivedData += FeatureViewViewModel_ReceivedData;
+        }
+
+        private void FeatureViewViewModel_ReceivedData(object sender, Tuple<string, object> e)
+        {
+            if (SelectedProfile == null || SelectedProfile.Id == e.Item1)
+                ReceivedProfilData?.Invoke(this, e.Item2);
         }
 
         public void Send(object sendModel)
