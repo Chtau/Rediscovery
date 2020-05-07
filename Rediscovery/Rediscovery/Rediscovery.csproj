@@ -22,12 +22,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets\exchange.js" />
     <None Remove="Assets\index.html" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Assets\exchange.js" />
     <EmbeddedResource Include="Assets\index.html" />
   </ItemGroup>
 

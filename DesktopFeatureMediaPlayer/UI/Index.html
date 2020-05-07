@@ -50,7 +50,7 @@
         function send(index) {
             var model = { commandIndex: index };
             log(model);
-            featureSend(JSON.stringify(model));
+            featureSend(model);
         }
         function playClick() {
             send(1);

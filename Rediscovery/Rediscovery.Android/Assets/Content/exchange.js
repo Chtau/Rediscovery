@@ -16,5 +16,5 @@ function currentModel() {
 }
 
 function featureSend(data) {
-    jsBridge.invokeAction(data);
+    jsBridge.invokeAction(JSON.stringify(data));
 }
