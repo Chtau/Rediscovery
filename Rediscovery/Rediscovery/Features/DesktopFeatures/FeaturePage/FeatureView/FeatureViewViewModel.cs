@@ -81,7 +81,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
                         {
                             Profiles.Add(item);
                         }
-                        SelectedProfile = connectionManifestFeature.Profiles.First();
+                        SelectedProfile = Profiles.First();
                         OnProfileChanged();
                     }
                 }

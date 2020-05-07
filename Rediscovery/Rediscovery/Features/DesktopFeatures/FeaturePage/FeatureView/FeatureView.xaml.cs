@@ -79,11 +79,16 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
 
         private void Setting_Clicked(object sender, EventArgs e)
         {
-            Rg.Plugins.Popup.Services.PopupNavigation.Instance.PushAsync(new FeatureSettingPopup(new FeatureSettingPopupViewModel
+            var model = new FeatureSettingPopupViewModel
             {
                 SelectedProfile = viewModel.SelectedProfile,
                 Profiles = viewModel.Profiles
-            }));
+            };
+            model.ProfileChanged += (obj, args) =>
+            {
+                viewModel.SelectedProfile = args;
+            };
+            Rg.Plugins.Popup.Services.PopupNavigation.Instance.PushAsync(new FeatureSettingPopup(model));
         }
     }
 }

@@ -9,6 +9,8 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
 {
     public class FeatureSettingPopupViewModel : BaseViewModel
     {
+        public event EventHandler<DeviceFeatureProfil> ProfileChanged;
+
         public ObservableCollection<DeviceFeatureProfil> Profiles { get; set; } = new ObservableCollection<DeviceFeatureProfil>();
 
         private DeviceFeatureProfil selectedProfile;
@@ -19,6 +21,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
             set
             {
                 SetProperty(ref selectedProfile, value);
+                ProfileChanged?.Invoke(this, value);
             }
         }
     }
