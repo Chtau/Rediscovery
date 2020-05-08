@@ -55,7 +55,7 @@
             div.innerHTML = JSON.stringify(str);
         }
         function featureReceive(data) {
-            log(data);
+            //log(data);
             if (data) {
                 setField("info", data.info);
                 setField("title", data.title);
@@ -69,19 +69,19 @@
         function profileChanged(data) {
             log(data);
             if (data && Array.isArray(data)) {
-                setDisplay("btn-fullscreen", data.includes("3"));
-                setDisplay("btn-fullscreen-exit", data.includes("2"));
-                setDisplay("btn-speedslower", data.includes("10"));
-                setDisplay("btn-speedfaster", data.includes("11"));
-                setDisplay("btn-jumpbackward", data.includes("13"));
-                setDisplay("btn-jumpforward", data.includes("12"));
-                setDisplay("btn-stop", data.includes("6"));
-                setDisplay("btn-mute", data.includes("7"));
-                setDisplay("btn-volume-down", data.includes("9"));
-                setDisplay("btn-volume-up", data.includes("8"));
-                setDisplay("btn-previous", data.includes("5"));
-                setDisplay("btn-play", data.includes("1"));
-                setDisplay("btn-next", data.includes("4"));
+                setDisplay("btn-fullscreen", data.includes(3));
+                setDisplay("btn-fullscreen-exit", data.includes(2));
+                setDisplay("btn-speedslower", data.includes(10));
+                setDisplay("btn-speedfaster", data.includes(11));
+                setDisplay("btn-jumpbackward", data.includes(13));
+                setDisplay("btn-jumpforward", data.includes(12));
+                setDisplay("btn-stop", data.includes(6));
+                setDisplay("btn-mute", data.includes(7));
+                setDisplay("btn-volume-down", data.includes(9));
+                setDisplay("btn-volume-up", data.includes(8));
+                setDisplay("btn-previous", data.includes(5));
+                setDisplay("btn-play", data.includes(1));
+                setDisplay("btn-next", data.includes(4));
             }
         }
         function send(index) {
@@ -90,16 +90,17 @@
             featureSend(model);
         }
         function setDisplay(key, show) {
-            document.getElementById(key).style.display = show === true ? "inherit" : "none";
+            document.getElementById(key).style.display = show === true ? "inherit" : "none";//"inherit"
         }
         function setField(key, value) {
             document.getElementById(key).innerHTML = value;
         }
 
         (function () {
+            domReady();
             // your page initialization code here
             // the DOM will be available here
-            profileChanged([
+            /*profileChanged([
                 "1",
                 "2",
                 "3",
@@ -122,7 +123,7 @@
                 "11",
                 "12",
                 "13"
-            ]);
+            ]);*/
             /*featureReceive({
                 info: null,
                 title: "Test",

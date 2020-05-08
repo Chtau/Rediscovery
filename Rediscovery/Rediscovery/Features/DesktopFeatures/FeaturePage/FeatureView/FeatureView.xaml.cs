@@ -59,6 +59,13 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
 
         private void ViewModel_UIDataReady(object sender, Tuple<Guid, string> e)
         {
+            hybridWebView.RegisterDOMReady(() =>
+            {
+                Dispatcher.BeginInvokeOnMainThread(() =>
+                {
+                    hybridWebView.SetProfileChanged(viewModel.SelectedProfile?.ProfileData?.ToString());
+                });
+            });
             hybridWebView.SourceFolderSet += (obj, args) =>
             {
                 Dispatcher.BeginInvokeOnMainThread(() =>

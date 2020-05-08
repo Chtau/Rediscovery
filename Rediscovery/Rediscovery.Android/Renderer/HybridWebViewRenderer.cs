@@ -52,18 +52,11 @@ namespace Rediscovery.Droid.Renderer
             }
             if (e.NewElement != null)
             {
-                //string modelValue = JavascriptModel + "'Hello Test';";
-                //{vueJSContent}
                 Control.SetWebViewClient(new JavascriptWebViewClient($"javascript: {exchangeJSContent}", (error) =>
                 {
                     ((HybridWebView)Element).InvokeError(error);
                 }));
-                //Control.SetWebViewClient(new JavascriptWebViewClient($"javascript: {JavascriptFunction}{JavascriptSendCallbackFunction}{modelValue}"));
                 Control.AddJavascriptInterface(new JSBridge(this), "jsBridge");
-                //string baseUrl = ((HtmlWebViewSource)((HybridWebView)Element).Source).BaseUrl;
-                
-                //Control.LoadDataWithBaseURL(baseUrl)
-                //Control.LoadUrl($"file:///android_asset/Content/{((HybridWebView)Element).Uri}");
             }
         }
     }
@@ -110,6 +103,18 @@ namespace Rediscovery.Droid.Renderer
             if (hybridWebViewRenderer != null && hybridWebViewRenderer.TryGetTarget(out hybridRenderer))
             {
                 ((HybridWebView)hybridRenderer.Element).InvokeAction(data);
+            }
+        }
+
+        [JavascriptInterface]
+        [Export("invokeDOMReady")]
+        public void InvokeDOMReady()
+        {
+            HybridWebViewRenderer hybridRenderer;
+
+            if (hybridWebViewRenderer != null && hybridWebViewRenderer.TryGetTarget(out hybridRenderer))
+            {
+                ((HybridWebView)hybridRenderer.Element).InvokeDOMReady();
             }
         }
     }

@@ -15,6 +15,7 @@ namespace Rediscovery.Controls
         public event EventHandler SourceFolderNoHtml;
 
         Action<string> action;
+        Action domReady;
         Action<string> error;
 
         public static readonly BindableProperty UriProperty = BindableProperty.Create(
@@ -98,9 +99,15 @@ namespace Rediscovery.Controls
             error = callback;
         }
 
+        public void RegisterDOMReady(Action callback)
+        {
+            domReady = callback;
+        }
+
         public void Cleanup()
         {
             action = null;
+            domReady = null;
         }
 
         public void InvokeAction(string data)
@@ -119,6 +126,15 @@ namespace Rediscovery.Controls
                 return;
             }
             error.Invoke(data);
+        }
+
+        public void InvokeDOMReady()
+        {
+            if (domReady == null)
+            {
+                return;
+            }
+            domReady.Invoke();
         }
     }
 }
