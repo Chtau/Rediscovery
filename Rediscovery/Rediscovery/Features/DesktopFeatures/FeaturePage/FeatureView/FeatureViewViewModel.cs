@@ -104,7 +104,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
         private void OnProfileChanged()
         {
             Title = SelectedProfile.DisplayName;
-            ProfilChanged?.Invoke(this, SelectedProfile);
+            ProfilChanged?.Invoke(this, SelectedProfile?.ProfileData);
         }
     }
 }
