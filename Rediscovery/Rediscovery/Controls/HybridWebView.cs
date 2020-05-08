@@ -74,9 +74,16 @@ namespace Rediscovery.Controls
             Dispatcher.BeginInvokeOnMainThread(() =>
             {
                 System.Diagnostics.Debug.Print("Invoke JS model change with data:" + data);
-                //this.Eval($"internalChangeModel({data})");
-                //this.Eval($"log({data})");
                 this.Eval($"featureReceive({data})");
+            });
+        }
+
+        public void SetProfileChanged(string data)
+        {
+            Dispatcher.BeginInvokeOnMainThread(() =>
+            {
+                System.Diagnostics.Debug.Print("Invoke JS profile change with data:" + data);
+                this.Eval($"profileChanged({data})");
             });
         }
 

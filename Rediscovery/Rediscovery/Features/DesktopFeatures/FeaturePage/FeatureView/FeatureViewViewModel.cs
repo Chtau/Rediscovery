@@ -16,7 +16,8 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
 
         public event EventHandler<Tuple<Guid, string>> UIDataReady;
         public event EventHandler<Tuple<Guid, Guid>> UIDataNoArchive;
-        public event EventHandler<object> ReceivedProfilData;
+        public event EventHandler<object> ReceivedFeatureData;
+        public event EventHandler<object> ProfilChanged;
 
         public readonly Features.Connection.Models.ConnectionManifestFeature ConnectionManifestFeature;
         public readonly Guid DesktopConfigId;
@@ -92,7 +93,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
         private void FeatureViewViewModel_ReceivedData(object sender, Tuple<string, object> e)
         {
             if (SelectedProfile == null || string.Equals(SelectedProfile.Id, e.Item1, StringComparison.OrdinalIgnoreCase))
-                ReceivedProfilData?.Invoke(this, e.Item2);
+                ReceivedFeatureData?.Invoke(this, e.Item2);
         }
 
         public void Send(object sendModel)
@@ -103,6 +104,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
         private void OnProfileChanged()
         {
             Title = SelectedProfile.DisplayName;
+            ProfilChanged?.Invoke(this, SelectedProfile);
         }
     }
 }
