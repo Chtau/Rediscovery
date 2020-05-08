@@ -3,7 +3,6 @@
 <head>
     <link type="text/css" rel="stylesheet" href="./css/materialize.min.css" media="screen,projection" />
     <link type="text/css" rel="stylesheet" href="./css/style.css">
-    <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 
@@ -14,26 +13,37 @@
         </div>
         <div class="center-content z-depth-2">
             <div class="content-info">
-                <div class="info-album">The Hunting Party</div>
-                <div class="info-song">Final Masquerade</div>
-                <div class="info-artist">Linkin Park</div>
+                <div id="info" class="info-album">Info</div>
+                <div id="title" class="info-song">Title</div>
+                <div id="artist" class="info-artist">Artist</div>
             </div>
 
             <div class="content-buttons">
                 <ul class="list list-main-buttons">
-                    <li><a class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">skip_previous</i></a></li>
-                    <li><a class="btn-floating btn-large waves-effect waves-light red" onclick="javascript: playClick();"><i class="material-icons">play_arrow</i></a></li>
-                    <li><a class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">skip_next</i></a></li>
+                    <li id="btn-previous"><a class="btn-floating btn-large waves-effect waves-light red" onclick="javascript: send(5);"><i class="material-icons">skip_previous</i></a></li>
+                    <li id="btn-play"><a class="btn-floating btn-large waves-effect waves-light red" onclick="javascript: send(1);"><i class="material-icons">play_arrow</i></a></li>
+                    <li id="btn-pause" style="display: none;"><a class="btn-floating btn-large waves-effect waves-light red" onclick="javascript: send(1);"><i class="material-icons">pause</i></a></li>
+                    <li id="btn-next"><a class="btn-floating btn-large waves-effect waves-light red" onclick="javascript: send(4);"><i class="material-icons">skip_next</i></a></li>
+                </ul>
+            </div>
+            <div class="footer-content-wrapper">
+                <ul class="list list-footer-buttons">
+                    <li id="btn-fullscreen"><a class="btn-floating btn-small waves-effect waves-light white" onclick="javascript: send(3);"><i class="material-icons">fullscreen</i></a></li>
+                    <li id="btn-fullscreen-exit"><a class="btn-floating btn-small waves-effect waves-light white" onclick="javascript: send(2);"><i class="material-icons">fullscreen_exit</i></a></li>
+                    <li id="btn-speedslower"><a class="btn-floating btn-small waves-effect waves-light white" onclick="javascript: send(10);"><i class="material-icons">fast_rewind</i></a></li>
+                    <li id="btn-speedfaster"><a class="btn-floating btn-small waves-effect waves-light white" onclick="javascript: send(11);"><i class="material-icons">fast_forward</i></a></li>
+                    <li id="btn-jumpbackward"><a class="btn-floating btn-small waves-effect waves-light white" onclick="javascript: send(13);"><i class="material-icons">replay_5</i></a></li>
+                    <li id="btn-jumpforward"><a class="btn-floating btn-small waves-effect waves-light white" onclick="javascript: send(12);"><i class="material-icons">forward_5</i></a></li>
                 </ul>
             </div>
         </div>
         <div class="footer-content z-depth-2 grey lighten-2">
             <div class="footer-content-wrapper">
                 <ul class="list list-footer-buttons">
-                    <li><a class="btn-floating btn-small waves-effect waves-light white"><i class="material-icons">skip_previous</i></a></li>
-                    <li><a class="btn-floating btn-small waves-effect waves-light white"><i class="material-icons">skip_previous</i></a></li>
-                    <li><a class="btn-floating btn-small waves-effect waves-light white"><i class="material-icons">skip_previous</i></a></li>
-                    <li><a class="btn-floating btn-small waves-effect waves-light white"><i class="material-icons">skip_previous</i></a></li>
+                    <li id="btn-stop"><a class="btn-floating btn waves-effect waves-light white" onclick="javascript: send(6);"><i class="material-icons">stop</i></a></li>
+                    <li id="btn-mute"><a class="btn-floating btn waves-effect waves-light white" onclick="javascript: send(7);"><i class="material-icons">volume_off</i></a></li>
+                    <li id="btn-volume-down"><a class="btn-floating btn waves-effect waves-light white" onclick="javascript: send(9);"><i class="material-icons">volume_down</i></a></li>
+                    <li id="btn-volume-up"><a class="btn-floating btn waves-effect waves-light white" onclick="javascript: send(8);"><i class="material-icons">volume_up</i></a></li>
                 </ul>
             </div>
         </div>
@@ -46,23 +56,78 @@
         }
         function featureReceive(data) {
             log(data);
+            if (data) {
+                setField("info", data.info);
+                setField("title", data.title);
+                setField("artist", data.artist);
+            } else {
+                setField("info", "");
+                setField("title", "");
+                setField("artist", "");
+            }
         }
         function profileChanged(data) {
             log(data);
+            if (data && Array.isArray(data)) {
+                setDisplay("btn-fullscreen", data.includes("3"));
+                setDisplay("btn-fullscreen-exit", data.includes("2"));
+                setDisplay("btn-speedslower", data.includes("10"));
+                setDisplay("btn-speedfaster", data.includes("11"));
+                setDisplay("btn-jumpbackward", data.includes("13"));
+                setDisplay("btn-jumpforward", data.includes("12"));
+                setDisplay("btn-stop", data.includes("6"));
+                setDisplay("btn-mute", data.includes("7"));
+                setDisplay("btn-volume-down", data.includes("9"));
+                setDisplay("btn-volume-up", data.includes("8"));
+                setDisplay("btn-previous", data.includes("5"));
+                setDisplay("btn-play", data.includes("1"));
+                setDisplay("btn-next", data.includes("4"));
+            }
         }
         function send(index) {
             var model = { commandIndex: index };
             log(model);
             featureSend(model);
         }
-        function playClick() {
-            send(1);
-        };
+        function setDisplay(key, show) {
+            document.getElementById(key).style.display = show === true ? "inherit" : "none";
+        }
+        function setField(key, value) {
+            document.getElementById(key).innerHTML = value;
+        }
 
         (function () {
             // your page initialization code here
             // the DOM will be available here
-
+            profileChanged([
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "8",
+                "9"
+            ]);
+            profileChanged([
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10",
+                "11",
+                "12",
+                "13"
+            ]);
+            /*featureReceive({
+                info: null,
+                title: "Test",
+                artist: "none"
+            })*/
         })();
     </script>
 </body>

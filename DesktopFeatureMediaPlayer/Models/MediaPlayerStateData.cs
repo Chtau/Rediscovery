@@ -8,6 +8,8 @@ namespace DesktopFeatureMediaPlayer.Models
     {
         public bool ProcessRunning { get; set; }
 
-        public string CurrentTitle { get; set; }
+        public string Title { get; set; }
+        public string Artist { get; set; }
+        public string Info { get; set; }
     }
 }

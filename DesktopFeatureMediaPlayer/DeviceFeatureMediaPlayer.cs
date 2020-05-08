@@ -51,7 +51,9 @@ namespace DesktopFeatureMediaPlayer
                         var dataObj = new Models.MediaPlayerStateData
                         {
                             ProcessRunning = controller.ProcessRunning,
-                            CurrentTitle = controller.CurrentTitle
+                            Title = controller.CurrentTitle,
+                            Artist = null,
+                            Info = null
                         };
                         var data = new DeviceFeatureData(deviceId, GetDeviceFeatureInfo().Id, profile.Id.ToString(), dataObj);
                         OnSendData(this, data);
