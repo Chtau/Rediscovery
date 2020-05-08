@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Rediscovery.Services;
 using System;
 using System.Collections.Generic;
 using System.IO.Compression;
@@ -18,6 +19,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
 
         private Features.Connection.IConnect connect => DependencyService.Get<Features.Connection.IConnect>() ?? new Features.Connection.Connect();
         private IFeatureUIService featureUIService => DependencyService.Get<IFeatureUIService>() ?? new FeatureUIService();
+        private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
 
         public FeatureView(Guid desktopConfigId, Features.Connection.Models.ConnectionManifestFeature connectionManifestFeature)
         {
@@ -29,6 +31,11 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
             viewModel.UIDataNoArchive += ViewModel_UIDataNoArchive;
             viewModel.ReceivedFeatureData += ViewModel_ReceivedData;
             viewModel.ProfilChanged += ViewModel_ProfilChanged;
+
+            hybridWebView.RegisterErrorCallback((error) =>
+            {
+                logger.Error(new Exception(error));
+            });
         }
 
         private void ViewModel_ProfilChanged(object sender, object e)

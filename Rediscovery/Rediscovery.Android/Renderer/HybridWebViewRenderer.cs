@@ -54,7 +54,10 @@ namespace Rediscovery.Droid.Renderer
             {
                 //string modelValue = JavascriptModel + "'Hello Test';";
                 //{vueJSContent}
-                Control.SetWebViewClient(new JavascriptWebViewClient($"javascript: {exchangeJSContent}"));
+                Control.SetWebViewClient(new JavascriptWebViewClient($"javascript: {exchangeJSContent}", (error) =>
+                {
+                    ((HybridWebView)Element).InvokeError(error);
+                }));
                 //Control.SetWebViewClient(new JavascriptWebViewClient($"javascript: {JavascriptFunction}{JavascriptSendCallbackFunction}{modelValue}"));
                 Control.AddJavascriptInterface(new JSBridge(this), "jsBridge");
                 //string baseUrl = ((HtmlWebViewSource)((HybridWebView)Element).Source).BaseUrl;
@@ -67,17 +70,25 @@ namespace Rediscovery.Droid.Renderer
 
     public class JavascriptWebViewClient : WebViewClient
     {
-        string _javascript;
+        private readonly string _javascript;
+        private readonly Action<string> _error;
 
-        public JavascriptWebViewClient(string javascript)
+        public JavascriptWebViewClient(string javascript, Action<string> error)
         {
             _javascript = javascript;
+            _error = error;
         }
 
         public override void OnPageFinished(Android.Webkit.WebView view, string url)
         {
             base.OnPageFinished(view, url);
             view.EvaluateJavascript(_javascript, null);
+        }
+
+        public override void OnReceivedError(Android.Webkit.WebView view, IWebResourceRequest request, WebResourceError error)
+        {
+            base.OnReceivedError(view, request, error);
+            _error.Invoke($"Code:{Enum.GetName(typeof(ClientError), error.ErrorCode)} Description:{error.Description}");
         }
     }
 

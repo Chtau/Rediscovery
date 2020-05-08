@@ -15,6 +15,7 @@ namespace Rediscovery.Controls
         public event EventHandler SourceFolderNoHtml;
 
         Action<string> action;
+        Action<string> error;
 
         public static readonly BindableProperty UriProperty = BindableProperty.Create(
             propertyName: "Uri",
@@ -92,6 +93,11 @@ namespace Rediscovery.Controls
             action = callback;
         }
 
+        public void RegisterErrorCallback(Action<string> callback)
+        {
+            error = callback;
+        }
+
         public void Cleanup()
         {
             action = null;
@@ -104,6 +110,15 @@ namespace Rediscovery.Controls
                 return;
             }
             action.Invoke(data);
+        }
+
+        public void InvokeError(string data)
+        {
+            if (error == null || data == null)
+            {
+                return;
+            }
+            error.Invoke(data);
         }
     }
 }
