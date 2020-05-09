@@ -15,6 +15,7 @@ namespace Rediscovery.Controls
         public event EventHandler SourceFolderNoHtml;
 
         Action<string> action;
+        Action<string> logger;
         Action domReady;
         Action<string> error;
 
@@ -94,6 +95,11 @@ namespace Rediscovery.Controls
             action = callback;
         }
 
+        public void RegisterLogger(Action<string> callback)
+        {
+            logger = callback;
+        }
+
         public void RegisterErrorCallback(Action<string> callback)
         {
             error = callback;
@@ -108,6 +114,7 @@ namespace Rediscovery.Controls
         {
             action = null;
             domReady = null;
+            logger = null;
         }
 
         public void InvokeAction(string data)
@@ -135,6 +142,15 @@ namespace Rediscovery.Controls
                 return;
             }
             domReady.Invoke();
+        }
+
+        public void InvokeLogger(string data)
+        {
+            if (logger == null || data == null)
+            {
+                return;
+            }
+            logger.Invoke(data);
         }
     }
 }

@@ -117,5 +117,17 @@ namespace Rediscovery.Droid.Renderer
                 ((HybridWebView)hybridRenderer.Element).InvokeDOMReady();
             }
         }
+
+        [JavascriptInterface]
+        [Export("invokeLogger")]
+        public void InvokeLogger(string data)
+        {
+            HybridWebViewRenderer hybridRenderer;
+
+            if (hybridWebViewRenderer != null && hybridWebViewRenderer.TryGetTarget(out hybridRenderer))
+            {
+                ((HybridWebView)hybridRenderer.Element).InvokeLogger(data);
+            }
+        }
     }
 }

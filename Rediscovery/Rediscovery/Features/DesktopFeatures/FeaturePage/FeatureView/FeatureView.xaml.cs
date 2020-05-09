@@ -66,6 +66,10 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
                     hybridWebView.SetProfileChanged(viewModel.SelectedProfile?.ProfileData?.ToString());
                 });
             });
+            hybridWebView.RegisterLogger((data) =>
+            {
+                logger.Message(data);
+            });
             hybridWebView.SourceFolderSet += (obj, args) =>
             {
                 Dispatcher.BeginInvokeOnMainThread(() =>
