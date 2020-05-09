@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
     xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
+    xmlns:flex="clr-namespace:Flex.Controls;assembly=Flex"
     x:Class="Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView.FeatureSettingPopup">
     <pages:PopupPage.Animation>
         <animations:ScaleAnimation 
@@ -29,7 +30,12 @@
                         SelectedItem="{Binding SelectedProfile}"
                         ItemDisplayBinding="{Binding DisplayName}">
                     </Picker>
-                    <Button x:Name="Close" Text="Close" TextColor="#A9D1DE" Clicked="Close_Clicked"></Button>
+                    <flex:FlexButton 
+                        Icon="close_white.png"
+                        Text="Close"
+                        Margin="5"
+                        Clicked="Close_Clicked"
+                    Style="{StaticResource LargeFlexButton}"/>
                 </StackLayout>
             </ScrollView>
         </StackLayout>
