@@ -4,3 +4,6 @@
 function domReady() {
     jsBridge.invokeDOMReady();
 }
+(function () {
+    domReady();
+})();
