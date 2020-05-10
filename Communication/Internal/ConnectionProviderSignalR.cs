@@ -97,12 +97,12 @@ namespace Communication.Internal
             _logger = logger;
         }
 
-        public async Task<bool> Connect(Action<bool, HubConnection> connectCallback, ConnectionConfiguration model, bool shouldUseToken = true)
+        public async Task<(HubConnection Connection, bool Result)> Connect(Action<bool, HubConnection> connectCallback, ConnectionConfiguration model, bool shouldUseToken = true)
         {
             var con = await OnGetConnection(model, shouldUseToken);
             bool connected = IsConnected;
             connectCallback?.Invoke(connected, con);
-            return connected;
+            return (con, connected);
         }
 
         public async Task CloseConnection()
