@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DesktopService.Features.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -29,26 +30,31 @@ namespace DesktopService.Features.RemoteResources
 
         private readonly ILogger<DesktopHubRemoteResourceHub> _logger;
         private readonly SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration _remoteResourceSettings;
+        private readonly IDeviceService _deviceService;
 
-        public DiscoveryServiceRemoteResourceHub(ILoggerFactory loggerFactory, IOptions<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration> remoteResourceSettings)
+        public DiscoveryServiceRemoteResourceHub(ILoggerFactory loggerFactory,
+            IOptions<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration> remoteResourceSettings,
+            IDeviceService deviceService)
         {
             _logger = loggerFactory.CreateLogger<DesktopHubRemoteResourceHub>();
             _remoteResourceSettings = remoteResourceSettings.Value;
+            _deviceService = deviceService;
         }
 
         public async Task Hello(string applicationKey)
         {
             try
             {
-                if (_remoteResourceSettings.RediscoveryDiscoveryServiceApplicationKey.Equals(applicationKey, StringComparison.OrdinalIgnoreCase))
+                string token = _deviceService.AuthenticateRemoteResourceConsumer(applicationKey);
+                if (!string.IsNullOrWhiteSpace(token))
                 {
                     await Groups.AddToGroupAsync(Context.ConnectionId, GroupName);
                     _logger.LogInformation($"DiscoveryService => Hello received from Application (Key:{applicationKey})");
-                    await Clients.Caller.SendAsync("Hello", "ok");
+                    await Clients.Caller.SendAsync("Hello", token);
                 } else
                 {
                     _logger.LogInformation($"DiscoveryService => Hello received from unknown Application (Key:{applicationKey})");
-                    await Clients.Caller.SendAsync("Hello", "unknown");
+                    await Clients.Caller.SendAsync("Hello", null);
                 }
             }
             catch (Exception ex)

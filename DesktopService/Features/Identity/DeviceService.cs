@@ -14,6 +14,10 @@ namespace DesktopService.Features.Identity
 {
     public class DeviceService : IDeviceService
     {
+        public const string DesktopHubRole = "desktophubconsumer";
+        public const string InfoHubRole = "infohubconsumer";
+        public const string DiscoveryServiceRole = "discoveryserviceconsumer";
+
         public event EventHandler<Device> NewDeviceAdded;
 
         private readonly Guid anonymouseId = new Guid("3D2AF409-6809-4ED1-B86A-451C94165E38");
@@ -45,21 +49,21 @@ namespace DesktopService.Features.Identity
             if (string.Equals(_remoteResourceSettings.RediscoveryDesktopHubApplicationKey, consumerKey, StringComparison.OrdinalIgnoreCase))
             {
                 validKey = true;
-                roleName = _remoteResourceSettings.RediscoveryDesktopHubApplicationRole;
+                roleName = DesktopHubRole;
             } else if (string.Equals(_remoteResourceSettings.RediscoveryDesktopInfoHubApplicationKey, consumerKey, StringComparison.OrdinalIgnoreCase))
             {
                 validKey = true;
-                roleName = _remoteResourceSettings.RediscoveryDesktopInfoHubApplicationRole;
+                roleName = InfoHubRole;
             } else if (string.Equals(_remoteResourceSettings.RediscoveryDiscoveryServiceApplicationKey, consumerKey, StringComparison.OrdinalIgnoreCase))
             {
                 validKey = true;
-                roleName = _remoteResourceSettings.RediscoveryDiscoveryServiceApplicationRole;
+                roleName = DiscoveryServiceRole;
             }
             if (validKey)
             {
                 return OnCreateToken(new Claim[]
                 {
-                    new Claim(ClaimTypes.Sid, Guid.NewGuid().ToString()),
+                    new Claim(ClaimTypes.Sid, consumerKey),
                     new Claim(ClaimTypes.Name, consumerKey),
                     new Claim(ClaimTypes.Role, roleName)
                 });

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DesktopService.Features.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -30,30 +31,34 @@ namespace DesktopService.Features.RemoteResources
         private readonly ILogger<DesktopHubRemoteResourceHub> _logger;
         private readonly SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration _remoteResourceSettings;
         private readonly IRemoteResourcesRepository _remoteResourcesRepository;
+        private readonly IDeviceService _deviceService;
 
         public DesktopHubRemoteResourceHub(ILoggerFactory loggerFactory, 
             IOptions<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration> remoteResourceSettings,
-            IRemoteResourcesRepository remoteResourcesRepository)
+            IRemoteResourcesRepository remoteResourcesRepository,
+            IDeviceService deviceService)
         {
             _logger = loggerFactory.CreateLogger<DesktopHubRemoteResourceHub>();
             _remoteResourceSettings = remoteResourceSettings.Value;
             _remoteResourcesRepository = remoteResourcesRepository;
+            _deviceService = deviceService;
         }
 
         public async Task Hello(string applicationKey)
         {
             try
             {
-                if (_remoteResourceSettings.RediscoveryDesktopHubApplicationKey.Equals(applicationKey, StringComparison.OrdinalIgnoreCase))
+                string token = _deviceService.AuthenticateRemoteResourceConsumer(applicationKey);
+                if (!string.IsNullOrWhiteSpace(token))
                 {
                     await Groups.AddToGroupAsync(Context.ConnectionId, GroupName);
                     _logger.LogInformation($"DesktopHub => Hello received from Application (Key:{applicationKey})");
-                    await Clients.Caller.SendAsync("Hello", "ok");
+                    await Clients.Caller.SendAsync("Hello", token);
                 }
                 else
                 {
                     _logger.LogInformation($"DesktopHub => Hello received from unknown Application (Key:{applicationKey})");
-                    await Clients.Caller.SendAsync("Hello", "unknown");
+                    await Clients.Caller.SendAsync("Hello", null);
                 }
             }
             catch (Exception ex)
@@ -62,21 +67,25 @@ namespace DesktopService.Features.RemoteResources
             }
         }
 
+        [Authorize(Roles = DeviceService.DesktopHubRole)]
         public void RequestActiveDeviceInfo()
         {
             _remoteResourcesRepository.SendActiveDeviceInfo();
         }
 
+        [Authorize(Roles = DeviceService.DesktopHubRole)]
         public void RequestDeviceInfo()
         {
             _remoteResourcesRepository.SendDeviceInfo();
         }
 
+        [Authorize(Roles = DeviceService.DesktopHubRole)]
         public void RequestServiceFeature()
         {
             _remoteResourcesRepository.SendServiceFeature();
         }
 
+        [Authorize(Roles = DeviceService.DesktopHubRole)]
         public void RequestDeleteDeviceInfo(SharedCoreModels.DeviceInfo deviceInfo)
         {
             _remoteResourcesRepository.DeleteDeviceInfo(deviceInfo);

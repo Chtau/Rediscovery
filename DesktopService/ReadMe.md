@@ -69,7 +69,7 @@ Do receive data the Client has to call `Hello` with the correct application key.
 
 |Function|Info|
 |-----|----|
-|`Hello(string result)`|Sends a hello response result `ok` (if valid application key) or `unknown` (application key is unknown to the service)|
+|`Hello(string result)`|Sends a hello response result with a valid authentication `Bearer` token (if valid application key) or `null` (application key is unknown to the service)|
 |`ActiveDeviceInfo(List<SharedCoreModels.DeviceInfo> deviceInfos)`|Sends all active devices which are connected to the service|
 |`DeviceInfo(List<SharedCoreModels.DeviceInfo> deviceInfos)`|Sends all devices known by the service|
 |`ServiceFeature(List<SharedCoreModels.DeviceFeature> deviceInfos)`|Sends all supported feature by the service|
@@ -91,7 +91,7 @@ Do receive data the Client has to call `Hello` with the correct application key.
 
 |Function|Info|
 |-----|----|
-|`Hello(string result)`|Sends a hello response result `ok` (if valid application key) or `unknown` (application key is unknown to the service)|
+|`Hello(string result)`|Sends a hello response result with a valid authentication `Bearer` token (if valid application key) or `null` (application key is unknown to the service)|
 
 #### SignalR Hub Endpoint `/remote/resource/info`
 
@@ -108,7 +108,7 @@ Do receive data the Client has to call `Hello` with the correct application key.
 
 |Function|Info|
 |-----|----|
-|`Hello(string result)`|Sends a hello response result `ok` (if valid application key) or `unknown` (application key is unknown to the service)|
+|`Hello(string result)`|Sends a hello response result with a valid authentication `Bearer` token (if valid application key) or `null` (application key is unknown to the service)|
 |`NewValidationCode(SharedCoreModels.IncomingConnectionInfo connectionInfo)`|Sends connection validation data|
 |`ApplicationInfo(string serviceInfo)`|Sends service info|
 
