@@ -1,0 +1,116 @@
+﻿using Communication.Models;
+using Microsoft.AspNetCore.SignalR.Client;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Communication.Internal
+{
+    internal class ConnectionProvider
+    {
+        private readonly string _hubLink;
+        private readonly Protocol _protocol;
+        private readonly ILogger _logger;
+
+        private HubConnection connection;
+
+        public event EventHandler<Tuple<HubConnection, ConnectionConfiguration, bool>> ConnectionChanged;
+        public event EventHandler ConnectionClosed;
+
+        public bool IsConnected
+        {
+            get
+            {
+                if (connection != null)
+                    return connection.State == HubConnectionState.Connected;
+                return false;
+            }
+        }
+
+        public ConnectionProvider(ILogger logger, string hubLink, Protocol protocol = Protocol.HTTP)
+        {
+            _hubLink = hubLink;
+            _protocol = protocol;
+            _logger = logger;
+        }
+
+        internal async Task<HubConnection> OnGetConnection(ConnectionConfiguration model, bool shouldUseToken = true)
+        {
+            if (model == null)
+                return null;
+            try
+            {
+                if (connection != null)
+                {
+                    for (int i = 0; i < 50; i++)
+                    {
+                        if (connection.State == HubConnectionState.Connected)
+                            break;
+                        await Task.Delay(50);
+                    }
+                    if (connection.State == HubConnectionState.Connected)
+                    {
+                        return connection;
+                    }
+                    else
+                    {
+                        _logger.Message($"Reconnect to connection {model.DisplayName} ({DateTime.Now.ToString()})");
+                        await connection.StopAsync();
+                        await connection.DisposeAsync();
+                        connection = null;
+                        //return await OnGetConnection(model, shouldUseToken);
+                    }
+                }
+
+                string url = _protocol.ToProtocolValue() + model.Address + _hubLink;
+                _logger.Message($"Try do connect to {model.DisplayName} with Address:{url} ({DateTime.Now.ToString()})");
+                if (shouldUseToken)
+                {
+                    connection = new HubConnectionBuilder()
+                    .WithUrl(url, options =>
+                    {
+                        options.AccessTokenProvider = () => Task.FromResult(model.Token);
+                    })
+                    .Build();
+                }
+                else
+                {
+                    connection = new HubConnectionBuilder()
+                    .WithUrl(url)
+                    .Build();
+                }
+                await connection.StartAsync();
+                for (int i = 0; i < 50; i++)
+                {
+                    await Task.Delay(50);
+                    if (connection.State == HubConnectionState.Connected)
+                        break;
+                }
+                AfterCreateNewConnection(connection, model, IsConnected);
+                return connection;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+                return null;
+            }
+        }
+
+        public async Task CloseConnections()
+        {
+            if (connection != null)
+            {
+                await connection.StopAsync();
+                await connection.DisposeAsync();
+                connection = null;
+            }
+            ConnectionClosed?.Invoke(this, EventArgs.Empty);
+        }
+
+        public virtual void AfterCreateNewConnection(HubConnection connection, ConnectionConfiguration model, bool isConnected)
+        {
+            ConnectionChanged?.Invoke(this, new Tuple<HubConnection, ConnectionConfiguration, bool>(connection, model, IsConnected));
+        }
+    }
+}
