@@ -14,5 +14,6 @@ namespace DesktopService.Features.Identity
         Task<Models.Device> GetByName(string deviceName);
         Task<Models.Device> AddDevice(string deviceName);
         string CreateNewToken(string sid, string name);
+        string AuthenticateRemoteResourceConsumer(string consumerKey);
     }
 }

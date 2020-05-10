@@ -10,12 +10,15 @@ namespace SharedConfigurations.DesktopService.Models
 
         public string RediscoveryDesktopHubPath { get; set; }
         public string RediscoveryDesktopHubApplicationKey { get; set; }
+        public string RediscoveryDesktopHubApplicationRole { get; set; }
 
         public string RediscoveryDiscoveryServicePath { get; set; }
         public string RediscoveryDiscoveryServiceApplicationKey { get; set; }
+        public string RediscoveryDiscoveryServiceApplicationRole { get; set; }
 
         public string RediscoveryDesktopInfoHubPath { get; set; }
         public string RediscoveryDesktopInfoHubApplicationKey { get; set; }
+        public string RediscoveryDesktopInfoHubApplicationRole { get; set; }
 
         public bool ShowServiceInfoOnStart { get; set; }
     }

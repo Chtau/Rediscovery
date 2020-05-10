@@ -20,18 +20,52 @@ namespace DesktopService.Features.Identity
         private readonly string anonymouseDeviceName = "Anonymous";
 
         private readonly ILogger<DeviceService> _logger;
+        private readonly SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration _remoteResourceSettings;
         private readonly SharedConfigurations.DesktopService.Models.IdentityConfiguration _identitySettings;
         private readonly Random _random;
         private readonly DAL.IDBContext _dBContext;
 
-        public DeviceService(ILoggerFactory loggerFactory, IOptions<SharedConfigurations.DesktopService.Models.IdentityConfiguration> identitySettings, DAL.IDBContext dBContext)
+        public DeviceService(ILoggerFactory loggerFactory, 
+            IOptions<SharedConfigurations.DesktopService.Models.IdentityConfiguration> identitySettings,
+            IOptions<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration> remoteResourceSettings,
+            DAL.IDBContext dBContext)
         {
             _logger = loggerFactory.CreateLogger<DeviceService>();
             _dBContext = dBContext;
             _identitySettings = identitySettings.Value;
+            _remoteResourceSettings = remoteResourceSettings.Value;
             _random = new Random();
         }
 
+
+        public string AuthenticateRemoteResourceConsumer(string consumerKey)
+        {
+            bool validKey = false;
+            string roleName = null;
+            if (string.Equals(_remoteResourceSettings.RediscoveryDesktopHubApplicationKey, consumerKey, StringComparison.OrdinalIgnoreCase))
+            {
+                validKey = true;
+                roleName = _remoteResourceSettings.RediscoveryDesktopHubApplicationRole;
+            } else if (string.Equals(_remoteResourceSettings.RediscoveryDesktopInfoHubApplicationKey, consumerKey, StringComparison.OrdinalIgnoreCase))
+            {
+                validKey = true;
+                roleName = _remoteResourceSettings.RediscoveryDesktopInfoHubApplicationRole;
+            } else if (string.Equals(_remoteResourceSettings.RediscoveryDiscoveryServiceApplicationKey, consumerKey, StringComparison.OrdinalIgnoreCase))
+            {
+                validKey = true;
+                roleName = _remoteResourceSettings.RediscoveryDiscoveryServiceApplicationRole;
+            }
+            if (validKey)
+            {
+                return OnCreateToken(new Claim[]
+                {
+                    new Claim(ClaimTypes.Sid, Guid.NewGuid().ToString()),
+                    new Claim(ClaimTypes.Name, consumerKey),
+                    new Claim(ClaimTypes.Role, roleName)
+                });
+            }
+            return null;
+        }
 
         public async Task<Device> Authenticate(string deviceName, string passwordKey)
         {
@@ -80,20 +114,11 @@ namespace DesktopService.Features.Identity
 
         public string CreateNewToken(string sid, string name)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_identitySettings.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
+            return OnCreateToken(new Claim[]
                 {
                     new Claim(ClaimTypes.Sid, sid),
                     new Claim(ClaimTypes.Name, name),
-                }),
-                Expires = DateTime.UtcNow.AddDays(180),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+                });
         }
 
         public async Task<IEnumerable<Device>> GetAll()
@@ -193,6 +218,20 @@ namespace DesktopService.Features.Identity
                 _logger.LogError(ex.ToString());
                 return null;
             }
+        }
+
+        private string OnCreateToken(Claim[] claims)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_identitySettings.Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddDays(180),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
 
         private async Task OnUpdateUser(Device device)
