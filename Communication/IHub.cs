@@ -15,5 +15,6 @@ namespace CommunicationConsumer
         void Authenticate(string applicationKey, Models.ConnectionConfiguration configuration, Action<Models.ConnectionConfiguration, bool> callback);
         void Connect(string applicationKey, Models.ConnectionConfiguration configuration);
         bool RequestAllData();
+        void Disconnect();
     }
 }

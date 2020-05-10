@@ -28,6 +28,7 @@ namespace CommunicationConsumer
 
         public void Authenticate(string applicationKey, Models.ConnectionConfiguration configuration, Action<Models.ConnectionConfiguration, bool> callback)
         {
+            Disconnect();
             Task.Run(async () =>
             {
                 await _connectionProviderAuthentication.Connect(async (result, connection) =>
@@ -49,10 +50,6 @@ namespace CommunicationConsumer
                                     callback.Invoke(configuration, false);
                                 }
                             });
-                            if (connection.State != HubConnectionState.Connected)
-                            {
-                                await connection.StartAsync();
-                            }
                             await connection.InvokeAsync("Hello", applicationKey);
                         } catch (Exception ex)
                         {
@@ -71,29 +68,42 @@ namespace CommunicationConsumer
 
         public void Connect(string applicationKey, Models.ConnectionConfiguration configuration)
         {
+            try
+            {
+                _connectionProvider.CloseConnection();
+            } catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
             Task.Run(async () =>
             {
-                await _connectionProviderAuthentication.Connect(async (result, connection) =>
+                await _connectionProvider.Connect(async (result, connection) =>
                 {
                     if (result)
                     {
-                        connection.On<List<SharedCoreModels.DeviceInfo>>("ActiveDeviceInfo", (deviceInfos) =>
+                        try
                         {
-                            ActiveDeviceInfoReceived?.Invoke(this, deviceInfos);
-                        });
-                        connection.On<List<SharedCoreModels.DeviceInfo>>("DeviceInfo", (deviceInfos) =>
+                            connection.On<List<SharedCoreModels.DeviceInfo>>("ActiveDeviceInfo", (deviceInfos) =>
+                            {
+                                ActiveDeviceInfoReceived?.Invoke(this, deviceInfos);
+                            });
+                            connection.On<List<SharedCoreModels.DeviceInfo>>("DeviceInfo", (deviceInfos) =>
+                            {
+                                DeviceInfoReceived?.Invoke(this, deviceInfos);
+                            });
+                            connection.On<List<SharedCoreModels.DeviceFeature>>("ServiceFeature", (deviceInfos) =>
+                            {
+                                ServiceFeatureReceived?.Invoke(this, deviceInfos);
+                            });
+                            connection.On<SharedCoreModels.LoggerEntryModel>("LogEntry", (entry) =>
+                            {
+                                LogEntryReceived?.Invoke(this, entry);
+                            });
+                            await connection.InvokeAsync("RegisterListener", applicationKey);
+                        } catch (Exception ex)
                         {
-                            DeviceInfoReceived?.Invoke(this, deviceInfos);
-                        });
-                        connection.On<List<SharedCoreModels.DeviceFeature>>("ServiceFeature", (deviceInfos) =>
-                        {
-                            ServiceFeatureReceived?.Invoke(this, deviceInfos);
-                        });
-                        connection.On<SharedCoreModels.LoggerEntryModel>("LogEntry", (entry) =>
-                        {
-                            LogEntryReceived?.Invoke(this, entry);
-                        });
-                        await connection.InvokeAsync("RegisterListener", applicationKey);
+                            _logger.Error(ex);
+                        }
                     }
                 }, configuration, true);
             });
@@ -105,14 +115,32 @@ namespace CommunicationConsumer
             {
                 Task.Run(async () =>
                 {
-                    await _connectionProvider.CurrentConnection.InvokeAsync("RequestDeviceInfo");
-                    await _connectionProvider.CurrentConnection.InvokeAsync("RequestServiceFeature");
-                    await _connectionProvider.CurrentConnection.InvokeAsync("RequestActiveDeviceInfo");
+                    try
+                    {
+                        await _connectionProvider.CurrentConnection.InvokeAsync("RequestDeviceInfo");
+                        await _connectionProvider.CurrentConnection.InvokeAsync("RequestServiceFeature");
+                        await _connectionProvider.CurrentConnection.InvokeAsync("RequestActiveDeviceInfo");
+                    } catch (Exception ex)
+                    {
+                        _logger.Error(ex);
+                    }
                 });
                 return true;
             }
             else
                 return false;
+        }
+
+        public void Disconnect()
+        {
+            try
+            {
+                _connectionProvider.CloseConnection();
+                _connectionProviderAuthentication.CloseConnection();
+            } catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
         }
     }
 }

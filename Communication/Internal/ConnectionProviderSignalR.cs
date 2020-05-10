@@ -28,6 +28,14 @@ namespace CommunicationConsumer.Internal
             }
         }
 
+        public HubConnection CurrentConnection
+        {
+            get
+            {
+                return connection;
+            }
+        }
+
         private async Task<HubConnection> OnGetConnection(ConnectionConfiguration model, bool shouldUseToken = true)
         {
             if (model == null)
