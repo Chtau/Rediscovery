@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Communication
+namespace CommunicationConsumer
 {
     public class RemoteConnectionHub : IRemoteConnectionHub
     {

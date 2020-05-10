@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Communication.Models
+namespace CommunicationConsumer.Models
 {
     public class ConnectionConfiguration
     {
