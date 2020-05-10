@@ -14,5 +14,7 @@ namespace CommunicationConsumer.Internal
         void Init(ILogger logger, string hubLink, Protocol protocol = Protocol.HTTP);
         Task<(T Connection, bool Result)> Connect(Action<bool, T> connectCallback, ConnectionConfiguration model, bool shouldUseToken = true);
         Task CloseConnection();
+        T CurrentConnection { get; }
+        bool IsConnected { get; }
     }
 }
