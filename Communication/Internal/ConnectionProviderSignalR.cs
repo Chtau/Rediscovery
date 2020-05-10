@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace Communication.Internal
 {
-    internal class ConnectionProvider
+    internal class ConnectionProviderSignalR : IConnectionProvider<HubConnection>
     {
-        private readonly string _hubLink;
-        private readonly Protocol _protocol;
-        private readonly ILogger _logger;
+        private string _hubLink;
+        private Protocol _protocol;
+        private ILogger _logger;
 
         private HubConnection connection;
 
-        public event EventHandler<Tuple<HubConnection, ConnectionConfiguration, bool>> ConnectionChanged;
+        public event EventHandler<(ConnectionConfiguration Config, bool IsConnected)> ConnectionChanged;
         public event EventHandler ConnectionClosed;
 
         public bool IsConnected
@@ -28,14 +28,7 @@ namespace Communication.Internal
             }
         }
 
-        public ConnectionProvider(ILogger logger, string hubLink, Protocol protocol = Protocol.HTTP)
-        {
-            _hubLink = hubLink;
-            _protocol = protocol;
-            _logger = logger;
-        }
-
-        internal async Task<HubConnection> OnGetConnection(ConnectionConfiguration model, bool shouldUseToken = true)
+        private async Task<HubConnection> OnGetConnection(ConnectionConfiguration model, bool shouldUseToken = true)
         {
             if (model == null)
                 return null;
@@ -87,7 +80,7 @@ namespace Communication.Internal
                     if (connection.State == HubConnectionState.Connected)
                         break;
                 }
-                AfterCreateNewConnection(connection, model, IsConnected);
+                ConnectionChanged?.Invoke(this, (model, IsConnected));
                 return connection;
             }
             catch (Exception ex)
@@ -97,7 +90,22 @@ namespace Communication.Internal
             }
         }
 
-        public async Task CloseConnections()
+        public void Init(ILogger logger, string hubLink, Protocol protocol = Protocol.HTTP)
+        {
+            _hubLink = hubLink;
+            _protocol = protocol;
+            _logger = logger;
+        }
+
+        public async Task<bool> Connect(Action<bool, HubConnection> connectCallback, ConnectionConfiguration model, bool shouldUseToken = true)
+        {
+            var con = await OnGetConnection(model, shouldUseToken);
+            bool connected = IsConnected;
+            connectCallback?.Invoke(connected, con);
+            return connected;
+        }
+
+        public async Task CloseConnection()
         {
             if (connection != null)
             {
@@ -106,11 +114,6 @@ namespace Communication.Internal
                 connection = null;
             }
             ConnectionClosed?.Invoke(this, EventArgs.Empty);
-        }
-
-        public virtual void AfterCreateNewConnection(HubConnection connection, ConnectionConfiguration model, bool isConnected)
-        {
-            ConnectionChanged?.Invoke(this, new Tuple<HubConnection, ConnectionConfiguration, bool>(connection, model, IsConnected));
         }
     }
 }
