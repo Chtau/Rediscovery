@@ -56,7 +56,4 @@
     <ProjectReference Include="..\SharedConfigurations\SharedConfigurations.csproj" />
     <ProjectReference Include="..\SharedCoreModels\SharedCoreModels.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Feature\Device\Model\" />
-  </ItemGroup>
 </Project>
