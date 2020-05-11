@@ -22,6 +22,20 @@ namespace CommunicationResourceProvider
             _resourcesRepository = resourcesRepository;
         }
 
+        public void AddActiveDevice(string userId)
+        {
+            if (!ActiveUserHandler.UserIds.Contains(userId))
+                ActiveUserHandler.UserIds.Add(userId);
+            SendActiveDeviceInfo();
+        }
+
+        public void RemoveActiveDevice(string userId)
+        {
+            if (ActiveUserHandler.UserIds.Contains(userId))
+                ActiveUserHandler.UserIds.Remove(userId);
+            SendActiveDeviceInfo();
+        }
+
         public void SendActiveDeviceInfo()
         {
             try

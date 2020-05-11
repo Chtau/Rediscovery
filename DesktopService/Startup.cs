@@ -100,7 +100,6 @@ namespace DesktopService
             services.AddSingleton<Features.Identity.IDeviceService, Features.Identity.DeviceService>();
             services.AddSingleton<IUserIdProvider, Features.Identity.ClaimUserIdProvider>();
             services.AddSingleton<Features.RemoteResources.IRemoteResourcesIncomingConnection, Features.RemoteResources.RemoteResourcesIncomingConnection>();
-            services.AddSingleton<Features.RemoteResources.IRemoteResourcesRepository, Features.RemoteResources.RemoteResourcesRepository>();
             services.AddSingleton<Features.RemoteResources.IRemoteResourcesServiceInfo, Features.RemoteResources.RemoteResourcesServiceInfo>();
             services.AddSingleton<Features.RemoteResources.IRemoteResourcesLiveLogger, Features.RemoteResources.RemoteResourcesLiveLogger>();
             services.AddSingleton<IFeatureService, FeatureService>();
@@ -108,9 +107,6 @@ namespace DesktopService
             services.AddSingleton<PluginFeature.Interfaces.IPluginLogger, Features.PluginLogger.PluginLogger>();
 
             services.AddSingleton<Features.Plugins.ILoadPlugins, Features.Plugins.LoadPlugins>();
-
-            //services.AddSingleton<IAuthenticateService, Features.Identity.DeviceService>();
-            //services.AddSingleton<IResourcesRepository, RemoteResourcesRepository>();
             services.AddResourceProvider<Features.Identity.DeviceService, RemoteResourcesRepository>();
         }
 
@@ -144,9 +140,6 @@ namespace DesktopService
                 endpoints.MapControllers();
                 endpoints.MapHub<ConnectHub>("/hubs/connect");
                 endpoints.MapHub<DeviceFeatureHub>("/hubs/feature");
-                //endpoints.MapHub<DesktopHubRemoteResourceHub>("/remote/resource/hub");
-                endpoints.MapHub<DiscoveryServiceRemoteResourceHub>("/remote/resource/discovery");
-                endpoints.MapHub<DesktopInfoHubRemoteResourceHub>("/remote/resource/info");
             });
         }
     }

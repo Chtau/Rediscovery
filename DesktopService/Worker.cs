@@ -14,22 +14,16 @@ namespace DesktopService
 {
     public class Worker : IHostedService, IDisposable
     {
-        private readonly Features.RemoteResources.IRemoteResourcesIncomingConnection _remoteResourcesIncomingConnection;
-        private readonly Features.RemoteResources.IRemoteResourcesRepository _remoteResourcesRepository;
         private readonly Features.RemoteResources.IRemoteResourcesServiceInfo _remoteResourcesServiceInfo;
         private readonly Features.Configuration.IDistributeConfig _distributeConfig;
         private readonly SharedConfigurations.DesktopService.Models.AppConfiguration _appSettings;
         private readonly ILogger<Worker> _logger;
 
-        public Worker(Features.RemoteResources.IRemoteResourcesIncomingConnection remoteResourcesIncomingConnection,
-            Features.RemoteResources.IRemoteResourcesRepository remoteResourcesRepository,
-            Features.RemoteResources.IRemoteResourcesServiceInfo remoteResourcesServiceInfo,
+        public Worker(Features.RemoteResources.IRemoteResourcesServiceInfo remoteResourcesServiceInfo,
             Features.Configuration.IDistributeConfig distributeConfig,
             IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> appOptions,
             ILoggerFactory loggerFactory)
         {
-            _remoteResourcesIncomingConnection = remoteResourcesIncomingConnection;
-            _remoteResourcesRepository = remoteResourcesRepository;
             _remoteResourcesServiceInfo = remoteResourcesServiceInfo;
             _distributeConfig = distributeConfig;
             _appSettings = appOptions.Value;

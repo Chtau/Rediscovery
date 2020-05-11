@@ -7,6 +7,7 @@ namespace DesktopService.Features.RemoteResources
 {
     public interface IRemoteResourcesIncomingConnection
     {
+        [Obsolete("Replace with new Device accept logic")]
         Task ShowCode(string code, string device, DateTime validTill);
     }
 }

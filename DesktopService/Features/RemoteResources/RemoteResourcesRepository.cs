@@ -13,20 +13,17 @@ using System.Threading.Tasks;
 
 namespace DesktopService.Features.RemoteResources
 {
-    public class RemoteResourcesRepository : IRemoteResourcesRepository, IResourcesRepository
+    public class RemoteResourcesRepository : IResourcesRepository
     {
         private readonly DAL.IDBContext _dBContext;
         private readonly DeviceFeature.IFeatureService _featureService;
-        private readonly IHubContext<DesktopHubRemoteResourceHub> _hubContext;
         private readonly ILogger<RemoteResourcesRepository> _logger;
 
         public RemoteResourcesRepository(DAL.IDBContext dBContext,
             DeviceFeature.IFeatureService featureService,
-            IHubContext<DesktopHubRemoteResourceHub> hubContext,
             ILoggerFactory loggerFactory)
         {
             _dBContext = dBContext;
-            _hubContext = hubContext;
             _featureService = featureService;
             _logger = loggerFactory.CreateLogger<RemoteResourcesRepository>();
         }
@@ -76,47 +73,10 @@ namespace DesktopService.Features.RemoteResources
             try
             {
                 _dBContext.Instance.Table<Device>().DeleteAsync(x => x.Id == deviceInfo.Id);
-                SendDeviceInfo();
-                SendActiveDeviceInfo();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"DeleteDeviceInfo error for Id:{deviceInfo?.Id} Name:{deviceInfo?.Name}");
-            }
-        }
-
-        public void SendActiveDeviceInfo()
-        {
-            try
-            {
-                _hubContext.Clients.Group(DesktopHubRemoteResourceHub.GroupName).SendAsync("ActiveDeviceInfo", GetResourceActiveDeviceInfo());
-            } catch (Exception ex)
-            {
-                _logger.LogError(ex, "SendActiveDeviceInfo send remote resource");
-            }
-        }
-
-        public void SendDeviceInfo()
-        {
-            try
-            {
-                _hubContext.Clients.Group(DesktopHubRemoteResourceHub.GroupName).SendAsync("DeviceInfo", GetResourceDeviceInfo());
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "SendDeviceInfo send remote resource");
-            }
-        }
-
-        public void SendServiceFeature()
-        {
-            try
-            {
-                _hubContext.Clients.Group(DesktopHubRemoteResourceHub.GroupName).SendAsync("ServiceFeature", GetResourceDeviceFeature());
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "SendServiceFeature send remote resource");
             }
         }
     }

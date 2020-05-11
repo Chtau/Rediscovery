@@ -14,30 +14,24 @@ namespace DesktopService.Features.DeviceFeature
     {
         public override Task OnConnectedAsync()
         {
-            if (!ActiveUserHandler.UserIds.Contains(Context.UserIdentifier))
-                ActiveUserHandler.UserIds.Add(Context.UserIdentifier);
-            _remoteResourcesRepository.SendActiveDeviceInfo();
+            _remoteResourcesSenderService.AddActiveDevice(Context.UserIdentifier);
             return base.OnConnectedAsync();
         }
 
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            if (ActiveUserHandler.UserIds.Contains(Context.UserIdentifier))
-                ActiveUserHandler.UserIds.Remove(Context.UserIdentifier);
-            _remoteResourcesRepository.SendActiveDeviceInfo();
+            _remoteResourcesSenderService.RemoveActiveDevice(Context.UserIdentifier);
             return base.OnDisconnectedAsync(exception);
         }
 
         private readonly IFeatureService _featureService;
-        private readonly IHubContext<DeviceFeatureHub> _hubContext;
-        private readonly IRemoteResourcesRepository _remoteResourcesRepository;
+        private readonly CommunicationResourceProvider.IRemoteResourcesSenderService _remoteResourcesSenderService;
 
-        public DeviceFeatureHub(IFeatureService featureService, IHubContext<DeviceFeatureHub> hubContext,
-            IRemoteResourcesRepository remoteResourcesRepository)
+        public DeviceFeatureHub(IFeatureService featureService,
+            CommunicationResourceProvider.IRemoteResourcesSenderService remoteResourcesSenderService)
         {
-            _hubContext = hubContext;
             _featureService = featureService;
-            _remoteResourcesRepository = remoteResourcesRepository;
+            _remoteResourcesSenderService = remoteResourcesSenderService;
         }
 
         public void ClientMessage(Guid featureId, string profileId, object data)

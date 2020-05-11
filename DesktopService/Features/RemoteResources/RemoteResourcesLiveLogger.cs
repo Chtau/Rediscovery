@@ -12,20 +12,15 @@ namespace DesktopService.Features.RemoteResources
     public class RemoteResourcesLiveLogger : IRemoteResourcesLiveLogger
     {
         private readonly ILogger<RemoteResourcesLiveLogger> _logger;
-        private readonly SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration _remoteResourceSettings;
-        private readonly IHubContext<DesktopHubRemoteResourceHub> _hubContext;
         private readonly CommunicationResourceProvider.IRemoteResourcesSenderService _remoteResourcesSenderService;
 
         private DateTime lastFailedConnection = DateTime.MinValue;
         private int connectionsFailed = 0;
 
-        public RemoteResourcesLiveLogger(IHubContext<DesktopHubRemoteResourceHub> hubContext, ILoggerFactory loggerFactory,
-            IOptions<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration> remoteResourceSettings,
+        public RemoteResourcesLiveLogger(ILoggerFactory loggerFactory,
             CommunicationResourceProvider.IRemoteResourcesSenderService remoteResourcesSenderService)
         {
             _logger = loggerFactory.CreateLogger<RemoteResourcesLiveLogger>();
-            _remoteResourceSettings = remoteResourceSettings.Value;
-            _hubContext = hubContext;
             _remoteResourcesSenderService = remoteResourcesSenderService;
         }
 

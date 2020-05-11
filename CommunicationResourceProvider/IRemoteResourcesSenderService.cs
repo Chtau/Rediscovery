@@ -6,6 +6,8 @@ namespace CommunicationResourceProvider
 {
     public interface IRemoteResourcesSenderService
     {
+        void AddActiveDevice(string userId);
+        void RemoveActiveDevice(string userId);
         void SendActiveDeviceInfo();
         void SendDeviceInfo();
         void SendServiceFeature();

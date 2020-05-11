@@ -12,22 +12,20 @@ namespace DesktopService.Features.RemoteResources
     {
         private readonly ILogger<RemoteResourcesIncomingConnection> _logger;
         private readonly SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration _remoteResourceSettings;
-        private readonly IHubContext<DesktopInfoHubRemoteResourceHub> _hubContext;
 
         public RemoteResourcesIncomingConnection(ILoggerFactory loggerFactory,
-            IOptions<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration> remoteResourceSettings,
-            IHubContext<DesktopInfoHubRemoteResourceHub> hubContext)
+            IOptions<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration> remoteResourceSettings)
         {
             _logger = loggerFactory.CreateLogger<RemoteResourcesIncomingConnection>();
             _remoteResourceSettings = remoteResourceSettings.Value;
-            _hubContext = hubContext;
         }
 
         public async Task ShowCode(string code, string device, DateTime validTill)
         {
             try
             {
-                if (ActiveDesktopInfoHandler.ConnectionIds.Count > 0)
+                // TODO: rework new accept logic for devices
+                /*if (ActiveDesktopInfoHandler.ConnectionIds.Count > 0)
                 {
                     var infoData = new SharedCoreModels.IncomingConnectionInfo
                     {
@@ -53,7 +51,7 @@ namespace DesktopService.Features.RemoteResources
                             _logger.LogWarning($"Could not find Rediscovery Hub application file @{_remoteResourceSettings.RediscoveryDesktopInfoHubPath}");
                         }
                     }
-                }
+                }*/
             } catch (Exception ex)
             {
                 _logger.LogError(ex.ToString());
