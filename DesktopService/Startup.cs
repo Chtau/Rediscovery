@@ -109,9 +109,9 @@ namespace DesktopService
 
             services.AddSingleton<Features.Plugins.ILoadPlugins, Features.Plugins.LoadPlugins>();
 
-            services.AddSingleton<IAuthenticateService, Features.Identity.DeviceService>();
-            services.AddSingleton<IResourcesRepository, RemoteResourcesRepository>();
-            services.AddResourceProvider();
+            //services.AddSingleton<IAuthenticateService, Features.Identity.DeviceService>();
+            //services.AddSingleton<IResourcesRepository, RemoteResourcesRepository>();
+            services.AddResourceProvider<Features.Identity.DeviceService, RemoteResourcesRepository>();
         }
 
         // Use this method to configure the HTTP request pipeline.

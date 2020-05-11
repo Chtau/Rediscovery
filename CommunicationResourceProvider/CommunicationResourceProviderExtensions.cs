@@ -18,8 +18,12 @@ namespace CommunicationResourceProvider
             return app;
         }
 
-        public static IServiceCollection AddResourceProvider(this IServiceCollection services)
+        public static IServiceCollection AddResourceProvider<TAuthenticateService, TResourcesRepository>(this IServiceCollection services)
+            where TAuthenticateService : class, IAuthenticateService
+            where TResourcesRepository : class, IResourcesRepository
         {
+            services.AddSingleton<IAuthenticateService, TAuthenticateService>();
+            services.AddSingleton<IResourcesRepository, TResourcesRepository>();
             services.AddSingleton<IRemoteResourcesSenderService, RemoteResourcesSenderService>();
             return services;
         }
