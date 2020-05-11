@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Rediscovery.Desktop.Hub.Feature.Device;
 using Rediscovery.Desktop.Hub.Feature.Features;
 using Rediscovery.Desktop.Hub.Feature.Logger;
@@ -14,24 +15,45 @@ namespace Rediscovery.Desktop.Hub.Feature
     public class CommunicationController : Shared.BaseController
     {
         private readonly ILogger<CommunicationController> _logger;
-        private readonly IDeviceService _deviceService;
-        private readonly ILoggerService _loggerService;
-        private readonly IFeatureService _featureService;
+        private readonly CommunicationConsumer.IHub _hub;
+        private readonly SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration _remoteResourceSettings;
+        //private readonly IDeviceService _deviceService;
+        //private readonly ILoggerService _loggerService;
+        //private readonly IFeatureService _featureService;
+
+        private CommunicationConsumer.Models.ConnectionConfiguration connectionConfiguration;
 
         public CommunicationController(ILogger<CommunicationController> logger,
-            IDeviceService deviceService,
-            ILoggerService loggerService,
-            IFeatureService featureService
+            CommunicationConsumer.IHub hub,
+            IOptions<SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration> remoteResourceSettings
+            //IDeviceService deviceService,
+            //ILoggerService loggerService,
+            //IFeatureService featureService
             )
         {
+            _remoteResourceSettings = remoteResourceSettings.Value;
             _logger = logger;
-            _deviceService = deviceService;
+            _hub = hub;
+            connectionConfiguration = new CommunicationConsumer.Models.ConnectionConfiguration
+            {
+                Address = _remoteResourceSettings.IP + (_remoteResourceSettings.Port != null ? ":" + _remoteResourceSettings.Port : ""),
+                DisplayName = _remoteResourceSettings.DesktopHubApplicationKey,
+                Id = Guid.NewGuid(),
+                State = CommunicationConsumer.ConnectionState.None,
+                Token = null
+            };
+            _hub.Init(new CommunicationConsumer.Logger(), "/remote/resource/hub");
+            _hub.ActiveDeviceInfoReceived += _deviceService_ActiveDeviceInfoReceived;
+            _hub.DeviceInfoReceived += _deviceService_DeviceInfoReceived;
+            _hub.LogEntryReceived += _loggerService_LoggerDataReceived;
+            _hub.ServiceFeatureReceived += _featureService_DeviceFeatureReceived;
+            /*_deviceService = deviceService;
             _loggerService = loggerService;
             _featureService = featureService;
             _deviceService.DeviceInfoReceived += _deviceService_DeviceInfoReceived;
             _deviceService.ActiveDeviceInfoReceived += _deviceService_ActiveDeviceInfoReceived;
             _loggerService.LoggerDataReceived += _loggerService_LoggerDataReceived;
-            _featureService.DeviceFeatureReceived += _featureService_DeviceFeatureReceived;
+            _featureService.DeviceFeatureReceived += _featureService_DeviceFeatureReceived;*/
         }
 
         private void _deviceService_ActiveDeviceInfoReceived(object sender, List<DeviceInfo> e)
@@ -93,9 +115,26 @@ namespace Rediscovery.Desktop.Hub.Feature
         [HttpGet]
         public bool InitServiceConnection()
         {
-            _deviceService.Init();
-            _loggerService.Init();
-            _featureService.Init();
+            _hub.Authenticate(_remoteResourceSettings.DesktopHubApplicationKey, connectionConfiguration, (resultModel, state) =>
+            {
+                if (state)
+                {
+                    connectionConfiguration.Token = resultModel.Token;
+                    _hub.Connect(_remoteResourceSettings.DesktopHubApplicationKey, connectionConfiguration, (listener) =>
+                    {
+                        if (listener)
+                            _hub.RequestAllData();
+                        else
+                            _logger.LogWarning("Listener response not valid");
+                    });
+                } else
+                {
+                    _logger.LogWarning("Could not Authenticate for remote resource access");
+                }
+            });
+            //_deviceService.Init();
+            //_loggerService.Init();
+            //_featureService.Init();
             return true;
         }
     }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rediscovery.Desktop.Hub.Feature.RemoteResource
 {
+    [Obsolete]
     public interface IDesktopHubRemoteResourceService
     {
         Task Connect();

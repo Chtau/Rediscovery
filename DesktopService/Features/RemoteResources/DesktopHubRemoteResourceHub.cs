@@ -51,7 +51,7 @@ namespace DesktopService.Features.RemoteResources
                 string token = _deviceService.AuthenticateRemoteResourceConsumer(applicationKey);
                 if (!string.IsNullOrWhiteSpace(token))
                 {
-                    await Groups.AddToGroupAsync(Context.ConnectionId, GroupName);
+                    //await Groups.AddToGroupAsync(Context.ConnectionId, GroupName);
                     _logger.LogInformation($"DesktopHub => Hello received from Application (Key:{applicationKey})");
                     await Clients.Caller.SendAsync("Hello", token);
                 }
@@ -59,6 +59,29 @@ namespace DesktopService.Features.RemoteResources
                 {
                     _logger.LogInformation($"DesktopHub => Hello received from unknown Application (Key:{applicationKey})");
                     await Clients.Caller.SendAsync("Hello", null);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+            }
+        }
+
+        [Authorize(Roles = DeviceService.DesktopHubRole)]
+        public async Task RegisterListener(string applicationKey)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(applicationKey))
+                {
+                    await Groups.AddToGroupAsync(Context.ConnectionId, GroupName);
+                    _logger.LogInformation($"DesktopHub => RegisterListener received from Application (Key:{applicationKey})");
+                    await Clients.Caller.SendAsync("RegisterListenerResponse", true);
+                }
+                else
+                {
+                    _logger.LogInformation($"DesktopHub => RegisterListener received from unknown Application (Key:{applicationKey})");
+                    await Clients.Caller.SendAsync("RegisterListenerResponse", false);
                 }
             }
             catch (Exception ex)

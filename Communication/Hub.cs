@@ -13,11 +13,16 @@ namespace CommunicationConsumer
         public event EventHandler<List<SharedCoreModels.DeviceFeature>> ServiceFeatureReceived;
         public event EventHandler<SharedCoreModels.LoggerEntryModel> LogEntryReceived;
 
-        private readonly ILogger _logger;
-        private readonly Internal.IConnectionProvider<HubConnection> _connectionProviderAuthentication;
-        private readonly Internal.IConnectionProvider<HubConnection> _connectionProvider;
+        private ILogger _logger;
+        private Internal.IConnectionProvider<HubConnection> _connectionProviderAuthentication;
+        private Internal.IConnectionProvider<HubConnection> _connectionProvider;
 
-        public Hub(ILogger logger, string hubLink, Protocol protocol = Protocol.HTTP)
+        public Hub()
+        {
+            
+        }
+
+        public void Init(ILogger logger, string hubLink, Protocol protocol = Protocol.HTTP)
         {
             _logger = logger;
             _connectionProviderAuthentication = new Internal.ConnectionProviderSignalR();
@@ -66,7 +71,7 @@ namespace CommunicationConsumer
             });
         }
 
-        public void Connect(string applicationKey, Models.ConnectionConfiguration configuration)
+        public void Connect(string applicationKey, Models.ConnectionConfiguration configuration, Action<bool> listenerCallback)
         {
             try
             {
@@ -98,6 +103,10 @@ namespace CommunicationConsumer
                             connection.On<SharedCoreModels.LoggerEntryModel>("LogEntry", (entry) =>
                             {
                                 LogEntryReceived?.Invoke(this, entry);
+                            });
+                            connection.On<bool>("RegisterListenerResponse", (listenerResult) =>
+                            {
+                                listenerCallback?.Invoke(listenerResult);
                             });
                             await connection.InvokeAsync("RegisterListener", applicationKey);
                         } catch (Exception ex)

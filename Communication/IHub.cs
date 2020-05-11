@@ -12,8 +12,9 @@ namespace CommunicationConsumer
         event EventHandler<List<SharedCoreModels.DeviceFeature>> ServiceFeatureReceived;
         event EventHandler<SharedCoreModels.LoggerEntryModel> LogEntryReceived;
 
+        void Init(ILogger logger, string hubLink, Protocol protocol = Protocol.HTTP);
         void Authenticate(string applicationKey, Models.ConnectionConfiguration configuration, Action<Models.ConnectionConfiguration, bool> callback);
-        void Connect(string applicationKey, Models.ConnectionConfiguration configuration);
+        void Connect(string applicationKey, Models.ConnectionConfiguration configuration, Action<bool> listenerCallback);
         bool RequestAllData();
         void Disconnect();
     }
