@@ -1,10 +1,10 @@
-﻿using CommunicationConsumer.Models;
+﻿using CommunicationResourceConsumer.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CommunicationConsumer.Internal
+namespace CommunicationResourceConsumer.Internal
 {
     internal interface IConnectionProvider<T>
     {

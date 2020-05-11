@@ -12,28 +12,28 @@ namespace Rediscovery.Desktop.Hub.Feature
     public class CommunicationController : Shared.BaseController
     {
         private readonly ILogger<CommunicationController> _logger;
-        private readonly CommunicationConsumer.IHub _hub;
+        private readonly CommunicationResourceConsumer.IHub _hub;
         private readonly SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration _remoteResourceSettings;
 
-        private CommunicationConsumer.Models.ConnectionConfiguration connectionConfiguration;
+        private CommunicationResourceConsumer.Models.ConnectionConfiguration connectionConfiguration;
 
         public CommunicationController(ILogger<CommunicationController> logger,
-            CommunicationConsumer.IHub hub,
+            CommunicationResourceConsumer.IHub hub,
             IOptions<SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration> remoteResourceSettings
             )
         {
             _remoteResourceSettings = remoteResourceSettings.Value;
             _logger = logger;
             _hub = hub;
-            connectionConfiguration = new CommunicationConsumer.Models.ConnectionConfiguration
+            connectionConfiguration = new CommunicationResourceConsumer.Models.ConnectionConfiguration
             {
                 Address = _remoteResourceSettings.IP + (_remoteResourceSettings.Port != null ? ":" + _remoteResourceSettings.Port : ""),
                 DisplayName = _remoteResourceSettings.DesktopHubApplicationKey,
                 Id = Guid.NewGuid(),
-                State = CommunicationConsumer.ConnectionState.None,
+                State = CommunicationResourceConsumer.ConnectionState.None,
                 Token = null
             };
-            _hub.Init(new CommunicationConsumer.Logger(), "/remote/resource/hub");
+            _hub.Init(new CommunicationResourceConsumer.Logger(), "/remote/resource/hub");
             _hub.ActiveDeviceInfoReceived += _deviceService_ActiveDeviceInfoReceived;
             _hub.DeviceInfoReceived += _deviceService_DeviceInfoReceived;
             _hub.LogEntryReceived += _loggerService_LoggerDataReceived;

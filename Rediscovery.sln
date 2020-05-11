@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Desktop.Hub", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppControlPanel", "AppControlPanel\AppControlPanel.csproj", "{7F62F8C0-D13D-4A2B-8CB7-13C719C0CABF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationConsumer", "Communication\CommunicationConsumer.csproj", "{34CEE8B3-475B-4704-9B8C-06F237B51193}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationResourceConsumer", "Communication\CommunicationResourceConsumer.csproj", "{34CEE8B3-475B-4704-9B8C-06F237B51193}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

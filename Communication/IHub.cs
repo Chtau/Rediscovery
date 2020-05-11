@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CommunicationConsumer
+namespace CommunicationResourceConsumer
 {
     public interface IHub
     {

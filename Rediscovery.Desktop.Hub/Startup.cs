@@ -34,7 +34,7 @@ namespace Rediscovery.Desktop.Hub
 
             services.AddHostedService<Worker>();
 
-            services.AddSingleton<CommunicationConsumer.IHub, CommunicationConsumer.Hub>();
+            services.AddSingleton<CommunicationResourceConsumer.IHub, CommunicationResourceConsumer.Hub>();
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

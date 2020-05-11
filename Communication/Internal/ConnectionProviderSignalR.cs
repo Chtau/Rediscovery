@@ -1,11 +1,11 @@
-﻿using CommunicationConsumer.Models;
+﻿using CommunicationResourceConsumer.Models;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CommunicationConsumer.Internal
+namespace CommunicationResourceConsumer.Internal
 {
     internal class ConnectionProviderSignalR : IConnectionProvider<HubConnection>
     {

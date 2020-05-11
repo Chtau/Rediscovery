@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommunicationConsumer
+namespace CommunicationResourceConsumer
 {
     internal static class Extensions
     {
