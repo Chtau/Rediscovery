@@ -14,16 +14,19 @@ namespace DesktopService.Features.RemoteResources
         private readonly ILogger<RemoteResourcesLiveLogger> _logger;
         private readonly SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration _remoteResourceSettings;
         private readonly IHubContext<DesktopHubRemoteResourceHub> _hubContext;
+        private readonly CommunicationResourceProvider.IRemoteResourcesSenderService _remoteResourcesSenderService;
 
         private DateTime lastFailedConnection = DateTime.MinValue;
         private int connectionsFailed = 0;
 
         public RemoteResourcesLiveLogger(IHubContext<DesktopHubRemoteResourceHub> hubContext, ILoggerFactory loggerFactory,
-            IOptions<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration> remoteResourceSettings)
+            IOptions<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration> remoteResourceSettings,
+            CommunicationResourceProvider.IRemoteResourcesSenderService remoteResourcesSenderService)
         {
             _logger = loggerFactory.CreateLogger<RemoteResourcesLiveLogger>();
             _remoteResourceSettings = remoteResourceSettings.Value;
             _hubContext = hubContext;
+            _remoteResourcesSenderService = remoteResourcesSenderService;
         }
 
         public void Log(LoggerEntryModel liveLoggerModel)
@@ -41,7 +44,8 @@ namespace DesktopService.Features.RemoteResources
                 {
                     try
                     {
-                        _hubContext.Clients.Group(DesktopHubRemoteResourceHub.GroupName).SendAsync("LogEntry", liveLoggerModel);
+                        _remoteResourcesSenderService.SendLoggerEntry(liveLoggerModel);
+                        //_hubContext.Clients.Group(DesktopHubRemoteResourceHub.GroupName).SendAsync("LogEntry", liveLoggerModel);
                     } catch (Exception ex)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;

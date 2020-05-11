@@ -9,7 +9,7 @@ namespace CommunicationResourceProvider
 {
     public static class CommunicationResourceProviderExtensions
     {
-        public static IApplicationBuilder AddResourceProvider(this IApplicationBuilder app, string hubPath)
+        public static IApplicationBuilder UseResourceProvider(this IApplicationBuilder app, string hubPath)
         {
             app.UseSignalR(x =>
             {

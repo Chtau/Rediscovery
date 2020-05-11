@@ -26,7 +26,7 @@ namespace CommunicationResourceProvider
         {
             try
             {
-                _hubContext.Clients.Group(GroupNames.Admin).SendAsync("ActiveDeviceInfo", _resourcesRepository.GetResourceDeviceFeature());
+                _hubContext.Clients.Group(GroupNames.Admin).SendAsync("ActiveDeviceInfo", _resourcesRepository.GetResourceActiveDeviceInfo());
             }
             catch (Exception ex)
             {
@@ -38,7 +38,7 @@ namespace CommunicationResourceProvider
         {
             try
             {
-                _hubContext.Clients.Group(GroupNames.Admin).SendAsync("DeviceInfo", _resourcesRepository.GetResourceDeviceFeature());
+                _hubContext.Clients.Group(GroupNames.Admin).SendAsync("DeviceInfo", _resourcesRepository.GetResourceDeviceInfo());
             }
             catch (Exception ex)
             {
@@ -55,6 +55,18 @@ namespace CommunicationResourceProvider
             catch (Exception ex)
             {
                 _logger.LogError(ex, "SendServiceFeature send remote resource");
+            }
+        }
+
+        public void SendLoggerEntry(SharedCoreModels.LoggerEntryModel liveLoggerModel)
+        {
+            try
+            {
+                _hubContext.Clients.Group(GroupNames.Admin).SendAsync("LogEntry", liveLoggerModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "SendLoggerEntry send remote resource");
             }
         }
     }

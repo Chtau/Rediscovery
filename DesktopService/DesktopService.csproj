@@ -44,6 +44,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CommunicationResourceProvider\CommunicationResourceProvider.csproj" />
     <ProjectReference Include="..\PluginFeature\PluginFeature.csproj" />
     <ProjectReference Include="..\SharedCommandArguments\SharedCommandArguments.csproj" />
     <ProjectReference Include="..\SharedConfigurations\SharedConfigurations.csproj" />

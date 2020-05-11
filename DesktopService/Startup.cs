@@ -1,4 +1,5 @@
-﻿using DesktopService.Features.Authentication;
+﻿using CommunicationResourceProvider;
+using DesktopService.Features.Authentication;
 using DesktopService.Features.DeviceFeature;
 using DesktopService.Features.InternalLogger;
 using DesktopService.Features.Logger;
@@ -107,6 +108,10 @@ namespace DesktopService
             services.AddSingleton<PluginFeature.Interfaces.IPluginLogger, Features.PluginLogger.PluginLogger>();
 
             services.AddSingleton<Features.Plugins.ILoadPlugins, Features.Plugins.LoadPlugins>();
+
+            services.AddSingleton<IAuthenticateService, Features.Identity.DeviceService>();
+            services.AddSingleton<IResourcesRepository, RemoteResourcesRepository>();
+            services.AddResourceProvider();
         }
 
         // Use this method to configure the HTTP request pipeline.
@@ -133,12 +138,13 @@ namespace DesktopService
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseResourceProvider("/remote/resource/hub");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<ConnectHub>("/hubs/connect");
                 endpoints.MapHub<DeviceFeatureHub>("/hubs/feature");
-                endpoints.MapHub<DesktopHubRemoteResourceHub>("/remote/resource/hub");
+                //endpoints.MapHub<DesktopHubRemoteResourceHub>("/remote/resource/hub");
                 endpoints.MapHub<DiscoveryServiceRemoteResourceHub>("/remote/resource/discovery");
                 endpoints.MapHub<DesktopInfoHubRemoteResourceHub>("/remote/resource/info");
             });

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using CommunicationResourceProvider;
 using DesktopService.Features.Identity.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -12,7 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DesktopService.Features.Identity
 {
-    public class DeviceService : IDeviceService
+    public class DeviceService : IDeviceService, IAuthenticateService
     {
         public const string DesktopHubRole = "desktophubconsumer";
         public const string InfoHubRole = "infohubconsumer";
@@ -258,6 +259,33 @@ namespace DesktopService.Features.Identity
                 retVal += _random.Next(0, 9);
             }
             return retVal;
+        }
+
+        public string AuthenticateRemoteResourceConsumer(string consumerKey, string roleName)
+        {
+            bool validKey = false;
+            if (string.Equals(_remoteResourceSettings.RediscoveryDesktopHubApplicationKey, consumerKey, StringComparison.OrdinalIgnoreCase))
+            {
+                validKey = true;
+            }
+            else if (string.Equals(_remoteResourceSettings.RediscoveryDesktopInfoHubApplicationKey, consumerKey, StringComparison.OrdinalIgnoreCase))
+            {
+                validKey = true;
+            }
+            else if (string.Equals(_remoteResourceSettings.RediscoveryDiscoveryServiceApplicationKey, consumerKey, StringComparison.OrdinalIgnoreCase))
+            {
+                validKey = true;
+            }
+            if (validKey)
+            {
+                return OnCreateToken(new Claim[]
+                {
+                    new Claim(ClaimTypes.Sid, consumerKey),
+                    new Claim(ClaimTypes.Name, consumerKey),
+                    new Claim(ClaimTypes.Role, roleName)
+                });
+            }
+            return null;
         }
     }
 }

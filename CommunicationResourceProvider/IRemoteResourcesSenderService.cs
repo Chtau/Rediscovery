@@ -9,5 +9,6 @@ namespace CommunicationResourceProvider
         void SendActiveDeviceInfo();
         void SendDeviceInfo();
         void SendServiceFeature();
+        void SendLoggerEntry(SharedCoreModels.LoggerEntryModel liveLoggerModel);
     }
 }

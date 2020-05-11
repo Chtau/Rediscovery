@@ -1,4 +1,5 @@
-﻿using DesktopService.Features.DeviceFeature;
+﻿using CommunicationResourceProvider;
+using DesktopService.Features.DeviceFeature;
 using DesktopService.Features.Identity.Models;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace DesktopService.Features.RemoteResources
 {
-    public class RemoteResourcesRepository : IRemoteResourcesRepository
+    public class RemoteResourcesRepository : IRemoteResourcesRepository, IResourcesRepository
     {
         private readonly DAL.IDBContext _dBContext;
         private readonly DeviceFeature.IFeatureService _featureService;
@@ -30,7 +31,7 @@ namespace DesktopService.Features.RemoteResources
             _logger = loggerFactory.CreateLogger<RemoteResourcesRepository>();
         }
 
-        private List<SharedCoreModels.DeviceFeature> GetResourceDeviceFeature()
+        public List<SharedCoreModels.DeviceFeature> GetResourceDeviceFeature()
         {
             var features = _featureService.GetFeaturesManifest();
             return (from x in features
@@ -44,7 +45,7 @@ namespace DesktopService.Features.RemoteResources
                     }).ToList();
         }
 
-        private List<SharedCoreModels.DeviceInfo> GetResourceDeviceInfo()
+        public List<SharedCoreModels.DeviceInfo> GetResourceDeviceInfo()
         {
             var users = _dBContext.Instance.Table<Device>().ToListAsync().GetAwaiter().GetResult();
             return (from x in users
@@ -56,7 +57,7 @@ namespace DesktopService.Features.RemoteResources
                     }).ToList();
         }
 
-        private List<SharedCoreModels.DeviceInfo> GetResourceActiveDeviceInfo()
+        public List<SharedCoreModels.DeviceInfo> GetResourceActiveDeviceInfo()
         {
             var allUsers = from x in ActiveUserHandler.UserIds select new Guid(x);
             var users = _dBContext.Instance.Table<Device>().ToListAsync().GetAwaiter().GetResult();
