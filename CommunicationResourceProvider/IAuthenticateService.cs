@@ -6,6 +6,6 @@ namespace CommunicationResourceProvider
 {
     public interface IAuthenticateService
     {
-        string AuthenticateRemoteResourceConsumer(string consumerKey, string roleName);
+        string AuthenticationTokenRemoteResourceConsumer(string consumerKey, string roleName);
     }
 }

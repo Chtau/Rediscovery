@@ -44,7 +44,7 @@ namespace CommunicationResourceProvider
         {
             try
             {
-                string token = _authenticateService.AuthenticateRemoteResourceConsumer(applicationKey, GroupNames.Admin);
+                string token = _authenticateService.AuthenticationTokenRemoteResourceConsumer(applicationKey, GroupNames.Admin);
                 if (!string.IsNullOrWhiteSpace(token))
                 {
                     _logger.LogInformation($"RemoteResourceHub => Hello received from Application (Key:{applicationKey})");
