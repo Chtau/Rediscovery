@@ -8,7 +8,7 @@ namespace DALDesktopService
 {
     public interface IDBContext
     {
-        Task Connect(string connectionString);
+        Task Connect();
         SQLiteAsyncConnection Instance { get; }
     }
 }

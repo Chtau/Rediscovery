@@ -11,21 +11,20 @@ namespace DALDesktopService
     public class DBContext : IDBContext
     {
         private readonly ILogger<DBContext> _logger;
-        private readonly SharedConfigurations.DesktopService.Models.AppConfiguration _appSettings;
 
         internal SQLiteAsyncConnection DB = null;
 
-        public DBContext(ILoggerFactory loggerFactory, IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> options)
+        public DBContext(ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<DBContext>();
-            _appSettings = options.Value;
+            Connect().GetAwaiter();
         }
 
-        public async Task Connect(string connectionString)
+        public async Task Connect()
         {
             try
             {
-                DB = new SQLiteAsyncConnection(connectionString);
+                DB = new SQLiteAsyncConnection(ConfigurationInstance.Configuration.ConnectionString);
                 await OnBuildModel();
             }
             catch (Exception ex)
