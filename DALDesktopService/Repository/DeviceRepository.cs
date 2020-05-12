@@ -88,6 +88,7 @@ namespace DALDesktopService.Repository
                     device1.Token = device.Token;
                     device1.DeviceName = device.DeviceName;
                     device1.AllowAccess = device.AllowAccess;
+                    DeviceMetadata.UpdateInstance(device, device1);
                     await _dBContext.Instance.UpdateAsync(device1);
                 }
                 else
@@ -100,6 +101,7 @@ namespace DALDesktopService.Repository
                         DeviceIdentifier = device.DeviceIdentifier,
                         Token = device.Token,
                     };
+                    DeviceMetadata.UpdateInstance(device, device1);
                     await _dBContext.Instance.InsertOrReplaceAsync(device1);
                 }
                 DeviceChanged?.Invoke(this, device1);
