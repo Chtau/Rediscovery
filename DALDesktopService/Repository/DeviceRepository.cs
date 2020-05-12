@@ -14,7 +14,7 @@ namespace DALDesktopService.Repository
         private readonly ILogger<DeviceRepository> _logger;
 
         public event EventHandler<Device> DeviceChanged;
-        public event EventHandler<Device> DeviceDeleted;
+        public event EventHandler<Guid> DeviceDeleted;
 
 
         public DeviceRepository(IDBContext dBContext, ILoggerFactory loggerFactory)
@@ -23,12 +23,12 @@ namespace DALDesktopService.Repository
             _logger = loggerFactory.CreateLogger<DeviceRepository>();
         }
 
-        public async Task<bool> DeleteDevice(Device device)
+        public async Task<bool> DeleteDevice(Guid id)
         {
             try
             {
-                await _dBContext.Instance.Table<Models.Device>().DeleteAsync(x => x.Id == device.Id);
-                DeviceDeleted?.Invoke(this, device);
+                await _dBContext.Instance.Table<Models.Device>().DeleteAsync(x => x.Id == id);
+                DeviceDeleted?.Invoke(this, id);
                 return true;
             }
             catch (Exception ex)

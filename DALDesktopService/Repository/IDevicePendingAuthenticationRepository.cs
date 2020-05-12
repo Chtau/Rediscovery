@@ -8,11 +8,11 @@ namespace DALDesktopService.Repository
     public interface IDevicePendingAuthenticationRepository
     {
         event EventHandler<Models.DevicePendingAuthentication> DevicePendingAuthenticationChanged;
-        event EventHandler<Models.DevicePendingAuthentication> DevicePendingAuthenticationDeleted;
+        event EventHandler<Guid> DevicePendingAuthenticationDeleted;
         Task<IEnumerable<Models.DevicePendingAuthentication>> GetAll();
         Task<Models.DevicePendingAuthentication> GetById(Guid id);
         Task<Models.DevicePendingAuthentication> GetByDeviceIdentifier(string deviceIdentifier);
         Task<Models.DevicePendingAuthentication> SaveDevicePendingAuthentication(Models.DevicePendingAuthentication devicePendingAuthentication);
-        Task<bool> DeleteDevicePendingAuthentication(Models.DevicePendingAuthentication devicePendingAuthentication);
+        Task<bool> DeleteDevicePendingAuthentication(Guid id);
     }
 }

@@ -13,7 +13,7 @@ namespace DALDesktopService.Repository
         private readonly ILogger<DevicePendingAuthenticationRepository> _logger;
 
         public event EventHandler<DevicePendingAuthentication> DevicePendingAuthenticationChanged;
-        public event EventHandler<DevicePendingAuthentication> DevicePendingAuthenticationDeleted;
+        public event EventHandler<Guid> DevicePendingAuthenticationDeleted;
 
         public DevicePendingAuthenticationRepository(IDBContext dBContext, ILoggerFactory loggerFactory)
         {
@@ -21,12 +21,12 @@ namespace DALDesktopService.Repository
             _logger = loggerFactory.CreateLogger<DevicePendingAuthenticationRepository>();
         }
 
-        public async Task<bool> DeleteDevicePendingAuthentication(DevicePendingAuthentication devicePendingAuthentication)
+        public async Task<bool> DeleteDevicePendingAuthentication(Guid id)
         {
             try
             {
-                await _dBContext.Instance.Table<Models.DevicePendingAuthentication>().DeleteAsync(x => x.Id == devicePendingAuthentication.Id);
-                DevicePendingAuthenticationDeleted?.Invoke(this, devicePendingAuthentication);
+                await _dBContext.Instance.Table<Models.DevicePendingAuthentication>().DeleteAsync(x => x.Id == id);
+                DevicePendingAuthenticationDeleted?.Invoke(this, id);
                 return true;
             }
             catch (Exception ex)
