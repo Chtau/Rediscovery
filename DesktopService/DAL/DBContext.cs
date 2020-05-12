@@ -37,6 +37,7 @@ namespace DesktopService.DAL
         private async Task OnBuildModel()
         {
             await DB.CreateTableAsync<Features.Identity.Models.Device>();
+            await DB.CreateTableAsync<Features.Identity.Models.DevicePendingAuthentication>();
         }
 
         public SQLiteAsyncConnection Instance

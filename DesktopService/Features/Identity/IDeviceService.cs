@@ -15,5 +15,10 @@ namespace DesktopService.Features.Identity
         Task<Models.Device> AddDevice(string deviceName);
         string CreateNewToken(string sid, string name);
         string AuthenticateRemoteResourceConsumer(string consumerKey);
+
+
+        event EventHandler<Models.DevicePendingAuthentication> NewDevicePendingAuthenticationAdded;
+        Task<Models.DevicePendingAuthentication> AddPendingAuthentication(string deviceName, string deviceIdentifier);
+        Task<Models.DevicePendingAuthentication> PendingAuthenticationByIdentifier(string deviceIdentifier);
     }
 }

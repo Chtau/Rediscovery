@@ -41,7 +41,8 @@ namespace Rediscovery.Features.Authentication
             OnManifest(connection, model);
             _logger.Message($"Send Welcome to Service:{model.DisplayName} ({DateTime.Now})");
             var setting = settingStore.GetItem(Guid.Empty);
-            connection.InvokeAsync("Welcome", setting.DeviceIdentifier);
+            // TODO: create a unique identifier for every device
+            connection.InvokeAsync("Welcome", setting.DeviceIdentifier, setting.DeviceIdentifier);
         }
 
         private void OnHello(HubConnection con, DesktopConfiguration.DesktopConfigurationModel model)

@@ -29,7 +29,7 @@ namespace DesktopService.Features.Authentication
             _remoteResourcesIncomingConnection = remoteResourcesIncomingConnection;
         }
         
-        public async Task Welcome(string device)
+        public async Task Welcome(string device, string deviceIdentifier)
         {
             try
             {
@@ -44,9 +44,8 @@ namespace DesktopService.Features.Authentication
                 }
                 else if (result.Item1 == Auth.LoginState.RequiredAuthorizeKey)
                 {
-                    var userInfo = await _deviceService.AddDevice(device);
+                    await _deviceService.AddPendingAuthentication(device, deviceIdentifier);
                     await OnSendHello(SharedCoreModels.Enums.ConnectionState.WaitForApprovel, null);
-                    await _remoteResourcesIncomingConnection.ShowCode(userInfo.PasswordKey, userInfo.DeviceName, userInfo.PasswordKeyValidTill);
                 }
                 else if (result.Item1 == Auth.LoginState.OK)
                 {
@@ -58,6 +57,7 @@ namespace DesktopService.Features.Authentication
             }
         }
 
+        [Obsolete("Remove after logic change")]
         public async Task AuthorizeKey(string device, string key)
         {
             try

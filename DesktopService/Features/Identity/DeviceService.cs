@@ -20,6 +20,7 @@ namespace DesktopService.Features.Identity
         public const string DiscoveryServiceRole = "discoveryserviceconsumer";
 
         public event EventHandler<Device> NewDeviceAdded;
+        public event EventHandler<DevicePendingAuthentication> NewDevicePendingAuthenticationAdded;
 
         private readonly Guid anonymouseId = new Guid("3D2AF409-6809-4ED1-B86A-451C94165E38");
         private readonly string anonymouseDeviceName = "Anonymous";
@@ -286,6 +287,80 @@ namespace DesktopService.Features.Identity
                 });
             }
             return null;
+        }
+
+        public async Task<DevicePendingAuthentication> AddPendingAuthentication(string deviceName, string deviceIdentifier)
+        {
+            try
+            {
+                DevicePendingAuthentication devicePendingAuthentication = await PendingAuthenticationByIdentifier(deviceIdentifier);
+                if (devicePendingAuthentication != null)
+                {
+                    devicePendingAuthentication.DeviceName = deviceName;
+                    devicePendingAuthentication.RequestTime = DateTime.UtcNow;
+                    await OnUpdatePendingAuthentication(devicePendingAuthentication);
+                }
+                else
+                {
+                    devicePendingAuthentication = new DevicePendingAuthentication
+                    {
+                        Id = Guid.NewGuid(),
+                        DeviceName = deviceName,
+                        DeviceIdentifier = deviceIdentifier,
+                        RequestTime = DateTime.UtcNow
+                    };
+                    await OnAddPendingAuthentication(devicePendingAuthentication);
+                }
+                NewDevicePendingAuthenticationAdded?.Invoke(this, devicePendingAuthentication);
+                return devicePendingAuthentication;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return null;
+            }
+        }
+
+        public async Task<DevicePendingAuthentication> PendingAuthenticationByIdentifier(string deviceIdentifier)
+        {
+            try
+            {
+                deviceIdentifier = deviceIdentifier.ToLower();
+                return await _dBContext.Instance.Table<Models.DevicePendingAuthentication>().FirstOrDefaultAsync(x => x.DeviceIdentifier == deviceIdentifier);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return null;
+            }
+        }
+
+        private async Task<bool> OnUpdatePendingAuthentication(DevicePendingAuthentication devicePendingAuthentication)
+        {
+            try
+            {
+                await _dBContext.Instance.UpdateAsync(devicePendingAuthentication);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return false;
+            }
+        }
+
+        private async Task<bool> OnAddPendingAuthentication(DevicePendingAuthentication devicePendingAuthentication)
+        {
+            try
+            {
+                await _dBContext.Instance.InsertOrReplaceAsync(devicePendingAuthentication);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return false;
+            }
         }
     }
 }
