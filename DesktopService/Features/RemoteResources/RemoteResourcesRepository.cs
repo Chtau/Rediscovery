@@ -1,6 +1,5 @@
 ﻿using CommunicationResourceProvider;
 using DesktopService.Features.DeviceFeature;
-using DesktopService.Features.Identity.Models;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using PluginFeature.Models;
@@ -15,16 +14,17 @@ namespace DesktopService.Features.RemoteResources
 {
     public class RemoteResourcesRepository : IResourcesRepository
     {
-        private readonly DAL.IDBContext _dBContext;
+        private readonly DALDesktopService.Repository.IDeviceRepository _deviceRepository;
         private readonly DeviceFeature.IFeatureService _featureService;
         private readonly ILogger<RemoteResourcesRepository> _logger;
 
-        public RemoteResourcesRepository(DAL.IDBContext dBContext,
+        public RemoteResourcesRepository(
             DeviceFeature.IFeatureService featureService,
+            DALDesktopService.Repository.IDeviceRepository deviceRepository,
             ILoggerFactory loggerFactory)
         {
-            _dBContext = dBContext;
             _featureService = featureService;
+            _deviceRepository = deviceRepository;
             _logger = loggerFactory.CreateLogger<RemoteResourcesRepository>();
         }
 
@@ -44,7 +44,7 @@ namespace DesktopService.Features.RemoteResources
 
         public List<SharedCoreModels.DeviceInfo> GetResourceDeviceInfo()
         {
-            var users = _dBContext.Instance.Table<Device>().ToListAsync().GetAwaiter().GetResult();
+            var users = _deviceRepository.GetAll().GetAwaiter().GetResult();
             return (from x in users
                     select new SharedCoreModels.DeviceInfo
                     {
@@ -57,7 +57,7 @@ namespace DesktopService.Features.RemoteResources
         public List<SharedCoreModels.DeviceInfo> GetResourceActiveDeviceInfo()
         {
             var allUsers = from x in ActiveUserHandler.UserIds select new Guid(x);
-            var users = _dBContext.Instance.Table<Device>().ToListAsync().GetAwaiter().GetResult();
+            var users = _deviceRepository.GetAll().GetAwaiter().GetResult();
             return (from x in users
                     join y in allUsers on x.Id equals y
                     select new SharedCoreModels.DeviceInfo
@@ -72,7 +72,7 @@ namespace DesktopService.Features.RemoteResources
         {
             try
             {
-                _dBContext.Instance.Table<Device>().DeleteAsync(x => x.Id == deviceInfo.Id);
+                _deviceRepository.DeleteDevice(deviceInfo.Id).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {

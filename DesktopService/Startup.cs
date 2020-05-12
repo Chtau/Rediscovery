@@ -89,9 +89,6 @@ namespace DesktopService
                 };
             });
 
-            // configure DI for application services
-            services.AddScoped<Features.Identity.IDeviceService, Features.Identity.DeviceService>();
-
             services.AddHostedService<Worker>();
 
             services.AddLogging();
@@ -100,10 +97,9 @@ namespace DesktopService
                 c.ConnectionString = System.IO.Path.Combine(AppFolders.GetUserFolder(appSettings.AppDataFolder), "rediscovery.db");
             });
             services.AddSingleton<IConfigurationRoot>(Configuration);
-            services.AddSingleton<DAL.IDBContext, DAL.DBContext>();
             services.AddSingleton<Features.FeatureDefinitions.IManifest, Features.FeatureDefinitions.Manifest>();
+            services.AddScoped<Features.Authentication.ITokenService, Features.Authentication.TokenService>();
             services.AddSingleton<Features.Authentication.IAuth, Features.Authentication.Auth>();
-            services.AddSingleton<Features.Identity.IDeviceService, Features.Identity.DeviceService>();
             services.AddSingleton<IUserIdProvider, Features.Identity.ClaimUserIdProvider>();
             services.AddSingleton<Features.RemoteResources.IRemoteResourcesIncomingConnection, Features.RemoteResources.RemoteResourcesIncomingConnection>();
             services.AddSingleton<Features.RemoteResources.IRemoteResourcesServiceInfo, Features.RemoteResources.RemoteResourcesServiceInfo>();
@@ -113,7 +109,7 @@ namespace DesktopService
             services.AddSingleton<PluginFeature.Interfaces.IPluginLogger, Features.PluginLogger.PluginLogger>();
 
             services.AddSingleton<Features.Plugins.ILoadPlugins, Features.Plugins.LoadPlugins>();
-            services.AddResourceProvider<Features.Identity.DeviceService, RemoteResourcesRepository>();
+            services.AddResourceProvider<Features.Authentication.TokenService, RemoteResourcesRepository>();
         }
 
         // Use this method to configure the HTTP request pipeline.
