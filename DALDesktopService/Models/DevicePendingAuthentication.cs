@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DALDesktopService.Models
 {
-    public class DevicePendingAuthentication
+    public class DevicePendingAuthentication : DeviceMetadata
     {
         private string deviceIdentifier { get; set; }
 

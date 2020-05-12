@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DALDesktopService.Models
 {
-    public class Device
+    public class Device : DeviceMetadata
     {
         private string deviceIdentifier { get; set; }
 
