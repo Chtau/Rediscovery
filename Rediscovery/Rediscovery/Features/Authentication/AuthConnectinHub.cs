@@ -47,7 +47,7 @@ namespace Rediscovery.Features.Authentication
             {
                 DeviceName = setting.DeviceIdentifier,
                 DeviceIdentifier = OnGetDeviceIdentifier(),
-                DeviceType = (SharedCoreModels.DeviceType)Xamarin.Essentials.DeviceInfo.DeviceType,
+                DeviceType = Enum.GetName(typeof(DeviceType), Xamarin.Essentials.DeviceInfo.DeviceType),
                 Idiom = Xamarin.Essentials.DeviceInfo.Idiom.ToString(),
                 Manufacturer = Xamarin.Essentials.DeviceInfo.Manufacturer,
                 Model = Xamarin.Essentials.DeviceInfo.Model,
