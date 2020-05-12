@@ -4,12 +4,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DesktopService.DAL
+namespace DALDesktopService
 {
-    [Obsolete("Use Library DALDesktopService")]
     public interface IDBContext
     {
-        Task Connect();
+        Task Connect(string connectionString);
         SQLiteAsyncConnection Instance { get; }
     }
 }

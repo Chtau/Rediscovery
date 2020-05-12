@@ -5,6 +5,7 @@ using System.Text;
 
 namespace DesktopService.Features.Identity.Models
 {
+    [Obsolete("Use Library DALDesktopService")]
     public class DevicePendingAuthentication
     {
         private string deviceIdentifier { get; set; }

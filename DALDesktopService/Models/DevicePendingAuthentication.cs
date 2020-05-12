@@ -3,10 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopService.Features.Identity.Models
+namespace DALDesktopService.Models
 {
-    [Obsolete("Use Library DALDesktopService")]
-    public class Device
+    public class DevicePendingAuthentication
     {
         private string deviceIdentifier { get; set; }
 
@@ -21,9 +20,6 @@ namespace DesktopService.Features.Identity.Models
                 deviceIdentifier = value?.ToLower();
             }
         }
-        public string PasswordKey { get; set; }
-        public DateTime PasswordKeyValidTill { get; set; }
-        public string Token { get; set; }
-        public bool AllowAccess { get; set; }
+        public DateTime RequestTime { get; set; }
     }
 }
