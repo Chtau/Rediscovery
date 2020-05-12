@@ -1,4 +1,5 @@
 ﻿using CommunicationResourceProvider;
+using DALDesktopService;
 using DesktopService.Features.Authentication;
 using DesktopService.Features.DeviceFeature;
 using DesktopService.Features.InternalLogger;
@@ -50,8 +51,9 @@ namespace DesktopService
             var appSettingsSection = Configuration.GetSection(SharedConfigurations.DesktopService.Models.AppConfiguration.SectionName);
             services.Configure<SharedConfigurations.DesktopService.Models.AppConfiguration> (appSettingsSection);
 
-            var appSettings = identitySettingsSection.Get<SharedConfigurations.DesktopService.Models.IdentityConfiguration>();
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            var appSettings = appSettingsSection.Get<SharedConfigurations.DesktopService.Models.AppConfiguration>();
+            var identitySettings = identitySettingsSection.Get<SharedConfigurations.DesktopService.Models.IdentityConfiguration>();
+            var key = Encoding.ASCII.GetBytes(identitySettings.Secret);
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -93,6 +95,10 @@ namespace DesktopService
             services.AddHostedService<Worker>();
 
             services.AddLogging();
+            services.AddDAL((c) =>
+            {
+                c.ConnectionString = System.IO.Path.Combine(AppFolders.GetUserFolder(appSettings.AppDataFolder), "rediscovery.db");
+            });
             services.AddSingleton<IConfigurationRoot>(Configuration);
             services.AddSingleton<DAL.IDBContext, DAL.DBContext>();
             services.AddSingleton<Features.FeatureDefinitions.IManifest, Features.FeatureDefinitions.Manifest>();
