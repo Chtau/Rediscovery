@@ -3,6 +3,7 @@ using DesktopService.Features.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
+using SharedCoreModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -29,11 +30,11 @@ namespace DesktopService.Features.Authentication
             _remoteResourcesIncomingConnection = remoteResourcesIncomingConnection;
         }
         
-        public async Task Welcome(string device, string deviceIdentifier)
+        public async Task Welcome(WelcomeDeviceMessage welcomeDeviceMessage)
         {
             try
             {
-                var result = await _auth.RequestLogin(device);
+                var result = await _auth.RequestLogin(welcomeDeviceMessage.DeviceName);
                 if (result.Item1 == Auth.LoginState.Denied)
                 {
                     await OnSendHello(SharedCoreModels.Enums.ConnectionState.Denied, null);
@@ -44,12 +45,12 @@ namespace DesktopService.Features.Authentication
                 }
                 else if (result.Item1 == Auth.LoginState.RequiredAuthorizeKey)
                 {
-                    await _deviceService.AddPendingAuthentication(device, deviceIdentifier);
+                    await _deviceService.AddPendingAuthentication(welcomeDeviceMessage.DeviceName, welcomeDeviceMessage.DeviceIdentifier);
                     await OnSendHello(SharedCoreModels.Enums.ConnectionState.WaitForApprovel, null);
                 }
                 else if (result.Item1 == Auth.LoginState.OK)
                 {
-                    await OnLogin(device, result.Item2.Token);
+                    await OnLogin(welcomeDeviceMessage.DeviceName, result.Item2.Token);
                 }
             } catch (Exception ex)
             {

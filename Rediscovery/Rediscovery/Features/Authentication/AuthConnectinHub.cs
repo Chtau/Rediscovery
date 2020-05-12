@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using System.Linq;
 using Rediscovery.Features.Connection;
+using Xamarin.Essentials;
+using Xamarin.Forms.Internals;
 
 namespace Rediscovery.Features.Authentication
 {
@@ -41,8 +43,28 @@ namespace Rediscovery.Features.Authentication
             OnManifest(connection, model);
             _logger.Message($"Send Welcome to Service:{model.DisplayName} ({DateTime.Now})");
             var setting = settingStore.GetItem(Guid.Empty);
-            // TODO: create a unique identifier for every device
-            connection.InvokeAsync("Welcome", setting.DeviceIdentifier, setting.DeviceIdentifier);
+            connection.InvokeAsync("Welcome", new WelcomeDeviceMessage
+            {
+                DeviceName = setting.DeviceIdentifier,
+                DeviceIdentifier = OnGetDeviceIdentifier(),
+                DeviceType = (SharedCoreModels.DeviceType)Xamarin.Essentials.DeviceInfo.DeviceType,
+                Idiom = Xamarin.Essentials.DeviceInfo.Idiom.ToString(),
+                Manufacturer = Xamarin.Essentials.DeviceInfo.Manufacturer,
+                Model = Xamarin.Essentials.DeviceInfo.Model,
+                OSVersion = Xamarin.Essentials.DeviceInfo.VersionString,
+                Platform = Xamarin.Essentials.DeviceInfo.Platform.ToString()
+            });
+        }
+
+        private string OnGetDeviceIdentifier()
+        {
+            var deviceId = Preferences.Get("rediscovery_identifier", string.Empty);
+            if (string.IsNullOrWhiteSpace(deviceId))
+            {
+                deviceId = System.Guid.NewGuid().ToString();
+                Preferences.Set("rediscovery_identifier", deviceId);
+            }
+            return deviceId;
         }
 
         private void OnHello(HubConnection con, DesktopConfiguration.DesktopConfigurationModel model)
