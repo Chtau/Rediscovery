@@ -40,7 +40,7 @@ namespace DesktopService.Features.Authentication
             try
             {
                 var u = await _deviceRepository.GetByDeviceIdentifier(welcomeDeviceMessage.DeviceIdentifier);
-                if (u?.AllowAccess == true)
+                if (u != null)
                 {
                     u.Token = _tokenService.CreateNewToken(u.Id.ToString(), u.DeviceName);
                     u.DeviceType = welcomeDeviceMessage.DeviceType;
@@ -50,7 +50,7 @@ namespace DesktopService.Features.Authentication
                     u.OSVersion = welcomeDeviceMessage.OSVersion;
                     u.Platform = welcomeDeviceMessage.Platform;
                     u = await _deviceRepository.SaveDevice(u);
-                    return new Tuple<LoginState, DALDesktopService.Models.Device>(LoginState.OK, u);
+                    return new Tuple<LoginState, DALDesktopService.Models.Device>(u.AllowAccess ? LoginState.OK : LoginState.Denied, u);
                 }
                 else
                 {
