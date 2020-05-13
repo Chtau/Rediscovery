@@ -101,6 +101,6 @@ export class DeviceService {
   }
 
   public resolvePendingDevice(id: string, accept: boolean): void {
-    
+    this.ipc.send('resolvependingdevice-ipc', id, accept);
   }
 }
