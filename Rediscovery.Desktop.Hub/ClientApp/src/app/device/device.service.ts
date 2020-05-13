@@ -7,6 +7,7 @@ import { environment } from "src/environments/environment";
 
 import * as dummyDevice from '../../assets/dummy/device.json';
 import * as dummyConnectedDevice from '../../assets/dummy/connecteddevice.json';
+import * as dummyPendingDevice from '../../assets/dummy/pendingdevice.json';
 import { IpcService } from "../ipc.service";
 
 @Injectable()
@@ -14,9 +15,11 @@ export class DeviceService {
 
   registeredDevicesChanged = new EventEmitter<IDeviceInfo[]>();
   connectedDevicesChanged = new EventEmitter<IDeviceInfo[]>();
+  pendingDevicesChanged = new EventEmitter<IDeviceInfo[]>();
 
   registeredDeviceModels: IDeviceInfo[] = [];
   connectedDeviceModels: IDeviceInfo[] = [];
+  pendingDeviceModels: IDeviceInfo[] = [];
   
   constructor(private ipc: IpcService,private zone: NgZone) {
     
@@ -27,6 +30,7 @@ export class DeviceService {
     if (environment.isElectron === false) {
       this.registeredDeviceModels = <IDeviceInfo[]>dummyDevice.default;
       this.connectedDeviceModels = <IDeviceInfo[]>dummyConnectedDevice.default;
+      this.pendingDeviceModels = <IDeviceInfo[]>dummyPendingDevice.default;
     } else {
       this.ipc.on('registereddeviceinfo-ipc', (event, arg) => {
         // switch to angular zone for change detected events ...
@@ -42,6 +46,13 @@ export class DeviceService {
           this.connectedDevicesChanged.emit(this.connectedDeviceModels);
         });
       });
+      this.ipc.on('pendingdevice-ipc', (event, arg) => {
+        // switch to angular zone for change detected events ...
+        this.zone.run(() => {
+          this.pendingDeviceModels = arg;
+          this.pendingDevicesChanged.emit(this.pendingDeviceModels);
+        });
+      });
     }
   }
 
@@ -51,6 +62,10 @@ export class DeviceService {
 
   public getConnectedDevices(): IDeviceInfo[] {
     return this.connectedDeviceModels;
+  }
+
+  public getPendingDevices(): IDeviceInfo[] {
+    return this.pendingDeviceModels;
   }
 
   public getDeviceDetail(id: string): IDeviceInfo {
@@ -75,5 +90,17 @@ export class DeviceService {
         return x;
       }
     });
+  }
+
+  public getPendingDeviceDetail(id: string): IDeviceInfo {
+    return this.pendingDeviceModels.find(x => {
+      if (x.id == id) {
+        return x;
+      }
+    });
+  }
+
+  public resolvePendingDevice(id: string, accept: boolean): void {
+    
   }
 }

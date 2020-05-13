@@ -26,6 +26,7 @@ import { DeviceRegisteredComponent } from './device/registered/device-registered
 import { InfoComponent } from './info/info.component';
 import { SettingComponent } from './setting/setting.component';
 import { IpcService } from './ipc.service';
+import { DevicePendingComponent } from './device/pending/device-pending.component';
 
 const routes: Route[] = [
   { path: 'counter', component: CounterComponent },
@@ -37,6 +38,10 @@ const routes: Route[] = [
     path: 'devices', 
     component: DeviceListComponent,
     children: [
+      {
+        path: 'pending/:id', 
+        component: DevicePendingComponent,
+      },
       {
         path: 'registered/:id', 
         component: DeviceRegisteredComponent,
@@ -83,6 +88,7 @@ const routes: Route[] = [
     DeviceOverviewComponent,
     DeviceDetailComponent,
     DeviceRegisteredComponent,
+    DevicePendingComponent,
     InfoComponent,
     SettingComponent
   ],

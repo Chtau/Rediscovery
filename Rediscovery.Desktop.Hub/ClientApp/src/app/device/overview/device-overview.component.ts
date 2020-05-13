@@ -10,10 +10,13 @@ export class DeviceOverviewComponent {
   
   connectedDeviceModels: IDeviceInfo[] = [];
   registeredDeviceModels: IDeviceInfo[] = [];
+  pendingDeviceModels: IDeviceInfo[] = [];
+  selectedPendingDevice: IDeviceInfo[] = [];
 
   constructor(private deviceService: DeviceService) {
     this.connectedDeviceModels = deviceService.getConnectedDevices();
     this.registeredDeviceModels = deviceService.getRegisteredDevices();
+    this.pendingDeviceModels = deviceService.getPendingDevices();
 
     this.deviceService.registeredDevicesChanged.subscribe(result => {
       this.registeredDeviceModels = result;
@@ -22,6 +25,26 @@ export class DeviceOverviewComponent {
     this.deviceService.connectedDevicesChanged.subscribe(result => {
       this.connectedDeviceModels = result;
     });
+
+    this.deviceService.pendingDevicesChanged.subscribe(result => {
+      this.pendingDeviceModels = result;
+    });
+  }
+
+  onAcceptSelectedPendingDevices():void {
+    this.onResolvePendingDevices(true);
+  }
+
+  onRemoveSelectedPendingDevices():void {
+    this.onResolvePendingDevices(true);
+  }
+
+  private onResolvePendingDevices(accept: boolean):void {
+    if (this.selectedPendingDevice.length > 0) {
+      this.selectedPendingDevice.forEach(item => {
+        this.deviceService.resolvePendingDevice(item.id, accept);
+      });
+    }
   }
 
 }
