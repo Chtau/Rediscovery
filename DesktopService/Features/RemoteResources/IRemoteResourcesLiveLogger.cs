@@ -7,7 +7,6 @@ namespace DesktopService.Features.RemoteResources
 {
     public interface IRemoteResourcesLiveLogger
     {
-        [Obsolete("Use [CommunicationResourceProvider.IRemoteResourcesSenderService.SendLoggerEntry] instead")]
         void Log(LoggerEntryModel liveLoggerModel);
     }
 }
