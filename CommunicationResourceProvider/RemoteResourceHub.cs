@@ -130,6 +130,9 @@ namespace CommunicationResourceProvider
             try
             {
                 _resourcesRepository.ResolvePendingAuthenticationDevices(deviceInfo, accept);
+                _remoteResourcesSenderService.SendDeviceInfo();
+                _remoteResourcesSenderService.SendActiveDeviceInfo();
+                _remoteResourcesSenderService.SendPendingAuthenticationDevices();
             }
             catch (Exception ex)
             {
