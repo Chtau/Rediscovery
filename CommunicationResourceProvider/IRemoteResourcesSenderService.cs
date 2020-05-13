@@ -11,6 +11,7 @@ namespace CommunicationResourceProvider
         void SendActiveDeviceInfo();
         void SendDeviceInfo();
         void SendServiceFeature();
+        void SendPendingAuthenticationDevices();
         void SendLoggerEntry(SharedCoreModels.LoggerEntryModel liveLoggerModel);
     }
 }

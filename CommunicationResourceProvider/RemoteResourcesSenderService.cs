@@ -83,5 +83,17 @@ namespace CommunicationResourceProvider
                 _logger.LogError(ex, "SendLoggerEntry send remote resource");
             }
         }
+
+        public void SendPendingAuthenticationDevices()
+        {
+            try
+            {
+                _hubContext.Clients.Group(GroupNames.Admin).SendAsync("PendingAuthenticationDevices", _resourcesRepository.GetResourcePendingAuthenticationDevices());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "SendPendingAuthenticationDevices send remote resource");
+            }
+        }
     }
 }

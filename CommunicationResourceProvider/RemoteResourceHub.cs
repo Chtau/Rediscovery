@@ -104,6 +104,12 @@ namespace CommunicationResourceProvider
         }
 
         [Authorize(Roles = AuthorizationRoles.AdminRole)]
+        public void RequestPendingAuthenticationDevices()
+        {
+            _remoteResourcesSenderService.SendPendingAuthenticationDevices();
+        }
+
+        [Authorize(Roles = AuthorizationRoles.AdminRole)]
         public void RequestDeleteDeviceInfo(SharedCoreModels.DeviceInfo deviceInfo)
         {
             try
@@ -111,7 +117,21 @@ namespace CommunicationResourceProvider
                 _resourcesRepository.DeleteDeviceInfo(deviceInfo);
                 _remoteResourcesSenderService.SendDeviceInfo();
                 _remoteResourcesSenderService.SendActiveDeviceInfo();
+                _remoteResourcesSenderService.SendPendingAuthenticationDevices();
             } catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+            }
+        }
+
+        [Authorize(Roles = AuthorizationRoles.AdminRole)]
+        public void RequestResolvePendingAuthenticationDevice(SharedCoreModels.DeviceInfo deviceInfo, bool accept)
+        {
+            try
+            {
+                _resourcesRepository.ResolvePendingAuthenticationDevices(deviceInfo, accept);
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex.ToString());
             }
