@@ -40,7 +40,6 @@ namespace DesktopService.Features.RemoteResources
                     try
                     {
                         _remoteResourcesSenderService.SendLoggerEntry(liveLoggerModel);
-                        //_hubContext.Clients.Group(DesktopHubRemoteResourceHub.GroupName).SendAsync("LogEntry", liveLoggerModel);
                     } catch (Exception ex)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;

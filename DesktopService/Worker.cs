@@ -14,17 +14,15 @@ namespace DesktopService
 {
     public class Worker : IHostedService, IDisposable
     {
-        private readonly Features.RemoteResources.IRemoteResourcesServiceInfo _remoteResourcesServiceInfo;
         private readonly Features.Configuration.IDistributeConfig _distributeConfig;
         private readonly SharedConfigurations.DesktopService.Models.AppConfiguration _appSettings;
         private readonly ILogger<Worker> _logger;
 
-        public Worker(Features.RemoteResources.IRemoteResourcesServiceInfo remoteResourcesServiceInfo,
+        public Worker(
             Features.Configuration.IDistributeConfig distributeConfig,
             IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> appOptions,
             ILoggerFactory loggerFactory)
         {
-            _remoteResourcesServiceInfo = remoteResourcesServiceInfo;
             _distributeConfig = distributeConfig;
             _appSettings = appOptions.Value;
             _logger = loggerFactory.CreateLogger<Worker>();
@@ -56,7 +54,6 @@ namespace DesktopService
             }
 
             _distributeConfig.Share();
-            _remoteResourcesServiceInfo.ShowInfoWindow();
 
             // the Task.Run leads to a thread starvation
             /*Task.Run(() =>

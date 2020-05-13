@@ -101,8 +101,6 @@ namespace DesktopService
             services.AddScoped<Features.Authentication.ITokenService, Features.Authentication.TokenService>();
             services.AddSingleton<Features.Authentication.IAuth, Features.Authentication.Auth>();
             services.AddSingleton<IUserIdProvider, Features.Identity.ClaimUserIdProvider>();
-            services.AddSingleton<Features.RemoteResources.IRemoteResourcesIncomingConnection, Features.RemoteResources.RemoteResourcesIncomingConnection>();
-            services.AddSingleton<Features.RemoteResources.IRemoteResourcesServiceInfo, Features.RemoteResources.RemoteResourcesServiceInfo>();
             services.AddSingleton<Features.RemoteResources.IRemoteResourcesLiveLogger, Features.RemoteResources.RemoteResourcesLiveLogger>();
             services.AddSingleton<IFeatureService, FeatureService>();
             services.AddSingleton<Features.Configuration.IDistributeConfig, Features.Configuration.DistributeConfig>();
