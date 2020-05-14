@@ -10,12 +10,10 @@ export class DeviceListComponent {
   
   connectedDeviceModels: IDeviceInfo[] = [];
   registeredDeviceModels: IDeviceInfo[] = [];
-  pendingDeviceModels: IDeviceInfo[] = [];
 
   constructor(private deviceService: DeviceService) {
     this.connectedDeviceModels = this.deviceService.getConnectedDevices();
     this.registeredDeviceModels = this.deviceService.getRegisteredDevices();
-    this.pendingDeviceModels = this.deviceService.getPendingDevices();
 
     this.deviceService.registeredDevicesChanged.subscribe(result => {
       this.registeredDeviceModels = result;
@@ -23,10 +21,6 @@ export class DeviceListComponent {
 
     this.deviceService.connectedDevicesChanged.subscribe(result => {
       this.connectedDeviceModels = result;
-    });
-
-    this.deviceService.pendingDevicesChanged.subscribe(result => {
-      this.pendingDeviceModels = result;
     });
   }
 

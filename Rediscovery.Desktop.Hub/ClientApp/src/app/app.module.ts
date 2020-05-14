@@ -10,8 +10,6 @@ import { ClarityModule } from "@clr/angular";
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { DeviceListComponent } from './device/device-list.component';
 import { FeatureListComponent } from './feature/feature-list.component';
 import { FeatureListOverviewComponent } from './feature/list/feature-list-overview.component';
@@ -26,11 +24,8 @@ import { DeviceRegisteredComponent } from './device/registered/device-registered
 import { InfoComponent } from './info/info.component';
 import { SettingComponent } from './setting/setting.component';
 import { IpcService } from './ipc.service';
-import { DevicePendingComponent } from './device/pending/device-pending.component';
 
 const routes: Route[] = [
-  { path: 'counter', component: CounterComponent },
-  { path: 'fetch-data', component: FetchDataComponent },
   { path: 'logger', component: LoggerComponent },
   { path: 'info', component: InfoComponent },
   { path: 'settings', component: SettingComponent },
@@ -38,10 +33,6 @@ const routes: Route[] = [
     path: 'devices', 
     component: DeviceListComponent,
     children: [
-      {
-        path: 'pending/:id', 
-        component: DevicePendingComponent,
-      },
       {
         path: 'registered/:id', 
         component: DeviceRegisteredComponent,
@@ -78,8 +69,6 @@ const routes: Route[] = [
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    CounterComponent,
-    FetchDataComponent,
     DeviceListComponent,
     FeatureListComponent,
     FeatureListOverviewComponent,
@@ -88,7 +77,6 @@ const routes: Route[] = [
     DeviceOverviewComponent,
     DeviceDetailComponent,
     DeviceRegisteredComponent,
-    DevicePendingComponent,
     InfoComponent,
     SettingComponent
   ],

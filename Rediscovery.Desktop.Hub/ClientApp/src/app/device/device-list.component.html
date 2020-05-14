@@ -5,15 +5,6 @@
           Devices
       </a>
       <section class="nav-group collapsible">
-        <input id="tabPending" type="checkbox">
-        <label for="tabPending">Pending Authentication</label>
-        <ul class="nav-list">
-          <li *ngFor="let model of pendingDeviceModels">
-            <a [routerLink]="['/devices/pending/' + model.id]" [routerLinkActive]="['active']" class="nav-link">{{model.name}}</a>
-          </li>
-        </ul>
-    </section>
-      <section class="nav-group collapsible">
           <input id="tabexample1" type="checkbox">
           <label for="tabexample1">Connected Devices</label>
           <ul class="nav-list">
