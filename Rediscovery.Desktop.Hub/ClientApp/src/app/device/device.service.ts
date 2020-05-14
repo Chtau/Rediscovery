@@ -100,7 +100,7 @@ export class DeviceService {
     });
   }
 
-  public resolvePendingDevice(id: string, accept: boolean): void {
-    this.ipc.send('resolvependingdevice-ipc', id, accept);
+  public resolvePendingDevice(resolve: IPendingAuthenticationResolve): void {
+    this.ipc.send('resolvependingdevice-ipc', resolve);
   }
 }

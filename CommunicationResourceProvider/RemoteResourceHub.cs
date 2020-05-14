@@ -125,11 +125,11 @@ namespace CommunicationResourceProvider
         }
 
         [Authorize(Roles = AuthorizationRoles.AdminRole)]
-        public void RequestResolvePendingAuthenticationDevice(SharedCoreModels.DeviceInfo deviceInfo, bool accept)
+        public void RequestResolvePendingAuthenticationDevice(Guid deviceId, bool accept)
         {
             try
             {
-                _resourcesRepository.ResolvePendingAuthenticationDevices(deviceInfo, accept);
+                _resourcesRepository.ResolvePendingAuthenticationDevices(deviceId, accept);
                 _remoteResourcesSenderService.SendDeviceInfo();
                 _remoteResourcesSenderService.SendActiveDeviceInfo();
                 _remoteResourcesSenderService.SendPendingAuthenticationDevices();

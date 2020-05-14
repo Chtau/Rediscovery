@@ -96,11 +96,11 @@ namespace DesktopService.Features.RemoteResources
                     }).ToList();
         }
 
-        public bool ResolvePendingAuthenticationDevices(DeviceInfo deviceInfo, bool accept)
+        public bool ResolvePendingAuthenticationDevices(Guid deviceId, bool accept)
         {
             try
             {
-                var pendingDevice = _devicePendingAuthenticationRepository.GetById(deviceInfo.Id).GetAwaiter().GetResult();
+                var pendingDevice = _devicePendingAuthenticationRepository.GetById(deviceId).GetAwaiter().GetResult();
                 if (pendingDevice != null)
                 {
                     if (accept)
@@ -119,16 +119,16 @@ namespace DesktopService.Features.RemoteResources
                             Platform = pendingDevice.Platform
                         });
                     }
-                    _devicePendingAuthenticationRepository.DeleteDevicePendingAuthentication(deviceInfo.Id).GetAwaiter().GetResult();
+                    _devicePendingAuthenticationRepository.DeleteDevicePendingAuthentication(deviceId).GetAwaiter().GetResult();
                     return true;
                 } else
                 {
-                    _logger.LogCritical($"ResolvePendingAuthenticationDevices could no longer find pending authentication device (Id:{deviceInfo?.Id} Name:{deviceInfo?.Name} Accept:{accept})");
+                    _logger.LogCritical($"ResolvePendingAuthenticationDevices could no longer find pending authentication device (Id:{deviceId} Accept:{accept})");
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"ResolvePendingAuthenticationDevices error for Id:{deviceInfo?.Id} Name:{deviceInfo?.Name} Accept:{accept}");
+                _logger.LogError(ex, $"ResolvePendingAuthenticationDevices error for Id:{deviceId} Accept:{accept}");
             }
             return false;
         }

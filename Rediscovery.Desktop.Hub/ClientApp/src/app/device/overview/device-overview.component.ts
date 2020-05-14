@@ -39,10 +39,13 @@ export class DeviceOverviewComponent {
     this.onResolvePendingDevices(true);
   }
 
-  private onResolvePendingDevices(accept: boolean):void {
+  private onResolvePendingDevices(acceptValue: boolean):void {
     if (this.selectedPendingDevice.length > 0) {
       this.selectedPendingDevice.forEach(item => {
-        this.deviceService.resolvePendingDevice(item.id, accept);
+        this.deviceService.resolvePendingDevice({
+          id: item.id,
+          accept: acceptValue
+        });
       });
     }
   }

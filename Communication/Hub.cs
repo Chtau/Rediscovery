@@ -10,6 +10,7 @@ namespace CommunicationResourceConsumer
     {
         public event EventHandler<List<SharedCoreModels.DeviceInfo>> ActiveDeviceInfoReceived;
         public event EventHandler<List<SharedCoreModels.DeviceInfo>> DeviceInfoReceived;
+        public event EventHandler<List<SharedCoreModels.DeviceInfo>> PendingAuthenticationDeviceReceived;
         public event EventHandler<List<SharedCoreModels.DeviceFeature>> ServiceFeatureReceived;
         public event EventHandler<SharedCoreModels.LoggerEntryModel> LogEntryReceived;
 
@@ -96,6 +97,10 @@ namespace CommunicationResourceConsumer
                             {
                                 DeviceInfoReceived?.Invoke(this, deviceInfos);
                             });
+                            connection.On<List<SharedCoreModels.DeviceInfo>>("PendingAuthenticationDevices", (deviceInfos) =>
+                            {
+                                PendingAuthenticationDeviceReceived?.Invoke(this, deviceInfos);
+                            });
                             connection.On<List<SharedCoreModels.DeviceFeature>>("ServiceFeature", (deviceInfos) =>
                             {
                                 ServiceFeatureReceived?.Invoke(this, deviceInfos);
@@ -129,6 +134,7 @@ namespace CommunicationResourceConsumer
                         await _connectionProvider.CurrentConnection.InvokeAsync("RequestDeviceInfo");
                         await _connectionProvider.CurrentConnection.InvokeAsync("RequestServiceFeature");
                         await _connectionProvider.CurrentConnection.InvokeAsync("RequestActiveDeviceInfo");
+                        await _connectionProvider.CurrentConnection.InvokeAsync("RequestPendingAuthenticationDevices");
                     } catch (Exception ex)
                     {
                         _logger.Error(ex);
@@ -138,6 +144,24 @@ namespace CommunicationResourceConsumer
             }
             else
                 return false;
+        }
+
+        public void RequestResolvePendingAuthenticationDevice(Guid deviceId, bool accept)
+        {
+            if (deviceId != Guid.Empty)
+            {
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        await _connectionProvider.CurrentConnection.InvokeAsync("RequestResolvePendingAuthenticationDevice", deviceId, accept);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex);
+                    }
+                });
+            } 
         }
 
         public void Disconnect()

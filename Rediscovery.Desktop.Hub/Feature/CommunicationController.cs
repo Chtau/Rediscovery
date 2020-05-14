@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Rediscovery.Desktop.Hub.Feature.InternalIPCModels;
 using SharedCoreModels;
 using System;
 using System.Collections.Generic;
@@ -38,6 +39,27 @@ namespace Rediscovery.Desktop.Hub.Feature
             _hub.DeviceInfoReceived += _deviceService_DeviceInfoReceived;
             _hub.LogEntryReceived += _loggerService_LoggerDataReceived;
             _hub.ServiceFeatureReceived += _featureService_DeviceFeatureReceived;
+            _hub.PendingAuthenticationDeviceReceived += _hub_PendingAuthenticationDeviceReceived;
+
+            ElectronNET.API.Electron.IpcMain.On("resolvependingdevice-ipc", (args) =>
+            {
+                var param = Newtonsoft.Json.JsonConvert.DeserializeObject<PendingAuthenticationResolve>(args?.ToString());
+                _logger.LogDebug($"Resolve pending device authentication for Id:{param.Id} Accept:{param.Accept}");
+                _hub.RequestResolvePendingAuthenticationDevice(param.Id, param.Accept);
+            });
+        }
+
+        private void _hub_PendingAuthenticationDeviceReceived(object sender, List<DeviceInfo> e)
+        {
+            try
+            {
+                var mainWindow = ElectronNET.API.Electron.WindowManager.BrowserWindows.First();
+                ElectronNET.API.Electron.IpcMain.Send(mainWindow, "pendingdevice-ipc", e);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "PendingAuthenticationDeviceReceived via IPC from Service");
+            }
         }
 
         private void _deviceService_ActiveDeviceInfoReceived(object sender, List<DeviceInfo> e)
@@ -107,7 +129,9 @@ namespace Rediscovery.Desktop.Hub.Feature
                     _hub.Connect(_remoteResourceSettings.DesktopHubApplicationKey, connectionConfiguration, (listener) =>
                     {
                         if (listener)
+                        {
                             _hub.RequestAllData();
+                        }
                         else
                             _logger.LogWarning("Listener response not valid");
                     });

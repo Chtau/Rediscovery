@@ -3,3 +3,8 @@ interface IDeviceInfo {
   id: string;
   allowAccess: boolean;
 }
+
+interface IPendingAuthenticationResolve {
+  id: string;
+  accept: boolean;
+}

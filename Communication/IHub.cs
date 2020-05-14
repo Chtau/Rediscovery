@@ -9,6 +9,7 @@ namespace CommunicationResourceConsumer
     {
         event EventHandler<List<SharedCoreModels.DeviceInfo>> ActiveDeviceInfoReceived;
         event EventHandler<List<SharedCoreModels.DeviceInfo>> DeviceInfoReceived;
+        event EventHandler<List<SharedCoreModels.DeviceInfo>> PendingAuthenticationDeviceReceived;
         event EventHandler<List<SharedCoreModels.DeviceFeature>> ServiceFeatureReceived;
         event EventHandler<SharedCoreModels.LoggerEntryModel> LogEntryReceived;
 
@@ -17,5 +18,6 @@ namespace CommunicationResourceConsumer
         void Connect(string applicationKey, Models.ConnectionConfiguration configuration, Action<bool> listenerCallback);
         bool RequestAllData();
         void Disconnect();
+        void RequestResolvePendingAuthenticationDevice(Guid deviceId, bool accept);
     }
 }
