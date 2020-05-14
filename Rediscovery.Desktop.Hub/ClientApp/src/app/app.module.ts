@@ -24,6 +24,7 @@ import { DeviceRegisteredComponent } from './device/registered/device-registered
 import { InfoComponent } from './info/info.component';
 import { SettingComponent } from './setting/setting.component';
 import { IpcService } from './ipc.service';
+import { PendingAuthenticationComponent } from './pending-authentication/pending-authentication.component';
 
 const routes: Route[] = [
   { path: 'logger', component: LoggerComponent },
@@ -78,7 +79,11 @@ const routes: Route[] = [
     DeviceDetailComponent,
     DeviceRegisteredComponent,
     InfoComponent,
-    SettingComponent
+    SettingComponent,
+    PendingAuthenticationComponent
+  ],
+  entryComponents: [
+    PendingAuthenticationComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
