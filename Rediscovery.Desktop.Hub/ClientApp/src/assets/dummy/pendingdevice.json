@@ -2,6 +2,14 @@
   {
     "name": "New Device",
     "id": "0",
-    "allowAccess": false
+    "allowAccess": false,
+    "identifier": "0",
+    "requestTime": null,
+    "model": "S7",
+    "manufacturer": "Samsung",
+    "oSVersion": "Android 9.0.0",
+    "platform": "Android",
+    "idiom": "Phone",
+    "deviceType": "Physical"
   }
 ]
