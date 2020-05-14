@@ -43,9 +43,16 @@ namespace Rediscovery.Desktop.Hub.Feature
 
             ElectronNET.API.Electron.IpcMain.On("resolvependingdevice-ipc", (args) =>
             {
-                var param = Newtonsoft.Json.JsonConvert.DeserializeObject<PendingAuthenticationResolve>(args?.ToString());
-                _logger.LogDebug($"Resolve pending device authentication for Id:{param.Id} Accept:{param.Accept}");
-                _hub.RequestResolvePendingAuthenticationDevice(param.Id, param.Accept);
+                try
+                {
+                    var param = Newtonsoft.Json.JsonConvert.DeserializeObject<PendingAuthenticationResolve>(args?.ToString());
+                    _logger.LogDebug($"Resolve pending device authentication for Id:{param.Id} Accept:{param.Accept}");
+                    _hub.RequestResolvePendingAuthenticationDevice(param.Id, param.Accept);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error in IPC listener from UI [resolvependingdevice-ipc]");
+                }
             });
         }
 
@@ -111,11 +118,6 @@ namespace Rediscovery.Desktop.Hub.Feature
             {
                 _logger.LogError(ex, "DeviceInfoReceived via IPC from Service");
             }
-            /*ElectronNET.API.Electron.IpcMain.On("async-msg", (args) =>
-            {
-                var mainWindow = ElectronNET.API.Electron.WindowManager.BrowserWindows.First();
-                ElectronNET.API.Electron.IpcMain.Send(mainWindow, "asynchronous-reply", e);
-            });*/
         }
 
         [HttpGet]
