@@ -1,5 +1,7 @@
 ﻿using CommunicationResourceProvider;
+using DALDesktopService.Models;
 using DesktopService.Features.DeviceFeature;
+using DesktopService.Map;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using PluginFeature.Models;
@@ -36,26 +38,16 @@ namespace DesktopService.Features.RemoteResources
         {
             var features = _featureService.GetFeaturesManifest();
             return (from x in features
-                    select new SharedCoreModels.DeviceFeature
-                    {
-                        Id = x.Id,
-                        DisplayName = x.DisplayName,
-                        MinControlIntegrationPoint = x.MinControlIntegrationPoint.ToString(),
-                        MinFeatureIntegrationPoint = x.MinFeatureIntegrationPoint.ToString(),
-                        Version = x.Version.ToString()
-                    }).ToList();
+                    select x.ToDeviceFeature()
+                    ).ToList();
         }
 
         public List<SharedCoreModels.DeviceInfo> GetResourceDeviceInfo()
         {
             var users = _deviceRepository.GetAll().GetAwaiter().GetResult();
             return (from x in users
-                    select new SharedCoreModels.DeviceInfo
-                    {
-                        Id = x.Id,
-                        AllowAccess = x.AllowAccess,
-                        Name = x.DeviceName
-                    }).ToList();
+                    select x.ToDeviceInfo()
+                    ).ToList();
         }
 
         public List<SharedCoreModels.DeviceInfo> GetResourceActiveDeviceInfo()
@@ -64,12 +56,8 @@ namespace DesktopService.Features.RemoteResources
             var users = _deviceRepository.GetAll().GetAwaiter().GetResult();
             return (from x in users
                     join y in allUsers on x.Id equals y
-                    select new SharedCoreModels.DeviceInfo
-                    {
-                        Id = x.Id,
-                        AllowAccess = x.AllowAccess,
-                        Name = x.DeviceName
-                    }).ToList();
+                    select x.ToDeviceInfo()
+                    ).ToList();
         }
 
         public void DeleteDeviceInfo(SharedCoreModels.DeviceInfo deviceInfo)
@@ -88,12 +76,8 @@ namespace DesktopService.Features.RemoteResources
         {
             var devices = _devicePendingAuthenticationRepository.GetAll().GetAwaiter().GetResult();
             return (from x in devices
-                    select new SharedCoreModels.DeviceInfo
-                    {
-                        Id = x.Id,
-                        AllowAccess = false,
-                        Name = x.DeviceName
-                    }).ToList();
+                    select x.ToDeviceInfo()
+                    ).ToList();
         }
 
         public bool ResolvePendingAuthenticationDevices(Guid deviceId, bool accept)
@@ -105,19 +89,7 @@ namespace DesktopService.Features.RemoteResources
                 {
                     if (accept)
                     {
-                        _deviceRepository.SaveDevice(new DALDesktopService.Models.Device
-                        {
-                            Id = Guid.NewGuid(),
-                            AllowAccess = true,
-                            DeviceIdentifier = pendingDevice.DeviceIdentifier,
-                            DeviceName = pendingDevice.DeviceName,
-                            DeviceType = pendingDevice.DeviceType,
-                            Idiom = pendingDevice.Idiom,
-                            Manufacturer = pendingDevice.Manufacturer,
-                            Model = pendingDevice.Model,
-                            OSVersion = pendingDevice.OSVersion,
-                            Platform = pendingDevice.Platform
-                        });
+                        _deviceRepository.SaveDevice(pendingDevice.ToNewDevice());
                     }
                     _devicePendingAuthenticationRepository.DeleteDevicePendingAuthentication(deviceId).GetAwaiter().GetResult();
                     return true;
