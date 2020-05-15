@@ -101,6 +101,20 @@ export class DeviceService {
   }
 
   public resolvePendingDevice(resolve: IPendingAuthenticationResolve): void {
-    this.ipc.send('resolvependingdevice-ipc', resolve);
+    if (environment.isElectron === true) {
+      this.ipc.send('resolvependingdevice-ipc', resolve);
+    }
+  }
+
+  public deleteDevice(device: IDeviceInfo) : void {
+    if (environment.isElectron === true) {
+      this.ipc.send('deletedeviceinfo-ipc', device.id);
+    }
+  }
+
+  public updateDevice(device: IDeviceInfo) : void {
+    if (environment.isElectron === true) {
+      this.ipc.send('updatedeviceinfo-ipc', device);
+    }
   }
 }

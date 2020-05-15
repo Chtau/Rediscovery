@@ -13,9 +13,6 @@ export class DeviceRegisteredComponent implements AfterViewInit {
   allowAccessCheck: boolean = true;
   saveDisabled: boolean = true;
   confirmModal: boolean = false;
-  isSaveModel: boolean = false;
-  modalTitle: string = "Save changes";
-  modalDescription: string = "";
 
   constructor(private deviceService: DeviceService,
     private route: ActivatedRoute,
@@ -46,24 +43,16 @@ export class DeviceRegisteredComponent implements AfterViewInit {
   }
 
   onSave(): void {
-    this.modalTitle = "Save changes";
-    this.isSaveModel = true;
-    this.confirmModal = true;
+    this.model.allowAccess = this.allowAccessCheck;
+    this.deviceService.updateDevice(this.model);
   }
 
   onDelete(): void {
-    this.modalTitle = "Delete device";
-    this.modalDescription = "Are you sure you want to delete this device?";
-    this.isSaveModel = false;
     this.confirmModal = true;
   }
 
   onModalConfirm(): void {
-    if (this.isSaveModel === true) {
-
-    } else {
-
-    }
+    this.deviceService.deleteDevice(this.model);
   }
 
 }

@@ -32,9 +32,9 @@
   <button class="btn btn-danger" (click)="onDelete()">Delete Device</button>
 </div>
 <clr-modal [(clrModalOpen)]="confirmModal">
-  <h3 class="modal-title">{{modalTitle}}</h3>
-  <div class="modal-body" *ngIf="isSaveModel === false">
-      <p>{{modalDescription}}</p>
+  <h3 class="modal-title">Delete device</h3>
+  <div class="modal-body">
+      <p>Are you sure you want to delete this device?</p>
   </div>
   <div class="modal-footer">
       <button type="button" class="btn btn-outline" (click)="confirmModal = false">Cancel</button>
