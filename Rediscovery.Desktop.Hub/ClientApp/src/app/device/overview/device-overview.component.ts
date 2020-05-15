@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { DeviceService } from '../device.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-device-overview',
@@ -11,7 +12,7 @@ export class DeviceOverviewComponent {
   connectedDeviceModels: IDeviceInfo[] = [];
   registeredDeviceModels: IDeviceInfo[] = [];
 
-  constructor(private deviceService: DeviceService) {
+  constructor(private deviceService: DeviceService, private route: Router) {
     this.connectedDeviceModels = deviceService.getConnectedDevices();
     this.registeredDeviceModels = deviceService.getRegisteredDevices();
 
@@ -22,5 +23,13 @@ export class DeviceOverviewComponent {
     this.deviceService.connectedDevicesChanged.subscribe(result => {
       this.connectedDeviceModels = result;
     });
+  }
+
+  onEditConnected(model: IDeviceInfo): void {
+    this.route.navigate(['/devices/',model.id])
+  }
+
+  onEditRegistered(model: IDeviceInfo): void {
+    this.route.navigate(['/devices/registered/',model.id])
   }
 }
