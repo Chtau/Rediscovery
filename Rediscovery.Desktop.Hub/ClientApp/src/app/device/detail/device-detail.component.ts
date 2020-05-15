@@ -10,6 +10,8 @@ import { DeviceService } from '../device.service';
 export class DeviceDetailComponent implements AfterViewInit {
   
   model: IDeviceInfo = null;
+  allowAccessCheck: boolean = true;
+  saveDisabled: boolean = true;
 
   constructor(private deviceService: DeviceService,
     private route: ActivatedRoute,
@@ -28,6 +30,22 @@ export class DeviceDetailComponent implements AfterViewInit {
 
   private onLoadModel(id: string): void {
     this.model = this.deviceService.getDeviceDetail(id);
+    this.allowAccessCheck = this.model.allowAccess;
   }
 
+  onAllowAccessChanged(event): void {
+    if (this.allowAccessCheck === this.model.allowAccess) {
+      this.saveDisabled = false;
+    } else {
+      this.saveDisabled = true;
+    }
+  }
+
+  onSave(): void {
+
+  }
+
+  onDelete(): void {
+
+  }
 }

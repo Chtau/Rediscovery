@@ -1,2 +1,33 @@
-<p>{{model.id}}</p>
-<p>{{model.name}}</p>
+<h3>{{model.name}}</h3>
+<table class="table table-model">
+  <tbody>
+    <tr>
+      <td class="left">Model</td>
+      <td class="left">{{model.manufacturer}} {{model.model}}</td>
+    </tr>
+    <tr>
+      <td class="left">Platform</td>
+      <td class="left">{{model.platform}} {{model.oSVersion}}</td>
+    </tr>
+    <tr>
+      <td class="left">Idiom</td>
+      <td class="left">{{model.idiom}}</td>
+    </tr>
+    <tr>
+      <td class="left">Devicetype</td>
+      <td class="left">{{model.deviceType}}</td>
+    </tr>
+  </tbody>
+</table>
+<div>
+  <clr-checkbox-container>
+    <clr-checkbox-wrapper>
+      <input type="checkbox" clrCheckbox name="options" value="true" (ngModelChange)="onAllowAccessChanged($event)" [(ngModel)]="allowAccessCheck" />
+      <label>Allow access</label>
+    </clr-checkbox-wrapper>
+    <clr-control-helper>Uncheck to no longer allow this device to have access.</clr-control-helper>
+  </clr-checkbox-container>
+  <br>
+  <button class="btn btn-success" [disabled]="saveDisabled" (click)="onSave()">Save</button>
+  <button class="btn btn-danger" (click)="onDelete()">Delete Device</button>
+</div>
