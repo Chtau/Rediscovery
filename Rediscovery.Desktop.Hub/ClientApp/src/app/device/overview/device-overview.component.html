@@ -6,7 +6,7 @@
 
   <clr-dg-row *ngFor="let model of connectedDeviceModels">
     <clr-dg-action-overflow>
-      <button class="action-item" (click)="onEditConnected(model)">Edit</button>
+      <button class="action-item" (click)="onViewConnected(model)">View</button>
     </clr-dg-action-overflow>
     <clr-dg-cell>{{model.name}}</clr-dg-cell>
     <clr-dg-cell>{{model.manufacturer}} {{model.model}}</clr-dg-cell>

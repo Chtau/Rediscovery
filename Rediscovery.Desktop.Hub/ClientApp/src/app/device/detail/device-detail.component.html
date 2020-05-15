@@ -20,14 +20,5 @@
   </tbody>
 </table>
 <div>
-  <clr-checkbox-container>
-    <clr-checkbox-wrapper>
-      <input type="checkbox" clrCheckbox name="options" value="true" (ngModelChange)="onAllowAccessChanged($event)" [(ngModel)]="allowAccessCheck" />
-      <label>Allow access</label>
-    </clr-checkbox-wrapper>
-    <clr-control-helper>Uncheck to no longer allow this device to have access.</clr-control-helper>
-  </clr-checkbox-container>
-  <br>
-  <button class="btn btn-success" [disabled]="saveDisabled" (click)="onSave()">Save</button>
-  <button class="btn btn-danger" (click)="onDelete()">Delete Device</button>
+  <button class="btn btn-primary" (click)="onOpenEdit()">Edit</button>
 </div>

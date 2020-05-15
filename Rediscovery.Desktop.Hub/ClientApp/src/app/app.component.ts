@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { DeviceService } from './device/device.service';
 import { LoggerService } from './logger/logger.service';
 import { FeatureService } from './feature/feature.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -17,9 +18,7 @@ export class AppComponent {
     this.deviceService.initIPC();
     this.loggerService.initIPC();
     this.featuerService.initIPC();
-    http.get<boolean>(baseUrl + 'communication').subscribe(result => {
-      console.log('Communication to Service init');
-    }, error => console.error(error));
+    this.onServiceConnection();
   }
 
   private onExit():void {
@@ -27,9 +26,11 @@ export class AppComponent {
   }
 
   onServiceConnection(): void {
-    this.http.get<boolean>(this.baseUrl + 'communication').subscribe(result => {
-      console.log('Communication to Service init');
-    }, error => console.error(error));
+    if (environment.isElectron === true) {
+      this.http.get<boolean>(this.baseUrl + 'communication').subscribe(result => {
+        console.log('Communication to Service init');
+      }, error => console.error(error));
+    }
   }
 
 }

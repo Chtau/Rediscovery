@@ -25,7 +25,7 @@ export class DeviceOverviewComponent {
     });
   }
 
-  onEditConnected(model: IDeviceInfo): void {
+  onViewConnected(model: IDeviceInfo): void {
     this.route.navigate(['/devices/',model.id])
   }
 
