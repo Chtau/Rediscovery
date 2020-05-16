@@ -30,6 +30,16 @@ export class DeviceRegisteredComponent implements AfterViewInit {
   }
 
   private onLoadModel(id: string): void {
+    this.deviceService.registeredDevicesChanged.subscribe((result: IDeviceInfo[]) => {
+      if (this.model) {
+        result.forEach(item => {
+          if (item.id === this.model.id) {
+            this.model = item;
+            this.allowAccessCheck = this.model.allowAccess;
+          }
+        });
+      }
+    });
     this.model = this.deviceService.getRegisteredDeviceDetail(id);
     this.allowAccessCheck = this.model.allowAccess;
   }
@@ -53,6 +63,8 @@ export class DeviceRegisteredComponent implements AfterViewInit {
 
   onModalConfirm(): void {
     this.deviceService.deleteDevice(this.model);
+    this.confirmModal = false;
+    this.router.navigate(['/devices'])
   }
 
 }

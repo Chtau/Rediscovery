@@ -27,6 +27,15 @@ export class DeviceDetailComponent implements AfterViewInit {
   }
 
   private onLoadModel(id: string): void {
+    this.deviceService.connectedDevicesChanged.subscribe((result: IDeviceInfo[]) => {
+      if (this.model) {
+        result.forEach(item => {
+          if (item.id === this.model.id) {
+            this.model = item;
+          }
+        });
+      }
+    });
     this.model = this.deviceService.getDeviceDetail(id);
   }
 
