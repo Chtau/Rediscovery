@@ -87,6 +87,7 @@ namespace DALDesktopService.Repository
                     device1.RequestTime = devicePendingAuthentication.RequestTime;
                     DeviceMetadata.UpdateInstance(devicePendingAuthentication, device1);
                     await _dBContext.Instance.UpdateAsync(device1);
+                    _logger.LogDebug($"Update pending for authentication Device (Identifier:{devicePendingAuthentication.DeviceIdentifier} Name:{devicePendingAuthentication.DeviceName})");
                 }
                 else
                 {
@@ -99,6 +100,7 @@ namespace DALDesktopService.Repository
                     };
                     DeviceMetadata.UpdateInstance(devicePendingAuthentication, device1);
                     await _dBContext.Instance.InsertOrReplaceAsync(device1);
+                    _logger.LogDebug($"Insert pending for authentication Device (Identifier:{devicePendingAuthentication.DeviceIdentifier} Name:{devicePendingAuthentication.DeviceName})");
                 }
                 DevicePendingAuthenticationChanged?.Invoke(this, device1);
                 return device1;

@@ -50,10 +50,12 @@ namespace DesktopService.Features.Authentication
                     u.OSVersion = welcomeDeviceMessage.OSVersion;
                     u.Platform = welcomeDeviceMessage.Platform;
                     u = await _deviceRepository.SaveDevice(u);
+                    _logger.LogDebug($"Request login Device found (Identifier:{u.DeviceIdentifier} Name:{u.DeviceName} Allow:{u.AllowAccess})");
                     return new Tuple<LoginState, DALDesktopService.Models.Device>(u.AllowAccess ? LoginState.OK : LoginState.Denied, u);
                 }
                 else
                 {
+                    _logger.LogDebug($"Request login Device not found (Identifier:{u.DeviceIdentifier} Name:{u.DeviceName} Allow:{u.AllowAccess})");
                     return new Tuple<LoginState, DALDesktopService.Models.Device>(LoginState.RequiredAuthorizeKey, null);
                 }
             }
