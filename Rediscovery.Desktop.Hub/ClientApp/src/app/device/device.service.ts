@@ -108,7 +108,7 @@ export class DeviceService {
 
   public deleteDevice(device: IDeviceInfo) : void {
     if (environment.isElectron === true) {
-      this.ipc.send('deletedeviceinfo-ipc', device.id);
+      this.ipc.send('deletedeviceinfo-ipc', device);
     }
   }
 

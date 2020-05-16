@@ -54,6 +54,32 @@ namespace Rediscovery.Desktop.Hub.Feature
                     _logger.LogError(ex, "Error in IPC listener from UI [resolvependingdevice-ipc]");
                 }
             });
+            ElectronNET.API.Electron.IpcMain.On("deletedeviceinfo-ipc", (args) =>
+            {
+                try
+                {
+                    var param = Newtonsoft.Json.JsonConvert.DeserializeObject<DeviceInfo>(args?.ToString());
+                    _logger.LogDebug($"Delete device for Id:{param.Id}");
+                    _hub.RequestDeleteDevice(param);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error in IPC listener from UI [deletedeviceinfo-ipc]");
+                }
+            });
+            ElectronNET.API.Electron.IpcMain.On("updatedeviceinfo-ipc", (args) =>
+            {
+                try
+                {
+                    var param = Newtonsoft.Json.JsonConvert.DeserializeObject<DeviceInfo>(args?.ToString());
+                    _logger.LogDebug($"Update device authentication for Id:{param.Id}");
+                    _hub.RequestUpdateDevice(param);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error in IPC listener from UI [updatedeviceinfo-ipc]");
+                }
+            });
         }
 
         private void _hub_PendingAuthenticationDeviceReceived(object sender, List<DeviceInfo> e)

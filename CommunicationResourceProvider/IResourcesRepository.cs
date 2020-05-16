@@ -10,6 +10,7 @@ namespace CommunicationResourceProvider
         List<SharedCoreModels.DeviceInfo> GetResourceDeviceInfo();
         List<SharedCoreModels.DeviceInfo> GetResourceActiveDeviceInfo();
         void DeleteDeviceInfo(SharedCoreModels.DeviceInfo deviceInfo);
+        void UpdateDeviceInfo(SharedCoreModels.DeviceInfo deviceInfo);
         List<SharedCoreModels.DeviceInfo> GetResourcePendingAuthenticationDevices();
         bool ResolvePendingAuthenticationDevices(Guid deviceId, bool accept);
     }

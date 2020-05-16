@@ -72,6 +72,18 @@ namespace DesktopService.Features.RemoteResources
             }
         }
 
+        public void UpdateDeviceInfo(SharedCoreModels.DeviceInfo deviceInfo)
+        {
+            try
+            {
+                _deviceRepository.SaveDevice(deviceInfo?.ToDevice()).GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"DeleteDeviceInfo error for Id:{deviceInfo?.Id} Name:{deviceInfo?.Name}");
+            }
+        }
+
         public List<DeviceInfo> GetResourcePendingAuthenticationDevices()
         {
             var devices = _devicePendingAuthenticationRepository.GetAll().GetAwaiter().GetResult();

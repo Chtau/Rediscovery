@@ -161,7 +161,43 @@ namespace CommunicationResourceConsumer
                         _logger.Error(ex);
                     }
                 });
-            } 
+            }
+        }
+
+        public void RequestDeleteDevice(SharedCoreModels.DeviceInfo deviceInfo)
+        {
+            if (deviceInfo != null)
+            {
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        await _connectionProvider.CurrentConnection.InvokeAsync("RequestDeleteDeviceInfo", deviceInfo);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex);
+                    }
+                });
+            }
+        }
+
+        public void RequestUpdateDevice(SharedCoreModels.DeviceInfo deviceInfo)
+        {
+            if (deviceInfo != null)
+            {
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        await _connectionProvider.CurrentConnection.InvokeAsync("RequestUpdateDeviceInfo", deviceInfo);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex);
+                    }
+                });
+            }
         }
 
         public void Disconnect()

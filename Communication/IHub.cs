@@ -19,5 +19,7 @@ namespace CommunicationResourceConsumer
         bool RequestAllData();
         void Disconnect();
         void RequestResolvePendingAuthenticationDevice(Guid deviceId, bool accept);
+        void RequestDeleteDevice(SharedCoreModels.DeviceInfo deviceInfo);
+        void RequestUpdateDevice(SharedCoreModels.DeviceInfo deviceInfo);
     }
 }

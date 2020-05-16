@@ -24,6 +24,23 @@ namespace DesktopService.Map
             };
         }
 
+        public static DALDesktopService.Models.Device ToDevice(this SharedCoreModels.DeviceInfo deviceInfo)
+        {
+            return new DALDesktopService.Models.Device
+            {
+                Id = deviceInfo.Id,
+                AllowAccess = deviceInfo.AllowAccess,
+                DeviceName = deviceInfo.Name,
+                DeviceIdentifier = deviceInfo.Identifier,
+                DeviceType = deviceInfo.DeviceType,
+                Idiom = deviceInfo.Idiom,
+                Manufacturer = deviceInfo.Manufacturer,
+                Model = deviceInfo.Model,
+                OSVersion = deviceInfo.OSVersion,
+                Platform = deviceInfo.Platform
+            };
+        }
+
         public static SharedCoreModels.DeviceInfo ToDeviceInfo(this DALDesktopService.Models.DevicePendingAuthentication device)
         {
             return new SharedCoreModels.DeviceInfo
