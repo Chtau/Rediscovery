@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunicationBase;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,8 +15,8 @@ namespace CommunicationResourceConsumer
         event EventHandler<SharedCoreModels.LoggerEntryModel> LogEntryReceived;
 
         void Init(ILogger logger, string hubLink, Protocol protocol = Protocol.HTTP);
-        void Authenticate(string applicationKey, Models.ConnectionConfiguration configuration, Action<Models.ConnectionConfiguration, bool> callback);
-        void Connect(string applicationKey, Models.ConnectionConfiguration configuration, Action<bool> listenerCallback);
+        void Authenticate(string applicationKey, ConnectionConfiguration configuration, Action<ConnectionConfiguration, bool> callback);
+        void Connect(string applicationKey, ConnectionConfiguration configuration, Action<bool> listenerCallback);
         bool RequestAllData();
         void Disconnect();
         void RequestResolvePendingAuthenticationDevice(Guid deviceId, bool accept);

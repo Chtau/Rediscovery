@@ -1,13 +1,12 @@
-﻿using CommunicationResourceConsumer.Models;
-using Microsoft.AspNetCore.SignalR.Client;
+﻿using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CommunicationResourceConsumer.Internal
+namespace CommunicationBase
 {
-    internal class ConnectionProviderSignalR : IConnectionProvider<HubConnection>
+    public class ConnectionProviderSignalR : IConnectionProvider<HubConnection>
     {
         private string _hubLink;
         private Protocol _protocol;

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using CommunicationBase;
+using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,8 +16,8 @@ namespace CommunicationResourceConsumer
         public event EventHandler<SharedCoreModels.LoggerEntryModel> LogEntryReceived;
 
         private ILogger _logger;
-        private Internal.IConnectionProvider<HubConnection> _connectionProviderAuthentication;
-        private Internal.IConnectionProvider<HubConnection> _connectionProvider;
+        private IConnectionProvider<HubConnection> _connectionProviderAuthentication;
+        private IConnectionProvider<HubConnection> _connectionProvider;
 
         public Hub()
         {
@@ -26,13 +27,13 @@ namespace CommunicationResourceConsumer
         public void Init(ILogger logger, string hubLink, Protocol protocol = Protocol.HTTP)
         {
             _logger = logger;
-            _connectionProviderAuthentication = new Internal.ConnectionProviderSignalR();
-            _connectionProvider = new Internal.ConnectionProviderSignalR();
+            _connectionProviderAuthentication = new ConnectionProviderSignalR();
+            _connectionProvider = new ConnectionProviderSignalR();
             _connectionProviderAuthentication.Init(_logger, hubLink, protocol);
             _connectionProvider.Init(_logger, hubLink, protocol);
         }
 
-        public void Authenticate(string applicationKey, Models.ConnectionConfiguration configuration, Action<Models.ConnectionConfiguration, bool> callback)
+        public void Authenticate(string applicationKey, ConnectionConfiguration configuration, Action<ConnectionConfiguration, bool> callback)
         {
             Disconnect();
             Task.Run(async () =>
@@ -72,7 +73,7 @@ namespace CommunicationResourceConsumer
             });
         }
 
-        public void Connect(string applicationKey, Models.ConnectionConfiguration configuration, Action<bool> listenerCallback)
+        public void Connect(string applicationKey, ConnectionConfiguration configuration, Action<bool> listenerCallback)
         {
             try
             {

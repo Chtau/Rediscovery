@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommunicationResourceConsumer
+namespace CommunicationBase
 {
-	public enum Protocol
-	{
-		HTTP,
-		HTTPS
-	}
+    public enum Protocol
+    {
+        HTTP,
+        HTTPS
+    }
 
     public enum ConnectionState
     {
