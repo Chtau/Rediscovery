@@ -8,6 +8,7 @@ using Xamarin.Forms;
 
 namespace Rediscovery.Features.Connection
 {
+    [Obsolete("New Library")]
     public abstract class InternalHubs : BaseService
     {
         private readonly string _hubLink;

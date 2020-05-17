@@ -15,6 +15,7 @@ using Xamarin.Forms.Internals;
 
 namespace Rediscovery.Features.Authentication
 {
+    [Obsolete("New Library")]
     public class AuthConnectinHub : InternalHubs, IInternalHub
     {
         const string AuthHubLink = "/hubs/connect";

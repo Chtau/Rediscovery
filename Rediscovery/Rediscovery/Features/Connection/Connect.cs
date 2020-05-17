@@ -17,6 +17,7 @@ using PluginFeature.Models;
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.Connection.Connect))]
 namespace Rediscovery.Features.Connection
 {
+    [Obsolete("New Library")]
     public class Connect : BaseService, IConnect
     {
         internal const string Protocol = "http://";

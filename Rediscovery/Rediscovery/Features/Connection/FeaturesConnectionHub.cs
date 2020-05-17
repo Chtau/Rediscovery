@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rediscovery.Features.Connection
 {
+    [Obsolete("New Library")]
     public class FeaturesConnectionHub : InternalHubs, IInternalHub
     {
         const string hubLink = "/hubs/feature";

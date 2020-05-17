@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Rediscovery.Features.Connection
 {
+    [Obsolete("New Library")]
     public interface IConnect
     {
         Task AutoConnect();
