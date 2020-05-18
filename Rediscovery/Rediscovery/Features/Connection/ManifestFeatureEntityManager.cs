@@ -6,13 +6,14 @@ using System.Linq;
 using Xamarin.Forms;
 using System.Threading.Tasks;
 using Rediscovery.Services;
+using System.Threading;
 
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.Connection.ManifestFeatureEntityManager))]
 namespace Rediscovery.Features.Connection
 {
     public class ManifestFeatureEntityManager : BaseService, IManifestFeatureEntityManager
     {
-        private Features.Connection.IConnect connection => DependencyService.Get<Features.Connection.IConnect>() ?? new Features.Connection.Connect();
+        private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
 
         public System.Collections.ObjectModel.ObservableCollection<Features.Connection.Models.ConnectionManifestFeature> ConnectionManifestFeatures { get; set; }
 
@@ -21,11 +22,11 @@ namespace Rediscovery.Features.Connection
             ConnectionManifestFeatures = new System.Collections.ObjectModel.ObservableCollection<Features.Connection.Models.ConnectionManifestFeature>();
         }
 
-        public void Clear(Guid modelId)
+        public void Clear(Guid configurationId)
         {
             try
             {
-                var removeFeatures = ConnectionManifestFeatures.Where(x => x.ConnectionId == modelId);
+                var removeFeatures = ConnectionManifestFeatures.Where(x => x.ConfigurationId == configurationId);
                 if (removeFeatures != null)
                 {
                     foreach (var item in removeFeatures.ToList())
@@ -40,41 +41,65 @@ namespace Rediscovery.Features.Connection
             }
         }
 
-        public List<Features.Connection.Models.ConnectionManifestFeature> GetConnectionManifestFeature(Guid modelId)
+        public void AddManifestData(SharedCoreModels.Manifest manifest, Guid configurationId, string displayName)
         {
-            var result = new List<Features.Connection.Models.ConnectionManifestFeature>();
-            var task = Task.Factory.StartNew(async () =>
+            try
             {
-                result = await GetConnectionManifestFeatureAsync(modelId);
-            });
-            task.Wait();
-            return result;
+                try
+                {
+                    var config = desktopStore.GetItem(configurationId);
+                    config.ManifestAppMinimumVersion = PluginFeature.Models.Version.ConvertFrom(manifest.AppMinimumVersion);
+                    config.ManifestClientName = manifest.ClientName;
+                    config.ManifestClientVersion = PluginFeature.Models.Version.ConvertFrom(manifest.ClientVersion);
+                    desktopStore.UpdateItem(config);
+                } catch (Exception ex)
+                {
+                    _logger.Error(ex);
+                }
+                foreach (var item in manifest.SupportedFeatures)
+                {
+                    var feature = new Connection.Models.ConnectionManifestFeature
+                    {
+                        ConfigurationId = configurationId,
+                        ConnectionDisplayName = displayName,
+                        FeatureDisplayName = item.DisplayName,
+                        FeatureControlIntegrationPoint = item.ControlIntegrationPoint,
+                        FeatureFeatureIntegrationPoint = item.FeatureIntegrationPoint,
+                        ControlIntegration = item.ControlIntegration,
+                        FeatureId = item.Id,
+                        FeatureMinControlIntegrationPoint = PluginFeature.Models.Version.ConvertFrom(item.MinControlIntegrationPoint),
+                        FeatureMinFeatureIntegrationPoint = PluginFeature.Models.Version.ConvertFrom(item.MinFeatureIntegrationPoint),
+                        FeatureVersion = PluginFeature.Models.Version.ConvertFrom(item.Version),
+                    };
+                    var connectionManifestFeature = ConnectionManifestFeatures.FirstOrDefault(x => x.ConfigurationId == configurationId);
+                    if (connectionManifestFeature != null)
+                    {
+                        connectionManifestFeature = feature;
+                    }
+                    else
+                    {
+                        ConnectionManifestFeatures.Add(feature);
+                    }
+                }
+            } catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
         }
 
-        public async Task<List<Features.Connection.Models.ConnectionManifestFeature>> GetConnectionManifestFeatureAsync(Guid modelId)
+        public List<Features.Connection.Models.ConnectionManifestFeature> GetConnectionManifestFeature(Guid configurationId)
         {
-            var conModel = await connection.GetModel(modelId);
-            if (conModel != null)
-                return ConnectionManifestFeatures.Where(x => x.ConnectionId == conModel.Id).ToList();
+            var mani = ConnectionManifestFeatures.Where(x => x.ConfigurationId == configurationId)?.ToList();
+            if (mani != null)
+                return mani;
             return new List<Features.Connection.Models.ConnectionManifestFeature>();
         }
 
         public List<Features.Connection.Models.ConnectionManifestFeature> GetConnectedConnectionManifestFeature()
         {
-            var result = new List<Features.Connection.Models.ConnectionManifestFeature>();
-            var task = Task.Factory.StartNew(async () =>
-            {
-                result = await GetConnectedConnectionManifestFeatureAsync();
-            });
-            task.Wait();
-            return result;
-        }
-
-        public async Task<List<Features.Connection.Models.ConnectionManifestFeature>> GetConnectedConnectionManifestFeatureAsync()
-        {
-            var conModel = await connection.GetConnectedModels();
-            if (conModel != null)
-                return ConnectionManifestFeatures.ToList();
+            var mani = ConnectionManifestFeatures?.ToList();
+            if (mani != null)
+                return mani;
             return new List<Features.Connection.Models.ConnectionManifestFeature>();
         }
     }

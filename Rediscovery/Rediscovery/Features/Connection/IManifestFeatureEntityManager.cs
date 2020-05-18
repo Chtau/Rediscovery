@@ -9,10 +9,9 @@ namespace Rediscovery.Features.Connection
     public interface IManifestFeatureEntityManager
     {
         System.Collections.ObjectModel.ObservableCollection<Features.Connection.Models.ConnectionManifestFeature> ConnectionManifestFeatures { get; set; }
-        List<Features.Connection.Models.ConnectionManifestFeature> GetConnectionManifestFeature(Guid modelId);
-        Task<List<Features.Connection.Models.ConnectionManifestFeature>> GetConnectionManifestFeatureAsync(Guid modelId);
+        List<Features.Connection.Models.ConnectionManifestFeature> GetConnectionManifestFeature(Guid configurationId);
         List<Features.Connection.Models.ConnectionManifestFeature> GetConnectedConnectionManifestFeature();
-        Task<List<Features.Connection.Models.ConnectionManifestFeature>> GetConnectedConnectionManifestFeatureAsync();
-        void Clear(Guid modelId);
+        void Clear(Guid configurationId);
+        void AddManifestData(SharedCoreModels.Manifest manifest, Guid configurationId, string displayName);
     }
 }

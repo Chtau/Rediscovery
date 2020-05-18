@@ -12,7 +12,7 @@ namespace Rediscovery.Features.Connection.Models
     public class ConnectionManifestFeature : BaseModel
     {
         private Guid _id;
-        private Guid _connectionId;
+        private Guid _configurationId;
         private string _connectionDisplayName;
         private string _featureDisplayName;
         private Guid _featureId;
@@ -31,10 +31,10 @@ namespace Rediscovery.Features.Connection.Models
         /// <summary>
         /// Desktop Configuration Model Id for the Connection
         /// </summary>
-        public Guid ConnectionId
+        public Guid ConfigurationId
         {
-            get { return _connectionId; }
-            set { SetProperty(ref _connectionId, value); }
+            get { return _configurationId; }
+            set { SetProperty(ref _configurationId, value); }
         }
 
         public string ConnectionDisplayName
