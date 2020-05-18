@@ -81,7 +81,7 @@ namespace CommunicationClientConsumer
             });
         }
 
-        public void Connect(string deviceIdentifier, ConnectionConfiguration configuration)
+        public void Connect(string deviceIdentifier, ConnectionConfiguration configuration, Action<bool> resultCallback)
         {
             try
             {
@@ -104,11 +104,16 @@ namespace CommunicationClientConsumer
                                 _logger.Message($"Feature response received (ConfigurationId:{configuration.Id} FeatureId:{featureId} ProfileId:{profileId} At:{DateTime.Now})");
                                 FeatureResponseReceived?.Invoke(this, new Models.ResponseReceived(configuration.Id, featureId, profileId, data));
                             });
+                            resultCallback?.Invoke(true);
                         }
                         catch (Exception ex)
                         {
                             _logger.Error(ex);
+                            resultCallback?.Invoke(false);
                         }
+                    } else
+                    {
+                        resultCallback?.Invoke(false);
                     }
                 }, configuration, true);
             });
