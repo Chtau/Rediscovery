@@ -8,6 +8,8 @@ namespace CommunicationBase
 {
     public class ConnectionProviderSignalR : IConnectionProvider<HubConnection>
     {
+        private string baseUrl;
+        private string token;
         private string _hubLink;
         private Protocol _protocol;
         private ILogger _logger;
@@ -35,12 +37,17 @@ namespace CommunicationBase
             }
         }
 
+        public string BaseUrl => baseUrl;
+
+        public string Token => token;
+
         private async Task<HubConnection> OnGetConnection(ConnectionConfiguration model, bool shouldUseToken = true)
         {
             if (model == null)
                 return null;
             try
             {
+                token = model.Token;
                 if (connection != null)
                 {
                     for (int i = 0; i < 50; i++)
@@ -63,7 +70,8 @@ namespace CommunicationBase
                     }
                 }
 
-                string url = _protocol.ToProtocolValue() + model.Address + _hubLink;
+                baseUrl = _protocol.ToProtocolValue() + model.Address;
+                string url = baseUrl + _hubLink;
                 _logger.Message($"Try do connect to {model.DisplayName} with Address:{url} ({DateTime.Now.ToString()})");
                 if (shouldUseToken)
                 {

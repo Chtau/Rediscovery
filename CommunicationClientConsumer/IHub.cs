@@ -1,8 +1,11 @@
 ﻿using CommunicationBase;
+using PluginFeature.Models;
 using SharedCoreModels;
 using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CommunicationClientConsumer
 {
@@ -15,5 +18,8 @@ namespace CommunicationClientConsumer
         void Send(Guid featureId, string profileId, object data);
         void Start(Guid featureId);
         void Stop(Guid featureId);
+        Task<ZipArchive> GetUIArchive(Guid featureId);
+        Task<List<DeviceFeatureProfil>> GetDeviceFeatureProfils(Guid featureId);
+        Task<DeviceFeatureSetting> GetDeviceFeatureSetting(Guid featureId);
     }
 }

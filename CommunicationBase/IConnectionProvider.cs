@@ -15,5 +15,7 @@ namespace CommunicationBase
         Task CloseConnection();
         T CurrentConnection { get; }
         bool IsConnected { get; }
+        string BaseUrl { get; }
+        string Token { get; }
     }
 }

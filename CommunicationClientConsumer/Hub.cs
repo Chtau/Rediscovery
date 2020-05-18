@@ -184,7 +184,7 @@ namespace CommunicationClientConsumer
 
         public async Task<ZipArchive> GetUIArchive(Guid featureId)
         {
-            var response = await GetResponseMessage(modelId, featureId, "/features/ui/");
+            var response = await GetResponseMessage(featureId, "/features/ui/");
             if (response.IsSuccessStatusCode)
             {
                 var file = await response.Content.ReadAsStreamAsync();
@@ -199,7 +199,7 @@ namespace CommunicationClientConsumer
 
         public async Task<List<DeviceFeatureProfil>> GetDeviceFeatureProfils(Guid featureId)
         {
-            var response = await GetResponseMessage(modelId, featureId, "/features/profiles/");
+            var response = await GetResponseMessage(featureId, "/features/profiles/");
             if (response.IsSuccessStatusCode)
             {
                 try
@@ -218,7 +218,7 @@ namespace CommunicationClientConsumer
 
         public async Task<DeviceFeatureSetting> GetDeviceFeatureSetting(Guid featureId)
         {
-            var response = await GetResponseMessage(modelId, featureId, "/features/settings/");
+            var response = await GetResponseMessage(featureId, "/features/settings/");
             if (response.IsSuccessStatusCode)
             {
                 try
@@ -240,15 +240,16 @@ namespace CommunicationClientConsumer
             try
             {
                 var client = new HttpClient();
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", model.Token);
-                var response = await client.GetAsync($"{Protocol}{model.LastKnownAddress}{subUrl}{featureId}");
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _connectionProvider.Token);
+                var response = await client.GetAsync($"{_connectionProvider.BaseUrl}{subUrl}{featureId}");
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     client.CancelPendingRequests();
                     client.Dispose();
                     client = null;
-                    var clientRetry = await GetHttpClientFeature(modelId);
-                    return await clientRetry.GetAsync($"{Protocol}{model.LastKnownAddress}{subUrl}{featureId}");
+                    var clientRetry = new HttpClient();
+                    clientRetry.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _connectionProvider.Token);
+                    return await clientRetry.GetAsync($"{_connectionProvider.BaseUrl}{subUrl}{featureId}");
                 }
                 else
                 {
