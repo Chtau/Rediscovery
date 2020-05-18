@@ -18,6 +18,8 @@ namespace CommunicationClientConsumer
         private IConnectionProvider<HubConnection> _connectionProviderAuthentication;
         private IConnectionProvider<HubConnection> _connectionProvider;
 
+        public event EventHandler<Models.ResponseReceived> FeatureResponseReceived;
+
         public void Init(ILogger logger, string authHubLink, string exchangeHubLink, Protocol protocol = Protocol.HTTP)
         {
             _logger = logger;
@@ -99,8 +101,8 @@ namespace CommunicationClientConsumer
                         {
                             connection.On<Guid, string, object>("ClientResponse", (Guid featureId, string profileId, object data) =>
                             {
-                                _logger.Message($"Feature Desktop response received (FeatureId:{featureId} ProfileId:{profileId} At:{DateTime.Now})");
-                                //DesktopResponseReceived?.Invoke(this, (model.Id, featureId, profileId, data));
+                                _logger.Message($"Feature response received (ConfigurationId:{configuration.Id} FeatureId:{featureId} ProfileId:{profileId} At:{DateTime.Now})");
+                                FeatureResponseReceived?.Invoke(this, new Models.ResponseReceived(configuration.Id, featureId, profileId, data));
                             });
                         }
                         catch (Exception ex)

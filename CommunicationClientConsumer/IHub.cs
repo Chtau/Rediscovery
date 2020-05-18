@@ -11,6 +11,7 @@ namespace CommunicationClientConsumer
 {
     public interface IHub
     {
+        event EventHandler<Models.ResponseReceived> FeatureResponseReceived;
         void Init(ILogger logger, string authHubLink, string exchangeHubLink, Protocol protocol = Protocol.HTTP);
         void Authenticate(WelcomeDeviceMessage welcomeDeviceMessage, ConnectionConfiguration configuration, Action<ConnectionConfiguration, bool> callback, Action<Manifest> manifestCallback);
         void Connect(string deviceIdentifier, ConnectionConfiguration configuration);
