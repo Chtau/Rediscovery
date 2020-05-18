@@ -13,7 +13,7 @@ namespace Rediscovery.Features.DesktopFeatures
 {
     public class FeatureUIService : BaseService, IFeatureUIService
     {
-        private Features.Connection.IConnect connect => DependencyService.Get<Features.Connection.IConnect>() ?? new Features.Connection.Connect();
+        private CommunicationClientConsumer.IHub communicationHub => DependencyService.Get<CommunicationClientConsumer.IHub>() ?? new CommunicationClientConsumer.Hub();
         private Services.IFileSystem fileSystem => DependencyService.Get<Services.IFileSystem>() ?? new Services.FileSystem();
         private IHtmlUIService htmlUIService => DependencyService.Get<IHtmlUIService>() ?? new HtmlUIService();
 
@@ -23,7 +23,7 @@ namespace Rediscovery.Features.DesktopFeatures
             {
                 try
                 {
-                    var profiles = await connect.GetDeviceFeatureProfils(modelId, featureId);
+                    var profiles = await communicationHub.GetDeviceFeatureProfils(featureId);
                     if (profiles != null)
                     {
                         callback?.Invoke(true, profiles);
@@ -51,7 +51,7 @@ namespace Rediscovery.Features.DesktopFeatures
             {
                 try
                 {
-                    var settings = await connect.GetDeviceFeatureSetting(modelId, featureId);
+                    var settings = await communicationHub.GetDeviceFeatureSetting(featureId);
                     if (settings != null)
                     {
                         callback?.Invoke(true, settings);
@@ -90,7 +90,7 @@ namespace Rediscovery.Features.DesktopFeatures
                 }
                 try
                 {
-                    var archive = await connect.GetUIArchive(modelId, featureId);
+                    var archive = await communicationHub.GetUIArchive(featureId);
                     if (archive != null)
                     {
                         archive.ExtractToDirectory(directory);

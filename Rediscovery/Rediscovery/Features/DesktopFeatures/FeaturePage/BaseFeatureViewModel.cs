@@ -1,4 +1,5 @@
-﻿using Rediscovery.Services;
+﻿using CommunicationClientConsumer;
+using Rediscovery.Services;
 using Rediscovery.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -11,33 +12,32 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage
     {
         public event EventHandler<Tuple<string, object>> ReceivedData;
 
-        private IFeatureExchange featureExchange => DependencyService.Get<IFeatureExchange>() ?? new FeatureExchange();
+        private IHub communicationHub => DependencyService.Get<IHub>() ?? new Hub();
 
         internal readonly Features.Connection.Models.ConnectionManifestFeature _connectionManifestFeature;
-        internal ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
 
         public string FeatureVersion => _connectionManifestFeature.FeatureVersion;
 
         public BaseFeatureViewModel(Features.Connection.Models.ConnectionManifestFeature connectionManifestFeature)
         {
             _connectionManifestFeature = connectionManifestFeature;
-            featureExchange.DesktopResponseReceived += FeatureExchange_DesktopResponseReceived;
+            communicationHub.FeatureResponseReceived += CommunicationHub_FeatureResponseReceived;
         }
 
-        private void FeatureExchange_DesktopResponseReceived(object sender, (Guid connectionId, Guid featureId, string profileId, object data) e)
+        private void CommunicationHub_FeatureResponseReceived(object sender, CommunicationClientConsumer.Models.ResponseReceived e)
         {
-            _logger.Message($"{DateTime.Now.ToShortTimeString()} Feature exchange received. (connectionId:{e.connectionId} featureId:{e.featureId} profileId:{e.profileId} data:{e.data})");
-            if (_connectionManifestFeature.ConnectionId == e.connectionId && _connectionManifestFeature.FeatureId == e.featureId)
+            _logger.Message($"{DateTime.Now.ToShortTimeString()} Feature exchange received. (ConfigurationId:{e.ConfigurationId} FeatureId:{e.FeatureId} ProfileId:{e.ProfileId})");
+            if (_connectionManifestFeature.ConfigurationId == e.ConfigurationId && _connectionManifestFeature.FeatureId == e.FeatureId)
             {
-                Receive(e.data);
-                ReceivedData?.Invoke(sender, new Tuple<string, object>(e.profileId, e.data));
+                Receive(e.Data);
+                ReceivedData?.Invoke(sender, new Tuple<string, object>(e.ProfileId, e.Data));
             }
         }
 
         public virtual void Send(string profileId, object data)
         {
             _logger.Message($"{DateTime.Now.ToShortTimeString()} Try to send from Feature. (profileId:{profileId} data:{data})");
-            featureExchange.Send(_connectionManifestFeature, profileId, data);
+            communicationHub.Send(_connectionManifestFeature.FeatureId, profileId, data);
         }
 
         public virtual void Receive(object data)
@@ -47,12 +47,12 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage
 
         public virtual void Start()
         {
-            featureExchange.Start(_connectionManifestFeature);
+            communicationHub.Start(_connectionManifestFeature.FeatureId);
         }
 
         public virtual void Stop()
         {
-            featureExchange.Stop(_connectionManifestFeature);
+            communicationHub.Stop(_connectionManifestFeature.FeatureId);
         }
     }
 }

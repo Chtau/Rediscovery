@@ -34,7 +34,6 @@
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.14.0" />
     <PackageReference Include="Forms.Controls.FlexButton" Version="0.11.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.3" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.2" />
     <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
@@ -43,21 +42,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\CommunicationClientConsumer\CommunicationClientConsumer.csproj" />
     <ProjectReference Include="..\..\PluginFeature\PluginFeature.csproj" />
     <ProjectReference Include="..\..\SharedCoreModels\SharedCoreModels.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Features\DesktopFeatures\FeaturePage\TerminalPage\TerminalFeaturePage.xaml.cs">
-      <DependentUpon>TerminalFeaturePage.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Update="Controls\Terminal.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Features\Authentication\AuthenticationKey.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Features\DesktopConfiguration\DesktopConfigurationEditPage.xaml">
@@ -76,12 +67,6 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Features\DesktopFeatures\FeaturePage\FeatureView\FeatureView.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Features\DesktopFeatures\FeaturePage\MediaPlayer\MediaPlayerFeaturePage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Features\DesktopFeatures\FeaturePage\TerminalPage\TerminalFeaturePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Features\Settings\SettingPage.xaml">

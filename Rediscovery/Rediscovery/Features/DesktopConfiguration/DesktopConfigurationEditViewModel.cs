@@ -1,10 +1,10 @@
-﻿using Rediscovery.Features.Authentication;
-using Rediscovery.Features.Connection;
+﻿using Rediscovery.Features.Connection;
 using Rediscovery.Models;
 using Rediscovery.Services;
 using Rediscovery.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -15,7 +15,7 @@ namespace Rediscovery.Features.DesktopConfiguration
     {
         private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
-        private IConnect auth => DependencyService.Get<IConnect>() ?? new Connect();
+        private IConnectService connectService => DependencyService.Get<IConnectService>() ?? new ConnectService();
         private IManifestFeatureEntityManager entityManager => DependencyService.Get<IManifestFeatureEntityManager>() ?? new ManifestFeatureEntityManager();
 
         DesktopConfigurationModel item;
@@ -37,8 +37,6 @@ namespace Rediscovery.Features.DesktopConfiguration
 
         public DesktopConfigurationEditViewModel(DesktopConfigurationModel item = null)
         {
-            auth.HelloReceived += Auth_HelloReceived;
-            auth.ManifestReceived += Auth_ManifestReceived;
             Load = new LoadBinding
             {
                 IsLoading = false
@@ -66,12 +64,23 @@ namespace Rediscovery.Features.DesktopConfiguration
                 };
             }
 
-            Connect = new Command(async () =>
+            Connect = new Command(() =>
             {
                 try
                 {
                     Load.IsLoading = true;
-                    await auth.TryConnect(Item);
+                    connectService.Connect(Item, (result) =>
+                    {
+                        try
+                        {
+                            Item.ConnectionState = result;
+                            Item.LastConnection = DateTime.Now;
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Error(ex);
+                        }
+                    });
                 }
                 catch (Exception ex)
                 {
@@ -86,24 +95,6 @@ namespace Rediscovery.Features.DesktopConfiguration
             });
             Connect.ChangeCanExecute();
         }
-
-        private void Auth_ManifestReceived(object sender, Tuple<DesktopConfiguration.DesktopConfigurationModel, List<Features.Connection.Models.ConnectionManifestFeature>> e)
-        {
-            //throw new NotImplementedException();
-        }
-
-        private void Auth_HelloReceived(object sender, DesktopConfiguration.DesktopConfigurationModel e)
-        {
-            try
-            {
-                Item.ConnectionState = e.ConnectionState;
-                Item.LastConnection = e.LastConnection;
-            } catch (Exception ex)
-            {
-                logger.Error(ex);
-            }
-        }
-
 
         public async Task Save()
         {

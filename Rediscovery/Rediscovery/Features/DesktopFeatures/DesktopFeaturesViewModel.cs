@@ -1,6 +1,4 @@
-﻿using Rediscovery.Features.Authentication;
-using Rediscovery.Features.Authentication.Models;
-using Rediscovery.Features.Connection;
+﻿using Rediscovery.Features.Connection;
 using Rediscovery.Features.DesktopConfiguration;
 using Rediscovery.Services;
 using Rediscovery.ViewModels;

@@ -17,24 +17,12 @@ namespace Rediscovery.Views
     {
         private MainPageViewModel viewModel;
 
-        private Features.Connection.IConnect auth => DependencyService.Get<Features.Connection.IConnect>() ?? new Features.Connection.Connect();
-
         public MainPage()
         {
             InitializeComponent();
 
             BindingContext = viewModel = new MainPageViewModel();
             viewModel.Load();
-            auth.HelloReceived += Auth_HelloReceived;
-        }
-
-        private void Auth_HelloReceived(object sender, Features.DesktopConfiguration.DesktopConfigurationModel e)
-        {
-            if (e.ConnectionState == SharedCoreModels.Enums.ConnectionState.WaitForApprovel)
-            {
-                // TODO: change how we show Authentication key required per connection
-                Navigation.PushModalAsync(new Features.Authentication.AuthenticationKey(e.Id));
-            }
         }
     }
 }

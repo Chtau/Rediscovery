@@ -9,31 +9,36 @@ namespace Rediscovery
 {
     public partial class App : Application
     {
-
-        private IConnect connect => DependencyService.Get<IConnect>() ?? new Connect();
+        private IConnectService connect => DependencyService.Get<IConnectService>() ?? new ConnectService();
 
         public App()
         {
             InitializeComponent();
+
+            DependencyService.Register<CommunicationClientConsumer.Hub>();
+
             MainPage = new MainPage();
         }
 
         protected async override void OnStart()
         {
-            // Handle when your app starts
-            await connect.AutoConnect();
+            connect.AutoConnect((result) =>
+            {
+
+            });
         }
 
         protected async override void OnSleep()
         {
-            // Handle when your app sleeps
-            await connect.CloseConnections();
+            
         }
 
         protected async override void OnResume()
         {
-            // Handle when your app resumes
-            await connect.AutoConnect();
+            connect.AutoConnect((result) =>
+            {
+
+            });
         }
     }
 }
