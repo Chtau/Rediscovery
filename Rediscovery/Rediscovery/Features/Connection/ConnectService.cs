@@ -58,7 +58,7 @@ namespace Rediscovery.Features.Connection
                 {
                     if (result)
                     {
-                        communicationHub.Connect(item.ConvertToCommunicationConfigurationModel(), (conResult, state) =>
+                        communicationHub.Connect(config, (conResult, state) =>
                         {
                             resultCallback?.Invoke(conResult, state.ConvertToSharedCoreEnum());
                         });
