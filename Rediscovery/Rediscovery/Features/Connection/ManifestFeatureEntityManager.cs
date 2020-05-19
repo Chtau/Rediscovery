@@ -70,7 +70,7 @@ namespace Rediscovery.Features.Connection
                         FeatureMinFeatureIntegrationPoint = PluginFeature.Models.Version.ConvertFrom(item.MinFeatureIntegrationPoint),
                         FeatureVersion = PluginFeature.Models.Version.ConvertFrom(item.Version),
                     };
-                    var connectionManifestFeature = ConnectionManifestFeatures.FirstOrDefault(x => x.ConfigurationId == configurationId);
+                    var connectionManifestFeature = ConnectionManifestFeatures.FirstOrDefault(x => x.ConfigurationId == configurationId && x.FeatureId == feature.FeatureId);
                     if (connectionManifestFeature != null)
                     {
                         connectionManifestFeature = feature;
