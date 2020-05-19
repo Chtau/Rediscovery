@@ -69,12 +69,13 @@ namespace Rediscovery.Features.DesktopConfiguration
                 try
                 {
                     Load.IsLoading = true;
-                    connectService.Connect(Item, (result) =>
+                    connectService.Connect(Item, (result, state) =>
                     {
                         try
                         {
-                            Item.ConnectionState = result;
-                            Item.LastConnection = DateTime.Now;
+                            Item.ConnectionState = state;
+                            if (result)
+                                Item.LastConnection = DateTime.Now;
                         }
                         catch (Exception ex)
                         {

@@ -22,7 +22,7 @@ namespace Rediscovery
 
         protected async override void OnStart()
         {
-            connect.AutoConnect((result) =>
+            connect.AutoConnect((result, state) =>
             {
 
             });
@@ -35,7 +35,7 @@ namespace Rediscovery
 
         protected async override void OnResume()
         {
-            connect.AutoConnect((result) =>
+            connect.AutoConnect((result, state) =>
             {
 
             });
