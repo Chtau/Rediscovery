@@ -32,6 +32,13 @@ namespace Rediscovery.Features.DesktopConfiguration
             set { SetProperty(ref isConnectEnabled, value); }
         }
 
+        bool canEdit = false;
+        public bool CanEdit
+        {
+            get { return canEdit; }
+            set { SetProperty(ref canEdit, value); }
+        }
+
         public Command Connect { get; }
         public LoadBinding Load { get; set; }
 
@@ -47,6 +54,7 @@ namespace Rediscovery.Features.DesktopConfiguration
                 Title = "Edit Device";
                 Item = item;
                 IsConnectEnabled = true;
+                CanEdit = true;
             }
             else
             {
@@ -62,12 +70,14 @@ namespace Rediscovery.Features.DesktopConfiguration
                     ConnectionState = SharedCoreModels.Enums.ConnectionState.None,
                     LastConnection = null
                 };
+                CanEdit = true;
             }
 
             Connect = new Command(() =>
             {
                 try
                 {
+                    CanEdit = false;
                     Load.IsLoading = true;
                     connectService.Connect(Item, (result, state) =>
                     {
@@ -80,14 +90,16 @@ namespace Rediscovery.Features.DesktopConfiguration
                         catch (Exception ex)
                         {
                             logger.Error(ex);
+                        } finally
+                        {
+                            Load.IsLoading = false;
+                            CanEdit = true;
                         }
                     });
                 }
                 catch (Exception ex)
                 {
                     logger.Error(ex);
-                } finally
-                {
                     Load.IsLoading = false;
                 }
             }, () =>

@@ -22,13 +22,19 @@ namespace Rediscovery.Features.DesktopConfiguration
 
         async void Save_Clicked(object sender, EventArgs e)
         {
-            await viewModel.Save();
+            if (viewModel.CanEdit)
+            {
+                await viewModel.Save();
+            }
         }
 
         async void Remove_Clicked(object sender, EventArgs e)
         {
-            await viewModel.Remove();
-            await Navigation.PopModalAsync();
+            if (viewModel.CanEdit)
+            {
+                await viewModel.Remove();
+                await Navigation.PopModalAsync();
+            }
         }
 
         async void Back_Clicked(object sender, EventArgs e)

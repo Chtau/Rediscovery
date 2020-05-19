@@ -7,8 +7,8 @@
              mc:Ignorable="d"
              x:Class="Rediscovery.Features.DesktopConfiguration.DesktopConfigurationEditPage">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Save" Clicked="Save_Clicked" Icon="save_fill_green.png"/>
-        <ToolbarItem Text="Remove" Clicked="Remove_Clicked" Icon="delete_bin_fill_red.png"/>
+        <ToolbarItem IsEnabled="{Binding CanEdit}" Text="Save" Clicked="Save_Clicked" Icon="save_fill_green.png"/>
+        <ToolbarItem IsEnabled="{Binding CanEdit}" Text="Remove" Clicked="Remove_Clicked" Icon="delete_bin_fill_red.png"/>
         <ToolbarItem Text="Back" Clicked="Back_Clicked" Icon="close_white.png"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
@@ -54,12 +54,18 @@
             </Grid>
             <ContentView x:Name="actOverlay" IsVisible="{Binding Load.IsLoading}" 
                          HorizontalOptions="FillAndExpand" 
-                         VerticalOptions="FillAndExpand"
-                         >
-                <StackLayout>
-                    <ActivityIndicator IsVisible="True" IsRunning="True" x:Name="busyActivity" Style="{DynamicResource ActivityIndicator}"/>
-                    <Label Style="{DynamicResource ActivityIndicatorLabel}" Text="Connecting to Desktop" />
-                </StackLayout>
+                         VerticalOptions="FillAndExpand">
+                <AbsoluteLayout>
+                    <StackLayout AbsoluteLayout.LayoutFlags="All"
+                                 Style="{DynamicResource ActivityBackgroundOverlay}"
+                                 AbsoluteLayout.LayoutBounds="1,1,1,1"></StackLayout>
+                    <StackLayout AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1"
+                                 HorizontalOptions="FillAndExpand" 
+                         VerticalOptions="FillAndExpand">
+                        <ActivityIndicator IsVisible="True" IsRunning="True" x:Name="busyActivity" Style="{DynamicResource ActivityIndicator}"/>
+                        <Label Style="{DynamicResource ActivityIndicatorLabel}" Text="Connecting to Desktop" />
+                    </StackLayout>
+                </AbsoluteLayout>
             </ContentView>
         </Grid>
     </ContentPage.Content>

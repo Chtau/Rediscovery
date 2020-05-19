@@ -73,11 +73,18 @@
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
                 <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+                <Setter Property="TextColor" Value="Black" />
             </Style>
             <Style x:Key="ActivityIndicator" TargetType="ActivityIndicator">
                 <Setter Property="Color" Value="Red" />
                 <Setter Property="VerticalOptions" Value="CenterAndExpand" />
                 <Setter Property="HorizontalOptions" Value="CenterAndExpand" />
+            </Style>
+            <Style x:Key="ActivityBackgroundOverlay" TargetType="StackLayout">
+                <Setter Property="BackgroundColor" Value="WhiteSmoke" />
+                <Setter Property="Opacity" Value=".6" />
+                <Setter Property="VerticalOptions" Value="FillAndExpand" />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
             </Style>
         </ResourceDictionary>
     </Application.Resources>
