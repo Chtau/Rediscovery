@@ -9,5 +9,6 @@ namespace Rediscovery.Features.Connection
     {
         void AutoConnect(Action<bool, SharedCoreModels.Enums.ConnectionState> resultCallback);
         void Connect(DesktopConfigurationModel desktopConfigurationModel, Action<bool, SharedCoreModels.Enums.ConnectionState> resultCallback);
+        void Disconnect(DesktopConfigurationModel desktopConfigurationModel, Action<bool> resultCallback);
     }
 }

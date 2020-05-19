@@ -40,6 +40,7 @@ namespace Rediscovery.Features.DesktopConfiguration
         }
 
         public Command Connect { get; }
+        public Command Disconnect { get; }
         public LoadBinding Load { get; set; }
 
         public DesktopConfigurationEditViewModel(DesktopConfigurationModel item = null)
@@ -106,7 +107,40 @@ namespace Rediscovery.Features.DesktopConfiguration
             {
                 return IsConnectEnabled;
             });
+            Disconnect = new Command(() =>
+            {
+                try
+                {
+                    CanEdit = false;
+                    Load.IsLoading = true;
+                    connectService.Disconnect(Item, (result) =>
+                    {
+                        try
+                        {
+                            Item.ConnectionState = SharedCoreModels.Enums.ConnectionState.None;
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Error(ex);
+                        }
+                        finally
+                        {
+                            Load.IsLoading = false;
+                            CanEdit = true;
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                    Load.IsLoading = false;
+                }
+            }, () =>
+            {
+                return IsConnectEnabled;
+            });
             Connect.ChangeCanExecute();
+            Disconnect.ChangeCanExecute();
         }
 
         public async Task Save()
@@ -118,6 +152,7 @@ namespace Rediscovery.Features.DesktopConfiguration
                 {
                     IsConnectEnabled = true;
                     Connect.ChangeCanExecute();
+                    Disconnect.ChangeCanExecute();
                     Item = result.Item2;
                     MessagingCenter.Send(this, "refresh_desktop_configuration", Item);
                 }

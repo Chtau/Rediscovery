@@ -37,7 +37,7 @@
                             <Label Grid.Column="0" Grid.Row="0" Text="AutoConnect" FontSize="Medium"/>
                             <Switch Grid.Column="1" Grid.Row="0" IsToggled="{Binding Item.AutoConnect}" />
                             <Label Grid.Column="0" Grid.Row="1" Text="ConnectionState:" FontSize="Medium" />
-                            <Label Grid.Column="1" Grid.Row="1" Text="{Binding Item.ConnectionState}" FontSize="Medium"/>
+                            <Label Grid.Column="1" Grid.Row="1" Text="{Binding Item.ConnectionState, Converter={StaticResource connectionStateConverter}}" FontSize="Medium"/>
                             <Label Grid.Column="0" Grid.Row="2" Text="LastConnection:" FontSize="Medium" />
                             <Label Grid.Column="1" Grid.Row="2" Text="{Binding Item.LastConnection}" FontSize="Medium"/>
                         </Grid>
@@ -48,7 +48,15 @@
                         Icon="remote_control_fill.png"
                     Text="Connect"
                     Margin="5"
+                    IsVisible="{Binding Item.ConnectionState, Converter={StaticResource connectionStateReverseBoolConverter}}"
                     ClickedCommand="{Binding Connect}"
+                    Style="{StaticResource LargeFlexButton}"/>
+                    <flex:FlexButton 
+                        Icon="wifi_off.png"
+                    Text="Disconnect"
+                    Margin="5"
+                    IsVisible="{Binding Item.ConnectionState, Converter={StaticResource connectionStateBoolConverter}}"
+                    ClickedCommand="{Binding Disconnect}"
                     Style="{StaticResource LargeFlexButton}"/>
                 </StackLayout>
             </Grid>

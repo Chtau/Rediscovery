@@ -126,5 +126,12 @@ namespace Rediscovery.Features.Connection
                 _logger.Error(ex);
             }
         }
+
+        public void Disconnect(DesktopConfigurationModel desktopConfigurationModel, Action<bool> resultCallback)
+        {
+            communicationHub.Disconnect();
+            OnUpdateDesktopConfiguration(desktopConfigurationModel, true, SharedCoreModels.Enums.ConnectionState.None);
+            resultCallback?.Invoke(true);
+        }
     }
 }
