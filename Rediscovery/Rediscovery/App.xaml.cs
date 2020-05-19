@@ -22,10 +22,7 @@ namespace Rediscovery
 
         protected async override void OnStart()
         {
-            connect.AutoConnect((result, state) =>
-            {
-
-            });
+            OnRestart();
         }
 
         protected async override void OnSleep()
@@ -34,6 +31,11 @@ namespace Rediscovery
         }
 
         protected async override void OnResume()
+        {
+            OnRestart();
+        }
+
+        private void OnRestart()
         {
             connect.AutoConnect((result, state) =>
             {

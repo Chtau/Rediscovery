@@ -25,31 +25,43 @@ namespace Rediscovery.Features.Connection
 
         public void AutoConnect(Action<bool, SharedCoreModels.Enums.ConnectionState> resultCallback)
         {
+            OnResetDesktopConfigurationState();
+            Action<DesktopConfigurationModel, bool, SharedCoreModels.Enums.ConnectionState> callback = (config, result, state) =>
+            {
+                OnUpdateDesktopConfiguration(config, result, state);
+                resultCallback?.Invoke(result, state);
+            };
             try
             {
+                int index = 0;
                 var items = desktopStore.GetItems()?.ToList();
                 if (items?.Any(x => x.AutoConnect) == true)
                 {
-                    int index = 0;
-                    OnTryConnect(items, resultCallback, index);
+                    OnTryConnect(items, callback, index);
                 }
                 else
                 {
-                    resultCallback?.Invoke(false, SharedCoreModels.Enums.ConnectionState.None);
+                    callback?.Invoke(null, false, SharedCoreModels.Enums.ConnectionState.None);
                 }
             } catch (Exception ex)
             {
                 _logger.Error(ex);
-                resultCallback?.Invoke(false, SharedCoreModels.Enums.ConnectionState.Error);
+                callback?.Invoke(null, false, SharedCoreModels.Enums.ConnectionState.Error);
             }
         }
 
         public void Connect(DesktopConfigurationModel desktopConfigurationModel, Action<bool, SharedCoreModels.Enums.ConnectionState> resultCallback)
         {
-            OnTryConnect(new List<DesktopConfigurationModel> { desktopConfigurationModel }, resultCallback);
+            OnResetDesktopConfigurationState();
+            Action<DesktopConfigurationModel, bool, SharedCoreModels.Enums.ConnectionState> callback = (config, result, state) =>
+            {
+                OnUpdateDesktopConfiguration(desktopConfigurationModel, result, state);
+                resultCallback?.Invoke(result, state);
+            };
+            OnTryConnect(new List<DesktopConfigurationModel> { desktopConfigurationModel }, callback);
         }
 
-        private void OnTryConnect(List<DesktopConfigurationModel> desktopConfigurations, Action<bool, SharedCoreModels.Enums.ConnectionState> resultCallback, int nextIndex = 0)
+        private void OnTryConnect(List<DesktopConfigurationModel> desktopConfigurations, Action<DesktopConfigurationModel, bool, SharedCoreModels.Enums.ConnectionState> resultCallback, int nextIndex = 0)
         {
             if (desktopConfigurations != null && desktopConfigurations.Count > nextIndex)
             {
@@ -60,7 +72,7 @@ namespace Rediscovery.Features.Connection
                     {
                         communicationHub.Connect(config, (conResult, state) =>
                         {
-                            resultCallback?.Invoke(conResult, state.ConvertToSharedCoreEnum());
+                            resultCallback?.Invoke(item, conResult, state.ConvertToSharedCoreEnum());
                         });
                     }
                     else
@@ -74,7 +86,44 @@ namespace Rediscovery.Features.Connection
                 });
             } else
             {
-                resultCallback?.Invoke(false, SharedCoreModels.Enums.ConnectionState.Error);
+                resultCallback?.Invoke(null, false, SharedCoreModels.Enums.ConnectionState.Error);
+            }
+        }
+
+        private void OnResetDesktopConfigurationState()
+        {
+            try
+            {
+                var items = desktopStore.GetItems()?.ToList();
+                if (items != null)
+                {
+                    foreach (var item in items)
+                    {
+                        item.ConnectionState = SharedCoreModels.Enums.ConnectionState.None;
+                        desktopStore.UpdateItem(item);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+        }
+
+        private void OnUpdateDesktopConfiguration(DesktopConfigurationModel configuration, bool result, SharedCoreModels.Enums.ConnectionState state)
+        {
+            try
+            {
+                if (configuration != null)
+                {
+                    configuration.ConnectionState = state;
+                    if (result)
+                        configuration.LastConnection = DateTime.Now;
+                    desktopStore.UpdateItem(configuration);
+                }
+            } catch (Exception ex)
+            {
+                _logger.Error(ex);
             }
         }
     }
