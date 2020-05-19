@@ -123,8 +123,10 @@ namespace CommunicationClientConsumer
         {
             try
             {
-                _connectionProvider.CloseConnection();
-                _connectionProviderAuthentication.CloseConnection();
+                if (_connectionProvider != null)
+                    _connectionProvider.CloseConnection();
+                if (_connectionProviderAuthentication != null)
+                    _connectionProviderAuthentication.CloseConnection();
             }
             catch (Exception ex)
             {
