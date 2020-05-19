@@ -18,7 +18,7 @@ namespace Rediscovery.Features.Connection
         private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
         private IDeviceData deviceData => DependencyService.Get<IDeviceData>() ?? new DeviceData();
 
-        public void AutoConnect(Action<SharedCoreModels.Enums.ConnectionState> resultCallback)
+        public void AutoConnect(Action<bool, SharedCoreModels.Enums.ConnectionState> resultCallback)
         {
             try
             {
@@ -31,21 +31,15 @@ namespace Rediscovery.Features.Connection
                     {
                         if (result)
                         {
-                            communicationHub.Connect(deviceData.GetDeviceIdentifier(), item.ConvertToCommunicationConfigurationModel(), (conResult) =>
+                            communicationHub.Connect(item.ConvertToCommunicationConfigurationModel(), (conResult, state) =>
                             {
-                                if (!conResult)
-                                {
-                                    resultCallback?.Invoke(SharedCoreModels.Enums.ConnectionState.Warning);
-                                } else
-                                {
-                                    resultCallback?.Invoke(SharedCoreModels.Enums.ConnectionState.OK);
-                                }
+                                resultCallback?.Invoke(true, state.ConvertToSharedCoreEnum());
                             });
                         }
                         else
                         {
                             // TODO: recursive call to connect to the next item
-                            resultCallback?.Invoke(config.State.ConvertToSharedCoreEnum());
+                            resultCallback?.Invoke(false, config.State.ConvertToSharedCoreEnum());
                         }
                     }, (manifest) =>
                     {
@@ -54,16 +48,16 @@ namespace Rediscovery.Features.Connection
                 }
                 else
                 {
-                    resultCallback?.Invoke(SharedCoreModels.Enums.ConnectionState.None);
+                    resultCallback?.Invoke(false, SharedCoreModels.Enums.ConnectionState.None);
                 }
             } catch (Exception ex)
             {
                 _logger.Error(ex);
-                resultCallback?.Invoke(SharedCoreModels.Enums.ConnectionState.Error);
+                resultCallback?.Invoke(false, SharedCoreModels.Enums.ConnectionState.Error);
             }
         }
 
-        public void Connect(DesktopConfigurationModel desktopConfigurationModel, Action<SharedCoreModels.Enums.ConnectionState> resultCallback)
+        public void Connect(DesktopConfigurationModel desktopConfigurationModel, Action<bool, SharedCoreModels.Enums.ConnectionState> resultCallback)
         {
             throw new NotImplementedException();
         }
