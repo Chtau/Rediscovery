@@ -55,7 +55,6 @@ namespace Rediscovery.Features.DesktopConfiguration
             items[index].ManifestAppMinimumVersion = item.ManifestAppMinimumVersion;
             items[index].ManifestClientName = item.ManifestClientName;
             items[index].ManifestClientVersion = item.ManifestClientVersion;
-            items[index].Token = item.Token;
             items[index].AutoConnect = item.AutoConnect;
             items[index].ConnectionState = item.ConnectionState;
             items[index].DisplayName = item.DisplayName;

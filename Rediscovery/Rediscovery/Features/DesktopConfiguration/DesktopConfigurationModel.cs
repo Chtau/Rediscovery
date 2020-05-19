@@ -16,7 +16,6 @@ namespace Rediscovery.Features.DesktopConfiguration
         private string _manifestClientName;
         private string _manifestClientVersion;
         private string _manifestAppMinimumVersion;
-        private string _token;
 
         public Guid Id
         {
@@ -70,12 +69,6 @@ namespace Rediscovery.Features.DesktopConfiguration
         {
             get { return _manifestAppMinimumVersion; }
             set { SetProperty(ref _manifestAppMinimumVersion, value); }
-        }
-
-        public string Token
-        {
-            get { return _token; }
-            set { SetProperty(ref _token, value); }
         }
     }
 }

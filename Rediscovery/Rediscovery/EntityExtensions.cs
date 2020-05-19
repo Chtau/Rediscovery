@@ -16,7 +16,7 @@ namespace Rediscovery
                 Address = desktopConfigurationModel.LastKnownAddress,
                 DisplayName = desktopConfigurationModel.DisplayName,
                 State = desktopConfigurationModel.ConnectionState.ConvertToCommunicationEnum(),
-                Token = desktopConfigurationModel.Token
+                Token = null
             };
         }
     }
