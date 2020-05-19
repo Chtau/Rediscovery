@@ -18,6 +18,11 @@ namespace Rediscovery.Features.Connection
         private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
         private IDeviceData deviceData => DependencyService.Get<IDeviceData>() ?? new DeviceData();
 
+        public ConnectService()
+        {
+            communicationHub.Init(new CommunicationBase.Logger(), "/hubs/connect", "/hubs/feature");
+        }
+
         public void AutoConnect(Action<bool, SharedCoreModels.Enums.ConnectionState> resultCallback)
         {
             try

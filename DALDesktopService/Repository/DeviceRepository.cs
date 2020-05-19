@@ -56,7 +56,7 @@ namespace DALDesktopService.Repository
             try
             {
                 deviceIdentifier = deviceIdentifier.ToLower();
-                return await _dBContext.Instance.Table<Models.Device>().FirstOrDefaultAsync(x => x.DeviceName == deviceIdentifier);
+                return await _dBContext.Instance.Table<Models.Device>().FirstOrDefaultAsync(x => x.DeviceIdentifier == deviceIdentifier);
             }
             catch (Exception ex)
             {

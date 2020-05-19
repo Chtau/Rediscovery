@@ -55,7 +55,7 @@ namespace DesktopService.Features.Authentication
                 }
                 else
                 {
-                    _logger.LogDebug($"Request login Device not found (Identifier:{u.DeviceIdentifier} Name:{u.DeviceName} Allow:{u.AllowAccess})");
+                    _logger.LogDebug($"Request login Device not found (Identifier:{welcomeDeviceMessage.DeviceIdentifier} Name:{welcomeDeviceMessage.DeviceName})");
                     return new Tuple<LoginState, DALDesktopService.Models.Device>(LoginState.RequiredAuthorizeKey, null);
                 }
             }

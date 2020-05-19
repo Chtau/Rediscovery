@@ -16,7 +16,7 @@ namespace Rediscovery.Desktop.Hub.Feature
         private readonly CommunicationResourceConsumer.IHub _hub;
         private readonly SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration _remoteResourceSettings;
 
-        private CommunicationResourceConsumer.Models.ConnectionConfiguration connectionConfiguration;
+        private CommunicationBase.ConnectionConfiguration connectionConfiguration;
 
         public CommunicationController(ILogger<CommunicationController> logger,
             CommunicationResourceConsumer.IHub hub,
@@ -26,15 +26,15 @@ namespace Rediscovery.Desktop.Hub.Feature
             _remoteResourceSettings = remoteResourceSettings.Value;
             _logger = logger;
             _hub = hub;
-            connectionConfiguration = new CommunicationResourceConsumer.Models.ConnectionConfiguration
+            connectionConfiguration = new CommunicationBase.ConnectionConfiguration
             {
                 Address = _remoteResourceSettings.IP + (_remoteResourceSettings.Port != null ? ":" + _remoteResourceSettings.Port : ""),
                 DisplayName = _remoteResourceSettings.DesktopHubApplicationKey,
                 Id = Guid.NewGuid(),
-                State = CommunicationResourceConsumer.ConnectionState.None,
+                State = CommunicationBase.ConnectionState.None,
                 Token = null
             };
-            _hub.Init(new CommunicationResourceConsumer.Logger(), "/remote/resource/hub");
+            _hub.Init(new CommunicationBase.Logger(), "/remote/resource/hub");
             _hub.ActiveDeviceInfoReceived += _deviceService_ActiveDeviceInfoReceived;
             _hub.DeviceInfoReceived += _deviceService_DeviceInfoReceived;
             _hub.LogEntryReceived += _loggerService_LoggerDataReceived;
