@@ -15,7 +15,7 @@ namespace CommunicationClientConsumer
         void Init(ILogger logger, string authHubLink, string exchangeHubLink, Protocol protocol = Protocol.HTTP);
         void Authenticate(WelcomeDeviceMessage welcomeDeviceMessage, ConnectionConfiguration configuration, Action<ConnectionConfiguration, bool> callback, Action<Manifest> manifestCallback);
         void Connect(ConnectionConfiguration configuration, Action<bool, ConnectionState> resultCallback);
-        void Disconnect();
+        Task<bool> Disconnect();
         void Send(Guid featureId, string profileId, object data);
         void Start(Guid featureId);
         void Stop(Guid featureId);

@@ -31,9 +31,9 @@ namespace CommunicationClientConsumer
 
         public void Authenticate(WelcomeDeviceMessage welcomeDeviceMessage, ConnectionConfiguration configuration, Action<ConnectionConfiguration, bool> callback, Action<Manifest> manifestCallback)
         {
-            Disconnect();
             Task.Run(async () =>
             {
+                await Disconnect();
                 await _connectionProviderAuthentication.Connect(async (result, connection) =>
                 {
                     if (result)
@@ -83,16 +83,16 @@ namespace CommunicationClientConsumer
 
         public void Connect(ConnectionConfiguration configuration, Action<bool, ConnectionState> resultCallback)
         {
-            try
-            {
-                _connectionProvider.CloseConnection();
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex);
-            }
             Task.Run(async () =>
             {
+                try
+                {
+                    await _connectionProvider.CloseConnection();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex);
+                }
                 await _connectionProvider.Connect((result, connection) =>
                 {
                     if (result)
@@ -119,18 +119,21 @@ namespace CommunicationClientConsumer
             });
         }
 
-        public void Disconnect()
+        public async Task<bool> Disconnect()
         {
             try
             {
                 if (_connectionProvider != null)
-                    _connectionProvider.CloseConnection();
+                    await _connectionProvider.CloseConnection();
                 if (_connectionProviderAuthentication != null)
-                    _connectionProviderAuthentication.CloseConnection();
+                    await _connectionProviderAuthentication.CloseConnection();
+                _logger.Message($"After Disconnect (At:{DateTime.Now})");
+                return true;
             }
             catch (Exception ex)
             {
                 _logger.Error(ex);
+                return false;
             }
         }
 
