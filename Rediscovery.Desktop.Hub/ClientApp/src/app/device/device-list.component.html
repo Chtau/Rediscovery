@@ -6,7 +6,10 @@
       </a>
       <section class="nav-group collapsible">
           <input id="tabexample1" type="checkbox">
-          <label for="tabexample1">Connected Devices</label>
+          <label for="tabexample1">
+            Connected Devices
+            <span class="badge badge-success">{{connectedDeviceModels.length}}</span>
+          </label>
           <ul class="nav-list">
             <li *ngFor="let model of connectedDeviceModels">
               <a [routerLink]="['/devices/' + model.id]" [routerLinkActive]="['active']" class="nav-link">{{model.name}}</a>
@@ -15,7 +18,10 @@
       </section>
       <section class="nav-group collapsible">
           <input id="tabexample2" type="checkbox">
-          <label for="tabexample2">Registered Devices</label>
+          <label for="tabexample2">
+            Registered Devices
+            <span class="badge badge-light-blue">{{registeredDeviceModels.length}}</span>
+          </label>
           <ul class="nav-list">
             <li *ngFor="let model of registeredDeviceModels">
               <a [routerLink]="['/devices/registered/' + model.id]" [routerLinkActive]="['active']" class="nav-link">{{model.name}}</a>
