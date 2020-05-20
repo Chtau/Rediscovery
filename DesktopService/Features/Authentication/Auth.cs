@@ -70,24 +70,26 @@ namespace DesktopService.Features.Authentication
         {
             try
             {
-                var pendingDevice = await _devicePendingAuthenticationRepository.SaveDevicePendingAuthentication(new DALDesktopService.Models.DevicePendingAuthentication
+                var pendingDevice = await _devicePendingAuthenticationRepository.GetByDeviceIdentifier(welcomeDeviceMessage.DeviceIdentifier);
+                if (pendingDevice == null)
                 {
-                    DeviceIdentifier = welcomeDeviceMessage.DeviceIdentifier,
-                    DeviceName = welcomeDeviceMessage.DeviceName,
-                    DeviceType = welcomeDeviceMessage.DeviceType,
-                    Id = Guid.NewGuid(),
-                    Idiom = welcomeDeviceMessage.Idiom,
-                    Manufacturer = welcomeDeviceMessage.Manufacturer,
-                    Model = welcomeDeviceMessage.Model,
-                    OSVersion = welcomeDeviceMessage.OSVersion,
-                    Platform = welcomeDeviceMessage.Platform,
-                    RequestTime = DateTime.UtcNow,
-                });
-                if (pendingDevice != null)
-                {
-                    _remoteResourcesSenderService.SendPendingAuthenticationDevices();
-                    return true;
+                    // if we can't find the device in pending authentication then we add it
+                    pendingDevice = await _devicePendingAuthenticationRepository.SaveDevicePendingAuthentication(new DALDesktopService.Models.DevicePendingAuthentication
+                    {
+                        DeviceIdentifier = welcomeDeviceMessage.DeviceIdentifier,
+                        DeviceName = welcomeDeviceMessage.DeviceName,
+                        DeviceType = welcomeDeviceMessage.DeviceType,
+                        Id = Guid.NewGuid(),
+                        Idiom = welcomeDeviceMessage.Idiom,
+                        Manufacturer = welcomeDeviceMessage.Manufacturer,
+                        Model = welcomeDeviceMessage.Model,
+                        OSVersion = welcomeDeviceMessage.OSVersion,
+                        Platform = welcomeDeviceMessage.Platform,
+                        RequestTime = DateTime.UtcNow,
+                    });
                 }
+                _remoteResourcesSenderService.SendPendingAuthenticationDevices();
+                return true;
             } catch (Exception ex)
             {
                 _logger.LogError(ex.ToString());
