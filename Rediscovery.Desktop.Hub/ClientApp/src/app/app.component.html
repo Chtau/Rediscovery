@@ -18,7 +18,8 @@
       </div>
       <div class="header-actions">
         <a (click)="onServiceConnection()" class="nav-link nav-icon" aria-label="settings">
-          <clr-icon shape="connect"></clr-icon>
+          <clr-icon *ngIf="isServiceConnected" shape="connect"></clr-icon>
+          <clr-icon *ngIf="!isServiceConnected" shape="disconnect"></clr-icon>
           <clr-icon *ngIf="false" shape="disconnect"></clr-icon>
         </a>
         <clr-dropdown>

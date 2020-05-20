@@ -25,6 +25,7 @@ import { InfoComponent } from './info/info.component';
 import { SettingComponent } from './setting/setting.component';
 import { IpcService } from './ipc.service';
 import { PendingAuthenticationComponent } from './pending-authentication/pending-authentication.component';
+import { StateService } from './state.service';
 
 const routes: Route[] = [
   { path: 'logger', component: LoggerComponent },
@@ -97,6 +98,7 @@ const routes: Route[] = [
     LoggerService,
     FeatureService,
     DeviceService,
+    StateService,
     IpcService
   ],
   bootstrap: [AppComponent]
