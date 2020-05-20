@@ -23,7 +23,7 @@ export class PendingAuthenticationComponent {
   }
 
   onRemoveSelectedPendingDevices():void {
-    this.onResolvePendingDevices(true);
+    this.onResolvePendingDevices(false);
   }
 
   private onResolvePendingDevices(acceptValue: boolean):void {
