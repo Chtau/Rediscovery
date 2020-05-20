@@ -18,7 +18,7 @@ namespace CommunicationResourceConsumer
         void Authenticate(string applicationKey, ConnectionConfiguration configuration, Action<ConnectionConfiguration, bool> callback);
         void Connect(string applicationKey, ConnectionConfiguration configuration, Action<bool> listenerCallback);
         bool RequestAllData();
-        void Disconnect();
+        Task<bool> Disconnect();
         void RequestResolvePendingAuthenticationDevice(Guid deviceId, bool accept);
         void RequestDeleteDevice(SharedCoreModels.DeviceInfo deviceInfo);
         void RequestUpdateDevice(SharedCoreModels.DeviceInfo deviceInfo);

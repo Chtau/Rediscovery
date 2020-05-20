@@ -35,9 +35,9 @@ namespace CommunicationResourceConsumer
 
         public void Authenticate(string applicationKey, ConnectionConfiguration configuration, Action<ConnectionConfiguration, bool> callback)
         {
-            Disconnect();
             Task.Run(async () =>
             {
+                await Disconnect();
                 await _connectionProviderAuthentication.Connect(async (result, connection) =>
                 {
                     if (result)
@@ -75,15 +75,16 @@ namespace CommunicationResourceConsumer
 
         public void Connect(string applicationKey, ConnectionConfiguration configuration, Action<bool> listenerCallback)
         {
-            try
-            {
-                _connectionProvider.CloseConnection();
-            } catch (Exception ex)
-            {
-                _logger.Error(ex);
-            }
             Task.Run(async () =>
             {
+                try
+                {
+                    await _connectionProvider.CloseConnection();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex);
+                }
                 await _connectionProvider.Connect(async (result, connection) =>
                 {
                     if (result)
@@ -201,17 +202,19 @@ namespace CommunicationResourceConsumer
             }
         }
 
-        public void Disconnect()
+        public async Task<bool> Disconnect()
         {
             try
             {
                 if (_connectionProvider != null)
-                    _connectionProvider.CloseConnection();
+                    await _connectionProvider.CloseConnection();
                 if (_connectionProviderAuthentication != null)
-                    _connectionProviderAuthentication.CloseConnection();
+                    await _connectionProviderAuthentication.CloseConnection();
+                return true;
             } catch (Exception ex)
             {
                 _logger.Error(ex);
+                return false;
             }
         }
     }

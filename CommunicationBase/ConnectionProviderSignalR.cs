@@ -128,7 +128,7 @@ namespace CommunicationBase
                 await connection.DisposeAsync();
                 connection = null;
             }
-            //ConnectionClosed?.Invoke(this, EventArgs.Empty);
+            ConnectionClosed?.Invoke(this, EventArgs.Empty);
         }
     }
 }
