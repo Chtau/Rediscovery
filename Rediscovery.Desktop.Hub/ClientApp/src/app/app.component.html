@@ -1,8 +1,20 @@
 <body>
   <div class="main-container">
-    <!--<div class="alert alert-app-level">
-        ...
-    </div>-->
+    <div *ngIf="!isServiceConnected" class="alert alert-app-level alert-danger" role="alert">
+      <div class="alert-items">
+          <div class="alert-item static">
+              <div class="alert-icon-wrapper">
+                  <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+              </div>
+              <div class="alert-text">
+                  Could not connect to Service
+              </div>
+              <div class="alert-actions">
+                  <button class="btn alert-action" (click)="onServiceConnection()">Reconnect</button>
+              </div>
+          </div>
+      </div>
+  </div>
     <header class="header-1">
       <div class="branding">
         <a [routerLink]="['/']" class="nav-link">
@@ -11,16 +23,17 @@
         </a>  
       </div>
       <div class="header-nav">
-        <!--class="active nav-link nav-text"-->
           <a [routerLink]="['/devices']" [routerLinkActive]="['active']" class="nav-link nav-text">Devices</a>
           <a [routerLink]="['/features']" [routerLinkActive]="['active']" class="nav-link nav-text">Features</a>
           <a [routerLink]="['/logger']" [routerLinkActive]="['active']" class="nav-link nav-text">Logger</a>
       </div>
       <div class="header-actions">
-        <a (click)="onServiceConnection()" class="nav-link nav-icon" aria-label="settings">
+        <a (click)="onServiceConnection()" class="nav-link nav-icon tooltip tooltip-bottom-left" aria-label="settings">
           <clr-icon *ngIf="isServiceConnected" shape="connect"></clr-icon>
           <clr-icon *ngIf="!isServiceConnected" shape="disconnect"></clr-icon>
           <clr-icon *ngIf="false" shape="disconnect"></clr-icon>
+          <span *ngIf="isServiceConnected" class="tooltip-content">Service is connected</span>
+          <span *ngIf="!isServiceConnected" class="tooltip-content">Service is offline, try to reconnect</span>
         </a>
         <clr-dropdown>
           <button class="nav-icon" clrDropdownTrigger aria-label="toggle settings menu">
@@ -35,19 +48,8 @@
         </clr-dropdown>
       </div>
   </header>
-    <!--<nav class="subnav">
-        ...
-    </nav>-->
-    <div style="height: calc(100% - 60px);"><!--style="height: 100%;"-->
+    <div style="height: calc(100% - 60px);">
       <router-outlet></router-outlet>  
     </div>
-    
-    <!--<div class="content-container">
-        
-    </div>-->
 </div>
-  <!--<app-nav-menu></app-nav-menu>-->
-  <!--<div class="container">
-    <router-outlet></router-outlet>
-  </div>-->
 </body>
