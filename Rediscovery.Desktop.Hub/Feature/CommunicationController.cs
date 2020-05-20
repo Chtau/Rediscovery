@@ -40,6 +40,7 @@ namespace Rediscovery.Desktop.Hub.Feature
             _hub.LogEntryReceived += _loggerService_LoggerDataReceived;
             _hub.ServiceFeatureReceived += _featureService_DeviceFeatureReceived;
             _hub.PendingAuthenticationDeviceReceived += _hub_PendingAuthenticationDeviceReceived;
+            _hub.ConnectionStateChanged += _hub_ConnectionStateChanged;
 
             ElectronNET.API.Electron.IpcMain.On("resolvependingdevice-ipc", (args) =>
             {
@@ -80,6 +81,19 @@ namespace Rediscovery.Desktop.Hub.Feature
                     _logger.LogError(ex, "Error in IPC listener from UI [updatedeviceinfo-ipc]");
                 }
             });
+        }
+
+        private void _hub_ConnectionStateChanged(object sender, bool e)
+        {
+            try
+            {
+                var mainWindow = ElectronNET.API.Electron.WindowManager.BrowserWindows.First();
+                ElectronNET.API.Electron.IpcMain.Send(mainWindow, "hubconnectionchanged-ipc", e);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "ConnectionStateChanged via IPC from underlying connection");
+            }
         }
 
         private void _hub_PendingAuthenticationDeviceReceived(object sender, List<DeviceInfo> e)

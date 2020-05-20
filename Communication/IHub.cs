@@ -13,6 +13,7 @@ namespace CommunicationResourceConsumer
         event EventHandler<List<SharedCoreModels.DeviceInfo>> PendingAuthenticationDeviceReceived;
         event EventHandler<List<SharedCoreModels.DeviceFeature>> ServiceFeatureReceived;
         event EventHandler<SharedCoreModels.LoggerEntryModel> LogEntryReceived;
+        event EventHandler<bool> ConnectionStateChanged;
 
         void Init(ILogger logger, string hubLink, Protocol protocol = Protocol.HTTP);
         void Authenticate(string applicationKey, ConnectionConfiguration configuration, Action<ConnectionConfiguration, bool> callback);

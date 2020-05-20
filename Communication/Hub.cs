@@ -14,6 +14,7 @@ namespace CommunicationResourceConsumer
         public event EventHandler<List<SharedCoreModels.DeviceInfo>> PendingAuthenticationDeviceReceived;
         public event EventHandler<List<SharedCoreModels.DeviceFeature>> ServiceFeatureReceived;
         public event EventHandler<SharedCoreModels.LoggerEntryModel> LogEntryReceived;
+        public event EventHandler<bool> ConnectionStateChanged;
 
         private ILogger _logger;
         private IConnectionProvider<HubConnection> _connectionProviderAuthentication;
@@ -31,6 +32,18 @@ namespace CommunicationResourceConsumer
             _connectionProvider = new ConnectionProviderSignalR();
             _connectionProviderAuthentication.Init(_logger, hubLink, protocol);
             _connectionProvider.Init(_logger, hubLink, protocol);
+            _connectionProvider.ConnectionChanged += _connectionProvider_ConnectionChanged;
+            _connectionProvider.ConnectionClosed += _connectionProvider_ConnectionClosed;
+        }
+
+        private void _connectionProvider_ConnectionClosed(object sender, EventArgs e)
+        {
+            ConnectionStateChanged?.Invoke(this, false);
+        }
+
+        private void _connectionProvider_ConnectionChanged(object sender, (ConnectionConfiguration Config, bool IsConnected) e)
+        {
+            ConnectionStateChanged?.Invoke(this, e.IsConnected);
         }
 
         public void Authenticate(string applicationKey, ConnectionConfiguration configuration, Action<ConnectionConfiguration, bool> callback)

@@ -96,6 +96,20 @@ namespace CommunicationBase
                         break;
                 }
                 ConnectionChanged?.Invoke(this, (model, IsConnected));
+                if (connection != null)
+                {
+                    connection.Closed += (Exception arg) =>
+                    {
+                        ConnectionChanged?.Invoke(this, (model, IsConnected));
+                        ConnectionClosed?.Invoke(this, EventArgs.Empty);
+                        return null;
+                    };
+                    connection.Reconnected += (string arg) =>
+                    {
+                        ConnectionChanged?.Invoke(this, (model, IsConnected));
+                        return null;
+                    };
+                }
                 return connection;
             }
             catch (Exception ex)
