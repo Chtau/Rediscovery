@@ -78,7 +78,14 @@ namespace Rediscovery.Features.Connection
                     else
                     {
                         nextIndex++;
-                        OnTryConnect(desktopConfigurations, resultCallback, nextIndex);
+                        if (desktopConfigurations.Count > nextIndex)
+                        {
+                            OnTryConnect(desktopConfigurations, resultCallback, nextIndex);
+                        }
+                        else
+                        {
+                            resultCallback?.Invoke(item, result, config.State.ConvertToSharedCoreEnum());
+                        }
                     }
                 }, (manifest) =>
                 {
