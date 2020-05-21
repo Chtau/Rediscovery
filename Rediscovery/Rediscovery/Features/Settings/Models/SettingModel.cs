@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Xamarin.Essentials;
 
 namespace Rediscovery.Features.Settings.Models
 {
@@ -17,7 +18,7 @@ namespace Rediscovery.Features.Settings.Models
             set { SetProperty(ref _id, value); }
         }
 
-        public string DeviceIdentifier
+        public string DeviceName
         {
             get { return _deviceIdentifier; }
             set { SetProperty(ref _deviceIdentifier, value); }
@@ -33,6 +34,7 @@ namespace Rediscovery.Features.Settings.Models
         {
             Id = Guid.Empty;
             DiscoveryPort = 8888;
+            DeviceName = DeviceInfo.Name;
         }
     }
 }

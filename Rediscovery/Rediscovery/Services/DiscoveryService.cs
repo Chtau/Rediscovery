@@ -21,7 +21,7 @@ namespace Rediscovery.Services
             Task.Run(async () =>
             {
                 SettingModel setting = (await Store.GetItemsAsync()).FirstOrDefault();
-                if (setting != null)
+                if (setting == null)
                 {
                     setting = new SettingModel();
                 }

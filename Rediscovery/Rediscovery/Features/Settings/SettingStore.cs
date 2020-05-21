@@ -29,7 +29,7 @@ namespace Rediscovery.Features.Settings
             var srcItem = json.GetFileContent<SettingModel>(filePath());
             if (srcItem == null)
                 srcItem = new SettingModel();
-            srcItem.DeviceIdentifier = item.DeviceIdentifier;
+            srcItem.DeviceName = item.DeviceName;
             if (item.Id == Guid.Empty)
                 item.Id = Guid.NewGuid();
             srcItem.Id = item.Id;
@@ -75,7 +75,7 @@ namespace Rediscovery.Features.Settings
         public async Task<Tuple<bool, SettingModel>> UpdateItemAsync(SettingModel item)
         {
             var srcItem = json.GetFileContent<SettingModel>(filePath());
-            srcItem.DeviceIdentifier = item.DeviceIdentifier;
+            srcItem.DeviceName = item.DeviceName;
             if (item.Id == Guid.Empty)
                 item.Id = Guid.NewGuid();
             srcItem.Id = item.Id;

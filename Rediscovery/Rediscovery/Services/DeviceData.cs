@@ -28,7 +28,7 @@ namespace Rediscovery.Services
             var setting = settingStore.GetItem(Guid.Empty);
             return new WelcomeDeviceMessage
             {
-                DeviceName = setting.DeviceIdentifier,
+                DeviceName = setting.DeviceName,
                 DeviceIdentifier = GetDeviceIdentifier(),
                 DeviceType = Enum.GetName(typeof(DeviceType), Xamarin.Essentials.DeviceInfo.DeviceType),
                 Idiom = Xamarin.Essentials.DeviceInfo.Idiom.ToString(),
