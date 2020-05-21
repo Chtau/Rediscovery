@@ -100,9 +100,9 @@ namespace CommunicationResourceProvider
         {
             try
             {
-                _hubContext.Clients.Group(GroupNames.Admin).SendAsync("FeatureDetailsSettingsUI", _resourcesRepository.GetResourceDeviceFeatureSettingsUI(featureId));
-                _hubContext.Clients.Group(GroupNames.Admin).SendAsync("FeatureDetailsSettings", _resourcesRepository.GetResourceDeviceFeatureSettings(featureId));
-                _hubContext.Clients.Group(GroupNames.Admin).SendAsync("FeatureDetailsProfiles", _resourcesRepository.GetResourceDeviceFeatureProfiles(featureId));
+                _hubContext.Clients.Group(GroupNames.Admin).SendAsync("FeatureDetailsSettingsUI", featureId, _resourcesRepository.GetResourceDeviceFeatureSettingsUI(featureId));
+                _hubContext.Clients.Group(GroupNames.Admin).SendAsync("FeatureDetailsSettings", featureId, _resourcesRepository.GetResourceDeviceFeatureSettings(featureId));
+                _hubContext.Clients.Group(GroupNames.Admin).SendAsync("FeatureDetailsProfiles", featureId, _resourcesRepository.GetResourceDeviceFeatureProfiles(featureId));
             }
             catch (Exception ex)
             {
