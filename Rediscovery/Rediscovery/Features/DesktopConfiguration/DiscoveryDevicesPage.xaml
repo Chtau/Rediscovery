@@ -7,6 +7,9 @@
              mc:Ignorable="d"
              x:Class="Rediscovery.Features.DesktopConfiguration.DiscoveryDevicesPage"
              Title="Discovery">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Back" Clicked="Back_Clicked" Icon="close_white.png"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
