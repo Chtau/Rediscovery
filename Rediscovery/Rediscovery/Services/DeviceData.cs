@@ -10,15 +10,23 @@ namespace Rediscovery.Services
 {
     public class DeviceData : IDeviceData
     {
+        const string ApplicationDeviceIdentifier = "rediscovery_identifier";
+
         private IDataStoreGuid<Features.Settings.Models.SettingModel> settingStore => DependencyService.Get<IDataStoreGuid<Features.Settings.Models.SettingModel>>() ?? new Features.Settings.SettingStore();
+
+        public string GenerateNewDeviceIDentifier()
+        {
+            Preferences.Remove(ApplicationDeviceIdentifier);
+            return GetDeviceIdentifier();
+        }
 
         public string GetDeviceIdentifier()
         {
-            var deviceId = Preferences.Get("rediscovery_identifier", string.Empty);
+            var deviceId = Preferences.Get(ApplicationDeviceIdentifier, string.Empty);
             if (string.IsNullOrWhiteSpace(deviceId))
             {
                 deviceId = System.Guid.NewGuid().ToString();
-                Preferences.Set("rediscovery_identifier", deviceId);
+                Preferences.Set(ApplicationDeviceIdentifier, deviceId);
             }
             return deviceId;
         }

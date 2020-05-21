@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:flex="clr-namespace:Flex.Controls;assembly=Flex"
              mc:Ignorable="d"
              x:Class="Rediscovery.Features.Settings.SettingPage">
     <ContentPage.ToolbarItems>
@@ -18,11 +19,37 @@
                 <StackLayout Spacing="20" Padding="15">
                     <StackLayout>
                         <Label Text="Device Name" FontSize="Medium" />
-                        <Entry Text="{Binding Setting.DeviceIdentifier}" FontSize="Small" />
+                        <Entry Text="{Binding Setting.DeviceName}" FontSize="Small" />
                     </StackLayout>
                     <StackLayout>
                         <Label Text="Discovery Port" FontSize="Medium" />
                         <Entry Text="{Binding Setting.DiscoveryPort}" Keyboard="Numeric" FontSize="Small" />
+                    </StackLayout>
+                    <StackLayout>
+                        <Label Text="Application Device Identifier" FontSize="Medium" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Entry IsEnabled="False" Grid.Column="0" Text="{Binding ApplicationDeviceIdentifier}" FontSize="Small" />
+                            <flex:FlexButton 
+                                Clicked="GenerateADI_Clicked"
+                                Grid.Column="1"
+                            HorizontalOptions="End"
+                        Icon="restart_line.png"
+                            Margin="5"
+                            Style="{StaticResource RoundSmallFlexButton}"/>
+                        </Grid>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <flex:FlexButton 
+                            HorizontalOptions="Start"
+                        Icon="settings_fill.png"
+                            Margin="5"
+                            ClickedCommand="{Binding NativeSettingsUICommand}"
+                            Style="{StaticResource RoundSmallFlexButton}"/>
+                        <Label Text="App Info Settings" FontSize="Medium" VerticalOptions="Center" />
                     </StackLayout>
                 </StackLayout>
             </ScrollView>

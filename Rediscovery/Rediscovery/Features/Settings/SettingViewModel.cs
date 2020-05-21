@@ -9,12 +9,13 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using System.Linq;
 using System.Security.Cryptography;
+using Xamarin.Essentials;
 
 namespace Rediscovery.Features.Settings
 {
     public class SettingViewModel : BaseViewModel
     {
-        private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
+        private IDeviceData deviceData => DependencyService.Get<IDeviceData>() ?? new DeviceData();
         private IDataStoreGuid<SettingModel> Store => DependencyService.Get<IDataStoreGuid<SettingModel>>() ?? new SettingStore();
 
         Models.SettingModel setting = new SettingModel();
@@ -23,9 +24,19 @@ namespace Rediscovery.Features.Settings
             get { return setting; }
             set { SetProperty(ref setting, value); }
         }
+
+        string applicationDeviceIdentifier;
+        public string ApplicationDeviceIdentifier
+        {
+            get { return applicationDeviceIdentifier; }
+            set { SetProperty(ref applicationDeviceIdentifier, value); }
+        }
+
         public LoadBinding Load { get; set; }
         public Command LoadCommand { get; set; }
         public Command SaveCommand { get; set; }
+        public Command NativeSettingsUICommand { get; set; }
+        public Command GenerateNewApplicationDeviceIdentifierCommand { get; set; }
 
         public SettingViewModel()
         {
@@ -41,10 +52,19 @@ namespace Rediscovery.Features.Settings
             {
                 await OnSave();
             });
+            NativeSettingsUICommand = new Command(() =>
+            {
+                AppInfo.ShowSettingsUI();
+            });
+            GenerateNewApplicationDeviceIdentifierCommand = new Command(() =>
+            {
+                ApplicationDeviceIdentifier = deviceData.GenerateNewDeviceIDentifier();
+            });
         }
 
         private async Task OnLoad()
         {
+            ApplicationDeviceIdentifier = deviceData.GetDeviceIdentifier();
             var item = (await Store.GetItemsAsync()).FirstOrDefault();
             if (item != null)
             {

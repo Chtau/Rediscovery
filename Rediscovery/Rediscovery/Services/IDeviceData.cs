@@ -6,6 +6,7 @@ namespace Rediscovery.Services
 {
     public interface IDeviceData
     {
+        string GenerateNewDeviceIDentifier();
         string GetDeviceIdentifier();
         SharedCoreModels.WelcomeDeviceMessage GetWelcomeDeviceMessage();
     }
