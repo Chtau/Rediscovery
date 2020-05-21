@@ -116,5 +116,25 @@ namespace DesktopService.Features.RemoteResources
             }
             return false;
         }
+
+        public List<DeviceFeatureProfil> GetResourceDeviceFeatureProfiles(Guid featureId)
+        {
+            return _featureService.GetFeatureProfiles(featureId);
+        }
+
+        public DeviceFeatureSetting GetResourceDeviceFeatureSettings(Guid featureId)
+        {
+            return _featureService.GetFeatureSettings(featureId);
+        }
+
+        public byte[] GetResourceDeviceFeatureSettingsUI(Guid featureId)
+        {
+            var archivePath = _featureService.GetFeatureSettingsUIArchivePath(featureId);
+            if (!string.IsNullOrWhiteSpace(archivePath) && System.IO.File.Exists(archivePath))
+            {
+                return System.IO.File.ReadAllBytes(archivePath);
+            }
+            return null;
+        }
     }
 }

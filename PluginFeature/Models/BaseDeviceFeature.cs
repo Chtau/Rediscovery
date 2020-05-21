@@ -9,7 +9,7 @@ using System.Text;
 
 namespace PluginFeature.Models
 {
-    public abstract class BaseDeviceFeature : PluginFeature.Interfaces.IDeviceFeatureImplementation
+    public abstract class BaseDeviceFeature : IDeviceFeatureImplementation
     {
         internal string pluginDirectory = null;
         public IPluginLogger pluginLogger = null;
@@ -99,10 +99,10 @@ namespace PluginFeature.Models
             System.Diagnostics.Debug.Print($"Unregister device (id:{deviceId})");
         }
 
-        public virtual string OnGetUIZipPath()
+        public virtual string OnGetUIZipPath(string zipFileName, string subDirectory)
         {
-            string archivePath = Path.Combine(pluginDirectory, "ui.zip");
-            string uiDirectory = Path.Combine(pluginDirectory, "UI");
+            string archivePath = Path.Combine(pluginDirectory, zipFileName);
+            string uiDirectory = Path.Combine(pluginDirectory, subDirectory);
             if (System.IO.Directory.Exists(uiDirectory))
             {
                 if (File.Exists(archivePath))
@@ -115,7 +115,7 @@ namespace PluginFeature.Models
 
         public string GetUIArchivePath()
         {
-            return OnGetUIZipPath();
+            return OnGetUIZipPath("ui.zip", "UI");
         }
 
         public virtual DeviceFeatureSetting GetSettingsObject()
@@ -126,6 +126,11 @@ namespace PluginFeature.Models
         public virtual List<DeviceFeatureProfil> GetProfiles()
         {
             return null;
+        }
+
+        public string GetSettingsUIArchivePath()
+        {
+            return OnGetUIZipPath("settingui.zip", "SettingUI");
         }
     }
 }

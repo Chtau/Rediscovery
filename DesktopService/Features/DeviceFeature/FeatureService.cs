@@ -84,5 +84,10 @@ namespace DesktopService.Features.DeviceFeature
             System.Diagnostics.Debug.Print($"Feature (id: {featureId} profile: {data.ProfileId}) response =>" + data.Data);
             _hubContext.Clients.User(data.DeviceId).SendAsync("ClientResponse", featureId, data.ProfileId, data.Data);
         }
+
+        public string GetFeatureSettingsUIArchivePath(Guid featureId)
+        {
+            return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetSettingsUIArchivePath();
+        }
     }
 }

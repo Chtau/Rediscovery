@@ -155,5 +155,18 @@ namespace CommunicationResourceProvider
                 _logger.LogError(ex.ToString());
             }
         }
+
+        [Authorize(Roles = AuthorizationRoles.AdminRole)]
+        public void RequestFeatureDetails(Guid featureId)
+        {
+            try
+            {
+                _remoteResourcesSenderService.SendFeatureDetails(featureId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+            }
+        }
     }
 }

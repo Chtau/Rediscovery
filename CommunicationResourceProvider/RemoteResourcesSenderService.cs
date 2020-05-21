@@ -95,5 +95,19 @@ namespace CommunicationResourceProvider
                 _logger.LogError(ex, "SendPendingAuthenticationDevices send remote resource");
             }
         }
+
+        public void SendFeatureDetails(Guid featureId)
+        {
+            try
+            {
+                _hubContext.Clients.Group(GroupNames.Admin).SendAsync("FeatureDetailsSettingsUI", _resourcesRepository.GetResourceDeviceFeatureSettingsUI(featureId));
+                _hubContext.Clients.Group(GroupNames.Admin).SendAsync("FeatureDetailsSettings", _resourcesRepository.GetResourceDeviceFeatureSettings(featureId));
+                _hubContext.Clients.Group(GroupNames.Admin).SendAsync("FeatureDetailsProfiles", _resourcesRepository.GetResourceDeviceFeatureProfiles(featureId));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "SendFeatureDetails send remote resource");
+            }
+        }
     }
 }

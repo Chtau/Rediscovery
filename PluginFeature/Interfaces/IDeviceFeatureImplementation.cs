@@ -27,6 +27,7 @@ namespace PluginFeature.Interfaces
         void Unregister(string deviceId);
 
         string GetUIArchivePath();
+        string GetSettingsUIArchivePath();
 
         DeviceFeatureSetting GetSettingsObject();
 
