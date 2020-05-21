@@ -42,6 +42,8 @@ namespace Rediscovery.Features.DesktopConfiguration
                         item.IPAddress = answer.IPAddress;
                         item.Metadata = answer.Metadata;
                         item.Port = answer.Port;
+                        item.DesktopOS = answer.DesktopOS;
+                        item.DesktopName = answer.DesktopName;
                     } else
                     {
                         FoundDevices.Add(answer);

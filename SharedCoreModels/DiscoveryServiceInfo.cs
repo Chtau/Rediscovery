@@ -10,6 +10,8 @@ namespace SharedCoreModels
         private const string KeyMeta = "meta";
         private const string KeyPort = "port";
         private const string KeyName = "name";
+        private const string KeyDesktopName = "desktopname";
+        private const string KeyDesktopOS = "desktopos";
 
         public string IPAddress { get; set; }
 
@@ -19,9 +21,13 @@ namespace SharedCoreModels
 
         public string Name { get; set; }
 
+        public string DesktopName { get; set; }
+
+        public string DesktopOS { get; set; }
+
         public override string ToString()
         {
-            return $"{KeyIP}:{IPAddress};{KeyMeta}:{Metadata};{KeyPort}:{Port};{KeyName}:{Name}";
+            return $"{KeyIP}:{IPAddress};{KeyMeta}:{Metadata};{KeyPort}:{Port};{KeyName}:{Name};{KeyDesktopName}:{DesktopName};{KeyDesktopOS}:{DesktopOS}";
         }
 
         public void Parse(string value)
@@ -60,6 +66,12 @@ namespace SharedCoreModels
                                     break;
                                 case KeyName:
                                     Name = keyValue[1];
+                                    break;
+                                case KeyDesktopName:
+                                    DesktopName = keyValue[1];
+                                    break;
+                                case KeyDesktopOS:
+                                    DesktopOS = keyValue[1];
                                     break;
                             }
                         }

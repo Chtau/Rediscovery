@@ -43,10 +43,15 @@
                                                VerticalTextAlignment="End"/>
                                     </StackLayout>
                                     <StackLayout Padding="10, 0" Grid.Row="1" Orientation="Horizontal">
-                                        <Label Text="{Binding Metadata}" 
+                                        <Label Text="{Binding DesktopName}" 
                        LineBreakMode="NoWrap"
                        Style="{DynamicResource ListItemDetailTextStyle}"
                        FontSize="13" />
+                                        <Label Text="{Binding DesktopOS}" 
+                       LineBreakMode="NoWrap"
+                       Style="{DynamicResource ListItemDetailTextStyle}"
+                       FontSize="13"
+                                               VerticalTextAlignment="End"/>
                                     </StackLayout>
                                 </Grid>
                             </ViewCell>

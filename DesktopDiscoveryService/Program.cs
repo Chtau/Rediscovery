@@ -47,7 +47,9 @@ namespace DesktopDiscoveryService
                 Port = serviceInfoSettings.Port,
                 IPAddress = serviceInfoSettings.IP,
                 Metadata = serviceInfoSettings.MetaInfo,
-                Name = serviceInfoSettings.Name
+                Name = serviceInfoSettings.Name,
+                DesktopName = Environment.MachineName,
+                DesktopOS = System.Runtime.InteropServices.RuntimeInformation.OSDescription
             };
 
             Console.WriteLine("Waiting for Clients");
