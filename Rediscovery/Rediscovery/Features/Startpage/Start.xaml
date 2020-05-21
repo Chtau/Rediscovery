@@ -4,12 +4,30 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
+             Title="Rediscovery v0.0.0"
              x:Class="Rediscovery.Features.Startpage.Start">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Rediscovery Mobile Client!"
-                VerticalOptions="CenterAndExpand" 
+        <StackLayout Margin="25">
+            <Label FontSize="Medium" Text="Rediscovery Mobile Client Version 0.0.0"
+                VerticalOptions="Start" 
                 HorizontalOptions="CenterAndExpand" />
+            <Label VerticalOptions="Start" Margin="0,15,0,0"
+                HorizontalOptions="CenterAndExpand">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Latest Version and Source Code for the Rediscovery Project can be found " />
+                        <Span Text="here"
+                  TextColor="Blue"
+                  TextDecorations="Underline">
+                            <Span.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OpenUrlCommand}"
+                                          CommandParameter="https://github.com/Chtau/Rediscovery" />
+                            </Span.GestureRecognizers>
+                        </Span>
+                        <Span Text="." />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

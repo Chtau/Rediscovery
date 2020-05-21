@@ -56,9 +56,12 @@ namespace Rediscovery.Features.DesktopConfiguration
             });
             StopDiscoveryCommand = new Command(() =>
             {
+                if (IsDiscoveryRunning)
+                {
+                    _userNotification.ShowToast("Stopping device discovery");
+                }
                 IsDiscoveryRunning = false;
                 shouldStop = true;
-                _userNotification.ShowToast("Stopping device discovery");
             }, () =>
             {
                 return true;

@@ -4,6 +4,7 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
+             Title="Desktop configurations"
              x:Class="Rediscovery.Features.DesktopConfiguration.DesktopConfigurationPage">
     <ContentPage.ToolbarItems>
         <ToolbarItem x:Name="Discovery" Text="Discovery" Clicked="Discovery_Clicked" Icon="focus_white.png"/>

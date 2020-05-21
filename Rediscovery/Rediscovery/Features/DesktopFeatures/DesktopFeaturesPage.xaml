@@ -4,6 +4,7 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
+             Title="Available features"
              x:Class="Rediscovery.Features.DesktopFeatures.DesktopFeaturesPage">
     <ContentPage.ToolbarItems>
         <!--<ToolbarItem x:Name="Filter" Text="Filter" Clicked="Filter_Clicked" Icon="{Binding FilterIcon}"/>-->
