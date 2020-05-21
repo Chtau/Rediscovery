@@ -249,5 +249,8 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\wifi_off.png" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\stop_circle.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

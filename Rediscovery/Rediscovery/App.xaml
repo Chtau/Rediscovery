@@ -10,6 +10,7 @@
 
     <Application.Resources>
         <ResourceDictionary>
+            <converter:ReverseBoolConverter x:Key="reverseBoolConverter"/>
             <converter:ConnectionStateConverter x:Key="connectionStateConverter"/>
             <converter:ConnectionStateBoolConverter x:Key="connectionStateBoolConverter"/>
             <converter:ConnectionStateReverseBoolConverter x:Key="connectionStateReverseBoolConverter"/>

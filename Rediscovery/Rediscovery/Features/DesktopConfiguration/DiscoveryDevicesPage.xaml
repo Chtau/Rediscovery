@@ -52,11 +52,19 @@
                 </ListView>
             </StackLayout>
             <StackLayout Grid.Row="1" Margin="5">
-                <flex:FlexButton                    
+                <flex:FlexButton    
+                    IsVisible="{Binding IsDiscoveryRunning, Converter={StaticResource reverseBoolConverter}}"
                     Icon="focus_white.png"
                     Text="Start device discovery"
                     Padding="5"
                     ClickedCommand="{Binding DiscoveryCommand}"
+                    Style="{StaticResource LargeFlexButton}"/>
+                <flex:FlexButton                    
+                    IsVisible="{Binding IsDiscoveryRunning}"
+                    Icon="stop_circle.png"
+                    Text="Stop device discovery"
+                    Padding="5"
+                    ClickedCommand="{Binding StopDiscoveryCommand}"
                     Style="{StaticResource LargeFlexButton}"/>
             </StackLayout>
         </Grid>

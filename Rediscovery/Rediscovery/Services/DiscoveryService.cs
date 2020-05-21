@@ -16,7 +16,7 @@ namespace Rediscovery.Services
     {
         private IDataStoreGuid<SettingModel> Store => DependencyService.Get<IDataStoreGuid<SettingModel>>() ?? new SettingStore();
 
-        public void Boardcast(Action<SharedCoreModels.DiscoveryServiceInfo> callbackAnswer)
+        public void Boardcast(Action<SharedCoreModels.DiscoveryServiceInfo> callbackAnswer, Func<bool> interupt)
         {
             Task.Run(async () =>
             {
@@ -25,10 +25,12 @@ namespace Rediscovery.Services
                 {
                     setting = new SettingModel();
                 }
+                bool running = true;
                 do
                 {
                     try
                     {
+                        running = interupt.Invoke();
                         await Task.Delay(1000);
                         var ServerEp = new IPEndPoint(IPAddress.Any, 0);
                         var Client = new UdpClient();
@@ -55,11 +57,12 @@ namespace Rediscovery.Services
                         {
                             _logger.Message($"No valid Broadcast send (byte miss match Expected bytes:{RequestData.Length} send bytes:{sendBytes})");
                         }
+                        running = interupt.Invoke();
                     } catch (Exception ex)
                     {
                         _logger.Error(ex);
                     }
-                } while (true);
+                } while (running);
             });
         }
     }

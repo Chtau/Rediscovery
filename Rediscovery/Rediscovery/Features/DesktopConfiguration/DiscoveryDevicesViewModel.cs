@@ -17,11 +17,22 @@ namespace Rediscovery.Features.DesktopConfiguration
         public ObservableCollection<SharedCoreModels.DiscoveryServiceInfo> FoundDevices { get; set; } = new ObservableCollection<SharedCoreModels.DiscoveryServiceInfo>();
 
         public ICommand DiscoveryCommand { get; set; }
+        public ICommand StopDiscoveryCommand { get; set; }
+
+        bool isDiscoveryRunning = false;
+        public bool IsDiscoveryRunning
+        {
+            get { return isDiscoveryRunning; }
+            set { SetProperty(ref isDiscoveryRunning, value); }
+        }
+
+        private bool shouldStop = false;
 
         public DiscoveryDevicesViewModel()
         {
             DiscoveryCommand = new Command(() =>
             {
+                IsDiscoveryRunning = true;
                 discoveryService.Boardcast((answer) =>
                 {
                     Console.WriteLine("Answer Received from IPAddress:{0}", answer);
@@ -35,7 +46,18 @@ namespace Rediscovery.Features.DesktopConfiguration
                     {
                         FoundDevices.Add(answer);
                     }
+                }, () =>
+                {
+                    return !shouldStop;
                 });
+            }, () =>
+            {
+                return true;
+            });
+            StopDiscoveryCommand = new Command(() =>
+            {
+                IsDiscoveryRunning = false;
+                shouldStop = true;
             }, () =>
             {
                 return true;
