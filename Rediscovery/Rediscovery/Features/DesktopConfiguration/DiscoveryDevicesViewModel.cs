@@ -12,7 +12,6 @@ namespace Rediscovery.Features.DesktopConfiguration
 {
     public class DiscoveryDevicesViewModel : BaseViewModel
     {
-        private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private Services.IDiscoveryService discoveryService => DependencyService.Get<Services.IDiscoveryService>() ?? new Services.DiscoveryService();
         public ObservableCollection<SharedCoreModels.DiscoveryServiceInfo> FoundDevices { get; set; } = new ObservableCollection<SharedCoreModels.DiscoveryServiceInfo>();
 
@@ -33,6 +32,7 @@ namespace Rediscovery.Features.DesktopConfiguration
             DiscoveryCommand = new Command(() =>
             {
                 IsDiscoveryRunning = true;
+                _userNotification.ShowToast("Start discover devices");
                 discoveryService.Boardcast((answer) =>
                 {
                     Console.WriteLine("Answer Received from IPAddress:{0}", answer);
@@ -58,6 +58,7 @@ namespace Rediscovery.Features.DesktopConfiguration
             {
                 IsDiscoveryRunning = false;
                 shouldStop = true;
+                _userNotification.ShowToast("Stopping device discovery");
             }, () =>
             {
                 return true;

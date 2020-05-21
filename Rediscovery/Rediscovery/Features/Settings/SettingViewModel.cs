@@ -77,6 +77,7 @@ namespace Rediscovery.Features.Settings
             if (Setting != null)
             {
                 await Store.AddItemAsync(Setting);
+                _userNotification.ShowToast("Settings saved");
             }
         }
     }

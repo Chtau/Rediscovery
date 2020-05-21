@@ -12,6 +12,7 @@ namespace Rediscovery.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
+        internal IUserNotification _userNotification => DependencyService.Get<IUserNotification>() ?? new UserNotification();
         internal ILogger _logger => DependencyService.Get<ILogger>() ?? new Logger();
 
         bool isBusy = false;

@@ -13,7 +13,6 @@ namespace Rediscovery.Features.DesktopConfiguration
 {
     public class DesktopConfigurationEditViewModel : BaseViewModel
     {
-        private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
         private IConnectService connectService => DependencyService.Get<IConnectService>() ?? new ConnectService();
         private IManifestFeatureEntityManager entityManager => DependencyService.Get<IManifestFeatureEntityManager>() ?? new ManifestFeatureEntityManager();
@@ -86,11 +85,17 @@ namespace Rediscovery.Features.DesktopConfiguration
                         {
                             Item.ConnectionState = state;
                             if (result)
+                            {
                                 Item.LastConnection = DateTime.Now;
+                                _userNotification.ShowToast("Successful connected");
+                            } else
+                            {
+                                _userNotification.ShowToast("Not connected");
+                            }
                         }
                         catch (Exception ex)
                         {
-                            logger.Error(ex);
+                            _logger.Error(ex);
                         } finally
                         {
                             Load.IsLoading = false;
@@ -100,7 +105,7 @@ namespace Rediscovery.Features.DesktopConfiguration
                 }
                 catch (Exception ex)
                 {
-                    logger.Error(ex);
+                    _logger.Error(ex);
                     Load.IsLoading = false;
                 }
             }, () =>
@@ -118,10 +123,11 @@ namespace Rediscovery.Features.DesktopConfiguration
                         try
                         {
                             Item.ConnectionState = SharedCoreModels.Enums.ConnectionState.None;
+                            _userNotification.ShowToast("Disconnected");
                         }
                         catch (Exception ex)
                         {
-                            logger.Error(ex);
+                            _logger.Error(ex);
                         }
                         finally
                         {
@@ -132,7 +138,7 @@ namespace Rediscovery.Features.DesktopConfiguration
                 }
                 catch (Exception ex)
                 {
-                    logger.Error(ex);
+                    _logger.Error(ex);
                     Load.IsLoading = false;
                 }
             }, () =>
@@ -155,10 +161,12 @@ namespace Rediscovery.Features.DesktopConfiguration
                     Disconnect.ChangeCanExecute();
                     Item = result.Item2;
                     MessagingCenter.Send(this, "refresh_desktop_configuration", Item);
+                    _userNotification.ShowToast("Successful saved");
                 }
             } catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
+                _userNotification.ShowToast("Failed to save");
             }
         }
 
@@ -171,11 +179,13 @@ namespace Rediscovery.Features.DesktopConfiguration
                 {
                     entityManager.Clear(Item.Id);
                     MessagingCenter.Send(this, "refresh_desktop_configuration", Item);
+                    _userNotification.ShowToast("Configuration deleted");
                 }
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.Error(ex);
+                _userNotification.ShowToast("Failed to delete");
             }
         }
     }
