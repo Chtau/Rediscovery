@@ -6,7 +6,7 @@
              xmlns:flex="clr-namespace:Flex.Controls;assembly=Flex"
              mc:Ignorable="d"
              x:Class="Rediscovery.Features.DesktopConfiguration.DiscoveryDevicesPage"
-             Title="Discovery">
+             Title="Discover devices in the Network">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Back" Clicked="Back_Clicked" Icon="close_white.png"/>
     </ContentPage.ToolbarItems>

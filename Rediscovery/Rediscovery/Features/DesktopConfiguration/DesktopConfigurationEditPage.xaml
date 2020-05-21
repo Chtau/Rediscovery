@@ -7,8 +7,8 @@
              mc:Ignorable="d"
              x:Class="Rediscovery.Features.DesktopConfiguration.DesktopConfigurationEditPage">
     <ContentPage.ToolbarItems>
-        <ToolbarItem IsEnabled="{Binding CanEdit}" Text="Save" Clicked="Save_Clicked" Icon="save_fill_green.png"/>
-        <ToolbarItem IsEnabled="{Binding CanEdit}" Text="Remove" Clicked="Remove_Clicked" Icon="delete_bin_fill_red.png"/>
+        <ToolbarItem IsEnabled="{Binding CanEdit}" Text="Save" Clicked="Save_Clicked" Icon="save_fill.png"/>
+        <ToolbarItem IsEnabled="{Binding CanEdit}" Text="Remove" Clicked="Remove_Clicked" Icon="delete_bin_fill.png"/>
         <ToolbarItem Text="Back" Clicked="Back_Clicked" Icon="close_white.png"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>

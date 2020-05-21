@@ -20,7 +20,7 @@
                 VerticalOptions="FillAndExpand"
                  HasUnevenRows="true"
                  RefreshCommand="{Binding LoadItemsCommand}"
-                 IsPullToRefreshEnabled="true"
+                 IsPullToRefreshEnabled="false"
                  CachingStrategy="RecycleElement"
                  ItemSelected="OnItemSelected">
                     <ListView.ItemTemplate>
