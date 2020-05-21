@@ -13,6 +13,44 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
+            <StackLayout Grid.Row="0" Margin="15">
+                <ListView x:Name="DevicesFoundControl" 
+                ItemsSource="{Binding FoundDevices}"
+                VerticalOptions="FillAndExpand"
+                 HasUnevenRows="true"
+                 ItemSelected="DevicesFoundControl_ItemSelected"
+                 CachingStrategy="RecycleElement">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <StackLayout Padding="10, 10, 10, 0" Grid.Row="0" Orientation="Horizontal">
+                                        <Label Text="{Binding Name}" 
+                       LineBreakMode="NoWrap" 
+                       Style="{DynamicResource ListItemTextStyle}" 
+                       FontSize="16" />
+                                        <Label Text="{Binding IPAddress}" 
+                       LineBreakMode="NoWrap"
+                       Style="{DynamicResource ListItemDetailTextStyle}"
+                       FontSize="13"
+                                               VerticalTextAlignment="End"/>
+                                    </StackLayout>
+                                    <StackLayout Padding="10, 0" Grid.Row="1" Orientation="Horizontal">
+                                        <Label Text="{Binding Metadata}" 
+                       LineBreakMode="NoWrap"
+                       Style="{DynamicResource ListItemDetailTextStyle}"
+                       FontSize="13" />
+                                    </StackLayout>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
             <StackLayout Grid.Row="1" Margin="5">
                 <flex:FlexButton                    
                     Icon="focus_white.png"

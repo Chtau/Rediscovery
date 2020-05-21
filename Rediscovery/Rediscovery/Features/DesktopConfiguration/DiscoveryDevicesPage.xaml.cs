@@ -19,5 +19,15 @@ namespace Rediscovery.Features.DesktopConfiguration
             InitializeComponent();
             BindingContext = viewModel = new DiscoveryDevicesViewModel();
         }
+
+        private void DevicesFoundControl_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            SharedCoreModels.DiscoveryServiceInfo item = e.SelectedItem as SharedCoreModels.DiscoveryServiceInfo;
+            if (item != null)
+            {
+                //await Navigation.PushModalAsync(new NavigationPage(new FeaturePage.FeatureView.FeatureView(item.ConfigurationId, item)));
+                DevicesFoundControl.SelectedItem = null;
+            }
+        }
     }
 }
