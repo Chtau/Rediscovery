@@ -9,9 +9,21 @@
             xmlns:desktopFeatures="clr-namespace:Rediscovery.Features.DesktopFeatures"
             xmlns:desktops="clr-namespace:Rediscovery.Desktops"
             xmlns:settings="clr-namespace:Rediscovery.Features.Settings"
+            xmlns:startpage="clr-namespace:Rediscovery.Features.Startpage"
             x:Class="Rediscovery.Views.MainPage">
 
     <TabbedPage.Children>
+        <NavigationPage Title="Rediscovery">
+            <NavigationPage.Icon>
+                <OnPlatform x:TypeArguments="FileImageSource">
+                    <On Platform="iOS" Value="tab_feed.png"/>
+                </OnPlatform>
+            </NavigationPage.Icon>
+            <x:Arguments>
+                <startpage:Start/>
+            </x:Arguments>
+        </NavigationPage>
+        
         <NavigationPage Title="Features">
             <NavigationPage.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
