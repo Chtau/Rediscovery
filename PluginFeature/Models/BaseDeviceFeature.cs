@@ -132,5 +132,25 @@ namespace PluginFeature.Models
         {
             return OnGetUIZipPath("settingui.zip", "SettingUI");
         }
+
+        public string GetProfilesUIArchivePath()
+        {
+            return OnGetUIZipPath("profileui.zip", "ProfileUI");
+        }
+
+        public bool SaveSetting(DeviceFeatureSetting deviceFeatureSetting)
+        {
+            return false;
+        }
+
+        public bool SaveProfile(DeviceFeatureProfil deviceFeatureProfil)
+        {
+            return false;
+        }
+
+        public bool DeleteProfile(string profileId)
+        {
+            return false;
+        }
     }
 }

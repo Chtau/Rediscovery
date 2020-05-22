@@ -89,5 +89,25 @@ namespace DesktopService.Features.DeviceFeature
         {
             return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetSettingsUIArchivePath();
         }
+
+        public string GetFeatureProfilesUIArchivePath(Guid featureId)
+        {
+            return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetProfilesUIArchivePath();
+        }
+
+        public bool SaveFeatureSettings(Guid featureId, DeviceFeatureSetting deviceFeatureSetting)
+        {
+            return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.SaveSetting(deviceFeatureSetting) ?? false;
+        }
+
+        public bool SaveFeatureProfile(Guid featureId, DeviceFeatureProfil deviceFeatureProfil)
+        {
+            return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.SaveProfile(deviceFeatureProfil) ?? false;
+        }
+
+        public bool DeleteFeatureProfile(Guid featureId, string profileId)
+        {
+            return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.DeleteProfile(profileId) ?? false;
+        }
     }
 }

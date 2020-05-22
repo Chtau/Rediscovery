@@ -17,5 +17,9 @@ namespace CommunicationResourceProvider
         List<DeviceFeatureProfil> GetResourceDeviceFeatureProfiles(Guid featureId);
         DeviceFeatureSetting GetResourceDeviceFeatureSettings(Guid featureId);
         byte[] GetResourceDeviceFeatureSettingsUI(Guid featureId);
+        byte[] GetResourceDeviceFeatureProfilesUI(Guid featureId);
+        bool SaveFeatureSettings(Guid featureId, DeviceFeatureSetting deviceFeatureSetting);
+        bool SaveFeatureProfile(Guid featureId, DeviceFeatureProfil deviceFeatureProfil);
+        bool DeleteFeatureProfile(Guid featureId, string profileId);
     }
 }

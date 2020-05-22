@@ -14,7 +14,11 @@ namespace DesktopService.Features.DeviceFeature
         List<DeviceFeatureDefinition> GetFeaturesManifest();
         string GetFeatureUIArchivePath(Guid featureId);
         string GetFeatureSettingsUIArchivePath(Guid featureId);
+        string GetFeatureProfilesUIArchivePath(Guid featureId);
         List<DeviceFeatureProfil> GetFeatureProfiles(Guid featureId);
         DeviceFeatureSetting GetFeatureSettings(Guid featureId);
+        bool SaveFeatureSettings(Guid featureId, DeviceFeatureSetting deviceFeatureSetting);
+        bool SaveFeatureProfile(Guid featureId, DeviceFeatureProfil deviceFeatureProfil);
+        bool DeleteFeatureProfile(Guid featureId, string profileId);
     }
 }

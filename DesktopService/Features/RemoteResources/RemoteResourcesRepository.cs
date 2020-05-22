@@ -136,5 +136,25 @@ namespace DesktopService.Features.RemoteResources
             }
             return null;
         }
+
+        public byte[] GetResourceDeviceFeatureProfilesUI(Guid featureId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SaveFeatureSettings(Guid featureId, DeviceFeatureSetting deviceFeatureSetting)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SaveFeatureProfile(Guid featureId, DeviceFeatureProfil deviceFeatureProfil)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DeleteFeatureProfile(Guid featureId, string profileId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
