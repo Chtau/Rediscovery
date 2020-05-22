@@ -10,6 +10,7 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 export class FeatureDetailComponent implements AfterViewInit {
   
   model: IDeviceFeature = null;
+  settingsUrl: string = null;
 
   constructor(private featureService: FeatureService,
     private route: ActivatedRoute,
@@ -28,5 +29,8 @@ export class FeatureDetailComponent implements AfterViewInit {
 
   private onLoadModel(id: string): void {
     this.model = this.featureService.getFeatureDetail(id);
+    this.featureService.getFeatureDetailUI(id).subscribe(result => {
+      this.settingsUrl = result;
+    });
   }
 }

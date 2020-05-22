@@ -1,3 +1,7 @@
 .table-model {
   max-width: 750px;
 }
+
+.profile-select-wrapper {
+  display: flex;
+}

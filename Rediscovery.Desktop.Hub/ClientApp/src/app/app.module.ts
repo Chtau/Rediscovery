@@ -26,6 +26,7 @@ import { SettingComponent } from './setting/setting.component';
 import { IpcService } from './ipc.service';
 import { PendingAuthenticationComponent } from './pending-authentication/pending-authentication.component';
 import { StateService } from './state.service';
+import { Safe } from './safe.pipe';
 
 const routes: Route[] = [
   { path: 'logger', component: LoggerComponent },
@@ -81,7 +82,8 @@ const routes: Route[] = [
     DeviceRegisteredComponent,
     InfoComponent,
     SettingComponent,
-    PendingAuthenticationComponent
+    PendingAuthenticationComponent,
+    Safe
   ],
   entryComponents: [
     PendingAuthenticationComponent

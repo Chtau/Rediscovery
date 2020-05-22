@@ -2,7 +2,11 @@ import { Injectable, EventEmitter, NgZone } from "@angular/core";
 import { environment } from "src/environments/environment";
 
 import * as dummyFeature from '../../assets/dummy/feature.json';
+//import * as dummyFeatureUI from '../../assets/dummy/featuresetting.html';
 import { IpcService } from "../ipc.service";
+import { HttpClient } from "@angular/common/http";
+import { Observable, of } from "rxjs";
+import {map} from 'rxjs/operators';
 
 @Injectable()
 export class FeatureService {
@@ -11,7 +15,7 @@ export class FeatureService {
 
   models: IDeviceFeature[] = [];
   
-  constructor(private ipc: IpcService,private zone: NgZone) {
+  constructor(private ipc: IpcService,private zone: NgZone, private http: HttpClient) {
     
   }
 
@@ -40,5 +44,13 @@ export class FeatureService {
         return x;
       }
     });
+  }
+
+  public getFeatureDetailUI(id: string): Observable<string> {
+    return this.http.get('../../assets/dummy/featuresetting.html', {responseType: 'text'}).pipe(map(data => {
+      //console.log('data', data);
+      return data;
+    }));
+    //return '../../assets/dummy/featuresetting.html';//<string>dummyFeatureUI.default;
   }
 }
