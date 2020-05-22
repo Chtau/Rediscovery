@@ -5,3 +5,15 @@
 .profile-select-wrapper {
   display: flex;
 }
+
+.settings-content-wrapper {
+  width: 100%;
+  height: calc(100% - 180px);
+  overflow: scroll;
+}
+
+.profil-content-wrapper {
+  width: 100%;
+  height: calc(100% - 230px);
+  overflow: scroll;
+}

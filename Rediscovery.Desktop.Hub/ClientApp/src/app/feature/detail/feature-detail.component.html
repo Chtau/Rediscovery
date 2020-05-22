@@ -32,7 +32,7 @@
   <clr-tab *ngIf="model.hasSettings">
     <button clrTabLink>Settings</button>
     <clr-tab-content>
-      <div [innerHtml]="settingsUrl | safeHtml"></div>
+      <div class="settings-content-wrapper" [innerHtml]="settingsUrl | safeHtml"></div>
       <div>
         <button class="btn btn-success" (click)="onSave()">Save</button>
       </div>
@@ -49,11 +49,11 @@
         </select>
         <input style="margin-left: 25px;" clrInput placeholder="My input" name="input" [(ngModel)]="input" />
         <button style="margin-left: 25px;margin-top: 10px;" class="btn btn-primary" (click)="onAddProfile()">Add Profile</button>
+        <button style="margin-top: 10px;" class="btn btn-danger" (click)="onDelete()">Delete</button>
       </div>
-      ...
+      <div class="profil-content-wrapper" [innerHtml]="settingsUrl | safeHtml"></div>
       <div>
         <button class="btn btn-success" (click)="onSave()">Save</button>
-        <button class="btn btn-danger" (click)="onDelete()">Delete</button>
       </div>
     </clr-tab-content>
   </clr-tab>
