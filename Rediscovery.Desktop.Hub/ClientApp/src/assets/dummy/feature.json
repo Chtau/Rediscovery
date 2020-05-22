@@ -4,13 +4,23 @@
     "id": "0",
     "version": "v0.0",
     "minFeatureIntegrationPoint": "",
-    "minControlIntegrationPoint": ""
+    "minControlIntegrationPoint": "",
+    "hasSettings": true,
+    "hasProfiles": true,
+    "author": "Christoph Taucher",
+    "documentation": null,
+    "url": "https://github.com/Chtau/Rediscovery"
   },
   {
     "displayName": "Test 2",
     "id": "1",
     "version": "v0.0",
     "minFeatureIntegrationPoint": "",
-    "minControlIntegrationPoint": ""
+    "minControlIntegrationPoint": "",
+    "hasSettings": false,
+    "hasProfiles": false,
+    "author": "Christoph Taucher",
+    "documentation": null,
+    "url": null
   }
 ]

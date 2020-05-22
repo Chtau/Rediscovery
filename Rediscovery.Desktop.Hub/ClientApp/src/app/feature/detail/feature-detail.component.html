@@ -13,5 +13,17 @@
       <td class="left">Minimal UI integration Version</td>
       <td class="left">{{model.minControlIntegrationPoint}}</td>
     </tr>
+    <tr>
+      <td class="left">Author</td>
+      <td class="left">{{model.author}}</td>
+    </tr>
+    <tr *ngIf="model.url != null && model.url != ''">
+      <td class="left">Website</td>
+      <td class="left"><a [href]="model.url" target="_blank">{{model.url}}</a></td>
+    </tr>
   </tbody>
 </table>
+<div>
+  <button *ngIf="model.hasSettings" class="btn btn-primary" (click)="onOpenSetting()">Setting</button>
+  <button *ngIf="model.hasProfiles" class="btn btn-primary" (click)="onOpenProfiles()">Profiles</button>
+</div>
