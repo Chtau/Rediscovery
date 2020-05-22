@@ -22,5 +22,15 @@ namespace PluginFeature.Models
         public Models.Version MinFeatureIntegrationPoint { get; set; }
 
         public Models.Version MinControlIntegrationPoint { get; set; }
+
+        public bool HasSettings { get; set; }
+
+        public bool HasProfiles { get; set; }
+
+        public string Author { get; set; }
+
+        public string Documentation { get; set; }
+
+        public string Url { get; set; }
     }
 }

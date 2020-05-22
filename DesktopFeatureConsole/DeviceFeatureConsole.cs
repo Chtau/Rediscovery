@@ -34,6 +34,11 @@ namespace DesktopFeatureConsole
                 MinControlIntegrationPoint = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
                 MinFeatureIntegrationPoint = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
                 Version = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
+                Author = "Christoph Taucher",
+                Documentation = null,
+                HasProfiles = false,
+                HasSettings = false,
+                Url = null
             };
         }
 

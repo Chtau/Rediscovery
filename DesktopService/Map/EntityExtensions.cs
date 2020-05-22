@@ -67,7 +67,12 @@ namespace DesktopService.Map
                 DisplayName = deviceFeatureDefinition.DisplayName,
                 MinControlIntegrationPoint = deviceFeatureDefinition.MinControlIntegrationPoint.ToString(),
                 MinFeatureIntegrationPoint = deviceFeatureDefinition.MinFeatureIntegrationPoint.ToString(),
-                Version = deviceFeatureDefinition.Version.ToString()
+                Version = deviceFeatureDefinition.Version.ToString(),
+                Author = deviceFeatureDefinition.Author,
+                Documentation = deviceFeatureDefinition.Documentation,
+                HasProfiles = deviceFeatureDefinition.HasProfiles,
+                HasSettings = deviceFeatureDefinition.HasSettings,
+                Url = deviceFeatureDefinition.Url
             };
         }
     }

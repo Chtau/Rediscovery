@@ -79,6 +79,11 @@ namespace DesktopFeatureMediaPlayer
                 MinControlIntegrationPoint = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
                 MinFeatureIntegrationPoint = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
                 Version = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
+                Author = "Christoph Taucher",
+                Documentation = null,
+                HasProfiles = true,
+                HasSettings = false,
+                Url = null
             };
         }
 
