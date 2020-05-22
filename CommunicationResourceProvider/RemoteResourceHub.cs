@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
+using PluginFeature.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -162,6 +163,61 @@ namespace CommunicationResourceProvider
             try
             {
                 _remoteResourcesSenderService.SendFeatureDetails(featureId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+            }
+        }
+
+        [Authorize(Roles = AuthorizationRoles.AdminRole)]
+        public void RequestDeleteFeatureProfile(Guid featureId, string profileId)
+        {
+            try
+            {
+                _resourcesRepository.DeleteFeatureProfile(featureId, profileId);
+                _remoteResourcesSenderService.SendServiceFeature();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+            }
+        }
+
+        [Authorize(Roles = AuthorizationRoles.AdminRole)]
+        public void RequestSaveFeatureProfile(Guid featureId, DeviceFeatureProfil deviceFeatureProfil)
+        {
+            try
+            {
+                _resourcesRepository.SaveFeatureProfile(featureId, deviceFeatureProfil);
+                _remoteResourcesSenderService.SendFeatureDetails(featureId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+            }
+        }
+
+        [Authorize(Roles = AuthorizationRoles.AdminRole)]
+        public void RequestSaveFeatureSettings(Guid featureId, DeviceFeatureSetting deviceFeatureSetting)
+        {
+            try
+            {
+                _resourcesRepository.SaveFeatureSettings(featureId, deviceFeatureSetting);
+                _remoteResourcesSenderService.SendFeatureDetails(featureId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+            }
+        }
+
+        [Authorize(Roles = AuthorizationRoles.AdminRole)]
+        public void RequestFeatureDetailsUI(Guid featureId)
+        {
+            try
+            {
+                _remoteResourcesSenderService.SendFeatureDetailsUI(featureId);
             }
             catch (Exception ex)
             {

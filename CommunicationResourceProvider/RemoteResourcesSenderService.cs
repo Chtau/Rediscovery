@@ -100,13 +100,25 @@ namespace CommunicationResourceProvider
         {
             try
             {
-                _hubContext.Clients.Group(GroupNames.Admin).SendAsync("FeatureDetailsSettingsUI", featureId, _resourcesRepository.GetResourceDeviceFeatureSettingsUI(featureId));
                 _hubContext.Clients.Group(GroupNames.Admin).SendAsync("FeatureDetailsSettings", featureId, _resourcesRepository.GetResourceDeviceFeatureSettings(featureId));
                 _hubContext.Clients.Group(GroupNames.Admin).SendAsync("FeatureDetailsProfiles", featureId, _resourcesRepository.GetResourceDeviceFeatureProfiles(featureId));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "SendFeatureDetails send remote resource");
+            }
+        }
+
+        public void SendFeatureDetailsUI(Guid featureId)
+        {
+            try
+            {
+                _hubContext.Clients.Group(GroupNames.Admin).SendAsync("FeatureDetailsSettingsUI", featureId, _resourcesRepository.GetResourceDeviceFeatureSettingsUI(featureId));
+                _hubContext.Clients.Group(GroupNames.Admin).SendAsync("FeatureDetailsProfilesUI", featureId, _resourcesRepository.GetResourceDeviceFeatureProfilesUI(featureId));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "SendFeatureDetailsUI send remote resource");
             }
         }
     }
