@@ -29,12 +29,4 @@ export class FeatureDetailComponent implements AfterViewInit {
   private onLoadModel(id: string): void {
     this.model = this.featureService.getFeatureDetail(id);
   }
-
-  onOpenSetting(): void {
-
-  }
-
-  onOpenProfiles(): void {
-    
-  }
 }

@@ -1,29 +1,50 @@
 <h3>{{model.displayName}}</h3>
-<table class="table table-model">
-  <tbody>
-    <tr>
-      <td class="left">Plugin Version</td>
-      <td class="left">{{model.version}}</td>
-    </tr>
-    <tr>
-      <td class="left">Minimal Feature integration Version</td>
-      <td class="left">{{model.minFeatureIntegrationPoint}}</td>
-    </tr>
-    <tr>
-      <td class="left">Minimal UI integration Version</td>
-      <td class="left">{{model.minControlIntegrationPoint}}</td>
-    </tr>
-    <tr>
-      <td class="left">Author</td>
-      <td class="left">{{model.author}}</td>
-    </tr>
-    <tr *ngIf="model.url != null && model.url != ''">
-      <td class="left">Website</td>
-      <td class="left"><a [href]="model.url" target="_blank">{{model.url}}</a></td>
-    </tr>
-  </tbody>
-</table>
-<div>
-  <button *ngIf="model.hasSettings" class="btn btn-primary" (click)="onOpenSetting()">Setting</button>
-  <button *ngIf="model.hasProfiles" class="btn btn-primary" (click)="onOpenProfiles()">Profiles</button>
-</div>
+<clr-tabs>
+  <clr-tab>
+    <button clrTabLink id="link1">Information</button>
+    <clr-tab-content>
+      <table class="table table-model">
+        <tbody>
+          <tr>
+            <td class="left">Plugin Version</td>
+            <td class="left">{{model.version}}</td>
+          </tr>
+          <tr>
+            <td class="left">Minimal Feature integration Version</td>
+            <td class="left">{{model.minFeatureIntegrationPoint}}</td>
+          </tr>
+          <tr>
+            <td class="left">Minimal UI integration Version</td>
+            <td class="left">{{model.minControlIntegrationPoint}}</td>
+          </tr>
+          <tr>
+            <td class="left">Author</td>
+            <td class="left">{{model.author}}</td>
+          </tr>
+          <tr *ngIf="model.url != null && model.url != ''">
+            <td class="left">Website</td>
+            <td class="left"><a [href]="model.url" target="_blank">{{model.url}}</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </clr-tab-content>
+  </clr-tab>
+  <clr-tab *ngIf="model.hasSettings">
+    <button clrTabLink>Settings</button>
+    <clr-tab-content>
+      ...
+    </clr-tab-content>
+  </clr-tab>
+  <clr-tab *ngIf="model.hasProfiles">
+    <button clrTabLink>Profiles</button>
+    <clr-tab-content>
+      ...
+    </clr-tab-content>
+  </clr-tab>
+  <clr-tab *ngIf="model.documentation != null && model.documentation != ''">
+    <button clrTabLink>Documentation</button>
+    <clr-tab-content>
+      {{ model.documentation }}
+    </clr-tab-content>
+  </clr-tab>
+</clr-tabs>
