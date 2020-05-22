@@ -139,22 +139,27 @@ namespace DesktopService.Features.RemoteResources
 
         public byte[] GetResourceDeviceFeatureProfilesUI(Guid featureId)
         {
-            throw new NotImplementedException();
+            var archivePath = _featureService.GetFeatureProfilesUIArchivePath(featureId);
+            if (!string.IsNullOrWhiteSpace(archivePath) && System.IO.File.Exists(archivePath))
+            {
+                return System.IO.File.ReadAllBytes(archivePath);
+            }
+            return null;
         }
 
         public bool SaveFeatureSettings(Guid featureId, DeviceFeatureSetting deviceFeatureSetting)
         {
-            throw new NotImplementedException();
+            return _featureService.SaveFeatureSettings(featureId, deviceFeatureSetting);
         }
 
         public bool SaveFeatureProfile(Guid featureId, DeviceFeatureProfil deviceFeatureProfil)
         {
-            throw new NotImplementedException();
+            return _featureService.SaveFeatureProfile(featureId, deviceFeatureProfil);
         }
 
         public bool DeleteFeatureProfile(Guid featureId, string profileId)
         {
-            throw new NotImplementedException();
+            return _featureService.DeleteFeatureProfile(featureId, profileId);
         }
     }
 }

@@ -9,6 +9,9 @@ namespace DesktopService.Features.DeviceFeature
 {
     public interface IFeatureService
     {
+        event EventHandler ProfilesChanged;
+        event EventHandler SettingChanged;
+
         void Load();
         IDeviceFeatureImplementation GetFeature(Guid featureId);
         List<DeviceFeatureDefinition> GetFeaturesManifest();
