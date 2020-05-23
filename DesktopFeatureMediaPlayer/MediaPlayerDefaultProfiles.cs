@@ -8,12 +8,32 @@ namespace DesktopFeatureMediaPlayer
 {
     public static class MediaPlayerDefaultProfiles
     {
-        public static List<ProfileConfiguration> GetProfileConfigurations()
+        public static List<ProfileConfiguration> GetProfileConfigurations(string path)
         {
+            if (!System.IO.File.Exists(path))
+            {
+                SaveProfileConfigurations(path, new List<ProfileConfiguration>
+                {
+                    VLC(),
+                    Plex()
+                });
+            }
             var retVal = new List<ProfileConfiguration>();
-            retVal.Add(VLC());
-            retVal.Add(Plex());
+            var loaded = OnLoadConfiguration(path);
+            if (loaded?.Count > 0)
+                retVal.AddRange(loaded);
             return retVal;
+        }
+
+        public static void SaveProfileConfigurations(string path, List<ProfileConfiguration> profiles)
+        {
+            var jsonProfiles = Newtonsoft.Json.JsonConvert.SerializeObject(profiles);
+            System.IO.File.WriteAllText(path, jsonProfiles);
+        }
+
+        private static List<ProfileConfiguration> OnLoadConfiguration(string path)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<List<ProfileConfiguration>>(System.IO.File.ReadAllText(path));
         }
 
         private static ProfileConfiguration VLC()

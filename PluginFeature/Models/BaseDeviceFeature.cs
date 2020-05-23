@@ -14,6 +14,8 @@ namespace PluginFeature.Models
         internal string pluginDirectory = null;
         public IPluginLogger pluginLogger = null;
 
+        public string PluginDirectory => pluginDirectory;
+
         public class RegisteredDevice
         {
             public string DeviceId { get; set; }

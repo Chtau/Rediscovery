@@ -17,17 +17,18 @@ namespace DesktopFeatureMediaPlayer
 
         public DeviceFeatureMediaPlayer()
         {
-            foreach (var profile in MediaPlayerDefaultProfiles.GetProfileConfigurations())
-            {
-                var controller = new MediaPlayerController(profile);
-                controller.UpdateProcess += Controller_UpdateProcess;
-                controllers.Add(controller);
-            }
+            
         }
 
         public override void Init(string pluginDirectory, IPluginLogger pluginLogger)
         {
             base.Init(pluginDirectory, pluginLogger);
+            foreach (var profile in MediaPlayerDefaultProfiles.GetProfileConfigurations(ProfileConfigurationPath()))
+            {
+                var controller = new MediaPlayerController(profile);
+                controller.UpdateProcess += Controller_UpdateProcess;
+                controllers.Add(controller);
+            }
             if (controllers?.Count > 0)
             {
                 foreach (var item in controllers)
@@ -43,7 +44,7 @@ namespace DesktopFeatureMediaPlayer
             if ((newDate - updateTimer).TotalSeconds >= 1)
             {
                 updateTimer = newDate;
-                foreach (var profile in MediaPlayerDefaultProfiles.GetProfileConfigurations())
+                foreach (var profile in MediaPlayerDefaultProfiles.GetProfileConfigurations(ProfileConfigurationPath()))
                 {
                     var controller = OnGetController(profile.Id);
                     foreach (var deviceId in RegisteredDevices)
@@ -110,7 +111,7 @@ namespace DesktopFeatureMediaPlayer
         private List<DeviceFeatureProfil> OnGetDeviceFeatureProfiles()
         {
             var profiles = new List<DeviceFeatureProfil>();
-            var pro = MediaPlayerDefaultProfiles.GetProfileConfigurations();
+            var pro = MediaPlayerDefaultProfiles.GetProfileConfigurations(ProfileConfigurationPath());
             if (pro?.Count > 0)
             {
                 foreach (var item in pro)
@@ -164,7 +165,7 @@ namespace DesktopFeatureMediaPlayer
         public override void Register(string deviceId)
         {
             base.Register(deviceId);
-            foreach (var profile in MediaPlayerDefaultProfiles.GetProfileConfigurations())
+            foreach (var profile in MediaPlayerDefaultProfiles.GetProfileConfigurations(ProfileConfigurationPath()))
             {
                 var controller = OnGetController(profile.Id);
                 controller.InitWatcher();
@@ -174,7 +175,7 @@ namespace DesktopFeatureMediaPlayer
         public override void Unregister(string deviceId)
         {
             base.Unregister(deviceId);
-            foreach (var profile in MediaPlayerDefaultProfiles.GetProfileConfigurations())
+            foreach (var profile in MediaPlayerDefaultProfiles.GetProfileConfigurations(ProfileConfigurationPath()))
             {
                 var controller = OnGetController(profile.Id);
                 controller.Stop();
@@ -189,6 +190,11 @@ namespace DesktopFeatureMediaPlayer
         public override DeviceFeatureSetting GetSettingsObject()
         {
             return null;
+        }
+
+        private string ProfileConfigurationPath()
+        {
+            return System.IO.Path.Combine(PluginDirectory, "profiles.json");
         }
     }
 }
