@@ -140,17 +140,17 @@ namespace PluginFeature.Models
             return OnGetUIZipPath("profileui.zip", "ProfileUI");
         }
 
-        public bool SaveSetting(DeviceFeatureSetting deviceFeatureSetting)
+        public virtual bool SaveSetting(DeviceFeatureSetting deviceFeatureSetting)
         {
             return false;
         }
 
-        public bool SaveProfile(DeviceFeatureProfil deviceFeatureProfil)
+        public virtual bool SaveProfile(DeviceFeatureProfil deviceFeatureProfil)
         {
             return false;
         }
 
-        public bool DeleteProfile(string profileId)
+        public virtual bool DeleteProfile(string profileId)
         {
             return false;
         }

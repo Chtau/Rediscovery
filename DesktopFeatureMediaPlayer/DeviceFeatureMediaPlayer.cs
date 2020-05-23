@@ -116,7 +116,7 @@ namespace DesktopFeatureMediaPlayer
             {
                 foreach (var item in pro)
                 {
-                    profiles.Add(new DeviceFeatureProfil(item.Id.ToString(), item.DisplayName, item.CommandAvailable));
+                    profiles.Add(new DeviceFeatureProfil(item.Id.ToString(), item.DisplayName, item));
                 }
             }
             return profiles;
@@ -195,6 +195,47 @@ namespace DesktopFeatureMediaPlayer
         private string ProfileConfigurationPath()
         {
             return System.IO.Path.Combine(PluginDirectory, "profiles.json");
+        }
+
+        public override bool SaveProfile(DeviceFeatureProfil deviceFeatureProfil)
+        {
+            var profiles = MediaPlayerDefaultProfiles.GetProfileConfigurations(ProfileConfigurationPath());
+            var id = new Guid(deviceFeatureProfil.Id);
+            var profile = deviceFeatureProfil.ProfileData as ProfileConfiguration;
+            if (profile == null)
+            {
+                pluginLogger.LogCritical("Try to save profile but ProfileData could not be cast to the Object [ProfileConfiguration]");
+                return false;
+            }
+            var index = profiles.FindIndex(x => x.Id == id);
+            if (index != -1)
+            {
+                profiles[index].ApplicationPath = profile.ApplicationPath;
+                profiles[index].CommandAvailable = profile.CommandAvailable;
+                profiles[index].CommandConfiguration = profile.CommandConfiguration;
+                profiles[index].DisplayName = profile.DisplayName;
+                profiles[index].Id = profile.Id;
+                profiles[index].ProcessName = profile.ProcessName;
+            } else
+            {
+                profiles.Add(profile);
+            }
+            MediaPlayerDefaultProfiles.SaveProfileConfigurations(ProfileConfigurationPath(), profiles);
+            return true;
+        }
+
+        public override bool DeleteProfile(string profileId)
+        {
+            var profiles = MediaPlayerDefaultProfiles.GetProfileConfigurations(ProfileConfigurationPath());
+            var id = new Guid(profileId);
+            var index = profiles.FindIndex(x => x.Id == id);
+            if (index != -1)
+            {
+                profiles.RemoveAt(index);
+                MediaPlayerDefaultProfiles.SaveProfileConfigurations(ProfileConfigurationPath(), profiles);
+                return true;
+            }
+            return false;
         }
     }
 }

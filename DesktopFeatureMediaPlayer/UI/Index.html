@@ -68,20 +68,20 @@
         }
         function profileChanged(data) {
             log(data);
-            if (data && Array.isArray(data)) {
-                setDisplay("btn-fullscreen", data.includes(3));
-                setDisplay("btn-fullscreen-exit", data.includes(2));
-                setDisplay("btn-speedslower", data.includes(10));
-                setDisplay("btn-speedfaster", data.includes(11));
-                setDisplay("btn-jumpbackward", data.includes(13));
-                setDisplay("btn-jumpforward", data.includes(12));
-                setDisplay("btn-stop", data.includes(6));
-                setDisplay("btn-mute", data.includes(7));
-                setDisplay("btn-volume-down", data.includes(9));
-                setDisplay("btn-volume-up", data.includes(8));
-                setDisplay("btn-previous", data.includes(5));
-                setDisplay("btn-play", data.includes(1));
-                setDisplay("btn-next", data.includes(4));
+            if (data && data.commandAvailable && Array.isArray(data.commandAvailable)) {
+                setDisplay("btn-fullscreen", data.commandAvailable.includes(3));
+                setDisplay("btn-fullscreen-exit", data.commandAvailable.includes(2));
+                setDisplay("btn-speedslower", data.commandAvailable.includes(10));
+                setDisplay("btn-speedfaster", data.commandAvailable.includes(11));
+                setDisplay("btn-jumpbackward", data.commandAvailable.includes(13));
+                setDisplay("btn-jumpforward", data.commandAvailable.includes(12));
+                setDisplay("btn-stop", data.commandAvailable.includes(6));
+                setDisplay("btn-mute", data.commandAvailable.includes(7));
+                setDisplay("btn-volume-down", data.commandAvailable.includes(9));
+                setDisplay("btn-volume-up", data.commandAvailable.includes(8));
+                setDisplay("btn-previous", data.commandAvailable.includes(5));
+                setDisplay("btn-play", data.commandAvailable.includes(1));
+                setDisplay("btn-next", data.commandAvailable.includes(4));
             }
         }
         function send(index) {
