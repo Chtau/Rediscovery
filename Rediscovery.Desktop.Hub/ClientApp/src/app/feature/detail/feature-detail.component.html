@@ -27,6 +27,11 @@
           </tr>
         </tbody>
       </table>
+      <div>
+        <button type="button" class="btn btn-icon btn-primary" aria-label="open folder" (click)="openFolder()">
+          <clr-icon shape="folder-open"></clr-icon>
+        </button>
+      </div>
     </clr-tab-content>
   </clr-tab>
   <clr-tab *ngIf="model.hasSettings">

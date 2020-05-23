@@ -72,7 +72,8 @@ namespace DesktopService.Map
                 Documentation = deviceFeatureDefinition.Documentation,
                 HasProfiles = deviceFeatureDefinition.HasProfiles,
                 HasSettings = deviceFeatureDefinition.HasSettings,
-                Url = deviceFeatureDefinition.Url
+                Url = deviceFeatureDefinition.Url,
+                PluginDirectory = deviceFeatureDefinition.PluginDirectory
             };
         }
     }

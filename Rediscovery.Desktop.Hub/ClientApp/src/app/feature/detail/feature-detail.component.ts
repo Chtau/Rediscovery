@@ -1,6 +1,7 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { FeatureService } from '../feature.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { IOService } from 'src/app/io.service';
 
 @Component({
   selector: 'app-feature-detail',
@@ -13,6 +14,7 @@ export class FeatureDetailComponent implements AfterViewInit {
   settingsUrl: string = null;
 
   constructor(private featureService: FeatureService,
+    private ioService: IOService,
     private route: ActivatedRoute,
     private router: Router) {
     this.onLoadModel(this.route.snapshot.paramMap.get('id'));
@@ -32,5 +34,9 @@ export class FeatureDetailComponent implements AfterViewInit {
     this.featureService.getFeatureDetailUI(id).subscribe(result => {
       this.settingsUrl = result;
     });
+  }
+
+  openFolder(): void {
+    this.ioService.openDirectory(this.model.pluginDirectory);
   }
 }

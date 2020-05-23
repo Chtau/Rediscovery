@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ElectronNET.API.Entities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Rediscovery.Desktop.Hub.Feature.InternalIPCModels;
@@ -79,6 +80,18 @@ namespace Rediscovery.Desktop.Hub.Feature
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error in IPC listener from UI [updatedeviceinfo-ipc]");
+                }
+            });
+            ElectronNET.API.Electron.IpcMain.On("open-directory", async (args) => {
+                string dir = args?.ToString();
+                if (!string.IsNullOrWhiteSpace(dir))
+                {
+                    if (!dir.EndsWith(System.IO.Path.DirectorySeparatorChar))
+                    {
+                        dir += System.IO.Path.DirectorySeparatorChar;
+                    }
+                    if (System.IO.Directory.Exists(dir))
+                        await ElectronNET.API.Electron.Shell.ShowItemInFolderAsync(dir);
                 }
             });
         }

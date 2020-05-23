@@ -5,6 +5,7 @@ import { LoggerService } from './logger/logger.service';
 import { FeatureService } from './feature/feature.service';
 import { environment } from 'src/environments/environment';
 import { StateService } from './state.service';
+import { IOService } from './io.service';
 
 @Component({
   selector: 'app-root',
@@ -18,11 +19,13 @@ export class AppComponent {
   private deviceService: DeviceService,
   private loggerService: LoggerService,
   private featuerService: FeatureService,
+  private ioService: IOService,
   private stateService: StateService) {
     this.deviceService.initIPC();
     this.loggerService.initIPC();
     this.featuerService.initIPC();
     this.stateService.initIPC();
+    this.ioService.initIPC();
     this.stateService.serviceConnectionStateChanged.subscribe(result => {
       this.isServiceConnected = result;
     });

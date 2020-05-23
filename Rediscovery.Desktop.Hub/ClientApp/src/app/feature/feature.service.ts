@@ -51,6 +51,5 @@ export class FeatureService {
       //console.log('data', data);
       return data;
     }));
-    //return '../../assets/dummy/featuresetting.html';//<string>dummyFeatureUI.default;
   }
 }

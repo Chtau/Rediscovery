@@ -84,7 +84,8 @@ namespace DesktopFeatureMediaPlayer
                 Documentation = null,
                 HasProfiles = true,
                 HasSettings = false,
-                Url = null
+                Url = null,
+                PluginDirectory = PluginDirectory
             };
         }
 

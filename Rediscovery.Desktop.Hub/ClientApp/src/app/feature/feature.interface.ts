@@ -9,4 +9,5 @@ interface IDeviceFeature {
   author: string;
   documentation: string;
   url: string;
+  pluginDirectory: string;
 }

@@ -57,7 +57,12 @@ namespace DesktopService.Features.DeviceFeature
             var manifest = new List<DeviceFeatureDefinition>();
             foreach (var item in deviceFeatureImplementations)
             {
-                manifest.Add(item.GetDeviceFeatureInfo());
+                var def = item.GetDeviceFeatureInfo();
+                if (string.IsNullOrWhiteSpace(def.PluginDirectory))
+                {
+                    def.PluginDirectory = item.PluginDirectory;
+                }
+                manifest.Add(def);
             }
             return manifest;
         }

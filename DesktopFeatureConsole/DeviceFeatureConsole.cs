@@ -38,7 +38,8 @@ namespace DesktopFeatureConsole
                 Documentation = null,
                 HasProfiles = false,
                 HasSettings = false,
-                Url = null
+                Url = null,
+                PluginDirectory = PluginDirectory,
             };
         }
 
