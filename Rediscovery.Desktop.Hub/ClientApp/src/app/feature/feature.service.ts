@@ -12,8 +12,8 @@ import {map} from 'rxjs/operators';
 export class FeatureService {
 
   featuresChanged = new EventEmitter<IDeviceFeature[]>();
-  featuresProfileUIReceived = new EventEmitter<string>();
-  featuresSettingUIReceived = new EventEmitter<string>();
+  featuresProfileUIReceived = new EventEmitter<IEntityContent>();
+  featuresSettingUIReceived = new EventEmitter<IEntityContent>();
 
   models: IDeviceFeature[] = [];
   
@@ -42,6 +42,7 @@ export class FeatureService {
       this.ipc.on('features-setting-ui-ipc', (event, arg) => {
         // switch to angular zone for change detected events ...
         this.zone.run(() => {
+          console.log(arg);
           this.featuresSettingUIReceived.emit(arg);
         });
       });

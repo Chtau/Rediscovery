@@ -31,9 +31,16 @@ export class FeatureDetailComponent implements AfterViewInit {
 
   private onLoadModel(id: string): void {
     this.model = this.featureService.getFeatureDetail(id);
-    this.featureService.getFeatureDetailUI(id).subscribe(result => {
+    /*this.featureService.getFeatureDetailUI(id).subscribe(result => {
       this.settingsUrl = result;
+    });*/
+    this.featureService.featuresProfileUIReceived.subscribe((result: IEntityContent) => {
+      console.log('received Profile UI:' + JSON.stringify(result));
+      if (result.id == this.model.id) {
+        this.settingsUrl = result.content;
+      }
     });
+    this.featureService.requestFeatureDetailUI(id);
   }
 
   openFolder(): void {

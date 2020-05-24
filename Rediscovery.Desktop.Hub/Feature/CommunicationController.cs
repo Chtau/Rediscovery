@@ -6,6 +6,8 @@ using Rediscovery.Desktop.Hub.Feature.InternalIPCModels;
 using SharedCoreModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -120,9 +122,8 @@ namespace Rediscovery.Desktop.Hub.Feature
             try
             {
                 // received byte[] is the zip file 'profileui.zip'
-                // TODO: create a single html string content from zip file
                 var mainWindow = ElectronNET.API.Electron.WindowManager.BrowserWindows.First();
-                ElectronNET.API.Electron.IpcMain.Send(mainWindow, "features-setting-ui-ipc", e);
+                ElectronNET.API.Electron.IpcMain.Send(mainWindow, "features-setting-ui-ipc", new EntityContent<Guid, string>(e.Id, OnCreateHtmlContentFromByteArrayZipArchive(e.Content)));
             }
             catch (Exception ex)
             {
@@ -135,13 +136,50 @@ namespace Rediscovery.Desktop.Hub.Feature
             try
             {
                 // received byte[] is the zip file 'settingui.zip'
-                // TODO: create a single html string content from zip file
                 var mainWindow = ElectronNET.API.Electron.WindowManager.BrowserWindows.First();
-                ElectronNET.API.Electron.IpcMain.Send(mainWindow, "features-profile-ui-ipc", e);
+                ElectronNET.API.Electron.IpcMain.Send(mainWindow, "features-profile-ui-ipc", new EntityContent<Guid, string>(e.Id, OnCreateHtmlContentFromByteArrayZipArchive(e.Content)));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "FeatureProfileUIReceived via IPC from underlying connection");
+            }
+        }
+
+        private string OnCreateHtmlContentFromByteArrayZipArchive(byte[] buffer)
+        {
+            string fallback = "<h3>No UI found</h3>";
+            try
+            {
+                // TODO: handle multiple files with directory structure
+                string htmlContent = null;
+                if (buffer != null)
+                {
+                    using (MemoryStream stream = new MemoryStream())
+                    {
+                        stream.Write(buffer, 0, buffer.Length);
+                        stream.Seek(0, SeekOrigin.Begin);
+                        using (var zipArchive = new ZipArchive(stream))
+                        {
+                            if (zipArchive != null)
+                            {
+                                foreach (var entry in zipArchive.Entries)
+                                {
+                                    var entryStream = entry.Open();
+                                    using (StreamReader streamReader = new StreamReader(entryStream))
+                                    {
+                                        htmlContent += streamReader.ReadToEnd();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return htmlContent ?? fallback;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "OnCreateHtmlContentFromByteArrayZipArchive");
+                return fallback;
             }
         }
 
