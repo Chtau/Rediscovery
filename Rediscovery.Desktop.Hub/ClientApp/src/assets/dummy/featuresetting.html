@@ -8,16 +8,26 @@
 <body>
     <p>Media Player Profile configuration</p>
     <div id="tmp"></div>
+<button onclick="javascript: { alert('test1'); this.setModel(''); }">test</button>
     <script>
+      class MyComponent extends HTMLElement {
+          connectedCallback() {
+              this.innerHTML = `<h1>Hello world</h1>`;
+          }
+        }
+        customElements.define('my-component', MyComponent);
+      (function () {
+        alert('test');
         function setModel(model) {
             console.log('set Model invoked');
             console.log(model);
             document.getElementById('tmp').innerHTML = JSON.stringify(model);
-        };
+        }
         function getModel() {
             console.log('get Model called');
             return {};
-        };
+        }
+      })();
     </script>
 </body>
 </html>

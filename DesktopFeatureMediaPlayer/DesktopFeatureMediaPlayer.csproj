@@ -17,8 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="ProfileUI\Index.html">
+    <None Update="ProfileUI\customelement.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ProfileUI\Index.html">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="UI\css\materialize.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -1,0 +1,4 @@
+{
+  "id": "1",
+  "content": "<!DOCTYPE html><html lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta charset=\"utf-8\" /><title></title></head><body><p>Media Player Profile configuration</p><div id=\"tmp\"></div><script>function setModel(model) {console.log('set Model invoked');console.log(model);document.getElementById('tmp').innerHTML = JSON.stringify(model);};function getModel() {console.log('get Model called');return {};};</script></body></html>"
+}
