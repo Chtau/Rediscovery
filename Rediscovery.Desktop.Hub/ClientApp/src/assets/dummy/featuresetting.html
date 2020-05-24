@@ -1,61 +1,23 @@
-<html>
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
 <body>
-    <h1>Mediaplayer Test</h1>
-    <br />
-    <p id="modelContent"></p>
-    <br />
-    Enter name: <input type="text" id="name" />
-    <br />
-    <br />
-    <button type="button" onclick="javascript: invokeCSCode($('#name').val());">Invoke C# Code</button>
-    <br />
-    <p id="result">Result:</p>
-    <script type="text/javascript">
-        var modelData = undefined;
-        var callbackFunction = null;
-        function internalChangeModel(model) {
-            modelData = model;
-            if (callbackFunction) {
-                callbackFunction(modelData);
-            }
-        }
-
-        function changeModelListener(callback) {
-            callbackFunction = callback;
-        }
-
-        function currentModel() {
-            return modelData;
-        }
-
-        function featureSend(data) {
-            jsBridge.invokeAction(data);
-        }
-
-        function log(str) {
-            $('#result').text($('#result').text() + " " + str);
-        }
-
-
-        function invokeCSCode(data) {
-            try {
-                //log("Current Model:" + JSON.stringify(model));
-                log("Current Model:" + JSON.stringify(currentModel()));
-                if (changeModelListener) {
-                    changeModelListener((val) => {
-                        log("Received callback1:" + val);
-                    });
-                }
-
-                log("Sending Data1:" + data);
-                //invokeCSharpAction(data);
-                featureSend(data);
-            }
-            catch (err) {
-                log(err);
-            }
-        }
-            //$("#modelData").text(JSON.stringify(model));
+    <p>Media Player Profile configuration</p>
+    <div id="tmp"></div>
+    <script>
+        function setModel(model) {
+            console.log('set Model invoked');
+            console.log(model);
+            document.getElementById('tmp').innerHTML = JSON.stringify(model);
+        };
+        function getModel() {
+            console.log('get Model called');
+            return {};
+        };
     </script>
 </body>
 </html>

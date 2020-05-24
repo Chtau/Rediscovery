@@ -9,12 +9,12 @@
     <p>Media Player Profile configuration</p>
     <div id="tmp"></div>
     <script>
-        setModel(model) {
+        function setModel(model) {
             console.log('set Model invoked');
             console.log(model);
             document.getElementById('tmp').innerHTML = JSON.stringify(model);
         }
-        getModel() {
+        function getModel() {
             console.log('get Model called');
             return {};
         }

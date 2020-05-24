@@ -3,6 +3,9 @@ import { FeatureService } from '../feature.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { IOService } from 'src/app/io.service';
 
+declare var getModel: any;
+declare var setModel: any;
+
 @Component({
   selector: 'app-feature-detail',
   templateUrl: './feature-detail.component.html',
@@ -38,6 +41,8 @@ export class FeatureDetailComponent implements AfterViewInit {
       console.log('received Profile UI:' + JSON.stringify(result));
       if (result.id == this.model.id) {
         this.settingsUrl = result.content;
+        console.log('Try to set Model in Profile configuration JS');
+        setModel(this.model);
       }
     });
     this.featureService.requestFeatureDetailUI(id);
