@@ -15,8 +15,23 @@ namespace DesktopService.Features.DeviceFeature
         void Load();
         IDeviceFeatureImplementation GetFeature(Guid featureId);
         List<DeviceFeatureDefinition> GetFeaturesManifest();
+        /// <summary>
+        /// get the ZIP archive path from 'ui.zip'
+        /// </summary>
+        /// <param name="featureId"></param>
+        /// <returns></returns>
         string GetFeatureUIArchivePath(Guid featureId);
+        /// <summary>
+        /// get the ZIP archive path from 'settingui.zip'
+        /// </summary>
+        /// <param name="featureId"></param>
+        /// <returns></returns>
         string GetFeatureSettingsUIArchivePath(Guid featureId);
+        /// <summary>
+        /// get the ZIP archive path from 'profileui.zip'
+        /// </summary>
+        /// <param name="featureId"></param>
+        /// <returns></returns>
         string GetFeatureProfilesUIArchivePath(Guid featureId);
         List<DeviceFeatureProfil> GetFeatureProfiles(Guid featureId);
         DeviceFeatureSetting GetFeatureSettings(Guid featureId);

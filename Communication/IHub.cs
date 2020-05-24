@@ -14,6 +14,8 @@ namespace CommunicationResourceConsumer
         event EventHandler<List<SharedCoreModels.DeviceFeature>> ServiceFeatureReceived;
         event EventHandler<SharedCoreModels.LoggerEntryModel> LogEntryReceived;
         event EventHandler<bool> ConnectionStateChanged;
+        event EventHandler<SharedCoreModels.EntityContent<Guid, byte[]>> FeatureProfileUIReceived;
+        event EventHandler<SharedCoreModels.EntityContent<Guid, byte[]>> FeatureSettingUIReceived;
 
         void Init(ILogger logger, string hubLink, Protocol protocol = Protocol.HTTP);
         void Authenticate(string applicationKey, ConnectionConfiguration configuration, Action<ConnectionConfiguration, bool> callback);
@@ -23,5 +25,6 @@ namespace CommunicationResourceConsumer
         void RequestResolvePendingAuthenticationDevice(Guid deviceId, bool accept);
         void RequestDeleteDevice(SharedCoreModels.DeviceInfo deviceInfo);
         void RequestUpdateDevice(SharedCoreModels.DeviceInfo deviceInfo);
+        void RequestFeatureDetailsUI(Guid featureId);
     }
 }

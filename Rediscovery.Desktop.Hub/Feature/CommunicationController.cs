@@ -42,6 +42,8 @@ namespace Rediscovery.Desktop.Hub.Feature
             _hub.ServiceFeatureReceived += _featureService_DeviceFeatureReceived;
             _hub.PendingAuthenticationDeviceReceived += _hub_PendingAuthenticationDeviceReceived;
             _hub.ConnectionStateChanged += _hub_ConnectionStateChanged;
+            _hub.FeatureProfileUIReceived += _hub_FeatureProfileUIReceived;
+            _hub.FeatureSettingUIReceived += _hub_FeatureSettingUIReceived;
 
             ElectronNET.API.Electron.IpcMain.On("resolvependingdevice-ipc", (args) =>
             {
@@ -83,17 +85,64 @@ namespace Rediscovery.Desktop.Hub.Feature
                 }
             });
             ElectronNET.API.Electron.IpcMain.On("open-directory", async (args) => {
-                string dir = args?.ToString();
-                if (!string.IsNullOrWhiteSpace(dir))
+                try
                 {
-                    if (!dir.EndsWith(System.IO.Path.DirectorySeparatorChar))
+                    string dir = args?.ToString();
+                    if (!string.IsNullOrWhiteSpace(dir))
                     {
-                        dir += System.IO.Path.DirectorySeparatorChar;
+                        if (!dir.EndsWith(System.IO.Path.DirectorySeparatorChar))
+                        {
+                            dir += System.IO.Path.DirectorySeparatorChar;
+                        }
+                        if (System.IO.Directory.Exists(dir))
+                            await ElectronNET.API.Electron.Shell.ShowItemInFolderAsync(dir);
                     }
-                    if (System.IO.Directory.Exists(dir))
-                        await ElectronNET.API.Electron.Shell.ShowItemInFolderAsync(dir);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex.ToString());
                 }
             });
+            ElectronNET.API.Electron.IpcMain.On("request-features-detail-ui-ipc", (args) => {
+                try
+                {
+                    Guid featureId = new Guid(args.ToString());
+                    _hub.RequestFeatureDetailsUI(featureId);
+                } catch (Exception ex)
+                {
+                    logger.LogError(ex.ToString());
+                }
+            });
+        }
+
+        private void _hub_FeatureSettingUIReceived(object sender, EntityContent<Guid, byte[]> e)
+        {
+            try
+            {
+                // received byte[] is the zip file 'profileui.zip'
+                // TODO: create a single html string content from zip file
+                var mainWindow = ElectronNET.API.Electron.WindowManager.BrowserWindows.First();
+                ElectronNET.API.Electron.IpcMain.Send(mainWindow, "features-setting-ui-ipc", e);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "FeatureSettingUIReceived via IPC from underlying connection");
+            }
+        }
+
+        private void _hub_FeatureProfileUIReceived(object sender, EntityContent<Guid, byte[]> e)
+        {
+            try
+            {
+                // received byte[] is the zip file 'settingui.zip'
+                // TODO: create a single html string content from zip file
+                var mainWindow = ElectronNET.API.Electron.WindowManager.BrowserWindows.First();
+                ElectronNET.API.Electron.IpcMain.Send(mainWindow, "features-profile-ui-ipc", e);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "FeatureProfileUIReceived via IPC from underlying connection");
+            }
         }
 
         private void _hub_ConnectionStateChanged(object sender, bool e)

@@ -15,6 +15,8 @@ namespace CommunicationResourceConsumer
         public event EventHandler<List<SharedCoreModels.DeviceFeature>> ServiceFeatureReceived;
         public event EventHandler<SharedCoreModels.LoggerEntryModel> LogEntryReceived;
         public event EventHandler<bool> ConnectionStateChanged;
+        public event EventHandler<SharedCoreModels.EntityContent<Guid, byte[]>> FeatureProfileUIReceived;
+        public event EventHandler<SharedCoreModels.EntityContent<Guid, byte[]>> FeatureSettingUIReceived;
 
         private ILogger _logger;
         private IConnectionProvider<HubConnection> _connectionProviderAuthentication;
@@ -124,6 +126,14 @@ namespace CommunicationResourceConsumer
                             {
                                 LogEntryReceived?.Invoke(this, entry);
                             });
+                            connection.On<Guid, byte[]>("FeatureDetailsProfilesUI", (featureId, entry) =>
+                            {
+                                FeatureProfileUIReceived?.Invoke(this, new SharedCoreModels.EntityContent<Guid, byte[]>(featureId, entry));
+                            });
+                            connection.On<Guid, byte[]>("FeatureDetailsSettingsUI", (featureId, entry) =>
+                            {
+                                FeatureSettingUIReceived?.Invoke(this, new SharedCoreModels.EntityContent<Guid, byte[]>(featureId, entry));
+                            });
                             connection.On<bool>("RegisterListenerResponse", (listenerResult) =>
                             {
                                 listenerCallback?.Invoke(listenerResult);
@@ -229,6 +239,21 @@ namespace CommunicationResourceConsumer
                 _logger.Error(ex);
                 return false;
             }
+        }
+
+        public void RequestFeatureDetailsUI(Guid featureId)
+        {
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await _connectionProvider.CurrentConnection.InvokeAsync("RequestFeatureDetailsUI", featureId);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex);
+                }
+            });
         }
     }
 }

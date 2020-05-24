@@ -12,6 +12,8 @@ import {map} from 'rxjs/operators';
 export class FeatureService {
 
   featuresChanged = new EventEmitter<IDeviceFeature[]>();
+  featuresProfileUIReceived = new EventEmitter<string>();
+  featuresSettingUIReceived = new EventEmitter<string>();
 
   models: IDeviceFeature[] = [];
   
@@ -31,6 +33,18 @@ export class FeatureService {
           this.featuresChanged.emit(this.models);
         });
       });
+      this.ipc.on('features-profile-ui-ipc', (event, arg) => {
+        // switch to angular zone for change detected events ...
+        this.zone.run(() => {
+          this.featuresProfileUIReceived.emit(arg);
+        });
+      });
+      this.ipc.on('features-setting-ui-ipc', (event, arg) => {
+        // switch to angular zone for change detected events ...
+        this.zone.run(() => {
+          this.featuresSettingUIReceived.emit(arg);
+        });
+      });
     }
   }
 
@@ -44,6 +58,12 @@ export class FeatureService {
         return x;
       }
     });
+  }
+
+  public requestFeatureDetailUI(id: string): void {
+    if (environment.isElectron === true) {
+      this.ipc.send('request-features-detail-ui-ipc', id);
+    }
   }
 
   public getFeatureDetailUI(id: string): Observable<string> {

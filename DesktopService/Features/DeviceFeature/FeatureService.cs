@@ -37,6 +37,11 @@ namespace DesktopService.Features.DeviceFeature
             return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId);
         }
 
+        /// <summary>
+        /// get the ZIP archive path from 'ui.zip'
+        /// </summary>
+        /// <param name="featureId"></param>
+        /// <returns></returns>
         public string GetFeatureUIArchivePath(Guid featureId)
         {
             return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetUIArchivePath();
@@ -93,11 +98,21 @@ namespace DesktopService.Features.DeviceFeature
             _hubContext.Clients.User(data.DeviceId).SendAsync("ClientResponse", featureId, data.ProfileId, data.Data);
         }
 
+        /// <summary>
+        /// get the ZIP archive path from 'settingui.zip'
+        /// </summary>
+        /// <param name="featureId"></param>
+        /// <returns></returns>
         public string GetFeatureSettingsUIArchivePath(Guid featureId)
         {
             return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetSettingsUIArchivePath();
         }
 
+        /// <summary>
+        /// get the ZIP archive path from 'profileui.zip'
+        /// </summary>
+        /// <param name="featureId"></param>
+        /// <returns></returns>
         public string GetFeatureProfilesUIArchivePath(Guid featureId)
         {
             return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetProfilesUIArchivePath();
