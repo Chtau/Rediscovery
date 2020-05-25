@@ -37,7 +37,7 @@
   <clr-tab *ngIf="model.hasSettings">
     <button clrTabLink>Settings</button>
     <clr-tab-content>
-      <div class="settings-content-wrapper" [innerHtml]="settingsUrl | safeHtml"></div>
+      <div #settingContentWrapper class="settings-content-wrapper"></div>
       <div>
         <button class="btn btn-success" (click)="onSave()">Save</button>
       </div>
@@ -56,8 +56,7 @@
         <button style="margin-left: 25px;margin-top: 10px;" class="btn btn-primary" (click)="onAddProfile()">Add Profile</button>
         <button style="margin-top: 10px;" class="btn btn-danger" (click)="onDelete()">Delete</button>
       </div>
-      <div #profileContentWrapper class="profil-content-wrapper" [innerHtml]="settingsUrl | safeHtml"><!--[innerHtml]="settingsUrl | safeHtml"-->
-      </div>
+      <div #profileContentWrapper class="profil-content-wrapper"></div>
       <div>
         <button class="btn btn-success" (click)="onSave()">Save</button>
       </div>

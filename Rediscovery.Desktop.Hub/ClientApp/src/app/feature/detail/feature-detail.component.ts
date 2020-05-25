@@ -14,9 +14,9 @@ declare var setModel: any;
 export class FeatureDetailComponent implements AfterViewInit {
   
   @ViewChild('profileContentWrapper') profileContentWrapper: ElementRef;
+  @ViewChild('settingContentWrapper') settingContentWrapper: ElementRef;
 
   model: IDeviceFeature = null;
-  settingsUrl: string = null;
 
   constructor(private featureService: FeatureService,
     private ioService: IOService,
@@ -36,58 +36,60 @@ export class FeatureDetailComponent implements AfterViewInit {
 
   private onLoadModel(id: string): void {
     this.model = this.featureService.getFeatureDetail(id);
-    /*this.featureService.getFeatureDetailUI(id).subscribe(result => {
-      this.settingsUrl = result;
-    });*/
     this.featureService.featuresProfileUIReceived.subscribe((result: IEntityContent) => {
-      //console.log('received Profile UI:' + JSON.stringify(result));
-      if (result.id == this.model.id && this.profileContentWrapper) {
-        var componentName = 'profile-component-' + this.onCreateAlphanumericId(result.id);
-        var ele = customElements.get(componentName);
-        if (!ele) {
-          // get component Name
-          //class MyComponent extends
-          var js = result.content as string;
-          var patt = /class (.*) extends/i;
-          var match = js.match(patt);
-          var componentType = null;
-          if (match.length == 2) {
-            componentType = match[1];
-          }
-
-          // append define custom element and load js
-          js += `\r\ncustomElements.define('${componentName}', ${componentType});`;
-          this.loadScript(js);
-
-          // Create element
-          const popupEl: any = document.createElement(componentName) as any;
-
-          // Listen to the close event
-          popupEl.addEventListener('closed', () => document.body.removeChild(popupEl));
-
-          while (this.profileContentWrapper.nativeElement.firstChild) {
-            this.profileContentWrapper.nativeElement.removeChild(this.profileContentWrapper.nativeElement.lastChild);
-          }
-          this.profileContentWrapper.nativeElement.appendChild(popupEl);
-        }
-      }
+      this.setupWebElementUI(result, this.profileContentWrapper, 'profile-component-');
+    });
+    this.featureService.featuresSettingUIReceived.subscribe((result: IEntityContent) => {
+      this.setupWebElementUI(result, this.settingContentWrapper, 'setting-component-');
     });
     this.featureService.requestFeatureDetailUI(id);
   }
 
-  loaded: boolean = false;
+  private setupWebElementUI(result: IEntityContent, hostElement: ElementRef, componentBaseName: string):void {
+    if (result && result.content) {
+      if (result.id == this.model.id && hostElement) {
+        var componentName = componentBaseName + this.onCreateAlphanumericId(result.id);
+        var ele = customElements.get(componentName);
+        if (!ele) {
+          var js = result.content as string;
+          // append define custom element and load js
+          js += `\r\ncustomElements.define('${componentName}', ${this.getWebElementType(js)});`;
+          this.loadScript(js);
+        }
+        this.addWebElement(componentName, hostElement);
+      }
+    }
+  }
+
+  private addWebElement(componentName: string, hostElement: ElementRef): void {
+    // Create element
+    const controlEl: any = document.createElement(componentName) as any;
+
+    // Listen to the close event
+    controlEl.addEventListener('closed', () => document.body.removeChild(controlEl));
+
+    while (hostElement.nativeElement.firstChild) {
+      hostElement.nativeElement.removeChild(hostElement.nativeElement.lastChild);
+    }
+    hostElement.nativeElement.appendChild(controlEl);
+  }
+
+  private getWebElementType(js: string): string {
+    var patt = /class (.*) extends/i;
+    var match = js.match(patt);
+    if (match.length == 2) {
+      return match[1];
+    }
+    return null;
+  }
+
   private loadScript(scriptContent) {
-    if (this.loaded == false) {
-      this.loaded = true;
-      console.log('preparing to load...')
-      let node = document.createElement('script');
+    let node = document.createElement('script');
       node.textContent = scriptContent;
-      //node.src = url;
       node.type = 'text/javascript';
       node.async = true;
       node.charset = 'utf-8';
       document.getElementsByTagName('head')[0].appendChild(node);
-    }
   }
 
   private onCreateAlphanumericId(id: string) : string {
