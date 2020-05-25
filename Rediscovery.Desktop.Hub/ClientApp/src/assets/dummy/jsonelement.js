@@ -15,11 +15,15 @@ class JSONComponent extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    var newValueObj = JSON.parse(newValue);
     //console.log(`attributeChangedCallback in HTMLElement name:${name} newValue:${JSON.stringify(newValueObj)}`);
     if (name == 'setmodel') {
-      this.model = newValueObj;
-      this.setContent(newValueObj);
+      if (newValue) {
+        var newValueObj = JSON.parse(newValue);
+        this.model = newValueObj;
+        this.setContent(newValueObj);
+      } else {
+        this.setContent(null);
+      }
     } else if (name == 'getmodel') {
       this.dispatchEvent(new CustomEvent('modelchanged', { 
         detail: this.model
