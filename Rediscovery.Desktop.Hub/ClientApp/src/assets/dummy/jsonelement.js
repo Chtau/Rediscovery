@@ -1,6 +1,6 @@
 class JSONComponent extends HTMLElement {
 
-  model = null;
+  //model = null;
 
   static get observedAttributes() {
     return ['setmodel', 'getmodel'];
@@ -19,14 +19,14 @@ class JSONComponent extends HTMLElement {
     if (name == 'setmodel') {
       if (newValue) {
         var newValueObj = JSON.parse(newValue);
-        this.model = newValueObj;
+        //this.model = newValueObj;
         this.setContent(newValueObj);
       } else {
         this.setContent(null);
       }
     } else if (name == 'getmodel') {
       this.dispatchEvent(new CustomEvent('modelchanged', { 
-        detail: this.model
+        detail: null//this.model
       }))
     }
   }

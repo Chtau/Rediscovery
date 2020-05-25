@@ -41,18 +41,21 @@ export class FeatureDetailComponent implements AfterViewInit {
     this.featureService.featuresProfilesReceived.subscribe((result: IEntityContent<string, IDeviceFeatureProfil[]>) => {
       if (this.model && this.model.id == result.id) {
         this.modelProfiles = result;
+        this.onSetProfilesDropModel();
       }
     });
     this.featureService.featuresSettingsReceived.subscribe((result: IEntityContent<string, IDeviceFeatureSetting>) => {
       if (this.model && this.model.id == result.id) {
         this.modelSettings = result;
+        this.onSetSettingsContentModel();
       }
     });
     this.featureService.featuresProfileUIReceived.subscribe((result: IEntityContent<string, string>) => {
-      this.setupWebElementUI(result, this.profileContentWrapper, 'profile-component-');
+      this.setupWebElementUI(result, this.profileContentWrapper, 'component-');
     });
     this.featureService.featuresSettingUIReceived.subscribe((result: IEntityContent<string, string>) => {
-      this.setupWebElementUI(result, this.settingContentWrapper, 'setting-component-');
+      this.setupWebElementUI(result, this.settingContentWrapper, 'component-');
+      this.onSetSettingsContentModel();
     });
     this.featureService.requestFeatureDetailUI(id);
   }
@@ -60,12 +63,15 @@ export class FeatureDetailComponent implements AfterViewInit {
   private setupWebElementUI(result: IEntityContent<string, string>, hostElement: ElementRef, componentBaseName: string):void {
     if (result && result.content) {
       if (result.id == this.model.id && hostElement) {
-        var componentName = componentBaseName + this.onCreateAlphanumericId(result.id);
+        var js = result.content as string;
+        var componentName = "my-" + this.getWebElementType(js).toLowerCase();//componentBaseName + this.getWebElementType(js);//componentBaseName + this.getWebElementType(js) + '-' + this.onCreateAlphanumericId(result.id);
         var ele = customElements.get(componentName);
         if (!ele) {
-          var js = result.content as string;
+          console.log('add custom element:' + componentName);
           // append define custom element and load js
           js += `\r\ncustomElements.define('${componentName}', ${this.getWebElementType(js)});`;
+          //customElements.define('myjsoncomponent', JSONComponent);
+          //js += `\r\ncustomElements.define('my-jsoncomponent', JSONComponent);`;
           this.loadScript(js);
         }
         this.addWebElement(componentName, hostElement);
@@ -97,11 +103,12 @@ export class FeatureDetailComponent implements AfterViewInit {
 
   private loadScript(scriptContent) {
     let node = document.createElement('script');
-      node.textContent = scriptContent;
-      node.type = 'text/javascript';
-      node.async = true;
-      node.charset = 'utf-8';
-      document.getElementsByTagName('head')[0].appendChild(node);
+    node.textContent = scriptContent;
+    node.type = 'text/javascript';
+    //node.async = true;
+    node.async = false;
+    node.charset = 'utf-8';
+    document.getElementsByTagName('head')[0].appendChild(node);
   }
 
   private onCreateAlphanumericId(id: string) : string {
@@ -139,5 +146,22 @@ export class FeatureDetailComponent implements AfterViewInit {
       id: "1"
     }));
     this.profileContentWrapper.nativeElement.children[0].setAttribute('getModel', null);
+  }
+
+  private onSetSettingsContentModel(): void {
+    if (this.settingContentWrapper && this.settingContentWrapper.nativeElement && this.modelSettings) {
+      this.settingContentWrapper.nativeElement.children[0].setAttribute('setModel', JSON.stringify(this.modelSettings));
+    }
+  }
+
+  private onSetProfilesDropModel(): void {
+    // TODO: set select box for profile
+    // TODO: set display name
+  }
+
+  private onSetProfileContentModel(profile: IDeviceFeatureProfil): void {
+    if (this.profileContentWrapper && this.profileContentWrapper.nativeElement) {
+      this.profileContentWrapper.nativeElement.children[0].setAttribute('setModel', JSON.stringify(profile));
+    }
   }
 }

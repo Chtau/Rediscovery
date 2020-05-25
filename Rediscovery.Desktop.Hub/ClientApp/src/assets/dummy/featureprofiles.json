@@ -1,0 +1,18 @@
+[
+  {
+    "id": "0",
+    "displayName": "Profile 1",
+    "profileData": {
+      "profileContent1" : "1",
+      "profileContent2" : "2"
+    }
+  },
+  {
+    "id": "1",
+    "displayName": "Profile 2",
+    "profileData": {
+      "profileContent1" : "3",
+      "profileContent2" : "4"
+    }
+  }
+]
