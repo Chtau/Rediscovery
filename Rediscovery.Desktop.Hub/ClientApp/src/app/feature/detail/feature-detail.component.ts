@@ -27,7 +27,7 @@ export class FeatureDetailComponent implements AfterViewInit {
   }
   set SelectedProfileId(value: string) {
     this.selectedProfileId = value;
-    console.log('Profile selection changed to:' + this.selectedProfileId);
+    //console.log('Profile selection changed to:' + this.selectedProfileId);
     var curModel = this.modelProfiles.content.find(item => {
       if (item.id == this.selectedProfileId) {
         return true;
@@ -69,6 +69,7 @@ export class FeatureDetailComponent implements AfterViewInit {
     });
     this.featureService.featuresProfileUIReceived.subscribe((result: IEntityContent<string, string>) => {
       this.setupWebElementUI(result, this.profileContentWrapper, 'component-');
+      this.onSetProfilesDropModel();
     });
     this.featureService.featuresSettingUIReceived.subscribe((result: IEntityContent<string, string>) => {
       this.setupWebElementUI(result, this.settingContentWrapper, 'component-');
@@ -84,7 +85,7 @@ export class FeatureDetailComponent implements AfterViewInit {
         var componentName = "my-" + this.getWebElementType(js).toLowerCase();//componentBaseName + this.getWebElementType(js);//componentBaseName + this.getWebElementType(js) + '-' + this.onCreateAlphanumericId(result.id);
         var ele = customElements.get(componentName);
         if (!ele) {
-          console.log('add custom element:' + componentName);
+          //console.log('add custom element:' + componentName);
           // append define custom element and load js
           js += `\r\ncustomElements.define('${componentName}', ${this.getWebElementType(js)});`;
           //customElements.define('myjsoncomponent', JSONComponent);
@@ -172,8 +173,8 @@ export class FeatureDetailComponent implements AfterViewInit {
   }
 
   private onSetProfilesDropModel(): void {
-    // TODO: set select box for profile
-    // TODO: set display name
+    if (this.modelProfiles.content.length > 0)
+    this.SelectedProfileId = this.modelProfiles.content[0].id;
   }
 
   private onSetProfileContentModel(profile: IDeviceFeatureProfil): void {
