@@ -3,4 +3,4 @@ class MyComponent extends HTMLElement {
       this.innerHTML = `<h1>Hello world</h1>`;
   }
 }
-customElements.define('my-component', MyComponent);
+//customElements.define('my-component', MyComponent);

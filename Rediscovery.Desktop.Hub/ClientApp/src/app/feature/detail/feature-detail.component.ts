@@ -40,33 +40,38 @@ export class FeatureDetailComponent implements AfterViewInit {
       this.settingsUrl = result;
     });*/
     this.featureService.featuresProfileUIReceived.subscribe((result: IEntityContent) => {
-      console.log('received Profile UI:' + JSON.stringify(result));
+      //console.log('received Profile UI:' + JSON.stringify(result));
       if (result.id == this.model.id && this.profileContentWrapper) {
-        //this.settingsUrl = result.content;
 
-        //console.log('Try to set Model in Profile configuration JS');
-        //setModel(this.model);
-        //this.settingsUrl = '<script>' + result.content + '</script>';
-        //document.createElement('my-component')
-        
-        this.loadScript(result.content);
-        // Create element
-        const popupEl: any = document.createElement('my-component') as any;
+        // TODO: component name should some how include identitfer for this feature (we can't use numbers/ID because they are not valid as tags)
+        var componentName = 'profile-component';
+        var ele = customElements.get(componentName);
+        if (!ele) {
+          // get component Name
+          //class MyComponent extends
+          var js = result.content as string;
+          var patt = /class (.*) extends/i;
+          var match = js.match(patt);
+          var componentType = null;
+          if (match.length == 2) {
+            componentType = match[1];
+          }
 
-        // Listen to the close event
-        popupEl.addEventListener('closed', () => document.body.removeChild(popupEl));
+          // append define custom element and load js
+          js += `\r\ncustomElements.define('${componentName}', ${componentType});`;
+          this.loadScript(js);
 
-        // Set the message
-        //popupEl.message = message;
+          // Create element
+          const popupEl: any = document.createElement(componentName) as any;
 
-        // Add to the DOM
-        //document.body.appendChild(popupEl);
-        //document.body.removeChild()
-        //this.profileContentWrapper.nativeElement.
-        while (this.profileContentWrapper.nativeElement.firstChild) {
-          this.profileContentWrapper.nativeElement.removeChild(this.profileContentWrapper.nativeElement.lastChild);
+          // Listen to the close event
+          popupEl.addEventListener('closed', () => document.body.removeChild(popupEl));
+
+          while (this.profileContentWrapper.nativeElement.firstChild) {
+            this.profileContentWrapper.nativeElement.removeChild(this.profileContentWrapper.nativeElement.lastChild);
+          }
+          this.profileContentWrapper.nativeElement.appendChild(popupEl);
         }
-        this.profileContentWrapper.nativeElement.appendChild(popupEl);
       }
     });
     this.featureService.requestFeatureDetailUI(id);
