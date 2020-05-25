@@ -19,6 +19,23 @@ export class FeatureDetailComponent implements AfterViewInit {
   model: IDeviceFeature = null;
   modelProfiles: IEntityContent<string, IDeviceFeatureProfil[]> = null;
   modelSettings: IEntityContent<string, IDeviceFeatureSetting> = null;
+  selectedProfileId: string = null;
+  selectedProfileName: string = null;
+
+  get SelectedProfileId() : string {
+    return this.selectedProfileId;
+  }
+  set SelectedProfileId(value: string) {
+    this.selectedProfileId = value;
+    console.log('Profile selection changed to:' + this.selectedProfileId);
+    var curModel = this.modelProfiles.content.find(item => {
+      if (item.id == this.selectedProfileId) {
+        return true;
+      }
+    });
+    this.selectedProfileName = curModel.displayName;
+    this.onSetProfileContentModel(curModel);
+  }
 
   constructor(private featureService: FeatureService,
     private ioService: IOService,
