@@ -42,9 +42,7 @@ export class FeatureDetailComponent implements AfterViewInit {
     this.featureService.featuresProfileUIReceived.subscribe((result: IEntityContent) => {
       //console.log('received Profile UI:' + JSON.stringify(result));
       if (result.id == this.model.id && this.profileContentWrapper) {
-
-        // TODO: component name should some how include identitfer for this feature (we can't use numbers/ID because they are not valid as tags)
-        var componentName = 'profile-component';
+        var componentName = 'profile-component-' + this.onCreateAlphanumericId(result.id);
         var ele = customElements.get(componentName);
         if (!ele) {
           // get component Name
@@ -78,7 +76,7 @@ export class FeatureDetailComponent implements AfterViewInit {
   }
 
   loaded: boolean = false;
-  public loadScript(scriptContent) {
+  private loadScript(scriptContent) {
     if (this.loaded == false) {
       this.loaded = true;
       console.log('preparing to load...')
@@ -90,6 +88,30 @@ export class FeatureDetailComponent implements AfterViewInit {
       node.charset = 'utf-8';
       document.getElementsByTagName('head')[0].appendChild(node);
     }
+  }
+
+  private onCreateAlphanumericId(id: string) : string {
+    var map = [
+      'a',
+      'b',
+      'c',
+      'd',
+      'e',
+      'f',
+      'g',
+      'h',
+      'i',
+      'j',
+    ];
+    var idArray = id.split('');
+    var alphaId: string = "";
+    idArray.forEach(item => {
+      var num = parseInt(item);
+      if (!isNaN(num)) {
+        alphaId += map[num];
+      }
+    });
+    return alphaId;
   }
 
   openFolder(): void {
