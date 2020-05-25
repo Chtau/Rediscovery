@@ -63,15 +63,17 @@ export class FeatureDetailComponent implements AfterViewInit {
 
   private addWebElement(componentName: string, hostElement: ElementRef): void {
     // Create element
-    const controlEl: any = document.createElement(componentName) as any;
+    //const controlEl: any = document.createElement(componentName) as any;
+    const control: any = document.createElement(componentName) as any;
 
     // Listen to the close event
-    controlEl.addEventListener('closed', () => document.body.removeChild(controlEl));
+    control.addEventListener('closed', () => document.body.removeChild(control));
 
     while (hostElement.nativeElement.firstChild) {
       hostElement.nativeElement.removeChild(hostElement.nativeElement.lastChild);
     }
-    hostElement.nativeElement.appendChild(controlEl);
+    hostElement.nativeElement.appendChild(control);
+    control.addEventListener('modelchanged', e => console.log(e.detail));
   }
 
   private getWebElementType(js: string): string {
@@ -126,10 +128,11 @@ export class FeatureDetailComponent implements AfterViewInit {
     // TODO: https://developer.mozilla.org/en-US/docs/Web/Web_Components
     // TODO: https://angular.io/guide/elements
     // TODO: test only
-    console.log('Try to set Model in Profile configuration JS');
-    setModel({
+
+    this.profileContentWrapper.nativeElement.children[0].setAttribute('setModel', JSON.stringify({
       name: "Profile Test",
       id: "1"
-    });
+    }));
+    this.profileContentWrapper.nativeElement.children[0].setAttribute('getModel', null);
   }
 }

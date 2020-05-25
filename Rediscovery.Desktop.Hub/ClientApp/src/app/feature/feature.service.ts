@@ -83,7 +83,7 @@ export class FeatureService {
   }
 
   public getFeatureDetailUI1(id: string): Observable<string> {
-    return this.http.get('../../assets/dummy/customelement.js', {responseType: 'text'}).pipe(map(data => {
+    return this.http.get('../../assets/dummy/jsonelement.js', {responseType: 'text'}).pipe(map(data => {
       //console.log('data', data);
       this.featuresProfileUIReceived.emit({ id: id, content: data});
       return data;
