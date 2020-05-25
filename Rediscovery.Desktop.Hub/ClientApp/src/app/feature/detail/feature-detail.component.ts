@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { FeatureService } from '../feature.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { IOService } from 'src/app/io.service';
@@ -13,6 +13,8 @@ declare var setModel: any;
 })
 export class FeatureDetailComponent implements AfterViewInit {
   
+  @ViewChild('profileContentWrapper') profileContentWrapper: ElementRef;
+
   model: IDeviceFeature = null;
   settingsUrl: string = null;
 
@@ -39,7 +41,7 @@ export class FeatureDetailComponent implements AfterViewInit {
     });*/
     this.featureService.featuresProfileUIReceived.subscribe((result: IEntityContent) => {
       console.log('received Profile UI:' + JSON.stringify(result));
-      if (result.id == this.model.id) {
+      if (result.id == this.model.id && this.profileContentWrapper) {
         //this.settingsUrl = result.content;
 
         //console.log('Try to set Model in Profile configuration JS');
@@ -58,8 +60,13 @@ export class FeatureDetailComponent implements AfterViewInit {
         //popupEl.message = message;
 
         // Add to the DOM
-        document.body.appendChild(popupEl);
-
+        //document.body.appendChild(popupEl);
+        //document.body.removeChild()
+        //this.profileContentWrapper.nativeElement.
+        while (this.profileContentWrapper.nativeElement.firstChild) {
+          this.profileContentWrapper.nativeElement.removeChild(this.profileContentWrapper.nativeElement.lastChild);
+        }
+        this.profileContentWrapper.nativeElement.appendChild(popupEl);
       }
     });
     this.featureService.requestFeatureDetailUI(id);
