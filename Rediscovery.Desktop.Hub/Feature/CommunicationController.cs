@@ -46,6 +46,8 @@ namespace Rediscovery.Desktop.Hub.Feature
             _hub.ConnectionStateChanged += _hub_ConnectionStateChanged;
             _hub.FeatureProfileUIReceived += _hub_FeatureProfileUIReceived;
             _hub.FeatureSettingUIReceived += _hub_FeatureSettingUIReceived;
+            _hub.FeatureProfilesReceived += _hub_FeatureProfilesReceived;
+            _hub.FeatureSettingsReceived += _hub_FeatureSettingsReceived;
 
             ElectronNET.API.Electron.IpcMain.On("resolvependingdevice-ipc", (args) =>
             {
@@ -115,6 +117,32 @@ namespace Rediscovery.Desktop.Hub.Feature
                     logger.LogError(ex.ToString());
                 }
             });
+        }
+
+        private void _hub_FeatureSettingsReceived(object sender, EntityContent<Guid, PluginFeature.Models.DeviceFeatureSetting> e)
+        {
+            try
+            {
+                var mainWindow = ElectronNET.API.Electron.WindowManager.BrowserWindows.First();
+                ElectronNET.API.Electron.IpcMain.Send(mainWindow, "features-settings-ipc", e);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "FeatureSettingsReceived via IPC from underlying connection");
+            }
+        }
+
+        private void _hub_FeatureProfilesReceived(object sender, EntityContent<Guid, List<PluginFeature.Models.DeviceFeatureProfil>> e)
+        {
+            try
+            {
+                var mainWindow = ElectronNET.API.Electron.WindowManager.BrowserWindows.First();
+                ElectronNET.API.Electron.IpcMain.Send(mainWindow, "features-profiles-ipc", e);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "FeatureProfilesReceived via IPC from underlying connection");
+            }
         }
 
         private void _hub_FeatureSettingUIReceived(object sender, EntityContent<Guid, byte[]> e)

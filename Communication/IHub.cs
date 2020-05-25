@@ -1,4 +1,5 @@
 ﻿using CommunicationBase;
+using PluginFeature.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,6 +17,8 @@ namespace CommunicationResourceConsumer
         event EventHandler<bool> ConnectionStateChanged;
         event EventHandler<SharedCoreModels.EntityContent<Guid, byte[]>> FeatureProfileUIReceived;
         event EventHandler<SharedCoreModels.EntityContent<Guid, byte[]>> FeatureSettingUIReceived;
+        event EventHandler<SharedCoreModels.EntityContent<Guid, List<DeviceFeatureProfil>>> FeatureProfilesReceived;
+        event EventHandler<SharedCoreModels.EntityContent<Guid, DeviceFeatureSetting>> FeatureSettingsReceived;
 
         void Init(ILogger logger, string hubLink, Protocol protocol = Protocol.HTTP);
         void Authenticate(string applicationKey, ConnectionConfiguration configuration, Action<ConnectionConfiguration, bool> callback);

@@ -1,5 +1,6 @@
 ﻿using CommunicationBase;
 using Microsoft.AspNetCore.SignalR.Client;
+using PluginFeature.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,6 +18,8 @@ namespace CommunicationResourceConsumer
         public event EventHandler<bool> ConnectionStateChanged;
         public event EventHandler<SharedCoreModels.EntityContent<Guid, byte[]>> FeatureProfileUIReceived;
         public event EventHandler<SharedCoreModels.EntityContent<Guid, byte[]>> FeatureSettingUIReceived;
+        public event EventHandler<SharedCoreModels.EntityContent<Guid, List<DeviceFeatureProfil>>> FeatureProfilesReceived;
+        public event EventHandler<SharedCoreModels.EntityContent<Guid, DeviceFeatureSetting>> FeatureSettingsReceived;
 
         private ILogger _logger;
         private IConnectionProvider<HubConnection> _connectionProviderAuthentication;
@@ -133,6 +136,14 @@ namespace CommunicationResourceConsumer
                             connection.On<Guid, byte[]>("FeatureDetailsSettingsUI", (featureId, entry) =>
                             {
                                 FeatureSettingUIReceived?.Invoke(this, new SharedCoreModels.EntityContent<Guid, byte[]>(featureId, entry));
+                            });
+                            connection.On<Guid, List<DeviceFeatureProfil>>("FeatureDetailsProfiles", (featureId, entry) =>
+                            {
+                                FeatureProfilesReceived?.Invoke(this, new SharedCoreModels.EntityContent<Guid, List<DeviceFeatureProfil>>(featureId, entry));
+                            });
+                            connection.On<Guid, DeviceFeatureSetting>("FeatureDetailsSettings", (featureId, entry) =>
+                            {
+                                FeatureSettingsReceived?.Invoke(this, new SharedCoreModels.EntityContent<Guid, DeviceFeatureSetting>(featureId, entry));
                             });
                             connection.On<bool>("RegisterListenerResponse", (listenerResult) =>
                             {

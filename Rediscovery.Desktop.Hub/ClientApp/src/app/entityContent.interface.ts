@@ -1,4 +1,4 @@
-interface IEntityContent {
-  id: any;
-  content: any;
+interface IEntityContent<I, T> {
+  id: I;
+  content: T;
 }

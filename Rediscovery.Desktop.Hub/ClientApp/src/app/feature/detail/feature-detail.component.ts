@@ -17,6 +17,8 @@ export class FeatureDetailComponent implements AfterViewInit {
   @ViewChild('settingContentWrapper') settingContentWrapper: ElementRef;
 
   model: IDeviceFeature = null;
+  modelProfiles: IEntityContent<string, IDeviceFeatureProfil[]> = null;
+  modelSettings: IEntityContent<string, IDeviceFeatureSetting> = null;
 
   constructor(private featureService: FeatureService,
     private ioService: IOService,
@@ -36,16 +38,26 @@ export class FeatureDetailComponent implements AfterViewInit {
 
   private onLoadModel(id: string): void {
     this.model = this.featureService.getFeatureDetail(id);
-    this.featureService.featuresProfileUIReceived.subscribe((result: IEntityContent) => {
+    this.featureService.featuresProfilesReceived.subscribe((result: IEntityContent<string, IDeviceFeatureProfil[]>) => {
+      if (this.model && this.model.id == result.id) {
+        this.modelProfiles = result;
+      }
+    });
+    this.featureService.featuresSettingsReceived.subscribe((result: IEntityContent<string, IDeviceFeatureSetting>) => {
+      if (this.model && this.model.id == result.id) {
+        this.modelSettings = result;
+      }
+    });
+    this.featureService.featuresProfileUIReceived.subscribe((result: IEntityContent<string, string>) => {
       this.setupWebElementUI(result, this.profileContentWrapper, 'profile-component-');
     });
-    this.featureService.featuresSettingUIReceived.subscribe((result: IEntityContent) => {
+    this.featureService.featuresSettingUIReceived.subscribe((result: IEntityContent<string, string>) => {
       this.setupWebElementUI(result, this.settingContentWrapper, 'setting-component-');
     });
     this.featureService.requestFeatureDetailUI(id);
   }
 
-  private setupWebElementUI(result: IEntityContent, hostElement: ElementRef, componentBaseName: string):void {
+  private setupWebElementUI(result: IEntityContent<string, string>, hostElement: ElementRef, componentBaseName: string):void {
     if (result && result.content) {
       if (result.id == this.model.id && hostElement) {
         var componentName = componentBaseName + this.onCreateAlphanumericId(result.id);
@@ -63,12 +75,10 @@ export class FeatureDetailComponent implements AfterViewInit {
 
   private addWebElement(componentName: string, hostElement: ElementRef): void {
     // Create element
-    //const controlEl: any = document.createElement(componentName) as any;
     const control: any = document.createElement(componentName) as any;
-
     // Listen to the close event
     control.addEventListener('closed', () => document.body.removeChild(control));
-
+    // clean up previously added web elements
     while (hostElement.nativeElement.firstChild) {
       hostElement.nativeElement.removeChild(hostElement.nativeElement.lastChild);
     }
@@ -123,12 +133,7 @@ export class FeatureDetailComponent implements AfterViewInit {
   }
 
   onSave(): void {
-    // TODO: we should integrate Web Components as Profile and Setting edit view 
-    // TODO: https://github.com/mdn/web-components-examples/blob/master/editable-list/main.js
-    // TODO: https://developer.mozilla.org/en-US/docs/Web/Web_Components
-    // TODO: https://angular.io/guide/elements
     // TODO: test only
-
     this.profileContentWrapper.nativeElement.children[0].setAttribute('setModel', JSON.stringify({
       name: "Profile Test",
       id: "1"

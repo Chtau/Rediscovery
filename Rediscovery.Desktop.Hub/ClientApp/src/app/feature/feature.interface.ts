@@ -11,3 +11,13 @@ interface IDeviceFeature {
   url: string;
   pluginDirectory: string;
 }
+
+interface IDeviceFeatureSetting {
+  data: any;
+}
+
+interface IDeviceFeatureProfil {
+  id: string;
+  displayName: string;
+  profileData: string;
+}
