@@ -2,7 +2,6 @@ import { Injectable, EventEmitter, NgZone } from "@angular/core";
 import { environment } from "src/environments/environment";
 
 import * as dummyFeature from '../../assets/dummy/feature.json';
-import * as dummyFeatureUI from '../../assets/dummy/featuresetting.html.json';
 import { IpcService } from "../ipc.service";
 import { HttpClient } from "@angular/common/http";
 import { Observable, of } from "rxjs";
@@ -65,23 +64,13 @@ export class FeatureService {
     if (environment.isElectron === true) {
       this.ipc.send('request-features-detail-ui-ipc', id);
     } else {
-      var data = <IEntityContent>dummyFeatureUI.default;
-      data.id = id;
       //this.featuresProfileUIReceived.emit(data);
       this.getFeatureDetailUI1(id).subscribe(result => {
 
       });
     }
   }
-
-  public getFeatureDetailUI(id: string): Observable<string> {
-    return this.http.get('../../assets/dummy/featuresetting.html', {responseType: 'text'}).pipe(map(data => {
-      //console.log('data', data);
-      this.featuresProfileUIReceived.emit({ id: id, content: data});
-      return data;
-    }));
-  }
-
+  
   public getFeatureDetailUI1(id: string): Observable<string> {
     return this.http.get('../../assets/dummy/jsonelement.js', {responseType: 'text'}).pipe(map(data => {
       //console.log('data', data);
