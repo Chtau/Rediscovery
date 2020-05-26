@@ -68,21 +68,25 @@ export class FeatureDetailComponent implements AfterViewInit {
       }
     });
     this.featureService.featuresProfileUIReceived.subscribe((result: IEntityContent<string, string>) => {
-      this.setupWebElementUI(result, this.profileContentWrapper, 'component-');
+      this.setupWebElementUI(result, this.profileContentWrapper, (value) => {
+        console.log('Profile model change callback: ' + JSON.stringify(value));
+      });
       this.onSetProfilesDropModel();
     });
     this.featureService.featuresSettingUIReceived.subscribe((result: IEntityContent<string, string>) => {
-      this.setupWebElementUI(result, this.settingContentWrapper, 'component-');
+      this.setupWebElementUI(result, this.settingContentWrapper, (value) => {
+        console.log('Settings model change callback: ' + JSON.stringify(value));
+      });
       this.onSetSettingsContentModel();
     });
     this.featureService.requestFeatureDetailUI(id);
   }
 
-  private setupWebElementUI(result: IEntityContent<string, string>, hostElement: ElementRef, componentBaseName: string):void {
+  private setupWebElementUI(result: IEntityContent<string, string>, hostElement: ElementRef, changedCallback: (value) => void):void {
     if (result && result.content) {
       if (result.id == this.model.id && hostElement) {
         var js = result.content as string;
-        var componentName = "my-" + this.getWebElementType(js).toLowerCase();//componentBaseName + this.getWebElementType(js);//componentBaseName + this.getWebElementType(js) + '-' + this.onCreateAlphanumericId(result.id);
+        var componentName = "my-" + this.getWebElementType(js).toLowerCase();
         var ele = customElements.get(componentName);
         if (!ele) {
           //console.log('add custom element:' + componentName);
@@ -92,12 +96,12 @@ export class FeatureDetailComponent implements AfterViewInit {
           //js += `\r\ncustomElements.define('my-jsoncomponent', JSONComponent);`;
           this.loadScript(js);
         }
-        this.addWebElement(componentName, hostElement);
+        this.addWebElement(componentName, hostElement, changedCallback);
       }
     }
   }
 
-  private addWebElement(componentName: string, hostElement: ElementRef): void {
+  private addWebElement(componentName: string, hostElement: ElementRef, changedCallback: (value) => void): void {
     // Create element
     const control: any = document.createElement(componentName) as any;
     // Listen to the close event
@@ -107,7 +111,8 @@ export class FeatureDetailComponent implements AfterViewInit {
       hostElement.nativeElement.removeChild(hostElement.nativeElement.lastChild);
     }
     hostElement.nativeElement.appendChild(control);
-    control.addEventListener('modelchanged', e => console.log(e.detail));
+    //control.addEventListener('modelchanged', e => console.log(e.detail));
+    control.addEventListener('modelchanged', e => changedCallback(e.detail));
   }
 
   private getWebElementType(js: string): string {
@@ -157,13 +162,16 @@ export class FeatureDetailComponent implements AfterViewInit {
     this.ioService.openDirectory(this.model.pluginDirectory);
   }
 
-  onSave(): void {
-    // TODO: test only
-    this.profileContentWrapper.nativeElement.children[0].setAttribute('setModel', JSON.stringify({
-      name: "Profile Test",
-      id: "1"
-    }));
-    this.profileContentWrapper.nativeElement.children[0].setAttribute('getModel', null);
+  onSaveProfile(): void {
+    if (this.profileContentWrapper && this.profileContentWrapper.nativeElement && this.profileContentWrapper.nativeElement.children.length > 0) {
+      this.profileContentWrapper.nativeElement.children[0].setAttribute('getModel', null);
+    }
+  }
+
+  onSaveSetting(): void {
+    if (this.settingContentWrapper && this.settingContentWrapper.nativeElement && this.settingContentWrapper.nativeElement.children.length > 0) {
+      this.settingContentWrapper.nativeElement.children[0].setAttribute('getModel', null);
+    }
   }
 
   private onSetSettingsContentModel(): void {
