@@ -18,6 +18,13 @@
             if (newValue) {
                 try {
                     var newValueObj = JSON.parse(newValue);
+                    try {
+                        if (newValueObj?.profileData) {
+                            newValueObj.profileData = JSON.parse(newValueObj.profileData);
+                        }
+                    } catch (error) {
+
+                    }
                     this.model = newValueObj;
                     this.setContent(newValueObj);
                 } catch (error) {
