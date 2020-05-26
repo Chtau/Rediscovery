@@ -1,7 +1,7 @@
 <h3>{{model.displayName}}</h3>
 <clr-tabs>
   <clr-tab>
-    <button clrTabLink id="link1">Information</button>
+    <button clrTabLink id="information">Information</button>
     <clr-tab-content>
       <table class="table table-model">
         <tbody>
@@ -35,7 +35,7 @@
     </clr-tab-content>
   </clr-tab>
   <clr-tab *ngIf="model.hasSettings">
-    <button clrTabLink>Settings</button>
+    <button clrTabLink id="settings">Settings</button>
     <clr-tab-content>
       <div #settingContentWrapper class="settings-content-wrapper"></div>
       <div>
@@ -44,7 +44,7 @@
     </clr-tab-content>
   </clr-tab>
   <clr-tab *ngIf="model.hasProfiles">
-    <button clrTabLink>Profiles</button>
+    <button clrTabLink id="profiles">Profiles</button>
     <clr-tab-content>
       <div class="profile-select-wrapper">
         <select clrSelect name="options" [(ngModel)]="SelectedProfileId">
