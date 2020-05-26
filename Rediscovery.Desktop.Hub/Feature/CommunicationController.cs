@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using PluginFeature.Models;
 using Rediscovery.Desktop.Hub.Feature.InternalIPCModels;
 using SharedCoreModels;
 using System;
@@ -113,6 +114,39 @@ namespace Rediscovery.Desktop.Hub.Feature
                     Guid featureId = new Guid(args.ToString());
                     _hub.RequestFeatureDetailsUI(featureId);
                 } catch (Exception ex)
+                {
+                    logger.LogError(ex.ToString());
+                }
+            });
+            ElectronNET.API.Electron.IpcMain.On("request-features-save-profile-ipc", (args) => {
+                try
+                {
+                    var param = Newtonsoft.Json.JsonConvert.DeserializeObject<SharedCoreModels.EntityContent<Guid, DeviceFeatureProfil>>(args?.ToString());
+                    _hub.RequestFeatureSaveProfile(param);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex.ToString());
+                }
+            });
+            ElectronNET.API.Electron.IpcMain.On("request-features-delete-profile-ipc", (args) => {
+                try
+                {
+                    var param = Newtonsoft.Json.JsonConvert.DeserializeObject<SharedCoreModels.EntityContent<Guid, DeviceFeatureProfil>>(args?.ToString());
+                    _hub.RequestFeatureDeleteProfile(param);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex.ToString());
+                }
+            });
+            ElectronNET.API.Electron.IpcMain.On("request-features-save-setting-ipc", (args) => {
+                try
+                {
+                    var param = Newtonsoft.Json.JsonConvert.DeserializeObject<SharedCoreModels.EntityContent<Guid, DeviceFeatureSetting>>(args?.ToString());
+                    _hub.RequestFeatureSaveSetting(param);
+                }
+                catch (Exception ex)
                 {
                     logger.LogError(ex.ToString());
                 }

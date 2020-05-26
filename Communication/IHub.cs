@@ -29,5 +29,8 @@ namespace CommunicationResourceConsumer
         void RequestDeleteDevice(SharedCoreModels.DeviceInfo deviceInfo);
         void RequestUpdateDevice(SharedCoreModels.DeviceInfo deviceInfo);
         void RequestFeatureDetailsUI(Guid featureId);
+        void RequestFeatureSaveProfile(SharedCoreModels.EntityContent<Guid, DeviceFeatureProfil> profileEntity);
+        void RequestFeatureDeleteProfile(SharedCoreModels.EntityContent<Guid, DeviceFeatureProfil> profileEntity);
+        void RequestFeatureSaveSetting(SharedCoreModels.EntityContent<Guid, DeviceFeatureSetting> settingEntity);
     }
 }

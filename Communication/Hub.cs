@@ -1,6 +1,7 @@
 ﻿using CommunicationBase;
 using Microsoft.AspNetCore.SignalR.Client;
 using PluginFeature.Models;
+using SharedCoreModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -265,6 +266,60 @@ namespace CommunicationResourceConsumer
                     _logger.Error(ex);
                 }
             });
+        }
+
+        public void RequestFeatureSaveProfile(EntityContent<Guid, DeviceFeatureProfil> profileEntity)
+        {
+            if (profileEntity != null)
+            {
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        await _connectionProvider.CurrentConnection.InvokeAsync("RequestSaveFeatureProfile", profileEntity.Id, profileEntity.Content);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex);
+                    }
+                });
+            }
+        }
+
+        public void RequestFeatureDeleteProfile(EntityContent<Guid, DeviceFeatureProfil> profileEntity)
+        {
+            if (profileEntity != null)
+            {
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        await _connectionProvider.CurrentConnection.InvokeAsync("RequestDeleteFeatureProfile", profileEntity.Id, profileEntity.Content?.Id);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex);
+                    }
+                });
+            }
+        }
+
+        public void RequestFeatureSaveSetting(EntityContent<Guid, DeviceFeatureSetting> settingEntity)
+        {
+            if (settingEntity != null)
+            {
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        await _connectionProvider.CurrentConnection.InvokeAsync("RequestSaveFeatureSettings", settingEntity.Id, settingEntity.Content);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex);
+                    }
+                });
+            }
         }
     }
 }
