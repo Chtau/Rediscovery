@@ -50,9 +50,9 @@
         <select clrSelect name="options" [(ngModel)]="SelectedProfileId">
           <option *ngFor="let item of modelProfiles.content" [value]="item.id">{{ item.displayName }}</option>
         </select>
-        <input style="margin-left: 25px;" clrInput placeholder="My input" name="input" [(ngModel)]="selectedProfileName" />
+        <input style="margin-left: 25px;" clrInput placeholder="Profile" name="input" [(ngModel)]="SelectedProfileName" />
         <button style="margin-left: 25px;margin-top: 10px;" class="btn btn-primary" (click)="onAddProfile()">Add Profile</button>
-        <button style="margin-top: 10px;" class="btn btn-danger" (click)="onDelete()">Delete</button>
+        <button style="margin-top: 10px;" class="btn btn-danger" (click)="onDeleteProfile()">Delete</button>
       </div>
       <div #profileContentWrapper class="profil-content-wrapper"></div>
       <div>

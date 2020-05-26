@@ -100,6 +100,10 @@ export class FeatureService {
     console.log('Save feature profile: ' + JSON.stringify(entity));
   }
 
+  public deleteFeatureProfile(entity: IEntityContent<string, string>): void {
+    console.log('Delete feature profile: ' + JSON.stringify(entity));
+  }
+
   public saveFeatureSetting(entity: IEntityContent<string, IDeviceFeatureSetting>): void {
     console.log('Save feature profile: ' + JSON.stringify(entity));
   }

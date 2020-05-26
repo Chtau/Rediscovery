@@ -19,21 +19,48 @@ export class FeatureDetailComponent implements AfterViewInit {
   model: IDeviceFeature = null;
   modelProfiles: IEntityContent<string, IDeviceFeatureProfil[]> = null;
   modelSettings: IEntityContent<string, IDeviceFeatureSetting> = null;
-  selectedProfileId: string = null;
-  selectedProfileName: string = null;
-
-  get SelectedProfileId() : string {
-    return this.selectedProfileId;
-  }
-  set SelectedProfileId(value: string) {
-    this.selectedProfileId = value;
+  
+  get SelectedProfileName() : string {
     var curModel = this.modelProfiles.content.find(item => {
       if (item.id == this.selectedProfileId) {
         return true;
       }
     });
-    this.selectedProfileName = curModel.displayName;
-    this.onSetProfileContentModel(curModel);
+    if (curModel) {
+      return curModel.displayName;
+    } else {
+      return "";
+    }
+  }
+  set SelectedProfileName(value: string) {
+    var curModel = this.modelProfiles.content.find(item => {
+      if (item.id == this.selectedProfileId) {
+        return true;
+      }
+    });
+    if (curModel) {
+      curModel.displayName = value;
+    }
+  }
+
+  selectedProfileId: string = null;
+  get SelectedProfileId() : string {
+    return this.selectedProfileId;
+  }
+  set SelectedProfileId(value: string) {
+    this.selectedProfileId = value;
+    if (this.selectedProfileId) {
+      var curModel = this.modelProfiles.content.find(item => {
+        if (item.id == this.selectedProfileId) {
+          return true;
+        }
+      });
+      this.SelectedProfileName = curModel.displayName;
+      this.onSetProfileContentModel(curModel);
+    } else {
+      this.SelectedProfileName = null;
+      this.onSetProfileContentModel(null);
+    }
   }
 
   constructor(private featureService: FeatureService,
@@ -110,7 +137,7 @@ export class FeatureDetailComponent implements AfterViewInit {
   private getWebElementType(js: string): string {
     var patt = /class (.*) extends/i;
     var match = js.match(patt);
-    if (match.length == 2) {
+    if (match.length >= 2) {
       return match[1];
     }
     return null;
@@ -160,6 +187,42 @@ export class FeatureDetailComponent implements AfterViewInit {
     }
   }
 
+  onAddProfile(): void {
+    var newProfile: IDeviceFeatureProfil = {
+      id: "-1",
+      displayName: "New Profile",
+      profileData: null
+    };
+    var index = this.modelProfiles.content.findIndex(item => {
+      if (item.id == newProfile.id) {
+        return true;
+      }
+    });
+    if (index == -1) {
+      this.modelProfiles.content.push(newProfile);
+    }
+    this.SelectedProfileId = newProfile.id;
+  }
+
+  onDeleteProfile(): void {
+    if (this.selectedProfileId) {
+      var entity: IEntityContent<string, string> = {
+        id: this.model.id,
+        content: this.selectedProfileId
+      };
+      this.featureService.deleteFeatureProfile(entity);
+      var index = this.modelProfiles.content.findIndex(item => {
+        if (item.id == this.selectedProfileId) {
+          return true;
+        }
+      });
+      if (index != -1) {
+        this.modelProfiles.content.splice(index, 1);
+        this.onSetProfilesDropModel();
+      }
+    }
+  }
+
   onSaveSetting(): void {
     if (this.settingContentWrapper && this.settingContentWrapper.nativeElement && this.settingContentWrapper.nativeElement.children.length > 0) {
       this.settingContentWrapper.nativeElement.children[0].setAttribute('getModel', null);
@@ -173,8 +236,11 @@ export class FeatureDetailComponent implements AfterViewInit {
   }
 
   private onSetProfilesDropModel(): void {
-    if (this.modelProfiles.content.length > 0)
-    this.SelectedProfileId = this.modelProfiles.content[0].id;
+    if (this.modelProfiles.content.length > 0) {
+      this.SelectedProfileId = this.modelProfiles.content[0].id;
+    } else {
+      this.SelectedProfileId = null;
+    }
   }
 
   private onSetProfileContentModel(profile: IDeviceFeatureProfil): void {
