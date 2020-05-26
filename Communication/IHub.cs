@@ -32,5 +32,6 @@ namespace CommunicationResourceConsumer
         void RequestFeatureSaveProfile(SharedCoreModels.EntityContent<Guid, DeviceFeatureProfil> profileEntity);
         void RequestFeatureDeleteProfile(SharedCoreModels.EntityContent<Guid, DeviceFeatureProfil> profileEntity);
         void RequestFeatureSaveSetting(SharedCoreModels.EntityContent<Guid, DeviceFeatureSetting> settingEntity);
+        void RequestFeatureDetails(Guid featureId);
     }
 }

@@ -253,6 +253,21 @@ namespace CommunicationResourceConsumer
             }
         }
 
+        public void RequestFeatureDetails(Guid featureId)
+        {
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await _connectionProvider.CurrentConnection.InvokeAsync("RequestFeatureDetails", featureId);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex);
+                }
+            });
+        }
+
         public void RequestFeatureDetailsUI(Guid featureId)
         {
             Task.Run(async () =>

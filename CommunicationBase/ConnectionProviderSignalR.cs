@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -80,12 +81,28 @@ namespace CommunicationBase
                     {
                         options.AccessTokenProvider = () => Task.FromResult(model.Token);
                     })
+                    .ConfigureLogging(logging =>
+                    {
+                        // Log to the Output Window
+                        logging.AddDebug();
+
+                        // This will set ALL logging to Debug level
+                        logging.SetMinimumLevel(LogLevel.Debug);
+                    })
                     .Build();
                 }
                 else
                 {
                     connection = new HubConnectionBuilder()
                     .WithUrl(url)
+                    .ConfigureLogging(logging =>
+                    {
+                        // Log to the Output Window
+                        logging.AddDebug();
+
+                        // This will set ALL logging to Debug level
+                        logging.SetMinimumLevel(LogLevel.Debug);
+                    })
                     .Build();
                 }
                 await connection.StartAsync();

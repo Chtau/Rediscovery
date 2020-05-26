@@ -111,6 +111,7 @@ export class FeatureDetailComponent implements AfterViewInit {
       });
       this.onSetSettingsContentModel();
     });
+    this.featureService.requestFeatureDetail(id);
     this.featureService.requestFeatureDetailUI(id);
   }
 

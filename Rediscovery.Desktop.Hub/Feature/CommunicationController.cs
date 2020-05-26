@@ -108,6 +108,17 @@ namespace Rediscovery.Desktop.Hub.Feature
                     logger.LogError(ex.ToString());
                 }
             });
+            ElectronNET.API.Electron.IpcMain.On("request-features-detail-ipc", (args) => {
+                try
+                {
+                    Guid featureId = new Guid(args.ToString());
+                    _hub.RequestFeatureDetails(featureId);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex.ToString());
+                }
+            });
             ElectronNET.API.Electron.IpcMain.On("request-features-detail-ui-ipc", (args) => {
                 try
                 {
@@ -171,6 +182,13 @@ namespace Rediscovery.Desktop.Hub.Feature
             try
             {
                 var mainWindow = ElectronNET.API.Electron.WindowManager.BrowserWindows.First();
+                if (e.Content != null)
+                {
+                    foreach (var item in e.Content)
+                    {
+                        item.ProfileData = item.ProfileData?.ToString();
+                    }
+                }
                 ElectronNET.API.Electron.IpcMain.Send(mainWindow, "features-profiles-ipc", e);
             }
             catch (Exception ex)

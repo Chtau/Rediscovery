@@ -6,7 +6,12 @@ namespace PluginFeature.Models
 {
     public class DeviceFeatureProfil
     {
-        public DeviceFeatureProfil(string id, string displayName, object data)
+        public DeviceFeatureProfil()
+        {
+
+        }
+
+        public DeviceFeatureProfil(string id, string displayName, object data): this()
         {
             Id = id;
             DisplayName = displayName;

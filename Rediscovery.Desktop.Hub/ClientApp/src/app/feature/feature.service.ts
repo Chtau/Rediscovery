@@ -75,6 +75,14 @@ export class FeatureService {
     });
   }
 
+  public requestFeatureDetail(id: string): void {
+    if (environment.isElectron === true) {
+      this.ipc.send('request-features-detail-ipc', id);
+    } else {
+      
+    }
+  }
+
   public requestFeatureDetailUI(id: string): void {
     if (environment.isElectron === true) {
       this.ipc.send('request-features-detail-ui-ipc', id);
