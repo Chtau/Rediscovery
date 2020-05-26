@@ -39,7 +39,7 @@
     <clr-tab-content>
       <div #settingContentWrapper class="settings-content-wrapper"></div>
       <div>
-        <button class="btn btn-success" (click)="onSaveSetting()">Save</button>
+        <button class="btn btn-success" [disabled]="!canSaveSetting" (click)="onSaveSetting()">Save</button>
       </div>
     </clr-tab-content>
   </clr-tab>
@@ -56,7 +56,7 @@
       </div>
       <div #profileContentWrapper class="profil-content-wrapper"></div>
       <div>
-        <button class="btn btn-success" (click)="onSaveProfile()">Save</button>
+        <button class="btn btn-success" [disabled]="!canSaveProfile" (click)="onSaveProfile()">Save</button>
       </div>
     </clr-tab-content>
   </clr-tab>

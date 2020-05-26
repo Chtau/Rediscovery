@@ -19,6 +19,8 @@ export class FeatureDetailComponent implements AfterViewInit {
   model: IDeviceFeature = null;
   modelProfiles: IEntityContent<string, IDeviceFeatureProfil[]> = null;
   modelSettings: IEntityContent<string, IDeviceFeatureSetting> = null;
+  canSaveProfile: boolean = false;
+  canSaveSetting: boolean = false;
   
   get SelectedProfileName() : string {
     var curModel = this.modelProfiles.content.find(item => {
@@ -40,6 +42,7 @@ export class FeatureDetailComponent implements AfterViewInit {
     });
     if (curModel) {
       curModel.displayName = value;
+      this.canSaveProfile = true;
     }
   }
 
@@ -48,6 +51,7 @@ export class FeatureDetailComponent implements AfterViewInit {
     return this.selectedProfileId;
   }
   set SelectedProfileId(value: string) {
+    this.canSaveProfile = false;
     this.selectedProfileId = value;
     if (this.selectedProfileId) {
       var curModel = this.modelProfiles.content.find(item => {
@@ -55,7 +59,7 @@ export class FeatureDetailComponent implements AfterViewInit {
           return true;
         }
       });
-      this.SelectedProfileName = curModel.displayName;
+      //this.SelectedProfileName = curModel.displayName;
       this.onSetProfileContentModel(curModel);
     } else {
       this.SelectedProfileName = null;
@@ -95,13 +99,22 @@ export class FeatureDetailComponent implements AfterViewInit {
     });
     this.featureService.featuresProfileUIReceived.subscribe((result: IEntityContent<string, string>) => {
       this.setupWebElementUI(result, this.profileContentWrapper, (value) => {
-        this.featureService.saveFeatureProfile((this.model.id, value));
+        var curModel = this.modelProfiles.content.find(item => {
+          if (item.id == this.selectedProfileId) {
+            return true;
+          }
+        });
+        curModel.profileData = value.profileData;
+        this.canSaveProfile = true;
+        //this.featureService.saveFeatureProfile((this.model.id, value));
       });
       this.onSetProfilesDropModel();
     });
     this.featureService.featuresSettingUIReceived.subscribe((result: IEntityContent<string, string>) => {
       this.setupWebElementUI(result, this.settingContentWrapper, (value) => {
-        this.featureService.saveFeatureSetting((this.model.id, value));
+        this.modelSettings.content.data = value.data;
+        this.canSaveSetting = true;
+        //this.featureService.saveFeatureSetting((this.model.id, value));
       });
       this.onSetSettingsContentModel();
     });
@@ -182,8 +195,17 @@ export class FeatureDetailComponent implements AfterViewInit {
   }
 
   onSaveProfile(): void {
-    if (this.profileContentWrapper && this.profileContentWrapper.nativeElement && this.profileContentWrapper.nativeElement.children.length > 0) {
-      this.profileContentWrapper.nativeElement.children[0].setAttribute('getModel', null);
+    var curModel = this.modelProfiles.content.find(item => {
+      if (item.id == this.selectedProfileId) {
+        return true;
+      }
+    });
+    if (curModel) {
+      var entity: IEntityContent<string, IDeviceFeatureProfil>  = {
+        id: this.model.id,
+        content: curModel
+      }
+      this.featureService.saveFeatureProfile(entity);
     }
   }
 
@@ -202,6 +224,7 @@ export class FeatureDetailComponent implements AfterViewInit {
       this.modelProfiles.content.push(newProfile);
     }
     this.SelectedProfileId = newProfile.id;
+    this.canSaveProfile = true;
   }
 
   onDeleteProfile(): void {
@@ -224,9 +247,7 @@ export class FeatureDetailComponent implements AfterViewInit {
   }
 
   onSaveSetting(): void {
-    if (this.settingContentWrapper && this.settingContentWrapper.nativeElement && this.settingContentWrapper.nativeElement.children.length > 0) {
-      this.settingContentWrapper.nativeElement.children[0].setAttribute('getModel', null);
-    }
+    this.featureService.saveFeatureSetting((this.model.id, this.modelSettings));
   }
 
   private onSetSettingsContentModel(): void {
