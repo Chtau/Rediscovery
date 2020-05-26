@@ -1,13 +1,12 @@
 ﻿class JSONComponent extends HTMLElement {
 
-    model = null;
-
     static get observedAttributes() {
         return ['setmodel', 'getmodel'];
     }
 
     constructor() {
         super();
+        const model = {};
     }
 
     connectedCallback() {
@@ -26,14 +25,13 @@
         } else if (name == 'getmodel') {
             this.dispatchEvent(new CustomEvent('modelchanged', {
                 detail: this.model
-            }))
+            }));
         }
     }
 
     setContent(jsonObj) {
         if (jsonObj) {
-            this.innerHTML = `
-      <style>
+            this.innerHTML = `<style>
         .content-wrapper {
           height: 100%;
           width: 100%;
@@ -47,7 +45,7 @@
       </style>
       <div class="content-wrapper">
       <pre>${JSON.stringify(jsonObj, null, 4)}</pre>
-      </div>`
+      </div>`;
         } else {
             this.innerHTML = `<h1>No content</h1>`;
         }

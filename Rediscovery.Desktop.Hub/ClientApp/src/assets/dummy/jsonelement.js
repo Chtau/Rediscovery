@@ -1,13 +1,12 @@
 class JSONComponent extends HTMLElement {
 
-  model = null;
-
   static get observedAttributes() {
     return ['setmodel', 'getmodel'];
   }
 
   constructor() {
     super();
+    const model = {};
   }
 
   connectedCallback() {

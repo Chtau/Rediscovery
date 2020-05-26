@@ -21,13 +21,17 @@ export class FeatureDetailComponent implements AfterViewInit {
   modelSettings: IEntityContent<string, IDeviceFeatureSetting> = null;
   canSaveProfile: boolean = false;
   canSaveSetting: boolean = false;
-  
+
+  get profiles(): IDeviceFeatureProfil[] {
+    if (this.modelProfiles) {
+      return this.modelProfiles.content;
+    } else {
+      return [];
+    }
+  }
+
   get SelectedProfileName() : string {
-    var curModel = this.modelProfiles.content.find(item => {
-      if (item.id == this.selectedProfileId) {
-        return true;
-      }
-    });
+    var curModel = this.getProfileModel();
     if (curModel) {
       return curModel.displayName;
     } else {
@@ -35,11 +39,7 @@ export class FeatureDetailComponent implements AfterViewInit {
     }
   }
   set SelectedProfileName(value: string) {
-    var curModel = this.modelProfiles.content.find(item => {
-      if (item.id == this.selectedProfileId) {
-        return true;
-      }
-    });
+    var curModel = this.getProfileModel();
     if (curModel) {
       curModel.displayName = value;
       this.canSaveProfile = true;
@@ -54,13 +54,7 @@ export class FeatureDetailComponent implements AfterViewInit {
     this.canSaveProfile = false;
     this.selectedProfileId = value;
     if (this.selectedProfileId) {
-      var curModel = this.modelProfiles.content.find(item => {
-        if (item.id == this.selectedProfileId) {
-          return true;
-        }
-      });
-      //this.SelectedProfileName = curModel.displayName;
-      this.onSetProfileContentModel(curModel);
+      this.onSetProfileContentModel(this.getProfileModel());
     } else {
       this.SelectedProfileName = null;
       this.onSetProfileContentModel(null);
@@ -195,11 +189,7 @@ export class FeatureDetailComponent implements AfterViewInit {
   }
 
   onSaveProfile(): void {
-    var curModel = this.modelProfiles.content.find(item => {
-      if (item.id == this.selectedProfileId) {
-        return true;
-      }
-    });
+    var curModel = this.getProfileModel();
     if (curModel) {
       var entity: IEntityContent<string, IDeviceFeatureProfil>  = {
         id: this.model.id,
@@ -215,12 +205,8 @@ export class FeatureDetailComponent implements AfterViewInit {
       displayName: "New Profile",
       profileData: null
     };
-    var index = this.modelProfiles.content.findIndex(item => {
-      if (item.id == newProfile.id) {
-        return true;
-      }
-    });
-    if (index == -1) {
+    var index = this.getProfileModelIndex();
+    if (index == -1 && this.modelProfiles && this.modelProfiles.content) {
       this.modelProfiles.content.push(newProfile);
     }
     this.SelectedProfileId = newProfile.id;
@@ -234,12 +220,8 @@ export class FeatureDetailComponent implements AfterViewInit {
         content: this.selectedProfileId
       };
       this.featureService.deleteFeatureProfile(entity);
-      var index = this.modelProfiles.content.findIndex(item => {
-        if (item.id == this.selectedProfileId) {
-          return true;
-        }
-      });
-      if (index != -1) {
+      var index = this.getProfileModelIndex();
+      if (index != -1 && this.modelProfiles && this.modelProfiles.content) {
         this.modelProfiles.content.splice(index, 1);
         this.onSetProfilesDropModel();
       }
@@ -257,7 +239,7 @@ export class FeatureDetailComponent implements AfterViewInit {
   }
 
   private onSetProfilesDropModel(): void {
-    if (this.modelProfiles.content.length > 0) {
+    if (this.modelProfiles && this.modelProfiles.content && this.modelProfiles.content.length > 0) {
       this.SelectedProfileId = this.modelProfiles.content[0].id;
     } else {
       this.SelectedProfileId = null;
@@ -268,5 +250,29 @@ export class FeatureDetailComponent implements AfterViewInit {
     if (this.profileContentWrapper && this.profileContentWrapper.nativeElement) {
       this.profileContentWrapper.nativeElement.children[0].setAttribute('setModel', JSON.stringify(profile));
     }
+  }
+
+  private getProfileModel(): IDeviceFeatureProfil {
+    if (this.modelProfiles && this.modelProfiles.content && this.modelProfiles.content.length > 0) {
+      var curModel = this.modelProfiles.content.find(item => {
+        if (item.id == this.selectedProfileId) {
+          return true;
+        }
+      });
+      return curModel;
+    }
+    return null;
+  }
+
+  private getProfileModelIndex(): number {
+    if (this.modelProfiles && this.modelProfiles.content && this.modelProfiles.content.length > 0) {
+      var index = this.modelProfiles.content.findIndex(item => {
+        if (item.id == this.selectedProfileId) {
+          return true;
+        }
+      });
+      return index;
+    }
+    return -1;
   }
 }

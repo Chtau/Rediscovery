@@ -48,7 +48,7 @@
     <clr-tab-content>
       <div class="profile-select-wrapper">
         <select clrSelect name="options" [(ngModel)]="SelectedProfileId">
-          <option *ngFor="let item of modelProfiles.content" [value]="item.id">{{ item.displayName }}</option>
+          <option *ngFor="let item of profiles" [value]="item.id">{{ item.displayName }}</option>
         </select>
         <input style="margin-left: 25px;" clrInput placeholder="Profile" name="input" [(ngModel)]="SelectedProfileName" />
         <button style="margin-left: 25px;margin-top: 10px;" class="btn btn-primary" (click)="onAddProfile()">Add Profile</button>
