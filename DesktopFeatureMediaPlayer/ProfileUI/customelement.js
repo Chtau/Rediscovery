@@ -16,9 +16,13 @@
     attributeChangedCallback(name, oldValue, newValue) {
         if (name == 'setmodel') {
             if (newValue) {
-                var newValueObj = JSON.parse(newValue);
-                this.model = newValueObj;
-                this.setContent(newValueObj);
+                try {
+                    var newValueObj = JSON.parse(newValue);
+                    this.model = newValueObj;
+                    this.setContent(newValueObj);
+                } catch (error) {
+                    this.setContent(null);
+                }
             } else {
                 this.setContent(null);
             }

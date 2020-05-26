@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { FeatureService } from '../feature.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { IOService } from 'src/app/io.service';
@@ -64,7 +64,8 @@ export class FeatureDetailComponent implements AfterViewInit {
   constructor(private featureService: FeatureService,
     private ioService: IOService,
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    private cdRef: ChangeDetectorRef) {
     this.onLoadModel(this.route.snapshot.paramMap.get('id'));
     router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
@@ -100,7 +101,6 @@ export class FeatureDetailComponent implements AfterViewInit {
         });
         curModel.profileData = value.profileData;
         this.canSaveProfile = true;
-        //this.featureService.saveFeatureProfile((this.model.id, value));
       });
       this.onSetProfilesDropModel();
     });
@@ -108,7 +108,6 @@ export class FeatureDetailComponent implements AfterViewInit {
       this.setupWebElementUI(result, this.settingContentWrapper, (value) => {
         this.modelSettings.content.data = value.data;
         this.canSaveSetting = true;
-        //this.featureService.saveFeatureSetting((this.model.id, value));
       });
       this.onSetSettingsContentModel();
     });
@@ -205,9 +204,10 @@ export class FeatureDetailComponent implements AfterViewInit {
       displayName: "New Profile",
       profileData: null
     };
-    var index = this.getProfileModelIndex();
+    var index = this.getProfileModelByIndex(newProfile.id);
     if (index == -1 && this.modelProfiles && this.modelProfiles.content) {
       this.modelProfiles.content.push(newProfile);
+      this.cdRef.detectChanges();
     }
     this.SelectedProfileId = newProfile.id;
     this.canSaveProfile = true;
@@ -223,6 +223,7 @@ export class FeatureDetailComponent implements AfterViewInit {
       var index = this.getProfileModelIndex();
       if (index != -1 && this.modelProfiles && this.modelProfiles.content) {
         this.modelProfiles.content.splice(index, 1);
+        this.cdRef.detectChanges();
         this.onSetProfilesDropModel();
       }
     }
@@ -268,6 +269,18 @@ export class FeatureDetailComponent implements AfterViewInit {
     if (this.modelProfiles && this.modelProfiles.content && this.modelProfiles.content.length > 0) {
       var index = this.modelProfiles.content.findIndex(item => {
         if (item.id == this.selectedProfileId) {
+          return true;
+        }
+      });
+      return index;
+    }
+    return -1;
+  }
+
+  private getProfileModelByIndex(searchIndex: string): number {
+    if (this.modelProfiles && this.modelProfiles.content && this.modelProfiles.content.length > 0) {
+      var index = this.modelProfiles.content.findIndex(item => {
+        if (item.id == searchIndex) {
           return true;
         }
       });
