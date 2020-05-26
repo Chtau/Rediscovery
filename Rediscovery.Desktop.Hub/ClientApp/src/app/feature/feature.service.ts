@@ -97,14 +97,26 @@ export class FeatureService {
   }
 
   public saveFeatureProfile(entity: IEntityContent<string, IDeviceFeatureProfil>): void {
-    console.log('Save feature profile: ' + JSON.stringify(entity));
+    if (environment.isElectron === true) {
+      this.ipc.send('request-features-save-profile-ipc', entity);
+    } else {
+      console.log('Save feature profile: ' + JSON.stringify(entity));
+    }
   }
 
   public deleteFeatureProfile(entity: IEntityContent<string, string>): void {
-    console.log('Delete feature profile: ' + JSON.stringify(entity));
+    if (environment.isElectron === true) {
+      this.ipc.send('request-features-delete-profile-ipc', entity);
+    } else {
+      console.log('Delete feature profile: ' + JSON.stringify(entity));
+    }
   }
 
   public saveFeatureSetting(entity: IEntityContent<string, IDeviceFeatureSetting>): void {
-    console.log('Save feature profile: ' + JSON.stringify(entity));
+    if (environment.isElectron === true) {
+      this.ipc.send('request-features-save-setting-ipc', entity);
+    } else {
+      console.log('Save feature profile: ' + JSON.stringify(entity));
+    }
   }
 }
