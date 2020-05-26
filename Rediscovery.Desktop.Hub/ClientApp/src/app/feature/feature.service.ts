@@ -95,4 +95,12 @@ export class FeatureService {
       return data;
     }));
   }
+
+  public saveFeatureProfile(entity: IEntityContent<string, IDeviceFeatureProfil>): void {
+    console.log('Save feature profile: ' + JSON.stringify(entity));
+  }
+
+  public saveFeatureSetting(entity: IEntityContent<string, IDeviceFeatureSetting>): void {
+    console.log('Save feature profile: ' + JSON.stringify(entity));
+  }
 }

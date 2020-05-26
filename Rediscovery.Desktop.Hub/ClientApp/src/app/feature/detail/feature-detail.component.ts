@@ -27,7 +27,6 @@ export class FeatureDetailComponent implements AfterViewInit {
   }
   set SelectedProfileId(value: string) {
     this.selectedProfileId = value;
-    //console.log('Profile selection changed to:' + this.selectedProfileId);
     var curModel = this.modelProfiles.content.find(item => {
       if (item.id == this.selectedProfileId) {
         return true;
@@ -69,13 +68,13 @@ export class FeatureDetailComponent implements AfterViewInit {
     });
     this.featureService.featuresProfileUIReceived.subscribe((result: IEntityContent<string, string>) => {
       this.setupWebElementUI(result, this.profileContentWrapper, (value) => {
-        console.log('Profile model change callback: ' + JSON.stringify(value));
+        this.featureService.saveFeatureProfile((this.model.id, value));
       });
       this.onSetProfilesDropModel();
     });
     this.featureService.featuresSettingUIReceived.subscribe((result: IEntityContent<string, string>) => {
       this.setupWebElementUI(result, this.settingContentWrapper, (value) => {
-        console.log('Settings model change callback: ' + JSON.stringify(value));
+        this.featureService.saveFeatureSetting((this.model.id, value));
       });
       this.onSetSettingsContentModel();
     });
@@ -89,11 +88,7 @@ export class FeatureDetailComponent implements AfterViewInit {
         var componentName = "my-" + this.getWebElementType(js).toLowerCase();
         var ele = customElements.get(componentName);
         if (!ele) {
-          //console.log('add custom element:' + componentName);
-          // append define custom element and load js
           js += `\r\ncustomElements.define('${componentName}', ${this.getWebElementType(js)});`;
-          //customElements.define('myjsoncomponent', JSONComponent);
-          //js += `\r\ncustomElements.define('my-jsoncomponent', JSONComponent);`;
           this.loadScript(js);
         }
         this.addWebElement(componentName, hostElement, changedCallback);
@@ -102,16 +97,13 @@ export class FeatureDetailComponent implements AfterViewInit {
   }
 
   private addWebElement(componentName: string, hostElement: ElementRef, changedCallback: (value) => void): void {
-    // Create element
     const control: any = document.createElement(componentName) as any;
-    // Listen to the close event
     control.addEventListener('closed', () => document.body.removeChild(control));
     // clean up previously added web elements
     while (hostElement.nativeElement.firstChild) {
       hostElement.nativeElement.removeChild(hostElement.nativeElement.lastChild);
     }
     hostElement.nativeElement.appendChild(control);
-    //control.addEventListener('modelchanged', e => console.log(e.detail));
     control.addEventListener('modelchanged', e => changedCallback(e.detail));
   }
 
@@ -128,7 +120,7 @@ export class FeatureDetailComponent implements AfterViewInit {
     let node = document.createElement('script');
     node.textContent = scriptContent;
     node.type = 'text/javascript';
-    //node.async = true;
+    node.async = true;
     node.async = false;
     node.charset = 'utf-8';
     document.getElementsByTagName('head')[0].appendChild(node);
