@@ -22,12 +22,13 @@ namespace SharedBase.Logging
                 return instance;
             }
         }
+        #endregion
 
         public void LogCritical(string message, params object[] args)
         {
             if (args?.Length > 0)
                 message = string.Format(message, args);
-            Debug.WriteLine(message, "Critical");
+            Debug.WriteLine(message, nameof(LogCritical));
             Debug.Indent();
         }
 
@@ -35,13 +36,13 @@ namespace SharedBase.Logging
         {
             if (args?.Length > 0)
                 message = string.Format(message, args);
-            Debug.WriteLine(message, "Debug");
+            Debug.WriteLine(message, nameof(LogDebug));
             Debug.Indent();
         }
 
         public void LogError(Exception exception)
         {
-            Debug.WriteLine(exception.ToString(), "Error");
+            Debug.WriteLine(exception.ToString(), nameof(LogError));
             Debug.Indent();
         }
 
@@ -49,8 +50,8 @@ namespace SharedBase.Logging
         {
             if (args?.Length > 0)
                 message = string.Format(message, args);
-            Debug.WriteLine(exception.ToString(), "Error");
-            Debug.WriteLine(message, "Error");
+            Debug.WriteLine(exception.ToString(), nameof(LogError));
+            Debug.WriteLine(message, nameof(LogError));
             Debug.Indent();
         }
 
@@ -58,7 +59,7 @@ namespace SharedBase.Logging
         {
             if (args?.Length > 0)
                 message = string.Format(message, args);
-            Debug.WriteLine(message, "Information");
+            Debug.WriteLine(message, nameof(LogInformation));
             Debug.Indent();
         }
 
@@ -66,7 +67,7 @@ namespace SharedBase.Logging
         {
             if (args?.Length > 0)
                 message = string.Format(message, args);
-            Debug.WriteLine(message, "Trace");
+            Debug.WriteLine(message, nameof(LogTrace));
             Debug.Indent();
         }
 
@@ -74,11 +75,8 @@ namespace SharedBase.Logging
         {
             if (args?.Length > 0)
                 message = string.Format(message, args);
-            Debug.WriteLine(message, "Warning");
+            Debug.WriteLine(message, nameof(LogWarning));
             Debug.Indent();
         }
-        #endregion
-
-
     }
 }
