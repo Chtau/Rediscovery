@@ -14,13 +14,13 @@ namespace CommunicationClientConsumer
 {
     public class Hub : IHub
     {
-        private ILogger _logger;
+        private SharedBase.Logging.ILogger _logger;
         private IConnectionProvider<HubConnection> _connectionProviderAuthentication;
         private IConnectionProvider<HubConnection> _connectionProvider;
 
         public event EventHandler<Models.ResponseReceived> FeatureResponseReceived;
 
-        public void Init(ILogger logger, string authHubLink, string exchangeHubLink, Protocol protocol = Protocol.HTTP)
+        public void Init(SharedBase.Logging.ILogger logger, string authHubLink, string exchangeHubLink, Protocol protocol = Protocol.HTTP)
         {
             _logger = logger;
             _connectionProviderAuthentication = new ConnectionProviderSignalR();
@@ -42,12 +42,12 @@ namespace CommunicationClientConsumer
                         {
                             connection.On<Manifest>("Manifest", (manifest) =>
                             {
-                                _logger.Message($"Manifest received for {configuration.DisplayName} ({DateTime.Now})");
+                                _logger.LogTrace($"Manifest received for {configuration.DisplayName} ({DateTime.Now})");
                                 manifestCallback?.Invoke(manifest);
                             });
                             connection.On<ConnectionState, string>("Hello", (state, token) =>
                             {
-                                _logger.Message($"Hello received for {configuration.DisplayName} ({DateTime.Now})");
+                                _logger.LogTrace($"Hello received for {configuration.DisplayName} ({DateTime.Now})");
                                 if (!string.IsNullOrWhiteSpace(token))
                                 {
                                     configuration.Token = token;
@@ -65,7 +65,7 @@ namespace CommunicationClientConsumer
                         }
                         catch (Exception ex)
                         {
-                            _logger.Error(ex);
+                            _logger.LogError(ex, "Authentication flow failed after a valid authentication");
                             configuration.Token = null;
                             configuration.State = ConnectionState.Error;
                             callback.Invoke(configuration, false);
@@ -91,7 +91,7 @@ namespace CommunicationClientConsumer
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(ex);
+                    _logger.LogError(ex, "Error while trying to close the connection before creating a new connection");
                 }
                 await _connectionProvider.Connect((result, connection) =>
                 {
@@ -101,14 +101,14 @@ namespace CommunicationClientConsumer
                         {
                             connection.On<Guid, string, object>("ClientResponse", (Guid featureId, string profileId, object data) =>
                             {
-                                _logger.Message($"Feature response received (ConfigurationId:{configuration.Id} FeatureId:{featureId} ProfileId:{profileId} At:{DateTime.Now})");
+                                _logger.LogTrace($"Feature response received (ConfigurationId:{configuration.Id} FeatureId:{featureId} ProfileId:{profileId} At:{DateTime.Now})");
                                 FeatureResponseReceived?.Invoke(this, new Models.ResponseReceived(configuration.Id, featureId, profileId, data));
                             });
                             resultCallback?.Invoke(true, ConnectionState.OK);
                         }
                         catch (Exception ex)
                         {
-                            _logger.Error(ex);
+                            _logger.LogError(ex, "Connect flow failed after a successful connection was established");
                             resultCallback?.Invoke(false, ConnectionState.Error);
                         }
                     } else
@@ -127,12 +127,12 @@ namespace CommunicationClientConsumer
                     await _connectionProvider.CloseConnection();
                 if (_connectionProviderAuthentication != null)
                     await _connectionProviderAuthentication.CloseConnection();
-                _logger.Message($"After Disconnect (At:{DateTime.Now})");
+                _logger.LogTrace($"After Disconnect (At:{DateTime.Now})");
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.Error(ex);
+                _logger.LogError(ex, "Connection providers throw an error on disconnecting");
                 return false;
             }
         }
@@ -145,12 +145,12 @@ namespace CommunicationClientConsumer
                 {
                     try
                     {
-                        _logger.Message($"Send feature message (FeatureId:{featureId} ProfileId:{profileId} At:{DateTime.Now})");
+                        _logger.LogTrace($"Send feature message (FeatureId:{featureId} ProfileId:{profileId} At:{DateTime.Now})");
                         await _connectionProvider.CurrentConnection.InvokeAsync("ClientMessage", featureId, profileId, data);
                     }
                     catch (Exception ex)
                     {
-                        _logger.Error(ex);
+                        _logger.LogError(ex, $"Failed to send a [ClientMessage] from the Feature Id:{featureId}");
                     }
                 });
             }
@@ -164,12 +164,12 @@ namespace CommunicationClientConsumer
                 {
                     try
                     {
-                        _logger.Message($"Start feature usage (FeatureId:{featureId} At:{DateTime.Now})");
+                        _logger.LogTrace($"Start feature usage (FeatureId:{featureId} At:{DateTime.Now})");
                         await _connectionProvider.CurrentConnection.InvokeAsync("ClientFeatureStart", featureId);
                     }
                     catch (Exception ex)
                     {
-                        _logger.Error(ex);
+                        _logger.LogError(ex, $"Failed to send the command [ClientFeatureStart] for the Feature Id:{featureId}");
                     }
                 });
             }
@@ -183,12 +183,12 @@ namespace CommunicationClientConsumer
                 {
                     try
                     {
-                        _logger.Message($"Stop feature usage (FeatureId:{featureId} At:{DateTime.Now})");
+                        _logger.LogTrace($"Stop feature usage (FeatureId:{featureId} At:{DateTime.Now})");
                         await _connectionProvider.CurrentConnection.InvokeAsync("ClientFeatureStop", featureId);
                     }
                     catch (Exception ex)
                     {
-                        _logger.Error(ex);
+                        _logger.LogError(ex, $"Failed to send the command [ClientFeatureStop] for the Feature Id:{featureId}");
                     }
                 });
             }
@@ -214,15 +214,17 @@ namespace CommunicationClientConsumer
             var response = await GetResponseMessage(featureId, "/features/profiles/");
             if (response.IsSuccessStatusCode)
             {
+                string content = null;
                 try
                 {
-                    var content = await response.Content.ReadAsStringAsync();
+                    content = await response.Content.ReadAsStringAsync();
                     if (!string.IsNullOrWhiteSpace(content))
                         return Newtonsoft.Json.JsonConvert.DeserializeObject<List<DeviceFeatureProfil>>(content);
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(ex);
+                    _logger.LogError(ex, $"Source for deserialization to type [List<DeviceFeatureProfil>] is not valid (Feature id:{featureId})");
+                    _logger.LogTrace($"Feature (Id: {featureId}) Profile string value:" + content);
                 }
             }
             return null;
@@ -233,15 +235,17 @@ namespace CommunicationClientConsumer
             var response = await GetResponseMessage(featureId, "/features/settings/");
             if (response.IsSuccessStatusCode)
             {
+                string content = null;
                 try
                 {
-                    var content = await response.Content.ReadAsStringAsync();
+                    content = await response.Content.ReadAsStringAsync();
                     if (!string.IsNullOrWhiteSpace(content))
                         return Newtonsoft.Json.JsonConvert.DeserializeObject<DeviceFeatureSetting>(content);
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(ex);
+                    _logger.LogError(ex, $"Source for deserialization to type [DeviceFeatureSetting] is not valid (Feature id:{featureId})");
+                    _logger.LogTrace($"Feature (Id: {featureId}) Setting string value:" + content);
                 }
             }
             return null;
@@ -270,7 +274,7 @@ namespace CommunicationClientConsumer
             }
             catch (Exception ex)
             {
-                _logger.Error(ex);
+                _logger.LogError(ex, $"HttpClient Feature (Id:{featureId}) failed to get response message on Url:{subUrl}");
                 return new HttpResponseMessage(System.Net.HttpStatusCode.ExpectationFailed);
             }
         }

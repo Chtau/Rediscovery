@@ -95,7 +95,7 @@ namespace Rediscovery.Features.DesktopConfiguration
                         }
                         catch (Exception ex)
                         {
-                            _logger.Error(ex);
+                            _logger.LogError(ex);
                         } finally
                         {
                             Load.IsLoading = false;
@@ -105,7 +105,7 @@ namespace Rediscovery.Features.DesktopConfiguration
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(ex);
+                    _logger.LogError(ex);
                     Load.IsLoading = false;
                 }
             }, () =>
@@ -127,7 +127,7 @@ namespace Rediscovery.Features.DesktopConfiguration
                         }
                         catch (Exception ex)
                         {
-                            _logger.Error(ex);
+                            _logger.LogError(ex);
                         }
                         finally
                         {
@@ -138,7 +138,7 @@ namespace Rediscovery.Features.DesktopConfiguration
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(ex);
+                    _logger.LogError(ex);
                     Load.IsLoading = false;
                 }
             }, () =>
@@ -165,7 +165,7 @@ namespace Rediscovery.Features.DesktopConfiguration
                 }
             } catch (Exception ex)
             {
-                _logger.Error(ex);
+                _logger.LogError(ex);
                 _userNotification.ShowToast("Failed to save");
             }
         }
@@ -184,7 +184,7 @@ namespace Rediscovery.Features.DesktopConfiguration
             }
             catch (Exception ex)
             {
-                _logger.Error(ex);
+                _logger.LogError(ex);
                 _userNotification.ShowToast("Failed to delete");
             }
         }

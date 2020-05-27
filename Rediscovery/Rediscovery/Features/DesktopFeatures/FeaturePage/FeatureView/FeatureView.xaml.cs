@@ -18,7 +18,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
         private FeatureViewViewModel viewModel;
 
         private IFeatureUIService featureUIService => DependencyService.Get<IFeatureUIService>() ?? new FeatureUIService();
-        private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
+        private SharedBase.Logging.ILogger logger => DependencyService.Get<SharedBase.Logging.ILogger>() ?? new Logger();
 
         public FeatureView(Guid desktopConfigId, Features.Connection.Models.ConnectionManifestFeature connectionManifestFeature)
         {
@@ -33,7 +33,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
 
             hybridWebView.RegisterErrorCallback((error) =>
             {
-                logger.Error(new Exception(error));
+                logger.LogError(new Exception(error));
             });
         }
 
@@ -67,7 +67,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
             });
             hybridWebView.RegisterLogger((data) =>
             {
-                logger.Message(data);
+                logger.LogTrace(data);
             });
             hybridWebView.SourceFolderSet += (obj, args) =>
             {

@@ -20,10 +20,11 @@ namespace CommunicationResourceConsumer
         event EventHandler<SharedCoreModels.EntityContent<Guid, List<DeviceFeatureProfil>>> FeatureProfilesReceived;
         event EventHandler<SharedCoreModels.EntityContent<Guid, DeviceFeatureSetting>> FeatureSettingsReceived;
 
-        void Init(ILogger logger, string hubLink, Protocol protocol = Protocol.HTTP);
+        void Init(SharedBase.Logging.ILogger logger, string hubLink, Protocol protocol = Protocol.HTTP);
         void Authenticate(string applicationKey, ConnectionConfiguration configuration, Action<ConnectionConfiguration, bool> callback);
         void Connect(string applicationKey, ConnectionConfiguration configuration, Action<bool> listenerCallback);
         bool RequestAllData();
+        bool RequestAllFeatures();
         Task<bool> Disconnect();
         void RequestResolvePendingAuthenticationDevice(Guid deviceId, bool accept);
         void RequestDeleteDevice(SharedCoreModels.DeviceInfo deviceInfo);

@@ -12,7 +12,7 @@ namespace CommunicationClientConsumer
     public interface IHub
     {
         event EventHandler<Models.ResponseReceived> FeatureResponseReceived;
-        void Init(ILogger logger, string authHubLink, string exchangeHubLink, Protocol protocol = Protocol.HTTP);
+        void Init(SharedBase.Logging.ILogger logger, string authHubLink, string exchangeHubLink, Protocol protocol = Protocol.HTTP);
         void Authenticate(WelcomeDeviceMessage welcomeDeviceMessage, ConnectionConfiguration configuration, Action<ConnectionConfiguration, bool> callback, Action<Manifest> manifestCallback);
         void Connect(ConnectionConfiguration configuration, Action<bool, ConnectionState> resultCallback);
         Task<bool> Disconnect();

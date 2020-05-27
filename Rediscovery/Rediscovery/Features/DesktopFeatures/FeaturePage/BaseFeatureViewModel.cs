@@ -26,7 +26,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage
 
         private void CommunicationHub_FeatureResponseReceived(object sender, CommunicationClientConsumer.Models.ResponseReceived e)
         {
-            _logger.Message($"{DateTime.Now.ToShortTimeString()} Feature exchange received. (ConfigurationId:{e.ConfigurationId} FeatureId:{e.FeatureId} ProfileId:{e.ProfileId})");
+            _logger.LogTrace($"{DateTime.Now.ToShortTimeString()} Feature exchange received. (ConfigurationId:{e.ConfigurationId} FeatureId:{e.FeatureId} ProfileId:{e.ProfileId})");
             if (_connectionManifestFeature.ConfigurationId == e.ConfigurationId && _connectionManifestFeature.FeatureId == e.FeatureId)
             {
                 Receive(e.Data);
@@ -36,7 +36,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage
 
         public virtual void Send(string profileId, object data)
         {
-            _logger.Message($"{DateTime.Now.ToShortTimeString()} Try to send from Feature. (profileId:{profileId} data:{data})");
+            _logger.LogTrace($"{DateTime.Now.ToShortTimeString()} Try to send from Feature. (profileId:{profileId} data:{data})");
             communicationHub.Send(_connectionManifestFeature.FeatureId, profileId, data);
         }
 

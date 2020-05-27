@@ -20,7 +20,7 @@ namespace Rediscovery.Features.Connection
 
         public ConnectService()
         {
-            communicationHub.Init(new CommunicationBase.Logger(), "/hubs/connect", "/hubs/feature");
+            communicationHub.Init(_logger, "/hubs/connect", "/hubs/feature");
         }
 
         public void AutoConnect(Action<bool, SharedCoreModels.Enums.ConnectionState> resultCallback)
@@ -45,7 +45,7 @@ namespace Rediscovery.Features.Connection
                 }
             } catch (Exception ex)
             {
-                _logger.Error(ex);
+                _logger.LogError(ex);
                 callback?.Invoke(null, false, SharedCoreModels.Enums.ConnectionState.Error);
             }
         }
@@ -113,7 +113,7 @@ namespace Rediscovery.Features.Connection
             }
             catch (Exception ex)
             {
-                _logger.Error(ex);
+                _logger.LogError(ex);
             }
         }
 
@@ -130,7 +130,7 @@ namespace Rediscovery.Features.Connection
                 }
             } catch (Exception ex)
             {
-                _logger.Error(ex);
+                _logger.LogError(ex);
             }
         }
 

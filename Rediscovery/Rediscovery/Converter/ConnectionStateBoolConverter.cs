@@ -9,7 +9,7 @@ namespace Rediscovery.Converter
 {
     public class ConnectionStateBoolConverter : IValueConverter
     {
-        internal ILogger _logger => DependencyService.Get<ILogger>() ?? new Logger();
+        internal SharedBase.Logging.ILogger _logger => DependencyService.Get<SharedBase.Logging.ILogger>() ?? new Logger();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -20,7 +20,7 @@ namespace Rediscovery.Converter
             }
             catch (Exception ex)
             {
-                _logger.Error(ex);
+                _logger.LogError(ex);
                 return false;
             }
         }
@@ -33,7 +33,7 @@ namespace Rediscovery.Converter
 
     public class ConnectionStateReverseBoolConverter : IValueConverter
     {
-        internal ILogger _logger => DependencyService.Get<ILogger>() ?? new Logger();
+        internal SharedBase.Logging.ILogger _logger => DependencyService.Get<SharedBase.Logging.ILogger>() ?? new Logger();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -44,7 +44,7 @@ namespace Rediscovery.Converter
             }
             catch (Exception ex)
             {
-                _logger.Error(ex);
+                _logger.LogError(ex);
                 return !false;
             }
         }

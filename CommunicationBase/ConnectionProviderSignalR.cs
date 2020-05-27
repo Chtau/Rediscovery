@@ -13,7 +13,7 @@ namespace CommunicationBase
         private string token;
         private string _hubLink;
         private Protocol _protocol;
-        private ILogger _logger;
+        private SharedBase.Logging.ILogger _logger;
 
         private HubConnection connection;
 
@@ -63,7 +63,7 @@ namespace CommunicationBase
                     }
                     else
                     {
-                        _logger.Message($"Reconnect to connection {model.DisplayName} ({DateTime.Now.ToString()})");
+                        _logger.LogTrace($"Reconnect to connection {model.DisplayName} ({DateTime.Now.ToString()})");
                         await connection.StopAsync();
                         await connection.DisposeAsync();
                         connection = null;
@@ -73,7 +73,7 @@ namespace CommunicationBase
 
                 baseUrl = _protocol.ToProtocolValue() + model.Address;
                 string url = baseUrl + _hubLink;
-                _logger.Message($"Try do connect to {model.DisplayName} with Address:{url} ({DateTime.Now.ToString()})");
+                _logger.LogTrace($"Try do connect to {model.DisplayName} with Address:{url} ({DateTime.Now.ToString()})");
                 if (shouldUseToken)
                 {
                     connection = new HubConnectionBuilder()
@@ -131,12 +131,12 @@ namespace CommunicationBase
             }
             catch (Exception ex)
             {
-                _logger.Error(ex);
+                _logger.LogError(ex, "Could not get a valid HubConnection");
                 return null;
             }
         }
 
-        public void Init(ILogger logger, string hubLink, Protocol protocol = Protocol.HTTP)
+        public void Init(SharedBase.Logging.ILogger logger, string hubLink, Protocol protocol = Protocol.HTTP)
         {
             _hubLink = hubLink;
             _protocol = protocol;

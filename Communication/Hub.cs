@@ -22,7 +22,7 @@ namespace CommunicationResourceConsumer
         public event EventHandler<SharedCoreModels.EntityContent<Guid, List<DeviceFeatureProfil>>> FeatureProfilesReceived;
         public event EventHandler<SharedCoreModels.EntityContent<Guid, DeviceFeatureSetting>> FeatureSettingsReceived;
 
-        private ILogger _logger;
+        private SharedBase.Logging.ILogger _logger;
         private IConnectionProvider<HubConnection> _connectionProviderAuthentication;
         private IConnectionProvider<HubConnection> _connectionProvider;
 
@@ -31,7 +31,7 @@ namespace CommunicationResourceConsumer
             
         }
 
-        public void Init(ILogger logger, string hubLink, Protocol protocol = Protocol.HTTP)
+        public void Init(SharedBase.Logging.ILogger logger, string hubLink, Protocol protocol = Protocol.HTTP)
         {
             _logger = logger;
             _connectionProviderAuthentication = new ConnectionProviderSignalR();
@@ -79,7 +79,7 @@ namespace CommunicationResourceConsumer
                             await connection.InvokeAsync("Hello", applicationKey);
                         } catch (Exception ex)
                         {
-                            _logger.Error(ex);
+                            _logger.LogError(ex);
                             configuration.Token = null;
                             callback.Invoke(configuration, false);
                         }
@@ -102,7 +102,7 @@ namespace CommunicationResourceConsumer
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(ex);
+                    _logger.LogError(ex);
                 }
                 await _connectionProvider.Connect(async (result, connection) =>
                 {
@@ -113,18 +113,22 @@ namespace CommunicationResourceConsumer
                             connection.On<List<SharedCoreModels.DeviceInfo>>("ActiveDeviceInfo", (deviceInfos) =>
                             {
                                 ActiveDeviceInfoReceived?.Invoke(this, deviceInfos);
+                                _logger.LogTrace($"[{nameof(ActiveDeviceInfoReceived)}] @{DateTime.Now}");
                             });
                             connection.On<List<SharedCoreModels.DeviceInfo>>("DeviceInfo", (deviceInfos) =>
                             {
                                 DeviceInfoReceived?.Invoke(this, deviceInfos);
+                                _logger.LogTrace($"[{nameof(DeviceInfoReceived)}] @{DateTime.Now}");
                             });
                             connection.On<List<SharedCoreModels.DeviceInfo>>("PendingAuthenticationDevices", (deviceInfos) =>
                             {
                                 PendingAuthenticationDeviceReceived?.Invoke(this, deviceInfos);
+                                _logger.LogTrace($"[{nameof(PendingAuthenticationDeviceReceived)}] @{DateTime.Now}");
                             });
                             connection.On<List<SharedCoreModels.DeviceFeature>>("ServiceFeature", (deviceInfos) =>
                             {
                                 ServiceFeatureReceived?.Invoke(this, deviceInfos);
+                                _logger.LogTrace($"[{nameof(ServiceFeatureReceived)}] @{DateTime.Now}");
                             });
                             connection.On<SharedCoreModels.LoggerEntryModel>("LogEntry", (entry) =>
                             {
@@ -133,18 +137,22 @@ namespace CommunicationResourceConsumer
                             connection.On<Guid, byte[]>("FeatureDetailsProfilesUI", (featureId, entry) =>
                             {
                                 FeatureProfileUIReceived?.Invoke(this, new SharedCoreModels.EntityContent<Guid, byte[]>(featureId, entry));
+                                _logger.LogTrace($"[{nameof(FeatureProfileUIReceived)}] @{DateTime.Now}");
                             });
                             connection.On<Guid, byte[]>("FeatureDetailsSettingsUI", (featureId, entry) =>
                             {
                                 FeatureSettingUIReceived?.Invoke(this, new SharedCoreModels.EntityContent<Guid, byte[]>(featureId, entry));
+                                _logger.LogTrace($"[{nameof(FeatureSettingUIReceived)}] @{DateTime.Now}");
                             });
                             connection.On<Guid, List<DeviceFeatureProfil>>("FeatureDetailsProfiles", (featureId, entry) =>
                             {
                                 FeatureProfilesReceived?.Invoke(this, new SharedCoreModels.EntityContent<Guid, List<DeviceFeatureProfil>>(featureId, entry));
+                                _logger.LogTrace($"[{nameof(FeatureProfilesReceived)}] @{DateTime.Now}");
                             });
                             connection.On<Guid, DeviceFeatureSetting>("FeatureDetailsSettings", (featureId, entry) =>
                             {
                                 FeatureSettingsReceived?.Invoke(this, new SharedCoreModels.EntityContent<Guid, DeviceFeatureSetting>(featureId, entry));
+                                _logger.LogTrace($"[{nameof(FeatureSettingsReceived)}] @{DateTime.Now}");
                             });
                             connection.On<bool>("RegisterListenerResponse", (listenerResult) =>
                             {
@@ -153,7 +161,7 @@ namespace CommunicationResourceConsumer
                             await connection.InvokeAsync("RegisterListener", applicationKey);
                         } catch (Exception ex)
                         {
-                            _logger.Error(ex);
+                            _logger.LogError(ex);
                         }
                     }
                 }, configuration, true);
@@ -172,9 +180,10 @@ namespace CommunicationResourceConsumer
                         await _connectionProvider.CurrentConnection.InvokeAsync("RequestServiceFeature");
                         await _connectionProvider.CurrentConnection.InvokeAsync("RequestActiveDeviceInfo");
                         await _connectionProvider.CurrentConnection.InvokeAsync("RequestPendingAuthenticationDevices");
+                        _logger.LogTrace($"[{nameof(RequestAllData)}] @{DateTime.Now}");
                     } catch (Exception ex)
                     {
-                        _logger.Error(ex);
+                        _logger.LogError(ex);
                     }
                 });
                 return true;
@@ -192,10 +201,11 @@ namespace CommunicationResourceConsumer
                     try
                     {
                         await _connectionProvider.CurrentConnection.InvokeAsync("RequestResolvePendingAuthenticationDevice", deviceId, accept);
+                        _logger.LogTrace($"[{nameof(RequestResolvePendingAuthenticationDevice)}] @{DateTime.Now}");
                     }
                     catch (Exception ex)
                     {
-                        _logger.Error(ex);
+                        _logger.LogError(ex);
                     }
                 });
             }
@@ -210,10 +220,11 @@ namespace CommunicationResourceConsumer
                     try
                     {
                         await _connectionProvider.CurrentConnection.InvokeAsync("RequestDeleteDeviceInfo", deviceInfo);
+                        _logger.LogTrace($"[{nameof(RequestDeleteDevice)}] @{DateTime.Now}");
                     }
                     catch (Exception ex)
                     {
-                        _logger.Error(ex);
+                        _logger.LogError(ex);
                     }
                 });
             }
@@ -228,10 +239,11 @@ namespace CommunicationResourceConsumer
                     try
                     {
                         await _connectionProvider.CurrentConnection.InvokeAsync("RequestUpdateDeviceInfo", deviceInfo);
+                        _logger.LogTrace($"[{nameof(RequestUpdateDevice)}] @{DateTime.Now}");
                     }
                     catch (Exception ex)
                     {
-                        _logger.Error(ex);
+                        _logger.LogError(ex);
                     }
                 });
             }
@@ -248,7 +260,7 @@ namespace CommunicationResourceConsumer
                 return true;
             } catch (Exception ex)
             {
-                _logger.Error(ex);
+                _logger.LogError(ex);
                 return false;
             }
         }
@@ -260,10 +272,11 @@ namespace CommunicationResourceConsumer
                 try
                 {
                     await _connectionProvider.CurrentConnection.InvokeAsync("RequestFeatureDetails", featureId);
+                    _logger.LogTrace($"[{nameof(RequestFeatureDetails)}] @{DateTime.Now}");
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(ex);
+                    _logger.LogError(ex);
                 }
             });
         }
@@ -275,10 +288,11 @@ namespace CommunicationResourceConsumer
                 try
                 {
                     await _connectionProvider.CurrentConnection.InvokeAsync("RequestFeatureDetailsUI", featureId);
+                    _logger.LogTrace($"[{nameof(RequestFeatureDetailsUI)}] @{DateTime.Now}");
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(ex);
+                    _logger.LogError(ex);
                 }
             });
         }
@@ -292,10 +306,11 @@ namespace CommunicationResourceConsumer
                     try
                     {
                         await _connectionProvider.CurrentConnection.InvokeAsync("RequestSaveFeatureProfile", profileEntity.Id, profileEntity.Content);
+                        _logger.LogTrace($"[{nameof(RequestFeatureSaveProfile)}] @{DateTime.Now}");
                     }
                     catch (Exception ex)
                     {
-                        _logger.Error(ex);
+                        _logger.LogError(ex);
                     }
                 });
             }
@@ -310,10 +325,11 @@ namespace CommunicationResourceConsumer
                     try
                     {
                         await _connectionProvider.CurrentConnection.InvokeAsync("RequestDeleteFeatureProfile", profileEntity.Id, profileEntity.Content?.Id);
+                        _logger.LogTrace($"[{nameof(RequestFeatureDeleteProfile)}] @{DateTime.Now}");
                     }
                     catch (Exception ex)
                     {
-                        _logger.Error(ex);
+                        _logger.LogError(ex);
                     }
                 });
             }
@@ -328,13 +344,36 @@ namespace CommunicationResourceConsumer
                     try
                     {
                         await _connectionProvider.CurrentConnection.InvokeAsync("RequestSaveFeatureSettings", settingEntity.Id, settingEntity.Content);
+                        _logger.LogTrace($"[{nameof(RequestFeatureSaveSetting)}] @{DateTime.Now}");
                     }
                     catch (Exception ex)
                     {
-                        _logger.Error(ex);
+                        _logger.LogError(ex);
                     }
                 });
             }
+        }
+
+        public bool RequestAllFeatures()
+        {
+            if (_connectionProvider.IsConnected)
+            {
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        await _connectionProvider.CurrentConnection.InvokeAsync("RequestServiceFeature");
+                        _logger.LogTrace($"[{nameof(RequestAllFeatures)}] @{DateTime.Now}");
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex);
+                    }
+                });
+                return true;
+            }
+            else
+                return false;
         }
     }
 }

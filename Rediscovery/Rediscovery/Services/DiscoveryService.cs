@@ -49,18 +49,18 @@ namespace Rediscovery.Services
                                 var serviceInfo = new SharedCoreModels.DiscoveryServiceInfo();
                                 serviceInfo.Parse(ServerResponse);
                                 callbackAnswer?.Invoke(serviceInfo);
-                                _logger.Message($"Received {serviceInfo.ToString()} from {ServerEp.Address.ToString()}");
+                                _logger.LogTrace($"Received {serviceInfo} from {ServerEp.Address}");
 
                                 Client.Close();
                             });
                         } else
                         {
-                            _logger.Message($"No valid Broadcast send (byte miss match Expected bytes:{RequestData.Length} send bytes:{sendBytes})");
+                            _logger.LogInformation($"No valid Broadcast send (byte miss match Expected bytes:{RequestData.Length} send bytes:{sendBytes})");
                         }
                         running = interupt.Invoke();
                     } catch (Exception ex)
                     {
-                        _logger.Error(ex);
+                        _logger.LogError(ex);
                     }
                 } while (running);
             });

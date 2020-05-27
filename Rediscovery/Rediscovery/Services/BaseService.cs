@@ -7,6 +7,6 @@ namespace Rediscovery.Services
 {
     public abstract class BaseService
     {
-        internal ILogger _logger => DependencyService.Get<ILogger>() ?? new Logger();
+        internal SharedBase.Logging.ILogger _logger => DependencyService.Get<SharedBase.Logging.ILogger>() ?? new Logger();
     }
 }

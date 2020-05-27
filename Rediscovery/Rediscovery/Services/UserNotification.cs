@@ -18,7 +18,7 @@ namespace Rediscovery.Services
                 });
             } catch (Exception ex)
             {
-                _logger.Error(ex);
+                _logger.LogError(ex);
             }
         }
     }

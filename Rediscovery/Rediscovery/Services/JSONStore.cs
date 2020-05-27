@@ -42,14 +42,14 @@ namespace Rediscovery.Services
                 }
                 if (!result.Item1)
                 {
-                    _logger.Error(ioEX);
+                    _logger.LogError(ioEX);
                     return new Tuple<bool, T>(false, default);
                 }
                 return result;
             }
             catch (Exception ex)
             {
-                _logger.Error(ex);
+                _logger.LogError(ex);
                 return new Tuple<bool, T>(false, default);
             }
         }
@@ -82,14 +82,14 @@ namespace Rediscovery.Services
                 }
                 if (!result)
                 {
-                    _logger.Error(ioEX);
+                    _logger.LogError(ioEX);
                     return false;
                 }
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.Error(ex);
+                _logger.LogError(ex);
                 return false;
             }
         }
@@ -104,7 +104,7 @@ namespace Rediscovery.Services
             }
             catch (Exception ex)
             {
-                _logger.Error(ex);
+                _logger.LogError(ex);
                 return false;
             }
         }

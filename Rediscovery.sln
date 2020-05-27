@@ -45,6 +45,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationBase", "Commun
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationClientConsumer", "CommunicationClientConsumer\CommunicationClientConsumer.csproj", "{EC652CC1-ED58-4AC1-B1CF-D1908896421B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedBase", "SharedModels\SharedBase.csproj", "{FC34856C-FE50-49CE-812E-053F9F5193FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -313,6 +315,18 @@ Global
 		{EC652CC1-ED58-4AC1-B1CF-D1908896421B}.Release|x64.Build.0 = Release|Any CPU
 		{EC652CC1-ED58-4AC1-B1CF-D1908896421B}.Release|x86.ActiveCfg = Release|Any CPU
 		{EC652CC1-ED58-4AC1-B1CF-D1908896421B}.Release|x86.Build.0 = Release|Any CPU
+		{FC34856C-FE50-49CE-812E-053F9F5193FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC34856C-FE50-49CE-812E-053F9F5193FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC34856C-FE50-49CE-812E-053F9F5193FF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FC34856C-FE50-49CE-812E-053F9F5193FF}.Debug|x64.Build.0 = Debug|Any CPU
+		{FC34856C-FE50-49CE-812E-053F9F5193FF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FC34856C-FE50-49CE-812E-053F9F5193FF}.Debug|x86.Build.0 = Debug|Any CPU
+		{FC34856C-FE50-49CE-812E-053F9F5193FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC34856C-FE50-49CE-812E-053F9F5193FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC34856C-FE50-49CE-812E-053F9F5193FF}.Release|x64.ActiveCfg = Release|Any CPU
+		{FC34856C-FE50-49CE-812E-053F9F5193FF}.Release|x64.Build.0 = Release|Any CPU
+		{FC34856C-FE50-49CE-812E-053F9F5193FF}.Release|x86.ActiveCfg = Release|Any CPU
+		{FC34856C-FE50-49CE-812E-053F9F5193FF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

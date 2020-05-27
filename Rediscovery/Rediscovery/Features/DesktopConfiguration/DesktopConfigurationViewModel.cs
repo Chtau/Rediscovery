@@ -13,7 +13,6 @@ namespace Rediscovery.Features.DesktopConfiguration
 {
     public class DesktopConfigurationViewModel : BaseViewModel
     {
-        private ILogger logger => DependencyService.Get<ILogger>() ?? new Logger();
         public IDataStoreGuid<DesktopConfigurationModel> Store => DependencyService.Get<IDataStoreGuid<DesktopConfigurationModel>>() ?? new DesktopConfigurationStore();
 
         public ObservableCollection<DesktopConfigurationModel> Items { get; set; }
@@ -52,7 +51,7 @@ namespace Rediscovery.Features.DesktopConfiguration
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                _logger.LogError(ex);
             }
             finally
             {

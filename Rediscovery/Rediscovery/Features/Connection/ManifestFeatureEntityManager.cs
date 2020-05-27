@@ -36,7 +36,7 @@ namespace Rediscovery.Features.Connection
                 }
             } catch (Exception ex)
             {
-                _logger.Error(ex);
+                _logger.LogError(ex);
             }
         }
 
@@ -53,7 +53,7 @@ namespace Rediscovery.Features.Connection
                     desktopStore.UpdateItem(config);
                 } catch (Exception ex)
                 {
-                    _logger.Error(ex);
+                    _logger.LogError(ex);
                 }
                 foreach (var item in manifest.SupportedFeatures)
                 {
@@ -82,7 +82,7 @@ namespace Rediscovery.Features.Connection
                 }
             } catch (Exception ex)
             {
-                _logger.Error(ex);
+                _logger.LogError(ex);
             }
         }
 

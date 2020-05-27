@@ -30,13 +30,13 @@ namespace Rediscovery.Features.DesktopFeatures
                     }
                     else
                     {
-                        _logger.Message($"No Profiles received for Feature Id:{featureId}");
+                        _logger.LogInformation($"No Profiles received for Feature Id:{featureId}");
                         callback?.Invoke(false, null);
                     }
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(ex);
+                    _logger.LogError(ex);
                 }
                 finally
                 {
@@ -58,13 +58,13 @@ namespace Rediscovery.Features.DesktopFeatures
                     }
                     else
                     {
-                        _logger.Message($"No Settings received for Feature Id:{featureId}");
+                        _logger.LogInformation($"No Settings received for Feature Id:{featureId}");
                         callback?.Invoke(false, null);
                     }
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(ex);
+                    _logger.LogError(ex);
                 }
                 finally
                 {
@@ -86,7 +86,7 @@ namespace Rediscovery.Features.DesktopFeatures
                     }
                 } catch (Exception ex)
                 {
-                    _logger.Error(ex);
+                    _logger.LogError(ex);
                 }
                 try
                 {
@@ -99,13 +99,13 @@ namespace Rediscovery.Features.DesktopFeatures
                     }
                     else
                     {
-                        _logger.Message($"No UI Archive received for Feature Id:{featureId}");
+                        _logger.LogInformation($"No UI Archive received for Feature Id:{featureId}");
                         callback?.Invoke(false, directory);
                     }
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(ex);
+                    _logger.LogError(ex);
                     callback?.Invoke(false, directory);
                 }
             });
