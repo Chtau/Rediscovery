@@ -38,7 +38,7 @@
     <button clrTabLink id="settings">Settings</button>
     <clr-tab-content>
       <div #settingContentWrapper class="settings-content-wrapper"></div>
-      <div>
+      <div *ngIf="!SettingUIReadonly">
         <button class="btn btn-success" [disabled]="!canSaveSetting" (click)="onSaveSetting()">Save</button>
       </div>
     </clr-tab-content>
@@ -50,12 +50,12 @@
         <select clrSelect name="options" [(ngModel)]="SelectedProfileId">
           <option *ngFor="let item of profiles" [value]="item.id">{{ item.displayName }}</option>
         </select>
-        <input style="margin-left: 25px;" clrInput placeholder="Profile" name="input" [(ngModel)]="SelectedProfileName" />
-        <button style="margin-left: 25px;margin-top: 10px;" class="btn btn-primary" (click)="onAddProfile()">Add Profile</button>
-        <button style="margin-top: 10px;" class="btn btn-danger" (click)="onDeleteProfile()">Delete</button>
+        <input [readonly]="ProfileUIReadonly" style="margin-left: 25px;" clrInput placeholder="Profile" name="input" [(ngModel)]="SelectedProfileName" />
+        <button *ngIf="!ProfileUIReadonly" style="margin-left: 25px;margin-top: 10px;" class="btn btn-primary" (click)="onAddProfile()">Add Profile</button>
+        <button *ngIf="!ProfileUIReadonly" style="margin-top: 10px;" class="btn btn-danger" (click)="onDeleteProfile()">Delete</button>
       </div>
       <div #profileContentWrapper class="profil-content-wrapper"></div>
-      <div>
+      <div *ngIf="!ProfileUIReadonly">
         <button class="btn btn-success" [disabled]="!canSaveProfile" (click)="onSaveProfile()">Save</button>
       </div>
     </clr-tab-content>

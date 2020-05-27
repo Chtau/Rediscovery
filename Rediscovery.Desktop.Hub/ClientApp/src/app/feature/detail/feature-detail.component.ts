@@ -30,6 +30,20 @@ export class FeatureDetailComponent implements AfterViewInit {
     }
   }
 
+  get ProfileUIReadonly(): boolean {
+    if (this.model) {
+      return this.model.profileUIReadonly;
+    }
+    return false;
+  }
+
+  get SettingUIReadonly(): boolean {
+    if (this.model) {
+      return this.model.settingsUIReadonly;
+    }
+    return false;
+  }
+
   get SelectedProfileName() : string {
     var curModel = this.getProfileModel();
     if (curModel) {

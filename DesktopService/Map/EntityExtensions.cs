@@ -73,7 +73,9 @@ namespace DesktopService.Map
                 HasProfiles = deviceFeatureDefinition.HasProfiles,
                 HasSettings = deviceFeatureDefinition.HasSettings,
                 Url = deviceFeatureDefinition.Url,
-                PluginDirectory = deviceFeatureDefinition.PluginDirectory
+                PluginDirectory = deviceFeatureDefinition.PluginDirectory,
+                ProfileUIReadonly = deviceFeatureDefinition.ProfileUIReadonly,
+                SettingsUIReadonly = deviceFeatureDefinition.SettingsUIReadonly
             };
         }
     }

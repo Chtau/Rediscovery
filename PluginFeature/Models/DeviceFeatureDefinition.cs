@@ -34,5 +34,9 @@ namespace PluginFeature.Models
         public string Url { get; set; }
 
         public string PluginDirectory { get; set; }
+
+        public bool SettingsUIReadonly { get; set; }
+
+        public bool ProfileUIReadonly { get; set; }
     }
 }

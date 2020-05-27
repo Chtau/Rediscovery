@@ -5,7 +5,9 @@ interface IDeviceFeature {
   minFeatureIntegrationPoint: string;
   minControlIntegrationPoint: string;
   hasSettings: boolean;
+  settingsUIReadonly: boolean;
   hasProfiles: boolean;
+  profileUIReadonly: boolean;
   author: string;
   documentation: string;
   url: string;

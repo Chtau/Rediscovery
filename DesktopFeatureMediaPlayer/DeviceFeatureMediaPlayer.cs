@@ -83,7 +83,9 @@ namespace DesktopFeatureMediaPlayer
                 Author = "Christoph Taucher",
                 Documentation = null,
                 HasProfiles = true,
+                ProfileUIReadonly = true,
                 HasSettings = false,
+                SettingsUIReadonly = true,
                 Url = null,
                 PluginDirectory = PluginDirectory
             };

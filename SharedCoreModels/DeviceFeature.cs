@@ -18,7 +18,11 @@ namespace SharedCoreModels
 
         public bool HasSettings { get; set; }
 
+        public bool SettingsUIReadonly { get; set; }
+
         public bool HasProfiles { get; set; }
+
+        public bool ProfileUIReadonly { get; set; }
 
         public string Author { get; set; }
 

@@ -37,6 +37,8 @@ namespace DesktopFeatureConsole
                 Author = "Christoph Taucher",
                 Documentation = null,
                 HasProfiles = false,
+                ProfileUIReadonly = false,
+                SettingsUIReadonly = false,
                 HasSettings = false,
                 Url = null,
                 PluginDirectory = PluginDirectory,
