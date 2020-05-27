@@ -3,6 +3,9 @@
   <clr-dg-column>Version</clr-dg-column>
 
   <clr-dg-row *ngFor="let featureModel of featureModels">
+    <clr-dg-action-overflow>
+      <button class="action-item" (click)="onViewFeature(featureModel)">View</button>
+    </clr-dg-action-overflow>
       <clr-dg-cell>{{featureModel.displayName}}</clr-dg-cell>
       <clr-dg-cell>{{featureModel.version}}</clr-dg-cell>
   </clr-dg-row>

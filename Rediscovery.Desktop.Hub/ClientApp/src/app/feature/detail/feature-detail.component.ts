@@ -236,7 +236,7 @@ export class FeatureDetailComponent implements AfterViewInit {
   }
 
   private onSetSettingsContentModel(): void {
-    if (this.settingContentWrapper && this.settingContentWrapper.nativeElement && this.modelSettings) {
+    if (this.settingContentWrapper && this.settingContentWrapper.nativeElement && this.settingContentWrapper.nativeElement.children && this.settingContentWrapper.nativeElement.children.length > 0 && this.modelSettings) {
       this.settingContentWrapper.nativeElement.children[0].setAttribute('setModel', this.modelSettings.content);
     }
   }
@@ -250,7 +250,7 @@ export class FeatureDetailComponent implements AfterViewInit {
   }
 
   private onSetProfileContentModel(profile: IDeviceFeatureProfil): void {
-    if (this.profileContentWrapper && this.profileContentWrapper.nativeElement) {
+    if (this.profileContentWrapper && this.profileContentWrapper.nativeElement && this.profileContentWrapper.nativeElement.children && this.profileContentWrapper.nativeElement.children.length > 0) {
       this.profileContentWrapper.nativeElement.children[0].setAttribute('setModel', profile.profileData);
     }
   }
