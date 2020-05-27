@@ -99,14 +99,14 @@ export class FeatureDetailComponent implements AfterViewInit {
             return true;
           }
         });
-        curModel.profileData = value.profileData;
+        curModel.profileData = value;
         this.canSaveProfile = true;
       });
       this.onSetProfilesDropModel();
     });
     this.featureService.featuresSettingUIReceived.subscribe((result: IEntityContent<string, string>) => {
       this.setupWebElementUI(result, this.settingContentWrapper, (value) => {
-        this.modelSettings.content.data = value.data;
+        this.modelSettings.content.data = value;
         this.canSaveSetting = true;
       });
       this.onSetSettingsContentModel();
@@ -202,6 +202,7 @@ export class FeatureDetailComponent implements AfterViewInit {
   onAddProfile(): void {
     var newProfile: IDeviceFeatureProfil = {
       id: "-1",
+      featureId: this.model.id,
       displayName: "New Profile",
       profileData: null
     };
@@ -236,7 +237,7 @@ export class FeatureDetailComponent implements AfterViewInit {
 
   private onSetSettingsContentModel(): void {
     if (this.settingContentWrapper && this.settingContentWrapper.nativeElement && this.modelSettings) {
-      this.settingContentWrapper.nativeElement.children[0].setAttribute('setModel', JSON.stringify(this.modelSettings));
+      this.settingContentWrapper.nativeElement.children[0].setAttribute('setModel', this.modelSettings.content);
     }
   }
 
@@ -250,7 +251,7 @@ export class FeatureDetailComponent implements AfterViewInit {
 
   private onSetProfileContentModel(profile: IDeviceFeatureProfil): void {
     if (this.profileContentWrapper && this.profileContentWrapper.nativeElement) {
-      this.profileContentWrapper.nativeElement.children[0].setAttribute('setModel', JSON.stringify(profile));
+      this.profileContentWrapper.nativeElement.children[0].setAttribute('setModel', profile.profileData);
     }
   }
 

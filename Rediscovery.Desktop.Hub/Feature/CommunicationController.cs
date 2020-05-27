@@ -182,13 +182,6 @@ namespace Rediscovery.Desktop.Hub.Feature
             try
             {
                 var mainWindow = ElectronNET.API.Electron.WindowManager.BrowserWindows.First();
-                if (e.Content != null)
-                {
-                    foreach (var item in e.Content)
-                    {
-                        item.ProfileData = item.ProfileData?.ToString();
-                    }
-                }
                 ElectronNET.API.Electron.IpcMain.Send(mainWindow, "features-profiles-ipc", e);
             }
             catch (Exception ex)

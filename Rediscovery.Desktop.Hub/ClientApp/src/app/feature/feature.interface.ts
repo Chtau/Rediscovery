@@ -13,11 +13,13 @@ interface IDeviceFeature {
 }
 
 interface IDeviceFeatureSetting {
-  data: any;
+  featureId: string;
+  data: string;
 }
 
 interface IDeviceFeatureProfil {
   id: string;
+  featureId: string;
   displayName: string;
   profileData: string;
 }

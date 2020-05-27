@@ -62,7 +62,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
             {
                 Dispatcher.BeginInvokeOnMainThread(() =>
                 {
-                    hybridWebView.SetProfileChanged(viewModel.SelectedProfile?.ProfileData?.ToString());
+                    hybridWebView.SetProfileChanged(viewModel.SelectedProfile?.ProfileData);
                 });
             });
             hybridWebView.RegisterLogger((data) =>

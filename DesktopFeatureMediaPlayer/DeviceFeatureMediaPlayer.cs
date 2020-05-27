@@ -117,7 +117,7 @@ namespace DesktopFeatureMediaPlayer
             {
                 foreach (var item in pro)
                 {
-                    profiles.Add(new DeviceFeatureProfil(item.Id.ToString(), item.DisplayName, Newtonsoft.Json.JsonConvert.SerializeObject(item)));
+                    profiles.Add(new DeviceFeatureProfil(GetDeviceFeatureInfo().Id, item.Id.ToString(), item.DisplayName, Newtonsoft.Json.JsonConvert.SerializeObject(item)));
                 }
             }
             return profiles;
@@ -202,7 +202,7 @@ namespace DesktopFeatureMediaPlayer
         {
             var profiles = MediaPlayerDefaultProfiles.GetProfileConfigurations(ProfileConfigurationPath());
             var id = new Guid(deviceFeatureProfil.Id);
-            var profile = Newtonsoft.Json.JsonConvert.DeserializeObject<ProfileConfiguration>(deviceFeatureProfil.ProfileData?.ToString());
+            var profile = Newtonsoft.Json.JsonConvert.DeserializeObject<ProfileConfiguration>(deviceFeatureProfil.ProfileData);
             if (profile == null)
             {
                 pluginLogger.LogCritical("Try to save profile but ProfileData could not be cast to the Object [ProfileConfiguration]");

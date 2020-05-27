@@ -11,11 +11,13 @@ namespace PluginFeature.Models
 
         }
 
-        public DeviceFeatureSetting(object data)
+        public DeviceFeatureSetting(Guid featureId, string data)
         {
+            FeatureId = featureId;
             Data = data;
         }
 
-        public object Data { get; set; }
+        public Guid FeatureId { get; set; }
+        public string Data { get; set; }
     }
 }

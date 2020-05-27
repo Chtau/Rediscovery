@@ -18,13 +18,6 @@ class JSONComponent extends HTMLElement {
       if (newValue) {
         try {
           var newValueObj = JSON.parse(newValue);
-          try {
-            if (newValueObj?.profileData) {
-              newValueObj.profileData = JSON.parse(newValueObj.profileData);
-            }
-          } catch (error) {
-            
-          }
           this.model = newValueObj;
           this.setContent(newValueObj);  
         } catch (error) {
@@ -49,7 +42,7 @@ class JSONComponent extends HTMLElement {
           width: 100%;
         }
         pre {
-          height: 100%;
+          min-height: 100%;
           width: 100%;
           margin: 0;
           padding: 5px;
