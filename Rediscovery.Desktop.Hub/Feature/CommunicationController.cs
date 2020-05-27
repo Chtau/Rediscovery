@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PluginFeature.Models;
 using Rediscovery.Desktop.Hub.Feature.InternalIPCModels;
+using Rediscovery.Desktop.Hub.Logging;
 using SharedCoreModels;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,7 @@ namespace Rediscovery.Desktop.Hub.Feature
                 State = CommunicationBase.ConnectionState.None,
                 Token = null
             };
-            _hub.Init(new CommunicationBase.Logger(), "/remote/resource/hub");
+            _hub.Init(_logger.ToSharedLogger(), "/remote/resource/hub");
             _hub.ActiveDeviceInfoReceived += _deviceService_ActiveDeviceInfoReceived;
             _hub.DeviceInfoReceived += _deviceService_DeviceInfoReceived;
             _hub.LogEntryReceived += _loggerService_LoggerDataReceived;
