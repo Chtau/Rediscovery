@@ -75,7 +75,8 @@ export class FeatureDetailComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    
+    this.onSetProfilesDropModel();
+    this.onSetSettingsContentModel();
   }
 
   private onLoadModel(id: string): void {
