@@ -22,4 +22,8 @@ export class FeatureListOverviewComponent {
   onViewFeature(featureModel: IDeviceFeature): void {
     this.route.navigate(['/features/',featureModel.id])
   }
+
+  onRefreshFeatures(): void {
+    this.featureService.requestAllFeatures();
+  }
 }

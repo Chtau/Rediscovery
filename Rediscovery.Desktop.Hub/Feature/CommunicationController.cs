@@ -162,6 +162,16 @@ namespace Rediscovery.Desktop.Hub.Feature
                     logger.LogError(ex.ToString());
                 }
             });
+            ElectronNET.API.Electron.IpcMain.On("request-all-features-ipc", (args) => {
+                try
+                {
+                    _hub.RequestAllFeatures();
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex.ToString());
+                }
+            });
         }
 
         private void _hub_FeatureSettingsReceived(object sender, EntityContent<Guid, PluginFeature.Models.DeviceFeatureSetting> e)

@@ -63,6 +63,14 @@ export class FeatureService {
     }
   }
 
+  public requestAllFeatures(): void {
+    if (environment.isElectron === true) {
+      this.ipc.send('request-all-features-ipc');
+    } else {
+      
+    }
+  }
+
   public getFeatures(): IDeviceFeature[] {
     return this.models;
   }
