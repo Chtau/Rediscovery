@@ -13,7 +13,7 @@ namespace CommunicationResourceConsumer
         event EventHandler<List<SharedCoreModels.DeviceInfo>> DeviceInfoReceived;
         event EventHandler<List<SharedCoreModels.DeviceInfo>> PendingAuthenticationDeviceReceived;
         event EventHandler<List<SharedCoreModels.DeviceFeature>> ServiceFeatureReceived;
-        event EventHandler<SharedCoreModels.LoggerEntryModel> LogEntryReceived;
+        event EventHandler<SharedBase.Logging.LoggerEntry> LogEntryReceived;
         event EventHandler<bool> ConnectionStateChanged;
         event EventHandler<SharedCoreModels.EntityContent<Guid, byte[]>> FeatureProfileUIReceived;
         event EventHandler<SharedCoreModels.EntityContent<Guid, byte[]>> FeatureSettingUIReceived;
@@ -34,6 +34,6 @@ namespace CommunicationResourceConsumer
         void RequestFeatureDeleteProfile(SharedCoreModels.EntityContent<Guid, DeviceFeatureProfil> profileEntity);
         void RequestFeatureSaveSetting(SharedCoreModels.EntityContent<Guid, DeviceFeatureSetting> settingEntity);
         void RequestFeatureDetails(Guid featureId);
-        void LogEntry(SharedCoreModels.LoggerEntryModel loggerEntry);
+        void LogEntry(SharedBase.Logging.LoggerEntry loggerEntry);
     }
 }

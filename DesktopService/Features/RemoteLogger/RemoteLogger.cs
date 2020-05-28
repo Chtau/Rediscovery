@@ -35,35 +35,35 @@ namespace DesktopService.Features.Logger
 
             if (_config.EventId == 0 || _config.EventId == eventId.Id)
             {
-                _config.RemoteResourcesLiveLogger.Log(new SharedCoreModels.LoggerEntryModel
+                _config.RemoteResourcesLiveLogger.Log(new SharedBase.Logging.LoggerEntry
                 {
                     Id = eventId.Id.ToString(),
                     LogLevel = GetLoggerType(logLevel),
-                    Text = formatter(state, exception),
+                    Message = formatter(state, exception),
                     Time = DateTime.Now
                 });
             }
         }
 
-        private SharedCoreModels.LoggerEntryModel.LoggerType GetLoggerType(LogLevel logLevel)
+        private SharedBase.Logging.LoggerEntry.LoggerType GetLoggerType(LogLevel logLevel)
         {
             switch (logLevel)
             {
                 case LogLevel.Trace:
-                    return SharedCoreModels.LoggerEntryModel.LoggerType.Trace;
+                    return SharedBase.Logging.LoggerEntry.LoggerType.Trace;
                 case LogLevel.Debug:
-                    return SharedCoreModels.LoggerEntryModel.LoggerType.Debug;
+                    return SharedBase.Logging.LoggerEntry.LoggerType.Debug;
                 case LogLevel.Information:
                 case LogLevel.None:
-                    return SharedCoreModels.LoggerEntryModel.LoggerType.Information;
+                    return SharedBase.Logging.LoggerEntry.LoggerType.Information;
                 case LogLevel.Warning:
-                    return SharedCoreModels.LoggerEntryModel.LoggerType.Warning;
+                    return SharedBase.Logging.LoggerEntry.LoggerType.Warning;
                 case LogLevel.Error:
-                    return SharedCoreModels.LoggerEntryModel.LoggerType.Error;
+                    return SharedBase.Logging.LoggerEntry.LoggerType.Error;
                 case LogLevel.Critical:
-                    return SharedCoreModels.LoggerEntryModel.LoggerType.Critical;
+                    return SharedBase.Logging.LoggerEntry.LoggerType.Critical;
             }
-            return SharedCoreModels.LoggerEntryModel.LoggerType.Information;
+            return SharedBase.Logging.LoggerEntry.LoggerType.Information;
         }
     }
 }

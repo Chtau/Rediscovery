@@ -12,7 +12,7 @@ namespace CommunicationResourceProvider
         void SendDeviceInfo();
         void SendServiceFeature();
         void SendPendingAuthenticationDevices();
-        void SendLoggerEntry(SharedCoreModels.LoggerEntryModel liveLoggerModel);
+        void SendLoggerEntry(SharedBase.Logging.LoggerEntry liveLoggerModel);
         void SendFeatureDetails(Guid featureId);
         void SendFeatureDetailsUI(Guid featureId);
     }

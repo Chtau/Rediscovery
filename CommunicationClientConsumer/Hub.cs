@@ -194,27 +194,6 @@ namespace CommunicationClientConsumer
             }
         }
 
-        public void LogEntry(SharedCoreModels.LoggerEntryModel loggerEntry)
-        {
-            if (loggerEntry != null)
-            {
-                Task.Run(async () =>
-                {
-                    try
-                    {
-                        if (loggerEntry != null)
-                        {
-                            await _connectionProvider.CurrentConnection.InvokeAsync("LogEntry", loggerEntry);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex);
-                    }
-                });
-            }
-        }
-
         public async Task<ZipArchive> GetUIArchive(Guid featureId)
         {
             var response = await GetResponseMessage(featureId, "/features/ui/");
@@ -297,6 +276,24 @@ namespace CommunicationClientConsumer
             {
                 _logger.LogError(ex, $"HttpClient Feature (Id:{featureId}) failed to get response message on Url:{subUrl}");
                 return new HttpResponseMessage(System.Net.HttpStatusCode.ExpectationFailed);
+            }
+        }
+
+        public void LogEntry(SharedBase.Logging.LoggerEntry e)
+        {
+            if (e != null)
+            {
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        await _connectionProvider.CurrentConnection.InvokeAsync("LogEntry", e);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex);
+                    }
+                });
             }
         }
     }

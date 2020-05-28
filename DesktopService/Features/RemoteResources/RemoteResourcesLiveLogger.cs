@@ -24,7 +24,7 @@ namespace DesktopService.Features.RemoteResources
             _remoteResourcesSenderService = remoteResourcesSenderService;
         }
 
-        public void Log(LoggerEntryModel liveLoggerModel)
+        public void Log(SharedBase.Logging.LoggerEntry liveLoggerModel)
         {
             try
             {

@@ -319,7 +319,7 @@ namespace Rediscovery.Desktop.Hub.Feature
             }
         }
 
-        private void _loggerService_LoggerDataReceived(object sender, LoggerEntryModel e)
+        private void _loggerService_LoggerDataReceived(object sender, SharedBase.Logging.LoggerEntry e)
         {
             try
             {

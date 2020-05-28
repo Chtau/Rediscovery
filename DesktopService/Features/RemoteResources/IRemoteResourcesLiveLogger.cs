@@ -7,6 +7,6 @@ namespace DesktopService.Features.RemoteResources
 {
     public interface IRemoteResourcesLiveLogger
     {
-        void Log(LoggerEntryModel liveLoggerModel);
+        void Log(SharedBase.Logging.LoggerEntry liveLoggerModel);
     }
 }

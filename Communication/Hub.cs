@@ -15,7 +15,7 @@ namespace CommunicationResourceConsumer
         public event EventHandler<List<SharedCoreModels.DeviceInfo>> DeviceInfoReceived;
         public event EventHandler<List<SharedCoreModels.DeviceInfo>> PendingAuthenticationDeviceReceived;
         public event EventHandler<List<SharedCoreModels.DeviceFeature>> ServiceFeatureReceived;
-        public event EventHandler<SharedCoreModels.LoggerEntryModel> LogEntryReceived;
+        public event EventHandler<SharedBase.Logging.LoggerEntry> LogEntryReceived;
         public event EventHandler<bool> ConnectionStateChanged;
         public event EventHandler<SharedCoreModels.EntityContent<Guid, byte[]>> FeatureProfileUIReceived;
         public event EventHandler<SharedCoreModels.EntityContent<Guid, byte[]>> FeatureSettingUIReceived;
@@ -130,7 +130,7 @@ namespace CommunicationResourceConsumer
                                 ServiceFeatureReceived?.Invoke(this, deviceInfos);
                                 _logger.LogTrace($"[{nameof(ServiceFeatureReceived)}] @{DateTime.Now}");
                             });
-                            connection.On<SharedCoreModels.LoggerEntryModel>("LogEntry", (entry) =>
+                            connection.On<SharedBase.Logging.LoggerEntry>("LogEntry", (entry) =>
                             {
                                 LogEntryReceived?.Invoke(this, entry);
                             });
@@ -376,7 +376,7 @@ namespace CommunicationResourceConsumer
                 return false;
         }
 
-        public void LogEntry(SharedCoreModels.LoggerEntryModel loggerEntry)
+        public void LogEntry(SharedBase.Logging.LoggerEntry loggerEntry)
         {
             if (_connectionProvider.IsConnected)
             {

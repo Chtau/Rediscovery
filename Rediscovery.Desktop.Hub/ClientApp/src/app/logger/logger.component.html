@@ -57,8 +57,8 @@
         <li tabindex="-1" class="shell-system-li" 
         [ngClass]="{'shell-critical': entry.type === 5, 'shell-error': entry.type == 4, 'shell-warning': entry.type == 3, 'shell-information': entry.type == 2, 'shell-debug': entry.type == 1, 'shell-trace': entry.type == 0}" 
         *ngFor="let entry of entries">
-          {{ entry.text }}
-          <span *ngIf="entry.subText != null" class="col">{{entry.subText}}</span>
+          {{ entry.message }}
+          <span *ngIf="entry.module != null" class="col">{{entry.module}}</span>
         </li>
       </ul>
               <!--<li>

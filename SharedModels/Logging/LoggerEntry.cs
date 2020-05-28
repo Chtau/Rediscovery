@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedCoreModels
+namespace SharedBase.Logging
 {
-
-    public class LoggerEntryModel
+    public class LoggerEntry
     {
         public enum LoggerType
         {
@@ -27,15 +26,26 @@ namespace SharedCoreModels
                 Type = (int)logLevel;
             }
         }
-        public int Type { get;private set; }
+        public int Type { get; private set; }
 
         public string Id { get; set; }
 
-        public string Text { get; set; }
+        public string Message { get; set; }
 
-        public string SubText { get; set; }
+        public string Module { get; set; }
 
         public DateTime Time { get; set; }
 
+        public static LoggerEntry CreateEntry(string module, string message, LoggerType loggerType)
+        {
+            return new LoggerEntry
+            {
+                Id = Guid.NewGuid().ToString(),
+                LogLevel = loggerType,
+                Message = message,
+                Module = module,
+                Time = DateTime.Now,
+            };
+        }
     }
 }

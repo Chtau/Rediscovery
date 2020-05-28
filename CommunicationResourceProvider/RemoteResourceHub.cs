@@ -226,7 +226,7 @@ namespace CommunicationResourceProvider
         }
 
         [Authorize(Roles = AuthorizationRoles.AdminRole)]
-        public void LogEntry(SharedCoreModels.LoggerEntryModel loggerEntry)
+        public void LogEntry(SharedBase.Logging.LoggerEntry loggerEntry)
         {
             // TODO: refactor create Log from SharedCoreModels.LoggerEntryModel
             try
@@ -235,23 +235,23 @@ namespace CommunicationResourceProvider
                 {
                     switch (loggerEntry.LogLevel)
                     {
-                        case SharedCoreModels.LoggerEntryModel.LoggerType.Trace:
-                            _logger.LogTrace(loggerEntry.Text, loggerEntry.SubText, loggerEntry.Time, loggerEntry.Id);
+                        case SharedBase.Logging.LoggerEntry.LoggerType.Trace:
+                            _logger.LogTrace(loggerEntry.Message);
                             break;
-                        case SharedCoreModels.LoggerEntryModel.LoggerType.Debug:
-                            _logger.LogDebug(loggerEntry.Text, loggerEntry.SubText, loggerEntry.Time, loggerEntry.Id);
+                        case SharedBase.Logging.LoggerEntry.LoggerType.Debug:
+                            _logger.LogDebug(loggerEntry.Message);
                             break;
-                        case SharedCoreModels.LoggerEntryModel.LoggerType.Information:
-                            _logger.LogInformation(loggerEntry.Text, loggerEntry.SubText, loggerEntry.Time, loggerEntry.Id);
+                        case SharedBase.Logging.LoggerEntry.LoggerType.Information:
+                            _logger.LogInformation(loggerEntry.Message);
                             break;
-                        case SharedCoreModels.LoggerEntryModel.LoggerType.Warning:
-                            _logger.LogWarning(loggerEntry.Text, loggerEntry.SubText, loggerEntry.Time, loggerEntry.Id);
+                        case SharedBase.Logging.LoggerEntry.LoggerType.Warning:
+                            _logger.LogWarning(loggerEntry.Message);
                             break;
-                        case SharedCoreModels.LoggerEntryModel.LoggerType.Error:
-                            _logger.LogError(loggerEntry.Text, loggerEntry.SubText, loggerEntry.Time, loggerEntry.Id);
+                        case SharedBase.Logging.LoggerEntry.LoggerType.Error:
+                            _logger.LogError(loggerEntry.Message);
                             break;
-                        case SharedCoreModels.LoggerEntryModel.LoggerType.Critical:
-                            _logger.LogCritical(loggerEntry.Text, loggerEntry.SubText, loggerEntry.Time, loggerEntry.Id);
+                        case SharedBase.Logging.LoggerEntry.LoggerType.Critical:
+                            _logger.LogCritical(loggerEntry.Message);
                             break;
                         default:
                             break;

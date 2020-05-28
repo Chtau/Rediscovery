@@ -9,8 +9,8 @@ export enum LoggerType {
 
 export interface ILoggerEntry {
   id: string;
-  text: string;
-  subText?: string;
+  message: string;
+  module: string;
   time: Date;
   type: LoggerType;
 };

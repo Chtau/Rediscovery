@@ -72,7 +72,7 @@ namespace CommunicationResourceProvider
             }
         }
 
-        public void SendLoggerEntry(SharedCoreModels.LoggerEntryModel liveLoggerModel)
+        public void SendLoggerEntry(SharedBase.Logging.LoggerEntry liveLoggerModel)
         {
             try
             {

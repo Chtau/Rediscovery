@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using SharedBase.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
