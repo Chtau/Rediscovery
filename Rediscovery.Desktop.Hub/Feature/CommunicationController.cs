@@ -39,7 +39,9 @@ namespace Rediscovery.Desktop.Hub.Feature
                 State = CommunicationBase.ConnectionState.None,
                 Token = null
             };
-            _hub.Init(_logger.ToSharedLogger(), "/remote/resource/hub");
+            var log = _logger.ToSharedLogger();
+            log.EntryAdded += Log_EntryAdded;
+            _hub.Init(log, "/remote/resource/hub");
             _hub.ActiveDeviceInfoReceived += _deviceService_ActiveDeviceInfoReceived;
             _hub.DeviceInfoReceived += _deviceService_DeviceInfoReceived;
             _hub.LogEntryReceived += _loggerService_LoggerDataReceived;
@@ -56,12 +58,15 @@ namespace Rediscovery.Desktop.Hub.Feature
                 try
                 {
                     var param = Newtonsoft.Json.JsonConvert.DeserializeObject<PendingAuthenticationResolve>(args?.ToString());
-                    _logger.LogDebug($"Resolve pending device authentication for Id:{param.Id} Accept:{param.Accept}");
+                    string msg = $"Resolve pending device authentication for Id:{param.Id} Accept:{param.Accept}";
+                    _logger.LogDebug(msg);
+                    OnRemoteLogEntry(msg, SharedBase.Logging.LoggerEntry.LoggerType.Debug);
                     _hub.RequestResolvePendingAuthenticationDevice(param.Id, param.Accept);
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error in IPC listener from UI [resolvependingdevice-ipc]");
+                    OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
                 }
             });
             ElectronNET.API.Electron.IpcMain.On("deletedeviceinfo-ipc", (args) =>
@@ -69,12 +74,15 @@ namespace Rediscovery.Desktop.Hub.Feature
                 try
                 {
                     var param = Newtonsoft.Json.JsonConvert.DeserializeObject<DeviceInfo>(args?.ToString());
-                    _logger.LogDebug($"Delete device for Id:{param.Id}");
+                    string msg = $"Delete device for Id:{param.Id}";
+                    _logger.LogDebug(msg);
+                    OnRemoteLogEntry(msg, SharedBase.Logging.LoggerEntry.LoggerType.Debug);
                     _hub.RequestDeleteDevice(param);
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error in IPC listener from UI [deletedeviceinfo-ipc]");
+                    OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
                 }
             });
             ElectronNET.API.Electron.IpcMain.On("updatedeviceinfo-ipc", (args) =>
@@ -82,12 +90,15 @@ namespace Rediscovery.Desktop.Hub.Feature
                 try
                 {
                     var param = Newtonsoft.Json.JsonConvert.DeserializeObject<DeviceInfo>(args?.ToString());
-                    _logger.LogDebug($"Update device authentication for Id:{param.Id}");
+                    string msg = $"Update device authentication for Id:{param.Id}";
+                    _logger.LogDebug(msg);
+                    OnRemoteLogEntry(msg, SharedBase.Logging.LoggerEntry.LoggerType.Debug);
                     _hub.RequestUpdateDevice(param);
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error in IPC listener from UI [updatedeviceinfo-ipc]");
+                    OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
                 }
             });
             ElectronNET.API.Electron.IpcMain.On("open-directory", async (args) => {
@@ -101,12 +112,18 @@ namespace Rediscovery.Desktop.Hub.Feature
                             dir += System.IO.Path.DirectorySeparatorChar;
                         }
                         if (System.IO.Directory.Exists(dir))
+                        {
                             await ElectronNET.API.Electron.Shell.ShowItemInFolderAsync(dir);
+                        } else
+                        {
+                            OnRemoteLogEntry($"UI tried to open Directory (\"{dir}\") but it don't exist.", SharedBase.Logging.LoggerEntry.LoggerType.Debug);
+                        }
                     }
                 }
                 catch (Exception ex)
                 {
                     logger.LogError(ex.ToString());
+                    OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
                 }
             });
             ElectronNET.API.Electron.IpcMain.On("request-features-detail-ipc", (args) => {
@@ -118,6 +135,7 @@ namespace Rediscovery.Desktop.Hub.Feature
                 catch (Exception ex)
                 {
                     logger.LogError(ex.ToString());
+                    OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
                 }
             });
             ElectronNET.API.Electron.IpcMain.On("request-features-detail-ui-ipc", (args) => {
@@ -128,6 +146,7 @@ namespace Rediscovery.Desktop.Hub.Feature
                 } catch (Exception ex)
                 {
                     logger.LogError(ex.ToString());
+                    OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
                 }
             });
             ElectronNET.API.Electron.IpcMain.On("request-features-save-profile-ipc", (args) => {
@@ -139,6 +158,7 @@ namespace Rediscovery.Desktop.Hub.Feature
                 catch (Exception ex)
                 {
                     logger.LogError(ex.ToString());
+                    OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
                 }
             });
             ElectronNET.API.Electron.IpcMain.On("request-features-delete-profile-ipc", (args) => {
@@ -150,6 +170,7 @@ namespace Rediscovery.Desktop.Hub.Feature
                 catch (Exception ex)
                 {
                     logger.LogError(ex.ToString());
+                    OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
                 }
             });
             ElectronNET.API.Electron.IpcMain.On("request-features-save-setting-ipc", (args) => {
@@ -161,6 +182,7 @@ namespace Rediscovery.Desktop.Hub.Feature
                 catch (Exception ex)
                 {
                     logger.LogError(ex.ToString());
+                    OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
                 }
             });
             ElectronNET.API.Electron.IpcMain.On("request-all-features-ipc", (args) => {
@@ -171,8 +193,14 @@ namespace Rediscovery.Desktop.Hub.Feature
                 catch (Exception ex)
                 {
                     logger.LogError(ex.ToString());
+                    OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
                 }
             });
+        }
+
+        private void Log_EntryAdded(object sender, SharedBase.Logging.LoggerEntry e)
+        {
+            OnRemoteLogEntry(e.Message, e.LogLevel);
         }
 
         private void _hub_FeatureSettingsReceived(object sender, EntityContent<Guid, PluginFeature.Models.DeviceFeatureSetting> e)
@@ -185,6 +213,7 @@ namespace Rediscovery.Desktop.Hub.Feature
             catch (Exception ex)
             {
                 _logger.LogError(ex, "FeatureSettingsReceived via IPC from underlying connection");
+                OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
             }
         }
 
@@ -198,6 +227,7 @@ namespace Rediscovery.Desktop.Hub.Feature
             catch (Exception ex)
             {
                 _logger.LogError(ex, "FeatureProfilesReceived via IPC from underlying connection");
+                OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
             }
         }
 
@@ -212,6 +242,7 @@ namespace Rediscovery.Desktop.Hub.Feature
             catch (Exception ex)
             {
                 _logger.LogError(ex, "FeatureSettingUIReceived via IPC from underlying connection");
+                OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
             }
         }
 
@@ -226,6 +257,7 @@ namespace Rediscovery.Desktop.Hub.Feature
             catch (Exception ex)
             {
                 _logger.LogError(ex, "FeatureProfileUIReceived via IPC from underlying connection");
+                OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
             }
         }
 
@@ -263,6 +295,7 @@ namespace Rediscovery.Desktop.Hub.Feature
             catch (Exception ex)
             {
                 _logger.LogError(ex, "OnCreateHtmlContentFromByteArrayZipArchive");
+                OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
                 return fallback;
             }
         }
@@ -277,6 +310,7 @@ namespace Rediscovery.Desktop.Hub.Feature
             catch (Exception ex)
             {
                 _logger.LogError(ex, "ConnectionStateChanged via IPC from underlying connection");
+                OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
             }
         }
 
@@ -290,6 +324,7 @@ namespace Rediscovery.Desktop.Hub.Feature
             catch (Exception ex)
             {
                 _logger.LogError(ex, "PendingAuthenticationDeviceReceived via IPC from Service");
+                OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
             }
         }
 
@@ -303,6 +338,7 @@ namespace Rediscovery.Desktop.Hub.Feature
             catch (Exception ex)
             {
                 _logger.LogError(ex, "ActiveDeviceInfoReceived via IPC from Service");
+                OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
             }
         }
 
@@ -316,6 +352,7 @@ namespace Rediscovery.Desktop.Hub.Feature
             catch (Exception ex)
             {
                 _logger.LogError(ex, "DeviceFeatureReceived via IPC from Service");
+                OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
             }
         }
 
@@ -329,6 +366,7 @@ namespace Rediscovery.Desktop.Hub.Feature
             catch (Exception ex)
             {
                 _logger.LogError(ex, "LoggerDataReceived via IPC from Service");
+                OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
             }
         }
 
@@ -341,7 +379,13 @@ namespace Rediscovery.Desktop.Hub.Feature
             } catch (Exception ex)
             {
                 _logger.LogError(ex, "DeviceInfoReceived via IPC from Service");
+                OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
             }
+        }
+
+        private void OnRemoteLogEntry(string message, SharedBase.Logging.LoggerEntry.LoggerType loggerType)
+        {
+            _hub?.LogEntry(SharedBase.Logging.LoggerEntry.CreateEntry(nameof(Rediscovery.Desktop.Hub), message, loggerType));
         }
 
         [HttpGet]
@@ -356,14 +400,21 @@ namespace Rediscovery.Desktop.Hub.Feature
                     {
                         if (listener)
                         {
+                            OnRemoteLogEntry("Listener response valid!", SharedBase.Logging.LoggerEntry.LoggerType.Trace);
                             _hub.RequestAllData();
                         }
                         else
-                            _logger.LogWarning("Listener response not valid");
+                        {
+                            string msg = "Listener response not valid";
+                            _logger.LogWarning(msg);
+                            OnRemoteLogEntry(msg, SharedBase.Logging.LoggerEntry.LoggerType.Warning);
+                        }
                     });
                 } else
                 {
-                    _logger.LogWarning("Could not Authenticate for remote resource access");
+                    string msg = "Could not Authenticate for remote resource access";
+                    _logger.LogWarning(msg);
+                    OnRemoteLogEntry(msg, SharedBase.Logging.LoggerEntry.LoggerType.Warning);
                 }
             });
             return true;

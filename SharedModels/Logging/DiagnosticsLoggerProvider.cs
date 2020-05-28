@@ -24,6 +24,8 @@ namespace SharedBase.Logging
         }
         #endregion
 
+        public event EventHandler<LoggerEntry> EntryAdded;
+
         public void LogCritical(string message, params object[] args)
         {
             if (args?.Length > 0)

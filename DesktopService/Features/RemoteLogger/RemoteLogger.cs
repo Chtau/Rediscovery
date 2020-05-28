@@ -28,6 +28,7 @@ namespace DesktopService.Features.Logger
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
+            // TEST Message start with => [FeatureSettingsReceived]
             if (!IsEnabled(logLevel))
             {
                 return;

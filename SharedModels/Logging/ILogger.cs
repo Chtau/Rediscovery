@@ -6,6 +6,7 @@ namespace SharedBase.Logging
 {
     public interface ILogger
     {
+        event EventHandler<LoggerEntry> EntryAdded;
         void LogCritical(string message, params object[] args);
         void LogDebug(string message, params object[] args);
         void LogError(Exception exception);
