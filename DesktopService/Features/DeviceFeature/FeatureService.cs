@@ -9,6 +9,7 @@ using PluginFeature.Interfaces;
 using PluginFeature.Models;
 using System.IO;
 using System.IO.Compression;
+using Microsoft.Extensions.Logging;
 
 namespace DesktopService.Features.DeviceFeature
 {
@@ -18,14 +19,16 @@ namespace DesktopService.Features.DeviceFeature
         private readonly IHubContext<DeviceFeatureHub> _hubContext;
         private readonly SharedConfigurations.DesktopService.Models.AppConfiguration _appSettings;
         private readonly Features.Plugins.ILoadPlugins _loadPlugins;
+        private readonly ILogger<FeatureService> _logger;
 
         public event EventHandler ProfilesChanged;
         public event EventHandler SettingChanged;
 
-        public FeatureService(IHubContext<DeviceFeatureHub> hubContext,
+        public FeatureService(ILoggerFactory loggerFactory, IHubContext<DeviceFeatureHub> hubContext,
             IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> appOptions,
             Features.Plugins.ILoadPlugins loadPlugins)
         {
+            _logger = loggerFactory.CreateLogger<FeatureService>();
             _hubContext = hubContext;
             _appSettings = appOptions.Value;
             _loadPlugins = loadPlugins;
@@ -94,7 +97,7 @@ namespace DesktopService.Features.DeviceFeature
 
         private void ResponseToClient(Guid featureId, DeviceFeatureData data)
         {
-            System.Diagnostics.Debug.Print($"Feature (id: {featureId} profile: {data.ProfileId}) response =>" + data.Data);
+            _logger.LogTrace($"Feature (id: {featureId} profile: {data.ProfileId}) response =>" + data.Data);
             _hubContext.Clients.User(data.DeviceId).SendAsync("ClientResponse", featureId, data.ProfileId, data.Data);
         }
 

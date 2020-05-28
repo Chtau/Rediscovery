@@ -1,6 +1,7 @@
 ﻿using DesktopService.Features.RemoteResources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using PluginFeature.Models;
 using System;
 using System.Collections.Generic;
@@ -24,19 +25,21 @@ namespace DesktopService.Features.DeviceFeature
             return base.OnDisconnectedAsync(exception);
         }
 
+        private readonly ILogger<DeviceFeatureHub> _logger;
         private readonly IFeatureService _featureService;
         private readonly CommunicationResourceProvider.IRemoteResourcesSenderService _remoteResourcesSenderService;
 
-        public DeviceFeatureHub(IFeatureService featureService,
+        public DeviceFeatureHub(ILoggerFactory loggerFactory, IFeatureService featureService,
             CommunicationResourceProvider.IRemoteResourcesSenderService remoteResourcesSenderService)
         {
+            _logger = loggerFactory.CreateLogger<DeviceFeatureHub>();
             _featureService = featureService;
             _remoteResourcesSenderService = remoteResourcesSenderService;
         }
 
         public void ClientMessage(Guid featureId, string profileId, object data)
         {
-            System.Diagnostics.Debug.Print($"Feature (id: {featureId}) Message on Service received");
+            _logger.LogTrace($"Feature (id: {featureId}) Message on Service received");
             var feature = _featureService.GetFeature(featureId);
             if (feature != null)
             {
@@ -47,7 +50,7 @@ namespace DesktopService.Features.DeviceFeature
 
         public void ClientFeatureStart(Guid featureId)
         {
-            System.Diagnostics.Debug.Print($"Feature (id: {featureId}) START on Service received");
+            _logger.LogTrace($"Feature (id: {featureId}) START on Service received");
             var feature = _featureService.GetFeature(featureId);
             if (feature != null)
             {
@@ -57,7 +60,7 @@ namespace DesktopService.Features.DeviceFeature
 
         public void ClientFeatureStop(Guid featureId)
         {
-            System.Diagnostics.Debug.Print($"Feature (id: {featureId}) STOP on Service received");
+            _logger.LogTrace($"Feature (id: {featureId}) STOP on Service received");
             var feature = _featureService.GetFeature(featureId);
             if (feature != null)
             {

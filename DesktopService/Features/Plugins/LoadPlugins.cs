@@ -1,4 +1,5 @@
-﻿using PluginFeature.Interfaces;
+﻿using Microsoft.Extensions.Logging;
+using PluginFeature.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,9 +12,11 @@ namespace DesktopService.Features.Plugins
     public class LoadPlugins : ILoadPlugins
     {
         private readonly IPluginLogger _pluginLogger;
+        private readonly ILogger<LoadPlugins> _logger;
 
-        public LoadPlugins(IPluginLogger pluginLogger)
+        public LoadPlugins(ILoggerFactory loggerFactory, IPluginLogger pluginLogger)
         {
+            _logger = loggerFactory.CreateLogger<LoadPlugins>();
             _pluginLogger = pluginLogger;
         }
 
@@ -21,9 +24,16 @@ namespace DesktopService.Features.Plugins
         {
             if (System.IO.File.Exists(path))
             {
-                Console.WriteLine($"Loading Plugin from: {path}");
                 PluginLoadContext loadContext = new PluginLoadContext(path);
-                return loadContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(path)));
+                var result = loadContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(path)));
+                if (result != null)
+                    _logger.LogInformation($"Plugin successful loaded (Assembly:\"{result.GetName()}\" Path:\"{path}\")");
+                else
+                    _logger.LogCritical($"Failed to load Plugin (Path:\"{path}\")");
+                return result;
+            } else
+            {
+                _logger.LogWarning("Request Plugin on Path:\"{path}\" does not exist.");
             }
             return null;
         }
