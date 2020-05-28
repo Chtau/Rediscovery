@@ -127,7 +127,7 @@ namespace DesktopService
             loggerFactory.AddRemoteLogger(o =>
             {
                 o.RemoteResourcesLiveLogger = app.ApplicationServices.GetRequiredService<Features.RemoteResources.IRemoteResourcesLiveLogger>();
-                o.LogLevel = LogLevel.Trace;
+                o.LogLevel = LogLevel.Trace; //TODO: make log level a configuration option
             });
             
             app.UseRouting();
