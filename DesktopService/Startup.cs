@@ -113,7 +113,7 @@ namespace DesktopService
         // Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddInternalLogger();
+            /*loggerFactory.AddInternalLogger();
             loggerFactory.AddInternalLogger(new InternalLoggerConfiguration
             {
                 LogLevel = LogLevel.Debug,
@@ -123,7 +123,7 @@ namespace DesktopService
             {
                 c.LogLevel = LogLevel.Information;
                 c.Color = ConsoleColor.Blue;
-            });
+            });*/
             loggerFactory.AddRemoteLogger(o =>
             {
                 o.RemoteResourcesLiveLogger = app.ApplicationServices.GetRequiredService<Features.RemoteResources.IRemoteResourcesLiveLogger>();
