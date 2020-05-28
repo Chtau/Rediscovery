@@ -73,6 +73,7 @@ namespace DesktopService.Features.DeviceFeature
         [AllowAnonymous]
         public void LogEntry(SharedCoreModels.LoggerEntryModel loggerEntry)
         {
+            // TODO: refactor create Log from SharedCoreModels.LoggerEntryModel
             try
             {
                 if (loggerEntry != null)

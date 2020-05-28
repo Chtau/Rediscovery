@@ -228,6 +228,7 @@ namespace CommunicationResourceProvider
         [Authorize(Roles = AuthorizationRoles.AdminRole)]
         public void LogEntry(SharedCoreModels.LoggerEntryModel loggerEntry)
         {
+            // TODO: refactor create Log from SharedCoreModels.LoggerEntryModel
             try
             {
                 if (loggerEntry != null)
