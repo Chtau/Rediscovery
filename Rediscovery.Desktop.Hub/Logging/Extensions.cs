@@ -10,8 +10,7 @@ namespace Rediscovery.Desktop.Hub.Logging
     {
         public static SharedBase.Logging.ILogger ToSharedLogger<T>(this ILogger<T> logger)
         {
-            // TODO: implement a Logger
-            return null;
+            return new Logger<T>(logger);
         }
     }
 }
