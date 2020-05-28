@@ -50,7 +50,11 @@ namespace PluginFeature.Models
             if (!internalCall)
             {
                 if (!result)
-                    System.Diagnostics.Debug.Fail("Device feature received data but is not registered (Service will not response to this request)");
+                {
+                    string message = "Device feature received data but is not registered (Service will not response to this request)";
+                    pluginLogger?.LogCritical(message);
+                    System.Diagnostics.Debug.Fail(message);
+                }
             }
             return result;
         }
@@ -88,7 +92,7 @@ namespace PluginFeature.Models
         {
             if (!OnIsRegister(deviceId, true))
                 registeredDevices.Add(new RegisteredDevice(deviceId));
-            System.Diagnostics.Debug.Print($"Register device (id:{deviceId})");
+            pluginLogger?.LogInformation($"Register device (id:{deviceId})");
         }
 
         public virtual void Unregister(string deviceId)
@@ -98,7 +102,7 @@ namespace PluginFeature.Models
                 var item = registeredDevices.First(x => string.Equals(x.DeviceId, deviceId, StringComparison.OrdinalIgnoreCase));
                 registeredDevices.Remove(item);
             }
-            System.Diagnostics.Debug.Print($"Unregister device (id:{deviceId})");
+            pluginLogger?.LogInformation($"Unregister device (id:{deviceId})");
         }
 
         public virtual string OnGetUIZipPath(string zipFileName, string subDirectory)

@@ -9,6 +9,7 @@ namespace Rediscovery.Controls
 {
     public class HybridWebView : WebView
     {
+        private SharedBase.Logging.ILogger _logger => DependencyService.Get<SharedBase.Logging.ILogger>() ?? new Services.Logger();
         private IHtmlUIService htmlUIService => DependencyService.Get<IHtmlUIService>() ?? new HtmlUIService();
 
         public event EventHandler SourceFolderSet;
@@ -61,7 +62,7 @@ namespace Rediscovery.Controls
                     else
                     {
                         string msg = "No HTML file for the UI!";
-                        System.Diagnostics.Debug.Print(msg);
+                        _logger.LogWarning(msg);
                         SourceFolderSet?.Invoke(this, EventArgs.Empty);
                         SourceFolderNoHtml?.Invoke(this, EventArgs.Empty);
                         throw new System.IO.FileNotFoundException(msg);
@@ -76,7 +77,7 @@ namespace Rediscovery.Controls
         {
             Dispatcher.BeginInvokeOnMainThread(() =>
             {
-                System.Diagnostics.Debug.Print("Invoke JS model change with data:" + data);
+                _logger.LogTrace("Invoke JS model change with data:" + data);
                 this.Eval($"featureReceive({data})");
             });
         }
@@ -85,7 +86,7 @@ namespace Rediscovery.Controls
         {
             Dispatcher.BeginInvokeOnMainThread(() =>
             {
-                System.Diagnostics.Debug.Print("Invoke JS profile change with data:" + data);
+                _logger.LogTrace("Invoke JS profile change with data:" + data);
                 this.Eval($"profileChanged({data})");
             });
         }

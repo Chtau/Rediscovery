@@ -12,6 +12,7 @@ namespace Rediscovery.Controls
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Terminal : Grid
     {
+        private SharedBase.Logging.ILogger _logger => DependencyService.Get<SharedBase.Logging.ILogger>() ?? new Services.Logger();
         public event EventHandler<string> SendCommand;
 
         public Terminal()
@@ -41,7 +42,7 @@ namespace Rediscovery.Controls
                 }
             } catch (Exception ex)
             {
-                System.Diagnostics.Debug.Print(ex.ToString() + Environment.NewLine);
+                _logger.LogError(ex);
             }
         }
 
