@@ -194,6 +194,27 @@ namespace CommunicationClientConsumer
             }
         }
 
+        public void LogEntry(SharedCoreModels.LoggerEntryModel loggerEntry)
+        {
+            if (loggerEntry != null)
+            {
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        if (loggerEntry != null)
+                        {
+                            await _connectionProvider.CurrentConnection.InvokeAsync("LogEntry", loggerEntry);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex);
+                    }
+                });
+            }
+        }
+
         public async Task<ZipArchive> GetUIArchive(Guid featureId)
         {
             var response = await GetResponseMessage(featureId, "/features/ui/");

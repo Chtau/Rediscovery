@@ -224,5 +224,43 @@ namespace CommunicationResourceProvider
                 _logger.LogError(ex.ToString());
             }
         }
+
+        [Authorize(Roles = AuthorizationRoles.AdminRole)]
+        public void LogEntry(SharedCoreModels.LoggerEntryModel loggerEntry)
+        {
+            try
+            {
+                if (loggerEntry != null)
+                {
+                    switch (loggerEntry.LogLevel)
+                    {
+                        case SharedCoreModels.LoggerEntryModel.LoggerType.Trace:
+                            _logger.LogTrace(loggerEntry.Text, loggerEntry.SubText, loggerEntry.Time, loggerEntry.Id);
+                            break;
+                        case SharedCoreModels.LoggerEntryModel.LoggerType.Debug:
+                            _logger.LogDebug(loggerEntry.Text, loggerEntry.SubText, loggerEntry.Time, loggerEntry.Id);
+                            break;
+                        case SharedCoreModels.LoggerEntryModel.LoggerType.Information:
+                            _logger.LogInformation(loggerEntry.Text, loggerEntry.SubText, loggerEntry.Time, loggerEntry.Id);
+                            break;
+                        case SharedCoreModels.LoggerEntryModel.LoggerType.Warning:
+                            _logger.LogWarning(loggerEntry.Text, loggerEntry.SubText, loggerEntry.Time, loggerEntry.Id);
+                            break;
+                        case SharedCoreModels.LoggerEntryModel.LoggerType.Error:
+                            _logger.LogError(loggerEntry.Text, loggerEntry.SubText, loggerEntry.Time, loggerEntry.Id);
+                            break;
+                        case SharedCoreModels.LoggerEntryModel.LoggerType.Critical:
+                            _logger.LogCritical(loggerEntry.Text, loggerEntry.SubText, loggerEntry.Time, loggerEntry.Id);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+            }
+        }
     }
 }

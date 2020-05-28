@@ -22,5 +22,6 @@ namespace CommunicationClientConsumer
         Task<ZipArchive> GetUIArchive(Guid featureId);
         Task<List<DeviceFeatureProfil>> GetDeviceFeatureProfils(Guid featureId);
         Task<DeviceFeatureSetting> GetDeviceFeatureSetting(Guid featureId);
+        void LogEntry(SharedCoreModels.LoggerEntryModel loggerEntry);
     }
 }

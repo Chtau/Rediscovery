@@ -375,5 +375,23 @@ namespace CommunicationResourceConsumer
             else
                 return false;
         }
+
+        public void LogEntry(SharedCoreModels.LoggerEntryModel loggerEntry)
+        {
+            if (_connectionProvider.IsConnected)
+            {
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        await _connectionProvider.CurrentConnection.InvokeAsync("LogEntry", loggerEntry);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex);
+                    }
+                });
+            }
+        }
     }
 }
