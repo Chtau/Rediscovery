@@ -8,6 +8,8 @@ namespace DesktopService.Features.Logger
 {
     public class RemoteLoggerProvider : ILoggerProvider
     {
+        public static string CachedLastMessage = null;
+
         private readonly RemoteLoggerConfiguration _config;
         private readonly ConcurrentDictionary<string, RemoteLogger> _loggers = new ConcurrentDictionary<string, RemoteLogger>();
 

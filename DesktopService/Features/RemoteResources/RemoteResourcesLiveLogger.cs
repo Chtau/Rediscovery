@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using DesktopService.Features.Logger;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SharedCoreModels;
@@ -15,7 +16,6 @@ namespace DesktopService.Features.RemoteResources
         private readonly CommunicationResourceProvider.IRemoteResourcesSenderService _remoteResourcesSenderService;
 
         private DateTime lastFailedConnection = DateTime.MinValue;
-        private int connectionsFailed = 0;
 
         public RemoteResourcesLiveLogger(ILoggerFactory loggerFactory,
             CommunicationResourceProvider.IRemoteResourcesSenderService remoteResourcesSenderService)
@@ -28,26 +28,22 @@ namespace DesktopService.Features.RemoteResources
         {
             try
             {
-                if (connectionsFailed > 15)
+                try
                 {
-                    if ((DateTime.UtcNow - lastFailedConnection).TotalMinutes > 5)
+                    var lMsg = liveLoggerModel.Message.ToLower();
+                    if (RemoteLoggerProvider.CachedLastMessage != lMsg)
                     {
-                        connectionsFailed = 0;
-                        lastFailedConnection = DateTime.MinValue;
-                    }
-                } else
-                {
-                    try
-                    {
+                        Console.WriteLine($"RemoteLogger send Msg:{liveLoggerModel.Message}");
                         _remoteResourcesSenderService.SendLoggerEntry(liveLoggerModel);
-                    } catch (Exception ex)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"LiveLogger PipeClient failed ({connectionsFailed}) Exception:" + ex.ToString());
-                        Console.ResetColor();
-                        connectionsFailed++;
-                        lastFailedConnection = DateTime.UtcNow;
                     }
+                    RemoteLoggerProvider.CachedLastMessage = lMsg;
+                }
+                catch (Exception ex)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"LiveLogger failed Exception:" + ex.ToString());
+                    Console.ResetColor();
+                    lastFailedConnection = DateTime.UtcNow;
                 }
             }
             catch (Exception ex)

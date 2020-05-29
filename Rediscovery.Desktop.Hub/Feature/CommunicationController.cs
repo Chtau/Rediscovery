@@ -17,6 +17,8 @@ namespace Rediscovery.Desktop.Hub.Feature
 {
     public class CommunicationController : Shared.BaseController
     {
+        private static string lastLoggerMessage = null;
+
         private readonly ILogger<CommunicationController> _logger;
         private readonly CommunicationResourceConsumer.IHub _hub;
         private readonly SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration _remoteResourceSettings;
@@ -353,8 +355,14 @@ namespace Rediscovery.Desktop.Hub.Feature
         {
             try
             {
-                var mainWindow = ElectronNET.API.Electron.WindowManager.BrowserWindows.First();
-                ElectronNET.API.Electron.IpcMain.Send(mainWindow, "loggermessage-ipc", e);
+                var msg = e.Message.ToLower();
+                if (lastLoggerMessage != msg)
+                {
+                    Console.WriteLine($"{DateTime.Now}: Logger Message received => {e.Message}");
+                    var mainWindow = ElectronNET.API.Electron.WindowManager.BrowserWindows.First();
+                    ElectronNET.API.Electron.IpcMain.Send(mainWindow, "loggermessage-ipc", e);
+                }
+                lastLoggerMessage = msg;
             }
             catch (Exception ex)
             {
@@ -382,8 +390,9 @@ namespace Rediscovery.Desktop.Hub.Feature
         }
 
         [HttpGet]
-        public bool InitServiceConnection()
+        public async Task<bool> InitServiceConnection()
         {
+            await _hub.Disconnect();
             _hub.Authenticate(_remoteResourceSettings.DesktopHubApplicationKey, connectionConfiguration, (resultModel, state) =>
             {
                 if (state)
