@@ -39,9 +39,7 @@ namespace Rediscovery.Desktop.Hub.Feature
                 State = CommunicationBase.ConnectionState.None,
                 Token = null
             };
-            var log = _logger.ToSharedLogger();
-            log.EntryAdded += Log_EntryAdded;
-            _hub.Init(log, "/remote/resource/hub");
+            _hub.Init(_logger.ToSharedLogger(), "/remote/resource/hub");
             _hub.ActiveDeviceInfoReceived += _deviceService_ActiveDeviceInfoReceived;
             _hub.DeviceInfoReceived += _deviceService_DeviceInfoReceived;
             _hub.LogEntryReceived += _loggerService_LoggerDataReceived;
@@ -196,11 +194,6 @@ namespace Rediscovery.Desktop.Hub.Feature
                     OnRemoteLogEntry(ex.ToString(), SharedBase.Logging.LoggerEntry.LoggerType.Error);
                 }
             });
-        }
-
-        private void Log_EntryAdded(object sender, SharedBase.Logging.LoggerEntry e)
-        {
-            OnRemoteLogEntry(e.Message, e.LogLevel);
         }
 
         private void _hub_FeatureSettingsReceived(object sender, EntityContent<Guid, PluginFeature.Models.DeviceFeatureSetting> e)
