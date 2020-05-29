@@ -84,10 +84,10 @@ namespace CommunicationBase
                     .ConfigureLogging(logging =>
                     {
                         // Log to the Output Window
-                        logging.AddDebug();
+                        //logging.AddDebug();
 
                         // This will set ALL logging to Debug level
-                        logging.SetMinimumLevel(LogLevel.Debug);
+                        //logging.SetMinimumLevel(LogLevel.Debug);
                     })
                     .Build();
                 }
@@ -98,10 +98,10 @@ namespace CommunicationBase
                     .ConfigureLogging(logging =>
                     {
                         // Log to the Output Window
-                        logging.AddDebug();
+                        //logging.AddDebug();
 
                         // This will set ALL logging to Debug level
-                        logging.SetMinimumLevel(LogLevel.Debug);
+                        //logging.SetMinimumLevel(LogLevel.Debug);
                     })
                     .Build();
                 }
