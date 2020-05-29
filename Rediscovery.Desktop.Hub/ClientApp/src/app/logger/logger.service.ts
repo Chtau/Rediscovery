@@ -25,12 +25,17 @@ export class LoggerService {
       this.ipc.on('loggermessage-ipc', (event, arg) => {
         // switch to angular zone for change detected events ...
         this.zone.run(() => {
-          //console.log('Logger Entry:' + arg.message);
           this.entries.push(arg);
           this.entriesChanged.emit(this.entries);
           this.entryAddedChanged.emit(arg);
         });
       });
+    }
+  }
+
+  public removeIPC(): void {
+    if (environment.isElectron === true) {
+      this.ipc.remove('loggermessage-ipc');
     }
   }
 
