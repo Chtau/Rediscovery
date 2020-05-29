@@ -38,6 +38,7 @@ export class AppComponent {
 
   onServiceConnection(): void {
     if (environment.isElectron === true) {
+      this.loggerService.reset();
       this.http.get<boolean>(this.baseUrl + 'communication').subscribe(result => {
         console.log('Communication to Service init');
         this.isServiceConnected = this.stateService.getServiceConnectionState();

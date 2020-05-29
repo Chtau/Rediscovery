@@ -10,6 +10,7 @@ export class LoggerService {
 
   entriesChanged = new EventEmitter<ILoggerEntry[]>();
   entryAddedChanged = new EventEmitter<ILoggerEntry>();
+  resetTrigger = new EventEmitter<boolean>();
 
   entries: ILoggerEntry[] = [];
   
@@ -24,6 +25,7 @@ export class LoggerService {
       this.ipc.on('loggermessage-ipc', (event, arg) => {
         // switch to angular zone for change detected events ...
         this.zone.run(() => {
+          //console.log('Logger Entry:' + arg.message);
           this.entries.push(arg);
           this.entriesChanged.emit(this.entries);
           this.entryAddedChanged.emit(arg);
@@ -34,6 +36,12 @@ export class LoggerService {
 
   public getEntries(): ILoggerEntry[] {
     return this.entries;
+  }
+
+  public reset(): void {
+    this.resetTrigger.emit(true);
+    this.entries = [];
+    this.entriesChanged.emit(this.entries);
   }
 
 }

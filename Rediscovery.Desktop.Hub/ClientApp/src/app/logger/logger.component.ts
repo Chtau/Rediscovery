@@ -25,8 +25,18 @@ export class LoggerComponent implements OnInit, AfterViewChecked, AfterViewInit 
     this.sourceEntries = loggerService.getEntries();
     this.setEntires();
     this.scrollToBottom();
-    this.loggerService.entryAddedChanged.subscribe(result => {
+    this.loggerService.resetTrigger.subscribe(result => {
+      this.entries = [];
+      this.sourceEntries = [];
+    });
+    /*this.loggerService.entryAddedChanged.subscribe(result => {
       this.sourceEntries.push(result);
+      this.setEntires();
+      this.scrollToBottom();
+      console.log('Service Entires:' + loggerService.getEntries().length + ' Component Entires:' + this.sourceEntries.length + ' Filter Entries:' + this.entries.length);
+    });*/
+    this.loggerService.entriesChanged.subscribe(result => {
+      this.sourceEntries = result;
       this.setEntires();
       this.scrollToBottom();
     });
@@ -58,6 +68,7 @@ export class LoggerComponent implements OnInit, AfterViewChecked, AfterViewInit 
   clearConsole(): void {
     this.entries = [];
     this.sourceEntries = [];
+    this.loggerService.reset();
   }
 
   changeAutoscroll(): void {
