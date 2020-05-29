@@ -4,6 +4,7 @@ using System.Text;
 
 namespace SharedCoreModels
 {
+    [Obsolete("Create new Model to integrate [DevicePendingAuthentication]")]
     public class DeviceInfo : DeviceInfoMetadata
     {
         public Guid Id { get; set; }
