@@ -33,7 +33,6 @@ namespace DesktopService.Features.RemoteResources
                     var lMsg = liveLoggerModel.Message.ToLower();
                     if (RemoteLoggerProvider.CachedLastMessage != lMsg)
                     {
-                        Console.WriteLine($"RemoteLogger send Msg:{liveLoggerModel.Message}");
                         _remoteResourcesSenderService.SendLoggerEntry(liveLoggerModel);
                     }
                     RemoteLoggerProvider.CachedLastMessage = lMsg;

@@ -358,7 +358,6 @@ namespace Rediscovery.Desktop.Hub.Feature
                 var msg = e.Message.ToLower();
                 if (lastLoggerMessage != msg)
                 {
-                    Console.WriteLine($"{DateTime.Now}: Logger Message received => {e.Message}");
                     var mainWindow = ElectronNET.API.Electron.WindowManager.BrowserWindows.First();
                     ElectronNET.API.Electron.IpcMain.Send(mainWindow, "loggermessage-ipc", e);
                 }
