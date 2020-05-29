@@ -22,26 +22,27 @@ namespace DesktopFeatureConsole
             OnSendData(this, data);
         }
 
-        public override DeviceFeatureDefinition GetDeviceFeatureInfo()
+        public override SharedBase.Device.FeatureDefinitionExtended GetDeviceFeatureInfo()
         {
-            return new DeviceFeatureDefinition
+            return new SharedBase.Device.FeatureDefinitionExtended
             {
                 DisplayName = "Console",
                 Id = new Guid("558AC5BD-5B76-433D-8CD7-BCBB7596AAA1"),
-                ControlIntegrationPoint = IntegrationPoint.Mobile,
-                FeatureIntegrationPoint = IntegrationPoint.Desktop,
-                ControlIntegration = ControlIntegrationType.Terminal,
-                MinControlIntegrationPoint = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
-                MinFeatureIntegrationPoint = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
-                Version = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
+                ControlIntegrationPoint = SharedBase.Device.IntegrationPoint.Mobile,
+                FeatureIntegrationPoint = SharedBase.Device.IntegrationPoint.Desktop,
+                MinimalControlIntegrationPoint = new SharedBase.Core.Version() { Major = 0, Minor = 0 },
+                MinimalFeatureIntegrationPoint = new SharedBase.Core.Version() { Major = 0, Minor = 0 },
+                Version = new SharedBase.Core.Version() { Major = 0, Minor = 0 },
                 Author = "Christoph Taucher",
                 Documentation = null,
                 HasProfiles = false,
                 ProfileUIReadonly = false,
-                SettingsUIReadonly = false,
+                SettingUIReadonly = false,
                 HasSettings = false,
-                Url = null,
+                Website = null,
                 PluginDirectory = PluginDirectory,
+                ProfileUIElementName = null,
+                SettingUIElementName = null
             };
         }
 

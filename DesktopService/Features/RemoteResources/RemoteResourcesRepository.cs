@@ -34,11 +34,11 @@ namespace DesktopService.Features.RemoteResources
             _logger = loggerFactory.CreateLogger<RemoteResourcesRepository>();
         }
 
-        public List<SharedCoreModels.DeviceFeature> GetResourceDeviceFeature()
+        public List<SharedBase.Device.FeatureDefinitionExtended> GetResourceDeviceFeature()
         {
             var features = _featureService.GetFeaturesManifest();
             return (from x in features
-                    select x.ToDeviceFeature()
+                    select x
                     ).ToList();
         }
 

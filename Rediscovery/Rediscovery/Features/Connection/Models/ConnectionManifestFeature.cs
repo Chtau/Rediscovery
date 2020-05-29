@@ -1,6 +1,7 @@
 ﻿using PluginFeature;
 using PluginFeature.Models;
 using Rediscovery.Models;
+using SharedBase.Device;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -83,13 +84,6 @@ namespace Rediscovery.Features.Connection.Models
         {
             get { return _featureControlIntegrationPoint; }
             set { SetProperty(ref _featureControlIntegrationPoint, value); }
-        }
-
-        private ControlIntegrationType controlIntegration;
-        public ControlIntegrationType ControlIntegration
-        {
-            get { return controlIntegration; }
-            set { SetProperty(ref controlIntegration, value); }
         }
 
         private object settingsObject;

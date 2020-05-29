@@ -17,10 +17,11 @@ namespace DesktopService.Features.FeatureDefinitions
 
         private bool BuildManifest()
         {
+            // TODO: better integration for manifest creation
             manifest = new SharedCoreModels.Manifest
             {
-                AppMinimumVersion = new PluginFeature.Models.Version() { Major = 0, Minor = 0, Patch = 0, Label = null },
-                ClientVersion = new PluginFeature.Models.Version() { Major = 0, Minor = 0, Patch = 0, Label = null },
+                AppMinimumVersion = new SharedBase.Core.Version() { Major = 0, Minor = 0, Patch = 0, Label = null },
+                ClientVersion = new SharedBase.Core.Version() { Major = 0, Minor = 0, Patch = 0, Label = null },
                 SupportedFeatures = _featureService.GetFeaturesManifest(),
                 ClientName = "DEV-Desktop"
             };

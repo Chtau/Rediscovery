@@ -337,7 +337,7 @@ namespace Rediscovery.Desktop.Hub.Feature
             }
         }
 
-        private void _featureService_DeviceFeatureReceived(object sender, List<DeviceFeature> e)
+        private void _featureService_DeviceFeatureReceived(object sender, List<SharedBase.Device.FeatureDefinitionExtended> e)
         {
             try
             {

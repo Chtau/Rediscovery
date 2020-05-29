@@ -47,9 +47,9 @@ namespace Rediscovery.Features.Connection
                 try
                 {
                     var config = desktopStore.GetItem(configurationId);
-                    config.ManifestAppMinimumVersion = PluginFeature.Models.Version.ConvertFrom(manifest.AppMinimumVersion);
+                    config.ManifestAppMinimumVersion = SharedBase.Core.Version.ConvertFrom(manifest.AppMinimumVersion);
                     config.ManifestClientName = manifest.ClientName;
-                    config.ManifestClientVersion = PluginFeature.Models.Version.ConvertFrom(manifest.ClientVersion);
+                    config.ManifestClientVersion = SharedBase.Core.Version.ConvertFrom(manifest.ClientVersion);
                     desktopStore.UpdateItem(config);
                 } catch (Exception ex)
                 {
@@ -64,11 +64,10 @@ namespace Rediscovery.Features.Connection
                         FeatureDisplayName = item.DisplayName,
                         FeatureControlIntegrationPoint = item.ControlIntegrationPoint,
                         FeatureFeatureIntegrationPoint = item.FeatureIntegrationPoint,
-                        ControlIntegration = item.ControlIntegration,
                         FeatureId = item.Id,
-                        FeatureMinControlIntegrationPoint = PluginFeature.Models.Version.ConvertFrom(item.MinControlIntegrationPoint),
-                        FeatureMinFeatureIntegrationPoint = PluginFeature.Models.Version.ConvertFrom(item.MinFeatureIntegrationPoint),
-                        FeatureVersion = PluginFeature.Models.Version.ConvertFrom(item.Version),
+                        FeatureMinControlIntegrationPoint = SharedBase.Core.Version.ConvertFrom(item.MinimalControlIntegrationPoint),
+                        FeatureMinFeatureIntegrationPoint = SharedBase.Core.Version.ConvertFrom(item.MinimalFeatureIntegrationPoint),
+                        FeatureVersion = SharedBase.Core.Version.ConvertFrom(item.Version),
                     };
                     var connectionManifestFeature = ConnectionManifestFeatures.FirstOrDefault(x => x.ConfigurationId == configurationId && x.FeatureId == feature.FeatureId);
                     if (connectionManifestFeature != null)

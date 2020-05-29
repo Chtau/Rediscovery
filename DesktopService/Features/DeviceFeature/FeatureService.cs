@@ -60,9 +60,9 @@ namespace DesktopService.Features.DeviceFeature
             return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetSettingsObject();
         }
 
-        public List<DeviceFeatureDefinition> GetFeaturesManifest()
+        public List<SharedBase.Device.FeatureDefinitionExtended> GetFeaturesManifest()
         {
-            var manifest = new List<DeviceFeatureDefinition>();
+            var manifest = new List<SharedBase.Device.FeatureDefinitionExtended>();
             foreach (var item in deviceFeatureImplementations)
             {
                 var def = item.GetDeviceFeatureInfo();

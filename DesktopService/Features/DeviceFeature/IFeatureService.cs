@@ -14,7 +14,7 @@ namespace DesktopService.Features.DeviceFeature
 
         void Load();
         IDeviceFeatureImplementation GetFeature(Guid featureId);
-        List<DeviceFeatureDefinition> GetFeaturesManifest();
+        List<SharedBase.Device.FeatureDefinitionExtended> GetFeaturesManifest();
         /// <summary>
         /// get the ZIP archive path from 'ui.zip'
         /// </summary>

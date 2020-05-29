@@ -13,7 +13,7 @@ namespace PluginFeature.Interfaces
         void Dispose();
         event EventHandler<DeviceFeatureData> SendData;
         void ReceiveData(DeviceFeatureData data);
-        DeviceFeatureDefinition GetDeviceFeatureInfo();
+        SharedBase.Device.FeatureDefinitionExtended GetDeviceFeatureInfo();
 
         /// <summary>
         /// Register a device id to send/receive data from the feature

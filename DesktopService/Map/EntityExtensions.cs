@@ -58,25 +58,5 @@ namespace DesktopService.Map
                 RequestTime = device.RequestTime
             };
         }
-
-        public static SharedCoreModels.DeviceFeature ToDeviceFeature(this PluginFeature.Models.DeviceFeatureDefinition deviceFeatureDefinition)
-        {
-            return new SharedCoreModels.DeviceFeature
-            {
-                Id = deviceFeatureDefinition.Id,
-                DisplayName = deviceFeatureDefinition.DisplayName,
-                MinControlIntegrationPoint = deviceFeatureDefinition.MinControlIntegrationPoint.ToString(),
-                MinFeatureIntegrationPoint = deviceFeatureDefinition.MinFeatureIntegrationPoint.ToString(),
-                Version = deviceFeatureDefinition.Version.ToString(),
-                Author = deviceFeatureDefinition.Author,
-                Documentation = deviceFeatureDefinition.Documentation,
-                HasProfiles = deviceFeatureDefinition.HasProfiles,
-                HasSettings = deviceFeatureDefinition.HasSettings,
-                Url = deviceFeatureDefinition.Url,
-                PluginDirectory = deviceFeatureDefinition.PluginDirectory,
-                ProfileUIReadonly = deviceFeatureDefinition.ProfileUIReadonly,
-                SettingsUIReadonly = deviceFeatureDefinition.SettingsUIReadonly
-            };
-        }
     }
 }

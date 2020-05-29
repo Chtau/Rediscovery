@@ -12,7 +12,7 @@ namespace CommunicationResourceConsumer
         event EventHandler<List<SharedCoreModels.DeviceInfo>> ActiveDeviceInfoReceived;
         event EventHandler<List<SharedCoreModels.DeviceInfo>> DeviceInfoReceived;
         event EventHandler<List<SharedCoreModels.DeviceInfo>> PendingAuthenticationDeviceReceived;
-        event EventHandler<List<SharedCoreModels.DeviceFeature>> ServiceFeatureReceived;
+        event EventHandler<List<SharedBase.Device.FeatureDefinitionExtended>> ServiceFeatureReceived;
         event EventHandler<SharedBase.Logging.LoggerEntry> LogEntryReceived;
         event EventHandler<bool> ConnectionStateChanged;
         event EventHandler<SharedCoreModels.EntityContent<Guid, byte[]>> FeatureProfileUIReceived;

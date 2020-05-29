@@ -4,7 +4,8 @@ using System.Text;
 
 namespace SharedBase.Device
 {
-    public class FeatureDefinitionExtended : FeatureDefinition, IFeatureMetadataDefinition, IFeatureProfileDefinition, IFeatureSettingDefinition
+    public class FeatureDefinitionExtended : FeatureDefinition, IFeatureMetadataDefinition, 
+        IFeatureProfileDefinition, IFeatureSettingDefinition, IFeatureIntegrationDefinition
     {
         public string Author { get; set; }
         public string Documentation { get; set; }
@@ -16,5 +17,7 @@ namespace SharedBase.Device
         public bool HasSettings { get; set; }
         public bool SettingUIReadonly { get; set; }
         public string SettingUIElementName { get; set; }
+        public IntegrationPoint ControlIntegrationPoint { get; set; }
+        public IntegrationPoint FeatureIntegrationPoint { get; set; }
     }
 }

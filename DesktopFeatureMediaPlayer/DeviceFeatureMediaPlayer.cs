@@ -2,6 +2,7 @@
 using PluginFeature;
 using PluginFeature.Interfaces;
 using PluginFeature.Models;
+using SharedBase.Device;
 using System;
 using System.Collections.Generic;
 using System.IO.Compression;
@@ -68,26 +69,27 @@ namespace DesktopFeatureMediaPlayer
             base.Dispose();
         }
 
-        public override DeviceFeatureDefinition GetDeviceFeatureInfo()
+        public override SharedBase.Device.FeatureDefinitionExtended GetDeviceFeatureInfo()
         {
-            return new DeviceFeatureDefinition
+            return new SharedBase.Device.FeatureDefinitionExtended
             {
                 DisplayName = "Mediaplayer",
                 Id = new Guid("D5B218BC-8F36-4100-9262-71155265DAD7"),
                 ControlIntegrationPoint = IntegrationPoint.Mobile,
                 FeatureIntegrationPoint = IntegrationPoint.Desktop,
-                ControlIntegration = ControlIntegrationType.MediaPlayer,
-                MinControlIntegrationPoint = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
-                MinFeatureIntegrationPoint = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
-                Version = new PluginFeature.Models.Version() { Major = 0, Minor = 0 },
+                MinimalControlIntegrationPoint = new SharedBase.Core.Version() { Major = 0, Minor = 0 },
+                MinimalFeatureIntegrationPoint = new SharedBase.Core.Version() { Major = 0, Minor = 0 },
+                Version = new SharedBase.Core.Version() { Major = 0, Minor = 0 },
                 Author = "Christoph Taucher",
                 Documentation = null,
                 HasProfiles = true,
                 ProfileUIReadonly = true,
                 HasSettings = false,
-                SettingsUIReadonly = true,
-                Url = null,
-                PluginDirectory = PluginDirectory
+                SettingUIReadonly = true,
+                Website = null,
+                PluginDirectory = PluginDirectory,
+                ProfileUIElementName = "JSONComponent",
+                SettingUIElementName = null
             };
         }
 
