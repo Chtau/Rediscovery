@@ -1,0 +1,69 @@
+﻿@page "/servicestatus"
+@inject CommunicationResourceConsumer.IHub _hub
+
+<h1>Service Status</h1>
+
+<p>Service connected: @connectionState</p>
+
+@code {
+
+    private bool connectionState = false;
+    private CommunicationBase.ConnectionConfiguration connectionConfiguration;
+
+    protected override async Task OnInitializedAsync()
+    {
+        connectionConfiguration = new CommunicationBase.ConnectionConfiguration
+        {
+            Address = "192.168.1.100:44341",
+            DisplayName = "hub",
+            Id = Guid.NewGuid(),
+            State = CommunicationBase.ConnectionState.None,
+            Token = null
+        };
+
+        _hub.Init(SharedBase.Logging.DiagnosticsLoggerProvider.Instance, "/remote/resource/hub");
+        _hub.ConnectionStateChanged += _hub_ConnectionStateChanged;
+
+        await InitServiceConnection();
+    }
+
+    private void _hub_ConnectionStateChanged(object sender, bool e)
+    {
+        try
+        {
+            connectionState = e;
+        }
+        catch (Exception ex)
+        {
+
+        }
+    }
+
+    private async Task<bool> InitServiceConnection()
+    {
+        await _hub.Disconnect();
+        _hub.Authenticate(connectionConfiguration.DisplayName, connectionConfiguration, (resultModel, state) =>
+        {
+            if (state)
+            {
+                connectionConfiguration.Token = resultModel.Token;
+                _hub.Connect(connectionConfiguration.DisplayName, connectionConfiguration, (listener) =>
+                {
+                    if (listener)
+                    {
+                        _hub.RequestAllData();
+                    }
+                    else
+                    {
+                        string msg = "Listener response not valid";
+                    }
+                });
+            }
+            else
+            {
+                string msg = "Could not Authenticate for remote resource access";
+            }
+        });
+        return true;
+    }
+}
