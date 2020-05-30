@@ -129,7 +129,16 @@ namespace DesktopService
                 o.RemoteResourcesLiveLogger = app.ApplicationServices.GetRequiredService<Features.RemoteResources.IRemoteResourcesLiveLogger>();
                 o.LogLevel = LogLevel.Trace; //TODO: make log level a configuration option
             });
-            
+
+            app.UseCors(builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                    //.AllowCredentials();
+            });
+
+
             app.UseRouting();
             
             app.UseAuthentication();
