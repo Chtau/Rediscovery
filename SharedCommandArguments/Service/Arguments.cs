@@ -6,6 +6,7 @@ namespace SharedCommandArguments.Service
 {
     public static class Arguments
     {
+        public const string CommandPortHttps = "--porthttps:";
         public const string CommandPort = "--port:";
         public const string CommandIP = "--ip:";
     }

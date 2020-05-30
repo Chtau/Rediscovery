@@ -131,7 +131,7 @@ namespace DesktopService
             });
             
             app.UseRouting();
-
+            
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseResourceProvider("/remote/resource/hub");

@@ -19,6 +19,7 @@ namespace DesktopService
 
         public static string HostIpAddress = "127.0.0.1";
         public static ushort HostPort = 44341;
+        public static ushort HostPortHttps = 44342;
         public static string ExePath = null;
 
         public static void Main(string[] args)
@@ -32,6 +33,13 @@ namespace DesktopService
                 var vals = valueArg.Split(':');
                 if (ushort.TryParse(vals[1].Trim(), out ushort port))
                     HostPort = port;
+            }
+            if (args.Any(x => x.StartsWith(SharedCommandArguments.Service.Arguments.CommandPortHttps, StringComparison.OrdinalIgnoreCase)))
+            {
+                var valueArg = args.First(x => x.StartsWith(SharedCommandArguments.Service.Arguments.CommandPortHttps, StringComparison.OrdinalIgnoreCase));
+                var vals = valueArg.Split(':');
+                if (ushort.TryParse(vals[1].Trim(), out ushort port))
+                    HostPortHttps = port;
             }
             if (args.Any(x => x.StartsWith(SharedCommandArguments.Service.Arguments.CommandIP, StringComparison.OrdinalIgnoreCase)))
             {
@@ -78,8 +86,24 @@ namespace DesktopService
             {
                 //serverOptions.Listen(System.Net.IPAddress.Parse("192.168.1.100"), 44341);
                 serverOptions.Listen(System.Net.IPAddress.Parse(HostIpAddress), HostPort);
+                serverOptions.Listen(System.Net.IPAddress.Parse(HostIpAddress), HostPortHttps, (lo) =>
+                {
+                    lo.UseHttps();
+                });
+                serverOptions.ConfigureHttpsDefaults(op =>
+                {
+                    op.AllowAnyClientCertificate();
+                });
                 serverOptions.ListenLocalhost(HostPort);
+                serverOptions.ListenLocalhost(HostPortHttps, (lo) =>
+                {
+                    lo.UseHttps();
+                });
                 serverOptions.ListenAnyIP(HostPort);
+                serverOptions.ListenAnyIP(HostPortHttps, (lo) =>
+                {
+                    lo.UseHttps();
+                });
                 serverOptions.ConfigureEndpointDefaults(listenOptions =>
                 {
                     // Configure endpoint defaults
