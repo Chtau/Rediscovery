@@ -80,10 +80,15 @@ namespace CommunicationBase
                 var handler = new HttpClientHandler
                 {
                     //CheckCertificateRevocationList = false
-                    ClientCertificateOptions = ClientCertificateOption.Manual,
-                    ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => { return true; }
+                    //ClientCertificateOptions = ClientCertificateOption.Manual,
+                    //ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => { return true; }
                     //ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+                    ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => {
+                        Console.WriteLine(cert.FriendlyName + " Issuer:" + cert.Issuer + " Thumbprint:" + cert.Thumbprint);
+                        return true; 
+                    }
                 };
+                handler.ClientCertificates.Add(model.x509Certificate);
 
                 if (shouldUseToken)
                 {

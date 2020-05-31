@@ -1,4 +1,8 @@
-﻿using System;
+﻿using CertificateManager;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace TestSignalR
@@ -7,7 +11,16 @@ namespace TestSignalR
     {
         static void Main(string[] args)
         {
+            var serviceProvider = new ServiceCollection()
+.AddCertificateManager()
+.BuildServiceProvider();
+
+            //CreateCert(serviceProvider);
+
+
             Console.WriteLine("Hello World!");
+
+            var clientCertificate = new X509Certificate2(Path.Combine(@"C:\DEV\Code\Workspaces\Repos\Rediscovery\TestSignalR", "dev_localhost.pfx"), "1234");
 
             var connectionConfiguration = new CommunicationBase.ConnectionConfiguration
             {
@@ -15,7 +28,8 @@ namespace TestSignalR
                 DisplayName = "hub",
                 Id = Guid.NewGuid(),
                 State = CommunicationBase.ConnectionState.None,
-                Token = null
+                Token = null,
+                x509Certificate = clientCertificate
             };
             var _hub = new CommunicationResourceConsumer.Hub();
             _hub.Init(SharedBase.Logging.DiagnosticsLoggerProvider.Instance, "/remote/resource/hub", CommunicationBase.Protocol.HTTPS);
@@ -23,6 +37,33 @@ namespace TestSignalR
 
             InitServiceConnection(_hub, connectionConfiguration);
             Console.ReadKey();
+        }
+
+        private static void CreateCert(ServiceProvider serviceProvider)
+        {
+
+            var _createCertificatesRsa = serviceProvider.GetService<CreateCertificatesRsa>();
+
+            // Create development certificate for localhost
+            var devCertificate = _createCertificatesRsa
+                .CreateDevelopmentCertificate("localhost", 10);
+
+            devCertificate.FriendlyName = "localhost development";
+
+            string password = "1234";
+            var importExportCertificate = serviceProvider.GetService<ImportExportCertificate>();
+
+            // full pfx with password
+            var rootCertInPfxBtyes = importExportCertificate.ExportRootPfx(password, devCertificate);
+            File.WriteAllBytes("dev_localhost.pfx", rootCertInPfxBtyes);
+
+            // private key
+            var exportRsaPrivateKeyPem = importExportCertificate.PemExportRsaPrivateKey(devCertificate);
+            File.WriteAllText($"dev_localhost.key", exportRsaPrivateKeyPem);
+
+            // public key certificate as pem
+            var exportPublicKeyCertificatePem = importExportCertificate.PemExportPublicKeyCertificate(devCertificate);
+            File.WriteAllText($"dev_localhost.pem", exportPublicKeyCertificatePem);
         }
 
         private static void _hub_ConnectionStateChanged(object sender, bool e)

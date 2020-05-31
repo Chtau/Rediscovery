@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DesktopService
 {
@@ -84,15 +85,17 @@ namespace DesktopService
         {
             webBuilder.ConfigureKestrel(serverOptions =>
             {
+                serverOptions.ConfigureHttpsDefaults(op =>
+                {
+                    //op.AllowAnyClientCertificate();
+                    op.ServerCertificate = GetX509Certificate2();
+                });
+
                 //serverOptions.Listen(System.Net.IPAddress.Parse("192.168.1.100"), 44341);
                 serverOptions.Listen(System.Net.IPAddress.Parse(HostIpAddress), HostPort);
                 serverOptions.Listen(System.Net.IPAddress.Parse(HostIpAddress), HostPortHttps, (lo) =>
                 {
                     lo.UseHttps();
-                });
-                serverOptions.ConfigureHttpsDefaults(op =>
-                {
-                    op.AllowAnyClientCertificate();
                 });
                 serverOptions.ListenLocalhost(HostPort);
                 serverOptions.ListenLocalhost(HostPortHttps, (lo) =>
@@ -112,5 +115,12 @@ namespace DesktopService
             })
             .UseStartup<Startup>();
         });
+
+        private static X509Certificate2 GetX509Certificate2()
+        {
+            var cert = new X509Certificate2(Path.Combine(@"C:\DEV\Code\Workspaces\Repos\Rediscovery\TestSignalR", "dev_localhost.pfx"), "1234");
+            Console.WriteLine(cert.FriendlyName + " Issuer:" + cert.Issuer + " Thumbprint:" + cert.Thumbprint);
+            return cert;
+        }
     }
 }
