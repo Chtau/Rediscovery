@@ -18,7 +18,8 @@
             DisplayName = "hub",
             Id = Guid.NewGuid(),
             State = CommunicationBase.ConnectionState.None,
-            Token = null
+            Token = null,
+            SSLThumbprint = "50BDB3835C1A37247375702E78409D95AADEC5F5"
         };
 
         _hub.Init(SharedBase.Logging.DiagnosticsLoggerProvider.Instance, "/remote/resource/hub", CommunicationBase.Protocol.HTTPS);

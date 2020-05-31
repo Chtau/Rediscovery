@@ -84,11 +84,11 @@ namespace CommunicationBase
                     //ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => { return true; }
                     //ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
                     ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => {
-                        Console.WriteLine(cert.FriendlyName + " Issuer:" + cert.Issuer + " Thumbprint:" + cert.Thumbprint);
-                        return true; 
+                        if (string.Equals(cert.Thumbprint, model.SSLThumbprint))
+                            return true;
+                        return false;
                     }
                 };
-                handler.ClientCertificates.Add(model.x509Certificate);
 
                 if (shouldUseToken)
                 {
@@ -99,7 +99,11 @@ namespace CommunicationBase
                         options.HttpMessageHandlerFactory = _ => handler;
                         options.WebSocketConfiguration = sockets =>
                         {
-                            sockets.RemoteCertificateValidationCallback += new RemoteCertificateValidationCallback((sender, certificate, chain, policyErrors) => { return true; });
+                            sockets.RemoteCertificateValidationCallback += new RemoteCertificateValidationCallback((sender, certificate, chain, policyErrors) => {
+                                if (string.Equals(certificate.GetCertHashString(), model.SSLThumbprint))
+                                    return true;
+                                return false;
+                            });
                         };
                     })
                     .ConfigureLogging(logging =>
@@ -128,7 +132,11 @@ namespace CommunicationBase
                         options.HttpMessageHandlerFactory = _ => handler;
                         options.WebSocketConfiguration = sockets =>
                         {
-                            sockets.RemoteCertificateValidationCallback += new RemoteCertificateValidationCallback((sender, certificate, chain, policyErrors) => { return true; });
+                            sockets.RemoteCertificateValidationCallback += new RemoteCertificateValidationCallback((sender, certificate, chain, policyErrors) => {
+                                if (string.Equals(certificate.GetCertHashString(), model.SSLThumbprint))
+                                    return true;
+                                return false;
+                            });
                         };
                     })
                     .ConfigureLogging(logging =>

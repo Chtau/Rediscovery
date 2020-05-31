@@ -29,7 +29,7 @@ namespace TestSignalR
                 Id = Guid.NewGuid(),
                 State = CommunicationBase.ConnectionState.None,
                 Token = null,
-                x509Certificate = clientCertificate
+                SSLThumbprint = clientCertificate.Thumbprint
             };
             var _hub = new CommunicationResourceConsumer.Hub();
             _hub.Init(SharedBase.Logging.DiagnosticsLoggerProvider.Instance, "/remote/resource/hub", CommunicationBase.Protocol.HTTPS);

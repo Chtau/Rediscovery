@@ -12,6 +12,6 @@ namespace CommunicationBase
         public string Address { get; set; }
         public string Token { get; set; }
         public ConnectionState State { get; set; }
-        public X509Certificate x509Certificate { get; set; }
+        public string SSLThumbprint { get; set; }
     }
 }
