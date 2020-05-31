@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Security;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -74,12 +76,24 @@ namespace CommunicationBase
                 baseUrl = _protocol.ToProtocolValue() + model.Address;
                 string url = baseUrl + _hubLink;
                 _logger.LogTrace($"Try do connect to {model.DisplayName} with Address:{url} ({DateTime.Now.ToString()})");
+
+                var handler = new HttpClientHandler
+                {
+                    ClientCertificateOptions = ClientCertificateOption.Manual,
+                    ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => { return true; }
+                };
+
                 if (shouldUseToken)
                 {
                     connection = new HubConnectionBuilder()
                     .WithUrl(url, options =>
                     {
                         options.AccessTokenProvider = () => Task.FromResult(model.Token);
+                        options.HttpMessageHandlerFactory = _ => handler;
+                        options.WebSocketConfiguration = sockets =>
+                        {
+                            sockets.RemoteCertificateValidationCallback += new RemoteCertificateValidationCallback((sender, certificate, chain, policyErrors) => { return true; });
+                        };
                     })
                     .ConfigureLogging(logging =>
                     {
@@ -93,8 +107,23 @@ namespace CommunicationBase
                 }
                 else
                 {
+                    // TODO: https://docs.microsoft.com/en-us/aspnet/core/signalr/security?view=aspnetcore-3.1
+                    // TODO: https://devblogs.microsoft.com/aspnet/configuring-https-in-asp-net-core-across-different-platforms/
+                    // TODO: https://docs.microsoft.com/en-us/dotnet/api/system.net.http.httpclienthandler.dangerousacceptanyservercertificatevalidator?view=netcore-3.0
+                    // TODO: https://damienbod.com/2019/09/07/using-certificate-authentication-with-ihttpclientfactory-and-httpclient/
+                    // TODO: https://github.com/dotnet/aspnetcore/issues/16919
+                    // TODO: https://github.com/dotnet/aspnetcore/issues/14102
+                    // TODO: https://github.com/dotnet/aspnetcore/issues/11408
+
                     connection = new HubConnectionBuilder()
-                    .WithUrl(url)
+                    .WithUrl(url, options =>
+                    {
+                        options.HttpMessageHandlerFactory = _ => handler;
+                        options.WebSocketConfiguration = sockets =>
+                        {
+                            sockets.RemoteCertificateValidationCallback += new RemoteCertificateValidationCallback((sender, certificate, chain, policyErrors) => { return true; });
+                        };
+                    })
                     .ConfigureLogging(logging =>
                     {
                         // Log to the Output Window
