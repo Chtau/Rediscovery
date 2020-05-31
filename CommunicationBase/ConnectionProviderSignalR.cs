@@ -79,14 +79,16 @@ namespace CommunicationBase
 
                 var handler = new HttpClientHandler
                 {
+                    //CheckCertificateRevocationList = false
                     ClientCertificateOptions = ClientCertificateOption.Manual,
                     ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => { return true; }
+                    //ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
                 };
 
                 if (shouldUseToken)
                 {
                     connection = new HubConnectionBuilder()
-                    .WithUrl(url, options =>
+                    .WithUrl(url, Microsoft.AspNetCore.Http.Connections.HttpTransportType.WebSockets, options =>
                     {
                         options.AccessTokenProvider = () => Task.FromResult(model.Token);
                         options.HttpMessageHandlerFactory = _ => handler;
@@ -116,7 +118,7 @@ namespace CommunicationBase
                     // TODO: https://github.com/dotnet/aspnetcore/issues/11408
 
                     connection = new HubConnectionBuilder()
-                    .WithUrl(url, options =>
+                    .WithUrl(url, Microsoft.AspNetCore.Http.Connections.HttpTransportType.WebSockets, options =>
                     {
                         options.HttpMessageHandlerFactory = _ => handler;
                         options.WebSocketConfiguration = sockets =>
