@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 using PluginFeature.Interfaces;

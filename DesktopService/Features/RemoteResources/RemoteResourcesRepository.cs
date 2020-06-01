@@ -2,7 +2,6 @@
 using DALDesktopService.Models;
 using DesktopService.Features.DeviceFeature;
 using DesktopService.Map;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using PluginFeature.Models;
 using SharedCoreModels;

@@ -1,5 +1,4 @@
 ﻿using DesktopService.Features.Logger;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SharedCoreModels;

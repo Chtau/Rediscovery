@@ -8,7 +8,6 @@ using DesktopService.Features.Logger;
 using DesktopService.Features.RemoteResources;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -38,11 +37,6 @@ namespace DesktopService
         // Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSignalR(options =>
-            {
-                options.EnableDetailedErrors = true;
-            });
-
             services.AddControllers();
 
             var identitySettingsSection = Configuration.GetSection(SharedConfigurations.DesktopService.Models.IdentityConfiguration.SectionName);

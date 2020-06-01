@@ -11,7 +11,7 @@ namespace CertificateService
     {
         public static IServiceCollection AddCertificateService(this IServiceCollection services)
         {
-            services.AddSingleton<CreateCertificatesRsa>();
+            services.AddCertificateManager();
             services.AddSingleton<ICertificateManager, CertificateManager>();
             return services;
         }
