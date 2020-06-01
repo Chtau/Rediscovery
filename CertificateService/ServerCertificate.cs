@@ -72,11 +72,15 @@ namespace CertificateService
             return OnGetPem(importExportCertificate, certificate);
         }
 
-        private static X509Certificate2 OnCreateCertificate(IServiceProvider serviceProvider, string dnsNameOrIP, string friendlyName)
+        internal static X509Certificate2 OnCreateCertificate(IServiceProvider serviceProvider, string dnsNameOrIP, string friendlyName = null)
         {
             var _createCertificatesRsa = serviceProvider.GetService<CreateCertificatesRsa>();
+            return OnCreateCertificate(_createCertificatesRsa, dnsNameOrIP, friendlyName);
+        }
 
-            var devCertificate = _createCertificatesRsa
+        internal static X509Certificate2 OnCreateCertificate(CreateCertificatesRsa createCertificatesRsa, string dnsNameOrIP, string friendlyName = null)
+        {
+            var devCertificate = createCertificatesRsa
                 .CreateDevelopmentCertificate(dnsNameOrIP, 10);
             devCertificate.FriendlyName = "development";
             if (!string.IsNullOrWhiteSpace(friendlyName))
@@ -85,17 +89,17 @@ namespace CertificateService
             return devCertificate;
         }
 
-        private static byte[] OnGetPfx(ImportExportCertificate importExportCertificate, X509Certificate2 certificate, string password)
+        internal static byte[] OnGetPfx(ImportExportCertificate importExportCertificate, X509Certificate2 certificate, string password)
         {
             return importExportCertificate.ExportRootPfx(password, certificate);
         }
 
-        private static string OnGetPrivateKey(ImportExportCertificate importExportCertificate, X509Certificate2 certificate)
+        internal static string OnGetPrivateKey(ImportExportCertificate importExportCertificate, X509Certificate2 certificate)
         {
             return importExportCertificate.PemExportRsaPrivateKey(certificate);
         }
 
-        private static string OnGetPem(ImportExportCertificate importExportCertificate, X509Certificate2 certificate)
+        internal static string OnGetPem(ImportExportCertificate importExportCertificate, X509Certificate2 certificate)
         {
             return importExportCertificate.PemExportPublicKeyCertificate(certificate);
         }
