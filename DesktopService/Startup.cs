@@ -1,4 +1,5 @@
-﻿using CommunicationResourceProvider;
+﻿using CertificateService;
+using CommunicationResourceProvider;
 using DALDesktopService;
 using DesktopService.Features.Authentication;
 using DesktopService.Features.DeviceFeature;
@@ -96,6 +97,11 @@ namespace DesktopService
             {
                 c.ConnectionString = System.IO.Path.Combine(AppFolders.GetUserFolder(appSettings.AppDataFolder), "rediscovery.db");
             });
+            services.AddCertificateService(config =>
+            {
+                config.DnsIp = Program.HostIpAddress;
+            });
+
             services.AddSingleton<IConfigurationRoot>(Configuration);
             services.AddSingleton<Features.FeatureDefinitions.IManifest, Features.FeatureDefinitions.Manifest>();
             services.AddScoped<Features.Authentication.ITokenService, Features.Authentication.TokenService>();
@@ -113,6 +119,7 @@ namespace DesktopService
         // Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
+            app.UseCertificateServiceDefaults();
             /*loggerFactory.AddInternalLogger();
             loggerFactory.AddInternalLogger(new InternalLoggerConfiguration
             {
