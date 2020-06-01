@@ -43,6 +43,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CertificateService\CertificateService.csproj" />
+    <ProjectReference Include="..\CommunicationAuthenticationProvider\CommunicationAuthenticationProvider.csproj" />
+    <ProjectReference Include="..\CommunicationFeatureProvider\CommunicationFeatureProvider.csproj" />
     <ProjectReference Include="..\CommunicationResourceProvider\CommunicationResourceProvider.csproj" />
     <ProjectReference Include="..\DALDesktopService\DALDesktopService.csproj" />
     <ProjectReference Include="..\PluginFeature\PluginFeature.csproj" />

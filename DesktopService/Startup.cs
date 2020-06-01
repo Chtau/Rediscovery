@@ -1,4 +1,6 @@
 ﻿using CertificateService;
+using CommunicationAuthenticationProvider;
+using CommunicationFeatureProvider;
 using CommunicationResourceProvider;
 using DALDesktopService;
 using DesktopService.Features.Authentication;
@@ -108,6 +110,8 @@ namespace DesktopService
 
             services.AddSingleton<Features.Plugins.ILoadPlugins, Features.Plugins.LoadPlugins>();
             services.AddResourceProvider<Features.Authentication.TokenService, RemoteResourcesRepository>();
+            services.AddAuthenticationProvider();
+            services.AddFeatureProvider();
         }
 
         // Use this method to configure the HTTP request pipeline.
@@ -145,11 +149,11 @@ namespace DesktopService
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseResourceProvider("/remote/resource/hub");
+            app.UseFeatureProvider("/hubs/feature");
+            app.UseAuthenticationProvider("/hubs/connect");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<ConnectHub>("/hubs/connect");
-                endpoints.MapHub<DeviceFeatureHub>("/hubs/feature");
             });
         }
     }
