@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace CommunicationFeatureProvider
 {
+    [Obsolete("Do not use")]
     [Authorize]
     public class FeatureHub : Hub
     {

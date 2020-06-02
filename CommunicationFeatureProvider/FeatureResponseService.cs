@@ -8,16 +8,14 @@ namespace CommunicationFeatureProvider
 {
     public class FeatureResponseService : IFeatureResponseService
     {
-        private readonly IHubContext<FeatureHub> _hubContext;
-
-        public FeatureResponseService(IHubContext<FeatureHub> hubContext)
+        public FeatureResponseService()
         {
-            _hubContext = hubContext;
+            
         }
 
         public void ResponseToClient(Guid featureId, DeviceFeatureData data)
         {
-            _hubContext.Clients.User(data.DeviceId).SendAsync("ClientResponse", featureId, data.ProfileId, data.Data);
+            //_hubContext.Clients.User(data.DeviceId).SendAsync("ClientResponse", featureId, data.ProfileId, data.Data);
         }
     }
 }

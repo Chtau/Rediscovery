@@ -12,9 +12,9 @@ namespace PluginFeature.Models
         public string DeviceId { get; set; }
         public Guid FeatureId { get; set; }
         public string ProfileId { get; set; }
-        public object Data { get; set; }
+        public string Data { get; set; }
 
-        public DeviceFeatureData(string deviceId, Guid featureId, string profileId, object data)
+        public DeviceFeatureData(string deviceId, Guid featureId, string profileId, string data)
         {
             DeviceId = deviceId;
             FeatureId = featureId;
