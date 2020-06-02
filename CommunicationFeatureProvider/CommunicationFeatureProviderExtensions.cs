@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using CommunicationFeatureProvider.ProtoServices;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -8,11 +9,11 @@ namespace CommunicationFeatureProvider
 {
     public static class CommunicationFeatureProviderExtensions
     {
-        public static IApplicationBuilder UseFeatureProvider(this IApplicationBuilder app, string hubPath)
+        public static IApplicationBuilder UseFeatureProvider(this IApplicationBuilder app)
         {
-            app.UseSignalR(x =>
+            app.UseEndpoints(endpoints =>
             {
-                x.MapHub<FeatureHub>(hubPath);
+                endpoints.MapGrpcService<GreeterService>();
             });
             return app;
         }
@@ -21,6 +22,7 @@ namespace CommunicationFeatureProvider
             where TActiveDeviceService : class, IActiveDeviceService
             where TFeatureEntityService : class, IFeatureEntityService
         {
+            services.AddGrpc();
             services.AddSingleton<IActiveDeviceService, TActiveDeviceService>();
             services.AddSingleton<IFeatureEntityService, TFeatureEntityService>();
             services.AddSingleton<IFeatureResponseService, FeatureResponseService>();
