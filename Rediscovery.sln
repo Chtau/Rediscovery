@@ -55,9 +55,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopHub.Shared", "Deskto
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CertificateService", "CertificateService\CertificateService.csproj", "{5EB7142F-4969-4B1C-A8AD-F4C526701412}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationFeatureProvider", "CommunicationFeatureProvider\CommunicationFeatureProvider.csproj", "{31BA226D-53DD-4F43-A001-F79D8766C412}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationFeatureProvider", "CommunicationFeatureProvider\CommunicationFeatureProvider.csproj", "{31BA226D-53DD-4F43-A001-F79D8766C412}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationAuthenticationProvider", "CommunicationAuthenticationProvider\CommunicationAuthenticationProvider.csproj", "{3DB0247C-1166-4141-9AB3-4BABE212B335}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationAuthenticationProvider", "CommunicationAuthenticationProvider\CommunicationAuthenticationProvider.csproj", "{3DB0247C-1166-4141-9AB3-4BABE212B335}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationFeatureConsumer", "CommunicationFeatureConsumer\CommunicationFeatureConsumer.csproj", "{1FB3B6F6-F47F-49CE-ADF2-113764CD8157}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -411,6 +413,18 @@ Global
 		{3DB0247C-1166-4141-9AB3-4BABE212B335}.Release|x64.Build.0 = Release|Any CPU
 		{3DB0247C-1166-4141-9AB3-4BABE212B335}.Release|x86.ActiveCfg = Release|Any CPU
 		{3DB0247C-1166-4141-9AB3-4BABE212B335}.Release|x86.Build.0 = Release|Any CPU
+		{1FB3B6F6-F47F-49CE-ADF2-113764CD8157}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FB3B6F6-F47F-49CE-ADF2-113764CD8157}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FB3B6F6-F47F-49CE-ADF2-113764CD8157}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1FB3B6F6-F47F-49CE-ADF2-113764CD8157}.Debug|x64.Build.0 = Debug|Any CPU
+		{1FB3B6F6-F47F-49CE-ADF2-113764CD8157}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1FB3B6F6-F47F-49CE-ADF2-113764CD8157}.Debug|x86.Build.0 = Debug|Any CPU
+		{1FB3B6F6-F47F-49CE-ADF2-113764CD8157}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FB3B6F6-F47F-49CE-ADF2-113764CD8157}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FB3B6F6-F47F-49CE-ADF2-113764CD8157}.Release|x64.ActiveCfg = Release|Any CPU
+		{1FB3B6F6-F47F-49CE-ADF2-113764CD8157}.Release|x64.Build.0 = Release|Any CPU
+		{1FB3B6F6-F47F-49CE-ADF2-113764CD8157}.Release|x86.ActiveCfg = Release|Any CPU
+		{1FB3B6F6-F47F-49CE-ADF2-113764CD8157}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
