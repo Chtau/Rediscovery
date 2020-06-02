@@ -28,5 +28,11 @@ namespace CommunicationFeatureProvider
             services.AddSingleton<IFeatureResponseService, FeatureResponseService>();
             return services;
         }
+
+        public static IServiceCollection AddFeatureProvider(this IServiceCollection services)
+        {
+            services.AddGrpc();
+            return services;
+        }
     }
 }

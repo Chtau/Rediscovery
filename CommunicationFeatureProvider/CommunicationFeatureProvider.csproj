@@ -9,7 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommunicationBase\CommunicationBase.csproj" />
     <ProjectReference Include="..\PluginFeature\PluginFeature.csproj" />
   </ItemGroup>
 
