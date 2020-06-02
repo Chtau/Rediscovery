@@ -19,4 +19,12 @@
     <Protobuf Include="..\Proto\featureexchange.proto" GrpcServices="Client" Link="Protos\featureexchange.proto" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ProtoServices\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PluginFeature\PluginFeature.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -42,7 +42,7 @@ namespace CommunicationFeatureProvider
             var feature = _featureEntityService.GetFeature(featureId);
             if (feature != null)
             {
-                var val = new DeviceFeatureData(Context.UserIdentifier, featureId, profileId, data);
+                var val = new DeviceFeatureData(Context.UserIdentifier, featureId, profileId, data.ToString());
                 feature.ReceiveData(val);
             }
         }

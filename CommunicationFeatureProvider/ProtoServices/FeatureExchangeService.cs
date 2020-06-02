@@ -16,16 +16,19 @@ namespace CommunicationFeatureProvider.ProtoServices
 
         public void SendFeatureData(PluginFeature.Models.DeviceFeatureData deviceFeatureData)
         {
-            Task.Run(async () =>
+            if (_responseStream != null)
             {
-                await _responseStream.WriteAsync(new DeviceFeatureData
+                Task.Run(async () =>
                 {
-                    Data = deviceFeatureData.Data,
-                    DeviceId = deviceFeatureData.DeviceId,
-                    FeatureId = deviceFeatureData.FeatureId.ToString(),
-                    ProfileId = deviceFeatureData.ProfileId
+                    await _responseStream.WriteAsync(new DeviceFeatureData
+                    {
+                        Data = deviceFeatureData.Data,
+                        DeviceId = deviceFeatureData.DeviceId,
+                        FeatureId = deviceFeatureData.FeatureId.ToString(),
+                        ProfileId = deviceFeatureData.ProfileId
+                    });
                 });
-            });
+            }
         }
 
         public override async Task ExchangeStream(IAsyncStreamReader<DeviceFeatureData> requestStream, IServerStreamWriter<DeviceFeatureData> responseStream, ServerCallContext context)

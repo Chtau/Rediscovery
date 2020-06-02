@@ -14,6 +14,7 @@ namespace CommunicationFeatureProvider
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<GreeterService>();
+                endpoints.MapGrpcService<FeatureExchangeService>();
             });
             return app;
         }

@@ -1,0 +1,54 @@
+﻿using System;
+using System.IO;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
+
+namespace GrpcTestClient
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Init Grpc!");
+            var consumer = new CommunicationFeatureConsumer.FeatureConsume();
+            consumer.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
+            consumer.HelloReplay += (obj, message) => {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("[Hello response]" + message);
+                Console.ResetColor();
+            };
+            Console.WriteLine("Send Client message");
+            consumer.SayHello("Test Client");
+
+
+            Console.WriteLine("Init Feature data stream");
+            consumer.ReceivedFeatureData += (obj, data) =>
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("[Feature data received]" + data.Data);
+                Console.ResetColor();
+            };
+
+
+            Console.ReadKey();
+        }
+
+        public static string ExportToPEM(X509Certificate cert)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            builder.AppendLine("-----BEGIN CERTIFICATE-----");
+            builder.AppendLine(Convert.ToBase64String(cert.Export(X509ContentType.Cert), Base64FormattingOptions.InsertLineBreaks));
+            builder.AppendLine("-----END CERTIFICATE-----");
+
+            return builder.ToString();
+        }
+
+        public static X509Certificate2 GetX509Certificate2()
+        {
+            var cert = new X509Certificate2(Path.Combine(@"C:\DEV\TMP", "development.pfx"), "1234");
+            Console.WriteLine(cert.FriendlyName + " Issuer:" + cert.Issuer + " Thumbprint:" + cert.Thumbprint);
+            return cert;
+        }
+    }
+}
