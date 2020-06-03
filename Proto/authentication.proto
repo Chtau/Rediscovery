@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package authentication;
+
+service AuthentionExchange {
+  rpc Welcome (WelcomeDeviceMessage) returns (WelcomeDeviceReply);
+}
+
+message WelcomeDeviceMessage {
+  string deviceIdentifier = 1;
+  string deviceName = 2;
+  string model = 3;
+  string manufacturer = 4;
+  string oSVersion = 5;
+  string platform = 6;
+  string idiom = 7;
+  string deviceType = 8;
+}
+
+message WelcomeDeviceReply {
+  string token = 1;
+  enum State {
+    None = 0;
+    OK = 1;
+    Error = 2;
+    Warning = 3;
+    Offline = 4;
+    Denied = 5;
+    WaitForApprovel = 6;
+  }
+  State connectionState = 2;
+}

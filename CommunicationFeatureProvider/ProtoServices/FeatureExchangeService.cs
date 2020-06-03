@@ -35,6 +35,7 @@ namespace CommunicationFeatureProvider.ProtoServices
         {
             _context = context;
             _responseStream = responseStream;
+            var user = _context.GetHttpContext().User;
 
             var readTask = Task.Run(async () =>
             {
