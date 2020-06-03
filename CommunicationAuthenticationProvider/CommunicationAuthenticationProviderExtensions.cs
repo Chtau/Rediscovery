@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using CommunicationAuthenticationProvider.ProtoServices;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -8,11 +9,12 @@ namespace CommunicationAuthenticationProvider
 {
     public static class CommunicationAuthenticationProviderExtensions
     {
-        public static IApplicationBuilder UseAuthenticationProvider(this IApplicationBuilder app, string hubPath)
+        public static IApplicationBuilder UseAuthenticationProvider(this IApplicationBuilder app)
         {
-            app.UseSignalR(x =>
+            app.UseEndpoints(endpoints =>
             {
-                x.MapHub<AuthenticationHub>(hubPath);
+                endpoints.MapGrpcService<AuthenticationExchangeService>();
+                endpoints.MapGrpcService<ManifestExchangeService>();
             });
             return app;
         }
@@ -20,6 +22,9 @@ namespace CommunicationAuthenticationProvider
         public static IServiceCollection AddAuthenticationProvider<TAuthenticationManager>(this IServiceCollection services)
             where TAuthenticationManager : class, IAuthenticationManager
         {
+            services.AddGrpc();
+            services.AddSingleton<IAuthenticationService, AuthenticationService>();
+            services.AddSingleton<Services.IEventService, Services.EventService>();
             services.AddSingleton<IAuthenticationManager, TAuthenticationManager>();
             return services;
         }

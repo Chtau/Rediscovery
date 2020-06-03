@@ -30,6 +30,7 @@ namespace CommunicationFeatureProvider
             return services;
         }
 
+        [Obsolete("Only use for Testing")]
         public static IServiceCollection AddFeatureProvider(this IServiceCollection services)
         {
             services.AddGrpc();
