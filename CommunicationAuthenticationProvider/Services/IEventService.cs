@@ -8,7 +8,9 @@ namespace CommunicationAuthenticationProvider.Services
     {
         event EventHandler<SharedCoreModels.WelcomeDeviceMessage> ReceivedWelcomeDeviceMessage;
         event EventHandler<SharedCoreModels.WelcomeDeviceReply> SendWelcomeDeviceReply;
+        event EventHandler<SharedCoreModels.Manifest> SendManifest;
         void InvokeSendWelcomeDeviceReply(SharedCoreModels.WelcomeDeviceReply welcomeDeviceReply);
         void InvokeReceivedWelcomeDeviceMessage(SharedCoreModels.WelcomeDeviceMessage welcomeDeviceMessage);
+        void InvokeSendManifest(SharedCoreModels.Manifest manifest);
     }
 }

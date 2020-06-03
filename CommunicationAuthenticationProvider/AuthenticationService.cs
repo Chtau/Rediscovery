@@ -62,9 +62,7 @@ namespace CommunicationAuthenticationProvider
                             State = SharedCoreModels.Enums.ConnectionState.OK,
                             Token = result.Token
                         });
-                        _logger.LogInformation("TODO: Send Manifest data to the Client");
-                        //await OnLogin(e.DeviceName, result.Token);
-                        await Clients.Caller.SendAsync("Manifest", _authenticationManager.GetManifest());
+                        _eventService.InvokeSendManifest(_authenticationManager.GetManifest());
                     }
                 }
                 catch (Exception ex)
