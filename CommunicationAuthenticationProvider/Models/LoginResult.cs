@@ -5,9 +5,10 @@ using System.Text;
 
 namespace CommunicationAuthenticationProvider.Models
 {
-    public class RequestLoginResult
+    public class LoginResult
     {
-        public string Token { get; set; }
-        public LoginState ResultState { get; set; }
+        public LoginState State { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
     }
 }

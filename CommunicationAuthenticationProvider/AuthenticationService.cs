@@ -13,13 +13,16 @@ namespace CommunicationAuthenticationProvider
         private readonly IEventService _eventService;
         private readonly ILogger<AuthenticationService> _logger;
         private readonly IAuthenticationManager _authenticationManager;
+        private readonly ITokenService _tokenService;
 
         public AuthenticationService(ILoggerFactory loggerFactory, IEventService eventService,
-            IAuthenticationManager authenticationManager)
+            IAuthenticationManager authenticationManager,
+            ITokenService tokenService)
         {
             _logger = loggerFactory.CreateLogger<AuthenticationService>();
             _authenticationManager = authenticationManager;
             _eventService = eventService;
+            _tokenService = tokenService;
             _eventService.ReceivedWelcomeDeviceMessage += _eventService_ReceivedWelcomeDeviceMessage;
         }
 
@@ -30,7 +33,7 @@ namespace CommunicationAuthenticationProvider
                 try
                 {
                     var result = await _authenticationManager.RequestLogin(e);
-                    if (result.ResultState == LoginState.Denied)
+                    if (result.State == LoginState.Denied)
                     {
                         _eventService.InvokeSendWelcomeDeviceReply(new SharedCoreModels.WelcomeDeviceReply
                         {
@@ -38,7 +41,7 @@ namespace CommunicationAuthenticationProvider
                             Token = null
                         });
                     }
-                    else if (result.ResultState == LoginState.Failed)
+                    else if (result.State == LoginState.Failed)
                     {
                         _eventService.InvokeSendWelcomeDeviceReply(new SharedCoreModels.WelcomeDeviceReply
                         {
@@ -46,7 +49,7 @@ namespace CommunicationAuthenticationProvider
                             Token = null
                         });
                     }
-                    else if (result.ResultState == LoginState.RequiredAuthorizeKey)
+                    else if (result.State == LoginState.RequiredAuthorizeKey)
                     {
                         await _authenticationManager.AddPendingApprovel(e);
                         _eventService.InvokeSendWelcomeDeviceReply(new SharedCoreModels.WelcomeDeviceReply
@@ -55,12 +58,12 @@ namespace CommunicationAuthenticationProvider
                             Token = null
                         });
                     }
-                    else if (result.ResultState == LoginState.OK)
+                    else if (result.State == LoginState.OK)
                     {
                         _eventService.InvokeSendWelcomeDeviceReply(new SharedCoreModels.WelcomeDeviceReply
                         {
                             State = SharedCoreModels.Enums.ConnectionState.OK,
-                            Token = result.Token
+                            Token = _tokenService.CreateNewToken(result.Id, result.Name)
                         });
                         _eventService.InvokeSendManifest(_authenticationManager.GetManifest());
                     }
