@@ -3,7 +3,7 @@ syntax = "proto3";
 package authentication;
 
 service AuthentionExchange {
-  rpc Welcome (WelcomeDeviceMessage) returns (WelcomeDeviceReply);
+  rpc Welcome (WelcomeDeviceMessage) returns (stream WelcomeDeviceReply);
 }
 
 message WelcomeDeviceMessage {
