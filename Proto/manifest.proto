@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package manifest;
+
+service ManifestExchange {
+  rpc Device (google.protobuf.Empty) returns (stream ManifestReply);
+}
+
+message FeatureDefinitionExtended {
+    string id = 1;
+    string displayName = 2;
+    string version = 3;
+    string minimalFeatureIntegrationPoint = 4;
+    string minimalControlIntegrationPoint = 5;
+    string author = 6;
+    string documentation = 7;
+    string website = 8;
+    string pluginDirectory = 9;
+    bool hasProfiles = 10;
+    bool profileUIReadonly = 11;
+    string profileUIElementName = 12;
+    bool hasSettings = 13;
+    bool settingUIReadonly = 14;
+    string settingUIElementName = 15;
+    enum IntegrationPoint {
+        Desktop = 0;
+        Mobile = 1;
+    }
+    IntegrationPoint controlIntegrationPoint = 16;
+    IntegrationPoint featureIntegrationPoint = 17;
+}
+
+message ManifestReply {
+  string clientName = 1;
+  string clientVersion = 2;
+  string appMinimumVersion = 3;
+  repeated FeatureDefinitionExtended supportedFeatures = 4;
+}
