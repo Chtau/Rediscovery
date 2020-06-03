@@ -4,17 +4,28 @@ using System.Text;
 using Grpc.Core;
 using Authentication;
 using System.Threading.Tasks;
+using CommunicationAuthenticationProvider.Services;
 
 namespace CommunicationAuthenticationProvider.ProtoServices
 {
     public class AuthenticationExchangeService : AuthentionExchange.AuthentionExchangeBase
     {
+        private readonly IEventService _eventService;
         private IServerStreamWriter<WelcomeDeviceReply> _responseStream;
         private ServerCallContext _context;
 
-        public event EventHandler<SharedCoreModels.WelcomeDeviceMessage> ReceivedWelcomeDeviceMessage;
+        public AuthenticationExchangeService(IEventService eventService)
+        {
+            _eventService = eventService;
+            _eventService.SendWelcomeDeviceReply += _eventService_SendWelcomeDeviceReply;
+        }
 
-        public void SendWelcomeDeviceReply(SharedCoreModels.Enums.ConnectionState connectionState, string token)
+        private void _eventService_SendWelcomeDeviceReply(object sender, SharedCoreModels.WelcomeDeviceReply e)
+        {
+            OnSendWelcomeDeviceReply(e);
+        }
+
+        private void OnSendWelcomeDeviceReply(SharedCoreModels.WelcomeDeviceReply welcomeDeviceReply)
         {
             if (_responseStream != null)
             {
@@ -22,8 +33,8 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                 {
                     await _responseStream.WriteAsync(new WelcomeDeviceReply
                     {
-                        ConnectionState = (WelcomeDeviceReply.Types.State)(int)connectionState,
-                        Token = token
+                        ConnectionState = (WelcomeDeviceReply.Types.State)(int)welcomeDeviceReply.State,
+                        Token = welcomeDeviceReply.Token
                     });
                 });
             }
@@ -34,7 +45,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
             _context = context;
             _responseStream = responseStream;
 
-            ReceivedWelcomeDeviceMessage?.Invoke(this, new SharedCoreModels.WelcomeDeviceMessage
+            _eventService.InvokeReceivedWelcomeDeviceMessage(new SharedCoreModels.WelcomeDeviceMessage
             {
                 DeviceIdentifier = request.DeviceIdentifier,
                 DeviceName = request.DeviceName,
