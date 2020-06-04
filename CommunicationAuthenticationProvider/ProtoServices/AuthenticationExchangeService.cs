@@ -71,10 +71,10 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                     Platform = request.Platform
                 });
 
-                /*do
+                do
                 {
                     await Task.Delay(100);
-                } while (true);*/
+                } while (true);
             }
             catch (Exception ex)
             {

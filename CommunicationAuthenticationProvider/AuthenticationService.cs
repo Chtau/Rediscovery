@@ -66,7 +66,6 @@ namespace CommunicationAuthenticationProvider
                             State = SharedCoreModels.Enums.ConnectionState.OK,
                             Token = _tokenService.CreateNewToken(result.Id, result.Name)
                         });
-                        _eventService.InvokeSendManifest(_authenticationManager.GetManifest());
                     }
                 }
                 catch (Exception ex)

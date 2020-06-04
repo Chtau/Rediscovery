@@ -6,6 +6,7 @@ using CommunicationAuthenticationProvider.Services;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Manifest;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 
 namespace CommunicationAuthenticationProvider.ProtoServices
@@ -14,38 +15,14 @@ namespace CommunicationAuthenticationProvider.ProtoServices
     {
         private readonly IEventService _eventService;
         private readonly ILogger<ManifestExchangeService> _logger;
-        private IServerStreamWriter<ManifestReply> _responseStream;
+        private readonly IAuthenticationManager _authenticationManager;
         private ServerCallContext _context;
 
-        public ManifestExchangeService(ILoggerFactory loggerFactory, IEventService eventService)
+        public ManifestExchangeService(ILoggerFactory loggerFactory, IEventService eventService, IAuthenticationManager authenticationManager)
         {
             _logger = loggerFactory.CreateLogger<ManifestExchangeService>();
+            _authenticationManager = authenticationManager;
             _eventService = eventService;
-            _eventService.SendManifest += _eventService_SendManifest;
-        }
-
-        private void _eventService_SendManifest(object sender, SharedCoreModels.Manifest e)
-        {
-            if (_responseStream != null)
-            {
-                Task.Run(async () =>
-                {
-                    try
-                    {
-                        var manifest = new ManifestReply
-                        {
-                            AppMinimumVersion = e.AppMinimumVersion.ToString(),
-                            ClientName = e.ClientName,
-                            ClientVersion = e.ClientVersion.ToString()
-                        };
-                        manifest.SupportedFeatures.Add(OnGetFeatures(e.SupportedFeatures));
-                        await _responseStream.WriteAsync(manifest);
-                    } catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "_eventService_SendManifest");
-                    }
-                });
-            }
         }
 
         private IEnumerable<FeatureDefinitionExtended> OnGetFeatures(List<SharedBase.Device.FeatureDefinitionExtended> featureDefinitionExtendeds)
@@ -80,12 +57,33 @@ namespace CommunicationAuthenticationProvider.ProtoServices
             return list;
         }
 
+        [Authorize]
         public override async Task Device(Empty request, IServerStreamWriter<ManifestReply> responseStream, ServerCallContext context)
         {
             try
             {
+                Console.WriteLine("Received Manifest request");
                 _context = context;
-                _responseStream = responseStream;
+
+                await Task.Run(async () =>
+                {
+                    try
+                    {
+                        var e = _authenticationManager.GetManifest();
+                        var manifest = new ManifestReply
+                        {
+                            AppMinimumVersion = e.AppMinimumVersion.ToString(),
+                            ClientName = e.ClientName,
+                            ClientVersion = e.ClientVersion.ToString()
+                        };
+                        manifest.SupportedFeatures.Add(OnGetFeatures(e.SupportedFeatures));
+                        await responseStream.WriteAsync(manifest);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Device send Manifest");
+                    }
+                });
             }
             catch (Exception ex)
             {

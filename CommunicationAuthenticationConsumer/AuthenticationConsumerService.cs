@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using CommunicationBase;
+using Grpc.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,6 +14,8 @@ namespace CommunicationAuthenticationConsumer
 
         private Authentication.AuthentionExchange.AuthentionExchangeClient authenticationClient;
         private Manifest.ManifestExchange.ManifestExchangeClient manifestClient;
+
+        public string Token { get; private set; }
 
         public void Connect(string ipAddress, int port, string certificatePEM)
         {
@@ -48,11 +51,12 @@ namespace CommunicationAuthenticationConsumer
                             {
                                 await foreach (var message in call.ResponseStream.ReadAllAsync())
                                 {
+                                    Token = message.Token;
                                     Console.WriteLine("Consumer Welcome reply received");
                                     var replyMsg = new SharedCoreModels.WelcomeDeviceReply
                                     {
                                         State = (SharedCoreModels.Enums.ConnectionState)(int)message.ConnectionState,
-                                        Token = message.Token
+                                        Token = Token
                                     };
                                     ReceivedWelcomeReply?.Invoke(this, replyMsg);
                                 }
@@ -77,11 +81,14 @@ namespace CommunicationAuthenticationConsumer
 
         public void RequestManifest()
         {
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 try
                 {
-                    using (var call = manifestClient.Device(new Google.Protobuf.WellKnownTypes.Empty()))
+                    Console.WriteLine("Consumer request Manifest");
+                    var meta = new Metadata();
+                    meta.AddAuthorizationHeader(Token);
+                    using (var call = manifestClient.Device(new Google.Protobuf.WellKnownTypes.Empty(), headers: meta))
                     {
                         var readTask = Task.Run(async () =>
                         {
@@ -98,12 +105,20 @@ namespace CommunicationAuthenticationConsumer
                                     };
                                     ReceivedManifestReply?.Invoke(this, replyMsg);
                                 }
+                                do
+                                {
+                                    await Task.Delay(100);
+                                } while (true);
                             }
                             catch (Exception ex)
                             {
                                 System.Diagnostics.Debug.Print(ex.ToString());
                             }
                         });
+                        do
+                        {
+                            await Task.Delay(100);
+                        } while (true);
                     }
                 }
                 catch (Exception ex)

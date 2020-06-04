@@ -20,7 +20,7 @@ namespace GrpcTestService
         public void ConfigureServices(IServiceCollection services)
         {
             //services.AddFeatureProvider();
-            services.AddAuthenticationProvider<AuthenticationManager>("test");
+            services.AddAuthenticationProvider<AuthenticationManager>("testtesttesttesttesttesttesttesttesttesttesttesttesttesttest");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
