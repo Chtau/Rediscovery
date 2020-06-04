@@ -5,7 +5,7 @@ import "google/protobuf/empty.proto";
 package manifest;
 
 service ManifestExchange {
-  rpc Device (google.protobuf.Empty) returns (stream ManifestReply);
+  rpc Device (google.protobuf.Empty) returns (ManifestReply);
 }
 
 message FeatureDefinitionExtended {

@@ -3,6 +3,7 @@ using Grpc.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CommunicationAuthenticationConsumer
@@ -31,6 +32,7 @@ namespace CommunicationAuthenticationConsumer
             {
                 try
                 {
+                    var cts = new CancellationTokenSource();
                     var msg = new Authentication.WelcomeDeviceMessage
                     {
                         DeviceIdentifier = message.DeviceIdentifier,
@@ -43,34 +45,15 @@ namespace CommunicationAuthenticationConsumer
                         Platform = message.Platform
                     };
                     Console.WriteLine("Consumer Welcome send Welcome");
-                    using (var call = authenticationClient.Welcome(msg))
+                    var reply = await authenticationClient.WelcomeAsync(msg, cancellationToken: cts.Token);
+                    Token = reply.Token;
+                    Console.WriteLine("Consumer Welcome reply received");
+                    var replyMsg = new SharedCoreModels.WelcomeDeviceReply
                     {
-                        var readTask = Task.Run(async () =>
-                        {
-                            try
-                            {
-                                await foreach (var message in call.ResponseStream.ReadAllAsync())
-                                {
-                                    Token = message.Token;
-                                    Console.WriteLine("Consumer Welcome reply received");
-                                    var replyMsg = new SharedCoreModels.WelcomeDeviceReply
-                                    {
-                                        State = (SharedCoreModels.Enums.ConnectionState)(int)message.ConnectionState,
-                                        Token = Token
-                                    };
-                                    ReceivedWelcomeReply?.Invoke(this, replyMsg);
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                System.Diagnostics.Debug.Print(ex.ToString());
-                            }
-                        });
-                        do
-                        {
-                            await Task.Delay(100);
-                        } while (true);
-                    }
+                        State = (SharedCoreModels.Enums.ConnectionState)(int)reply.ConnectionState,
+                        Token = Token
+                    };
+                    ReceivedWelcomeReply?.Invoke(this, replyMsg);
                 }
                 catch (Exception ex)
                 {
@@ -86,40 +69,18 @@ namespace CommunicationAuthenticationConsumer
                 try
                 {
                     Console.WriteLine("Consumer request Manifest");
+                    var cts = new CancellationTokenSource();
                     var meta = new Metadata();
                     meta.AddAuthorizationHeader(Token);
-                    using (var call = manifestClient.Device(new Google.Protobuf.WellKnownTypes.Empty(), headers: meta))
+                    var reply = await manifestClient.DeviceAsync(new Google.Protobuf.WellKnownTypes.Empty(), headers: meta, cancellationToken: cts.Token);
+                    var replyMsg = new SharedCoreModels.Manifest
                     {
-                        var readTask = Task.Run(async () =>
-                        {
-                            try
-                            {
-                                await foreach (var message in call.ResponseStream.ReadAllAsync())
-                                {
-                                    var replyMsg = new SharedCoreModels.Manifest
-                                    {
-                                        AppMinimumVersion = SharedBase.Core.Version.ConvertTo(message.AppMinimumVersion),
-                                        ClientName = message.ClientName,
-                                        ClientVersion = SharedBase.Core.Version.ConvertTo(message.ClientVersion),
-                                        SupportedFeatures = OnGetFeatures(message.SupportedFeatures)
-                                    };
-                                    ReceivedManifestReply?.Invoke(this, replyMsg);
-                                }
-                                do
-                                {
-                                    await Task.Delay(100);
-                                } while (true);
-                            }
-                            catch (Exception ex)
-                            {
-                                System.Diagnostics.Debug.Print(ex.ToString());
-                            }
-                        });
-                        do
-                        {
-                            await Task.Delay(100);
-                        } while (true);
-                    }
+                        AppMinimumVersion = SharedBase.Core.Version.ConvertTo(reply.AppMinimumVersion),
+                        ClientName = reply.ClientName,
+                        ClientVersion = SharedBase.Core.Version.ConvertTo(reply.ClientVersion),
+                        SupportedFeatures = OnGetFeatures(reply.SupportedFeatures)
+                    };
+                    ReceivedManifestReply?.Invoke(this, replyMsg);
                 }
                 catch (Exception ex)
                 {

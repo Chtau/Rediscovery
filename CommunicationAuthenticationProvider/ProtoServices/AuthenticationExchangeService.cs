@@ -6,58 +6,37 @@ using Authentication;
 using System.Threading.Tasks;
 using CommunicationAuthenticationProvider.Services;
 using Microsoft.Extensions.Logging;
+using SharedBase.Authentication;
 
 namespace CommunicationAuthenticationProvider.ProtoServices
 {
     public class AuthenticationExchangeService : AuthentionExchange.AuthentionExchangeBase
     {
-        private readonly IEventService _eventService;
         private readonly ILogger<AuthenticationExchangeService> _logger;
+        private readonly IAuthenticationManager _authenticationManager;
+        private readonly ITokenService _tokenService;
         private IServerStreamWriter<WelcomeDeviceReply> _responseStream;
 
-        public AuthenticationExchangeService(ILoggerFactory loggerFactory, IEventService eventService)
+        public AuthenticationExchangeService(ILoggerFactory loggerFactory,
+            IAuthenticationManager authenticationManager,
+            ITokenService tokenService)
         {
             _logger = loggerFactory.CreateLogger<AuthenticationExchangeService>();
-            _eventService = eventService;
-            _eventService.SendWelcomeDeviceReply += _eventService_SendWelcomeDeviceReply;
+            _authenticationManager = authenticationManager;
+            _tokenService = tokenService;
         }
 
-        private void _eventService_SendWelcomeDeviceReply(object sender, SharedCoreModels.WelcomeDeviceReply e)
+        public override async Task<WelcomeDeviceReply> Welcome(WelcomeDeviceMessage request, ServerCallContext context)
         {
-            OnSendWelcomeDeviceReply(e);
-        }
-
-        private void OnSendWelcomeDeviceReply(SharedCoreModels.WelcomeDeviceReply welcomeDeviceReply)
-        {
-            _logger.LogTrace("Provider try to send Welcome reply");
-            if (_responseStream != null)
+            var welcomeDeviceReply = new WelcomeDeviceReply
             {
-                Task.Run(async () =>
-                {
-                    try
-                    {
-                        await _responseStream.WriteAsync(new WelcomeDeviceReply
-                        {
-                            ConnectionState = (WelcomeDeviceReply.Types.State)(int)welcomeDeviceReply.State,
-                            Token = welcomeDeviceReply.Token
-                        });
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "OnSendWelcomeDeviceReply");
-                    }
-                });
-            }
-        }
-
-        public override async Task Welcome(WelcomeDeviceMessage request, IServerStreamWriter<WelcomeDeviceReply> responseStream, ServerCallContext context)
-        {
+                ConnectionState = WelcomeDeviceReply.Types.State.Offline,
+                Token = ""
+            };
             try
             {
                 _logger.LogTrace("Provider Welcome received");
-                _responseStream = responseStream;
-
-                _eventService.InvokeReceivedWelcomeDeviceMessage(new SharedCoreModels.WelcomeDeviceMessage
+                await OnReceivedWelcomeDeviceMessage(new SharedCoreModels.WelcomeDeviceMessage
                 {
                     DeviceIdentifier = request.DeviceIdentifier,
                     DeviceName = request.DeviceName,
@@ -67,17 +46,76 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                     Model = request.Model,
                     OSVersion = request.OSVersion,
                     Platform = request.Platform
-                });
-
-                do
+                }, (result) =>
                 {
-                    await Task.Delay(100);
-                } while (true);
+                    welcomeDeviceReply = new WelcomeDeviceReply
+                    {
+                        ConnectionState = (WelcomeDeviceReply.Types.State)(int)result.State,
+                        Token = result.Token
+                    };
+                });
+                welcomeDeviceReply.Token.EmptyIfNull();
+                return welcomeDeviceReply;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Welcome");
+                return welcomeDeviceReply;
             }
+        }
+
+        private async Task OnReceivedWelcomeDeviceMessage(SharedCoreModels.WelcomeDeviceMessage e, Action<SharedCoreModels.WelcomeDeviceReply> callback)
+        {
+            _logger.LogTrace("Provider received Welcome message from consumer");
+            await Task.Run(async () =>
+            {
+                try
+                {
+                    var result = await _authenticationManager.RequestLogin(e);
+                    if (result.State == LoginState.Denied)
+                    {
+                        callback.Invoke(new SharedCoreModels.WelcomeDeviceReply
+                        {
+                            State = SharedCoreModels.Enums.ConnectionState.Denied,
+                            Token = null
+                        });
+                    }
+                    else if (result.State == LoginState.Failed)
+                    {
+                        callback.Invoke(new SharedCoreModels.WelcomeDeviceReply
+                        {
+                            State = SharedCoreModels.Enums.ConnectionState.Error,
+                            Token = null
+                        });
+                    }
+                    else if (result.State == LoginState.RequiredAuthorizeKey)
+                    {
+                        await _authenticationManager.AddPendingApprovel(e);
+                        callback.Invoke(new SharedCoreModels.WelcomeDeviceReply
+                        {
+                            State = SharedCoreModels.Enums.ConnectionState.WaitForApprovel,
+                            Token = null
+                        });
+                    }
+                    else if (result.State == LoginState.OK)
+                    {
+                        callback.Invoke(new SharedCoreModels.WelcomeDeviceReply
+                        {
+                            State = SharedCoreModels.Enums.ConnectionState.OK,
+                            Token = _tokenService.CreateNewToken(result.Id, result.Name)
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.ToString());
+                    callback.Invoke(new SharedCoreModels.WelcomeDeviceReply
+                    {
+                        State = SharedCoreModels.Enums.ConnectionState.Error,
+                        Token = null
+                    });
+                }
+            });
         }
     }
 }

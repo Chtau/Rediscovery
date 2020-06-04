@@ -31,23 +31,23 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                 {
                     list.Add(new FeatureDefinitionExtended
                     {
-                        Author = item.Author,
+                        Author = item.Author.EmptyIfNull(),
                         ControlIntegrationPoint = (FeatureDefinitionExtended.Types.IntegrationPoint)(int)item.ControlIntegrationPoint,
-                        DisplayName = item.DisplayName,
-                        Documentation = item.Documentation,
+                        DisplayName = item.DisplayName.EmptyIfNull(),
+                        Documentation = item.Documentation.EmptyIfNull(),
                         FeatureIntegrationPoint = (FeatureDefinitionExtended.Types.IntegrationPoint)(int)item.FeatureIntegrationPoint,
                         HasProfiles = item.HasProfiles,
                         HasSettings = item.HasSettings,
-                        Id = item.Id.ToString(),
-                        MinimalControlIntegrationPoint = item.MinimalControlIntegrationPoint.ToString(),
-                        MinimalFeatureIntegrationPoint = item.MinimalFeatureIntegrationPoint.ToString(),
-                        PluginDirectory = item.PluginDirectory,
-                        ProfileUIElementName = item.ProfileUIElementName,
+                        Id = item.Id.ToString().EmptyIfNull(),
+                        MinimalControlIntegrationPoint = item.MinimalControlIntegrationPoint.ToString().EmptyIfNull(),
+                        MinimalFeatureIntegrationPoint = item.MinimalFeatureIntegrationPoint.ToString().EmptyIfNull(),
+                        PluginDirectory = item.PluginDirectory.EmptyIfNull(),
+                        ProfileUIElementName = item.ProfileUIElementName.EmptyIfNull(),
                         ProfileUIReadonly = item.ProfileUIReadonly,
-                        SettingUIElementName = item.SettingUIElementName,
+                        SettingUIElementName = item.SettingUIElementName.EmptyIfNull(),
                         SettingUIReadonly = item.SettingUIReadonly,
-                        Version = item.Version.ToString(),
-                        Website = item.Website,
+                        Version = item.Version.ToString().EmptyIfNull(),
+                        Website = item.Website.EmptyIfNull(),
                     });
                 }
             }
@@ -55,36 +55,32 @@ namespace CommunicationAuthenticationProvider.ProtoServices
         }
 
         [Authorize]
-        public override async Task Device(Empty request, IServerStreamWriter<ManifestReply> responseStream, ServerCallContext context)
+        public override Task<ManifestReply> Device(Empty request, ServerCallContext context)
         {
+            var manifest = new ManifestReply
+            {
+                AppMinimumVersion = "",
+                ClientName = "",
+                ClientVersion = ""
+            };
             try
             {
                 _logger.LogTrace("Received Manifest request");
-
-                await Task.Run(async () =>
+                var e = _authenticationManager.GetManifest();
+                manifest = new ManifestReply
                 {
-                    try
-                    {
-                        var e = _authenticationManager.GetManifest();
-                        var manifest = new ManifestReply
-                        {
-                            AppMinimumVersion = e.AppMinimumVersion.ToString(),
-                            ClientName = e.ClientName,
-                            ClientVersion = e.ClientVersion.ToString()
-                        };
-                        manifest.SupportedFeatures.Add(OnGetFeatures(e.SupportedFeatures));
-                        await responseStream.WriteAsync(manifest);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "Device send Manifest");
-                    }
-                });
+                    AppMinimumVersion = e.AppMinimumVersion.ToString().EmptyIfNull(),
+                    ClientName = e.ClientName.EmptyIfNull(),
+                    ClientVersion = e.ClientVersion.ToString().EmptyIfNull()
+                };
+                manifest.SupportedFeatures.Add(OnGetFeatures(e.SupportedFeatures));
+                return Task.FromResult(manifest);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Device");
             }
+            return Task.FromResult(manifest);
         }
     }
 }
