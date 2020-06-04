@@ -65,6 +65,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrpcTestService", "GrpcTest
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrpcTestClient", "GrpcTestClient\GrpcTestClient.csproj", "{E73E4ADE-BCC4-4DD9-BAFB-47314193F4AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationAuthenticationConsumer", "CommunicationAuthenticationConsumer\CommunicationAuthenticationConsumer.csproj", "{AA6DF67B-764A-4A57-A41F-2884CB4F30E5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -453,6 +455,18 @@ Global
 		{E73E4ADE-BCC4-4DD9-BAFB-47314193F4AB}.Release|x64.Build.0 = Release|Any CPU
 		{E73E4ADE-BCC4-4DD9-BAFB-47314193F4AB}.Release|x86.ActiveCfg = Release|Any CPU
 		{E73E4ADE-BCC4-4DD9-BAFB-47314193F4AB}.Release|x86.Build.0 = Release|Any CPU
+		{AA6DF67B-764A-4A57-A41F-2884CB4F30E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA6DF67B-764A-4A57-A41F-2884CB4F30E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA6DF67B-764A-4A57-A41F-2884CB4F30E5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AA6DF67B-764A-4A57-A41F-2884CB4F30E5}.Debug|x64.Build.0 = Debug|Any CPU
+		{AA6DF67B-764A-4A57-A41F-2884CB4F30E5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AA6DF67B-764A-4A57-A41F-2884CB4F30E5}.Debug|x86.Build.0 = Debug|Any CPU
+		{AA6DF67B-764A-4A57-A41F-2884CB4F30E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA6DF67B-764A-4A57-A41F-2884CB4F30E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA6DF67B-764A-4A57-A41F-2884CB4F30E5}.Release|x64.ActiveCfg = Release|Any CPU
+		{AA6DF67B-764A-4A57-A41F-2884CB4F30E5}.Release|x64.Build.0 = Release|Any CPU
+		{AA6DF67B-764A-4A57-A41F-2884CB4F30E5}.Release|x86.ActiveCfg = Release|Any CPU
+		{AA6DF67B-764A-4A57-A41F-2884CB4F30E5}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
