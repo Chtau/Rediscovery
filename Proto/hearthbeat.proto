@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package hearthbeat;
+
+service HearthbeatExchange {
+  rpc Beat (stream PingMessage) returns (stream PongMessage);
+}
+
+message PingMessage {
+  uint64 pingTime = 1;
+  uint64 pongTime = 2;
+  uint32 lastRoundTripTicks = 3;
+  Command command = 4;
+
+  enum Command {
+    Beat = 0;
+  }
+}
+
+message PongMessage {
+  uint64 pingTime = 1;
+  uint64 pongTime = 2;
+  uint32 lastRoundTripTicks = 3;
+  Command command = 4;
+
+  enum Command {
+    Beat = 0;
+  }
+}

@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.29.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommunicationBase\CommunicationBase.csproj" />
+    <ProjectReference Include="..\SharedCoreModels\SharedCoreModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="..\Proto\hearthbeat.proto" GrpcServices="Server" Link="Protos\hearthbeat.proto" />
+  </ItemGroup>
+
+</Project>
