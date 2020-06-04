@@ -38,7 +38,7 @@ namespace GrpcTestClient
         private static void ConsumeAuthentication()
         {
             Console.WriteLine("Test Grpc consume Authentication!");
-            IAuthenticationConsumerService consumerService = new AuthenticationConsumerService();
+            IAuthenticationConsumerService consumerService = new AuthenticationConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
             consumerService.ReceivedManifestReply += (obj, args) =>
             {
                 Console.WriteLine("[ReceivedManifestReply] Client:" + args.ClientName);

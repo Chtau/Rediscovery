@@ -1,5 +1,6 @@
 ﻿using CommunicationBase;
 using Grpc.Core;
+using SharedBase.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,8 +16,14 @@ namespace CommunicationAuthenticationConsumer
 
         private Authentication.AuthentionExchange.AuthentionExchangeClient authenticationClient;
         private Manifest.ManifestExchange.ManifestExchangeClient manifestClient;
+        private readonly ILogger _logger;
 
         public string Token { get; private set; }
+
+        public AuthenticationConsumerService(ILogger logger)
+        {
+            _logger = logger;
+        }
 
         public void Connect(string ipAddress, int port, string certificatePEM)
         {
@@ -44,10 +51,10 @@ namespace CommunicationAuthenticationConsumer
                         OSVersion = message.OSVersion,
                         Platform = message.Platform
                     };
-                    Console.WriteLine("Consumer Welcome send Welcome");
+                    _logger.LogTrace("Consumer Welcome send Welcome");
                     var reply = await authenticationClient.WelcomeAsync(msg, cancellationToken: cts.Token);
                     Token = reply.Token;
-                    Console.WriteLine("Consumer Welcome reply received");
+                    _logger.LogTrace("Consumer Welcome reply received");
                     var replyMsg = new SharedCoreModels.WelcomeDeviceReply
                     {
                         State = (SharedCoreModels.Enums.ConnectionState)(int)reply.ConnectionState,
@@ -68,7 +75,7 @@ namespace CommunicationAuthenticationConsumer
             {
                 try
                 {
-                    Console.WriteLine("Consumer request Manifest");
+                    _logger.LogTrace("Consumer request Manifest");
                     var cts = new CancellationTokenSource();
                     var meta = new Metadata();
                     meta.AddAuthorizationHeader(Token);
