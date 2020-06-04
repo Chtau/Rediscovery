@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunicationAuthenticationConsumer;
+using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -9,8 +10,9 @@ namespace GrpcTestClient
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Init Grpc!");
-            var consumer = new CommunicationFeatureConsumer.FeatureConsume();
+            Console.WriteLine("Test Grpc!");
+            ConsumeAuthentication();
+            /*var consumer = new CommunicationFeatureConsumer.FeatureConsume();
             consumer.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
             consumer.HelloReplay += (obj, message) => {
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -27,10 +29,37 @@ namespace GrpcTestClient
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("[Feature data received]" + data.Data);
                 Console.ResetColor();
-            };
+            };*/
 
 
             Console.ReadKey();
+        }
+
+        private static void ConsumeAuthentication()
+        {
+            Console.WriteLine("Test Grpc consume Authentication!");
+            IAuthenticationConsumerService consumerService = new AuthenticationConsumerService();
+            consumerService.ReceivedManifestReply += (obj, args) =>
+            {
+                Console.WriteLine("[ReceivedManifestReply] Client:" + args.ClientName);
+            };
+            consumerService.ReceivedWelcomeReply += (obj, args) =>
+            {
+                Console.WriteLine($"[ReceivedWelcomeReply] Token:{args.Token} State:{args.State}");
+                consumerService.RequestManifest();
+            };
+            consumerService.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
+            consumerService.SendWelcome(new SharedCoreModels.WelcomeDeviceMessage
+            {
+                DeviceIdentifier = "1",
+                DeviceName = "Test Client",
+                DeviceType = "Console",
+                Idiom = "",
+                Manufacturer = "",
+                Model = "",
+                OSVersion = "",
+                Platform = ""
+            });
         }
 
         public static string ExportToPEM(X509Certificate cert)

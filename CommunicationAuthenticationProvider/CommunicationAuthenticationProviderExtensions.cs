@@ -30,6 +30,7 @@ namespace CommunicationAuthenticationProvider
             where TAuthenticationManager : class, IAuthenticationManager
         {
             TokenSigningKey = Encoding.ASCII.GetBytes(tokenSigningKeySecret);
+            services.AddAuthorization();
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

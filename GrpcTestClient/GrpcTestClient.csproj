@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CommunicationAuthenticationConsumer\CommunicationAuthenticationConsumer.csproj" />
     <ProjectReference Include="..\CommunicationFeatureConsumer\CommunicationFeatureConsumer.csproj" />
   </ItemGroup>
 
