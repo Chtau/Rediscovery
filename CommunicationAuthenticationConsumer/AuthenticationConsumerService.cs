@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CommunicationAuthenticationConsumer
 {
-    public class AuthenticationConsumerService
+    public class AuthenticationConsumerService : IAuthenticationConsumerService
     {
         public event EventHandler<SharedCoreModels.WelcomeDeviceReply> ReceivedWelcomeReply;
         public event EventHandler<SharedCoreModels.Manifest> ReceivedManifestReply;
@@ -22,7 +22,7 @@ namespace CommunicationAuthenticationConsumer
             manifestClient = new Manifest.ManifestExchange.ManifestExchangeClient(channel);
         }
 
-        public void Welcome(SharedCoreModels.WelcomeDeviceMessage message)
+        public void SendWelcome(SharedCoreModels.WelcomeDeviceMessage message)
         {
             Task.Run(() =>
             {
