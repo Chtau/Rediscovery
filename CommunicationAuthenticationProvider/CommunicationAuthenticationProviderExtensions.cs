@@ -23,6 +23,9 @@ namespace CommunicationAuthenticationProvider
                 endpoints.MapGrpcService<AuthenticationExchangeService>();
                 endpoints.MapGrpcService<ManifestExchangeService>();
             });
+
+            var service = app.ApplicationServices.GetRequiredService<IAuthenticationService>();
+
             return app;
         }
 
@@ -51,6 +54,7 @@ namespace CommunicationAuthenticationProvider
             });
 
             services.AddGrpc();
+            //services.AddSingleton<IAuthenticationService>(new AuthenticationService());
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
             services.AddSingleton<Services.IEventService, Services.EventService>();
             services.AddSingleton<Services.ITokenService, Services.TokenService>();

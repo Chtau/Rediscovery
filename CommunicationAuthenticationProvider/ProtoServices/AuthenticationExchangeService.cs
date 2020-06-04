@@ -5,17 +5,20 @@ using Grpc.Core;
 using Authentication;
 using System.Threading.Tasks;
 using CommunicationAuthenticationProvider.Services;
+using Microsoft.Extensions.Logging;
 
 namespace CommunicationAuthenticationProvider.ProtoServices
 {
     public class AuthenticationExchangeService : AuthentionExchange.AuthentionExchangeBase
     {
         private readonly IEventService _eventService;
+        private readonly ILogger<AuthenticationExchangeService> _logger;
         private IServerStreamWriter<WelcomeDeviceReply> _responseStream;
         private ServerCallContext _context;
 
-        public AuthenticationExchangeService(IEventService eventService)
+        public AuthenticationExchangeService(ILoggerFactory loggerFactory, IEventService eventService)
         {
+            _logger = loggerFactory.CreateLogger<AuthenticationExchangeService>();
             _eventService = eventService;
             _eventService.SendWelcomeDeviceReply += _eventService_SendWelcomeDeviceReply;
         }
@@ -27,35 +30,56 @@ namespace CommunicationAuthenticationProvider.ProtoServices
 
         private void OnSendWelcomeDeviceReply(SharedCoreModels.WelcomeDeviceReply welcomeDeviceReply)
         {
+            Console.WriteLine("Provider try send Welcome reply");
             if (_responseStream != null)
             {
                 Task.Run(async () =>
                 {
-                    await _responseStream.WriteAsync(new WelcomeDeviceReply
+                    try
                     {
-                        ConnectionState = (WelcomeDeviceReply.Types.State)(int)welcomeDeviceReply.State,
-                        Token = welcomeDeviceReply.Token
-                    });
+                        await _responseStream.WriteAsync(new WelcomeDeviceReply
+                        {
+                            ConnectionState = (WelcomeDeviceReply.Types.State)(int)welcomeDeviceReply.State,
+                            Token = welcomeDeviceReply.Token
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "OnSendWelcomeDeviceReply");
+                    }
                 });
             }
         }
 
         public override async Task Welcome(WelcomeDeviceMessage request, IServerStreamWriter<WelcomeDeviceReply> responseStream, ServerCallContext context)
         {
-            _context = context;
-            _responseStream = responseStream;
-
-            _eventService.InvokeReceivedWelcomeDeviceMessage(new SharedCoreModels.WelcomeDeviceMessage
+            try
             {
-                DeviceIdentifier = request.DeviceIdentifier,
-                DeviceName = request.DeviceName,
-                DeviceType = request.DeviceType,
-                Idiom = request.Idiom,
-                Manufacturer = request.Manufacturer,
-                Model = request.Model,
-                OSVersion = request.OSVersion,
-                Platform = request.Platform
-            });
+                Console.WriteLine("Provider Welcome received");
+                _context = context;
+                _responseStream = responseStream;
+
+                _eventService.InvokeReceivedWelcomeDeviceMessage(new SharedCoreModels.WelcomeDeviceMessage
+                {
+                    DeviceIdentifier = request.DeviceIdentifier,
+                    DeviceName = request.DeviceName,
+                    DeviceType = request.DeviceType,
+                    Idiom = request.Idiom,
+                    Manufacturer = request.Manufacturer,
+                    Model = request.Model,
+                    OSVersion = request.OSVersion,
+                    Platform = request.Platform
+                });
+
+                /*do
+                {
+                    await Task.Delay(100);
+                } while (true);*/
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Welcome");
+            }
         }
     }
 }

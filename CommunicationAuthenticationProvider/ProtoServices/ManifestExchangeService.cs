@@ -6,17 +6,20 @@ using CommunicationAuthenticationProvider.Services;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Manifest;
+using Microsoft.Extensions.Logging;
 
 namespace CommunicationAuthenticationProvider.ProtoServices
 {
     public class ManifestExchangeService : ManifestExchange.ManifestExchangeBase
     {
         private readonly IEventService _eventService;
+        private readonly ILogger<ManifestExchangeService> _logger;
         private IServerStreamWriter<ManifestReply> _responseStream;
         private ServerCallContext _context;
 
-        public ManifestExchangeService(IEventService eventService)
+        public ManifestExchangeService(ILoggerFactory loggerFactory, IEventService eventService)
         {
+            _logger = loggerFactory.CreateLogger<ManifestExchangeService>();
             _eventService = eventService;
             _eventService.SendManifest += _eventService_SendManifest;
         }
@@ -27,14 +30,20 @@ namespace CommunicationAuthenticationProvider.ProtoServices
             {
                 Task.Run(async () =>
                 {
-                    var manifest = new ManifestReply
+                    try
                     {
-                        AppMinimumVersion = e.AppMinimumVersion.ToString(),
-                        ClientName = e.ClientName,
-                        ClientVersion = e.ClientVersion.ToString()
-                    };
-                    manifest.SupportedFeatures.Add(OnGetFeatures(e.SupportedFeatures));
-                    await _responseStream.WriteAsync(manifest);
+                        var manifest = new ManifestReply
+                        {
+                            AppMinimumVersion = e.AppMinimumVersion.ToString(),
+                            ClientName = e.ClientName,
+                            ClientVersion = e.ClientVersion.ToString()
+                        };
+                        manifest.SupportedFeatures.Add(OnGetFeatures(e.SupportedFeatures));
+                        await _responseStream.WriteAsync(manifest);
+                    } catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "_eventService_SendManifest");
+                    }
                 });
             }
         }
@@ -73,8 +82,15 @@ namespace CommunicationAuthenticationProvider.ProtoServices
 
         public override async Task Device(Empty request, IServerStreamWriter<ManifestReply> responseStream, ServerCallContext context)
         {
-            _context = context;
-            _responseStream = responseStream;
+            try
+            {
+                _context = context;
+                _responseStream = responseStream;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Device");
+            }
         }
     }
 }

@@ -24,33 +24,53 @@ namespace CommunicationAuthenticationConsumer
 
         public void SendWelcome(SharedCoreModels.WelcomeDeviceMessage message)
         {
-            Task.Run(() =>
+            Task.Run(async () =>
             {
-                var msg = new Authentication.WelcomeDeviceMessage
+                try
                 {
-                    DeviceIdentifier = message.DeviceIdentifier,
-                    DeviceName = message.DeviceName,
-                    DeviceType = message.DeviceType,
-                    Idiom = message.Idiom,
-                    Manufacturer = message.Manufacturer,
-                    Model = message.Model,
-                    OSVersion = message.OSVersion,
-                    Platform = message.Platform
-                };
-                using (var call = authenticationClient.Welcome(msg))
-                {
-                    var readTask = Task.Run(async () =>
+                    var msg = new Authentication.WelcomeDeviceMessage
                     {
-                        await foreach (var message in call.ResponseStream.ReadAllAsync())
+                        DeviceIdentifier = message.DeviceIdentifier,
+                        DeviceName = message.DeviceName,
+                        DeviceType = message.DeviceType,
+                        Idiom = message.Idiom,
+                        Manufacturer = message.Manufacturer,
+                        Model = message.Model,
+                        OSVersion = message.OSVersion,
+                        Platform = message.Platform
+                    };
+                    Console.WriteLine("Consumer Welcome send Welcome");
+                    using (var call = authenticationClient.Welcome(msg))
+                    {
+                        var readTask = Task.Run(async () =>
                         {
-                            var replyMsg = new SharedCoreModels.WelcomeDeviceReply
+                            try
                             {
-                                State = (SharedCoreModels.Enums.ConnectionState)(int)message.ConnectionState,
-                                Token = message.Token
-                            };
-                            ReceivedWelcomeReply?.Invoke(this, replyMsg);
-                        }
-                    });
+                                await foreach (var message in call.ResponseStream.ReadAllAsync())
+                                {
+                                    Console.WriteLine("Consumer Welcome reply received");
+                                    var replyMsg = new SharedCoreModels.WelcomeDeviceReply
+                                    {
+                                        State = (SharedCoreModels.Enums.ConnectionState)(int)message.ConnectionState,
+                                        Token = message.Token
+                                    };
+                                    ReceivedWelcomeReply?.Invoke(this, replyMsg);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.Print(ex.ToString());
+                            }
+                        });
+                        do
+                        {
+                            await Task.Delay(100);
+                        } while (true);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.Print(ex.ToString());
                 }
             });
         }
@@ -59,22 +79,36 @@ namespace CommunicationAuthenticationConsumer
         {
             Task.Run(() =>
             {
-                using (var call = manifestClient.Device(new Google.Protobuf.WellKnownTypes.Empty()))
+                try
                 {
-                    var readTask = Task.Run(async () =>
+                    using (var call = manifestClient.Device(new Google.Protobuf.WellKnownTypes.Empty()))
                     {
-                        await foreach (var message in call.ResponseStream.ReadAllAsync())
+                        var readTask = Task.Run(async () =>
                         {
-                            var replyMsg = new SharedCoreModels.Manifest
+                            try
                             {
-                                AppMinimumVersion = SharedBase.Core.Version.ConvertTo(message.AppMinimumVersion),
-                                ClientName = message.ClientName,
-                                ClientVersion = SharedBase.Core.Version.ConvertTo(message.ClientVersion),
-                                SupportedFeatures = OnGetFeatures(message.SupportedFeatures)
-                            };
-                            ReceivedManifestReply?.Invoke(this, replyMsg);
-                        }
-                    });
+                                await foreach (var message in call.ResponseStream.ReadAllAsync())
+                                {
+                                    var replyMsg = new SharedCoreModels.Manifest
+                                    {
+                                        AppMinimumVersion = SharedBase.Core.Version.ConvertTo(message.AppMinimumVersion),
+                                        ClientName = message.ClientName,
+                                        ClientVersion = SharedBase.Core.Version.ConvertTo(message.ClientVersion),
+                                        SupportedFeatures = OnGetFeatures(message.SupportedFeatures)
+                                    };
+                                    ReceivedManifestReply?.Invoke(this, replyMsg);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.Print(ex.ToString());
+                            }
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.Print(ex.ToString());
                 }
             });
         }
