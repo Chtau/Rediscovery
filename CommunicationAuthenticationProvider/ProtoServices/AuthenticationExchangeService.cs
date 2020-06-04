@@ -14,7 +14,6 @@ namespace CommunicationAuthenticationProvider.ProtoServices
         private readonly IEventService _eventService;
         private readonly ILogger<AuthenticationExchangeService> _logger;
         private IServerStreamWriter<WelcomeDeviceReply> _responseStream;
-        private ServerCallContext _context;
 
         public AuthenticationExchangeService(ILoggerFactory loggerFactory, IEventService eventService)
         {
@@ -30,7 +29,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
 
         private void OnSendWelcomeDeviceReply(SharedCoreModels.WelcomeDeviceReply welcomeDeviceReply)
         {
-            Console.WriteLine("Provider try send Welcome reply");
+            _logger.LogTrace("Provider try to send Welcome reply");
             if (_responseStream != null)
             {
                 Task.Run(async () =>
@@ -55,8 +54,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
         {
             try
             {
-                Console.WriteLine("Provider Welcome received");
-                _context = context;
+                _logger.LogTrace("Provider Welcome received");
                 _responseStream = responseStream;
 
                 _eventService.InvokeReceivedWelcomeDeviceMessage(new SharedCoreModels.WelcomeDeviceMessage

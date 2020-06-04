@@ -13,16 +13,13 @@ namespace CommunicationAuthenticationProvider.ProtoServices
 {
     public class ManifestExchangeService : ManifestExchange.ManifestExchangeBase
     {
-        private readonly IEventService _eventService;
         private readonly ILogger<ManifestExchangeService> _logger;
         private readonly IAuthenticationManager _authenticationManager;
-        private ServerCallContext _context;
 
-        public ManifestExchangeService(ILoggerFactory loggerFactory, IEventService eventService, IAuthenticationManager authenticationManager)
+        public ManifestExchangeService(ILoggerFactory loggerFactory, IAuthenticationManager authenticationManager)
         {
             _logger = loggerFactory.CreateLogger<ManifestExchangeService>();
             _authenticationManager = authenticationManager;
-            _eventService = eventService;
         }
 
         private IEnumerable<FeatureDefinitionExtended> OnGetFeatures(List<SharedBase.Device.FeatureDefinitionExtended> featureDefinitionExtendeds)
@@ -62,8 +59,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
         {
             try
             {
-                Console.WriteLine("Received Manifest request");
-                _context = context;
+                _logger.LogTrace("Received Manifest request");
 
                 await Task.Run(async () =>
                 {

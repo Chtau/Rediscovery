@@ -28,7 +28,7 @@ namespace CommunicationAuthenticationProvider
 
         private void _eventService_ReceivedWelcomeDeviceMessage(object sender, SharedCoreModels.WelcomeDeviceMessage e)
         {
-            Console.WriteLine("_eventService_ReceivedWelcomeDeviceMessage");
+            _logger.LogTrace("Provider received Welcome message from consumer");
             Task.Run(async () =>
             {
                 try
