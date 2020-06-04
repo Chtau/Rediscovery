@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GrpcHelper
+namespace CommunicationBase
 {
-    public static class Headers
+    public static class GrpcHeadersExtensions
     {
         public static void AddAuthorizationHeader(this Metadata metadata, string bearerToken)
         {
