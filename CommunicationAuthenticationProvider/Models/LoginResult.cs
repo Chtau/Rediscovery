@@ -10,5 +10,6 @@ namespace CommunicationAuthenticationProvider.Models
         public LoginState State { get; set; }
         public string Id { get; set; }
         public string Name { get; set; }
+        public string Role { get; set; }
     }
 }

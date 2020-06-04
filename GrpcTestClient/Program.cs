@@ -46,7 +46,7 @@ namespace GrpcTestClient
             consumerService.ReceivedWelcomeReply += (obj, args) =>
             {
                 Console.WriteLine($"[ReceivedWelcomeReply] Token:{args.Token} State:{args.State}");
-                consumerService.RequestManifest();
+                consumerService.RequestManifest(args.Token);
             };
             consumerService.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
             consumerService.SendWelcome(new SharedCoreModels.WelcomeDeviceMessage

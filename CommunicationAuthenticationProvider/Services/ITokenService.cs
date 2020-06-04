@@ -7,7 +7,7 @@ namespace CommunicationAuthenticationProvider.Services
 {
     public interface ITokenService
     {
-        string CreateNewToken(string sid, string name, DateTime? expireDateTime = null);
+        string CreateNewToken(string sid, string name, string role, DateTime? expireDateTime = null);
         string CreateNewToken(Claim[] claims, DateTime? expireDateTime = null);
     }
 }

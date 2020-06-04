@@ -10,6 +10,6 @@ namespace CommunicationAuthenticationConsumer
         event EventHandler<SharedCoreModels.Manifest> ReceivedManifestReply;
         void Connect(string ipAddress, int port, string certificatePEM);
         void SendWelcome(SharedCoreModels.WelcomeDeviceMessage message);
-        void RequestManifest();
+        void RequestManifest(string token);
     }
 }

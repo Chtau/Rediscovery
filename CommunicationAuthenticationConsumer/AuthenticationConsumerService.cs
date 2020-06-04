@@ -18,8 +18,6 @@ namespace CommunicationAuthenticationConsumer
         private Manifest.ManifestExchange.ManifestExchangeClient manifestClient;
         private readonly ILogger _logger;
 
-        public string Token { get; private set; }
-
         public AuthenticationConsumerService(ILogger logger)
         {
             _logger = logger;
@@ -53,12 +51,11 @@ namespace CommunicationAuthenticationConsumer
                     };
                     _logger.LogTrace("Consumer Welcome send Welcome");
                     var reply = await authenticationClient.WelcomeAsync(msg, cancellationToken: cts.Token);
-                    Token = reply.Token;
                     _logger.LogTrace("Consumer Welcome reply received");
                     var replyMsg = new SharedCoreModels.WelcomeDeviceReply
                     {
                         State = (SharedCoreModels.Enums.ConnectionState)(int)reply.ConnectionState,
-                        Token = Token
+                        Token = reply.Token
                     };
                     ReceivedWelcomeReply?.Invoke(this, replyMsg);
                 }
@@ -69,7 +66,7 @@ namespace CommunicationAuthenticationConsumer
             });
         }
 
-        public void RequestManifest()
+        public void RequestManifest(string token)
         {
             Task.Run(async () =>
             {
@@ -78,7 +75,7 @@ namespace CommunicationAuthenticationConsumer
                     _logger.LogTrace("Consumer request Manifest");
                     var cts = new CancellationTokenSource();
                     var meta = new Metadata();
-                    meta.AddAuthorizationHeader(Token);
+                    meta.AddAuthorizationHeader(token);
                     var reply = await manifestClient.DeviceAsync(new Google.Protobuf.WellKnownTypes.Empty(), headers: meta, cancellationToken: cts.Token);
                     var replyMsg = new SharedCoreModels.Manifest
                     {

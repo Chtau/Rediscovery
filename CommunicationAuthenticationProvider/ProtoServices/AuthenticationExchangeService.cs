@@ -15,7 +15,6 @@ namespace CommunicationAuthenticationProvider.ProtoServices
         private readonly ILogger<AuthenticationExchangeService> _logger;
         private readonly IAuthenticationManager _authenticationManager;
         private readonly ITokenService _tokenService;
-        private IServerStreamWriter<WelcomeDeviceReply> _responseStream;
 
         public AuthenticationExchangeService(ILoggerFactory loggerFactory,
             IAuthenticationManager authenticationManager,
@@ -102,7 +101,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                         callback.Invoke(new SharedCoreModels.WelcomeDeviceReply
                         {
                             State = SharedCoreModels.Enums.ConnectionState.OK,
-                            Token = _tokenService.CreateNewToken(result.Id, result.Name)
+                            Token = _tokenService.CreateNewToken(result.Id, result.Name, result.Role)
                         });
                     }
                 }
