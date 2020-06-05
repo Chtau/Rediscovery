@@ -4,6 +4,12 @@ package featuredata;
 
 service FeatureExchange {
   rpc ExchangeStream (stream DeviceFeatureData) returns (stream DeviceFeatureData);
+  rpc Start (FeatureState) returns (FeatureState);
+  rpc Stop (FeatureState) returns (FeatureState);
+}
+
+message FeatureState {
+	string featureId = 1;
 }
 
 message DeviceFeatureData {
