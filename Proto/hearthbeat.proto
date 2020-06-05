@@ -8,9 +8,8 @@ service HearthbeatExchange {
 
 message PingMessage {
   uint64 pingTime = 1;
-  uint64 pongTime = 2;
-  uint32 lastRoundTripTicks = 3;
-  Command command = 4;
+  uint32 lastRoundTripTicks = 2;
+  Command command = 3;
 
   enum Command {
     Beat = 0;
@@ -18,10 +17,9 @@ message PingMessage {
 }
 
 message PongMessage {
-  uint64 pingTime = 1;
-  uint64 pongTime = 2;
-  uint32 lastRoundTripTicks = 3;
-  Command command = 4;
+  uint64 pongTime = 1;
+  uint32 lastRoundTripTicks = 2;
+  Command command = 3;
 
   enum Command {
     Beat = 0;
