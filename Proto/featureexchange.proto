@@ -4,12 +4,18 @@ package featuredata;
 
 service FeatureExchange {
   rpc ExchangeStream (stream DeviceFeatureData) returns (stream DeviceFeatureData);
-  rpc Start (FeatureState) returns (FeatureState);
-  rpc Stop (FeatureState) returns (FeatureState);
+  rpc ChangeFeatureState (FeatureState) returns (FeatureState);
 }
 
 message FeatureState {
 	string featureId = 1;
+	enum State {
+        Unknown = 0;
+        Start = 1;
+        Stop = 2;
+        Error = 3;
+    }
+    State featureState = 2;
 }
 
 message DeviceFeatureData {
