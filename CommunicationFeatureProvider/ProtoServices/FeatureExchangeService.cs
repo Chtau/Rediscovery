@@ -14,16 +14,22 @@ namespace CommunicationFeatureProvider.ProtoServices
     public class FeatureExchangeService : FeatureExchange.FeatureExchangeBase
     {
         private readonly ILogger<FeatureExchangeService> _logger;
+        private readonly IFeatureManager _featureManager;
         private Dictionary<string, IServerStreamWriter<DeviceFeatureData>> responseStreams = new Dictionary<string, IServerStreamWriter<DeviceFeatureData>>();
 
-        public event EventHandler<PluginFeature.Models.DeviceFeatureData> ReceivedFeatureData;
-
-        public FeatureExchangeService(ILoggerFactory loggerFactory)
+        public FeatureExchangeService(ILoggerFactory loggerFactory, IFeatureManager featureManager)
         {
             _logger = loggerFactory.CreateLogger<FeatureExchangeService>();
+            _featureManager = featureManager;
+            _featureManager.SendData += _featureManager_SendData;
         }
 
-        public void SendFeatureData(string sid, PluginFeature.Models.DeviceFeatureData deviceFeatureData)
+        private void _featureManager_SendData(object sender, CommunicationBase.Models.ExchangeEntity<PluginFeature.Models.DeviceFeatureData> e)
+        {
+            OnSendFeatureData(e.Sid, e.Entity);
+        }
+
+        private void OnSendFeatureData(string sid, PluginFeature.Models.DeviceFeatureData deviceFeatureData)
         {
             if (responseStreams.ContainsKey(sid))
             {
@@ -63,7 +69,11 @@ namespace CommunicationFeatureProvider.ProtoServices
                 {
                     await foreach (var message in requestStream.ReadAllAsync())
                     {
-                        ReceivedFeatureData?.Invoke(this, new PluginFeature.Models.DeviceFeatureData(message.DeviceId, message.FeatureId.SafeGuid(), message.ProfileId, message.Data));
+                        _featureManager.ReceivedData(new CommunicationBase.Models.ExchangeEntity<PluginFeature.Models.DeviceFeatureData>
+                        {
+                            Entity = new PluginFeature.Models.DeviceFeatureData(message.DeviceId, message.FeatureId.SafeGuid(), message.ProfileId, message.Data),
+                            Sid = sid
+                        });
                     }
                 });
 
@@ -84,6 +94,39 @@ namespace CommunicationFeatureProvider.ProtoServices
                     if (responseStreams.ContainsKey(sid))
                         responseStreams.Remove(sid);
                 }
+            }
+        }
+
+        [Authorize]
+        public override Task<FeatureState> ChangeFeatureState(FeatureState request, ServerCallContext context)
+        {
+            try
+            {
+                var user = context.GetHttpContext().User;
+                var sid = user.Claims.GetSid();
+
+                var resultFeatureState = _featureManager.FeatureStateChange(new CommunicationBase.Models.ExchangeEntity<CommunicationBase.Models.FeatureState>
+                {
+                    Sid = sid,
+                    Entity = new CommunicationBase.Models.FeatureState
+                    {
+                        CurrentState = (CommunicationBase.Models.FeatureState.State)(int)request.FeatureState_,
+                        FeatureId = request.FeatureId
+                    }
+                });
+                return Task.FromResult(new FeatureState
+                {
+                    FeatureId = resultFeatureState.Entity.FeatureId,
+                    FeatureState_ = (FeatureState.Types.State)(int)resultFeatureState.Entity.CurrentState
+                });
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex, "Request for change Feature state");
+                return Task.FromResult(new FeatureState
+                {
+                    FeatureId = request.FeatureId,
+                    FeatureState_ = FeatureState.Types.State.Error
+                });
             }
         }
     }
