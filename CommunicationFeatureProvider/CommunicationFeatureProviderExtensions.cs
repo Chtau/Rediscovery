@@ -13,27 +13,16 @@ namespace CommunicationFeatureProvider
         {
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<GreeterService>();
                 endpoints.MapGrpcService<FeatureExchangeService>();
             });
             return app;
         }
 
-        public static IServiceCollection AddFeatureProvider<TActiveDeviceService, TFeatureEntityService>(this IServiceCollection services)
-            where TActiveDeviceService : class, IActiveDeviceService
-            where TFeatureEntityService : class, IFeatureEntityService
+        public static IServiceCollection AddFeatureProvider<TFeatureManager>(this IServiceCollection services)
+            where TFeatureManager : class, IFeatureManager
         {
             services.AddGrpc();
-            services.AddSingleton<IActiveDeviceService, TActiveDeviceService>();
-            services.AddSingleton<IFeatureEntityService, TFeatureEntityService>();
-            services.AddSingleton<IFeatureResponseService, FeatureResponseService>();
-            return services;
-        }
-
-        [Obsolete("Only use for Testing")]
-        public static IServiceCollection AddFeatureProvider(this IServiceCollection services)
-        {
-            services.AddGrpc();
+            services.AddSingleton<IFeatureManager, TFeatureManager>();
             return services;
         }
     }
