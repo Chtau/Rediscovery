@@ -67,7 +67,7 @@ namespace CommunicationFeatureProvider.ProtoServices
 
                 var readTask = Task.Run(async () =>
                 {
-                    await foreach (var message in requestStream.ReadAllAsync())
+                    await foreach (var message in requestStream.ReadAllAsync(cancellationToken: context.CancellationToken))
                     {
                         _featureManager.ReceivedData(new CommunicationBase.Models.ExchangeEntity<PluginFeature.Models.DeviceFeatureData>
                         {
@@ -83,6 +83,10 @@ namespace CommunicationFeatureProvider.ProtoServices
                 } while (!context.CancellationToken.IsCancellationRequested);
 
                 await readTask;
+            }
+            catch (System.OperationCanceledException)
+            {
+                _logger.LogTrace("ExchangeStream connection was canceled from Context Cancellation Token");
             }
             catch (Exception ex)
             {

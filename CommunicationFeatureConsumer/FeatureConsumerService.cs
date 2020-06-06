@@ -67,17 +67,17 @@ namespace CommunicationFeatureConsumer
             });
         }
 
-        public void StartFeatureData(string token, CancellationTokenSource cancellationTokenSource = null)
+        public void StartFeatureData(string token, CancellationTokenSource cts = null)
         {
             Task.Run(async () =>
             {
-                if (cancellationTokenSource == null)
-                    cancellationTokenSource = new CancellationTokenSource();
+                if (cts == null)
+                    cts = new CancellationTokenSource();
                 try
                 {
                     var meta = new Metadata();
                     meta.AddAuthorizationHeader(token);
-                    using (var call = exchangeClient.ExchangeStream(headers: meta))
+                    using (var call = exchangeClient.ExchangeStream(headers: meta, cancellationToken: cts.Token))
                     {
                         _responseStream = call.RequestStream;
 
@@ -91,7 +91,7 @@ namespace CommunicationFeatureConsumer
                         do
                         {
                             await Task.Delay(100);
-                        } while (!cancellationTokenSource.IsCancellationRequested);
+                        } while (!cts.IsCancellationRequested);
                     }
                 }
                 catch (Exception ex)
@@ -100,7 +100,8 @@ namespace CommunicationFeatureConsumer
                 }
                 finally
                 {
-                    cancellationTokenSource.Cancel();
+                    _responseStream = null;
+                    cts.Cancel();
                 }
             });
         }
