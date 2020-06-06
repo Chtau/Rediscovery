@@ -1,4 +1,6 @@
-﻿using Featuredata;
+﻿using CommunicationBase;
+using CommunicationBase.Models;
+using Featuredata;
 using Grpc.Core;
 using SharedBase.Logging;
 using System;
@@ -12,8 +14,10 @@ namespace CommunicationFeatureConsumer
     public class FeatureConsumerService : IFeatureConsumerService
     {
         public event EventHandler<CommunicationBase.Models.FeatureState> ReceiveFeatureStateChangeReply;
+        public event EventHandler<PluginFeature.Models.DeviceFeatureData> ReceiveFeatureData;
 
         private FeatureExchange.FeatureExchangeClient exchangeClient;
+        private IClientStreamWriter<DeviceFeatureData> _responseStream;
         private readonly ILogger _logger;
 
         public FeatureConsumerService(ILogger logger)
@@ -28,25 +32,27 @@ namespace CommunicationFeatureConsumer
             exchangeClient = new FeatureExchange.FeatureExchangeClient(channel);
         }
 
-        public void ChangeFeatureState(CommunicationBase.Models.FeatureState featureState)
+        public void ChangeFeatureState(string token, CommunicationBase.Models.FeatureState featureState)
         {
             Task.Run(async () =>
             {
+                var cts = new CancellationTokenSource();
                 try
                 {
-                    var cts = new CancellationTokenSource();
-                    var msg = new FeatureState
+                    var msg = new Featuredata.FeatureState
                     {
                         FeatureId = featureState.FeatureId,
-                        FeatureState_ = (FeatureState.Types.State)(int)featureState.CurrentState
+                        FeatureState_ = (Featuredata.FeatureState.Types.State)(int)featureState.CurrentState
                     };
+                    var meta = new Metadata();
+                    meta.AddAuthorizationHeader(token);
                     _logger.LogTrace("Consumer send change feature state request");
-                    var reply = await exchangeClient.ChangeFeatureStateAsync(msg, cancellationToken: cts.Token);
+                    var reply = await exchangeClient.ChangeFeatureStateAsync(msg, cancellationToken: cts.Token, headers: meta);
                     _logger.LogTrace("Consumer reply for feature state change");
                     var replyMsg = new CommunicationBase.Models.FeatureState
                     {
-                       CurrentState = (CommunicationBase.Models.FeatureState.State)(int)reply.FeatureState_,
-                       FeatureId = reply.FeatureId
+                        CurrentState = (CommunicationBase.Models.FeatureState.State)(int)reply.FeatureState_,
+                        FeatureId = reply.FeatureId
                     };
                     ReceiveFeatureStateChangeReply?.Invoke(this, replyMsg);
                 }
@@ -54,10 +60,52 @@ namespace CommunicationFeatureConsumer
                 {
                     _logger.LogError(ex);
                 }
+                finally
+                {
+                    cts.Cancel();
+                }
             });
         }
 
-        /*public void SendFeatureData(PluginFeature.Models.DeviceFeatureData deviceFeatureData)
+        public void StartFeatureData(string token, CancellationTokenSource cancellationTokenSource = null)
+        {
+            Task.Run(async () =>
+            {
+                if (cancellationTokenSource == null)
+                    cancellationTokenSource = new CancellationTokenSource();
+                try
+                {
+                    var meta = new Metadata();
+                    meta.AddAuthorizationHeader(token);
+                    using (var call = exchangeClient.ExchangeStream(headers: meta))
+                    {
+                        _responseStream = call.RequestStream;
+
+                        var readTask = Task.Run(async () =>
+                        {
+                            await foreach (var message in call.ResponseStream.ReadAllAsync())
+                            {
+                                ReceiveFeatureData?.Invoke(this, new PluginFeature.Models.DeviceFeatureData(message.DeviceId, message.FeatureId.SafeGuid(), message.ProfileId, message.Data));
+                            }
+                        });
+                        do
+                        {
+                            await Task.Delay(100);
+                        } while (!cancellationTokenSource.IsCancellationRequested);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex);
+                }
+                finally
+                {
+                    cancellationTokenSource.Cancel();
+                }
+            });
+        }
+
+        public void SendFeatureData(PluginFeature.Models.DeviceFeatureData deviceFeatureData)
         {
             if (_responseStream != null)
             {
@@ -73,31 +121,5 @@ namespace CommunicationFeatureConsumer
                 });
             }
         }
-
-        private void OnInitFeatureExchange()
-        {
-            Task.Run(async () =>
-            {
-                using (var call = exchangeClient.ExchangeStream())
-                {
-                    _responseStream = call.RequestStream;
-
-                    // Read incoming messages in a background task
-                    var readTask = Task.Run(async () =>
-                    {
-                        await foreach (var message in call.ResponseStream.ReadAllAsync())
-                        {
-                            ReceivedFeatureData?.Invoke(this, new PluginFeature.Models.DeviceFeatureData(message.DeviceId, message.FeatureId.SafeGuid(), message.ProfileId, message.Data));
-                        }
-                    });
-
-                    // Finish call and report results
-                    await call.RequestStream.CompleteAsync();
-                    await readTask;
-
-                    //Console.WriteLine($"Messages sent: {sent}");
-                }
-            });
-        }*/
     }
 }
