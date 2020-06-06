@@ -21,6 +21,7 @@ namespace GrpcTestService
         {
             //services.AddFeatureProvider();
             services.AddAuthenticationProvider<AuthenticationManager>("testtesttesttesttesttesttesttesttesttesttesttesttesttesttest");
+            services.AddFeatureProvider<FeatureManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -32,7 +33,8 @@ namespace GrpcTestService
             }
             app.UseRouting();
             app.UseAuthenticationProvider();
-            //app.UseFeatureProvider();
+            app.UseFeatureProvider();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", async context =>

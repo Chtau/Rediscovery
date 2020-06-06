@@ -8,6 +8,8 @@ namespace CommunicationFeatureConsumer
 {
     public interface IFeatureConsumerService
     {
+        void Connect(string ipAddress, int port, string certificatePEM);
+
         event EventHandler<FeatureState> ReceiveFeatureStateChangeReply;
         void ChangeFeatureState(string token, FeatureState featureState);
 

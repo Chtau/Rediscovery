@@ -1,4 +1,5 @@
 ﻿using CommunicationAuthenticationConsumer;
+using CommunicationFeatureConsumer;
 using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
@@ -47,6 +48,7 @@ namespace GrpcTestClient
             {
                 Console.WriteLine($"[ReceivedWelcomeReply] Token:{args.Token} State:{args.State}");
                 consumerService.RequestManifest(args.Token);
+                ConsumeFeature(args.Token);
             };
             consumerService.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
             consumerService.SendWelcome(new SharedCoreModels.WelcomeDeviceMessage
@@ -60,6 +62,33 @@ namespace GrpcTestClient
                 OSVersion = "",
                 Platform = ""
             });
+        }
+
+        private static void ConsumeFeature(string token)
+        {
+            Guid featureId = Guid.NewGuid();
+            Console.WriteLine($"Test Grpc consume Feature with Token:{token}");
+            IFeatureConsumerService featureConsumer = new FeatureConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
+            featureConsumer.ReceiveFeatureData += (obj, args) =>
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"[ReceiveFeatureData] Data:{args.Data}");
+                Console.ResetColor();
+            };
+            featureConsumer.ReceiveFeatureStateChangeReply += (obj, args) =>
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"[ReceiveFeatureStateChangeReply] CurrentState:{args.CurrentState}");
+                Console.ResetColor();
+            };
+            featureConsumer.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
+            featureConsumer.StartFeatureData(token);
+            featureConsumer.ChangeFeatureState(token, new CommunicationBase.Models.FeatureState
+            {
+                CurrentState = CommunicationBase.Models.FeatureState.State.Start,
+                FeatureId = featureId.ToString()
+            });
+            featureConsumer.SendFeatureData(new PluginFeature.Models.DeviceFeatureData("1", featureId, "1", $"{DateTime.Now} Client feature data"));
         }
 
         public static string ExportToPEM(X509Certificate cert)
