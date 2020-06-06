@@ -1,39 +1,63 @@
 ﻿using Featuredata;
 using Grpc.Core;
-using GrpcService1;
+using SharedBase.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CommunicationFeatureConsumer
 {
-    public class FeatureConsume
+    public class FeatureConsumerService : IFeatureConsumerService
     {
-        public event EventHandler<PluginFeature.Models.DeviceFeatureData> ReceivedFeatureData;
-        public event EventHandler<string> HelloReplay;
+        public event EventHandler<CommunicationBase.Models.FeatureState> ReceiveFeatureStateChangeReply;
 
-        private Greeter.GreeterClient client;
         private FeatureExchange.FeatureExchangeClient exchangeClient;
-        private IClientStreamWriter<DeviceFeatureData> _responseStream;
-        //private ServerCallContext _context;
+        private readonly ILogger _logger;
+
+        public FeatureConsumerService(ILogger logger)
+        {
+            _logger = logger;
+        }
 
         public void Connect(string ipAddress, int port, string certificatePEM)
         {
             var channelCredentials = new SslCredentials(certificatePEM);
             Channel channel = new Channel(ipAddress, port, channelCredentials);
-            client = new Greeter.GreeterClient(channel);
             exchangeClient = new FeatureExchange.FeatureExchangeClient(channel);
-            OnInitFeatureExchange();
         }
 
-        public void SayHello(string value)
+        public void ChangeFeatureState(CommunicationBase.Models.FeatureState featureState)
         {
-            var replay = client.SayHello(new HelloRequest { Name = value });
-            HelloReplay?.Invoke(this, replay.Message);
+            Task.Run(async () =>
+            {
+                try
+                {
+                    var cts = new CancellationTokenSource();
+                    var msg = new FeatureState
+                    {
+                        FeatureId = featureState.FeatureId,
+                        FeatureState_ = (FeatureState.Types.State)(int)featureState.CurrentState
+                    };
+                    _logger.LogTrace("Consumer send change feature state request");
+                    var reply = await exchangeClient.ChangeFeatureStateAsync(msg, cancellationToken: cts.Token);
+                    _logger.LogTrace("Consumer reply for feature state change");
+                    var replyMsg = new CommunicationBase.Models.FeatureState
+                    {
+                       CurrentState = (CommunicationBase.Models.FeatureState.State)(int)reply.FeatureState_,
+                       FeatureId = reply.FeatureId
+                    };
+                    ReceiveFeatureStateChangeReply?.Invoke(this, replyMsg);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex);
+                }
+            });
         }
 
-        public void SendFeatureData(PluginFeature.Models.DeviceFeatureData deviceFeatureData)
+        /*public void SendFeatureData(PluginFeature.Models.DeviceFeatureData deviceFeatureData)
         {
             if (_responseStream != null)
             {
@@ -74,6 +98,6 @@ namespace CommunicationFeatureConsumer
                     //Console.WriteLine($"Messages sent: {sent}");
                 }
             });
-        }
+        }*/
     }
 }
