@@ -13,7 +13,7 @@ service ResourceExchange {
   rpc DeleteDevice (DeviceChangeRequest) returns (DeviceChangeRequest);
   rpc ResolvePendingDevice (DevicePendingRequest) returns (DeviceChangeRequest);
 
-  rpc Features (google.protobuf.Empty) returns (stream FeatureDefinitionExtended);
+  rpc Features (google.protobuf.Empty) returns (stream FeatureList);
   rpc FeatureDetail (FeatureDetailRequest) returns (FeatureDetails);
   rpc FeatureDetailProfileDelete (FeatureDetailProfileDeleteRequest) returns (FeatureDetailProfileDeleteRequest);
   rpc FeatureDetailProfileSave (FeatureDetailProfileSaveRequest) returns (FeatureDetailProfileSaveRequest);
@@ -51,6 +51,10 @@ message DeviceChangeRequest {
 message DevicePendingRequest {
     string id = 1;
     bool accept = 2;
+}
+
+message FeatureList {
+    repeated FeatureDefinitionExtended features = 1;
 }
 
 message FeatureDetailRequest {

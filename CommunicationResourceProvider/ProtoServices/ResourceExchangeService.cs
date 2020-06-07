@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Resources;
 
@@ -15,6 +17,10 @@ namespace CommunicationResourceProvider.ProtoServices
         private readonly ILogger<ResourceExchangeService> _logger;
         private readonly IResourcesRepository _resourcesRepository;
 
+        private Dictionary<string, IServerStreamWriter<DeviceInfoList>> responseStreamsActiveDevices = new Dictionary<string, IServerStreamWriter<DeviceInfoList>>();
+        private Dictionary<string, IServerStreamWriter<DeviceInfoList>> responseStreamsDevices = new Dictionary<string, IServerStreamWriter<DeviceInfoList>>();
+        private Dictionary<string, IServerStreamWriter<FeatureList>> responseStreamsFeatures = new Dictionary<string, IServerStreamWriter<FeatureList>>();
+
         public ResourceExchangeService(ILoggerFactory loggerFactory, IResourcesRepository resourcesRepository)
         {
             _logger = loggerFactory.CreateLogger<ResourceExchangeService>();
@@ -22,16 +28,138 @@ namespace CommunicationResourceProvider.ProtoServices
         }
 
         [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
-        public override Task ActiveDevices(Empty request, IServerStreamWriter<DeviceInfoList> responseStream, ServerCallContext context)
+        public override async Task ActiveDevices(Empty request, IServerStreamWriter<DeviceInfoList> responseStream, ServerCallContext context)
         {
-            return base.ActiveDevices(request, responseStream, context);
+            string sid = null;
+            try
+            {
+                var user = context.GetHttpContext().User;
+                sid = user.Claims.GetSid();
+                if (responseStreamsActiveDevices.ContainsKey(sid))
+                    responseStreamsActiveDevices[sid] = responseStream;
+                else
+                    responseStreamsActiveDevices.Add(sid, responseStream);
+
+                OnSendActiveDevices(sid);
+                do
+                {
+                    await Task.Delay(100);
+                } while (!context.CancellationToken.IsCancellationRequested);
+
+                await Task.FromResult(true);
+            }
+            catch (System.OperationCanceledException)
+            {
+                _logger.LogTrace("ActiveDevices connection was canceled from Context Cancellation Token");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "ActiveDevices");
+            }
+            finally
+            {
+                if (!string.IsNullOrWhiteSpace(sid))
+                {
+                    if (responseStreamsActiveDevices.ContainsKey(sid))
+                        responseStreamsActiveDevices.Remove(sid);
+                }
+            }
         }
 
-        [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
-        public override Task Devices(Empty request, IServerStreamWriter<DeviceInfoList> responseStream, ServerCallContext context)
+        private void OnSendActiveDevices(string sid)
         {
-            return base.Devices(request, responseStream, context);
+            if (responseStreamsActiveDevices.ContainsKey(sid))
+            {
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        var devices = _resourcesRepository.GetResourceActiveDeviceInfo();
+                        var reply = new DeviceInfoList();
+                        if (devices?.Count > 0)
+                        {
+                            foreach (var item in devices)
+                            {
+                                reply.Devices.Add(item.GetProtoDeviceInfo());
+                            }
+                        }
+                        await responseStreamsActiveDevices[sid].WriteAsync(reply);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "OnSendActiveDevices write to response Stream");
+                    }
+                });
+            }
         }
+
+
+        [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
+        public override async Task Devices(Empty request, IServerStreamWriter<DeviceInfoList> responseStream, ServerCallContext context)
+        {
+            string sid = null;
+            try
+            {
+                var user = context.GetHttpContext().User;
+                sid = user.Claims.GetSid();
+                if (responseStreamsDevices.ContainsKey(sid))
+                    responseStreamsDevices[sid] = responseStream;
+                else
+                    responseStreamsDevices.Add(sid, responseStream);
+
+                OnSendDevices(sid);
+                do
+                {
+                    await Task.Delay(100);
+                } while (!context.CancellationToken.IsCancellationRequested);
+
+                await Task.FromResult(true);
+            }
+            catch (System.OperationCanceledException)
+            {
+                _logger.LogTrace("Devices connection was canceled from Context Cancellation Token");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Devices");
+            }
+            finally
+            {
+                if (!string.IsNullOrWhiteSpace(sid))
+                {
+                    if (responseStreamsDevices.ContainsKey(sid))
+                        responseStreamsDevices.Remove(sid);
+                }
+            }
+        }
+
+        private void OnSendDevices(string sid)
+        {
+            if (responseStreamsDevices.ContainsKey(sid))
+            {
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        var devices = _resourcesRepository.GetResourceDeviceInfo();
+                        var reply = new DeviceInfoList();
+                        if (devices?.Count > 0)
+                        {
+                            foreach (var item in devices)
+                            {
+                                reply.Devices.Add(item.GetProtoDeviceInfo());
+                            }
+                        }
+                        await responseStreamsDevices[sid].WriteAsync(reply);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "OnSendDevices write to response Stream");
+                    }
+                });
+            }
+        }
+
 
         [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
         public override Task<DeviceChangeRequest> DeleteDevice(DeviceChangeRequest request, ServerCallContext context)
@@ -40,10 +168,71 @@ namespace CommunicationResourceProvider.ProtoServices
         }
 
         [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
-        public override Task Features(Empty request, IServerStreamWriter<FeatureDefinitionExtended> responseStream, ServerCallContext context)
+        public override async Task Features(Empty request, IServerStreamWriter<FeatureList> responseStream, ServerCallContext context)
         {
-            return base.Features(request, responseStream, context);
+            string sid = null;
+            try
+            {
+                var user = context.GetHttpContext().User;
+                sid = user.Claims.GetSid();
+                if (responseStreamsFeatures.ContainsKey(sid))
+                    responseStreamsFeatures[sid] = responseStream;
+                else
+                    responseStreamsFeatures.Add(sid, responseStream);
+
+                OnSendFeatures(sid);
+                do
+                {
+                    await Task.Delay(100);
+                } while (!context.CancellationToken.IsCancellationRequested);
+
+                await Task.FromResult(true);
+            }
+            catch (System.OperationCanceledException)
+            {
+                _logger.LogTrace("Features connection was canceled from Context Cancellation Token");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Features");
+            }
+            finally
+            {
+                if (!string.IsNullOrWhiteSpace(sid))
+                {
+                    if (responseStreamsFeatures.ContainsKey(sid))
+                        responseStreamsFeatures.Remove(sid);
+                }
+            }
         }
+
+        private void OnSendFeatures(string sid)
+        {
+            if (responseStreamsFeatures.ContainsKey(sid))
+            {
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        var features = _resourcesRepository.GetResourceDeviceFeature();
+                        var reply = new FeatureList();
+                        if (features?.Count > 0)
+                        {
+                            foreach (var item in features)
+                            {
+                                reply.Features.Add(item.GetProtoFeatureDefinition());
+                            }
+                        }
+                        await responseStreamsFeatures[sid].WriteAsync(reply);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "OnSendFeatures write to response Stream");
+                    }
+                });
+            }
+        }
+
 
         [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
         public override Task<FeatureDetails> FeatureDetail(FeatureDetailRequest request, ServerCallContext context)
