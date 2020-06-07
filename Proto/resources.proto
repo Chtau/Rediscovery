@@ -10,10 +10,14 @@ service ResourceExchange {
   rpc PendingDevices (google.protobuf.Empty) returns (stream DeviceInfoList);
   rpc Devices (google.protobuf.Empty) returns (stream DeviceInfoList);
   rpc UpdateDevice (DeviceInfo) returns (DeviceInfo);
-  rpc DeleteDevice (DeviceChange) returns (DeviceChange);
-  rpc ResolvePendingDevice (DevicePending) returns (DeviceChange);
+  rpc DeleteDevice (DeviceChangeRequest) returns (DeviceChangeRequest);
+  rpc ResolvePendingDevice (DevicePendingRequest) returns (DeviceChangeRequest);
 
   rpc Features (google.protobuf.Empty) returns (stream FeatureDefinitionExtended);
+  rpc FeatureDetail (FeatureDetailRequest) returns (FeatureDetails);
+  rpc FeatureDetailProfileDelete (FeatureDetailProfileDeleteRequest) returns (FeatureDetailProfileDeleteRequest);
+  rpc FeatureDetailProfileSave (FeatureDetailProfileSaveRequest) returns (FeatureDetailProfileSaveRequest);
+  rpc FeatureDetailSettingSave (FeatureDetailSettingSaveRequest) returns (FeatureDetailSettingSaveRequest);
 }
 
 message DeviceInfoList {
@@ -22,19 +26,19 @@ message DeviceInfoList {
 
 message DeviceInfo {
     string id = 1;
-    string Identifier = 2;
-    string Name = 3;
-    bool AllowAccess = 4;
-    uint64 RequestTime = 5;
-    string Model = 6;
-    string Manufacturer = 7;
-    string OSVersion = 8;
-    string Platform = 9;
-    string Idiom = 10;
-    string DeviceType = 11;
+    string identifier = 2;
+    string name = 3;
+    bool allowAccess = 4;
+    uint64 requestTime = 5;
+    string model = 6;
+    string manufacturer = 7;
+    string oSVersion = 8;
+    string platform = 9;
+    string idiom = 10;
+    string deviceType = 11;
 }
 
-message DeviceChange {
+message DeviceChangeRequest {
     string id = 1;
     ActionResult result = 2;
     enum ActionResult {
@@ -44,7 +48,64 @@ message DeviceChange {
     }
 }
 
-message DevicePending {
+message DevicePendingRequest {
     string id = 1;
     bool accept = 2;
+}
+
+message FeatureDetailRequest {
+    string featureId = 1;
+}
+
+message FeatureDetails {
+    string featureId = 1;
+    FeatureDetailSetting setting = 2;
+    repeated FeatureDetailProfile profiles = 3;
+    bytes settingUI = 4;
+    bytes profileUI = 5;
+}
+
+message FeatureDetailSetting {
+    string featureId = 1;
+    string Data = 2;
+}
+
+message FeatureDetailProfile {
+    string Id = 1;
+    string featureId = 2;
+    string displayName = 3;
+    string profileData = 4;
+}
+
+message FeatureDetailProfileDeleteRequest {
+    string featureId = 1;
+    string profileId = 2;
+    ActionResult result = 3;
+    enum ActionResult {
+        None = 0;
+        Ok = 1;
+        Error = 2;
+    }
+}
+
+message FeatureDetailProfileSaveRequest {
+    string featureId = 1;
+    FeatureDetailProfile profile = 2;
+    ActionResult result = 3;
+    enum ActionResult {
+        None = 0;
+        Ok = 1;
+        Error = 2;
+    }
+}
+
+message FeatureDetailSettingSaveRequest {
+    string featureId = 1;
+    FeatureDetailSetting setting = 2;
+    ActionResult result = 3;
+    enum ActionResult {
+        None = 0;
+        Ok = 1;
+        Error = 2;
+    }
 }
