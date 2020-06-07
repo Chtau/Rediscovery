@@ -9,22 +9,20 @@ namespace CommunicationResourceProvider
 {
     public static class CommunicationResourceProviderExtensions
     {
-        public static IApplicationBuilder UseResourceProvider(this IApplicationBuilder app, string hubPath)
+        public static IApplicationBuilder UseResourceProvider(this IApplicationBuilder app)
         {
-            app.UseSignalR(x =>
+            app.UseEndpoints(endpoints =>
             {
-                x.MapHub<RemoteResourceHub>(hubPath);
+                //endpoints.MapGrpcService<AuthenticationExchangeService>();
             });
             return app;
         }
 
-        public static IServiceCollection AddResourceProvider<TAuthenticateService, TResourcesRepository>(this IServiceCollection services)
-            where TAuthenticateService : class, IAuthenticateService
+        public static IServiceCollection AddResourceProvider<TResourcesRepository>(this IServiceCollection services)
             where TResourcesRepository : class, IResourcesRepository
         {
-            services.AddSingleton<IAuthenticateService, TAuthenticateService>();
             services.AddSingleton<IResourcesRepository, TResourcesRepository>();
-            services.AddSingleton<IRemoteResourcesSenderService, RemoteResourcesSenderService>();
+            services.AddGrpc();
             return services;
         }
     }

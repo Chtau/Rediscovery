@@ -12,5 +12,6 @@ namespace CommunicationResourceProvider
     public static class AuthorizationRoles
     {
         public const string AdminRole = "admin";
+        public const string ResourceConsumer = "resourceconsumer";
     }
 }
