@@ -1,4 +1,5 @@
 ﻿using PluginFeature.Models;
+using SharedCoreModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,7 +13,7 @@ namespace CommunicationResourceProvider
         List<SharedCoreModels.DeviceInfo> GetResourceActiveDeviceInfo();
         void DeleteDeviceInfo(SharedCoreModels.DeviceInfo deviceInfo);
         void UpdateDeviceInfo(SharedCoreModels.DeviceInfo deviceInfo);
-        List<SharedCoreModels.DeviceInfo> GetResourcePendingAuthenticationDevices();
+        List<DeviceInfo> GetResourcePendingAuthenticationDevices();
         bool ResolvePendingAuthenticationDevices(Guid deviceId, bool accept);
         List<DeviceFeatureProfil> GetResourceDeviceFeatureProfiles(Guid featureId);
         DeviceFeatureSetting GetResourceDeviceFeatureSettings(Guid featureId);

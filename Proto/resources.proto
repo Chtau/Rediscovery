@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "shared.proto";
+
+package resources;
+
+service ResourceExchange {
+  rpc ActiveDevices (google.protobuf.Empty) returns (stream DeviceInfoList);
+  rpc PendingDevices (google.protobuf.Empty) returns (stream DeviceInfoList);
+  rpc Devices (google.protobuf.Empty) returns (stream DeviceInfoList);
+  rpc UpdateDevice (DeviceInfo) returns (DeviceInfo);
+  rpc DeleteDevice (DeviceChange) returns (DeviceChange);
+  rpc ResolvePendingDevice (DevicePending) returns (DeviceChange);
+
+  rpc Features (google.protobuf.Empty) returns (stream FeatureDefinitionExtended);
+}
+
+message DeviceInfoList {
+    repeated DeviceInfo devices = 1;
+}
+
+message DeviceInfo {
+    string id = 1;
+    string Identifier = 2;
+    string Name = 3;
+    bool AllowAccess = 4;
+    uint64 RequestTime = 5;
+    string Model = 6;
+    string Manufacturer = 7;
+    string OSVersion = 8;
+    string Platform = 9;
+    string Idiom = 10;
+    string DeviceType = 11;
+}
+
+message DeviceChange {
+    string id = 1;
+    ActionResult result = 2;
+    enum ActionResult {
+        None = 0;
+        Ok = 1;
+        Error = 2;
+    }
+}
+
+message DevicePending {
+    string id = 1;
+    bool accept = 2;
+}
