@@ -17,16 +17,38 @@ namespace CommunicationResourceProvider.ProtoServices
     {
         private readonly ILogger<ResourceExchangeService> _logger;
         private readonly IResourcesRepository _resourcesRepository;
+        private readonly IResourceManager _resourceManager;
 
         private Dictionary<string, IServerStreamWriter<DeviceInfoList>> responseStreamsActiveDevices = new Dictionary<string, IServerStreamWriter<DeviceInfoList>>();
         private Dictionary<string, IServerStreamWriter<DeviceInfoList>> responseStreamsDevices = new Dictionary<string, IServerStreamWriter<DeviceInfoList>>();
         private Dictionary<string, IServerStreamWriter<FeatureList>> responseStreamsFeatures = new Dictionary<string, IServerStreamWriter<FeatureList>>();
         private Dictionary<string, IServerStreamWriter<DeviceInfoList>> responseStreamsPendingDevices = new Dictionary<string, IServerStreamWriter<DeviceInfoList>>();
 
-        public ResourceExchangeService(ILoggerFactory loggerFactory, IResourcesRepository resourcesRepository)
+        public ResourceExchangeService(ILoggerFactory loggerFactory, IResourcesRepository resourcesRepository, IResourceManager resourceManager)
         {
             _logger = loggerFactory.CreateLogger<ResourceExchangeService>();
             _resourcesRepository = resourcesRepository;
+            _resourceManager = resourceManager;
+            _resourceManager.SendActiveDevicesChanged += (obj, args) =>
+            {
+                OnSendToAll(OnSendActiveDevices, responseStreamsActiveDevices);
+            };
+            _resourceManager.SendAllDevicesChanged += (obj, args) =>
+            {
+                OnSendAllDevices();
+            };
+            _resourceManager.SendDevicesChanged += (obj, args) =>
+            {
+                OnSendToAll(OnSendDevices, responseStreamsDevices);
+            };
+            _resourceManager.SendFeaturesChanged += (obj, args) =>
+            {
+                OnSendToAll(OnSendFeatures, responseStreamsFeatures);
+            };
+            _resourceManager.SendPendingDevicesChanged += (obj, args) =>
+            {
+                OnSendToAll(OnSendPendingDevices, responseStreamsPendingDevices);
+            };
         }
 
         [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
@@ -168,8 +190,11 @@ namespace CommunicationResourceProvider.ProtoServices
         {
             try
             {
-                var result = _resourcesRepository.DeleteDeviceInfo(request.Id.SafeGuid());
+                var deviceId = request.Id.SafeGuid();
+                var result = _resourcesRepository.DeleteDeviceInfo(deviceId);
                 OnSendAllDevices();
+                if (result)
+                    _resourceManager.DeleteDevice(deviceId);
                 return Task.FromResult(new DeviceChangeRequest
                 {
                     Id = request.Id,
@@ -297,8 +322,11 @@ namespace CommunicationResourceProvider.ProtoServices
         {
             try
             {
-                var result = _resourcesRepository.DeleteFeatureProfile(request.FeatureId.SafeGuid(), request.ProfileId);
-
+                var featureId = request.FeatureId.SafeGuid();
+                var profileId = request.ProfileId;
+                var result = _resourcesRepository.DeleteFeatureProfile(featureId, profileId);
+                if (result)
+                    _resourceManager.FeatureDetailProfileDelete(featureId, profileId);
                 return Task.FromResult(new FeatureDetailProfileDeleteRequest
                 {
                     FeatureId = request.FeatureId,
@@ -323,8 +351,11 @@ namespace CommunicationResourceProvider.ProtoServices
         {
             try
             {
-                var result = _resourcesRepository.SaveFeatureProfile(request.FeatureId.SafeGuid(), request.Profile.GetDeviceFeatureProfil());
-
+                var featureId = request.FeatureId.SafeGuid();
+                var profile = request.Profile.GetDeviceFeatureProfil();
+                var result = _resourcesRepository.SaveFeatureProfile(featureId, profile);
+                if (result)
+                    _resourceManager.FeatureDetailProfileDelete(featureId, profile.Id);
                 return Task.FromResult(new FeatureDetailProfileSaveRequest
                 {
                     Result = result ? FeatureDetailProfileSaveRequest.Types.ActionResult.Ok : FeatureDetailProfileSaveRequest.Types.ActionResult.Error,
@@ -349,8 +380,11 @@ namespace CommunicationResourceProvider.ProtoServices
         {
             try
             {
-                var result = _resourcesRepository.SaveFeatureSettings(request.FeatureId.SafeGuid(), request.Setting.GetDeviceFeatureSetting());
-
+                var featureId = request.FeatureId.SafeGuid();
+                var setting = request.Setting.GetDeviceFeatureSetting();
+                var result = _resourcesRepository.SaveFeatureSettings(featureId, setting);
+                if (result)
+                    _resourceManager.FeatureDetailSettingSave(featureId, setting);
                 return Task.FromResult(new FeatureDetailSettingSaveRequest
                 {
                     FeatureId = request.FeatureId,
@@ -442,8 +476,11 @@ namespace CommunicationResourceProvider.ProtoServices
         {
             try
             {
-                var result = _resourcesRepository.ResolvePendingAuthenticationDevices(request.Id.SafeGuid(), request.Accept);
+                var featureId = request.Id.SafeGuid();
+                var result = _resourcesRepository.ResolvePendingAuthenticationDevices(featureId, request.Accept);
                 OnSendAllDevices();
+                if (result)
+                    _resourceManager.ResolvePendingDevice(featureId, request.Accept);
                 return Task.FromResult(new DeviceChangeRequest
                 {
                     Id = request.Id,
@@ -469,6 +506,7 @@ namespace CommunicationResourceProvider.ProtoServices
                 var di = request.GetDeviceInfo();
                 var replyDeviceInfo = _resourcesRepository.UpdateDeviceInfo(di);
                 OnSendAllDevices();
+                _resourceManager.UpdateDevice(replyDeviceInfo);
                 return Task.FromResult(replyDeviceInfo.GetProtoDeviceInfo());
             }
             catch (Exception ex)

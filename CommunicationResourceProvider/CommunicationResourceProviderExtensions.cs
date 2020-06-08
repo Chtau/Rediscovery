@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using CommunicationResourceProvider.ProtoServices;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -13,15 +14,17 @@ namespace CommunicationResourceProvider
         {
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapGrpcService<AuthenticationExchangeService>();
+                endpoints.MapGrpcService<ResourceExchangeService>();
             });
             return app;
         }
 
-        public static IServiceCollection AddResourceProvider<TResourcesRepository>(this IServiceCollection services)
+        public static IServiceCollection AddResourceProvider<TResourcesRepository, TResourceManager>(this IServiceCollection services)
             where TResourcesRepository : class, IResourcesRepository
+            where TResourceManager : class, IResourceManager
         {
             services.AddSingleton<IResourcesRepository, TResourcesRepository>();
+            services.AddSingleton<IResourceManager, TResourceManager>();
             services.AddGrpc();
             return services;
         }
