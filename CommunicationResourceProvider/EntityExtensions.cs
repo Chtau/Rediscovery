@@ -65,5 +65,45 @@ namespace CommunicationResourceProvider
                 Website = featureDefinitionExtended.Website.EmptyIfNull()
             };
         }
+
+        public static PluginFeature.Models.DeviceFeatureSetting GetDeviceFeatureSetting(this Resources.FeatureDetailSetting featureDetailSetting)
+        {
+            return new PluginFeature.Models.DeviceFeatureSetting
+            {
+                Data = featureDetailSetting.Data,
+                FeatureId = featureDetailSetting.FeatureId.SafeGuid()
+            };
+        }
+
+        public static Resources.FeatureDetailSetting GetProtoFeatureDetailSetting(this PluginFeature.Models.DeviceFeatureSetting deviceFeatureSetting)
+        {
+            return new Resources.FeatureDetailSetting
+            {
+                Data = deviceFeatureSetting.Data,
+                FeatureId = deviceFeatureSetting.FeatureId.ToString()
+            };
+        }
+
+        public static PluginFeature.Models.DeviceFeatureProfil GetDeviceFeatureProfil(this Resources.FeatureDetailProfile featureDetailProfile)
+        {
+            return new PluginFeature.Models.DeviceFeatureProfil
+            {
+                DisplayName = featureDetailProfile.DisplayName,
+                FeatureId = featureDetailProfile.FeatureId.SafeGuid(),
+                Id = featureDetailProfile.Id,
+                ProfileData = featureDetailProfile.ProfileData
+            };
+        }
+
+        public static Resources.FeatureDetailProfile GetProtoFeatureDetailProfile(this PluginFeature.Models.DeviceFeatureProfil deviceFeatureProfil)
+        {
+            return new Resources.FeatureDetailProfile
+            {
+                FeatureId = deviceFeatureProfil.FeatureId.ToString(),
+                DisplayName = deviceFeatureProfil.DisplayName,
+                Id = deviceFeatureProfil.Id,
+                ProfileData = deviceFeatureProfil.ProfileData
+            };
+        }
     }
 }

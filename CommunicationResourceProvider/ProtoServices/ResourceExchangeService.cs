@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Google.Protobuf.WellKnownTypes;
@@ -238,25 +239,117 @@ namespace CommunicationResourceProvider.ProtoServices
         [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
         public override Task<FeatureDetails> FeatureDetail(FeatureDetailRequest request, ServerCallContext context)
         {
-            return base.FeatureDetail(request, context);
+            try
+            {
+                Guid featureId = request.FeatureId.SafeGuid();
+                var settings = _resourcesRepository.GetResourceDeviceFeatureSettings(featureId);
+                var settingsUI = _resourcesRepository.GetResourceDeviceFeatureSettingsUI(featureId);
+                var profiles = _resourcesRepository.GetResourceDeviceFeatureProfiles(featureId);
+                var profilesUI = _resourcesRepository.GetResourceDeviceFeatureProfilesUI(featureId);
+
+                var reply = new FeatureDetails
+                {
+                    FeatureId = request.FeatureId,
+                    ProfileUI = Google.Protobuf.ByteString.CopyFrom(profilesUI),
+                    SettingUI = Google.Protobuf.ByteString.CopyFrom(settingsUI),
+                    Setting = settings.GetProtoFeatureDetailSetting()
+                };
+                if (profiles?.Count > 0)
+                {
+                    foreach (var item in profiles)
+                    {
+                        reply.Profiles.Add(item.GetProtoFeatureDetailProfile());
+                    }
+                }
+
+                return Task.FromResult(reply);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "FeatureDetail");
+                return Task.FromResult(new FeatureDetails
+                {
+                    FeatureId = request.FeatureId
+                });
+            }
         }
 
         [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
         public override Task<FeatureDetailProfileDeleteRequest> FeatureDetailProfileDelete(FeatureDetailProfileDeleteRequest request, ServerCallContext context)
         {
-            return base.FeatureDetailProfileDelete(request, context);
+            try
+            {
+                var result = _resourcesRepository.DeleteFeatureProfile(request.FeatureId.SafeGuid(), request.ProfileId);
+
+                return Task.FromResult(new FeatureDetailProfileDeleteRequest
+                {
+                    FeatureId = request.FeatureId,
+                    ProfileId = request.ProfileId,
+                    Result = result ? FeatureDetailProfileDeleteRequest.Types.ActionResult.Ok : FeatureDetailProfileDeleteRequest.Types.ActionResult.Error
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "FeatureDetailProfileDelete");
+                return Task.FromResult(new FeatureDetailProfileDeleteRequest
+                {
+                    FeatureId = request.FeatureId,
+                    ProfileId = request.ProfileId,
+                    Result = FeatureDetailProfileDeleteRequest.Types.ActionResult.Error
+                });
+            }
         }
 
         [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
         public override Task<FeatureDetailProfileSaveRequest> FeatureDetailProfileSave(FeatureDetailProfileSaveRequest request, ServerCallContext context)
         {
-            return base.FeatureDetailProfileSave(request, context);
+            try
+            {
+                var result = _resourcesRepository.SaveFeatureProfile(request.FeatureId.SafeGuid(), request.Profile.GetDeviceFeatureProfil());
+
+                return Task.FromResult(new FeatureDetailProfileSaveRequest
+                {
+                    Result = result ? FeatureDetailProfileSaveRequest.Types.ActionResult.Ok : FeatureDetailProfileSaveRequest.Types.ActionResult.Error,
+                    FeatureId = request.FeatureId,
+                    Profile = request.Profile
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "FeatureDetailProfileSave");
+                return Task.FromResult(new FeatureDetailProfileSaveRequest
+                {
+                    Result = FeatureDetailProfileSaveRequest.Types.ActionResult.Error,
+                    FeatureId = request.FeatureId,
+                    Profile = request.Profile
+                });
+            }
         }
 
         [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
         public override Task<FeatureDetailSettingSaveRequest> FeatureDetailSettingSave(FeatureDetailSettingSaveRequest request, ServerCallContext context)
         {
-            return base.FeatureDetailSettingSave(request, context);
+            try
+            {
+                var result = _resourcesRepository.SaveFeatureSettings(request.FeatureId.SafeGuid(), request.Setting.GetDeviceFeatureSetting());
+
+                return Task.FromResult(new FeatureDetailSettingSaveRequest
+                {
+                    FeatureId = request.FeatureId,
+                    Result = result ? FeatureDetailSettingSaveRequest.Types.ActionResult.Ok : FeatureDetailSettingSaveRequest.Types.ActionResult.Error,
+                    Setting = request.Setting
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "FeatureDetailSettingSave");
+                return Task.FromResult(new FeatureDetailSettingSaveRequest
+                {
+                    FeatureId = request.FeatureId,
+                    Result = FeatureDetailSettingSaveRequest.Types.ActionResult.Error,
+                    Setting = request.Setting
+                });
+            }
         }
 
         [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
@@ -329,7 +422,25 @@ namespace CommunicationResourceProvider.ProtoServices
         [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
         public override Task<DeviceChangeRequest> ResolvePendingDevice(DevicePendingRequest request, ServerCallContext context)
         {
-            return base.ResolvePendingDevice(request, context);
+            try
+            {
+                var result = _resourcesRepository.ResolvePendingAuthenticationDevices(request.Id.SafeGuid(), request.Accept);
+                
+                return Task.FromResult(new DeviceChangeRequest
+                {
+                    Id = request.Id,
+                    Result = result ? DeviceChangeRequest.Types.ActionResult.Ok : DeviceChangeRequest.Types.ActionResult.Error
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "ResolvePendingDevice");
+                return Task.FromResult(new DeviceChangeRequest
+                {
+                    Id = request.Id,
+                    Result = DeviceChangeRequest.Types.ActionResult.Error
+                });
+            }
         }
 
         [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
@@ -337,34 +448,14 @@ namespace CommunicationResourceProvider.ProtoServices
         {
             try
             {
-                var user = context.GetHttpContext().User;
-                var sid = user.Claims.GetSid();
-
-                _resourcesRepository.UpdateDeviceInfo(deviceInfo);
-
-                var resultFeatureState = _featureManager.FeatureStateChange(new CommunicationBase.Models.ExchangeEntity<CommunicationBase.Models.FeatureState>
-                {
-                    Sid = sid,
-                    Entity = new CommunicationBase.Models.FeatureState
-                    {
-                        CurrentState = (CommunicationBase.Models.FeatureState.State)(int)request.FeatureState_,
-                        FeatureId = request.FeatureId
-                    }
-                });
-                return Task.FromResult(new FeatureState
-                {
-                    FeatureId = resultFeatureState.Entity.FeatureId,
-                    FeatureState_ = (FeatureState.Types.State)(int)resultFeatureState.Entity.CurrentState
-                });
+                var di = request.GetDeviceInfo();
+                var replyDeviceInfo = _resourcesRepository.UpdateDeviceInfo(di);       
+                return Task.FromResult(replyDeviceInfo.GetProtoDeviceInfo());
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "UpdateDevice");
-                return Task.FromResult(new FeatureState
-                {
-                    FeatureId = request.FeatureId,
-                    FeatureState_ = FeatureState.Types.State.Error
-                });
+                return Task.FromResult(request);
             }
         }
     }
