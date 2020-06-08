@@ -21,4 +21,11 @@ public static class StringExtensions
         }
         return Guid.Empty;
     }
+
+    public static string EmptyIfNull(this string value)
+    {
+        if (value == null)
+            value = string.Empty;
+        return value;
+    }
 }

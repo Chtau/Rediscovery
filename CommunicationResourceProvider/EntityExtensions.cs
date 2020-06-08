@@ -20,7 +20,25 @@ namespace CommunicationResourceProvider
                 Name = deviceInfo.Name.EmptyIfNull(),
                 OSVersion = deviceInfo.OSVersion.EmptyIfNull(),
                 Platform = deviceInfo.Platform.EmptyIfNull(),
-                RequestTime = deviceInfo.RequestTime.HasValue ? (ulong)deviceInfo.RequestTime.Value.Ticks : 0
+                RequestTime = deviceInfo.RequestTime.DatetimeTicksLong()
+            };
+        }
+
+        public static SharedCoreModels.DeviceInfo GetDeviceInfo(this Resources.DeviceInfo deviceInfo)
+        {
+            return new SharedCoreModels.DeviceInfo
+            {
+                AllowAccess = deviceInfo.AllowAccess,
+                DeviceType = deviceInfo.DeviceType,
+                Id = deviceInfo.Id.SafeGuid(),
+                Identifier = deviceInfo.Identifier,
+                Idiom = deviceInfo.Idiom,
+                Manufacturer = deviceInfo.Manufacturer,
+                Model = deviceInfo.Model,
+                Name = deviceInfo.Name,
+                OSVersion = deviceInfo.OSVersion,
+                Platform = deviceInfo.Platform,
+                RequestTime = deviceInfo.RequestTime.TicksLongDatetime(),
             };
         }
 

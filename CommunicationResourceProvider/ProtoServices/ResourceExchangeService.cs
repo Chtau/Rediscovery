@@ -20,6 +20,7 @@ namespace CommunicationResourceProvider.ProtoServices
         private Dictionary<string, IServerStreamWriter<DeviceInfoList>> responseStreamsActiveDevices = new Dictionary<string, IServerStreamWriter<DeviceInfoList>>();
         private Dictionary<string, IServerStreamWriter<DeviceInfoList>> responseStreamsDevices = new Dictionary<string, IServerStreamWriter<DeviceInfoList>>();
         private Dictionary<string, IServerStreamWriter<FeatureList>> responseStreamsFeatures = new Dictionary<string, IServerStreamWriter<FeatureList>>();
+        private Dictionary<string, IServerStreamWriter<DeviceInfoList>> responseStreamsPendingDevices = new Dictionary<string, IServerStreamWriter<DeviceInfoList>>();
 
         public ResourceExchangeService(ILoggerFactory loggerFactory, IResourcesRepository resourcesRepository)
         {
@@ -259,10 +260,71 @@ namespace CommunicationResourceProvider.ProtoServices
         }
 
         [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
-        public override Task PendingDevices(Empty request, IServerStreamWriter<DeviceInfoList> responseStream, ServerCallContext context)
+        public override async Task PendingDevices(Empty request, IServerStreamWriter<DeviceInfoList> responseStream, ServerCallContext context)
         {
-            return base.PendingDevices(request, responseStream, context);
+            string sid = null;
+            try
+            {
+                var user = context.GetHttpContext().User;
+                sid = user.Claims.GetSid();
+                if (responseStreamsPendingDevices.ContainsKey(sid))
+                    responseStreamsPendingDevices[sid] = responseStream;
+                else
+                    responseStreamsPendingDevices.Add(sid, responseStream);
+
+                OnSendPendingDevices(sid);
+                do
+                {
+                    await Task.Delay(100);
+                } while (!context.CancellationToken.IsCancellationRequested);
+
+                await Task.FromResult(true);
+            }
+            catch (System.OperationCanceledException)
+            {
+                _logger.LogTrace("PendingDevices connection was canceled from Context Cancellation Token");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "PendingDevices");
+            }
+            finally
+            {
+                if (!string.IsNullOrWhiteSpace(sid))
+                {
+                    if (responseStreamsPendingDevices.ContainsKey(sid))
+                        responseStreamsPendingDevices.Remove(sid);
+                }
+            }
         }
+
+        private void OnSendPendingDevices(string sid)
+        {
+            if (responseStreamsPendingDevices.ContainsKey(sid))
+            {
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        var features = _resourcesRepository.GetResourcePendingAuthenticationDevices();
+                        var reply = new DeviceInfoList();
+                        if (features?.Count > 0)
+                        {
+                            foreach (var item in features)
+                            {
+                                reply.Devices.Add(item.GetProtoDeviceInfo());
+                            }
+                        }
+                        await responseStreamsPendingDevices[sid].WriteAsync(reply);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "OnSendPendingDevices write to response Stream");
+                    }
+                });
+            }
+        }
+
 
         [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
         public override Task<DeviceChangeRequest> ResolvePendingDevice(DevicePendingRequest request, ServerCallContext context)
@@ -273,7 +335,37 @@ namespace CommunicationResourceProvider.ProtoServices
         [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
         public override Task<DeviceInfo> UpdateDevice(DeviceInfo request, ServerCallContext context)
         {
-            return base.UpdateDevice(request, context);
+            try
+            {
+                var user = context.GetHttpContext().User;
+                var sid = user.Claims.GetSid();
+
+                _resourcesRepository.UpdateDeviceInfo(deviceInfo);
+
+                var resultFeatureState = _featureManager.FeatureStateChange(new CommunicationBase.Models.ExchangeEntity<CommunicationBase.Models.FeatureState>
+                {
+                    Sid = sid,
+                    Entity = new CommunicationBase.Models.FeatureState
+                    {
+                        CurrentState = (CommunicationBase.Models.FeatureState.State)(int)request.FeatureState_,
+                        FeatureId = request.FeatureId
+                    }
+                });
+                return Task.FromResult(new FeatureState
+                {
+                    FeatureId = resultFeatureState.Entity.FeatureId,
+                    FeatureState_ = (FeatureState.Types.State)(int)resultFeatureState.Entity.CurrentState
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "UpdateDevice");
+                return Task.FromResult(new FeatureState
+                {
+                    FeatureId = request.FeatureId,
+                    FeatureState_ = FeatureState.Types.State.Error
+                });
+            }
         }
     }
 }
