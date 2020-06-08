@@ -166,7 +166,25 @@ namespace CommunicationResourceProvider.ProtoServices
         [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
         public override Task<DeviceChangeRequest> DeleteDevice(DeviceChangeRequest request, ServerCallContext context)
         {
-            return base.DeleteDevice(request, context);
+            try
+            {
+                var result = _resourcesRepository.DeleteDeviceInfo(request.Id.SafeGuid());
+
+                return Task.FromResult(new DeviceChangeRequest
+                {
+                    Id = request.Id,
+                    Result = result ? DeviceChangeRequest.Types.ActionResult.Ok : DeviceChangeRequest.Types.ActionResult.Error
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "DeleteDevice");
+                return Task.FromResult(new DeviceChangeRequest
+                {
+                    Id = request.Id,
+                    Result = DeviceChangeRequest.Types.ActionResult.Error
+                });
+            }
         }
 
         [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
