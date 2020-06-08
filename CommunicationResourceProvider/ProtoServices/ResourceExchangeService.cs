@@ -169,7 +169,7 @@ namespace CommunicationResourceProvider.ProtoServices
             try
             {
                 var result = _resourcesRepository.DeleteDeviceInfo(request.Id.SafeGuid());
-
+                OnSendAllDevices();
                 return Task.FromResult(new DeviceChangeRequest
                 {
                     Id = request.Id,
@@ -443,7 +443,7 @@ namespace CommunicationResourceProvider.ProtoServices
             try
             {
                 var result = _resourcesRepository.ResolvePendingAuthenticationDevices(request.Id.SafeGuid(), request.Accept);
-                
+                OnSendAllDevices();
                 return Task.FromResult(new DeviceChangeRequest
                 {
                     Id = request.Id,
@@ -467,13 +467,32 @@ namespace CommunicationResourceProvider.ProtoServices
             try
             {
                 var di = request.GetDeviceInfo();
-                var replyDeviceInfo = _resourcesRepository.UpdateDeviceInfo(di);       
+                var replyDeviceInfo = _resourcesRepository.UpdateDeviceInfo(di);
+                OnSendAllDevices();
                 return Task.FromResult(replyDeviceInfo.GetProtoDeviceInfo());
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "UpdateDevice");
                 return Task.FromResult(request);
+            }
+        }
+
+        private void OnSendAllDevices()
+        {
+            OnSendToAll(OnSendDevices, responseStreamsDevices);
+            OnSendToAll(OnSendActiveDevices, responseStreamsActiveDevices);
+            OnSendToAll(OnSendPendingDevices, responseStreamsPendingDevices);
+        }
+
+        private void OnSendToAll<T>(Action<string> sendAction, Dictionary<string, T> responseDictonary)
+        {
+            if (responseDictonary?.Count > 0)
+            {
+                foreach (var item in responseDictonary)
+                {
+                    sendAction(item.Key);
+                }
             }
         }
     }
