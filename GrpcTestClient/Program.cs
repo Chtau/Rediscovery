@@ -1,5 +1,6 @@
 ﻿using CommunicationAuthenticationConsumer;
 using CommunicationFeatureConsumer;
+using CommunicationResourceConsumer;
 using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
@@ -13,6 +14,7 @@ namespace GrpcTestClient
         {
             Console.WriteLine("Test Grpc!");
             ConsumeAuthentication();
+            ConsumeResources();
             /*var consumer = new CommunicationFeatureConsumer.FeatureConsume();
             consumer.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
             consumer.HelloReplay += (obj, message) => {
@@ -89,6 +91,46 @@ namespace GrpcTestClient
                 FeatureId = featureId.ToString()
             });
             featureConsumer.SendFeatureData(new PluginFeature.Models.DeviceFeatureData("1", featureId, "1", $"{DateTime.Now} Client feature data"));
+        }
+
+        private static void ConsumeResources()
+        {
+            IAuthenticationConsumerService consumerService = new AuthenticationConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
+            consumerService.ReceivedManifestReply += (obj, args) =>
+            {
+                Console.WriteLine("[ReceivedManifestReply] Client:" + args.ClientName);
+            };
+            consumerService.ReceivedWelcomeReply += (obj, args) =>
+            {
+                Console.WriteLine($"[ReceivedWelcomeReply] Token:{args.Token} State:{args.State}");
+                consumerService.RequestManifest(args.Token);
+                ConsumeResource(args.Token);
+            };
+            consumerService.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
+            consumerService.SendWelcome(new SharedCoreModels.WelcomeDeviceMessage
+            {
+                DeviceIdentifier = "80",
+                DeviceName = "Test Client",
+                DeviceType = "Console",
+                Idiom = "",
+                Manufacturer = "",
+                Model = "",
+                OSVersion = "",
+                Platform = ""
+            });
+        }
+
+        private static void ConsumeResource(string token)
+        {
+            IResourceConsumerService consumerService = new ResourceConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
+            consumerService.ListenDevices(token);
+            consumerService.ReceiveDevices += (obj, args) =>
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"[ReceiveDevices] Count:{args.Count}");
+                Console.ResetColor();
+            };
+            consumerService.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
         }
 
         public static string ExportToPEM(X509Certificate cert)
