@@ -15,6 +15,7 @@ namespace CommunicationFeatureConsumer
     {
         public event EventHandler<CommunicationBase.Models.FeatureState> ReceiveFeatureStateChangeReply;
         public event EventHandler<PluginFeature.Models.DeviceFeatureData> ReceiveFeatureData;
+        public event EventHandler<Models.FeatureClientData> ReceiveClientData;
 
         private FeatureExchange.FeatureExchangeClient exchangeClient;
         private IClientStreamWriter<DeviceFeatureData> _responseStream;
@@ -121,6 +122,51 @@ namespace CommunicationFeatureConsumer
                     });
                 });
             }
+        }
+
+        public void FeatureClient(string token, Guid featureId)
+        {
+            Task.Run(async () =>
+            {
+                var cts = new CancellationTokenSource();
+                try
+                {
+                    var msg = new Featuredata.FeatureRequest
+                    {
+                        FeatureId = featureId.ToString()
+                    };
+                    var meta = new Metadata();
+                    meta.AddAuthorizationHeader(token);
+                    _logger.LogTrace("Consumer send request to get feature client data");
+                    var reply = await exchangeClient.FeatureClientAsync(msg, cancellationToken: cts.Token, headers: meta);
+                    var replyMsg = new Models.FeatureClientData
+                    {
+                        FeatureId = reply.FeatureId.SafeGuid(),
+                        FeatureSetting = reply.Setting.GetDeviceFeatureSetting(),
+                        FeatureProfils = new List<PluginFeature.Models.DeviceFeatureProfil>()
+                    };
+                    if (reply.Profiles?.Count > 0)
+                    {
+                        foreach (var item in reply.Profiles)
+                        {
+                            replyMsg.FeatureProfils.Add(item.GetDeviceFeatureProfil());
+                        }
+                    }
+                    if (reply.Archive?.Length > 0)
+                    {
+                        replyMsg.UIArchive = reply.Archive.ToByteArray();
+                    }
+                    ReceiveClientData?.Invoke(this, replyMsg);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex);
+                }
+                finally
+                {
+                    cts.Cancel();
+                }
+            });
         }
     }
 }

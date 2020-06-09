@@ -16,5 +16,7 @@ namespace CommunicationFeatureConsumer
         event EventHandler<PluginFeature.Models.DeviceFeatureData> ReceiveFeatureData;
         void StartFeatureData(string token, CancellationTokenSource cts = null);
         void SendFeatureData(PluginFeature.Models.DeviceFeatureData deviceFeatureData);
+        event EventHandler<Models.FeatureClientData> ReceiveClientData;
+        void FeatureClient(string token, Guid featureId);
     }
 }
