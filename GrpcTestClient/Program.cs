@@ -123,7 +123,6 @@ namespace GrpcTestClient
         private static void ConsumeResource(string token)
         {
             IResourceConsumerService consumerService = new ResourceConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
-            consumerService.ListenDevices(token);
             consumerService.ReceiveDevices += (obj, args) =>
             {
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -131,6 +130,7 @@ namespace GrpcTestClient
                 Console.ResetColor();
             };
             consumerService.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
+            consumerService.ListenDevices(token);
         }
 
         public static string ExportToPEM(X509Certificate cert)

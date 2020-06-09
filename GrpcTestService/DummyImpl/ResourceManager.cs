@@ -16,6 +16,18 @@ namespace GrpcTestService.DummyImpl
         public event EventHandler SendPendingDevicesChanged;
         public event EventHandler SendFeaturesChanged;
 
+        public ResourceManager()
+        {
+            Task.Run(async () =>
+            {
+                do
+                {
+                    await Task.Delay(5000);
+                    SendAllDevicesChanged?.Invoke(this, EventArgs.Empty);
+                } while (true);
+            });
+        }
+
         public void DeleteDevice(Guid deviceId)
         {
             Console.ForegroundColor = ConsoleColor.Green;
