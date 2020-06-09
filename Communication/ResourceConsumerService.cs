@@ -21,6 +21,7 @@ namespace CommunicationResourceConsumer
         public event EventHandler<(Guid featureId, string profileId, bool result)> ReceiveFeatureDetailProfileDeleteResult;
         public event EventHandler<(PluginFeature.Models.DeviceFeatureProfil profile, bool result)> ReceiveFeatureDetailProfileSave;
         public event EventHandler<(PluginFeature.Models.DeviceFeatureSetting setting, bool result)> ReceiveFeatureDetailSettingSave;
+        public event EventHandler<Models.FeatureDetail> ReceiveFeatureDetails;
 
         private readonly ILogger _logger;
 
@@ -379,5 +380,47 @@ namespace CommunicationResourceConsumer
             });
         }
 
+        public void FeatureDetail(string token, PluginFeature.Models.DeviceFeatureSetting setting)
+        {
+            Task.Run(async () =>
+            {
+                var cts = new CancellationTokenSource();
+                try
+                {
+                    var meta = new Metadata();
+                    meta.AddAuthorizationHeader(token);
+                    _logger.LogTrace("Consumer send feature detail request");
+                    var msg = new Resources.FeatureDetailRequest
+                    {
+                        FeatureId = setting.FeatureId.ToString()
+                    };
+                    var reply = await resourceExchangeClient.FeatureDetailAsync(msg, cancellationToken: cts.Token, headers: meta);
+                    var result = new Models.FeatureDetail
+                    {
+                        FeatureId = reply.FeatureId.SafeGuid(),
+                        Setting = reply.Setting.GetDeviceFeatureSetting(),
+                        ProfileUI = reply.ProfileUI.ToByteArray(),
+                        SettingUI = reply.SettingUI.ToByteArray(),
+                        Profils = new List<PluginFeature.Models.DeviceFeatureProfil>()
+                    };
+                    if (reply.Profiles.Count > 0)
+                    {
+                        foreach (var item in reply.Profiles)
+                        {
+                            result.Profils.Add(item.GetDeviceFeatureProfil());
+                        }
+                    }
+                    ReceiveFeatureDetails?.Invoke(this, result);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex);
+                }
+                finally
+                {
+                    cts.Cancel();
+                }
+            });
+        }
     }
 }
