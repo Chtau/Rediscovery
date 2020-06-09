@@ -162,8 +162,7 @@ namespace CommunicationFeatureProvider.ProtoServices
                 }
                 if (archive?.Length > 0)
                 {
-                    // TODO: check against max byte array length for each entity in the proto definition
-                    result.Archive.Add(ByteString.CopyFrom(archive));
+                    result.Archive = ByteString.CopyFrom(archive);
                 }
 
                 return Task.FromResult(result);
