@@ -93,7 +93,7 @@ namespace CommunicationAuthenticationConsumer
             });
         }
 
-        private List<SharedBase.Device.FeatureDefinitionExtended> OnGetFeatures(IEnumerable<Manifest.FeatureDefinitionExtended> featureDefinitionExtendeds)
+        private List<SharedBase.Device.FeatureDefinitionExtended> OnGetFeatures(IEnumerable<FeatureDefinitionExtended> featureDefinitionExtendeds)
         {
             var list = new List<SharedBase.Device.FeatureDefinitionExtended>();
             if (featureDefinitionExtendeds != null)
