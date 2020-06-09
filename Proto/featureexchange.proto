@@ -1,10 +1,13 @@
 syntax = "proto3";
 
+import "shared.proto";
+
 package featuredata;
 
 service FeatureExchange {
   rpc ExchangeStream (stream DeviceFeatureData) returns (stream DeviceFeatureData);
   rpc ChangeFeatureState (FeatureState) returns (FeatureState);
+  rpc FeatureClient (FeatureRequest) returns (FeatureClientData);
 }
 
 message FeatureState {
@@ -23,4 +26,15 @@ message DeviceFeatureData {
   string featureId = 2;
   string profileId = 3;
   string data = 4;
+}
+
+message FeatureRequest {
+    string featureId = 1;
+}
+
+message FeatureClientData {
+    string featureId = 1;
+    repeated byte archive = 2;
+    FeatureDetailSetting setting = 2;
+    repeated FeatureDetailProfile profiles = 3;
 }

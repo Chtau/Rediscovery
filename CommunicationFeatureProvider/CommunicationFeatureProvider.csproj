@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <Protobuf Include="..\Proto\featureexchange.proto" GrpcServices="Server" Link="Protos\featureexchange.proto" />
+    <Protobuf Include="..\Proto\shared.proto" GrpcServices="Server" Link="Protos\shared.proto" />
   </ItemGroup>
   
 </Project>

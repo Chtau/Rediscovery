@@ -23,3 +23,15 @@ message FeatureDefinitionExtended {
     IntegrationPoint controlIntegrationPoint = 16;
     IntegrationPoint featureIntegrationPoint = 17;
 }
+
+message FeatureDetailSetting {
+    string featureId = 1;
+    string Data = 2;
+}
+
+message FeatureDetailProfile {
+    string Id = 1;
+    string featureId = 2;
+    string displayName = 3;
+    string profileData = 4;
+}

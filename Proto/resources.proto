@@ -69,18 +69,6 @@ message FeatureDetails {
     bytes profileUI = 5;
 }
 
-message FeatureDetailSetting {
-    string featureId = 1;
-    string Data = 2;
-}
-
-message FeatureDetailProfile {
-    string Id = 1;
-    string featureId = 2;
-    string displayName = 3;
-    string profileData = 4;
-}
-
 message FeatureDetailProfileDeleteRequest {
     string featureId = 1;
     string profileId = 2;
