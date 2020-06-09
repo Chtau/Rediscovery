@@ -8,6 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CommunicationAuthenticationConsumer\CommunicationAuthenticationConsumer.csproj" />
     <ProjectReference Include="..\CommunicationFeatureConsumer\CommunicationFeatureConsumer.csproj" />
+    <ProjectReference Include="..\Communication\CommunicationResourceConsumer.csproj" />
   </ItemGroup>
 
 </Project>

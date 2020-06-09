@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CommunicationAuthenticationProvider\CommunicationAuthenticationProvider.csproj" />
     <ProjectReference Include="..\CommunicationFeatureProvider\CommunicationFeatureProvider.csproj" />
+    <ProjectReference Include="..\CommunicationResourceProvider\CommunicationResourceProvider.csproj" />
   </ItemGroup>
 
 </Project>

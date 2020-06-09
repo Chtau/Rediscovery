@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunicationAuthenticationProvider;
 using CommunicationFeatureProvider;
+using CommunicationResourceProvider;
 using GrpcTestService.DummyImpl;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -22,6 +23,7 @@ namespace GrpcTestService
             //services.AddFeatureProvider();
             services.AddAuthenticationProvider<AuthenticationManager>("testtesttesttesttesttesttesttesttesttesttesttesttesttesttest");
             services.AddFeatureProvider<FeatureManager>();
+            services.AddResourceProvider<ResourceRepository, ResourceManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -34,7 +36,8 @@ namespace GrpcTestService
             app.UseRouting();
             app.UseAuthenticationProvider();
             app.UseFeatureProvider();
-            
+            app.UseResourceProvider();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", async context =>
