@@ -34,7 +34,7 @@ message FeatureRequest {
 
 message FeatureClientData {
     string featureId = 1;
-    repeated byte archive = 2;
-    FeatureDetailSetting setting = 2;
-    repeated FeatureDetailProfile profiles = 3;
+    repeated bytes archive = 2;
+    FeatureDetailSetting setting = 3;
+    repeated FeatureDetailProfile profiles = 4;
 }

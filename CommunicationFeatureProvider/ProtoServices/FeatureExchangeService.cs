@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Google.Protobuf;
 
 namespace CommunicationFeatureProvider.ProtoServices
 {
@@ -131,6 +132,46 @@ namespace CommunicationFeatureProvider.ProtoServices
                     FeatureId = request.FeatureId,
                     FeatureState_ = FeatureState.Types.State.Error
                 });
+            }
+        }
+
+        [Authorize]
+        public override Task<FeatureClientData> FeatureClient(FeatureRequest request, ServerCallContext context)
+        {
+            var result = new FeatureClientData
+            {
+                FeatureId = request.FeatureId
+            };
+            try
+            {
+                var user = context.GetHttpContext().User;
+                var sid = user.Claims.GetSid();
+
+                var featureId = request.FeatureId.SafeGuid();
+                var archive = _featureManager.GetFeatureUIArchive(featureId);
+                var profiles = _featureManager.GetFeatureProfiles(featureId);
+                var setting = _featureManager.GetFeatureSettings(featureId);
+
+                result.Setting = setting.GetProtoFeatureDetailSetting();
+                if (profiles?.Count > 0)
+                {
+                    foreach (var item in profiles)
+                    {
+                        result.Profiles.Add(item.GetProtoFeatureDetailProfile());
+                    }
+                }
+                if (archive?.Length > 0)
+                {
+                    // TODO: check against max byte array length for each entity in the proto definition
+                    result.Archive.Add(ByteString.CopyFrom(archive));
+                }
+
+                return Task.FromResult(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Request to get feature client data");
+                return Task.FromResult(result);
             }
         }
     }
