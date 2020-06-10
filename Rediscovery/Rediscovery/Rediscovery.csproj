@@ -43,7 +43,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CommunicationClientConsumer\CommunicationClientConsumer.csproj" />
     <ProjectReference Include="..\..\PluginFeature\PluginFeature.csproj" />
     <ProjectReference Include="..\..\SharedCoreModels\SharedCoreModels.csproj" />
   </ItemGroup>

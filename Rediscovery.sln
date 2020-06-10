@@ -43,8 +43,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DALDesktopService", "DALDes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationBase", "CommunicationBase\CommunicationBase.csproj", "{54D3ED5B-3BCB-4872-850F-5F5B3B422FE3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationClientConsumer", "CommunicationClientConsumer\CommunicationClientConsumer.csproj", "{EC652CC1-ED58-4AC1-B1CF-D1908896421B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedBase", "SharedModels\SharedBase.csproj", "{FC34856C-FE50-49CE-812E-053F9F5193FF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopHub.Server", "DesktopHub\Server\DesktopHub.Server.csproj", "{9876C3FD-2112-421A-A5C9-4C057C33ACEA}"
@@ -65,7 +63,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrpcTestService", "GrpcTest
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrpcTestClient", "GrpcTestClient\GrpcTestClient.csproj", "{E73E4ADE-BCC4-4DD9-BAFB-47314193F4AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationAuthenticationConsumer", "CommunicationAuthenticationConsumer\CommunicationAuthenticationConsumer.csproj", "{AA6DF67B-764A-4A57-A41F-2884CB4F30E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationAuthenticationConsumer", "CommunicationAuthenticationConsumer\CommunicationAuthenticationConsumer.csproj", "{AA6DF67B-764A-4A57-A41F-2884CB4F30E5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationHearthbeatProvider", "CommunicationHearthbeatProvider\CommunicationHearthbeatProvider.csproj", "{ECEEE68C-A5CE-4875-AFA2-E6A20541EED0}"
 EndProject
@@ -327,18 +325,6 @@ Global
 		{54D3ED5B-3BCB-4872-850F-5F5B3B422FE3}.Release|x64.Build.0 = Release|Any CPU
 		{54D3ED5B-3BCB-4872-850F-5F5B3B422FE3}.Release|x86.ActiveCfg = Release|Any CPU
 		{54D3ED5B-3BCB-4872-850F-5F5B3B422FE3}.Release|x86.Build.0 = Release|Any CPU
-		{EC652CC1-ED58-4AC1-B1CF-D1908896421B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EC652CC1-ED58-4AC1-B1CF-D1908896421B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EC652CC1-ED58-4AC1-B1CF-D1908896421B}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{EC652CC1-ED58-4AC1-B1CF-D1908896421B}.Debug|x64.Build.0 = Debug|Any CPU
-		{EC652CC1-ED58-4AC1-B1CF-D1908896421B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{EC652CC1-ED58-4AC1-B1CF-D1908896421B}.Debug|x86.Build.0 = Debug|Any CPU
-		{EC652CC1-ED58-4AC1-B1CF-D1908896421B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EC652CC1-ED58-4AC1-B1CF-D1908896421B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EC652CC1-ED58-4AC1-B1CF-D1908896421B}.Release|x64.ActiveCfg = Release|Any CPU
-		{EC652CC1-ED58-4AC1-B1CF-D1908896421B}.Release|x64.Build.0 = Release|Any CPU
-		{EC652CC1-ED58-4AC1-B1CF-D1908896421B}.Release|x86.ActiveCfg = Release|Any CPU
-		{EC652CC1-ED58-4AC1-B1CF-D1908896421B}.Release|x86.Build.0 = Release|Any CPU
 		{FC34856C-FE50-49CE-812E-053F9F5193FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FC34856C-FE50-49CE-812E-053F9F5193FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC34856C-FE50-49CE-812E-053F9F5193FF}.Debug|x64.ActiveCfg = Debug|Any CPU
