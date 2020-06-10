@@ -27,11 +27,25 @@ namespace CommunicationAuthenticationProvider
             return app;
         }
 
-        public static IServiceCollection AddAuthenticationProvider<TAuthenticationManager>(this IServiceCollection services, string tokenSigningKeySecret)
+        public static IServiceCollection AddAuthenticationProvider<TAuthenticationManager>(this IServiceCollection services, string tokenSigningKeySecret, string deviceRole = "device", string resourceConsumerRole = "resourceconsumer")
             where TAuthenticationManager : class, IAuthenticationManager
         {
             TokenSigningKey = Encoding.ASCII.GetBytes(tokenSigningKeySecret);
-            services.AddAuthorization();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Device", policy =>
+                {
+                    if (!string.IsNullOrWhiteSpace(deviceRole))
+                        policy.RequireRole(deviceRole);
+                    policy.RequireAuthenticatedUser();
+                });
+                options.AddPolicy("ResourceConsumer", policy =>
+                {
+                    if (!string.IsNullOrWhiteSpace(resourceConsumerRole))
+                        policy.RequireRole(resourceConsumerRole);
+                    policy.RequireAuthenticatedUser();
+                });
+            });
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
