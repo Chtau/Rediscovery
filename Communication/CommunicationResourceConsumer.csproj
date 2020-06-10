@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CommunicationBase\CommunicationBase.csproj" />
-    <ProjectReference Include="..\SharedCoreModels\SharedCoreModels.csproj" />
   </ItemGroup>
   
   <ItemGroup>

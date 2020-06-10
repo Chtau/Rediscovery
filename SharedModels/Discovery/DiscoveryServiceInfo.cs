@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedCoreModels
+namespace SharedBase.Discovery
 {
     public class DiscoveryServiceInfo
     {
@@ -40,7 +40,8 @@ namespace SharedCoreModels
                     var sp = value.Split(';');
                     if (sp != null && sp.Length > 0)
                         items.AddRange(sp);
-                } else
+                }
+                else
                 {
                     items.Add(value);
                 }

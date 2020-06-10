@@ -44,7 +44,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\PluginFeature\PluginFeature.csproj" />
-    <ProjectReference Include="..\..\SharedCoreModels\SharedCoreModels.csproj" />
   </ItemGroup>
 
   <ItemGroup>

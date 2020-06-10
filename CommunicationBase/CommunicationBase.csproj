@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PluginFeature\PluginFeature.csproj" />
-    <ProjectReference Include="..\SharedCoreModels\SharedCoreModels.csproj" />
     <ProjectReference Include="..\SharedModels\SharedBase.csproj" />
   </ItemGroup>
 

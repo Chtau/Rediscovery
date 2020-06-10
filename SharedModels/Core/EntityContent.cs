@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedCoreModels
+namespace SharedBase.Core
 {
     public class EntityContent<I, T>
     {

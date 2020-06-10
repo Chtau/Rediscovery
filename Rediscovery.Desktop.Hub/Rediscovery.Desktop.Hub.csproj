@@ -54,6 +54,5 @@
     <ProjectReference Include="..\Communication\CommunicationResourceConsumer.csproj" />
     <ProjectReference Include="..\IPCPipe\IPCPipe.csproj" />
     <ProjectReference Include="..\SharedConfigurations\SharedConfigurations.csproj" />
-    <ProjectReference Include="..\SharedCoreModels\SharedCoreModels.csproj" />
   </ItemGroup>
 </Project>
