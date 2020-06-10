@@ -51,7 +51,7 @@ namespace CommunicationResourceProvider.ProtoServices
             };
         }
 
-        [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
+        [Authorize(Policy = "ResourceConsumer")]
         public override async Task ActiveDevices(Empty request, IServerStreamWriter<DeviceInfoList> responseStream, ServerCallContext context)
         {
             string sid = null;
@@ -118,7 +118,7 @@ namespace CommunicationResourceProvider.ProtoServices
         }
 
 
-        [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
+        [Authorize(Policy = "ResourceConsumer")]
         public override async Task Devices(Empty request, IServerStreamWriter<DeviceInfoList> responseStream, ServerCallContext context)
         {
             string sid = null;
@@ -185,7 +185,7 @@ namespace CommunicationResourceProvider.ProtoServices
         }
 
 
-        [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
+        [Authorize(Policy = "ResourceConsumer")]
         public override Task<DeviceChangeRequest> DeleteDevice(DeviceChangeRequest request, ServerCallContext context)
         {
             try
@@ -212,7 +212,7 @@ namespace CommunicationResourceProvider.ProtoServices
             }
         }
 
-        [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
+        [Authorize(Policy = "ResourceConsumer")]
         public override async Task Features(Empty request, IServerStreamWriter<FeatureList> responseStream, ServerCallContext context)
         {
             string sid = null;
@@ -279,7 +279,7 @@ namespace CommunicationResourceProvider.ProtoServices
         }
 
 
-        [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
+        [Authorize(Policy = "ResourceConsumer")]
         public override Task<FeatureDetails> FeatureDetail(FeatureDetailRequest request, ServerCallContext context)
         {
             try
@@ -317,7 +317,7 @@ namespace CommunicationResourceProvider.ProtoServices
             }
         }
 
-        [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
+        [Authorize(Policy = "ResourceConsumer")]
         public override Task<FeatureDetailProfileDeleteRequest> FeatureDetailProfileDelete(FeatureDetailProfileDeleteRequest request, ServerCallContext context)
         {
             try
@@ -346,7 +346,7 @@ namespace CommunicationResourceProvider.ProtoServices
             }
         }
 
-        [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
+        [Authorize(Policy = "ResourceConsumer")]
         public override Task<FeatureDetailProfileSaveRequest> FeatureDetailProfileSave(FeatureDetailProfileSaveRequest request, ServerCallContext context)
         {
             try
@@ -375,7 +375,7 @@ namespace CommunicationResourceProvider.ProtoServices
             }
         }
 
-        [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
+        [Authorize(Policy = "ResourceConsumer")]
         public override Task<FeatureDetailSettingSaveRequest> FeatureDetailSettingSave(FeatureDetailSettingSaveRequest request, ServerCallContext context)
         {
             try
@@ -404,7 +404,7 @@ namespace CommunicationResourceProvider.ProtoServices
             }
         }
 
-        [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
+        [Authorize(Policy = "ResourceConsumer")]
         public override async Task PendingDevices(Empty request, IServerStreamWriter<DeviceInfoList> responseStream, ServerCallContext context)
         {
             string sid = null;
@@ -471,7 +471,7 @@ namespace CommunicationResourceProvider.ProtoServices
         }
 
 
-        [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
+        [Authorize(Policy = "ResourceConsumer")]
         public override Task<DeviceChangeRequest> ResolvePendingDevice(DevicePendingRequest request, ServerCallContext context)
         {
             try
@@ -498,7 +498,7 @@ namespace CommunicationResourceProvider.ProtoServices
             }
         }
 
-        [Authorize(Roles = AuthorizationRoles.ResourceConsumer)]
+        [Authorize(Policy = "ResourceConsumer")]
         public override Task<DeviceInfo> UpdateDevice(DeviceInfo request, ServerCallContext context)
         {
             try

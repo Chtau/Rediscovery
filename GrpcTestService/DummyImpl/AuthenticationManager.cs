@@ -32,7 +32,7 @@ namespace GrpcTestService.DummyImpl
                 Id = Guid.NewGuid().ToString(),
                 Name = welcomeDeviceMessage.DeviceName,
                 State = SharedBase.Authentication.LoginState.OK,
-                Role = welcomeDeviceMessage.DeviceIdentifier == "80" ? "resourceconsumer" : "User"
+                Role = welcomeDeviceMessage.DeviceIdentifier == "80" ? "resourceconsumer" : "device"
             });
         }
     }

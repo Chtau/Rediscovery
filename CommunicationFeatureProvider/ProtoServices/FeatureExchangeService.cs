@@ -53,7 +53,7 @@ namespace CommunicationFeatureProvider.ProtoServices
             }
         }
 
-        [Authorize]
+        [Authorize(Policy = "Device")]
         public override async Task ExchangeStream(IAsyncStreamReader<DeviceFeatureData> requestStream, IServerStreamWriter<DeviceFeatureData> responseStream, ServerCallContext context)
         {
             string sid = null;
@@ -102,7 +102,7 @@ namespace CommunicationFeatureProvider.ProtoServices
             }
         }
 
-        [Authorize]
+        [Authorize(Policy = "Device")]
         public override Task<FeatureState> ChangeFeatureState(FeatureState request, ServerCallContext context)
         {
             try
@@ -135,7 +135,7 @@ namespace CommunicationFeatureProvider.ProtoServices
             }
         }
 
-        [Authorize]
+        [Authorize(Policy = "Device")]
         public override Task<FeatureClientData> FeatureClient(FeatureRequest request, ServerCallContext context)
         {
             var result = new FeatureClientData

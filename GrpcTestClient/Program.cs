@@ -103,7 +103,6 @@ namespace GrpcTestClient
             consumerService.ReceivedWelcomeReply += (obj, args) =>
             {
                 Console.WriteLine($"[ReceivedWelcomeReply] Token:{args.Token} State:{args.State}");
-                consumerService.RequestManifest(args.Token);
                 ConsumeResource(args.Token);
             };
             consumerService.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
