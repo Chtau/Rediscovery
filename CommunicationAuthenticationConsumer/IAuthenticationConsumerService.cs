@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharedBase.Connection;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,10 +7,10 @@ namespace CommunicationAuthenticationConsumer
 {
     public interface IAuthenticationConsumerService
     {
-        event EventHandler<SharedCoreModels.WelcomeDeviceReply> ReceivedWelcomeReply;
-        event EventHandler<SharedCoreModels.Manifest> ReceivedManifestReply;
+        event EventHandler<WelcomeDeviceReply> ReceivedWelcomeReply;
+        event EventHandler<SharedBase.Connection.Manifest> ReceivedManifestReply;
         void Connect(string ipAddress, int port, string certificatePEM);
-        void SendWelcome(SharedCoreModels.WelcomeDeviceMessage message);
+        void SendWelcome(WelcomeDeviceMessage message);
         void RequestManifest(string token);
     }
 }

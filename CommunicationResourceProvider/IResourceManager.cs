@@ -12,7 +12,7 @@ namespace CommunicationResourceProvider
         event EventHandler SendPendingDevicesChanged;
         event EventHandler SendFeaturesChanged;
         void DeleteDevice(Guid deviceId);
-        void UpdateDevice(SharedCoreModels.DeviceInfo deviceInfo);
+        void UpdateDevice(SharedBase.Device.DeviceInfo deviceInfo);
         void ResolvePendingDevice(Guid deviceId, bool accept);
         void FeatureDetailProfileDelete(Guid featureId, string profileId);
         void FeatureDetailProfileSave(Guid featureId, PluginFeature.Models.DeviceFeatureProfil deviceFeatureProfil);

@@ -7,6 +7,7 @@ using System.Linq;
 using SharedFeatureFunctions;
 using Microsoft.Extensions.Configuration;
 using System.IO;
+using SharedBase.Discovery;
 
 namespace DesktopDiscoveryService
 {
@@ -42,7 +43,7 @@ namespace DesktopDiscoveryService
                 Console.WriteLine("Firewall rule: OK");
             }
 
-            var serviceInfo = new SharedCoreModels.DiscoveryServiceInfo
+            var serviceInfo = new DiscoveryServiceInfo
             {
                 Port = serviceInfoSettings.Port,
                 IPAddress = serviceInfoSettings.IP,

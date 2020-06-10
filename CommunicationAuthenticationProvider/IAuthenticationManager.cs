@@ -1,6 +1,6 @@
 ﻿using CommunicationAuthenticationProvider.Models;
 using SharedBase.Authentication;
-using SharedCoreModels;
+using SharedBase.Connection;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,7 +10,7 @@ namespace CommunicationAuthenticationProvider
 {
     public interface IAuthenticationManager
     {
-        SharedCoreModels.Manifest GetManifest();
+        SharedBase.Connection.Manifest GetManifest();
         Task<LoginResult> RequestLogin(WelcomeDeviceMessage welcomeDeviceMessage);
         Task<bool> AddPendingApprovel(WelcomeDeviceMessage welcomeDeviceMessage);
     }

@@ -53,7 +53,7 @@ namespace GrpcTestClient
                 ConsumeFeature(args.Token);
             };
             consumerService.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
-            consumerService.SendWelcome(new SharedCoreModels.WelcomeDeviceMessage
+            consumerService.SendWelcome(new SharedBase.Connection.WelcomeDeviceMessage
             {
                 DeviceIdentifier = "1",
                 DeviceName = "Test Client",
@@ -107,7 +107,7 @@ namespace GrpcTestClient
                 ConsumeResource(args.Token);
             };
             consumerService.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
-            consumerService.SendWelcome(new SharedCoreModels.WelcomeDeviceMessage
+            consumerService.SendWelcome(new SharedBase.Connection.WelcomeDeviceMessage
             {
                 DeviceIdentifier = "80",
                 DeviceName = "Test Client",

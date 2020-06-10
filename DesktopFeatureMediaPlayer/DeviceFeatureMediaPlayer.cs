@@ -57,7 +57,7 @@ namespace DesktopFeatureMediaPlayer
                             Artist = null,
                             Info = null
                         };
-                        var data = new DeviceFeatureData(deviceId, GetDeviceFeatureInfo().Id, profile.Id.ToString(), dataObj);
+                        var data = new DeviceFeatureData(deviceId, GetDeviceFeatureInfo().Id, profile.Id.ToString(), Newtonsoft.Json.JsonConvert.SerializeObject(dataObj));
                         OnSendData(this, data);
                     }
                 }

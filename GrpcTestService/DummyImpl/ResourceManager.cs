@@ -1,6 +1,5 @@
 ﻿using CommunicationResourceProvider;
 using PluginFeature.Models;
-using SharedCoreModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,7 +62,7 @@ namespace GrpcTestService.DummyImpl
             Console.ResetColor();
         }
 
-        public void UpdateDevice(DeviceInfo deviceInfo)
+        public void UpdateDevice(SharedBase.Device.DeviceInfo deviceInfo)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"[{nameof(UpdateDevice)}]");

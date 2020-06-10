@@ -1,6 +1,5 @@
 ﻿using CommunicationResourceProvider;
 using PluginFeature.Models;
-using SharedCoreModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +9,8 @@ namespace GrpcTestService.DummyImpl
 {
     public class ResourceRepository : IResourcesRepository
     {
-        private static List<DeviceInfo> deviceInfos = new List<DeviceInfo> {
-                new DeviceInfo
+        private static List<SharedBase.Device.DeviceInfo> deviceInfos = new List<SharedBase.Device.DeviceInfo> {
+                new SharedBase.Device.DeviceInfo
                 {
                     AllowAccess = true,
                     DeviceType = "A",
@@ -74,7 +73,7 @@ namespace GrpcTestService.DummyImpl
             return true;
         }
 
-        public List<DeviceInfo> GetResourceActiveDeviceInfo()
+        public List<SharedBase.Device.DeviceInfo> GetResourceActiveDeviceInfo()
         {
             return deviceInfos;
         }
@@ -104,12 +103,12 @@ namespace GrpcTestService.DummyImpl
             return new byte[255];
         }
 
-        public List<DeviceInfo> GetResourceDeviceInfo()
+        public List<SharedBase.Device.DeviceInfo> GetResourceDeviceInfo()
         {
             return deviceInfos;
         }
 
-        public List<DeviceInfo> GetResourcePendingAuthenticationDevices()
+        public List<SharedBase.Device.DeviceInfo> GetResourcePendingAuthenticationDevices()
         {
             return deviceInfos;
         }
@@ -129,7 +128,7 @@ namespace GrpcTestService.DummyImpl
             return true;
         }
 
-        public DeviceInfo UpdateDeviceInfo(DeviceInfo deviceInfo)
+        public SharedBase.Device.DeviceInfo UpdateDeviceInfo(SharedBase.Device.DeviceInfo deviceInfo)
         {
             return deviceInfos.First();
         }

@@ -1,5 +1,6 @@
 ﻿using CommunicationBase;
 using Grpc.Core;
+using SharedBase.Connection;
 using SharedBase.Logging;
 using System;
 using System.Collections.Generic;
@@ -11,8 +12,8 @@ namespace CommunicationAuthenticationConsumer
 {
     public class AuthenticationConsumerService : IAuthenticationConsumerService
     {
-        public event EventHandler<SharedCoreModels.WelcomeDeviceReply> ReceivedWelcomeReply;
-        public event EventHandler<SharedCoreModels.Manifest> ReceivedManifestReply;
+        public event EventHandler<WelcomeDeviceReply> ReceivedWelcomeReply;
+        public event EventHandler<SharedBase.Connection.Manifest> ReceivedManifestReply;
 
         private Authentication.AuthentionExchange.AuthentionExchangeClient authenticationClient;
         private Manifest.ManifestExchange.ManifestExchangeClient manifestClient;
@@ -31,7 +32,7 @@ namespace CommunicationAuthenticationConsumer
             manifestClient = new Manifest.ManifestExchange.ManifestExchangeClient(channel);
         }
 
-        public void SendWelcome(SharedCoreModels.WelcomeDeviceMessage message)
+        public void SendWelcome(WelcomeDeviceMessage message)
         {
             Task.Run(async () =>
             {
@@ -52,9 +53,9 @@ namespace CommunicationAuthenticationConsumer
                     _logger.LogTrace("Consumer Welcome send Welcome");
                     var reply = await authenticationClient.WelcomeAsync(msg, cancellationToken: cts.Token);
                     _logger.LogTrace("Consumer Welcome reply received");
-                    var replyMsg = new SharedCoreModels.WelcomeDeviceReply
+                    var replyMsg = new WelcomeDeviceReply
                     {
-                        State = (SharedCoreModels.Enums.ConnectionState)(int)reply.ConnectionState,
+                        State = (Enums.ConnectionState)(int)reply.ConnectionState,
                         Token = reply.Token
                     };
                     ReceivedWelcomeReply?.Invoke(this, replyMsg);
@@ -77,7 +78,7 @@ namespace CommunicationAuthenticationConsumer
                     var meta = new Metadata();
                     meta.AddAuthorizationHeader(token);
                     var reply = await manifestClient.DeviceAsync(new Google.Protobuf.WellKnownTypes.Empty(), headers: meta, cancellationToken: cts.Token);
-                    var replyMsg = new SharedCoreModels.Manifest
+                    var replyMsg = new SharedBase.Connection.Manifest
                     {
                         AppMinimumVersion = SharedBase.Core.Version.ConvertTo(reply.AppMinimumVersion),
                         ClientName = reply.ClientName,

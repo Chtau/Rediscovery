@@ -11,11 +11,11 @@ namespace CommunicationResourceConsumer
 {
     public class ResourceConsumerService : IResourceConsumerService
     {
-        public event EventHandler<List<SharedCoreModels.DeviceInfo>> ReceiveActiveDevices;
-        public event EventHandler<List<SharedCoreModels.DeviceInfo>> ReceivePendingDevices;
-        public event EventHandler<List<SharedCoreModels.DeviceInfo>> ReceiveDevices;
+        public event EventHandler<List<SharedBase.Device.DeviceInfo>> ReceiveActiveDevices;
+        public event EventHandler<List<SharedBase.Device.DeviceInfo>> ReceivePendingDevices;
+        public event EventHandler<List<SharedBase.Device.DeviceInfo>> ReceiveDevices;
         public event EventHandler<List<SharedBase.Device.FeatureDefinitionExtended>> ReceiveFeatures;
-        public event EventHandler<SharedCoreModels.DeviceInfo> ReceiveUpdateDevices;
+        public event EventHandler<SharedBase.Device.DeviceInfo> ReceiveUpdateDevices;
         public event EventHandler<(Guid deviceId, bool result)> ReceiveDeleteDevicesResult;
         public event EventHandler<(Guid deviceId, bool accept)> ReceiveResolvePendingDevicesResult;
         public event EventHandler<(Guid featureId, string profileId, bool result)> ReceiveFeatureDetailProfileDeleteResult;
@@ -55,7 +55,7 @@ namespace CommunicationResourceConsumer
                         {
                             await foreach (var message in call.ResponseStream.ReadAllAsync())
                             {
-                                var result = new List<SharedCoreModels.DeviceInfo>();
+                                var result = new List<SharedBase.Device.DeviceInfo>();
                                 foreach (var item in message.Devices)
                                 {
                                     result.Add(item.GetDeviceInfo());
@@ -96,7 +96,7 @@ namespace CommunicationResourceConsumer
                         {
                             await foreach (var message in call.ResponseStream.ReadAllAsync())
                             {
-                                var result = new List<SharedCoreModels.DeviceInfo>();
+                                var result = new List<SharedBase.Device.DeviceInfo>();
                                 foreach (var item in message.Devices)
                                 {
                                     result.Add(item.GetDeviceInfo());
@@ -137,7 +137,7 @@ namespace CommunicationResourceConsumer
                         {
                             await foreach (var message in call.ResponseStream.ReadAllAsync())
                             {
-                                var result = new List<SharedCoreModels.DeviceInfo>();
+                                var result = new List<SharedBase.Device.DeviceInfo>();
                                 foreach (var item in message.Devices)
                                 {
                                     result.Add(item.GetDeviceInfo());
@@ -203,7 +203,7 @@ namespace CommunicationResourceConsumer
             });
         }
 
-        public void UpdateDevice(string token, SharedCoreModels.DeviceInfo deviceInfo)
+        public void UpdateDevice(string token, SharedBase.Device.DeviceInfo deviceInfo)
         {
             Task.Run(async () =>
             {

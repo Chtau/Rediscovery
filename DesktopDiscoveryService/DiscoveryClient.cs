@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharedBase.Discovery;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -10,7 +11,7 @@ namespace DesktopDiscoveryService
     public class DiscoveryClient
     {
 
-        public void Start(SharedCoreModels.DiscoveryServiceInfo discoveryServiceInfo, int discoveryPort, Action<string> callbackReceived)
+        public void Start(DiscoveryServiceInfo discoveryServiceInfo, int discoveryPort, Action<string> callbackReceived)
         {
             Task.Run(() =>
             {

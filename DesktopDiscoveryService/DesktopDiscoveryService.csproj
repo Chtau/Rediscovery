@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SharedConfigurations\SharedConfigurations.csproj" />
     <ProjectReference Include="..\SharedFeatureFunctions\SharedFeatureFunctions.csproj" />
+    <ProjectReference Include="..\SharedModels\SharedBase.csproj" />
   </ItemGroup>
 
   <ItemGroup>

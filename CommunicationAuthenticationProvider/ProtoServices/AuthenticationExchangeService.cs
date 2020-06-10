@@ -35,7 +35,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
             try
             {
                 _logger.LogTrace("Provider Welcome received");
-                await OnReceivedWelcomeDeviceMessage(new SharedCoreModels.WelcomeDeviceMessage
+                await OnReceivedWelcomeDeviceMessage(new SharedBase.Connection.WelcomeDeviceMessage
                 {
                     DeviceIdentifier = request.DeviceIdentifier,
                     DeviceName = request.DeviceName,
@@ -63,7 +63,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
             }
         }
 
-        private async Task OnReceivedWelcomeDeviceMessage(SharedCoreModels.WelcomeDeviceMessage e, Action<SharedCoreModels.WelcomeDeviceReply> callback)
+        private async Task OnReceivedWelcomeDeviceMessage(SharedBase.Connection.WelcomeDeviceMessage e, Action<SharedBase.Connection.WelcomeDeviceReply> callback)
         {
             _logger.LogTrace("Provider received Welcome message from consumer");
             await Task.Run(async () =>
@@ -73,34 +73,34 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                     var result = await _authenticationManager.RequestLogin(e);
                     if (result.State == LoginState.Denied)
                     {
-                        callback.Invoke(new SharedCoreModels.WelcomeDeviceReply
+                        callback.Invoke(new SharedBase.Connection.WelcomeDeviceReply
                         {
-                            State = SharedCoreModels.Enums.ConnectionState.Denied,
+                            State = SharedBase.Connection.Enums.ConnectionState.Denied,
                             Token = null
                         });
                     }
                     else if (result.State == LoginState.Failed)
                     {
-                        callback.Invoke(new SharedCoreModels.WelcomeDeviceReply
+                        callback.Invoke(new SharedBase.Connection.WelcomeDeviceReply
                         {
-                            State = SharedCoreModels.Enums.ConnectionState.Error,
+                            State = SharedBase.Connection.Enums.ConnectionState.Error,
                             Token = null
                         });
                     }
                     else if (result.State == LoginState.RequiredAuthorizeKey)
                     {
                         await _authenticationManager.AddPendingApprovel(e);
-                        callback.Invoke(new SharedCoreModels.WelcomeDeviceReply
+                        callback.Invoke(new SharedBase.Connection.WelcomeDeviceReply
                         {
-                            State = SharedCoreModels.Enums.ConnectionState.WaitForApprovel,
+                            State = SharedBase.Connection.Enums.ConnectionState.WaitForApprovel,
                             Token = null
                         });
                     }
                     else if (result.State == LoginState.OK)
                     {
-                        callback.Invoke(new SharedCoreModels.WelcomeDeviceReply
+                        callback.Invoke(new SharedBase.Connection.WelcomeDeviceReply
                         {
-                            State = SharedCoreModels.Enums.ConnectionState.OK,
+                            State = SharedBase.Connection.Enums.ConnectionState.OK,
                             Token = _tokenService.CreateNewToken(result.Id, result.Name, result.Role)
                         });
                     }
@@ -108,9 +108,9 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                 catch (Exception ex)
                 {
                     _logger.LogError(ex.ToString());
-                    callback.Invoke(new SharedCoreModels.WelcomeDeviceReply
+                    callback.Invoke(new SharedBase.Connection.WelcomeDeviceReply
                     {
-                        State = SharedCoreModels.Enums.ConnectionState.Error,
+                        State = SharedBase.Connection.Enums.ConnectionState.Error,
                         Token = null
                     });
                 }

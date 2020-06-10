@@ -92,9 +92,9 @@ public static class EntityExtensions
         };
     }
 
-    public static SharedCoreModels.DeviceInfo GetDeviceInfo(this DeviceInfo deviceInfo)
+    public static SharedBase.Device.DeviceInfo GetDeviceInfo(this DeviceInfo deviceInfo)
     {
-        return new SharedCoreModels.DeviceInfo
+        return new SharedBase.Device.DeviceInfo
         {
             AllowAccess = deviceInfo.AllowAccess,
             DeviceType = deviceInfo.DeviceType,
@@ -110,7 +110,7 @@ public static class EntityExtensions
         };
     }
 
-    public static DeviceInfo GetProtoDeviceInfo(this SharedCoreModels.DeviceInfo deviceInfo)
+    public static DeviceInfo GetProtoDeviceInfo(this SharedBase.Device.DeviceInfo deviceInfo)
     {
         return new DeviceInfo
         {

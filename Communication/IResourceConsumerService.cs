@@ -7,11 +7,11 @@ namespace CommunicationResourceConsumer
 {
     public interface IResourceConsumerService
     {
-        event EventHandler<List<SharedCoreModels.DeviceInfo>> ReceiveActiveDevices;
-        event EventHandler<List<SharedCoreModels.DeviceInfo>> ReceivePendingDevices;
-        event EventHandler<List<SharedCoreModels.DeviceInfo>> ReceiveDevices;
+        event EventHandler<List<SharedBase.Device.DeviceInfo>> ReceiveActiveDevices;
+        event EventHandler<List<SharedBase.Device.DeviceInfo>> ReceivePendingDevices;
+        event EventHandler<List<SharedBase.Device.DeviceInfo>> ReceiveDevices;
         event EventHandler<List<SharedBase.Device.FeatureDefinitionExtended>> ReceiveFeatures;
-        event EventHandler<SharedCoreModels.DeviceInfo> ReceiveUpdateDevices;
+        event EventHandler<SharedBase.Device.DeviceInfo> ReceiveUpdateDevices;
         event EventHandler<(Guid deviceId, bool result)> ReceiveDeleteDevicesResult;
         event EventHandler<(Guid deviceId, bool accept)> ReceiveResolvePendingDevicesResult;
         event EventHandler<(Guid featureId, string profileId, bool result)> ReceiveFeatureDetailProfileDeleteResult;
@@ -24,7 +24,7 @@ namespace CommunicationResourceConsumer
         void ListenPendingDevices(string token, CancellationTokenSource cts = null);
         void ListenDevices(string token, CancellationTokenSource cts = null);
         void ListenFeatures(string token, CancellationTokenSource cts = null);
-        void UpdateDevice(string token, SharedCoreModels.DeviceInfo deviceInfo);
+        void UpdateDevice(string token, SharedBase.Device.DeviceInfo deviceInfo);
         void DeleteDevice(string token, Guid deviceId);
         void ResolvePendingDevice(string token, Guid deviceId, bool accept);
         void FeatureDetailProfileDelete(string token, Guid featureId, string profileId);

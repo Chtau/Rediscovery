@@ -1,6 +1,5 @@
 ﻿using CommunicationAuthenticationProvider;
 using CommunicationAuthenticationProvider.Models;
-using SharedCoreModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,14 +9,14 @@ namespace GrpcTestService.DummyImpl
 {
     public class AuthenticationManager : IAuthenticationManager
     {
-        public Task<bool> AddPendingApprovel(WelcomeDeviceMessage welcomeDeviceMessage)
+        public Task<bool> AddPendingApprovel(SharedBase.Connection.WelcomeDeviceMessage welcomeDeviceMessage)
         {
             return Task.FromResult(true);
         }
 
-        public SharedCoreModels.Manifest GetManifest()
+        public SharedBase.Connection.Manifest GetManifest()
         {
-            return new SharedCoreModels.Manifest
+            return new SharedBase.Connection.Manifest
             {
                 AppMinimumVersion = new SharedBase.Core.Version() { Major = 0, Minor = 0, Patch = 0, Label = "T" },
                 ClientVersion = new SharedBase.Core.Version() { Major = 0, Minor = 0, Patch = 0, Label = "T" },
@@ -26,7 +25,7 @@ namespace GrpcTestService.DummyImpl
             };
         }
 
-        public Task<LoginResult> RequestLogin(WelcomeDeviceMessage welcomeDeviceMessage)
+        public Task<LoginResult> RequestLogin(SharedBase.Connection.WelcomeDeviceMessage welcomeDeviceMessage)
         {
             return Task.FromResult(new LoginResult
             {
