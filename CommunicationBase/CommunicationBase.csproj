@@ -5,13 +5,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.12.2" />
     <PackageReference Include="Grpc.Core" Version="2.29.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.4" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.29.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.29.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.4" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PluginFeature\PluginFeature.csproj" />
+    <ProjectReference Include="..\SharedCoreModels\SharedCoreModels.csproj" />
     <ProjectReference Include="..\SharedModels\SharedBase.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="..\Proto\shared.proto" GrpcServices="Client" Link="Protos\shared.proto" />
   </ItemGroup>
 
 </Project>

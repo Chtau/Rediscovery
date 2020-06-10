@@ -17,7 +17,6 @@
   <ItemGroup>
     <Protobuf Include="..\Proto\authentication.proto" GrpcServices="Server" Link="Protos\authentication.proto" />
     <Protobuf Include="..\Proto\manifest.proto" GrpcServices="Server" Link="Protos\manifest.proto" />
-    <Protobuf Include="..\Proto\shared.proto" GrpcServices="Server" Link="Protos\shared.proto" />
   </ItemGroup>
 
 </Project>

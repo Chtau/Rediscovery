@@ -28,6 +28,21 @@ namespace GrpcTestService.DummyImpl
             };
         }
 
+        public List<DeviceFeatureProfil> GetFeatureProfiles(Guid featureId)
+        {
+            return new List<DeviceFeatureProfil>();
+        }
+
+        public DeviceFeatureSetting GetFeatureSettings(Guid featureId)
+        {
+            return new DeviceFeatureSetting();
+        }
+
+        public byte[] GetFeatureUIArchive(Guid featureId)
+        {
+            return new byte[0];
+        }
+
         public void ReceivedData(ExchangeEntity<DeviceFeatureData> deviceFeatureData)
         {
             Console.ForegroundColor = ConsoleColor.Green;

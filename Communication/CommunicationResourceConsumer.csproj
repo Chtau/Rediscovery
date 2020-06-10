@@ -21,7 +21,6 @@
   
   <ItemGroup>
     <Protobuf Include="..\Proto\resources.proto" GrpcServices="Client" Link="Protos\resources.proto" />
-    <Protobuf Include="..\Proto\shared.proto" GrpcServices="Client" Link="Protos\shared.proto" />
   </ItemGroup>
 
 </Project>

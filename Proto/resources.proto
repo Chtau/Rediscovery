@@ -24,20 +24,6 @@ message DeviceInfoList {
     repeated DeviceInfo devices = 1;
 }
 
-message DeviceInfo {
-    string id = 1;
-    string identifier = 2;
-    string name = 3;
-    bool allowAccess = 4;
-    uint64 requestTime = 5;
-    string model = 6;
-    string manufacturer = 7;
-    string oSVersion = 8;
-    string platform = 9;
-    string idiom = 10;
-    string deviceType = 11;
-}
-
 message DeviceChangeRequest {
     string id = 1;
     ActionResult result = 2;
