@@ -16,6 +16,7 @@ namespace Rediscovery
             InitializeComponent();
 
             DependencyService.Register<CommunicationClientConsumer.Hub>();
+            DependencyService.Register<CommunicationAuthenticationConsumer.AuthenticationConsumerService>();
 
             MainPage = new MainPage();
         }

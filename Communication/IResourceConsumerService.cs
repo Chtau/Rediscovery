@@ -19,7 +19,7 @@ namespace CommunicationResourceConsumer
         event EventHandler<(PluginFeature.Models.DeviceFeatureSetting setting, bool result)> ReceiveFeatureDetailSettingSave;
         event EventHandler<Models.FeatureDetail> ReceiveFeatureDetails;
 
-        void Connect(string ipAddress, int port, string certificatePEM);
+        bool Connect(string ipAddress, int port, string certificatePEM);
         void ListenActiveDevices(string token, CancellationTokenSource cts = null);
         void ListenPendingDevices(string token, CancellationTokenSource cts = null);
         void ListenDevices(string token, CancellationTokenSource cts = null);

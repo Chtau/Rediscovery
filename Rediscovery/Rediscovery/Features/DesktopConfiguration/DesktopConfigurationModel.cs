@@ -29,6 +29,7 @@ namespace Rediscovery.Features.DesktopConfiguration
             set { SetProperty(ref _displayName, value); }
         }
 
+        [Obsolete("New Fields for IP Address and new Field for Port")]
         public string LastKnownAddress
         {
             get { return _lastKnownAddress; }

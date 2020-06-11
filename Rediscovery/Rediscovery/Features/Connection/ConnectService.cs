@@ -13,23 +13,24 @@ namespace Rediscovery.Features.Connection
 {
     public class ConnectService : BaseService, IConnectService
     {
-        private CommunicationClientConsumer.IHub communicationHub => DependencyService.Get<CommunicationClientConsumer.IHub>() ?? new CommunicationClientConsumer.Hub();
+        private CommunicationAuthenticationConsumer.IAuthenticationConsumerService authenticationConsumer => DependencyService.Get<CommunicationAuthenticationConsumer.IAuthenticationConsumerService>();
+        //private CommunicationClientConsumer.IHub communicationHub => DependencyService.Get<CommunicationClientConsumer.IHub>() ?? new CommunicationClientConsumer.Hub();
         private IManifestFeatureEntityManager entityManager => DependencyService.Get<IManifestFeatureEntityManager>() ?? new ManifestFeatureEntityManager();
         private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
         private IDeviceData deviceData => DependencyService.Get<IDeviceData>() ?? new DeviceData();
 
         public ConnectService()
         {
-            communicationHub.Init(_logger, "/hubs/connect", "/hubs/feature");
+            //communicationHub.Init(_logger, "/hubs/connect", "/hubs/feature");
         }
 
-        public void AutoConnect(Action<bool, SharedBase.Connection.Enums.ConnectionState> resultCallback)
+        public void AutoConnect(Action<string, SharedBase.Connection.Enums.ConnectionState> resultCallback)
         {
             OnResetDesktopConfigurationState();
-            Action<DesktopConfigurationModel, bool, SharedBase.Connection.Enums.ConnectionState> callback = (config, result, state) =>
+            Action<DesktopConfigurationModel, string, SharedBase.Connection.Enums.ConnectionState> callback = (config, token, state) =>
             {
-                OnUpdateDesktopConfiguration(config, result, state);
-                resultCallback?.Invoke(result, state);
+                OnUpdateDesktopConfiguration(config, token, state);
+                resultCallback?.Invoke(token, state);
             };
             try
             {
@@ -41,32 +42,62 @@ namespace Rediscovery.Features.Connection
                 }
                 else
                 {
-                    callback?.Invoke(null, false, SharedBase.Connection.Enums.ConnectionState.None);
+                    callback?.Invoke(null, null, SharedBase.Connection.Enums.ConnectionState.None);
                 }
             } catch (Exception ex)
             {
                 _logger.LogError(ex);
-                callback?.Invoke(null, false, SharedBase.Connection.Enums.ConnectionState.Error);
+                callback?.Invoke(null, null, SharedBase.Connection.Enums.ConnectionState.Error);
             }
         }
 
-        public void Connect(DesktopConfigurationModel desktopConfigurationModel, Action<bool, SharedBase.Connection.Enums.ConnectionState> resultCallback)
+        public void Connect(DesktopConfigurationModel desktopConfigurationModel, Action<string, SharedBase.Connection.Enums.ConnectionState> resultCallback)
         {
             OnResetDesktopConfigurationState();
-            Action<DesktopConfigurationModel, bool, SharedBase.Connection.Enums.ConnectionState> callback = (config, result, state) =>
+            Action<DesktopConfigurationModel, string, SharedBase.Connection.Enums.ConnectionState> callback = (config, token, state) =>
             {
-                OnUpdateDesktopConfiguration(desktopConfigurationModel, result, state);
-                resultCallback?.Invoke(result, state);
+                OnUpdateDesktopConfiguration(desktopConfigurationModel, token, state);
+                resultCallback?.Invoke(token, state);
             };
             OnTryConnect(new List<DesktopConfigurationModel> { desktopConfigurationModel }, callback);
         }
 
-        private void OnTryConnect(List<DesktopConfigurationModel> desktopConfigurations, Action<DesktopConfigurationModel, bool, SharedBase.Connection.Enums.ConnectionState> resultCallback, int nextIndex = 0)
+        private void OnTryConnect(List<DesktopConfigurationModel> desktopConfigurations, Action<DesktopConfigurationModel, string, SharedBase.Connection.Enums.ConnectionState> resultCallback, int nextIndex = 0)
         {
             if (desktopConfigurations != null && desktopConfigurations.Count > nextIndex)
             {
                 var item = desktopConfigurations[nextIndex];
-                communicationHub.Authenticate(deviceData.GetWelcomeDeviceMessage(), item.ConvertToCommunicationConfigurationModel(), (config, result) =>
+                var addr = item.LastKnownAddress.Split(":")[0];
+                var port = item.LastKnownAddress.Split(":")[1];
+                if (authenticationConsumer.Connect(addr, int.Parse(port), ""))
+                {
+                    authenticationConsumer.SendWelcome(deviceData.GetWelcomeDeviceMessage(), deviceReply =>
+                    {
+                        if (deviceReply.State == SharedBase.Connection.Enums.ConnectionState.OK)
+                        {
+                            authenticationConsumer.RequestManifest(deviceReply.Token, manifest =>
+                            {
+                                entityManager.AddManifestData(manifest, item.Id, item.DisplayName);
+                            });
+                            resultCallback?.Invoke(item, deviceReply.Token, deviceReply.State);
+                        } else
+                        {
+                            nextIndex++;
+                            if (desktopConfigurations.Count > nextIndex)
+                            {
+                                OnTryConnect(desktopConfigurations, resultCallback, nextIndex);
+                            }
+                            else
+                            {
+                                resultCallback?.Invoke(item, null, item.ConnectionState);
+                            }
+                        }
+                    });
+                } else
+                {
+                    resultCallback?.Invoke(null, null, SharedBase.Connection.Enums.ConnectionState.Error);
+                }
+                /*communicationHub.Authenticate(deviceData.GetWelcomeDeviceMessage(), item.ConvertToCommunicationConfigurationModel(), (config, result) =>
                 {
                     if (result)
                     {
@@ -90,10 +121,10 @@ namespace Rediscovery.Features.Connection
                 }, (manifest) =>
                 {
                     entityManager.AddManifestData(manifest, item.Id, item.DisplayName);
-                });
+                });*/
             } else
             {
-                resultCallback?.Invoke(null, false, SharedBase.Connection.Enums.ConnectionState.Error);
+                resultCallback?.Invoke(null, null, SharedBase.Connection.Enums.ConnectionState.Error);
             }
         }
 
@@ -117,14 +148,14 @@ namespace Rediscovery.Features.Connection
             }
         }
 
-        private void OnUpdateDesktopConfiguration(DesktopConfigurationModel configuration, bool result, SharedBase.Connection.Enums.ConnectionState state)
+        private void OnUpdateDesktopConfiguration(DesktopConfigurationModel configuration, string token, SharedBase.Connection.Enums.ConnectionState state)
         {
             try
             {
                 if (configuration != null)
                 {
                     configuration.ConnectionState = state;
-                    if (result)
+                    if (configuration.ConnectionState == SharedBase.Connection.Enums.ConnectionState.OK)
                         configuration.LastConnection = DateTime.Now;
                     desktopStore.UpdateItem(configuration);
                 }
@@ -136,8 +167,8 @@ namespace Rediscovery.Features.Connection
 
         public void Disconnect(DesktopConfigurationModel desktopConfigurationModel, Action<bool> resultCallback)
         {
-            communicationHub.Disconnect();
-            OnUpdateDesktopConfiguration(desktopConfigurationModel, true, SharedBase.Connection.Enums.ConnectionState.None);
+            //communicationHub.Disconnect();
+            OnUpdateDesktopConfiguration(desktopConfigurationModel, null, SharedBase.Connection.Enums.ConnectionState.None);
             resultCallback?.Invoke(true);
         }
     }

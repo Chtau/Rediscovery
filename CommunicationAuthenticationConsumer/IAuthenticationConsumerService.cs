@@ -9,8 +9,8 @@ namespace CommunicationAuthenticationConsumer
     {
         event EventHandler<WelcomeDeviceReply> ReceivedWelcomeReply;
         event EventHandler<SharedBase.Connection.Manifest> ReceivedManifestReply;
-        void Connect(string ipAddress, int port, string certificatePEM);
-        void SendWelcome(WelcomeDeviceMessage message);
-        void RequestManifest(string token);
+        bool Connect(string ipAddress, int port, string certificatePEM);
+        void SendWelcome(WelcomeDeviceMessage message, Action<WelcomeDeviceReply> callback = null);
+        void RequestManifest(string token, Action<SharedBase.Connection.Manifest> callback = null);
     }
 }

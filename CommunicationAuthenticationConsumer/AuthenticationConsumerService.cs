@@ -24,15 +24,23 @@ namespace CommunicationAuthenticationConsumer
             _logger = logger;
         }
 
-        public void Connect(string ipAddress, int port, string certificatePEM)
+        public bool Connect(string ipAddress, int port, string certificatePEM)
         {
-            var channelCredentials = new SslCredentials(certificatePEM);
-            Channel channel = new Channel(ipAddress, port, channelCredentials);
-            authenticationClient = new Authentication.AuthentionExchange.AuthentionExchangeClient(channel);
-            manifestClient = new Manifest.ManifestExchange.ManifestExchangeClient(channel);
+            try
+            {
+                var channelCredentials = new SslCredentials(certificatePEM);
+                Channel channel = new Channel(ipAddress, port, channelCredentials);
+                authenticationClient = new Authentication.AuthentionExchange.AuthentionExchangeClient(channel);
+                manifestClient = new Manifest.ManifestExchange.ManifestExchangeClient(channel);
+                return authenticationClient != null;
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex);
+                return false;
+            }
         }
 
-        public void SendWelcome(WelcomeDeviceMessage message)
+        public void SendWelcome(WelcomeDeviceMessage message, Action<WelcomeDeviceReply> callback = null)
         {
             Task.Run(async () =>
             {
@@ -58,6 +66,7 @@ namespace CommunicationAuthenticationConsumer
                         State = (Enums.ConnectionState)(int)reply.ConnectionState,
                         Token = reply.Token
                     };
+                    callback?.Invoke(replyMsg);
                     ReceivedWelcomeReply?.Invoke(this, replyMsg);
                 }
                 catch (Exception ex)
@@ -67,7 +76,7 @@ namespace CommunicationAuthenticationConsumer
             });
         }
 
-        public void RequestManifest(string token)
+        public void RequestManifest(string token, Action<SharedBase.Connection.Manifest> callback = null)
         {
             Task.Run(async () =>
             {
@@ -85,6 +94,7 @@ namespace CommunicationAuthenticationConsumer
                         ClientVersion = SharedBase.Core.Version.ConvertTo(reply.ClientVersion),
                         SupportedFeatures = OnGetFeatures(reply.SupportedFeatures)
                     };
+                    callback?.Invoke(replyMsg);
                     ReceivedManifestReply?.Invoke(this, replyMsg);
                 }
                 catch (Exception ex)
