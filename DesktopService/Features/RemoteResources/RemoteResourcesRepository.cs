@@ -50,8 +50,7 @@ namespace DesktopService.Features.RemoteResources
 
         public List<SharedBase.Device.DeviceInfo> GetResourceActiveDeviceInfo()
         {
-            // TODO: fix active devices
-            var allUsers = from x in ActiveUserHandler.UserIds select new Guid(x);
+            var allUsers = from x in CommunicationFeatureProvider.FeatureActiveDevices.Devices select new Guid(x);
             var users = _deviceRepository.GetAll().GetAwaiter().GetResult();
             return (from x in users
                     join y in allUsers on x.Id equals y

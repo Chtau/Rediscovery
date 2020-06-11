@@ -100,6 +100,7 @@ namespace DesktopService
 
             services.AddAuthenticationProvider<AuthenticationManager>(identitySettings.Secret);
             services.AddFeatureProvider<FeatureManager>();
+            services.AddResourceProvider<RemoteResourcesRepository, ResourceManager>();
 
             services.AddSingleton<IConfigurationRoot>(Configuration);
             services.AddSingleton<Features.RemoteResources.IRemoteResourcesLiveLogger, Features.RemoteResources.RemoteResourcesLiveLogger>();
@@ -108,8 +109,6 @@ namespace DesktopService
             services.AddSingleton<PluginFeature.Interfaces.IPluginLogger, Features.PluginLogger.PluginLogger>();
 
             services.AddSingleton<Features.Plugins.ILoadPlugins, Features.Plugins.LoadPlugins>();
-            services.AddResourceProvider<Features.Authentication.TokenService, RemoteResourcesRepository>();
-            
         }
 
         // Use this method to configure the HTTP request pipeline.

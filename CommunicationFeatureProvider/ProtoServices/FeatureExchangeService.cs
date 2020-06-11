@@ -61,6 +61,7 @@ namespace CommunicationFeatureProvider.ProtoServices
             {
                 var user = context.GetHttpContext().User;
                 sid = user.Claims.GetSid();
+                FeatureActiveDevices.AddDevice(sid);
                 if (responseStreams.ContainsKey(sid))
                     responseStreams[sid] = responseStream;
                 else
@@ -96,6 +97,7 @@ namespace CommunicationFeatureProvider.ProtoServices
             {
                 if (!string.IsNullOrWhiteSpace(sid))
                 {
+                    FeatureActiveDevices.RemoveDevice(sid);
                     if (responseStreams.ContainsKey(sid))
                         responseStreams.Remove(sid);
                 }
