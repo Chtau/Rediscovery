@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using SharedCoreModels;
 
 namespace DesktopService.Features.FeatureDefinitions
 {
     public class Manifest : IManifest
     {
-        private SharedCoreModels.Manifest manifest;
+        private SharedBase.Connection.Manifest manifest;
         private Features.DeviceFeature.IFeatureService _featureService;
 
         public Manifest(Features.DeviceFeature.IFeatureService featureService)
@@ -18,7 +17,7 @@ namespace DesktopService.Features.FeatureDefinitions
         private bool BuildManifest()
         {
             // TODO: better integration for manifest creation
-            manifest = new SharedCoreModels.Manifest
+            manifest = new SharedBase.Connection.Manifest
             {
                 AppMinimumVersion = new SharedBase.Core.Version() { Major = 0, Minor = 0, Patch = 0, Label = null },
                 ClientVersion = new SharedBase.Core.Version() { Major = 0, Minor = 0, Patch = 0, Label = null },
@@ -28,7 +27,7 @@ namespace DesktopService.Features.FeatureDefinitions
             return true;
         }
 
-        public SharedCoreModels.Manifest GetManifest()
+        public SharedBase.Connection.Manifest GetManifest()
         {
             if (manifest == null)
                 BuildManifest();

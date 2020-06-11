@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using SharedCoreModels;
+using SharedBase.Connection;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace DesktopService.Features.Authentication
 {
+    [Obsolete("no longer needed ????")]
     public class Auth : IAuth
     {
         public enum LoginState
@@ -21,18 +22,15 @@ namespace DesktopService.Features.Authentication
         private readonly ITokenService _tokenService;
         private readonly DALDesktopService.Repository.IDeviceRepository _deviceRepository;
         private readonly DALDesktopService.Repository.IDevicePendingAuthenticationRepository _devicePendingAuthenticationRepository;
-        private readonly CommunicationResourceProvider.IRemoteResourcesSenderService _remoteResourcesSenderService;
 
         public Auth(ILoggerFactory loggerFactory, ITokenService tokenService,
             DALDesktopService.Repository.IDeviceRepository deviceRepository,
-            DALDesktopService.Repository.IDevicePendingAuthenticationRepository devicePendingAuthenticationRepository,
-            CommunicationResourceProvider.IRemoteResourcesSenderService remoteResourcesSenderService)
+            DALDesktopService.Repository.IDevicePendingAuthenticationRepository devicePendingAuthenticationRepository)
         {
             _logger = loggerFactory.CreateLogger<Auth>();
             _tokenService = tokenService;
             _deviceRepository = deviceRepository;
             _devicePendingAuthenticationRepository = devicePendingAuthenticationRepository;
-            _remoteResourcesSenderService = remoteResourcesSenderService;
         }
 
         public async Task<Tuple<LoginState, DALDesktopService.Models.Device>> RequestLogin(WelcomeDeviceMessage welcomeDeviceMessage)

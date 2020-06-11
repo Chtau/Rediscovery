@@ -6,9 +6,9 @@ namespace DesktopService.Map
 {
     public static class EntityExtensions
     {
-        public static SharedCoreModels.DeviceInfo ToDeviceInfo(this DALDesktopService.Models.Device device)
+        public static SharedBase.Device.DeviceInfo ToDeviceInfo(this DALDesktopService.Models.Device device)
         {
-            return new SharedCoreModels.DeviceInfo
+            return new SharedBase.Device.DeviceInfo
             {
                 Id = device.Id,
                 AllowAccess = device.AllowAccess,
@@ -24,7 +24,7 @@ namespace DesktopService.Map
             };
         }
 
-        public static DALDesktopService.Models.Device ToDevice(this SharedCoreModels.DeviceInfo deviceInfo)
+        public static DALDesktopService.Models.Device ToDevice(this SharedBase.Device.DeviceInfo deviceInfo)
         {
             return new DALDesktopService.Models.Device
             {
@@ -41,9 +41,9 @@ namespace DesktopService.Map
             };
         }
 
-        public static SharedCoreModels.DeviceInfo ToDeviceInfo(this DALDesktopService.Models.DevicePendingAuthentication device)
+        public static SharedBase.Device.DeviceInfo ToDeviceInfo(this DALDesktopService.Models.DevicePendingAuthentication device)
         {
-            return new SharedCoreModels.DeviceInfo
+            return new SharedBase.Device.DeviceInfo
             {
                 Id = device.Id,
                 AllowAccess = false,

@@ -6,6 +6,6 @@ namespace DesktopService.Features.FeatureDefinitions
 {
     public interface IManifest
     {
-        SharedCoreModels.Manifest GetManifest();
+        SharedBase.Connection.Manifest GetManifest();
     }
 }

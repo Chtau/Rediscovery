@@ -1,7 +1,6 @@
 ﻿using DesktopService.Features.Logger;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using SharedCoreModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,15 +11,16 @@ namespace DesktopService.Features.RemoteResources
     public class RemoteResourcesLiveLogger : IRemoteResourcesLiveLogger
     {
         private readonly ILogger<RemoteResourcesLiveLogger> _logger;
-        private readonly CommunicationResourceProvider.IRemoteResourcesSenderService _remoteResourcesSenderService;
+        //private readonly CommunicationResourceProvider.IRemoteResourcesSenderService _remoteResourcesSenderService;
 
         private DateTime lastFailedConnection = DateTime.MinValue;
 
-        public RemoteResourcesLiveLogger(ILoggerFactory loggerFactory,
-            CommunicationResourceProvider.IRemoteResourcesSenderService remoteResourcesSenderService)
+        public RemoteResourcesLiveLogger(ILoggerFactory loggerFactory
+            //CommunicationResourceProvider.IRemoteResourcesSenderService remoteResourcesSenderService
+            )
         {
             _logger = loggerFactory.CreateLogger<RemoteResourcesLiveLogger>();
-            _remoteResourcesSenderService = remoteResourcesSenderService;
+            //_remoteResourcesSenderService = remoteResourcesSenderService;
         }
 
         public void Log(SharedBase.Logging.LoggerEntry liveLoggerModel)
@@ -32,7 +32,8 @@ namespace DesktopService.Features.RemoteResources
                     var lMsg = liveLoggerModel.Message.ToLower();
                     if (RemoteLoggerProvider.CachedLastMessage != lMsg)
                     {
-                        _remoteResourcesSenderService.SendLoggerEntry(liveLoggerModel);
+                        // TODO: impl. Live logger provider consumer
+                        //_remoteResourcesSenderService.SendLoggerEntry(liveLoggerModel);
                     }
                     RemoteLoggerProvider.CachedLastMessage = lMsg;
                 }

@@ -4,7 +4,6 @@ using DesktopService.Features.DeviceFeature;
 using DesktopService.Map;
 using Microsoft.Extensions.Logging;
 using PluginFeature.Models;
-using SharedCoreModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +40,7 @@ namespace DesktopService.Features.RemoteResources
                     ).ToList();
         }
 
-        public List<SharedCoreModels.DeviceInfo> GetResourceDeviceInfo()
+        public List<SharedBase.Device.DeviceInfo> GetResourceDeviceInfo()
         {
             var users = _deviceRepository.GetAll().GetAwaiter().GetResult();
             return (from x in users
@@ -49,8 +48,9 @@ namespace DesktopService.Features.RemoteResources
                     ).ToList();
         }
 
-        public List<SharedCoreModels.DeviceInfo> GetResourceActiveDeviceInfo()
+        public List<SharedBase.Device.DeviceInfo> GetResourceActiveDeviceInfo()
         {
+            // TODO: fix active devices
             var allUsers = from x in ActiveUserHandler.UserIds select new Guid(x);
             var users = _deviceRepository.GetAll().GetAwaiter().GetResult();
             return (from x in users
@@ -59,31 +59,34 @@ namespace DesktopService.Features.RemoteResources
                     ).ToList();
         }
 
-        public void DeleteDeviceInfo(SharedCoreModels.DeviceInfo deviceInfo)
+        public bool DeleteDeviceInfo(Guid id)
         {
             try
             {
-                _deviceRepository.DeleteDevice(deviceInfo.Id).GetAwaiter().GetResult();
+                return _deviceRepository.DeleteDevice(id).GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"DeleteDeviceInfo error for Id:{id}");
+                return false;
+            }
+        }
+
+        public SharedBase.Device.DeviceInfo UpdateDeviceInfo(SharedBase.Device.DeviceInfo deviceInfo)
+        {
+            try
+            {
+                var device = _deviceRepository.SaveDevice(deviceInfo?.ToDevice()).GetAwaiter().GetResult();
+                return device.ToDeviceInfo();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"DeleteDeviceInfo error for Id:{deviceInfo?.Id} Name:{deviceInfo?.Name}");
+                return deviceInfo;
             }
         }
 
-        public void UpdateDeviceInfo(SharedCoreModels.DeviceInfo deviceInfo)
-        {
-            try
-            {
-                _deviceRepository.SaveDevice(deviceInfo?.ToDevice()).GetAwaiter().GetResult();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"DeleteDeviceInfo error for Id:{deviceInfo?.Id} Name:{deviceInfo?.Name}");
-            }
-        }
-
-        public List<DeviceInfo> GetResourcePendingAuthenticationDevices()
+        public List<SharedBase.Device.DeviceInfo> GetResourcePendingAuthenticationDevices()
         {
             var devices = _devicePendingAuthenticationRepository.GetAll().GetAwaiter().GetResult();
             return (from x in devices
