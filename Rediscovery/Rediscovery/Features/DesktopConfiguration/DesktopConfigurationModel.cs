@@ -12,7 +12,7 @@ namespace Rediscovery.Features.DesktopConfiguration
         private string _lastKnownAddress;
         private DateTime? _lastConnection = null;
         private bool _autoConnect;
-        private SharedCoreModels.Enums.ConnectionState _connectionState;
+        private SharedBase.Connection.Enums.ConnectionState _connectionState;
         private string _manifestClientName;
         private string _manifestClientVersion;
         private string _manifestAppMinimumVersion;
@@ -47,7 +47,7 @@ namespace Rediscovery.Features.DesktopConfiguration
             set { SetProperty(ref _autoConnect, value); }
         }
 
-        public SharedCoreModels.Enums.ConnectionState ConnectionState
+        public SharedBase.Connection.Enums.ConnectionState ConnectionState
         {
             get { return _connectionState; }
             set { SetProperty(ref _connectionState, value); }

@@ -8,6 +8,6 @@ namespace Rediscovery.Services
     {
         string GenerateNewDeviceIDentifier();
         string GetDeviceIdentifier();
-        SharedCoreModels.WelcomeDeviceMessage GetWelcomeDeviceMessage();
+        SharedBase.Connection.WelcomeDeviceMessage GetWelcomeDeviceMessage();
     }
 }

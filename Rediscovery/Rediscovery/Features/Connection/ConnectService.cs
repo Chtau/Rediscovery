@@ -23,10 +23,10 @@ namespace Rediscovery.Features.Connection
             communicationHub.Init(_logger, "/hubs/connect", "/hubs/feature");
         }
 
-        public void AutoConnect(Action<bool, SharedCoreModels.Enums.ConnectionState> resultCallback)
+        public void AutoConnect(Action<bool, SharedBase.Connection.Enums.ConnectionState> resultCallback)
         {
             OnResetDesktopConfigurationState();
-            Action<DesktopConfigurationModel, bool, SharedCoreModels.Enums.ConnectionState> callback = (config, result, state) =>
+            Action<DesktopConfigurationModel, bool, SharedBase.Connection.Enums.ConnectionState> callback = (config, result, state) =>
             {
                 OnUpdateDesktopConfiguration(config, result, state);
                 resultCallback?.Invoke(result, state);
@@ -41,19 +41,19 @@ namespace Rediscovery.Features.Connection
                 }
                 else
                 {
-                    callback?.Invoke(null, false, SharedCoreModels.Enums.ConnectionState.None);
+                    callback?.Invoke(null, false, SharedBase.Connection.Enums.ConnectionState.None);
                 }
             } catch (Exception ex)
             {
                 _logger.LogError(ex);
-                callback?.Invoke(null, false, SharedCoreModels.Enums.ConnectionState.Error);
+                callback?.Invoke(null, false, SharedBase.Connection.Enums.ConnectionState.Error);
             }
         }
 
-        public void Connect(DesktopConfigurationModel desktopConfigurationModel, Action<bool, SharedCoreModels.Enums.ConnectionState> resultCallback)
+        public void Connect(DesktopConfigurationModel desktopConfigurationModel, Action<bool, SharedBase.Connection.Enums.ConnectionState> resultCallback)
         {
             OnResetDesktopConfigurationState();
-            Action<DesktopConfigurationModel, bool, SharedCoreModels.Enums.ConnectionState> callback = (config, result, state) =>
+            Action<DesktopConfigurationModel, bool, SharedBase.Connection.Enums.ConnectionState> callback = (config, result, state) =>
             {
                 OnUpdateDesktopConfiguration(desktopConfigurationModel, result, state);
                 resultCallback?.Invoke(result, state);
@@ -61,7 +61,7 @@ namespace Rediscovery.Features.Connection
             OnTryConnect(new List<DesktopConfigurationModel> { desktopConfigurationModel }, callback);
         }
 
-        private void OnTryConnect(List<DesktopConfigurationModel> desktopConfigurations, Action<DesktopConfigurationModel, bool, SharedCoreModels.Enums.ConnectionState> resultCallback, int nextIndex = 0)
+        private void OnTryConnect(List<DesktopConfigurationModel> desktopConfigurations, Action<DesktopConfigurationModel, bool, SharedBase.Connection.Enums.ConnectionState> resultCallback, int nextIndex = 0)
         {
             if (desktopConfigurations != null && desktopConfigurations.Count > nextIndex)
             {
@@ -93,7 +93,7 @@ namespace Rediscovery.Features.Connection
                 });
             } else
             {
-                resultCallback?.Invoke(null, false, SharedCoreModels.Enums.ConnectionState.Error);
+                resultCallback?.Invoke(null, false, SharedBase.Connection.Enums.ConnectionState.Error);
             }
         }
 
@@ -106,7 +106,7 @@ namespace Rediscovery.Features.Connection
                 {
                     foreach (var item in items)
                     {
-                        item.ConnectionState = SharedCoreModels.Enums.ConnectionState.None;
+                        item.ConnectionState = SharedBase.Connection.Enums.ConnectionState.None;
                         desktopStore.UpdateItem(item);
                     }
                 }
@@ -117,7 +117,7 @@ namespace Rediscovery.Features.Connection
             }
         }
 
-        private void OnUpdateDesktopConfiguration(DesktopConfigurationModel configuration, bool result, SharedCoreModels.Enums.ConnectionState state)
+        private void OnUpdateDesktopConfiguration(DesktopConfigurationModel configuration, bool result, SharedBase.Connection.Enums.ConnectionState state)
         {
             try
             {
@@ -137,7 +137,7 @@ namespace Rediscovery.Features.Connection
         public void Disconnect(DesktopConfigurationModel desktopConfigurationModel, Action<bool> resultCallback)
         {
             communicationHub.Disconnect();
-            OnUpdateDesktopConfiguration(desktopConfigurationModel, true, SharedCoreModels.Enums.ConnectionState.None);
+            OnUpdateDesktopConfiguration(desktopConfigurationModel, true, SharedBase.Connection.Enums.ConnectionState.None);
             resultCallback?.Invoke(true);
         }
     }

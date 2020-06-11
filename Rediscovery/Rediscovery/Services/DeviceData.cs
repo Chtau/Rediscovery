@@ -1,5 +1,4 @@
-﻿using SharedCoreModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using Xamarin.Essentials;
@@ -31,10 +30,10 @@ namespace Rediscovery.Services
             return deviceId;
         }
 
-        public SharedCoreModels.WelcomeDeviceMessage GetWelcomeDeviceMessage()
+        public SharedBase.Connection.WelcomeDeviceMessage GetWelcomeDeviceMessage()
         {
             var setting = settingStore.GetItem(Guid.Empty);
-            return new WelcomeDeviceMessage
+            return new SharedBase.Connection.WelcomeDeviceMessage
             {
                 DeviceName = setting.DeviceName,
                 DeviceIdentifier = GetDeviceIdentifier(),

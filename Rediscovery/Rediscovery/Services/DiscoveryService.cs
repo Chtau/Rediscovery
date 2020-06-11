@@ -16,7 +16,7 @@ namespace Rediscovery.Services
     {
         private IDataStoreGuid<SettingModel> Store => DependencyService.Get<IDataStoreGuid<SettingModel>>() ?? new SettingStore();
 
-        public void Boardcast(Action<SharedCoreModels.DiscoveryServiceInfo> callbackAnswer, Func<bool> interupt)
+        public void Boardcast(Action<SharedBase.Discovery.DiscoveryServiceInfo> callbackAnswer, Func<bool> interupt)
         {
             Task.Run(async () =>
             {
@@ -46,7 +46,7 @@ namespace Rediscovery.Services
                                 var ServerResponseData = Client.Receive(ref ServerEp);
                                 var ServerResponse = Encoding.ASCII.GetString(ServerResponseData);
                                 //callbackAnswer?.Invoke(ServerEp.Address.ToString());
-                                var serviceInfo = new SharedCoreModels.DiscoveryServiceInfo();
+                                var serviceInfo = new SharedBase.Discovery.DiscoveryServiceInfo();
                                 serviceInfo.Parse(ServerResponse);
                                 callbackAnswer?.Invoke(serviceInfo);
                                 _logger.LogTrace($"Received {serviceInfo} from {ServerEp.Address}");

@@ -13,7 +13,7 @@ namespace Rediscovery.Features.DesktopConfiguration
     public class DiscoveryDevicesViewModel : BaseViewModel
     {
         private Services.IDiscoveryService discoveryService => DependencyService.Get<Services.IDiscoveryService>() ?? new Services.DiscoveryService();
-        public ObservableCollection<SharedCoreModels.DiscoveryServiceInfo> FoundDevices { get; set; } = new ObservableCollection<SharedCoreModels.DiscoveryServiceInfo>();
+        public ObservableCollection<SharedBase.Discovery.DiscoveryServiceInfo> FoundDevices { get; set; } = new ObservableCollection<SharedBase.Discovery.DiscoveryServiceInfo>();
 
         public ICommand DiscoveryCommand { get; set; }
         public ICommand StopDiscoveryCommand { get; set; }

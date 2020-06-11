@@ -11,6 +11,6 @@ namespace Rediscovery.Features.Connection
         List<Features.Connection.Models.ConnectionManifestFeature> GetConnectionManifestFeature(Guid configurationId);
         List<Features.Connection.Models.ConnectionManifestFeature> GetConnectedConnectionManifestFeature();
         void Clear(Guid configurationId);
-        void AddManifestData(SharedCoreModels.Manifest manifest, Guid configurationId, string displayName);
+        void AddManifestData(SharedBase.Connection.Manifest manifest, Guid configurationId, string displayName);
     }
 }

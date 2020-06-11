@@ -40,7 +40,7 @@ namespace Rediscovery.Features.Connection
             }
         }
 
-        public void AddManifestData(SharedCoreModels.Manifest manifest, Guid configurationId, string displayName)
+        public void AddManifestData(SharedBase.Connection.Manifest manifest, Guid configurationId, string displayName)
         {
             try
             {

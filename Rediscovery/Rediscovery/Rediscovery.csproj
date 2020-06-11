@@ -43,6 +43,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\CommunicationAuthenticationConsumer\CommunicationAuthenticationConsumer.csproj" />
+    <ProjectReference Include="..\..\CommunicationFeatureConsumer\CommunicationFeatureConsumer.csproj" />
     <ProjectReference Include="..\..\PluginFeature\PluginFeature.csproj" />
   </ItemGroup>
 
