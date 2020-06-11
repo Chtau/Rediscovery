@@ -77,7 +77,6 @@ namespace DesktopService.Features.Authentication
                 var u = await _deviceRepository.GetByDeviceIdentifier(welcomeDeviceMessage.DeviceIdentifier);
                 if (u != null)
                 {
-                    // TODO: remove u.Token
                     u.DeviceType = welcomeDeviceMessage.DeviceType;
                     u.Idiom = welcomeDeviceMessage.Idiom;
                     u.Manufacturer = welcomeDeviceMessage.Manufacturer;
@@ -86,12 +85,11 @@ namespace DesktopService.Features.Authentication
                     u.Platform = welcomeDeviceMessage.Platform;
                     u = await _deviceRepository.SaveDevice(u);
                     _logger.LogDebug($"Request login Device found (Identifier:{u.DeviceIdentifier} Name:{u.DeviceName} Allow:{u.AllowAccess})");
-                    // TODO: handle get correct [Role]
                     return new LoginResult
                     {
                         Id = u.Id.ToString(),
                         Name = u.DeviceName,
-                        Role = "device",
+                        Role = u.Role,
                         State = u.AllowAccess ? SharedBase.Authentication.LoginState.OK : SharedBase.Authentication.LoginState.Denied
                     };
                 }

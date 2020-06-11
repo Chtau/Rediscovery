@@ -20,7 +20,7 @@ namespace DALDesktopService.Models
                 deviceIdentifier = value?.ToLower();
             }
         }
-        public string Token { get; set; }
         public bool AllowAccess { get; set; }
+        public string Role { get; set; }
     }
 }
