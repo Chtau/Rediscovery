@@ -38,5 +38,9 @@ namespace DesktopService.Features.DeviceFeature
         bool SaveFeatureSettings(Guid featureId, DeviceFeatureSetting deviceFeatureSetting);
         bool SaveFeatureProfile(Guid featureId, DeviceFeatureProfil deviceFeatureProfil);
         bool DeleteFeatureProfile(Guid featureId, string profileId);
+        event EventHandler<DeviceFeatureData> RespondToClient;
+        void ReceiveData(Guid featureId, DeviceFeatureData data);
+        void StartFeature(Guid featureId, string sid);
+        void StopFeature(Guid featureId, string sid);
     }
 }

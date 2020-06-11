@@ -21,6 +21,7 @@ namespace DesktopService.Features.DeviceFeature
 
         public event EventHandler ProfilesChanged;
         public event EventHandler SettingChanged;
+        public event EventHandler<DeviceFeatureData> RespondToClient;
 
         public FeatureService(ILoggerFactory loggerFactory,
             IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> appOptions,
@@ -85,18 +86,27 @@ namespace DesktopService.Features.DeviceFeature
                 {
                     item.SendData += (object sender, DeviceFeatureData e) =>
                     {
-                        ResponseToClient(item.GetDeviceFeatureInfo().Id, e);
+                        _logger.LogTrace($"Feature (id: {item.GetDeviceFeatureInfo().Id} profile: {e.ProfileId}) response =>" + e.Data);
+                        RespondToClient?.Invoke(this, e);
                     };
                     deviceFeatureImplementations.Add(item);
                 }
             }
         }
 
-        private void ResponseToClient(Guid featureId, DeviceFeatureData data)
+        public void ReceiveData(Guid featureId, DeviceFeatureData data)
         {
-            _logger.LogTrace($"Feature (id: {featureId} profile: {data.ProfileId}) response =>" + data.Data);
-            // TODO: use new impl.
-            _hubContext.Clients.User(data.DeviceId).SendAsync("ClientResponse", featureId, data.ProfileId, data.Data);
+            deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.ReceiveData(data);
+        }
+
+        public void StartFeature(Guid featureId, string sid)
+        {
+            deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.Register(sid);
+        }
+
+        public void StopFeature(Guid featureId, string sid)
+        {
+            deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.Unregister(sid);
         }
 
         /// <summary>

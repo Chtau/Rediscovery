@@ -97,7 +97,9 @@ namespace DesktopService
             {
                 config.DnsIp = Program.HostIpAddress;
             });
+
             services.AddAuthenticationProvider<AuthenticationManager>(identitySettings.Secret);
+            services.AddFeatureProvider<FeatureManager>();
 
             services.AddSingleton<IConfigurationRoot>(Configuration);
             services.AddScoped<Features.Authentication.ITokenService, Features.Authentication.TokenService>();
@@ -109,7 +111,7 @@ namespace DesktopService
 
             services.AddSingleton<Features.Plugins.ILoadPlugins, Features.Plugins.LoadPlugins>();
             services.AddResourceProvider<Features.Authentication.TokenService, RemoteResourcesRepository>();
-            services.AddFeatureProvider();
+            
         }
 
         // Use this method to configure the HTTP request pipeline.
