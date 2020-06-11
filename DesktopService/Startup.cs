@@ -102,8 +102,6 @@ namespace DesktopService
             services.AddFeatureProvider<FeatureManager>();
 
             services.AddSingleton<IConfigurationRoot>(Configuration);
-            services.AddScoped<Features.Authentication.ITokenService, Features.Authentication.TokenService>();
-            services.AddSingleton<IUserIdProvider, Features.Identity.ClaimUserIdProvider>();
             services.AddSingleton<Features.RemoteResources.IRemoteResourcesLiveLogger, Features.RemoteResources.RemoteResourcesLiveLogger>();
             services.AddSingleton<IFeatureService, FeatureService>();
             services.AddSingleton<Features.Configuration.IDistributeConfig, Features.Configuration.DistributeConfig>();
@@ -148,9 +146,9 @@ namespace DesktopService
             
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseResourceProvider("/remote/resource/hub");
-            app.UseFeatureProvider("/hubs/feature");
-            app.UseAuthenticationProvider("/hubs/connect");
+            app.UseResourceProvider();
+            app.UseFeatureProvider();
+            app.UseAuthenticationProvider();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
