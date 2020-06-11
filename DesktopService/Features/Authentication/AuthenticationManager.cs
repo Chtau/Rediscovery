@@ -15,16 +15,19 @@ namespace DesktopService.Features.Authentication
         private readonly DALDesktopService.Repository.IDevicePendingAuthenticationRepository _devicePendingAuthenticationRepository;
         private readonly DALDesktopService.Repository.IDeviceRepository _deviceRepository;
         private readonly Features.DeviceFeature.IFeatureService _featureService;
+        private readonly IRoleResolver _roleResolver;
 
         public AuthenticationManager(ILoggerFactory loggerFactory,
             DALDesktopService.Repository.IDevicePendingAuthenticationRepository devicePendingAuthenticationRepository,
             DALDesktopService.Repository.IDeviceRepository deviceRepository,
-            Features.DeviceFeature.IFeatureService featureService)
+            Features.DeviceFeature.IFeatureService featureService,
+            IRoleResolver roleResolver)
         {
             _logger = loggerFactory.CreateLogger<AuthenticationManager>();
             _devicePendingAuthenticationRepository = devicePendingAuthenticationRepository;
             _deviceRepository = deviceRepository;
             _featureService = featureService;
+            _roleResolver = roleResolver;
         }
 
         public async Task<bool> AddPendingApprovel(WelcomeDeviceMessage welcomeDeviceMessage)
@@ -83,6 +86,7 @@ namespace DesktopService.Features.Authentication
                     u.Model = welcomeDeviceMessage.Model;
                     u.OSVersion = welcomeDeviceMessage.OSVersion;
                     u.Platform = welcomeDeviceMessage.Platform;
+                    u.Role = _roleResolver.GetRole(welcomeDeviceMessage.DeviceIdentifier);
                     u = await _deviceRepository.SaveDevice(u);
                     _logger.LogDebug($"Request login Device found (Identifier:{u.DeviceIdentifier} Name:{u.DeviceName} Allow:{u.AllowAccess})");
                     return new LoginResult

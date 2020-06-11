@@ -47,9 +47,12 @@ namespace DesktopService
             services.Configure<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration>(remoteResourceSettingsSection);
             var appSettingsSection = Configuration.GetSection(SharedConfigurations.DesktopService.Models.AppConfiguration.SectionName);
             services.Configure<SharedConfigurations.DesktopService.Models.AppConfiguration> (appSettingsSection);
+            var rolesSection = Configuration.GetSection(SharedConfigurations.DesktopService.Models.RoleConfiguration.SectionName);
+            services.Configure<SharedConfigurations.DesktopService.Models.RoleConfiguration>(rolesSection);
 
             var appSettings = appSettingsSection.Get<SharedConfigurations.DesktopService.Models.AppConfiguration>();
             var identitySettings = identitySettingsSection.Get<SharedConfigurations.DesktopService.Models.IdentityConfiguration>();
+            var roleSettings = identitySettingsSection.Get<SharedConfigurations.DesktopService.Models.RoleConfiguration>();
             //var key = Encoding.ASCII.GetBytes(identitySettings.Secret);
             /*services.AddAuthentication(x =>
             {
@@ -98,13 +101,14 @@ namespace DesktopService
                 config.DnsIp = Program.HostIpAddress;
             });
 
-            services.AddAuthenticationProvider<AuthenticationManager>(identitySettings.Secret);
+            services.AddAuthenticationProvider<AuthenticationManager>(identitySettings.Secret, roleSettings.DeviceRoleName, roleSettings.ResourceConsumerRoleName);
             services.AddFeatureProvider<FeatureManager>();
             services.AddResourceProvider<RemoteResourcesRepository, ResourceManager>();
 
             services.AddSingleton<IConfigurationRoot>(Configuration);
             services.AddSingleton<Features.RemoteResources.IRemoteResourcesLiveLogger, Features.RemoteResources.RemoteResourcesLiveLogger>();
             services.AddSingleton<IFeatureService, FeatureService>();
+            services.AddSingleton<IRoleResolver, RoleResolver>();
             services.AddSingleton<Features.Configuration.IDistributeConfig, Features.Configuration.DistributeConfig>();
             services.AddSingleton<PluginFeature.Interfaces.IPluginLogger, Features.PluginLogger.PluginLogger>();
 
