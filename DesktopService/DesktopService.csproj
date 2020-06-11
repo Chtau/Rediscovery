@@ -60,6 +60,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\FeatureDefinitions\" />
     <Folder Include="Services\" />
   </ItemGroup>
 

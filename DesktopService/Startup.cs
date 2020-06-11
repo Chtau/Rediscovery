@@ -50,8 +50,8 @@ namespace DesktopService
 
             var appSettings = appSettingsSection.Get<SharedConfigurations.DesktopService.Models.AppConfiguration>();
             var identitySettings = identitySettingsSection.Get<SharedConfigurations.DesktopService.Models.IdentityConfiguration>();
-            var key = Encoding.ASCII.GetBytes(identitySettings.Secret);
-            services.AddAuthentication(x =>
+            //var key = Encoding.ASCII.GetBytes(identitySettings.Secret);
+            /*services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -84,7 +84,7 @@ namespace DesktopService
                         return Task.CompletedTask;
                     }
                 };
-            });
+            });*/
 
             services.AddHostedService<Worker>();
 
@@ -97,11 +97,10 @@ namespace DesktopService
             {
                 config.DnsIp = Program.HostIpAddress;
             });
+            services.AddAuthenticationProvider<AuthenticationManager>(identitySettings.Secret);
 
             services.AddSingleton<IConfigurationRoot>(Configuration);
-            services.AddSingleton<Features.FeatureDefinitions.IManifest, Features.FeatureDefinitions.Manifest>();
             services.AddScoped<Features.Authentication.ITokenService, Features.Authentication.TokenService>();
-            services.AddSingleton<Features.Authentication.IAuth, Features.Authentication.Auth>();
             services.AddSingleton<IUserIdProvider, Features.Identity.ClaimUserIdProvider>();
             services.AddSingleton<Features.RemoteResources.IRemoteResourcesLiveLogger, Features.RemoteResources.RemoteResourcesLiveLogger>();
             services.AddSingleton<IFeatureService, FeatureService>();
@@ -110,7 +109,6 @@ namespace DesktopService
 
             services.AddSingleton<Features.Plugins.ILoadPlugins, Features.Plugins.LoadPlugins>();
             services.AddResourceProvider<Features.Authentication.TokenService, RemoteResourcesRepository>();
-            services.AddAuthenticationProvider();
             services.AddFeatureProvider();
         }
 
