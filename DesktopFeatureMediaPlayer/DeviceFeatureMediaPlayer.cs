@@ -58,7 +58,11 @@ namespace DesktopFeatureMediaPlayer
                             Info = null
                         };
                         var data = new DeviceFeatureData(deviceId, GetDeviceFeatureInfo().Id, profile.Id.ToString(), Newtonsoft.Json.JsonConvert.SerializeObject(dataObj));
-                        OnSendData(this, data);
+                        OnSendData(this, new ExchangeEntity<DeviceFeatureData>
+                        {
+                            Sid = deviceId,
+                            Entity = data
+                        });
                     }
                 }
             }
@@ -93,17 +97,17 @@ namespace DesktopFeatureMediaPlayer
             };
         }
 
-        public override void ReceiveData(DeviceFeatureData data)
+        public override void ReceiveData(ExchangeEntity<DeviceFeatureData> data)
         {
             base.ReceiveData(data);
-            if (data != null && IsRegister(data.DeviceId))
+            if (data != null && IsRegister(data.Entity.DeviceId))
             {
-                if (!string.IsNullOrWhiteSpace(data.Data?.ToString()))
+                if (!string.IsNullOrWhiteSpace(data.Entity.Data?.ToString()))
                 {
-                    var commandModel = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.CommandModel>(data.Data?.ToString());
+                    var commandModel = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.CommandModel>(data.Entity.Data?.ToString());
                     if (commandModel != null)
                     {
-                        OnHandleCommand(data.ProfileId, commandModel);
+                        OnHandleCommand(data.Entity.ProfileId, commandModel);
                     }
                     else
                     {

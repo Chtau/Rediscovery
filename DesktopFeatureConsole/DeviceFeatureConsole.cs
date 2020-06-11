@@ -19,7 +19,11 @@ namespace DesktopFeatureConsole
         private void Terminal_Output(object sender, CommandQueue<string, List<string>> e)
         {
             var data = new DeviceFeatureData(e.DeviceId, GetDeviceFeatureInfo().Id, null, e.OutgoingData[e.OutgoingData.Count - 1]);
-            OnSendData(this, data);
+            OnSendData(this, new ExchangeEntity<DeviceFeatureData>
+            {
+                Sid = e.DeviceId,
+                Entity = data
+            });
         }
 
         public override SharedBase.Device.FeatureDefinitionExtended GetDeviceFeatureInfo()
@@ -52,17 +56,17 @@ namespace DesktopFeatureConsole
             terminal.Close();
         }
 
-        public override void ReceiveData(DeviceFeatureData data)
+        public override void ReceiveData(ExchangeEntity<DeviceFeatureData> data)
         {
             base.ReceiveData(data);
-            if (data != null && IsRegister(data.DeviceId))
+            if (data != null && IsRegister(data.Entity.DeviceId))
             {
-                if (!string.IsNullOrWhiteSpace(data.Data?.ToString()))
+                if (!string.IsNullOrWhiteSpace(data.Entity.Data?.ToString()))
                 {
                     terminal.NewCommand(new CommandQueue<string, List<string>>
                     {
-                        IncomingData = data.Data.ToString(),
-                        DeviceId = data.DeviceId,
+                        IncomingData = data.Entity.Data.ToString(),
+                        DeviceId = data.Entity.DeviceId,
                     });
                 }
             }

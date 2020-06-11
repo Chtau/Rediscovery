@@ -23,9 +23,9 @@ namespace DesktopFeatureTestApp
         static void ConsoleFeature()
         {
             IDeviceFeatureImplementation feature = new DeviceFeatureConsole();
-            feature.SendData += (object sender, DeviceFeatureData e) =>
+            feature.SendData += (object sender, ExchangeEntity<DeviceFeatureData> e) =>
             {
-                Console.WriteLine(e.Data);
+                Console.WriteLine(e.Entity.Data);
             };
             feature.Init(null, null);
             //feature.ReceiveData(new DeviceFeatureData { Data = "echo Hallo" });

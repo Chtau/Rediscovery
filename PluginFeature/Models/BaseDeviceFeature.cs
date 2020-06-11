@@ -60,9 +60,9 @@ namespace PluginFeature.Models
         }
 
 
-        public event EventHandler<PluginFeature.Models.DeviceFeatureData> SendData;
+        public event EventHandler<ExchangeEntity<DeviceFeatureData>> SendData;
 
-        public void OnSendData(object obj, PluginFeature.Models.DeviceFeatureData args)
+        public void OnSendData(object obj, ExchangeEntity<DeviceFeatureData> args)
         {
             SendData?.Invoke(obj, args);
         }
@@ -83,7 +83,7 @@ namespace PluginFeature.Models
             this.pluginLogger = pluginLogger;
         }
 
-        public virtual void ReceiveData(PluginFeature.Models.DeviceFeatureData data)
+        public virtual void ReceiveData(ExchangeEntity<DeviceFeatureData> data)
         {
 
         }

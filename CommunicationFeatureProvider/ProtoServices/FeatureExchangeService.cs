@@ -16,7 +16,7 @@ namespace CommunicationFeatureProvider.ProtoServices
     {
         private readonly ILogger<FeatureExchangeService> _logger;
         private readonly IFeatureManager _featureManager;
-        private Dictionary<string, IServerStreamWriter<DeviceFeatureData>> responseStreams = new Dictionary<string, IServerStreamWriter<DeviceFeatureData>>();
+        private Dictionary<string, IServerStreamWriter<Featuredata.DeviceFeatureData>> responseStreams = new Dictionary<string, IServerStreamWriter<Featuredata.DeviceFeatureData>>();
 
         public FeatureExchangeService(ILoggerFactory loggerFactory, IFeatureManager featureManager)
         {
@@ -25,7 +25,7 @@ namespace CommunicationFeatureProvider.ProtoServices
             _featureManager.SendData += _featureManager_SendData;
         }
 
-        private void _featureManager_SendData(object sender, CommunicationBase.Models.ExchangeEntity<PluginFeature.Models.DeviceFeatureData> e)
+        private void _featureManager_SendData(object sender, PluginFeature.Models.ExchangeEntity<PluginFeature.Models.DeviceFeatureData> e)
         {
             OnSendFeatureData(e.Sid, e.Entity);
         }
@@ -38,7 +38,7 @@ namespace CommunicationFeatureProvider.ProtoServices
                 {
                     try
                     {
-                        await responseStreams[sid].WriteAsync(new DeviceFeatureData
+                        await responseStreams[sid].WriteAsync(new Featuredata.DeviceFeatureData
                         {
                             Data = deviceFeatureData.Data,
                             DeviceId = deviceFeatureData.DeviceId,
@@ -71,7 +71,7 @@ namespace CommunicationFeatureProvider.ProtoServices
                 {
                     await foreach (var message in requestStream.ReadAllAsync(cancellationToken: context.CancellationToken))
                     {
-                        _featureManager.ReceivedData(new CommunicationBase.Models.ExchangeEntity<PluginFeature.Models.DeviceFeatureData>
+                        _featureManager.ReceivedData(new PluginFeature.Models.ExchangeEntity<PluginFeature.Models.DeviceFeatureData>
                         {
                             Entity = new PluginFeature.Models.DeviceFeatureData(message.DeviceId, message.FeatureId.SafeGuid(), message.ProfileId, message.Data),
                             Sid = sid
@@ -112,7 +112,7 @@ namespace CommunicationFeatureProvider.ProtoServices
                 var user = context.GetHttpContext().User;
                 var sid = user.Claims.GetSid();
 
-                var resultFeatureState = _featureManager.FeatureStateChange(new CommunicationBase.Models.ExchangeEntity<CommunicationBase.Models.FeatureState>
+                var resultFeatureState = _featureManager.FeatureStateChange(new PluginFeature.Models.ExchangeEntity<CommunicationBase.Models.FeatureState>
                 {
                     Sid = sid,
                     Entity = new CommunicationBase.Models.FeatureState
