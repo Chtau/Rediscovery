@@ -49,7 +49,7 @@ namespace DesktopService.Features.DeviceFeature
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Feature state changed");
+                _logger.LogError(ex, $"Feature state changed (Requested State:{Enum.GetName(typeof(FeatureState.State), featureStateChange.Entity.CurrentState)})");
                 featureStateChange.Entity.CurrentState = FeatureState.State.Error;
             }
             return featureStateChange;
@@ -67,37 +67,29 @@ namespace DesktopService.Features.DeviceFeature
 
         public byte[] GetFeatureUIArchive(Guid featureId)
         {
+            string uiPath = null;
             try
             {
-                string uiPath = _featureService.GetFeatureUIArchivePath(featureId);
-                using (FileStream fs = new FileStream(uiPath, FileMode.Open, FileAccess.Read))
+                uiPath = _featureService.GetFeatureUIArchivePath(featureId);
+                if (!string.IsNullOrWhiteSpace(uiPath) && System.IO.File.Exists(uiPath))
                 {
-                    byte[] archiveData = new byte[fs.Length];
-                    fs.Read(archiveData, 0, System.Convert.ToInt32(fs.Length));
-                    fs.Close();
-                    return archiveData;
+                    return System.IO.File.ReadAllBytes(uiPath);
                 }
             } catch (Exception ex)
             {
-                _logger.LogError(ex, "Feature UI ZipArchive get byte[]");
-                return new byte[0];
+                _logger.LogError(ex, $"Feature UI ZipArchive get byte[] (Path:{uiPath})");
             }
+            return null;
         }
 
         public void ReceivedData(ExchangeEntity<DeviceFeatureData> deviceFeatureData)
         {
-            // TODO: SID required
-            _featureService.ReceiveData(deviceFeatureData.Entity.FeatureId, deviceFeatureData.Entity);
+            _featureService.ReceiveData(deviceFeatureData.Entity.FeatureId, deviceFeatureData);
         }
 
-        private void _featureService_RespondToClient(object sender, DeviceFeatureData e)
+        private void _featureService_RespondToClient(object sender, ExchangeEntity<DeviceFeatureData> e)
         {
-            // TODO: SID required
-            SendData?.Invoke(sender, new ExchangeEntity<DeviceFeatureData>
-            {
-                Sid = "",
-                Entity = e
-            });
+            SendData?.Invoke(sender, e);
         }
     }
 }

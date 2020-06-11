@@ -21,7 +21,7 @@ namespace DesktopService.Features.DeviceFeature
 
         public event EventHandler ProfilesChanged;
         public event EventHandler SettingChanged;
-        public event EventHandler<DeviceFeatureData> RespondToClient;
+        public event EventHandler<ExchangeEntity<DeviceFeatureData>> RespondToClient;
 
         public FeatureService(ILoggerFactory loggerFactory,
             IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> appOptions,
@@ -84,9 +84,9 @@ namespace DesktopService.Features.DeviceFeature
             {
                 foreach (var item in desktopPluginFeatures)
                 {
-                    item.SendData += (object sender, DeviceFeatureData e) =>
+                    item.SendData += (object sender, ExchangeEntity<DeviceFeatureData> e) =>
                     {
-                        _logger.LogTrace($"Feature (id: {item.GetDeviceFeatureInfo().Id} profile: {e.ProfileId}) response =>" + e.Data);
+                        _logger.LogTrace($"Feature (id: {item.GetDeviceFeatureInfo().Id} profile: {e.Entity.ProfileId}) response =>" + e.Entity.Data);
                         RespondToClient?.Invoke(this, e);
                     };
                     deviceFeatureImplementations.Add(item);
@@ -94,7 +94,7 @@ namespace DesktopService.Features.DeviceFeature
             }
         }
 
-        public void ReceiveData(Guid featureId, DeviceFeatureData data)
+        public void ReceiveData(Guid featureId, ExchangeEntity<DeviceFeatureData> data)
         {
             deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.ReceiveData(data);
         }

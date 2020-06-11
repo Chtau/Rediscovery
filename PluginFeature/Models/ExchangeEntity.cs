@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommunicationBase.Models
+namespace PluginFeature.Models
 {
     public class ExchangeEntity<T>
     {
