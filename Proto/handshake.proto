@@ -8,8 +8,23 @@ service HandShakeExchange {
 
 message GreetingMessage {
   string deviceIdentifier = 1;
+  string deviceName = 2;
+  string model = 3;
+  string manufacturer = 4;
+  string oSVersion = 5;
+  string platform = 6;
+  string idiom = 7;
+  string deviceType = 8;
 }
 
 message GreetingReply {
   string PEM = 1;
+  enum State {
+    None = 0;
+    OK = 1;
+    Error = 2;
+    Denied = 3;
+    WaitForApprovel = 4;
+  }
+  State CanConnect = 2;
 }

@@ -21,6 +21,10 @@ namespace CommunicationAuthenticationProvider.ProtoServices
 
         public override Task<GreetingReply> Greeting(GreetingMessage request, ServerCallContext context)
         {
+            // TODO: greeting should replace some function of welcome
+            // TODO: check if the device is allowed
+            // TODO: add to pending authorization if unknown
+            // TODO: if the device is allowed to connect send the Certificate PEM
             var reply = new GreetingReply
             {
                 PEM = ""
