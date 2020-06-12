@@ -50,7 +50,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                     welcomeDeviceReply = new WelcomeDeviceReply
                     {
                         ConnectionState = (WelcomeDeviceReply.Types.State)(int)result.State,
-                        Token = result.Token
+                        Token = result.Token.EmptyIfNull()
                     };
                 });
                 welcomeDeviceReply.Token.EmptyIfNull();

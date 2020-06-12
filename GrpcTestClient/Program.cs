@@ -49,8 +49,16 @@ namespace GrpcTestClient
             consumerService.ReceivedWelcomeReply += (obj, args) =>
             {
                 Console.WriteLine($"[ReceivedWelcomeReply] Token:{args.Token} State:{args.State}");
-                consumerService.RequestManifest(args.Token);
-                ConsumeFeature(args.Token);
+                if (args.State == SharedBase.Connection.Enums.ConnectionState.OK)
+                {
+                    consumerService.RequestManifest(args.Token);
+                    ConsumeFeature(args.Token);
+                } else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"[ReceivedWelcomeReply] No authorization! State:{args.State}");
+                    Console.ResetColor();
+                }
             };
             //consumerService.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
             //consumerService.Connect("192.168.1.100", 44342, ExportToPEM(GetX509Certificate2()));
