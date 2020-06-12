@@ -18,10 +18,27 @@ namespace Rediscovery.Features.Connection
         private IManifestFeatureEntityManager entityManager => DependencyService.Get<IManifestFeatureEntityManager>() ?? new ManifestFeatureEntityManager();
         private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
         private IDeviceData deviceData => DependencyService.Get<IDeviceData>() ?? new DeviceData();
+        private Dictionary<Guid, string> desktopConfigurationToken = new Dictionary<Guid, string>();
 
         public ConnectService()
         {
             //communicationHub.Init(_logger, "/hubs/connect", "/hubs/feature");
+        }
+
+        public string GetToken(Guid configurationId)
+        {
+            if (desktopConfigurationToken.ContainsKey(configurationId))
+                return desktopConfigurationToken[configurationId];
+            return null;
+        }
+
+        private void OnSetToken(Guid configurationId, string token)
+        {
+            // TODO: remove Token ...
+            if (desktopConfigurationToken.ContainsKey(configurationId))
+                desktopConfigurationToken[configurationId] = token;
+            else
+                desktopConfigurationToken.Add(configurationId,token);
         }
 
         public void AutoConnect(Action<string, SharedBase.Connection.Enums.ConnectionState> resultCallback)
@@ -69,12 +86,14 @@ namespace Rediscovery.Features.Connection
                 var item = desktopConfigurations[nextIndex];
                 var addr = item.LastKnownAddress.Split(":")[0];
                 var port = item.LastKnownAddress.Split(":")[1];
+                // TODO: we need to handle if we connect the first time and have no PEM for SSL
                 if (authenticationConsumer.Connect(addr, int.Parse(port), ""))
                 {
                     authenticationConsumer.SendWelcome(deviceData.GetWelcomeDeviceMessage(), deviceReply =>
                     {
                         if (deviceReply.State == SharedBase.Connection.Enums.ConnectionState.OK)
                         {
+                            OnSetToken(item.Id, deviceReply.Token);
                             authenticationConsumer.RequestManifest(deviceReply.Token, manifest =>
                             {
                                 entityManager.AddManifestData(manifest, item.Id, item.DisplayName);

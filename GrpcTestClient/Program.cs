@@ -52,7 +52,9 @@ namespace GrpcTestClient
                 consumerService.RequestManifest(args.Token);
                 ConsumeFeature(args.Token);
             };
-            consumerService.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
+            //consumerService.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
+            //consumerService.Connect("192.168.1.100", 44342, ExportToPEM(GetX509Certificate2()));
+            consumerService.Connect("localhost", 44342, ExportToPEM(GetX509Certificate2()));
             consumerService.SendWelcome(new SharedBase.Connection.WelcomeDeviceMessage
             {
                 DeviceIdentifier = "1",

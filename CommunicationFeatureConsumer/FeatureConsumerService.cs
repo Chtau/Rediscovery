@@ -26,11 +26,19 @@ namespace CommunicationFeatureConsumer
             _logger = logger;
         }
 
-        public void Connect(string ipAddress, int port, string certificatePEM)
+        public bool Connect(string ipAddress, int port, string certificatePEM)
         {
-            var channelCredentials = new SslCredentials(certificatePEM);
-            Channel channel = new Channel(ipAddress, port, channelCredentials);
-            exchangeClient = new FeatureExchange.FeatureExchangeClient(channel);
+            try
+            {
+                var channelCredentials = new SslCredentials(certificatePEM);
+                Channel channel = new Channel(ipAddress, port, channelCredentials);
+                exchangeClient = new FeatureExchange.FeatureExchangeClient(channel);
+                return exchangeClient != null;
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex);
+                return false;
+            }
         }
 
         public void ChangeFeatureState(string token, CommunicationBase.Models.FeatureState featureState)

@@ -32,11 +32,19 @@ namespace CommunicationResourceConsumer
             _logger = logger;
         }
 
-        public void Connect(string ipAddress, int port, string certificatePEM)
+        public bool Connect(string ipAddress, int port, string certificatePEM)
         {
-            var channelCredentials = new SslCredentials(certificatePEM);
-            Channel channel = new Channel(ipAddress, port, channelCredentials);
-            resourceExchangeClient = new Resources.ResourceExchange.ResourceExchangeClient(channel);
+            try
+            {
+                var channelCredentials = new SslCredentials(certificatePEM);
+                Channel channel = new Channel(ipAddress, port, channelCredentials);
+                resourceExchangeClient = new Resources.ResourceExchange.ResourceExchangeClient(channel);
+                return resourceExchangeClient != null;
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex);
+                return false;
+            }
         }
 
         public void ListenActiveDevices(string token, CancellationTokenSource cts = null)

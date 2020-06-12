@@ -88,8 +88,8 @@ namespace DesktopService
                 serverOptions.ConfigureHttpsDefaults(op =>
                 {
                     //op.AllowAnyClientCertificate();
-                    //op.ServerCertificate = GetX509Certificate2();
-                    op.ServerCertificate = CertificateService.ServerCertificate.Create(HostIpAddress);
+                    op.ServerCertificate = GetX509Certificate2();
+                    //op.ServerCertificate = CertificateService.ServerCertificate.Create(HostIpAddress);
                 });
 
                 //serverOptions.Listen(System.Net.IPAddress.Parse("192.168.1.100"), 44341);
@@ -119,7 +119,8 @@ namespace DesktopService
 
         private static X509Certificate2 GetX509Certificate2()
         {
-            var cert = new X509Certificate2(Path.Combine(@"C:\DEV\Code\Workspaces\Repos\Rediscovery\TestSignalR", "dev_localhost.pfx"), "1234");
+            var cert = new X509Certificate2(Path.Combine(@"C:\DEV\TMP", "development.pfx"), "1234");
+            //var cert = new X509Certificate2(Path.Combine(@"C:\DEV\Code\Workspaces\Repos\Rediscovery\TestSignalR", "dev_localhost.pfx"), "1234");
             Console.WriteLine(cert.FriendlyName + " Issuer:" + cert.Issuer + " Thumbprint:" + cert.Thumbprint);
             return cert;
         }

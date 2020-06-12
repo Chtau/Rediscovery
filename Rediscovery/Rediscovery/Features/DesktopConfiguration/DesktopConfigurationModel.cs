@@ -7,6 +7,8 @@ namespace Rediscovery.Features.DesktopConfiguration
 {
     public class DesktopConfigurationModel : BaseModel
     {
+        // TODO: add PEM Certificate
+
         private Guid _id;
         private string _displayName;
         private string _lastKnownAddress;
