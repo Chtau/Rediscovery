@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CertificateService\CertificateService.csproj" />
     <ProjectReference Include="..\CommunicationAuthenticationConsumer\CommunicationAuthenticationConsumer.csproj" />
     <ProjectReference Include="..\CommunicationFeatureConsumer\CommunicationFeatureConsumer.csproj" />
     <ProjectReference Include="..\Communication\CommunicationResourceConsumer.csproj" />

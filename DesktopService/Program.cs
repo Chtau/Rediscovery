@@ -88,8 +88,8 @@ namespace DesktopService
                 serverOptions.ConfigureHttpsDefaults(op =>
                 {
                     //op.AllowAnyClientCertificate();
-                    op.ServerCertificate = GetX509Certificate2();
-                    //op.ServerCertificate = CertificateService.ServerCertificate.Create(HostIpAddress);
+                    //op.ServerCertificate = GetX509Certificate2();
+                    op.ServerCertificate = CertificateService.ServerCertificate.Create(HostIpAddress);
                 });
 
                 //serverOptions.Listen(System.Net.IPAddress.Parse("192.168.1.100"), 44341);

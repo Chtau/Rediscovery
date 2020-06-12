@@ -61,8 +61,8 @@ namespace GrpcTestClient
                 }
             };
             //consumerService.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
-            //consumerService.Connect("192.168.1.100", 44342, ExportToPEM(GetX509Certificate2()));
-            consumerService.Connect("localhost", 44342, ExportToPEM(GetX509Certificate2()));
+            consumerService.Connect("192.168.1.100", 44342, ExportToPEM(GetX509Certificate2()));
+            //consumerService.Connect("localhost", 44342, ExportToPEM(GetX509Certificate2()));
             consumerService.SendWelcome(new SharedBase.Connection.WelcomeDeviceMessage
             {
                 DeviceIdentifier = "1",
@@ -155,6 +155,7 @@ namespace GrpcTestClient
 
         public static X509Certificate2 GetX509Certificate2()
         {
+            //var cert = CertificateService.ServerCertificate.Create("192.168.1.100");
             var cert = new X509Certificate2(Path.Combine(@"C:\DEV\TMP", "development.pfx"), "1234");
             Console.WriteLine(cert.FriendlyName + " Issuer:" + cert.Issuer + " Thumbprint:" + cert.Thumbprint);
             return cert;

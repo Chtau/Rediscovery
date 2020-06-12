@@ -44,6 +44,11 @@ namespace CommunicationAuthenticationConsumer
         {
             Task.Run(async () =>
             {
+                var replyMsg = new WelcomeDeviceReply
+                {
+                    State = Enums.ConnectionState.None,
+                    Token = ""
+                };
                 try
                 {
                     var cts = new CancellationTokenSource();
@@ -61,17 +66,20 @@ namespace CommunicationAuthenticationConsumer
                     _logger.LogTrace("Consumer Welcome send Welcome");
                     var reply = await authenticationClient.WelcomeAsync(msg, cancellationToken: cts.Token);
                     _logger.LogTrace("Consumer Welcome reply received");
-                    var replyMsg = new WelcomeDeviceReply
+                    replyMsg = new WelcomeDeviceReply
                     {
                         State = (Enums.ConnectionState)(int)reply.ConnectionState,
                         Token = reply.Token
                     };
-                    callback?.Invoke(replyMsg);
-                    ReceivedWelcomeReply?.Invoke(this, replyMsg);
                 }
                 catch (Exception ex)
                 {
                     System.Diagnostics.Debug.Print(ex.ToString());
+                    replyMsg.State = Enums.ConnectionState.Error;
+                } finally
+                {
+                    callback?.Invoke(replyMsg);
+                    ReceivedWelcomeReply?.Invoke(this, replyMsg);
                 }
             });
         }

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package handshake;
+
+service HandShakeExchange {
+  rpc Greeting (GreetingMessage) returns (GreetingReply);
+}
+
+message GreetingMessage {
+  string deviceIdentifier = 1;
+}
+
+message GreetingReply {
+  string PEM = 1;
+}
