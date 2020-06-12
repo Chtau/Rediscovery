@@ -19,12 +19,8 @@ namespace CommunicationAuthenticationProvider.ProtoServices
             _authenticationManager = authenticationManager;
         }
 
-        public override Task<GreetingReply> Greeting(GreetingMessage request, ServerCallContext context)
+        public override async Task<GreetingReply> Greeting(GreetingMessage request, ServerCallContext context)
         {
-            // TODO: greeting should replace some function of welcome
-            // TODO: check if the device is allowed
-            // TODO: add to pending authorization if unknown
-            // TODO: if the device is allowed to connect send the Certificate PEM
             var reply = new GreetingReply
             {
                 PEM = "",
@@ -33,42 +29,76 @@ namespace CommunicationAuthenticationProvider.ProtoServices
             try
             {
                 _logger.LogTrace("Received Greeting request");
-                reply.PEM = _authenticationManager.GetCertificatePEM(request.DeviceIdentifier);
-                return Task.FromResult(reply);
+                var allowed = await OnReceivedGreeting(new SharedBase.Connection.GreetingDeviceMessage
+                {
+                    DeviceIdentifier = request.DeviceIdentifier,
+                    DeviceName = request.DeviceName,
+                    DeviceType = request.DeviceType,
+                    Idiom = request.Idiom,
+                    Manufacturer = request.Manufacturer,
+                    Model = request.Model,
+                    OSVersion = request.OSVersion,
+                    Platform = request.Platform
+                });
+                if (allowed == SharedBase.Connection.Enums.AllowConnect.OK)
+                {
+                    reply.PEM = _authenticationManager.GetCertificatePEM(request.DeviceIdentifier);
+                }
+                switch (allowed)
+                {
+                    case SharedBase.Connection.Enums.AllowConnect.None:
+                        reply.CanConnect = GreetingReply.Types.State.None;
+                        break;
+                    case SharedBase.Connection.Enums.AllowConnect.OK:
+                        reply.CanConnect = GreetingReply.Types.State.Ok;
+                        break;
+                    case SharedBase.Connection.Enums.AllowConnect.Error:
+                        reply.CanConnect = GreetingReply.Types.State.Error;
+                        break;
+                    case SharedBase.Connection.Enums.AllowConnect.Denied:
+                        reply.CanConnect = GreetingReply.Types.State.Denied;
+                        break;
+                    case SharedBase.Connection.Enums.AllowConnect.UnkownDevice:
+                        reply.CanConnect = GreetingReply.Types.State.WaitForApprovel;
+                        break;
+                    default:
+                        break;
+                }
+                return reply;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Greeting");
+                return reply;
             }
-            return Task.FromResult(reply);
         }
 
-        private async Task OnReceivedGreeting(SharedBase.Connection.GreetingDeviceMessage e, Action<SharedBase.Connection.Enums.AllowConnect> callback)
+        private async Task<SharedBase.Connection.Enums.AllowConnect> OnReceivedGreeting(SharedBase.Connection.GreetingDeviceMessage e)
         {
             _logger.LogTrace("Provider received Greeting message from consumer");
-            await Task.Run(async () =>
+            return await Task.Run(async () =>
             {
                 try
                 {
                     var canConnect = await _authenticationManager.AllowedToLogin(e.DeviceIdentifier);
                     if (canConnect == SharedBase.Connection.Enums.AllowConnect.OK)
                     {
-                        callback.Invoke(canConnect);
+                        return canConnect;
                     } else if (canConnect == SharedBase.Connection.Enums.AllowConnect.UnkownDevice)
                     {
                         if (await _authenticationManager.AddPendingApprovel(e))
-                            callback.Invoke(canConnect);
+                            return canConnect;
                         else
-                            callback.Invoke(SharedBase.Connection.Enums.AllowConnect.Error);
+                            return SharedBase.Connection.Enums.AllowConnect.Error;
                     } else
                     {
-                        callback.Invoke(canConnect);
+                        return canConnect;
                     }
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex.ToString());
-                    callback.Invoke(SharedBase.Connection.Enums.AllowConnect.Error);
+                    return SharedBase.Connection.Enums.AllowConnect.Error;
                 }
             });
         }
