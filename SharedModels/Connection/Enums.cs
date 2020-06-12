@@ -16,5 +16,14 @@ namespace SharedBase.Connection
             Denied = 5,
             WaitForApprovel = 6
         }
+
+        public enum AllowConnect
+        {
+            None = 0,
+            OK = 1,
+            Error = 2,
+            Denied = 3,
+            UnkownDevice = 4,
+        }
     }
 }

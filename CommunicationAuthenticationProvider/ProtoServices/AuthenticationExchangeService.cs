@@ -62,7 +62,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                 return welcomeDeviceReply;
             }
         }
-
+        /*
         private async Task OnReceivedWelcomeDeviceMessage(SharedBase.Connection.WelcomeDeviceMessage e, Action<SharedBase.Connection.WelcomeDeviceReply> callback)
         {
             _logger.LogTrace("Provider received Welcome message from consumer");
@@ -116,5 +116,6 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                 }
             });
         }
+        */
     }
 }

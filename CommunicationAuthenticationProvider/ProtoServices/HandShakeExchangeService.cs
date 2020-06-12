@@ -27,7 +27,8 @@ namespace CommunicationAuthenticationProvider.ProtoServices
             // TODO: if the device is allowed to connect send the Certificate PEM
             var reply = new GreetingReply
             {
-                PEM = ""
+                PEM = "",
+                CanConnect = GreetingReply.Types.State.None
             };
             try
             {
@@ -40,6 +41,36 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                 _logger.LogError(ex, "Greeting");
             }
             return Task.FromResult(reply);
+        }
+
+        private async Task OnReceivedGreeting(SharedBase.Connection.GreetingDeviceMessage e, Action<SharedBase.Connection.Enums.AllowConnect> callback)
+        {
+            _logger.LogTrace("Provider received Greeting message from consumer");
+            await Task.Run(async () =>
+            {
+                try
+                {
+                    var canConnect = await _authenticationManager.AllowedToLogin(e.DeviceIdentifier);
+                    if (canConnect == SharedBase.Connection.Enums.AllowConnect.OK)
+                    {
+                        callback.Invoke(canConnect);
+                    } else if (canConnect == SharedBase.Connection.Enums.AllowConnect.UnkownDevice)
+                    {
+                        if (await _authenticationManager.AddPendingApprovel(e))
+                            callback.Invoke(canConnect);
+                        else
+                            callback.Invoke(SharedBase.Connection.Enums.AllowConnect.Error);
+                    } else
+                    {
+                        callback.Invoke(canConnect);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.ToString());
+                    callback.Invoke(SharedBase.Connection.Enums.AllowConnect.Error);
+                }
+            });
         }
     }
 }

@@ -12,8 +12,10 @@ namespace CommunicationAuthenticationProvider
     public interface IAuthenticationManager
     {
         SharedBase.Connection.Manifest GetManifest();
+        [Obsolete("")]
         Task<LoginResult> RequestLogin(WelcomeDeviceMessage welcomeDeviceMessage);
-        Task<bool> AddPendingApprovel(WelcomeDeviceMessage welcomeDeviceMessage);
+        Task<bool> AddPendingApprovel(SharedBase.Connection.GreetingDeviceMessage greetingDeviceMessage);
         string GetCertificatePEM(string deviceIdentifier);
+        Task<SharedBase.Connection.Enums.AllowConnect> AllowedToLogin(string deviceIdentifier);
     }
 }
