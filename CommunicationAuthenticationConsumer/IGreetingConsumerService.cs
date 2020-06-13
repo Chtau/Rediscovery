@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharedBase.Connection;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,6 +7,6 @@ namespace CommunicationAuthenticationConsumer
 {
     public interface IGreetingConsumerService
     {
-        string GreetHost(string host, string deviceIdentifier);
+        GreetingDeviceReply GreetHost(string host, GreetingDeviceMessage greetingDevice);
     }
 }
