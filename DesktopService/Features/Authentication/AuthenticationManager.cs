@@ -150,7 +150,8 @@ namespace DesktopService.Features.Authentication
 
                 if (_identitySetting.AnonymousLogin && retVal.State != SharedBase.Authentication.LoginState.OK)
                 {
-                    // TODO: to we require a device ID ???
+                    // TODO: do we need to save this temp devices for the id somewhere ?
+                    retVal.Id = Guid.NewGuid().ToString();
                     retVal.State = SharedBase.Authentication.LoginState.OK;
                     retVal.Role = _roleResolver.GetRole(welcomeDeviceMessage.DeviceIdentifier);
                 }
