@@ -19,6 +19,8 @@ namespace DesktopService
         // TODO: https://docs.microsoft.com/en-us/aspnet/core/signalr/dotnet-client?view=aspnetcore-2.2
         // TODO: https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/windows-service?view=aspnetcore-2.2&tabs=visual-studio
 
+        // TODO: remove static values and replace with service
+
         public static string HostIpAddress = "127.0.0.1";
         public static ushort HostPort = 44341;
         public static ushort HostPortHttps = 44342;
@@ -101,6 +103,7 @@ namespace DesktopService
                 });
                 serverOptions.Listen(System.Net.IPAddress.Parse(HostIpAddress), HostPortHttps, (lo) =>
                 {
+                    lo.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
                     lo.UseHttps();
                 });
                 /*serverOptions.ListenLocalhost(HostPort);
@@ -124,12 +127,14 @@ namespace DesktopService
 
         private static X509Certificate2 GetX509Certificate2(string host)
         {
-            X509Certificate2 = CertificateService.ServerCertificate.Create(HostIpAddress);
-            return X509Certificate2;
-            //var cert = new X509Certificate2(Path.Combine(@"C:\DEV\TMP", "development.pfx"), "1234");
+            var pfx = CertificateService.ServerCertificate.CreatePfx(host, "1234", "Rediscovery");
+            X509Certificate2 = new X509Certificate2(pfx, "1234");
+            //X509Certificate2 = CertificateService.ServerCertificate.Create(HostIpAddress);
+            //X509Certificate2 = new X509Certificate2(Path.Combine(@"C:\DEV\TMP", "development.pfx"), "1234");
             //var cert = new X509Certificate2(Path.Combine(@"C:\DEV\Code\Workspaces\Repos\Rediscovery\TestSignalR", "dev_localhost.pfx"), "1234");
             //Console.WriteLine(cert.FriendlyName + " Issuer:" + cert.Issuer + " Thumbprint:" + cert.Thumbprint);
             //return cert;
+            return X509Certificate2;
         }
 
         public static string CertPEM()

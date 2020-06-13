@@ -56,8 +56,8 @@ namespace GrpcTestClient
             if (result.CanConnect == SharedBase.Connection.Enums.AllowConnect.OK)
             {
                 //consumerService.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
-                consumerService.Connect("192.168.1.100", 44342, result.PEM);
                 //consumerService.Connect("localhost", 44342, ExportToPEM(GetX509Certificate2()));
+                consumerService.Connect("192.168.1.100", 44342, result.PEM);
                 consumerService.SendWelcome(new SharedBase.Connection.WelcomeDeviceMessage
                 {
                     DeviceIdentifier = "1",
@@ -131,6 +131,7 @@ namespace GrpcTestClient
 
         public static string ExportToPEM(X509Certificate cert)
         {
+            //var c = cert.Export(X509ContentType.Pkcs12);
             StringBuilder builder = new StringBuilder();
 
             builder.AppendLine("-----BEGIN CERTIFICATE-----");

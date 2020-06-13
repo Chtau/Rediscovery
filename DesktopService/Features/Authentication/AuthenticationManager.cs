@@ -1,6 +1,7 @@
 ﻿using CommunicationAuthenticationProvider;
 using CommunicationAuthenticationProvider.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using SharedBase.Connection;
 using System;
 using System.Collections.Generic;
@@ -16,18 +17,21 @@ namespace DesktopService.Features.Authentication
         private readonly DALDesktopService.Repository.IDeviceRepository _deviceRepository;
         private readonly Features.DeviceFeature.IFeatureService _featureService;
         private readonly IRoleResolver _roleResolver;
+        private readonly SharedConfigurations.DesktopService.Models.IdentityConfiguration _identitySetting;
 
         public AuthenticationManager(ILoggerFactory loggerFactory,
             DALDesktopService.Repository.IDevicePendingAuthenticationRepository devicePendingAuthenticationRepository,
             DALDesktopService.Repository.IDeviceRepository deviceRepository,
             Features.DeviceFeature.IFeatureService featureService,
-            IRoleResolver roleResolver)
+            IRoleResolver roleResolver,
+            IOptions<SharedConfigurations.DesktopService.Models.IdentityConfiguration> settingOptions)
         {
             _logger = loggerFactory.CreateLogger<AuthenticationManager>();
             _devicePendingAuthenticationRepository = devicePendingAuthenticationRepository;
             _deviceRepository = deviceRepository;
             _featureService = featureService;
             _roleResolver = roleResolver;
+            _identitySetting = settingOptions.Value;
         }
 
         public async Task<bool> AddPendingApprovel(GreetingDeviceMessage greetingDeviceMessage)
@@ -65,6 +69,8 @@ namespace DesktopService.Features.Authentication
         {
             try
             {
+                if (_identitySetting.AnonymousLogin)
+                    return Enums.AllowConnect.OK;
                 var u = await _deviceRepository.GetByDeviceIdentifier(deviceIdentifier);
                 if (u != null)
                 {
@@ -107,6 +113,13 @@ namespace DesktopService.Features.Authentication
 
         public async Task<LoginResult> RequestLogin(WelcomeDeviceMessage welcomeDeviceMessage)
         {
+            var retVal = new LoginResult
+            {
+                Id = null,
+                DeviceIdentifier = null,
+                Role = null,
+                State = SharedBase.Authentication.LoginState.Failed
+            };
             try
             {
                 var u = await _deviceRepository.GetByDeviceIdentifier(welcomeDeviceMessage.DeviceIdentifier);
@@ -115,7 +128,7 @@ namespace DesktopService.Features.Authentication
                     u.Role = _roleResolver.GetRole(welcomeDeviceMessage.DeviceIdentifier);
                     u = await _deviceRepository.SaveDevice(u);
                     _logger.LogDebug($"Request login Device found (Identifier:{u.DeviceIdentifier} Name:{u.DeviceName} Allow:{u.AllowAccess})");
-                    return new LoginResult
+                    retVal = new LoginResult
                     {
                         Id = u.Id.ToString(),
                         DeviceIdentifier = u.DeviceIdentifier,
@@ -126,26 +139,28 @@ namespace DesktopService.Features.Authentication
                 else
                 {
                     _logger.LogDebug($"Request login Device not found (Identifier:{welcomeDeviceMessage.DeviceIdentifier})");
-                    return new LoginResult
+                    retVal = new LoginResult
                     {
                         Id = null,
-                        DeviceIdentifier = null,
+                        DeviceIdentifier = welcomeDeviceMessage.DeviceIdentifier,
                         Role = null,
                         State = SharedBase.Authentication.LoginState.RequiredAuthorizeKey
                     };
+                }
+
+                if (_identitySetting.AnonymousLogin && retVal.State != SharedBase.Authentication.LoginState.OK)
+                {
+                    // TODO: to we require a device ID ???
+                    retVal.State = SharedBase.Authentication.LoginState.OK;
+                    retVal.Role = _roleResolver.GetRole(welcomeDeviceMessage.DeviceIdentifier);
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.ToString());
+                retVal.State = SharedBase.Authentication.LoginState.Failed;
             }
-            return new LoginResult
-            {
-                Id = null,
-                DeviceIdentifier = null,
-                Role = null,
-                State = SharedBase.Authentication.LoginState.Failed
-            };
+            return retVal;
         }
     }
 }
