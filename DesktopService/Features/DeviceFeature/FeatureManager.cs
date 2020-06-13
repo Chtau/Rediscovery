@@ -2,6 +2,7 @@
 using CommunicationFeatureProvider;
 using Microsoft.Extensions.Logging;
 using PluginFeature.Models;
+using SharedBase.Feature;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +16,7 @@ namespace DesktopService.Features.DeviceFeature
         private readonly ILogger<FeatureManager> _logger;
         private readonly IFeatureService _featureService;
 
-        public event EventHandler<PluginExchangeEntity<PluginFeatureData>> SendData;
+        public event EventHandler<ExchangeEntity<FeatureData>> SendData;
 
         public FeatureManager(ILoggerFactory loggerFactory,
             IFeatureService featureService)
@@ -25,7 +26,7 @@ namespace DesktopService.Features.DeviceFeature
             _featureService.RespondToClient += _featureService_RespondToClient;
         }
 
-        public PluginExchangeEntity<FeatureState> FeatureStateChange(PluginExchangeEntity<FeatureState> featureStateChange)
+        public ExchangeEntity<FeatureState> FeatureStateChange(ExchangeEntity<FeatureState> featureStateChange)
         {
             try
             {
@@ -55,12 +56,12 @@ namespace DesktopService.Features.DeviceFeature
             return featureStateChange;
         }
 
-        public List<PluginFeatureProfil> GetFeatureProfiles(Guid featureId)
+        public List<FeatureProfil> GetFeatureProfiles(Guid featureId)
         {
             return _featureService.GetFeatureProfiles(featureId);
         }
 
-        public PluginFeatureSetting GetFeatureSettings(Guid featureId)
+        public FeatureSetting GetFeatureSettings(Guid featureId)
         {
             return _featureService.GetFeatureSettings(featureId);
         }
@@ -82,12 +83,12 @@ namespace DesktopService.Features.DeviceFeature
             return null;
         }
 
-        public void ReceivedData(PluginExchangeEntity<PluginFeatureData> deviceFeatureData)
+        public void ReceivedData(ExchangeEntity<FeatureData> deviceFeatureData)
         {
             _featureService.ReceiveData(deviceFeatureData.Entity.FeatureId, deviceFeatureData);
         }
 
-        private void _featureService_RespondToClient(object sender, PluginExchangeEntity<PluginFeatureData> e)
+        private void _featureService_RespondToClient(object sender, ExchangeEntity<FeatureData> e)
         {
             SendData?.Invoke(sender, e);
         }

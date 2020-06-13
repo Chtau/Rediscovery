@@ -4,6 +4,7 @@ using DesktopService.Features.DeviceFeature;
 using DesktopService.Map;
 using Microsoft.Extensions.Logging;
 using PluginFeature.Models;
+using SharedBase.Feature;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -118,12 +119,12 @@ namespace DesktopService.Features.RemoteResources
             return false;
         }
 
-        public List<PluginFeatureProfil> GetResourceDeviceFeatureProfiles(Guid featureId)
+        public List<FeatureProfil> GetResourceDeviceFeatureProfiles(Guid featureId)
         {
             return _featureService.GetFeatureProfiles(featureId);
         }
 
-        public PluginFeatureSetting GetResourceDeviceFeatureSettings(Guid featureId)
+        public FeatureSetting GetResourceDeviceFeatureSettings(Guid featureId)
         {
             return _featureService.GetFeatureSettings(featureId);
         }
@@ -148,12 +149,12 @@ namespace DesktopService.Features.RemoteResources
             return null;
         }
 
-        public bool SaveFeatureSettings(Guid featureId, PluginFeatureSetting deviceFeatureSetting)
+        public bool SaveFeatureSettings(Guid featureId, FeatureSetting deviceFeatureSetting)
         {
             return _featureService.SaveFeatureSettings(featureId, deviceFeatureSetting);
         }
 
-        public bool SaveFeatureProfile(Guid featureId, PluginFeatureProfil deviceFeatureProfil)
+        public bool SaveFeatureProfile(Guid featureId, FeatureProfil deviceFeatureProfil)
         {
             return _featureService.SaveFeatureProfile(featureId, deviceFeatureProfil);
         }

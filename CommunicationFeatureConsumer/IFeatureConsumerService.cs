@@ -1,4 +1,5 @@
 ﻿using CommunicationBase.Models;
+using SharedBase.Feature;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,9 +14,9 @@ namespace CommunicationFeatureConsumer
         event EventHandler<FeatureState> ReceiveFeatureStateChangeReply;
         void ChangeFeatureState(string token, FeatureState featureState);
 
-        event EventHandler<PluginFeature.Models.PluginFeatureData> ReceiveFeatureData;
+        event EventHandler<FeatureData> ReceiveFeatureData;
         void StartFeatureData(string token, CancellationTokenSource cts = null);
-        void SendFeatureData(PluginFeature.Models.PluginFeatureData deviceFeatureData);
+        void SendFeatureData(FeatureData deviceFeatureData);
         event EventHandler<Models.FeatureClientData> ReceiveClientData;
         void FeatureClient(string token, Guid featureId);
     }

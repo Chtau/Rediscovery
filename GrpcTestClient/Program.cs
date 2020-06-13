@@ -1,6 +1,7 @@
 ﻿using CommunicationAuthenticationConsumer;
 using CommunicationFeatureConsumer;
 using CommunicationResourceConsumer;
+using SharedBase.Feature;
 using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
@@ -94,7 +95,7 @@ namespace GrpcTestClient
                 CurrentState = CommunicationBase.Models.FeatureState.State.Start,
                 FeatureId = featureId.ToString()
             });
-            featureConsumer.SendFeatureData(new PluginFeature.Models.PluginFeatureData("1", featureId, "1", $"{DateTime.Now} Client feature data"));
+            featureConsumer.SendFeatureData(new FeatureData("1", featureId, "1", $"{DateTime.Now} Client feature data"));
         }
 
         private static void ConsumeResources()

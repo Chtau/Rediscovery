@@ -1,6 +1,6 @@
 ﻿using CommunicationBase.Models;
 using CommunicationFeatureProvider;
-using PluginFeature.Models;
+using SharedBase.Feature;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,14 +10,14 @@ namespace GrpcTestService.DummyImpl
 {
     public class FeatureManager : IFeatureManager
     {
-        public event EventHandler<PluginExchangeEntity<PluginFeatureData>> SendData;
+        public event EventHandler<ExchangeEntity<FeatureData>> SendData;
 
-        public PluginExchangeEntity<FeatureState> FeatureStateChange(PluginExchangeEntity<FeatureState> featureStateChange)
+        public ExchangeEntity<FeatureState> FeatureStateChange(ExchangeEntity<FeatureState> featureStateChange)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"[FeatureStateChange]: {featureStateChange.Entity.CurrentState}");
             Console.ResetColor();
-            return new PluginExchangeEntity<FeatureState>
+            return new ExchangeEntity<FeatureState>
             {
                 Sid = featureStateChange.Sid,
                 Entity = new FeatureState
@@ -28,14 +28,14 @@ namespace GrpcTestService.DummyImpl
             };
         }
 
-        public List<PluginFeatureProfil> GetFeatureProfiles(Guid featureId)
+        public List<FeatureProfil> GetFeatureProfiles(Guid featureId)
         {
-            return new List<PluginFeatureProfil>();
+            return new List<FeatureProfil>();
         }
 
-        public PluginFeatureSetting GetFeatureSettings(Guid featureId)
+        public FeatureSetting GetFeatureSettings(Guid featureId)
         {
-            return new PluginFeatureSetting();
+            return new FeatureSetting();
         }
 
         public byte[] GetFeatureUIArchive(Guid featureId)
@@ -43,7 +43,7 @@ namespace GrpcTestService.DummyImpl
             return new byte[0];
         }
 
-        public void ReceivedData(PluginExchangeEntity<PluginFeatureData> deviceFeatureData)
+        public void ReceivedData(ExchangeEntity<FeatureData> deviceFeatureData)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"[ReceivedData]: {deviceFeatureData.Entity.Data}");
@@ -53,10 +53,10 @@ namespace GrpcTestService.DummyImpl
             {
                 await Task.Delay(200);
                 Console.WriteLine($"Send [DeviceFeatureData] response to Client");
-                SendData.Invoke(this, new PluginExchangeEntity<PluginFeatureData>
+                SendData.Invoke(this, new ExchangeEntity<FeatureData>
                 {
                     Sid = deviceFeatureData.Sid,
-                    Entity = new PluginFeatureData(deviceFeatureData.Entity.DeviceId, deviceFeatureData.Entity.FeatureId,
+                    Entity = new FeatureData(deviceFeatureData.Entity.DeviceId, deviceFeatureData.Entity.FeatureId,
                         deviceFeatureData.Entity.ProfileId, $"{DateTime.Now} Service send data")
                 });
             });

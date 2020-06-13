@@ -1,5 +1,5 @@
 ﻿using CommunicationResourceProvider;
-using PluginFeature.Models;
+using SharedBase.Feature;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,14 +41,14 @@ namespace GrpcTestService.DummyImpl
             Console.ResetColor();
         }
 
-        public void FeatureDetailProfileSave(Guid featureId, PluginFeatureProfil deviceFeatureProfil)
+        public void FeatureDetailProfileSave(Guid featureId, FeatureProfil deviceFeatureProfil)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"[{nameof(FeatureDetailProfileSave)}]");
             Console.ResetColor();
         }
 
-        public void FeatureDetailSettingSave(Guid featureId, PluginFeatureSetting deviceFeatureSetting)
+        public void FeatureDetailSettingSave(Guid featureId, FeatureSetting deviceFeatureSetting)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"[{nameof(FeatureDetailSettingSave)}]");

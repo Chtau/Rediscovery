@@ -1,5 +1,6 @@
 ﻿using CommunicationBase;
 using Grpc.Core;
+using SharedBase.Feature;
 using SharedBase.Logging;
 using System;
 using System.Collections.Generic;
@@ -19,8 +20,8 @@ namespace CommunicationResourceConsumer
         public event EventHandler<(Guid deviceId, bool result)> ReceiveDeleteDevicesResult;
         public event EventHandler<(Guid deviceId, bool accept)> ReceiveResolvePendingDevicesResult;
         public event EventHandler<(Guid featureId, string profileId, bool result)> ReceiveFeatureDetailProfileDeleteResult;
-        public event EventHandler<(PluginFeature.Models.PluginFeatureProfil profile, bool result)> ReceiveFeatureDetailProfileSave;
-        public event EventHandler<(PluginFeature.Models.PluginFeatureSetting setting, bool result)> ReceiveFeatureDetailSettingSave;
+        public event EventHandler<(FeatureProfil profile, bool result)> ReceiveFeatureDetailProfileSave;
+        public event EventHandler<(FeatureSetting setting, bool result)> ReceiveFeatureDetailSettingSave;
         public event EventHandler<Models.FeatureDetail> ReceiveFeatureDetails;
 
         private readonly ILogger _logger;
@@ -326,7 +327,7 @@ namespace CommunicationResourceConsumer
             });
         }
 
-        public void FeatureDetailProfileSave(string token, PluginFeature.Models.PluginFeatureProfil profil)
+        public void FeatureDetailProfileSave(string token, FeatureProfil profil)
         {
             Task.Run(async () =>
             {
@@ -343,7 +344,7 @@ namespace CommunicationResourceConsumer
                         Result = Resources.FeatureDetailProfileSaveRequest.Types.ActionResult.None
                     };
                     var reply = await resourceExchangeClient.FeatureDetailProfileSaveAsync(msg, cancellationToken: cts.Token, headers: meta);
-                    (PluginFeature.Models.PluginFeatureProfil profile, bool result) result = (reply.Profile.GetDeviceFeatureProfil(), reply.Result == Resources.FeatureDetailProfileSaveRequest.Types.ActionResult.Ok ? true : false);
+                    (FeatureProfil profile, bool result) result = (reply.Profile.GetDeviceFeatureProfil(), reply.Result == Resources.FeatureDetailProfileSaveRequest.Types.ActionResult.Ok ? true : false);
                     ReceiveFeatureDetailProfileSave?.Invoke(this, result);
                 }
                 catch (Exception ex)
@@ -357,7 +358,7 @@ namespace CommunicationResourceConsumer
             });
         }
 
-        public void FeatureDetailSettingSave(string token, PluginFeature.Models.PluginFeatureSetting setting)
+        public void FeatureDetailSettingSave(string token, FeatureSetting setting)
         {
             Task.Run(async () =>
             {
@@ -374,7 +375,7 @@ namespace CommunicationResourceConsumer
                         Result = Resources.FeatureDetailSettingSaveRequest.Types.ActionResult.None
                     };
                     var reply = await resourceExchangeClient.FeatureDetailSettingSaveAsync(msg, cancellationToken: cts.Token, headers: meta);
-                    (PluginFeature.Models.PluginFeatureSetting setting, bool result) result = (reply.Setting.GetDeviceFeatureSetting(), reply.Result == Resources.FeatureDetailSettingSaveRequest.Types.ActionResult.Ok ? true : false);
+                    (FeatureSetting setting, bool result) result = (reply.Setting.GetDeviceFeatureSetting(), reply.Result == Resources.FeatureDetailSettingSaveRequest.Types.ActionResult.Ok ? true : false);
                     ReceiveFeatureDetailSettingSave?.Invoke(this, result);
                 }
                 catch (Exception ex)
@@ -388,7 +389,7 @@ namespace CommunicationResourceConsumer
             });
         }
 
-        public void FeatureDetail(string token, PluginFeature.Models.PluginFeatureSetting setting)
+        public void FeatureDetail(string token, FeatureSetting setting)
         {
             Task.Run(async () =>
             {
@@ -409,7 +410,7 @@ namespace CommunicationResourceConsumer
                         Setting = reply.Setting.GetDeviceFeatureSetting(),
                         ProfileUI = reply.ProfileUI.ToByteArray(),
                         SettingUI = reply.SettingUI.ToByteArray(),
-                        Profils = new List<PluginFeature.Models.PluginFeatureProfil>()
+                        Profils = new List<FeatureProfil>()
                     };
                     if (reply.Profiles.Count > 0)
                     {

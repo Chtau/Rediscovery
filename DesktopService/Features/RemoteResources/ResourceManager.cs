@@ -1,6 +1,7 @@
 ﻿using CommunicationResourceProvider;
 using Microsoft.Extensions.Logging;
 using PluginFeature.Models;
+using SharedBase.Feature;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -32,12 +33,12 @@ namespace DesktopService.Features.RemoteResources
             
         }
 
-        public void FeatureDetailProfileSave(Guid featureId, PluginFeatureProfil deviceFeatureProfil)
+        public void FeatureDetailProfileSave(Guid featureId, FeatureProfil deviceFeatureProfil)
         {
             
         }
 
-        public void FeatureDetailSettingSave(Guid featureId, PluginFeatureSetting deviceFeatureSetting)
+        public void FeatureDetailSettingSave(Guid featureId, FeatureSetting deviceFeatureSetting)
         {
             
         }

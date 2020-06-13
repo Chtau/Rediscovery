@@ -1,4 +1,4 @@
-﻿using PluginFeature.Models;
+﻿using SharedBase.Feature;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,12 +14,12 @@ namespace CommunicationResourceProvider
         SharedBase.Device.DeviceInfo UpdateDeviceInfo(SharedBase.Device.DeviceInfo deviceInfo);
         List<SharedBase.Device.DeviceInfo> GetResourcePendingAuthenticationDevices();
         bool ResolvePendingAuthenticationDevices(Guid deviceId, bool accept);
-        List<PluginFeatureProfil> GetResourceDeviceFeatureProfiles(Guid featureId);
-        PluginFeatureSetting GetResourceDeviceFeatureSettings(Guid featureId);
+        List<FeatureProfil> GetResourceDeviceFeatureProfiles(Guid featureId);
+        FeatureSetting GetResourceDeviceFeatureSettings(Guid featureId);
         byte[] GetResourceDeviceFeatureSettingsUI(Guid featureId);
         byte[] GetResourceDeviceFeatureProfilesUI(Guid featureId);
-        bool SaveFeatureSettings(Guid featureId, PluginFeatureSetting deviceFeatureSetting);
-        bool SaveFeatureProfile(Guid featureId, PluginFeatureProfil deviceFeatureProfil);
+        bool SaveFeatureSettings(Guid featureId, FeatureSetting deviceFeatureSetting);
+        bool SaveFeatureProfile(Guid featureId, FeatureProfil deviceFeatureProfil);
         bool DeleteFeatureProfile(Guid featureId, string profileId);
     }
 }

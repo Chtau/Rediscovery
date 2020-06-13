@@ -10,6 +10,7 @@ using System.IO;
 using System.IO.Compression;
 using Microsoft.Extensions.Logging;
 using DesktopService.Features.Plugins;
+using SharedBase.Feature;
 
 namespace DesktopService.Features.DeviceFeature
 {
@@ -22,7 +23,7 @@ namespace DesktopService.Features.DeviceFeature
 
         public event EventHandler ProfilesChanged;
         public event EventHandler SettingChanged;
-        public event EventHandler<PluginExchangeEntity<PluginFeatureData>> RespondToClient;
+        public event EventHandler<ExchangeEntity<FeatureData>> RespondToClient;
 
         public FeatureService(ILoggerFactory loggerFactory,
             IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> appOptions,
@@ -49,14 +50,14 @@ namespace DesktopService.Features.DeviceFeature
             return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetUIArchivePath();
         }
 
-        public List<PluginFeatureProfil> GetFeatureProfiles(Guid featureId)
+        public List<FeatureProfil> GetFeatureProfiles(Guid featureId)
         {
-            return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetProfiles();
+            return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetProfiles()?.GetFeatureProfils();
         }
 
-        public PluginFeatureSetting GetFeatureSettings(Guid featureId)
+        public FeatureSetting GetFeatureSettings(Guid featureId)
         {
-            return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetSettingsObject();
+            return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetSettingsObject()?.GetFeatureSetting();
         }
 
         public List<SharedBase.Device.FeatureDefinitionExtended> GetFeaturesManifest()
@@ -94,16 +95,16 @@ namespace DesktopService.Features.DeviceFeature
                     item.SendData += (object sender, PluginExchangeEntity<PluginFeatureData> e) =>
                     {
                         _logger.LogTrace($"Feature (id: {item.GetDeviceFeatureInfo().Id} profile: {e.Entity.ProfileId}) response =>" + e.Entity.Data);
-                        RespondToClient?.Invoke(this, e);
+                        RespondToClient?.Invoke(this, e.GetExchangeEntity());
                     };
                     deviceFeatureImplementations.Add(item);
                 }
             }
         }
 
-        public void ReceiveData(Guid featureId, PluginExchangeEntity<PluginFeatureData> data)
+        public void ReceiveData(Guid featureId, ExchangeEntity<FeatureData> data)
         {
-            deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.ReceiveData(data);
+            deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.ReceiveData(data?.GetPluginExchangeEntity());
         }
 
         public void StartFeature(Guid featureId, string sid)
@@ -136,17 +137,17 @@ namespace DesktopService.Features.DeviceFeature
             return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetProfilesUIArchivePath();
         }
 
-        public bool SaveFeatureSettings(Guid featureId, PluginFeatureSetting deviceFeatureSetting)
+        public bool SaveFeatureSettings(Guid featureId, FeatureSetting deviceFeatureSetting)
         {
-            var result = deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.SaveSetting(deviceFeatureSetting) ?? false;
+            var result = deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.SaveSetting(deviceFeatureSetting?.GetPluginFeatureSetting()) ?? false;
             if (result)
                 SettingChanged?.Invoke(this, EventArgs.Empty);
             return result;
         }
 
-        public bool SaveFeatureProfile(Guid featureId, PluginFeatureProfil deviceFeatureProfil)
+        public bool SaveFeatureProfile(Guid featureId, FeatureProfil deviceFeatureProfil)
         {
-            var result = deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.SaveProfile(deviceFeatureProfil) ?? false;
+            var result = deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.SaveProfile(deviceFeatureProfil?.GetPluginFeatureProfil()) ?? false;
             if (result)
                 ProfilesChanged?.Invoke(this, EventArgs.Empty);
             return result;

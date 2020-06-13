@@ -1,5 +1,5 @@
 ﻿using CommunicationResourceProvider;
-using PluginFeature.Models;
+using SharedBase.Feature;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,9 +47,9 @@ namespace GrpcTestService.DummyImpl
                     Website = null
                 }
             };
-        private static List<PluginFeatureProfil> deviceFeatureProfils = new List<PluginFeatureProfil>
+        private static List<FeatureProfil> deviceFeatureProfils = new List<FeatureProfil>
             {
-                new PluginFeatureProfil
+                new FeatureProfil
                 {
                     DisplayName = "A",
                     FeatureId = Guid.NewGuid(),
@@ -57,7 +57,7 @@ namespace GrpcTestService.DummyImpl
                     ProfileData = null
                 }
             };
-        private static PluginFeatureSetting deviceFeatureSetting = new PluginFeatureSetting
+        private static FeatureSetting deviceFeatureSetting = new FeatureSetting
         {
             Data = null,
             FeatureId = Guid.NewGuid()
@@ -83,7 +83,7 @@ namespace GrpcTestService.DummyImpl
             return featureDefinitionExtendeds;
         }
 
-        public List<PluginFeatureProfil> GetResourceDeviceFeatureProfiles(Guid featureId)
+        public List<FeatureProfil> GetResourceDeviceFeatureProfiles(Guid featureId)
         {
             return deviceFeatureProfils;
         }
@@ -93,7 +93,7 @@ namespace GrpcTestService.DummyImpl
             return new byte[255];
         }
 
-        public PluginFeatureSetting GetResourceDeviceFeatureSettings(Guid featureId)
+        public FeatureSetting GetResourceDeviceFeatureSettings(Guid featureId)
         {
             return deviceFeatureSetting;
         }
@@ -118,12 +118,12 @@ namespace GrpcTestService.DummyImpl
             return true;
         }
 
-        public bool SaveFeatureProfile(Guid featureId, PluginFeatureProfil deviceFeatureProfil)
+        public bool SaveFeatureProfile(Guid featureId, FeatureProfil deviceFeatureProfil)
         {
             return true;
         }
 
-        public bool SaveFeatureSettings(Guid featureId, PluginFeatureSetting deviceFeatureSetting)
+        public bool SaveFeatureSettings(Guid featureId, FeatureSetting deviceFeatureSetting)
         {
             return true;
         }

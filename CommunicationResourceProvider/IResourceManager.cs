@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharedBase.Feature;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,8 +16,8 @@ namespace CommunicationResourceProvider
         void UpdateDevice(SharedBase.Device.DeviceInfo deviceInfo);
         void ResolvePendingDevice(Guid deviceId, bool accept);
         void FeatureDetailProfileDelete(Guid featureId, string profileId);
-        void FeatureDetailProfileSave(Guid featureId, PluginFeature.Models.PluginFeatureProfil deviceFeatureProfil);
-        void FeatureDetailSettingSave(Guid featureId, PluginFeature.Models.PluginFeatureSetting deviceFeatureSetting);
+        void FeatureDetailProfileSave(Guid featureId, FeatureProfil deviceFeatureProfil);
+        void FeatureDetailSettingSave(Guid featureId, FeatureSetting deviceFeatureSetting);
         
     }
 }

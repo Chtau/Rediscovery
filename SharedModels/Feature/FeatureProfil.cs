@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PluginFeature.Models
+namespace SharedBase.Feature
 {
-    public class PluginFeatureProfil
+    public class FeatureProfil
     {
-        public PluginFeatureProfil()
+        public FeatureProfil()
         {
 
         }
 
-        public PluginFeatureProfil(Guid featureId, string id, string displayName, string data): this()
+        public FeatureProfil(Guid featureId, string id, string displayName, string data) : this()
         {
             FeatureId = featureId;
             Id = id;

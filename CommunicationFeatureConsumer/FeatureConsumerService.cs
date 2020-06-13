@@ -2,6 +2,7 @@
 using CommunicationBase.Models;
 using Featuredata;
 using Grpc.Core;
+using SharedBase.Feature;
 using SharedBase.Logging;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace CommunicationFeatureConsumer
     public class FeatureConsumerService : IFeatureConsumerService
     {
         public event EventHandler<CommunicationBase.Models.FeatureState> ReceiveFeatureStateChangeReply;
-        public event EventHandler<PluginFeature.Models.PluginFeatureData> ReceiveFeatureData;
+        public event EventHandler<FeatureData> ReceiveFeatureData;
         public event EventHandler<Models.FeatureClientData> ReceiveClientData;
 
         private FeatureExchange.FeatureExchangeClient exchangeClient;
@@ -94,7 +95,7 @@ namespace CommunicationFeatureConsumer
                         {
                             await foreach (var message in call.ResponseStream.ReadAllAsync())
                             {
-                                ReceiveFeatureData?.Invoke(this, new PluginFeature.Models.PluginFeatureData(message.DeviceId, message.FeatureId.SafeGuid(), message.ProfileId, message.Data));
+                                ReceiveFeatureData?.Invoke(this, new FeatureData(message.DeviceId, message.FeatureId.SafeGuid(), message.ProfileId, message.Data));
                             }
                         });
                         do
@@ -115,7 +116,7 @@ namespace CommunicationFeatureConsumer
             });
         }
 
-        public void SendFeatureData(PluginFeature.Models.PluginFeatureData deviceFeatureData)
+        public void SendFeatureData(FeatureData deviceFeatureData)
         {
             if (_responseStream != null)
             {
@@ -151,7 +152,7 @@ namespace CommunicationFeatureConsumer
                     {
                         FeatureId = reply.FeatureId.SafeGuid(),
                         FeatureSetting = reply.Setting.GetDeviceFeatureSetting(),
-                        FeatureProfils = new List<PluginFeature.Models.PluginFeatureProfil>()
+                        FeatureProfils = new List<FeatureProfil>()
                     };
                     if (reply.Profiles?.Count > 0)
                     {
