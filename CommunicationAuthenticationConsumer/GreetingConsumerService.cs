@@ -18,7 +18,7 @@ namespace CommunicationAuthenticationConsumer
             _logger = logger;
         }
 
-        public GreetingDeviceReply GreetHost(string host, GreetingDeviceMessage greetingDevice)
+        public GreetingDeviceReply GreetHost(string host, int port, GreetingDeviceMessage greetingDevice)
         {
             var task = Task.Run(async () =>
             {
@@ -26,7 +26,7 @@ namespace CommunicationAuthenticationConsumer
                 {
                     _logger.LogTrace("Consumer request Greeting");
                     var cts = new CancellationTokenSource();
-                    var channel = new Channel(host, ChannelCredentials.Insecure);
+                    var channel = new Channel(host, port, ChannelCredentials.Insecure);
                     var client = new Handshake.HandShakeExchange.HandShakeExchangeClient(channel);
                     var msg = new Handshake.GreetingMessage
                     {
@@ -70,9 +70,14 @@ namespace CommunicationAuthenticationConsumer
                 catch (Exception ex)
                 {
                     _logger.LogError(ex);
-                    return null;
+                    return new GreetingDeviceReply
+                    {
+                        PEM = "",
+                        CanConnect = Enums.AllowConnect.Error
+                    };
                 }
             });
+            Task.WaitAll(task);
             return task.GetAwaiter().GetResult();
         }
     }

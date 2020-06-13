@@ -14,26 +14,7 @@ namespace GrpcTestClient
         {
             Console.WriteLine("Test Grpc!");
             ConsumeAuthentication();
-            ConsumeResources();
-            /*var consumer = new CommunicationFeatureConsumer.FeatureConsume();
-            consumer.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
-            consumer.HelloReplay += (obj, message) => {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("[Hello response]" + message);
-                Console.ResetColor();
-            };
-            Console.WriteLine("Send Client message");
-            consumer.SayHello("Test Client");
-
-
-            Console.WriteLine("Init Feature data stream");
-            consumer.ReceivedFeatureData += (obj, data) =>
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("[Feature data received]" + data.Data);
-                Console.ResetColor();
-            };*/
-
+            //ConsumeResources();
 
             Console.ReadKey();
         }
@@ -60,13 +41,33 @@ namespace GrpcTestClient
                     Console.ResetColor();
                 }
             };
-            //consumerService.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
-            consumerService.Connect("192.168.1.100", 44342, ExportToPEM(GetX509Certificate2()));
-            //consumerService.Connect("localhost", 44342, ExportToPEM(GetX509Certificate2()));
-            consumerService.SendWelcome(new SharedBase.Connection.WelcomeDeviceMessage
+            var hand = new GreetingConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
+            var result = hand.GreetHost("192.168.1.100", 44341, new SharedBase.Connection.GreetingDeviceMessage
             {
                 DeviceIdentifier = "1",
+                DeviceName = "A",
+                DeviceType = "",
+                Idiom = "",
+                Manufacturer = "",
+                Model = "",
+                OSVersion = "",
+                Platform = ""
             });
+            if (result.CanConnect == SharedBase.Connection.Enums.AllowConnect.OK)
+            {
+                //consumerService.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
+                consumerService.Connect("192.168.1.100", 44342, result.PEM);
+                //consumerService.Connect("localhost", 44342, ExportToPEM(GetX509Certificate2()));
+                consumerService.SendWelcome(new SharedBase.Connection.WelcomeDeviceMessage
+                {
+                    DeviceIdentifier = "1",
+                });
+            } else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Greeting CanConnect:{result.CanConnect}");
+                Console.ResetColor();
+            }
         }
 
         private static void ConsumeFeature(string token)

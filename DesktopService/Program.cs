@@ -95,12 +95,15 @@ namespace DesktopService
                 });
 
                 //serverOptions.Listen(System.Net.IPAddress.Parse("192.168.1.100"), 44341);
-                serverOptions.Listen(System.Net.IPAddress.Parse(HostIpAddress), HostPort);
+                serverOptions.Listen(System.Net.IPAddress.Parse(HostIpAddress), HostPort, so =>
+                {
+                    so.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
+                });
                 serverOptions.Listen(System.Net.IPAddress.Parse(HostIpAddress), HostPortHttps, (lo) =>
                 {
                     lo.UseHttps();
                 });
-                serverOptions.ListenLocalhost(HostPort);
+                /*serverOptions.ListenLocalhost(HostPort);
                 serverOptions.ListenLocalhost(HostPortHttps, (lo) =>
                 {
                     lo.UseHttps();
@@ -109,7 +112,7 @@ namespace DesktopService
                 serverOptions.ListenAnyIP(HostPortHttps, (lo) =>
                 {
                     lo.UseHttps();
-                });
+                });*/
                 serverOptions.ConfigureEndpointDefaults(listenOptions =>
                 {
                     // Configure endpoint defaults

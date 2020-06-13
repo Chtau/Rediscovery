@@ -22,6 +22,7 @@ namespace CommunicationAuthenticationProvider
             {
                 endpoints.MapGrpcService<AuthenticationExchangeService>();
                 endpoints.MapGrpcService<ManifestExchangeService>();
+                endpoints.MapGrpcService<HandShakeExchangeService>();
             });
 
             return app;
