@@ -2,7 +2,6 @@
 using PluginFeature;
 using PluginFeature.Interfaces;
 using PluginFeature.Models;
-using SharedBase.Device;
 using System;
 using System.Collections.Generic;
 using System.IO.Compression;
@@ -73,17 +72,17 @@ namespace DesktopFeatureMediaPlayer
             base.Dispose();
         }
 
-        public override SharedBase.Device.FeatureDefinitionExtended GetDeviceFeatureInfo()
+        public override PluginFeatureDefinition GetDeviceFeatureInfo()
         {
-            return new SharedBase.Device.FeatureDefinitionExtended
+            return new PluginFeatureDefinition
             {
                 DisplayName = "Mediaplayer",
                 Id = new Guid("D5B218BC-8F36-4100-9262-71155265DAD7"),
-                ControlIntegrationPoint = IntegrationPoint.Mobile,
-                FeatureIntegrationPoint = IntegrationPoint.Desktop,
-                MinimalControlIntegrationPoint = new SharedBase.Core.Version() { Major = 0, Minor = 0 },
-                MinimalFeatureIntegrationPoint = new SharedBase.Core.Version() { Major = 0, Minor = 0 },
-                Version = new SharedBase.Core.Version() { Major = 0, Minor = 0 },
+                ControlIntegrationPoint = PluginFeatureDefinition.PluginIntegration.Mobile,
+                FeatureIntegrationPoint = PluginFeatureDefinition.PluginIntegration.Desktop,
+                MinimalControlIntegrationPoint = new PluginVersion() { Major = 0, Minor = 0 },
+                MinimalFeatureIntegrationPoint = new PluginVersion() { Major = 0, Minor = 0 },
+                Version = new PluginVersion() { Major = 0, Minor = 0 },
                 Author = "Christoph Taucher",
                 Documentation = null,
                 HasProfiles = true,

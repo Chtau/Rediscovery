@@ -17,14 +17,17 @@ namespace DesktopService
         private readonly Features.Configuration.IDistributeConfig _distributeConfig;
         private readonly SharedConfigurations.DesktopService.Models.AppConfiguration _appSettings;
         private readonly ILogger<Worker> _logger;
+        private readonly Features.DeviceFeature.IFeatureService _featureService;
 
         public Worker(
             Features.Configuration.IDistributeConfig distributeConfig,
             IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> appOptions,
+            Features.DeviceFeature.IFeatureService featureService,
             ILoggerFactory loggerFactory)
         {
             _distributeConfig = distributeConfig;
             _appSettings = appOptions.Value;
+            _featureService = featureService;
             _logger = loggerFactory.CreateLogger<Worker>();
         }
 
@@ -66,6 +69,8 @@ namespace DesktopService
                     Task.Delay(500);
                 } while (!cancellationToken.IsCancellationRequested);
             });*/
+            //_featureService.GetFeaturesManifest();
+
             return Task.CompletedTask;
         }
 

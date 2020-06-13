@@ -9,6 +9,7 @@ using PluginFeature.Models;
 using System.IO;
 using System.IO.Compression;
 using Microsoft.Extensions.Logging;
+using DesktopService.Features.Plugins;
 
 namespace DesktopService.Features.DeviceFeature
 {
@@ -63,12 +64,18 @@ namespace DesktopService.Features.DeviceFeature
             var manifest = new List<SharedBase.Device.FeatureDefinitionExtended>();
             foreach (var item in deviceFeatureImplementations)
             {
-                var def = item.GetDeviceFeatureInfo();
-                if (string.IsNullOrWhiteSpace(def.PluginDirectory))
+                try
                 {
-                    def.PluginDirectory = item.PluginDirectory;
+                    var def = item.GetDeviceFeatureInfo()?.GetFeatureDefinitionExtended();
+                    if (def != null && string.IsNullOrWhiteSpace(def.PluginDirectory))
+                    {
+                        def.PluginDirectory = item.PluginDirectory;
+                    }
+                    manifest.Add(def);
+                } catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Could not get Feature definition of Plugin: \"{nameof(item)}\"");
                 }
-                manifest.Add(def);
             }
             return manifest;
         }

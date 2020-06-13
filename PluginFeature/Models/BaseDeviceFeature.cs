@@ -72,7 +72,7 @@ namespace PluginFeature.Models
 
         }
 
-        public virtual SharedBase.Device.FeatureDefinitionExtended GetDeviceFeatureInfo()
+        public virtual PluginFeatureDefinition GetDeviceFeatureInfo()
         {
             return null;
         }
