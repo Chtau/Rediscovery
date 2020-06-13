@@ -22,6 +22,7 @@ namespace GrpcTestClient
 
         private static void ConsumeAuthentication()
         {
+            string pem = null;
             Console.WriteLine("Test Grpc consume Authentication!");
             IAuthenticationConsumerService consumerService = new AuthenticationConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
             consumerService.ReceivedManifestReply += (obj, args) =>
@@ -34,7 +35,7 @@ namespace GrpcTestClient
                 if (args.State == SharedBase.Connection.Enums.ConnectionState.OK)
                 {
                     consumerService.RequestManifest(args.Token);
-                    ConsumeFeature(args.Token);
+                    ConsumeFeature(args.Token, pem);
                 } else
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -56,9 +57,10 @@ namespace GrpcTestClient
             });
             if (result.CanConnect == SharedBase.Connection.Enums.AllowConnect.OK)
             {
+                pem = result.PEM;
                 //consumerService.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
                 //consumerService.Connect("localhost", 44342, ExportToPEM(GetX509Certificate2()));
-                consumerService.Connect("192.168.1.100", 44342, result.PEM);
+                consumerService.Connect("192.168.1.100", 44342, pem);
                 consumerService.SendWelcome(new SharedBase.Connection.WelcomeDeviceMessage
                 {
                     DeviceIdentifier = "1",
@@ -71,7 +73,7 @@ namespace GrpcTestClient
             }
         }
 
-        private static void ConsumeFeature(string token)
+        private static void ConsumeFeature(string token, string pem)
         {
             Guid featureId = Guid.NewGuid();
             Console.WriteLine($"Test Grpc consume Feature with Token:{token}");
@@ -88,7 +90,7 @@ namespace GrpcTestClient
                 Console.WriteLine($"[ReceiveFeatureStateChangeReply] CurrentState:{args.CurrentState}");
                 Console.ResetColor();
             };
-            featureConsumer.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
+            featureConsumer.Connect("192.168.1.100", 44342, pem);
             featureConsumer.StartFeatureData(token);
             featureConsumer.ChangeFeatureState(token, new CommunicationBase.Models.FeatureState
             {
