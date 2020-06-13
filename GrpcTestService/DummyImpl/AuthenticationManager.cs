@@ -1,5 +1,6 @@
 ﻿using CommunicationAuthenticationProvider;
 using CommunicationAuthenticationProvider.Models;
+using SharedBase.Connection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,21 @@ namespace GrpcTestService.DummyImpl
         public Task<bool> AddPendingApprovel(SharedBase.Connection.WelcomeDeviceMessage welcomeDeviceMessage)
         {
             return Task.FromResult(true);
+        }
+
+        public Task<bool> AddPendingApprovel(GreetingDeviceMessage greetingDeviceMessage)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Enums.AllowConnect> AllowedToLogin(string deviceIdentifier)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetCertificatePEM(string deviceIdentifier)
+        {
+            throw new NotImplementedException();
         }
 
         public SharedBase.Connection.Manifest GetManifest()
@@ -30,7 +46,6 @@ namespace GrpcTestService.DummyImpl
             return Task.FromResult(new LoginResult
             {
                 Id = Guid.NewGuid().ToString(),
-                Name = welcomeDeviceMessage.DeviceName,
                 State = SharedBase.Authentication.LoginState.OK,
                 Role = welcomeDeviceMessage.DeviceIdentifier == "80" ? "resourceconsumer" : "device"
             });

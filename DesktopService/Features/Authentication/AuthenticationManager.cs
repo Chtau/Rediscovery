@@ -30,25 +30,25 @@ namespace DesktopService.Features.Authentication
             _roleResolver = roleResolver;
         }
 
-        public async Task<bool> AddPendingApprovel(WelcomeDeviceMessage welcomeDeviceMessage)
+        public async Task<bool> AddPendingApprovel(GreetingDeviceMessage greetingDeviceMessage)
         {
             try
             {
-                var pendingDevice = await _devicePendingAuthenticationRepository.GetByDeviceIdentifier(welcomeDeviceMessage.DeviceIdentifier);
+                var pendingDevice = await _devicePendingAuthenticationRepository.GetByDeviceIdentifier(greetingDeviceMessage.DeviceIdentifier);
                 if (pendingDevice == null)
                 {
                     // if we can't find the device in pending authentication then we add it
                     pendingDevice = await _devicePendingAuthenticationRepository.SaveDevicePendingAuthentication(new DALDesktopService.Models.DevicePendingAuthentication
                     {
-                        DeviceIdentifier = welcomeDeviceMessage.DeviceIdentifier,
-                        DeviceName = welcomeDeviceMessage.DeviceName,
-                        DeviceType = welcomeDeviceMessage.DeviceType,
+                        DeviceIdentifier = greetingDeviceMessage.DeviceIdentifier,
+                        DeviceName = greetingDeviceMessage.DeviceName,
+                        DeviceType = greetingDeviceMessage.DeviceType,
+                        Idiom = greetingDeviceMessage.Idiom,
+                        Manufacturer = greetingDeviceMessage.Manufacturer,
+                        Model = greetingDeviceMessage.Model,
+                        OSVersion = greetingDeviceMessage.OSVersion,
+                        Platform = greetingDeviceMessage.Platform,
                         Id = Guid.NewGuid(),
-                        Idiom = welcomeDeviceMessage.Idiom,
-                        Manufacturer = welcomeDeviceMessage.Manufacturer,
-                        Model = welcomeDeviceMessage.Model,
-                        OSVersion = welcomeDeviceMessage.OSVersion,
-                        Platform = welcomeDeviceMessage.Platform,
                         RequestTime = DateTime.UtcNow,
                     });
                 }
@@ -59,6 +59,38 @@ namespace DesktopService.Features.Authentication
                 _logger.LogError(ex.ToString());
             }
             return false;
+        }
+
+        public async Task<Enums.AllowConnect> AllowedToLogin(string deviceIdentifier)
+        {
+            try
+            {
+                var u = await _deviceRepository.GetByDeviceIdentifier(deviceIdentifier);
+                if (u != null)
+                {
+                    if (u.AllowAccess)
+                    {
+                        return Enums.AllowConnect.OK;
+                    } else
+                    {
+                        return Enums.AllowConnect.Denied;
+                    }
+                }
+                else
+                {
+                    return Enums.AllowConnect.UnkownDevice;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return Enums.AllowConnect.Error;
+            }
+        }
+
+        public string GetCertificatePEM(string deviceIdentifier)
+        {
+            return Program.CertPEM();
         }
 
         public SharedBase.Connection.Manifest GetManifest()
@@ -80,30 +112,24 @@ namespace DesktopService.Features.Authentication
                 var u = await _deviceRepository.GetByDeviceIdentifier(welcomeDeviceMessage.DeviceIdentifier);
                 if (u != null)
                 {
-                    u.DeviceType = welcomeDeviceMessage.DeviceType;
-                    u.Idiom = welcomeDeviceMessage.Idiom;
-                    u.Manufacturer = welcomeDeviceMessage.Manufacturer;
-                    u.Model = welcomeDeviceMessage.Model;
-                    u.OSVersion = welcomeDeviceMessage.OSVersion;
-                    u.Platform = welcomeDeviceMessage.Platform;
                     u.Role = _roleResolver.GetRole(welcomeDeviceMessage.DeviceIdentifier);
                     u = await _deviceRepository.SaveDevice(u);
                     _logger.LogDebug($"Request login Device found (Identifier:{u.DeviceIdentifier} Name:{u.DeviceName} Allow:{u.AllowAccess})");
                     return new LoginResult
                     {
                         Id = u.Id.ToString(),
-                        Name = u.DeviceName,
+                        DeviceIdentifier = u.DeviceIdentifier,
                         Role = u.Role,
                         State = u.AllowAccess ? SharedBase.Authentication.LoginState.OK : SharedBase.Authentication.LoginState.Denied
                     };
                 }
                 else
                 {
-                    _logger.LogDebug($"Request login Device not found (Identifier:{welcomeDeviceMessage.DeviceIdentifier} Name:{welcomeDeviceMessage.DeviceName})");
+                    _logger.LogDebug($"Request login Device not found (Identifier:{welcomeDeviceMessage.DeviceIdentifier})");
                     return new LoginResult
                     {
                         Id = null,
-                        Name = null,
+                        DeviceIdentifier = null,
                         Role = null,
                         State = SharedBase.Authentication.LoginState.RequiredAuthorizeKey
                     };
@@ -116,7 +142,7 @@ namespace DesktopService.Features.Authentication
             return new LoginResult
             {
                 Id = null,
-                Name = null,
+                DeviceIdentifier = null,
                 Role = null,
                 State = SharedBase.Authentication.LoginState.Failed
             };

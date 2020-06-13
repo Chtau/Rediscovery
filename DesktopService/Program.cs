@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 
 namespace DesktopService
 {
@@ -22,6 +23,7 @@ namespace DesktopService
         public static ushort HostPort = 44341;
         public static ushort HostPortHttps = 44342;
         public static string ExePath = null;
+        public static X509Certificate2 X509Certificate2;
 
         public static void Main(string[] args)
         {
@@ -89,7 +91,7 @@ namespace DesktopService
                 {
                     //op.AllowAnyClientCertificate();
                     //op.ServerCertificate = GetX509Certificate2();
-                    op.ServerCertificate = CertificateService.ServerCertificate.Create(HostIpAddress);
+                    op.ServerCertificate = GetX509Certificate2(HostIpAddress);
                 });
 
                 //serverOptions.Listen(System.Net.IPAddress.Parse("192.168.1.100"), 44341);
@@ -117,12 +119,25 @@ namespace DesktopService
             .UseStartup<Startup>();
         });
 
-        private static X509Certificate2 GetX509Certificate2()
+        private static X509Certificate2 GetX509Certificate2(string host)
         {
-            var cert = new X509Certificate2(Path.Combine(@"C:\DEV\TMP", "development.pfx"), "1234");
+            X509Certificate2 = CertificateService.ServerCertificate.Create(HostIpAddress);
+            return X509Certificate2;
+            //var cert = new X509Certificate2(Path.Combine(@"C:\DEV\TMP", "development.pfx"), "1234");
             //var cert = new X509Certificate2(Path.Combine(@"C:\DEV\Code\Workspaces\Repos\Rediscovery\TestSignalR", "dev_localhost.pfx"), "1234");
-            Console.WriteLine(cert.FriendlyName + " Issuer:" + cert.Issuer + " Thumbprint:" + cert.Thumbprint);
-            return cert;
+            //Console.WriteLine(cert.FriendlyName + " Issuer:" + cert.Issuer + " Thumbprint:" + cert.Thumbprint);
+            //return cert;
+        }
+
+        public static string CertPEM()
+        {
+            StringBuilder builder = new StringBuilder();
+
+            builder.AppendLine("-----BEGIN CERTIFICATE-----");
+            builder.AppendLine(Convert.ToBase64String(X509Certificate2.Export(X509ContentType.Cert), Base64FormattingOptions.InsertLineBreaks));
+            builder.AppendLine("-----END CERTIFICATE-----");
+
+            return builder.ToString();
         }
     }
 }

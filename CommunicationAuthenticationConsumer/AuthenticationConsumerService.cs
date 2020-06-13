@@ -55,13 +55,6 @@ namespace CommunicationAuthenticationConsumer
                     var msg = new Authentication.WelcomeDeviceMessage
                     {
                         DeviceIdentifier = message.DeviceIdentifier,
-                        DeviceName = message.DeviceName,
-                        DeviceType = message.DeviceType,
-                        Idiom = message.Idiom,
-                        Manufacturer = message.Manufacturer,
-                        Model = message.Model,
-                        OSVersion = message.OSVersion,
-                        Platform = message.Platform
                     };
                     _logger.LogTrace("Consumer Welcome send Welcome");
                     var reply = await authenticationClient.WelcomeAsync(msg, cancellationToken: cts.Token);

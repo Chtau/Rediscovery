@@ -38,13 +38,6 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                 await OnReceivedWelcomeDeviceMessage(new SharedBase.Connection.WelcomeDeviceMessage
                 {
                     DeviceIdentifier = request.DeviceIdentifier,
-                    DeviceName = request.DeviceName,
-                    DeviceType = request.DeviceType,
-                    Idiom = request.Idiom,
-                    Manufacturer = request.Manufacturer,
-                    Model = request.Model,
-                    OSVersion = request.OSVersion,
-                    Platform = request.Platform
                 }, (result) =>
                 {
                     welcomeDeviceReply = new WelcomeDeviceReply
@@ -62,7 +55,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                 return welcomeDeviceReply;
             }
         }
-        /*
+        
         private async Task OnReceivedWelcomeDeviceMessage(SharedBase.Connection.WelcomeDeviceMessage e, Action<SharedBase.Connection.WelcomeDeviceReply> callback)
         {
             _logger.LogTrace("Provider received Welcome message from consumer");
@@ -89,7 +82,6 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                     }
                     else if (result.State == LoginState.RequiredAuthorizeKey)
                     {
-                        await _authenticationManager.AddPendingApprovel(e);
                         callback.Invoke(new SharedBase.Connection.WelcomeDeviceReply
                         {
                             State = SharedBase.Connection.Enums.ConnectionState.WaitForApprovel,
@@ -101,7 +93,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                         callback.Invoke(new SharedBase.Connection.WelcomeDeviceReply
                         {
                             State = SharedBase.Connection.Enums.ConnectionState.OK,
-                            Token = _tokenService.CreateNewToken(result.Id, result.Name, result.Role)
+                            Token = _tokenService.CreateNewToken(result.Id, result.DeviceIdentifier, result.Role)
                         });
                     }
                 }
@@ -116,6 +108,5 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                 }
             });
         }
-        */
     }
 }

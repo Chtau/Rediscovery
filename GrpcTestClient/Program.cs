@@ -66,13 +66,6 @@ namespace GrpcTestClient
             consumerService.SendWelcome(new SharedBase.Connection.WelcomeDeviceMessage
             {
                 DeviceIdentifier = "1",
-                DeviceName = "Test Client",
-                DeviceType = "Console",
-                Idiom = "",
-                Manufacturer = "",
-                Model = "",
-                OSVersion = "",
-                Platform = ""
             });
         }
 
@@ -119,13 +112,6 @@ namespace GrpcTestClient
             consumerService.SendWelcome(new SharedBase.Connection.WelcomeDeviceMessage
             {
                 DeviceIdentifier = "80",
-                DeviceName = "Test Client",
-                DeviceType = "Console",
-                Idiom = "",
-                Manufacturer = "",
-                Model = "",
-                OSVersion = "",
-                Platform = ""
             });
         }
 
