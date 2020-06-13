@@ -11,8 +11,8 @@ namespace PluginFeature.Interfaces
         string PluginDirectory { get; }
         void Init(string pluginDirectory, IPluginLogger pluginLogger);
         void Dispose();
-        event EventHandler<ExchangeEntity<DeviceFeatureData>> SendData;
-        void ReceiveData(ExchangeEntity<DeviceFeatureData> data);
+        event EventHandler<PluginExchangeEntity<PluginFeatureData>> SendData;
+        void ReceiveData(PluginExchangeEntity<PluginFeatureData> data);
         PluginFeatureDefinition GetDeviceFeatureInfo();
 
         /// <summary>
@@ -31,11 +31,11 @@ namespace PluginFeature.Interfaces
         string GetSettingsUIArchivePath();
         string GetProfilesUIArchivePath();
 
-        DeviceFeatureSetting GetSettingsObject();
+        PluginFeatureSetting GetSettingsObject();
 
-        List<DeviceFeatureProfil> GetProfiles();
-        bool SaveSetting(DeviceFeatureSetting deviceFeatureSetting);
-        bool SaveProfile(DeviceFeatureProfil deviceFeatureProfil);
+        List<PluginFeatureProfil> GetProfiles();
+        bool SaveSetting(PluginFeatureSetting deviceFeatureSetting);
+        bool SaveProfile(PluginFeatureProfil deviceFeatureProfil);
         bool DeleteProfile(string profileId);
     }
 }

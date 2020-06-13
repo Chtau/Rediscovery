@@ -4,14 +4,15 @@ using System.Text;
 
 namespace PluginFeature.Models
 {
-    public class DeviceFeatureProfil
+    [Obsolete("Should only be used in Plugin & Desktop Service")]
+    public class PluginFeatureProfil
     {
-        public DeviceFeatureProfil()
+        public PluginFeatureProfil()
         {
 
         }
 
-        public DeviceFeatureProfil(Guid featureId, string id, string displayName, string data): this()
+        public PluginFeatureProfil(Guid featureId, string id, string displayName, string data): this()
         {
             FeatureId = featureId;
             Id = id;

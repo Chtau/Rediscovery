@@ -118,12 +118,12 @@ namespace DesktopService.Features.RemoteResources
             return false;
         }
 
-        public List<DeviceFeatureProfil> GetResourceDeviceFeatureProfiles(Guid featureId)
+        public List<PluginFeatureProfil> GetResourceDeviceFeatureProfiles(Guid featureId)
         {
             return _featureService.GetFeatureProfiles(featureId);
         }
 
-        public DeviceFeatureSetting GetResourceDeviceFeatureSettings(Guid featureId)
+        public PluginFeatureSetting GetResourceDeviceFeatureSettings(Guid featureId)
         {
             return _featureService.GetFeatureSettings(featureId);
         }
@@ -148,12 +148,12 @@ namespace DesktopService.Features.RemoteResources
             return null;
         }
 
-        public bool SaveFeatureSettings(Guid featureId, DeviceFeatureSetting deviceFeatureSetting)
+        public bool SaveFeatureSettings(Guid featureId, PluginFeatureSetting deviceFeatureSetting)
         {
             return _featureService.SaveFeatureSettings(featureId, deviceFeatureSetting);
         }
 
-        public bool SaveFeatureProfile(Guid featureId, DeviceFeatureProfil deviceFeatureProfil)
+        public bool SaveFeatureProfile(Guid featureId, PluginFeatureProfil deviceFeatureProfil)
         {
             return _featureService.SaveFeatureProfile(featureId, deviceFeatureProfil);
         }

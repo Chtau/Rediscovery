@@ -14,12 +14,12 @@ namespace CommunicationResourceProvider
         SharedBase.Device.DeviceInfo UpdateDeviceInfo(SharedBase.Device.DeviceInfo deviceInfo);
         List<SharedBase.Device.DeviceInfo> GetResourcePendingAuthenticationDevices();
         bool ResolvePendingAuthenticationDevices(Guid deviceId, bool accept);
-        List<DeviceFeatureProfil> GetResourceDeviceFeatureProfiles(Guid featureId);
-        DeviceFeatureSetting GetResourceDeviceFeatureSettings(Guid featureId);
+        List<PluginFeatureProfil> GetResourceDeviceFeatureProfiles(Guid featureId);
+        PluginFeatureSetting GetResourceDeviceFeatureSettings(Guid featureId);
         byte[] GetResourceDeviceFeatureSettingsUI(Guid featureId);
         byte[] GetResourceDeviceFeatureProfilesUI(Guid featureId);
-        bool SaveFeatureSettings(Guid featureId, DeviceFeatureSetting deviceFeatureSetting);
-        bool SaveFeatureProfile(Guid featureId, DeviceFeatureProfil deviceFeatureProfil);
+        bool SaveFeatureSettings(Guid featureId, PluginFeatureSetting deviceFeatureSetting);
+        bool SaveFeatureProfile(Guid featureId, PluginFeatureProfil deviceFeatureProfil);
         bool DeleteFeatureProfile(Guid featureId, string profileId);
     }
 }

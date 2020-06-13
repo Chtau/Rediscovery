@@ -25,12 +25,12 @@ namespace CommunicationFeatureProvider.ProtoServices
             _featureManager.SendData += _featureManager_SendData;
         }
 
-        private void _featureManager_SendData(object sender, PluginFeature.Models.ExchangeEntity<PluginFeature.Models.DeviceFeatureData> e)
+        private void _featureManager_SendData(object sender, PluginFeature.Models.PluginExchangeEntity<PluginFeature.Models.PluginFeatureData> e)
         {
             OnSendFeatureData(e.Sid, e.Entity);
         }
 
-        private void OnSendFeatureData(string sid, PluginFeature.Models.DeviceFeatureData deviceFeatureData)
+        private void OnSendFeatureData(string sid, PluginFeature.Models.PluginFeatureData deviceFeatureData)
         {
             if (responseStreams.ContainsKey(sid))
             {
@@ -71,9 +71,9 @@ namespace CommunicationFeatureProvider.ProtoServices
                 {
                     await foreach (var message in requestStream.ReadAllAsync(cancellationToken: context.CancellationToken))
                     {
-                        _featureManager.ReceivedData(new PluginFeature.Models.ExchangeEntity<PluginFeature.Models.DeviceFeatureData>
+                        _featureManager.ReceivedData(new PluginFeature.Models.PluginExchangeEntity<PluginFeature.Models.PluginFeatureData>
                         {
-                            Entity = new PluginFeature.Models.DeviceFeatureData(message.DeviceId, message.FeatureId.SafeGuid(), message.ProfileId, message.Data),
+                            Entity = new PluginFeature.Models.PluginFeatureData(message.DeviceId, message.FeatureId.SafeGuid(), message.ProfileId, message.Data),
                             Sid = sid
                         });
                     }
@@ -112,7 +112,7 @@ namespace CommunicationFeatureProvider.ProtoServices
                 var user = context.GetHttpContext().User;
                 var sid = user.Claims.GetSid();
 
-                var resultFeatureState = _featureManager.FeatureStateChange(new PluginFeature.Models.ExchangeEntity<CommunicationBase.Models.FeatureState>
+                var resultFeatureState = _featureManager.FeatureStateChange(new PluginFeature.Models.PluginExchangeEntity<CommunicationBase.Models.FeatureState>
                 {
                     Sid = sid,
                     Entity = new CommunicationBase.Models.FeatureState

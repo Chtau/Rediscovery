@@ -15,7 +15,7 @@ namespace DesktopService.Features.DeviceFeature
         private readonly ILogger<FeatureManager> _logger;
         private readonly IFeatureService _featureService;
 
-        public event EventHandler<ExchangeEntity<DeviceFeatureData>> SendData;
+        public event EventHandler<PluginExchangeEntity<PluginFeatureData>> SendData;
 
         public FeatureManager(ILoggerFactory loggerFactory,
             IFeatureService featureService)
@@ -25,7 +25,7 @@ namespace DesktopService.Features.DeviceFeature
             _featureService.RespondToClient += _featureService_RespondToClient;
         }
 
-        public ExchangeEntity<FeatureState> FeatureStateChange(ExchangeEntity<FeatureState> featureStateChange)
+        public PluginExchangeEntity<FeatureState> FeatureStateChange(PluginExchangeEntity<FeatureState> featureStateChange)
         {
             try
             {
@@ -55,12 +55,12 @@ namespace DesktopService.Features.DeviceFeature
             return featureStateChange;
         }
 
-        public List<DeviceFeatureProfil> GetFeatureProfiles(Guid featureId)
+        public List<PluginFeatureProfil> GetFeatureProfiles(Guid featureId)
         {
             return _featureService.GetFeatureProfiles(featureId);
         }
 
-        public DeviceFeatureSetting GetFeatureSettings(Guid featureId)
+        public PluginFeatureSetting GetFeatureSettings(Guid featureId)
         {
             return _featureService.GetFeatureSettings(featureId);
         }
@@ -82,12 +82,12 @@ namespace DesktopService.Features.DeviceFeature
             return null;
         }
 
-        public void ReceivedData(ExchangeEntity<DeviceFeatureData> deviceFeatureData)
+        public void ReceivedData(PluginExchangeEntity<PluginFeatureData> deviceFeatureData)
         {
             _featureService.ReceiveData(deviceFeatureData.Entity.FeatureId, deviceFeatureData);
         }
 
-        private void _featureService_RespondToClient(object sender, ExchangeEntity<DeviceFeatureData> e)
+        private void _featureService_RespondToClient(object sender, PluginExchangeEntity<PluginFeatureData> e)
         {
             SendData?.Invoke(sender, e);
         }

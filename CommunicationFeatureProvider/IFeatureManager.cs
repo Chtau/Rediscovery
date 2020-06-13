@@ -8,11 +8,11 @@ namespace CommunicationFeatureProvider
 {
     public interface IFeatureManager
     {
-        event EventHandler<ExchangeEntity<PluginFeature.Models.DeviceFeatureData>> SendData;
-        void ReceivedData(ExchangeEntity<PluginFeature.Models.DeviceFeatureData> deviceFeatureData);
-        ExchangeEntity<FeatureState> FeatureStateChange(ExchangeEntity<FeatureState> featureStateChange);
+        event EventHandler<PluginExchangeEntity<PluginFeature.Models.PluginFeatureData>> SendData;
+        void ReceivedData(PluginExchangeEntity<PluginFeature.Models.PluginFeatureData> deviceFeatureData);
+        PluginExchangeEntity<FeatureState> FeatureStateChange(PluginExchangeEntity<FeatureState> featureStateChange);
         byte[] GetFeatureUIArchive(Guid featureId);
-        List<DeviceFeatureProfil> GetFeatureProfiles(Guid featureId);
-        DeviceFeatureSetting GetFeatureSettings(Guid featureId);
+        List<PluginFeatureProfil> GetFeatureProfiles(Guid featureId);
+        PluginFeatureSetting GetFeatureSettings(Guid featureId);
     }
 }

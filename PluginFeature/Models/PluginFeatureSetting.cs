@@ -4,14 +4,15 @@ using System.Text;
 
 namespace PluginFeature.Models
 {
-    public class DeviceFeatureSetting
+    [Obsolete("Should only be used in Plugin & Desktop Service")]
+    public class PluginFeatureSetting
     {
-        public DeviceFeatureSetting()
+        public PluginFeatureSetting()
         {
 
         }
 
-        public DeviceFeatureSetting(Guid featureId, string data)
+        public PluginFeatureSetting(Guid featureId, string data)
         {
             FeatureId = featureId;
             Data = data;

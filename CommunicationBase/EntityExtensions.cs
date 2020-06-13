@@ -28,16 +28,16 @@ public static class EntityExtensions
         };
     }
 
-    public static PluginFeature.Models.DeviceFeatureSetting GetDeviceFeatureSetting(this FeatureDetailSetting featureDetailSetting)
+    public static PluginFeature.Models.PluginFeatureSetting GetDeviceFeatureSetting(this FeatureDetailSetting featureDetailSetting)
     {
-        return new PluginFeature.Models.DeviceFeatureSetting
+        return new PluginFeature.Models.PluginFeatureSetting
         {
             Data = featureDetailSetting.Data,
             FeatureId = featureDetailSetting.FeatureId.SafeGuid()
         };
     }
 
-    public static FeatureDetailSetting GetProtoFeatureDetailSetting(this PluginFeature.Models.DeviceFeatureSetting deviceFeatureSetting)
+    public static FeatureDetailSetting GetProtoFeatureDetailSetting(this PluginFeature.Models.PluginFeatureSetting deviceFeatureSetting)
     {
         return new FeatureDetailSetting
         {
@@ -46,9 +46,9 @@ public static class EntityExtensions
         };
     }
 
-    public static PluginFeature.Models.DeviceFeatureProfil GetDeviceFeatureProfil(this FeatureDetailProfile featureDetailProfile)
+    public static PluginFeature.Models.PluginFeatureProfil GetDeviceFeatureProfil(this FeatureDetailProfile featureDetailProfile)
     {
-        return new PluginFeature.Models.DeviceFeatureProfil
+        return new PluginFeature.Models.PluginFeatureProfil
         {
             DisplayName = featureDetailProfile.DisplayName,
             FeatureId = featureDetailProfile.FeatureId.SafeGuid(),
@@ -57,7 +57,7 @@ public static class EntityExtensions
         };
     }
 
-    public static FeatureDetailProfile GetProtoFeatureDetailProfile(this PluginFeature.Models.DeviceFeatureProfil deviceFeatureProfil)
+    public static FeatureDetailProfile GetProtoFeatureDetailProfile(this PluginFeature.Models.PluginFeatureProfil deviceFeatureProfil)
     {
         return new FeatureDetailProfile
         {

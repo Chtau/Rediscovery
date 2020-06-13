@@ -15,8 +15,8 @@ namespace CommunicationResourceProvider
         void UpdateDevice(SharedBase.Device.DeviceInfo deviceInfo);
         void ResolvePendingDevice(Guid deviceId, bool accept);
         void FeatureDetailProfileDelete(Guid featureId, string profileId);
-        void FeatureDetailProfileSave(Guid featureId, PluginFeature.Models.DeviceFeatureProfil deviceFeatureProfil);
-        void FeatureDetailSettingSave(Guid featureId, PluginFeature.Models.DeviceFeatureSetting deviceFeatureSetting);
+        void FeatureDetailProfileSave(Guid featureId, PluginFeature.Models.PluginFeatureProfil deviceFeatureProfil);
+        void FeatureDetailSettingSave(Guid featureId, PluginFeature.Models.PluginFeatureSetting deviceFeatureSetting);
         
     }
 }

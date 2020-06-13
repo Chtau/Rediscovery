@@ -18,8 +18,8 @@ namespace DesktopFeatureConsole
 
         private void Terminal_Output(object sender, CommandQueue<string, List<string>> e)
         {
-            var data = new DeviceFeatureData(e.DeviceId, GetDeviceFeatureInfo().Id, null, e.OutgoingData[e.OutgoingData.Count - 1]);
-            OnSendData(this, new ExchangeEntity<DeviceFeatureData>
+            var data = new PluginFeatureData(e.DeviceId, GetDeviceFeatureInfo().Id, null, e.OutgoingData[e.OutgoingData.Count - 1]);
+            OnSendData(this, new PluginExchangeEntity<PluginFeatureData>
             {
                 Sid = e.DeviceId,
                 Entity = data
@@ -56,7 +56,7 @@ namespace DesktopFeatureConsole
             terminal.Close();
         }
 
-        public override void ReceiveData(ExchangeEntity<DeviceFeatureData> data)
+        public override void ReceiveData(PluginExchangeEntity<PluginFeatureData> data)
         {
             base.ReceiveData(data);
             if (data != null && IsRegister(data.Entity.DeviceId))
@@ -82,12 +82,12 @@ namespace DesktopFeatureConsole
             base.Unregister(deviceId);
         }
 
-        public override DeviceFeatureSetting GetSettingsObject()
+        public override PluginFeatureSetting GetSettingsObject()
         {
             return null;
         }
 
-        public override List<DeviceFeatureProfil> GetProfiles()
+        public override List<PluginFeatureProfil> GetProfiles()
         {
             return null;
         }

@@ -23,7 +23,7 @@ namespace DesktopFeatureTestApp
         static void ConsoleFeature()
         {
             IDeviceFeatureImplementation feature = new DeviceFeatureConsole();
-            feature.SendData += (object sender, ExchangeEntity<DeviceFeatureData> e) =>
+            feature.SendData += (object sender, PluginExchangeEntity<PluginFeatureData> e) =>
             {
                 Console.WriteLine(e.Entity.Data);
             };

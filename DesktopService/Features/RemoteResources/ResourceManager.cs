@@ -32,12 +32,12 @@ namespace DesktopService.Features.RemoteResources
             
         }
 
-        public void FeatureDetailProfileSave(Guid featureId, DeviceFeatureProfil deviceFeatureProfil)
+        public void FeatureDetailProfileSave(Guid featureId, PluginFeatureProfil deviceFeatureProfil)
         {
             
         }
 
-        public void FeatureDetailSettingSave(Guid featureId, DeviceFeatureSetting deviceFeatureSetting)
+        public void FeatureDetailSettingSave(Guid featureId, PluginFeatureSetting deviceFeatureSetting)
         {
             
         }

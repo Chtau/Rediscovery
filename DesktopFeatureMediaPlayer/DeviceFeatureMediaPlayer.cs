@@ -56,8 +56,8 @@ namespace DesktopFeatureMediaPlayer
                             Artist = null,
                             Info = null
                         };
-                        var data = new DeviceFeatureData(deviceId, GetDeviceFeatureInfo().Id, profile.Id.ToString(), Newtonsoft.Json.JsonConvert.SerializeObject(dataObj));
-                        OnSendData(this, new ExchangeEntity<DeviceFeatureData>
+                        var data = new PluginFeatureData(deviceId, GetDeviceFeatureInfo().Id, profile.Id.ToString(), Newtonsoft.Json.JsonConvert.SerializeObject(dataObj));
+                        OnSendData(this, new PluginExchangeEntity<PluginFeatureData>
                         {
                             Sid = deviceId,
                             Entity = data
@@ -96,7 +96,7 @@ namespace DesktopFeatureMediaPlayer
             };
         }
 
-        public override void ReceiveData(ExchangeEntity<DeviceFeatureData> data)
+        public override void ReceiveData(PluginExchangeEntity<PluginFeatureData> data)
         {
             base.ReceiveData(data);
             if (data != null && IsRegister(data.Entity.DeviceId))
@@ -116,15 +116,15 @@ namespace DesktopFeatureMediaPlayer
             }
         }
 
-        private List<DeviceFeatureProfil> OnGetDeviceFeatureProfiles()
+        private List<PluginFeatureProfil> OnGetDeviceFeatureProfiles()
         {
-            var profiles = new List<DeviceFeatureProfil>();
+            var profiles = new List<PluginFeatureProfil>();
             var pro = MediaPlayerDefaultProfiles.GetProfileConfigurations(ProfileConfigurationPath());
             if (pro?.Count > 0)
             {
                 foreach (var item in pro)
                 {
-                    profiles.Add(new DeviceFeatureProfil(GetDeviceFeatureInfo().Id, item.Id.ToString(), item.DisplayName, Newtonsoft.Json.JsonConvert.SerializeObject(item)));
+                    profiles.Add(new PluginFeatureProfil(GetDeviceFeatureInfo().Id, item.Id.ToString(), item.DisplayName, Newtonsoft.Json.JsonConvert.SerializeObject(item)));
                 }
             }
             return profiles;
@@ -190,12 +190,12 @@ namespace DesktopFeatureMediaPlayer
             }
         }
 
-        public override List<DeviceFeatureProfil> GetProfiles()
+        public override List<PluginFeatureProfil> GetProfiles()
         {
             return OnGetDeviceFeatureProfiles();
         }
 
-        public override DeviceFeatureSetting GetSettingsObject()
+        public override PluginFeatureSetting GetSettingsObject()
         {
             return null;
         }
@@ -205,7 +205,7 @@ namespace DesktopFeatureMediaPlayer
             return System.IO.Path.Combine(PluginDirectory, "profiles.json");
         }
 
-        public override bool SaveProfile(DeviceFeatureProfil deviceFeatureProfil)
+        public override bool SaveProfile(PluginFeatureProfil deviceFeatureProfil)
         {
             var profiles = MediaPlayerDefaultProfiles.GetProfileConfigurations(ProfileConfigurationPath());
             var id = new Guid(deviceFeatureProfil.Id);

@@ -22,7 +22,7 @@ namespace DesktopService.Features.DeviceFeature
 
         public event EventHandler ProfilesChanged;
         public event EventHandler SettingChanged;
-        public event EventHandler<ExchangeEntity<DeviceFeatureData>> RespondToClient;
+        public event EventHandler<PluginExchangeEntity<PluginFeatureData>> RespondToClient;
 
         public FeatureService(ILoggerFactory loggerFactory,
             IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> appOptions,
@@ -49,12 +49,12 @@ namespace DesktopService.Features.DeviceFeature
             return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetUIArchivePath();
         }
 
-        public List<DeviceFeatureProfil> GetFeatureProfiles(Guid featureId)
+        public List<PluginFeatureProfil> GetFeatureProfiles(Guid featureId)
         {
             return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetProfiles();
         }
 
-        public DeviceFeatureSetting GetFeatureSettings(Guid featureId)
+        public PluginFeatureSetting GetFeatureSettings(Guid featureId)
         {
             return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetSettingsObject();
         }
@@ -91,7 +91,7 @@ namespace DesktopService.Features.DeviceFeature
             {
                 foreach (var item in desktopPluginFeatures)
                 {
-                    item.SendData += (object sender, ExchangeEntity<DeviceFeatureData> e) =>
+                    item.SendData += (object sender, PluginExchangeEntity<PluginFeatureData> e) =>
                     {
                         _logger.LogTrace($"Feature (id: {item.GetDeviceFeatureInfo().Id} profile: {e.Entity.ProfileId}) response =>" + e.Entity.Data);
                         RespondToClient?.Invoke(this, e);
@@ -101,7 +101,7 @@ namespace DesktopService.Features.DeviceFeature
             }
         }
 
-        public void ReceiveData(Guid featureId, ExchangeEntity<DeviceFeatureData> data)
+        public void ReceiveData(Guid featureId, PluginExchangeEntity<PluginFeatureData> data)
         {
             deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.ReceiveData(data);
         }
@@ -136,7 +136,7 @@ namespace DesktopService.Features.DeviceFeature
             return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetProfilesUIArchivePath();
         }
 
-        public bool SaveFeatureSettings(Guid featureId, DeviceFeatureSetting deviceFeatureSetting)
+        public bool SaveFeatureSettings(Guid featureId, PluginFeatureSetting deviceFeatureSetting)
         {
             var result = deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.SaveSetting(deviceFeatureSetting) ?? false;
             if (result)
@@ -144,7 +144,7 @@ namespace DesktopService.Features.DeviceFeature
             return result;
         }
 
-        public bool SaveFeatureProfile(Guid featureId, DeviceFeatureProfil deviceFeatureProfil)
+        public bool SaveFeatureProfile(Guid featureId, PluginFeatureProfil deviceFeatureProfil)
         {
             var result = deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.SaveProfile(deviceFeatureProfil) ?? false;
             if (result)

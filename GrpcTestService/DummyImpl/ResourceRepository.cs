@@ -47,9 +47,9 @@ namespace GrpcTestService.DummyImpl
                     Website = null
                 }
             };
-        private static List<DeviceFeatureProfil> deviceFeatureProfils = new List<DeviceFeatureProfil>
+        private static List<PluginFeatureProfil> deviceFeatureProfils = new List<PluginFeatureProfil>
             {
-                new DeviceFeatureProfil
+                new PluginFeatureProfil
                 {
                     DisplayName = "A",
                     FeatureId = Guid.NewGuid(),
@@ -57,7 +57,7 @@ namespace GrpcTestService.DummyImpl
                     ProfileData = null
                 }
             };
-        private static DeviceFeatureSetting deviceFeatureSetting = new DeviceFeatureSetting
+        private static PluginFeatureSetting deviceFeatureSetting = new PluginFeatureSetting
         {
             Data = null,
             FeatureId = Guid.NewGuid()
@@ -83,7 +83,7 @@ namespace GrpcTestService.DummyImpl
             return featureDefinitionExtendeds;
         }
 
-        public List<DeviceFeatureProfil> GetResourceDeviceFeatureProfiles(Guid featureId)
+        public List<PluginFeatureProfil> GetResourceDeviceFeatureProfiles(Guid featureId)
         {
             return deviceFeatureProfils;
         }
@@ -93,7 +93,7 @@ namespace GrpcTestService.DummyImpl
             return new byte[255];
         }
 
-        public DeviceFeatureSetting GetResourceDeviceFeatureSettings(Guid featureId)
+        public PluginFeatureSetting GetResourceDeviceFeatureSettings(Guid featureId)
         {
             return deviceFeatureSetting;
         }
@@ -118,12 +118,12 @@ namespace GrpcTestService.DummyImpl
             return true;
         }
 
-        public bool SaveFeatureProfile(Guid featureId, DeviceFeatureProfil deviceFeatureProfil)
+        public bool SaveFeatureProfile(Guid featureId, PluginFeatureProfil deviceFeatureProfil)
         {
             return true;
         }
 
-        public bool SaveFeatureSettings(Guid featureId, DeviceFeatureSetting deviceFeatureSetting)
+        public bool SaveFeatureSettings(Guid featureId, PluginFeatureSetting deviceFeatureSetting)
         {
             return true;
         }

@@ -7,14 +7,15 @@ namespace PluginFeature.Models
     /// <summary>
     /// Used for the communication between feature UI and feature implementation
     /// </summary>
-    public class DeviceFeatureData
+    [Obsolete("Should only be used in Plugin & Desktop Service")]
+    public class PluginFeatureData
     {
         public string DeviceId { get; set; }
         public Guid FeatureId { get; set; }
         public string ProfileId { get; set; }
         public string Data { get; set; }
 
-        public DeviceFeatureData(string deviceId, Guid featureId, string profileId, string data)
+        public PluginFeatureData(string deviceId, Guid featureId, string profileId, string data)
         {
             DeviceId = deviceId;
             FeatureId = featureId;

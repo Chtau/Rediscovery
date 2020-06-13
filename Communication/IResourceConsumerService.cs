@@ -15,8 +15,8 @@ namespace CommunicationResourceConsumer
         event EventHandler<(Guid deviceId, bool result)> ReceiveDeleteDevicesResult;
         event EventHandler<(Guid deviceId, bool accept)> ReceiveResolvePendingDevicesResult;
         event EventHandler<(Guid featureId, string profileId, bool result)> ReceiveFeatureDetailProfileDeleteResult;
-        event EventHandler<(PluginFeature.Models.DeviceFeatureProfil profile, bool result)> ReceiveFeatureDetailProfileSave;
-        event EventHandler<(PluginFeature.Models.DeviceFeatureSetting setting, bool result)> ReceiveFeatureDetailSettingSave;
+        event EventHandler<(PluginFeature.Models.PluginFeatureProfil profile, bool result)> ReceiveFeatureDetailProfileSave;
+        event EventHandler<(PluginFeature.Models.PluginFeatureSetting setting, bool result)> ReceiveFeatureDetailSettingSave;
         event EventHandler<Models.FeatureDetail> ReceiveFeatureDetails;
 
         bool Connect(string ipAddress, int port, string certificatePEM);
@@ -28,8 +28,8 @@ namespace CommunicationResourceConsumer
         void DeleteDevice(string token, Guid deviceId);
         void ResolvePendingDevice(string token, Guid deviceId, bool accept);
         void FeatureDetailProfileDelete(string token, Guid featureId, string profileId);
-        void FeatureDetailProfileSave(string token, PluginFeature.Models.DeviceFeatureProfil profil);
-        void FeatureDetailSettingSave(string token, PluginFeature.Models.DeviceFeatureSetting setting);
-        void FeatureDetail(string token, PluginFeature.Models.DeviceFeatureSetting setting);
+        void FeatureDetailProfileSave(string token, PluginFeature.Models.PluginFeatureProfil profil);
+        void FeatureDetailSettingSave(string token, PluginFeature.Models.PluginFeatureSetting setting);
+        void FeatureDetail(string token, PluginFeature.Models.PluginFeatureSetting setting);
     }
 }

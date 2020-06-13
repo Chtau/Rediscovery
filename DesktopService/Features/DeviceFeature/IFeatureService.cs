@@ -33,13 +33,13 @@ namespace DesktopService.Features.DeviceFeature
         /// <param name="featureId"></param>
         /// <returns></returns>
         string GetFeatureProfilesUIArchivePath(Guid featureId);
-        List<DeviceFeatureProfil> GetFeatureProfiles(Guid featureId);
-        DeviceFeatureSetting GetFeatureSettings(Guid featureId);
-        bool SaveFeatureSettings(Guid featureId, DeviceFeatureSetting deviceFeatureSetting);
-        bool SaveFeatureProfile(Guid featureId, DeviceFeatureProfil deviceFeatureProfil);
+        List<PluginFeatureProfil> GetFeatureProfiles(Guid featureId);
+        PluginFeatureSetting GetFeatureSettings(Guid featureId);
+        bool SaveFeatureSettings(Guid featureId, PluginFeatureSetting deviceFeatureSetting);
+        bool SaveFeatureProfile(Guid featureId, PluginFeatureProfil deviceFeatureProfil);
         bool DeleteFeatureProfile(Guid featureId, string profileId);
-        event EventHandler<ExchangeEntity<DeviceFeatureData>> RespondToClient;
-        void ReceiveData(Guid featureId, ExchangeEntity<DeviceFeatureData> data);
+        event EventHandler<PluginExchangeEntity<PluginFeatureData>> RespondToClient;
+        void ReceiveData(Guid featureId, PluginExchangeEntity<PluginFeatureData> data);
         void StartFeature(Guid featureId, string sid);
         void StopFeature(Guid featureId, string sid);
     }

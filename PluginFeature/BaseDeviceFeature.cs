@@ -1,4 +1,5 @@
 ﻿using PluginFeature.Interfaces;
+using PluginFeature.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace PluginFeature.Models
+namespace PluginFeature
 {
     public abstract class BaseDeviceFeature : IDeviceFeatureImplementation
     {
@@ -60,9 +61,9 @@ namespace PluginFeature.Models
         }
 
 
-        public event EventHandler<ExchangeEntity<DeviceFeatureData>> SendData;
+        public event EventHandler<PluginExchangeEntity<PluginFeatureData>> SendData;
 
-        public void OnSendData(object obj, ExchangeEntity<DeviceFeatureData> args)
+        public void OnSendData(object obj, PluginExchangeEntity<PluginFeatureData> args)
         {
             SendData?.Invoke(obj, args);
         }
@@ -83,7 +84,7 @@ namespace PluginFeature.Models
             this.pluginLogger = pluginLogger;
         }
 
-        public virtual void ReceiveData(ExchangeEntity<DeviceFeatureData> data)
+        public virtual void ReceiveData(PluginExchangeEntity<PluginFeatureData> data)
         {
 
         }
@@ -124,12 +125,12 @@ namespace PluginFeature.Models
             return OnGetUIZipPath("ui.zip", "UI");
         }
 
-        public virtual DeviceFeatureSetting GetSettingsObject()
+        public virtual PluginFeatureSetting GetSettingsObject()
         {
             return null;
         }
 
-        public virtual List<DeviceFeatureProfil> GetProfiles()
+        public virtual List<PluginFeatureProfil> GetProfiles()
         {
             return null;
         }
@@ -144,12 +145,12 @@ namespace PluginFeature.Models
             return OnGetUIZipPath("profileui.zip", "ProfileUI");
         }
 
-        public virtual bool SaveSetting(DeviceFeatureSetting deviceFeatureSetting)
+        public virtual bool SaveSetting(PluginFeatureSetting deviceFeatureSetting)
         {
             return false;
         }
 
-        public virtual bool SaveProfile(DeviceFeatureProfil deviceFeatureProfil)
+        public virtual bool SaveProfile(PluginFeatureProfil deviceFeatureProfil)
         {
             return false;
         }
