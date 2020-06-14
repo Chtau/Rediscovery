@@ -22,10 +22,20 @@
                     <StackLayout Spacing="20" Padding="15">
                         <Label Text="Connection Name" FontSize="Medium" />
                         <Entry Text="{Binding Item.DisplayName}" FontSize="Small" />
-                        <Label Text="IP Address" FontSize="Medium" />
-                        <Editor Text="{Binding Item.Address}" Keyboard="Url" FontSize="Small" Margin="0" />
-                        <Label Text="Port" FontSize="Medium" />
-                        <Editor Text="{Binding Item.Port}" Keyboard="Numeric" FontSize="Small" Margin="0" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackLayout Grid.Column="0">
+                                <Label Text="IP Address" FontSize="Medium" />
+                                <Editor Text="{Binding Item.Address}" Keyboard="Url" FontSize="Small" Margin="0" />
+                            </StackLayout>
+                            <StackLayout Grid.Column="1">
+                                <Label Text="Port" FontSize="Medium" />
+                                <Editor Text="{Binding Item.Port}" Keyboard="Numeric" FontSize="Small" Margin="0" />
+                            </StackLayout>
+                        </Grid>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
