@@ -71,20 +71,27 @@ namespace Rediscovery.Features.DesktopFeatures
                 }
                 try
                 {
-                    var stream = new MemoryStream(e.UIArchive);
-                    var archive = new ZipArchive(stream);
-                    if (archive != null)
+                    if (e.UIArchive != null)
                     {
-                        archive.ExtractToDirectory(directory);
-                        Task.Run(async () =>
+                        var stream = new MemoryStream(e.UIArchive);
+                        var archive = new ZipArchive(stream);
+                        if (archive != null)
                         {
-                            await OnInjectUIDefaults(directory);
-                            ReceivedUI?.Invoke(this, new Tuple<bool, string>(true, directory));
-                        });
-                    }
-                    else
+                            archive.ExtractToDirectory(directory);
+                            Task.Run(async () =>
+                            {
+                                await OnInjectUIDefaults(directory);
+                                ReceivedUI?.Invoke(this, new Tuple<bool, string>(true, directory));
+                            });
+                        }
+                        else
+                        {
+                            _logger.LogInformation($"No UI Archive received for Feature Id:{featureId} (no valid ZipArchive from byte[])");
+                            ReceivedUI?.Invoke(this, new Tuple<bool, string>(false, directory));
+                        }
+                    } else
                     {
-                        _logger.LogInformation($"No UI Archive received for Feature Id:{featureId}");
+                        _logger.LogInformation($"No UI Archive received for Feature Id:{featureId} (byte[] was \"null\")");
                         ReceivedUI?.Invoke(this, new Tuple<bool, string>(false, directory));
                     }
                 }
