@@ -18,12 +18,12 @@ namespace CommunicationAuthenticationProvider.Services
             _logger = loggerFactory.CreateLogger<TokenService>();
         }
 
-        public string CreateNewToken(string sid, string name, string role, DateTime? expireDateTime = null)
+        public string CreateNewToken(string sid, string primarySid, string role, DateTime? expireDateTime = null)
         {
             return OnCreateToken(new Claim[]
                 {
                     new Claim(ClaimTypes.Sid, sid),
-                    new Claim(ClaimTypes.Name, name),
+                    new Claim(ClaimTypes.PrimarySid, primarySid),
                     new Claim(ClaimTypes.Role, role),
                 }, expireDateTime ?? DateTime.UtcNow.AddDays(7));
         }

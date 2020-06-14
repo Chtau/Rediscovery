@@ -9,7 +9,7 @@
 <body>
     <div class="wrapper">
         <div class="top-content">
-            <p id="result">Listener:</p>
+            <p id="result"></p>
         </div>
         <div class="center-content z-depth-2">
             <div class="content-info">
@@ -55,11 +55,12 @@
             div.innerHTML = JSON.stringify(str);
         }
         function featureReceive(data) {
+            // data received => {"ProcessRunning":true,"Title":"title.mp4","Artist":null,"Info":null}
             //log(data);
             if (data) {
-                setField("info", data.info);
-                setField("title", data.title);
-                setField("artist", data.artist);
+                setField("info", data.Info);
+                setField("title", data.Title);
+                setField("artist", data.Artist);
             } else {
                 setField("info", "");
                 setField("title", "");
@@ -67,26 +68,26 @@
             }
         }
         function profileChanged(data) {
-            log(data);
-            if (data && data.commandAvailable && Array.isArray(data.commandAvailable)) {
-                setDisplay("btn-fullscreen", data.commandAvailable.includes(3));
-                setDisplay("btn-fullscreen-exit", data.commandAvailable.includes(2));
-                setDisplay("btn-speedslower", data.commandAvailable.includes(10));
-                setDisplay("btn-speedfaster", data.commandAvailable.includes(11));
-                setDisplay("btn-jumpbackward", data.commandAvailable.includes(13));
-                setDisplay("btn-jumpforward", data.commandAvailable.includes(12));
-                setDisplay("btn-stop", data.commandAvailable.includes(6));
-                setDisplay("btn-mute", data.commandAvailable.includes(7));
-                setDisplay("btn-volume-down", data.commandAvailable.includes(9));
-                setDisplay("btn-volume-up", data.commandAvailable.includes(8));
-                setDisplay("btn-previous", data.commandAvailable.includes(5));
-                setDisplay("btn-play", data.commandAvailable.includes(1));
-                setDisplay("btn-next", data.commandAvailable.includes(4));
+            //log(data);
+            if (data && data.CommandAvailable && Array.isArray(data.CommandAvailable)) {
+                setDisplay("btn-fullscreen", data.CommandAvailable.includes(3));
+                setDisplay("btn-fullscreen-exit", data.CommandAvailable.includes(2));
+                setDisplay("btn-speedslower", data.CommandAvailable.includes(10));
+                setDisplay("btn-speedfaster", data.CommandAvailable.includes(11));
+                setDisplay("btn-jumpbackward", data.CommandAvailable.includes(13));
+                setDisplay("btn-jumpforward", data.CommandAvailable.includes(12));
+                setDisplay("btn-stop", data.CommandAvailable.includes(6));
+                setDisplay("btn-mute", data.CommandAvailable.includes(7));
+                setDisplay("btn-volume-down", data.CommandAvailable.includes(9));
+                setDisplay("btn-volume-up", data.CommandAvailable.includes(8));
+                setDisplay("btn-previous", data.CommandAvailable.includes(5));
+                setDisplay("btn-play", data.CommandAvailable.includes(1));
+                setDisplay("btn-next", data.CommandAvailable.includes(4));
             }
         }
         function send(index) {
-            var model = { commandIndex: index };
-            log(model);
+            var model = { CommandIndex: index };
+            //log(model);
             featureSend(model);
         }
         function setDisplay(key, show) {

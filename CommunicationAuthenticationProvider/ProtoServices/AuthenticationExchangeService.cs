@@ -93,7 +93,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                         callback.Invoke(new SharedBase.Connection.WelcomeDeviceReply
                         {
                             State = SharedBase.Connection.Enums.ConnectionState.OK,
-                            Token = _tokenService.CreateNewToken(result.Id, result.DeviceIdentifier, result.Role)
+                            Token = _tokenService.CreateNewToken(result.DeviceIdentifier, result.Id.ToString(), result.Role)
                         });
                     }
                 }

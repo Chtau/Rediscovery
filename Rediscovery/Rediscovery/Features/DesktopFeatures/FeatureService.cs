@@ -21,6 +21,7 @@ namespace Rediscovery.Features.DesktopFeatures
         public event EventHandler<Tuple<bool, string>> ReceivedUI;
 
         private IConsumer consumer => DependencyService.Get<IConsumer>();
+        private IDeviceData deviceData => DependencyService.Get<IDeviceData>() ?? new DeviceData();
         private IConnectService connectService => DependencyService.Get<IConnectService>();
         private Services.IFileSystem fileSystem => DependencyService.Get<Services.IFileSystem>() ?? new Services.FileSystem();
         private IHtmlUIService htmlUIService => DependencyService.Get<IHtmlUIService>() ?? new HtmlUIService();
@@ -111,6 +112,7 @@ namespace Rediscovery.Features.DesktopFeatures
                 if (consumer.FeatureConsumerService.Connect(desktopConfiguration.Address, conData.SSLPort, conData.PEM))
                 {
                     consumer.FeatureConsumerService.FeatureClient(conData.Token, this.featureId);
+                    consumer.FeatureConsumerService.StartFeatureData(conData.Token);
                     return true;
                 }
                 return false;
@@ -143,8 +145,9 @@ namespace Rediscovery.Features.DesktopFeatures
 
         public void Send(string profileId, string data)
         {
+            
             _logger.LogTrace($"{DateTime.Now.ToShortTimeString()} Try to send from Feature. (profileId:{profileId} data:{data})");
-            consumer.FeatureConsumerService.SendFeatureData(new SharedBase.Feature.FeatureData(null, featureId, profileId, data));
+            consumer.FeatureConsumerService.SendFeatureData(new SharedBase.Feature.FeatureData(deviceData.GetDeviceIdentifier(), featureId, profileId, data));
         }
 
         public string UIDirectory(Guid featureId)
