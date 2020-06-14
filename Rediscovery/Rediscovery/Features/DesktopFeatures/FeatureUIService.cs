@@ -1,6 +1,6 @@
 ﻿using AngleSharp;
-using PluginFeature.Models;
 using Rediscovery.Services;
+using SharedBase.Feature;
 using System;
 using System.Collections.Generic;
 using System.IO.Compression;
@@ -17,7 +17,7 @@ namespace Rediscovery.Features.DesktopFeatures
         private Services.IFileSystem fileSystem => DependencyService.Get<Services.IFileSystem>() ?? new Services.FileSystem();
         private IHtmlUIService htmlUIService => DependencyService.Get<IHtmlUIService>() ?? new HtmlUIService();
 
-        public void GetProfil(Guid modelId, Guid featureId, Action<bool, List<DeviceFeatureProfil>> callback)
+        public void GetProfil(Guid modelId, Guid featureId, Action<bool, List<FeatureProfil>> callback)
         {
             Task.Run(async () =>
             {
@@ -45,7 +45,7 @@ namespace Rediscovery.Features.DesktopFeatures
             });
         }
 
-        public void GetSetting(Guid modelId, Guid featureId, Action<bool, DeviceFeatureSetting> callback)
+        public void GetSetting(Guid modelId, Guid featureId, Action<bool, FeatureSetting> callback)
         {
             Task.Run(async () =>
             {

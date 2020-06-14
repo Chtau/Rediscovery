@@ -1,6 +1,6 @@
-﻿using PluginFeature.Models;
-using Rediscovery.Models;
+﻿using Rediscovery.Models;
 using Rediscovery.ViewModels;
+using SharedBase.Feature;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,11 +22,11 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
         public readonly Features.Connection.Models.ConnectionManifestFeature ConnectionManifestFeature;
         public readonly Guid DesktopConfigId;
 
-        public ObservableCollection<DeviceFeatureProfil> Profiles { get; set; } = new ObservableCollection<DeviceFeatureProfil>();
+        public ObservableCollection<FeatureProfil> Profiles { get; set; } = new ObservableCollection<FeatureProfil>();
 
-        private DeviceFeatureProfil selectedProfile;
+        private FeatureProfil selectedProfile;
 
-        public DeviceFeatureProfil SelectedProfile
+        public FeatureProfil SelectedProfile
         {
             get { return selectedProfile; }
             set
@@ -36,9 +36,9 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
             }
         }
 
-        private DeviceFeatureSetting featureSetting;
+        private FeatureSetting featureSetting;
 
-        public DeviceFeatureSetting FeatureSetting
+        public FeatureSetting FeatureSetting
         {
             get { return featureSetting; }
             set { SetProperty(ref featureSetting, value); }

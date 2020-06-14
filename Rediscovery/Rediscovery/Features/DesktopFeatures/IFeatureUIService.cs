@@ -1,4 +1,4 @@
-﻿using PluginFeature.Models;
+﻿using SharedBase.Feature;
 using System;
 using System.Collections.Generic;
 using System.IO.Compression;
@@ -12,7 +12,7 @@ namespace Rediscovery.Features.DesktopFeatures
         void SaveUI(Guid modelId, Guid featureId, Action<bool, string> callback);
 
         string UIDirectory(Guid featureId);
-        void GetProfil(Guid modelId, Guid featureId, Action<bool, List<DeviceFeatureProfil>> callback);
-        void GetSetting(Guid modelId, Guid featureId, Action<bool, DeviceFeatureSetting> callback);
+        void GetProfil(Guid modelId, Guid featureId, Action<bool, List<FeatureProfil>> callback);
+        void GetSetting(Guid modelId, Guid featureId, Action<bool, FeatureSetting> callback);
     }
 }

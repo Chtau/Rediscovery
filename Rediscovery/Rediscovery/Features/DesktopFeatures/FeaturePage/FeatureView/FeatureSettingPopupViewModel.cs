@@ -1,5 +1,5 @@
-﻿using PluginFeature.Models;
-using Rediscovery.ViewModels;
+﻿using Rediscovery.ViewModels;
+using SharedBase.Feature;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,13 +9,13 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
 {
     public class FeatureSettingPopupViewModel : BaseViewModel
     {
-        public event EventHandler<DeviceFeatureProfil> ProfileChanged;
+        public event EventHandler<FeatureProfil> ProfileChanged;
 
-        public ObservableCollection<DeviceFeatureProfil> Profiles { get; set; } = new ObservableCollection<DeviceFeatureProfil>();
+        public ObservableCollection<FeatureProfil> Profiles { get; set; } = new ObservableCollection<FeatureProfil>();
 
-        private DeviceFeatureProfil selectedProfile;
+        private FeatureProfil selectedProfile;
 
-        public DeviceFeatureProfil SelectedProfile
+        public FeatureProfil SelectedProfile
         {
             get { return selectedProfile; }
             set

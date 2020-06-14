@@ -1,7 +1,6 @@
-﻿using PluginFeature;
-using PluginFeature.Models;
-using Rediscovery.Models;
+﻿using Rediscovery.Models;
 using SharedBase.Device;
+using SharedBase.Feature;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -93,6 +92,6 @@ namespace Rediscovery.Features.Connection.Models
             set { SetProperty(ref settingsObject, value); }
         }
 
-        public ObservableCollection<DeviceFeatureProfil> Profiles { get; set; }
+        public ObservableCollection<FeatureProfil> Profiles { get; set; }
     }
 }
