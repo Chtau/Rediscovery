@@ -14,6 +14,7 @@ namespace Rediscovery.Features.Connection
     public class ConnectService : BaseService, IConnectService
     {
         private CommunicationAuthenticationConsumer.IAuthenticationConsumerService authenticationConsumer => DependencyService.Get<CommunicationAuthenticationConsumer.IAuthenticationConsumerService>();
+        private CommunicationAuthenticationConsumer.IGreetingConsumerService greetingConsumer => DependencyService.Get<CommunicationAuthenticationConsumer.IGreetingConsumerService>();
         //private CommunicationClientConsumer.IHub communicationHub => DependencyService.Get<CommunicationClientConsumer.IHub>() ?? new CommunicationClientConsumer.Hub();
         private IManifestFeatureEntityManager entityManager => DependencyService.Get<IManifestFeatureEntityManager>() ?? new ManifestFeatureEntityManager();
         private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
@@ -84,38 +85,46 @@ namespace Rediscovery.Features.Connection
             if (desktopConfigurations != null && desktopConfigurations.Count > nextIndex)
             {
                 var item = desktopConfigurations[nextIndex];
-                var addr = item.LastKnownAddress.Split(":")[0];
-                var port = item.LastKnownAddress.Split(":")[1];
-                // TODO: we need to handle if we connect the first time and have no PEM for SSL
-                if (authenticationConsumer.Connect(addr, int.Parse(port), ""))
+                var reply = greetingConsumer.GreetHost(item.Address, item.Port, deviceData.GreetingDeviceMessage());
+                if (reply.CanConnect == SharedBase.Connection.Enums.AllowConnect.OK)
                 {
-                    authenticationConsumer.SendWelcome(deviceData.GetWelcomeDeviceMessage(), deviceReply =>
+                    item.PEM = reply.PEM;
+                    if (authenticationConsumer.Connect(item.Address, item.SSLPort, item.PEM))
                     {
-                        if (deviceReply.State == SharedBase.Connection.Enums.ConnectionState.OK)
+                        authenticationConsumer.SendWelcome(deviceData.WelcomeDeviceMessage(), deviceReply =>
                         {
-                            OnSetToken(item.Id, deviceReply.Token);
-                            authenticationConsumer.RequestManifest(deviceReply.Token, manifest =>
+                            if (deviceReply.State == SharedBase.Connection.Enums.ConnectionState.OK)
                             {
-                                entityManager.AddManifestData(manifest, item.Id, item.DisplayName);
-                            });
-                            resultCallback?.Invoke(item, deviceReply.Token, deviceReply.State);
-                        } else
-                        {
-                            nextIndex++;
-                            if (desktopConfigurations.Count > nextIndex)
-                            {
-                                OnTryConnect(desktopConfigurations, resultCallback, nextIndex);
+                                OnSetToken(item.Id, deviceReply.Token);
+                                authenticationConsumer.RequestManifest(deviceReply.Token, manifest =>
+                                {
+                                    entityManager.AddManifestData(manifest, item.Id, item.DisplayName);
+                                });
+                                resultCallback?.Invoke(item, deviceReply.Token, deviceReply.State);
                             }
                             else
                             {
-                                resultCallback?.Invoke(item, null, item.ConnectionState);
+                                nextIndex++;
+                                if (desktopConfigurations.Count > nextIndex)
+                                {
+                                    OnTryConnect(desktopConfigurations, resultCallback, nextIndex);
+                                }
+                                else
+                                {
+                                    resultCallback?.Invoke(item, null, item.ConnectionState);
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+                    else
+                    {
+                        resultCallback?.Invoke(null, null, SharedBase.Connection.Enums.ConnectionState.Error);
+                    }
                 } else
                 {
                     resultCallback?.Invoke(null, null, SharedBase.Connection.Enums.ConnectionState.Error);
                 }
+                
                 /*communicationHub.Authenticate(deviceData.GetWelcomeDeviceMessage(), item.ConvertToCommunicationConfigurationModel(), (config, result) =>
                 {
                     if (result)

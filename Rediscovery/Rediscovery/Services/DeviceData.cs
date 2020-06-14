@@ -30,10 +30,10 @@ namespace Rediscovery.Services
             return deviceId;
         }
 
-        public SharedBase.Connection.WelcomeDeviceMessage GetWelcomeDeviceMessage()
+        public SharedBase.Connection.GreetingDeviceMessage GreetingDeviceMessage()
         {
             var setting = settingStore.GetItem(Guid.Empty);
-            return new SharedBase.Connection.WelcomeDeviceMessage
+            return new SharedBase.Connection.GreetingDeviceMessage
             {
                 DeviceName = setting.DeviceName,
                 DeviceIdentifier = GetDeviceIdentifier(),
@@ -43,6 +43,14 @@ namespace Rediscovery.Services
                 Model = Xamarin.Essentials.DeviceInfo.Model,
                 OSVersion = Xamarin.Essentials.DeviceInfo.VersionString,
                 Platform = Xamarin.Essentials.DeviceInfo.Platform.ToString()
+            };
+        }
+
+        public SharedBase.Connection.WelcomeDeviceMessage WelcomeDeviceMessage()
+        {
+            return new SharedBase.Connection.WelcomeDeviceMessage
+            {
+                DeviceIdentifier = GetDeviceIdentifier()
             };
         }
     }

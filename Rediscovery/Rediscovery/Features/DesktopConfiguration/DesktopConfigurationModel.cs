@@ -7,11 +7,12 @@ namespace Rediscovery.Features.DesktopConfiguration
 {
     public class DesktopConfigurationModel : BaseModel
     {
-        // TODO: add PEM Certificate
-
         private Guid _id;
         private string _displayName;
-        private string _lastKnownAddress;
+        private string _address;
+        private int _port;
+        private int _sslPort;
+        private string _pem;
         private DateTime? _lastConnection = null;
         private bool _autoConnect;
         private SharedBase.Connection.Enums.ConnectionState _connectionState;
@@ -31,11 +32,28 @@ namespace Rediscovery.Features.DesktopConfiguration
             set { SetProperty(ref _displayName, value); }
         }
 
-        [Obsolete("New Fields for IP Address and new Field for Port")]
-        public string LastKnownAddress
+        public string Address
         {
-            get { return _lastKnownAddress; }
-            set { SetProperty(ref _lastKnownAddress, value); }
+            get { return _address; }
+            set { SetProperty(ref _address, value); }
+        }
+
+        public int Port
+        {
+            get { return _port; }
+            set { SetProperty(ref _port, value); }
+        }
+
+        public int SSLPort
+        {
+            get { return _sslPort; }
+            set { SetProperty(ref _sslPort, value); }
+        }
+
+        public string PEM
+        {
+            get { return _pem; }
+            set { SetProperty(ref _pem, value); }
         }
 
         public DateTime? LastConnection
