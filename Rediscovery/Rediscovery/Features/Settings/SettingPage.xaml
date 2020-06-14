@@ -27,6 +27,10 @@
                         <Entry Text="{Binding Setting.DiscoveryPort}" Keyboard="Numeric" FontSize="Small" />
                     </StackLayout>
                     <StackLayout>
+                        <Label Text="Connect Timeout (seconds)" FontSize="Medium" />
+                        <Entry Text="{Binding Setting.ConnectTimeout}" Keyboard="Numeric" FontSize="Small" />
+                    </StackLayout>
+                    <StackLayout>
                         <Label Text="Application Device Identifier" FontSize="Medium" />
                         <Grid>
                             <Grid.ColumnDefinitions>

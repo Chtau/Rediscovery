@@ -10,6 +10,7 @@ namespace Rediscovery.Features.Settings.Models
         private Guid _id;
         private string _deviceIdentifier;
         private int _discoveryPort;
+        private int _connectTimeout;
 
         public Guid Id
         {
@@ -29,11 +30,18 @@ namespace Rediscovery.Features.Settings.Models
             set { SetProperty(ref _discoveryPort, value); }
         }
 
+        public int ConnectTimeout
+        {
+            get { return _connectTimeout; }
+            set { SetProperty(ref _connectTimeout, value); }
+        }
+
         public SettingModel()
         {
             Id = Guid.Empty;
             DiscoveryPort = 8888;
             DeviceName = Xamarin.Essentials.DeviceInfo.Name;
+            ConnectTimeout = 2;
         }
     }
 }

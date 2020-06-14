@@ -18,7 +18,7 @@ namespace CommunicationAuthenticationConsumer
             _logger = logger;
         }
 
-        public GreetingDeviceReply GreetHost(string host, int port, GreetingDeviceMessage greetingDevice)
+        public GreetingDeviceReply GreetHost(string host, int port, GreetingDeviceMessage greetingDevice, int secondsTimeout = 2)
         {
             var task = Task.Run(async () =>
             {
@@ -39,7 +39,7 @@ namespace CommunicationAuthenticationConsumer
                         OSVersion = greetingDevice.OSVersion.EmptyIfNull(),
                         Platform = greetingDevice.Platform.EmptyIfNull()
                     };
-                    var reply = await client.GreetingAsync(msg, cancellationToken: cts.Token);
+                    var reply = await client.GreetingAsync(msg, cancellationToken: cts.Token, deadline: DateTime.UtcNow.AddSeconds(secondsTimeout));
                     var canConnect = SharedBase.Connection.Enums.AllowConnect.None;
                     switch (reply.CanConnect)
                     {

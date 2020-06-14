@@ -32,6 +32,7 @@ namespace Rediscovery.Features.Settings
             srcItem.DeviceName = item.DeviceName;
             if (item.Id == Guid.Empty)
                 item.Id = Guid.NewGuid();
+            srcItem.ConnectTimeout = item.ConnectTimeout;
             srcItem.Id = item.Id;
             var result = json.SetFileContent(srcItem, filePath());
             return await Task.FromResult(new Tuple<bool, SettingModel>(result, srcItem));
@@ -78,6 +79,7 @@ namespace Rediscovery.Features.Settings
             srcItem.DeviceName = item.DeviceName;
             if (item.Id == Guid.Empty)
                 item.Id = Guid.NewGuid();
+            srcItem.ConnectTimeout = item.ConnectTimeout;
             srcItem.Id = item.Id;
             var result = json.SetFileContent(srcItem, filePath());
             return await Task.FromResult(new Tuple<bool, SettingModel>(result, srcItem));

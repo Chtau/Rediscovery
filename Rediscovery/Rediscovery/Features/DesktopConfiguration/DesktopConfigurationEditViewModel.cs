@@ -80,28 +80,33 @@ namespace Rediscovery.Features.DesktopConfiguration
                 {
                     CanEdit = false;
                     Load.IsLoading = true;
-                    connectService.Connect(Item, (result, state) =>
+                    Task.Run(() =>
                     {
-                        try
+                        connectService.Connect(Item, (result, state) =>
                         {
-                            Item.ConnectionState = state;
-                            if (state == SharedBase.Connection.Enums.ConnectionState.OK)
+                            try
                             {
-                                Item.LastConnection = DateTime.Now;
-                                _userNotification.ShowToast("Successful connected");
-                            } else
-                            {
-                                _userNotification.ShowToast("Not connected");
+                                Item.ConnectionState = state;
+                                if (state == SharedBase.Connection.Enums.ConnectionState.OK)
+                                {
+                                    Item.LastConnection = DateTime.Now;
+                                    _userNotification.ShowToast("Successful connected");
+                                }
+                                else
+                                {
+                                    _userNotification.ShowToast("Not connected");
+                                }
                             }
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.LogError(ex);
-                        } finally
-                        {
-                            Load.IsLoading = false;
-                            CanEdit = true;
-                        }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError(ex);
+                            }
+                            finally
+                            {
+                                Load.IsLoading = false;
+                                CanEdit = true;
+                            }
+                        });
                     });
                 }
                 catch (Exception ex)

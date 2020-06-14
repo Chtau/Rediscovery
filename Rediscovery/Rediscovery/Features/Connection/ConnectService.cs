@@ -15,6 +15,7 @@ namespace Rediscovery.Features.Connection
     public class ConnectService : BaseService, IConnectService
     {
         private IConsumer consumer => DependencyService.Get<IConsumer>();
+        private IDataStoreGuid<Features.Settings.Models.SettingModel> settingStore => DependencyService.Get<IDataStoreGuid<Features.Settings.Models.SettingModel>>() ?? new Features.Settings.SettingStore();
         private IManifestFeatureEntityManager entityManager => DependencyService.Get<IManifestFeatureEntityManager>() ?? new ManifestFeatureEntityManager();
         private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
         private IDeviceData deviceData => DependencyService.Get<IDeviceData>() ?? new DeviceData();
@@ -83,7 +84,8 @@ namespace Rediscovery.Features.Connection
             if (desktopConfigurations != null && desktopConfigurations.Count > nextIndex)
             {
                 var item = desktopConfigurations[nextIndex];
-                var reply = consumer.GreetingConsumerService.GreetHost(item.Address, item.Port, deviceData.GreetingDeviceMessage());
+                var setting = settingStore.GetItem(Guid.Empty);
+                var reply = consumer.GreetingConsumerService.GreetHost(item.Address, item.Port, deviceData.GreetingDeviceMessage(), setting.ConnectTimeout);
                 if (reply.CanConnect == SharedBase.Connection.Enums.AllowConnect.OK)
                 {
                     if (consumer.AuthenticationConsumerService.Connect(item.Address, reply.SSLPort, reply.PEM))

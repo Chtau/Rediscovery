@@ -7,6 +7,6 @@ namespace CommunicationAuthenticationConsumer
 {
     public interface IGreetingConsumerService
     {
-        GreetingDeviceReply GreetHost(string host, int port, GreetingDeviceMessage greetingDevice);
+        GreetingDeviceReply GreetHost(string host, int port, GreetingDeviceMessage greetingDevice, int secondsTimeout = 2);
     }
 }
