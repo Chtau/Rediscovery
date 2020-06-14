@@ -20,8 +20,9 @@ namespace Rediscovery.Features.DesktopFeatures
         public event EventHandler<FeatureSetting> ReceivedSetting;
         public event EventHandler<Tuple<bool, string>> ReceivedUI;
 
+        private IConsumer consumer => DependencyService.Get<IConsumer>();
         //private CommunicationClientConsumer.IHub communicationHub => DependencyService.Get<CommunicationClientConsumer.IHub>() ?? new CommunicationClientConsumer.Hub();
-        private CommunicationFeatureConsumer.IFeatureConsumerService featureConsumer => DependencyService.Get<CommunicationFeatureConsumer.IFeatureConsumerService>();
+        //private CommunicationFeatureConsumer.IFeatureConsumerService featureConsumer => DependencyService.Get<CommunicationFeatureConsumer.IFeatureConsumerService>();
         private IConnectService connectService => DependencyService.Get<IConnectService>();
         private Services.IFileSystem fileSystem => DependencyService.Get<Services.IFileSystem>() ?? new Services.FileSystem();
         private IHtmlUIService htmlUIService => DependencyService.Get<IHtmlUIService>() ?? new HtmlUIService();
@@ -30,9 +31,9 @@ namespace Rediscovery.Features.DesktopFeatures
 
         public FeatureService()
         {
-            featureConsumer.ReceiveClientData += FeatureConsumer_ReceiveClientData;
-            featureConsumer.ReceiveFeatureData += FeatureConsumer_ReceiveFeatureData;
-            featureConsumer.ReceiveFeatureStateChangeReply += FeatureConsumer_ReceiveFeatureStateChangeReply;
+            consumer.FeatureConsumerService.ReceiveClientData += FeatureConsumer_ReceiveClientData;
+            consumer.FeatureConsumerService.ReceiveFeatureData += FeatureConsumer_ReceiveFeatureData;
+            consumer.FeatureConsumerService.ReceiveFeatureStateChangeReply += FeatureConsumer_ReceiveFeatureStateChangeReply;
         }
 
         private void FeatureConsumer_ReceiveFeatureStateChangeReply(object sender, CommunicationBase.Models.FeatureState e)
@@ -101,9 +102,9 @@ namespace Rediscovery.Features.DesktopFeatures
             {
                 desktopConfiguration = configurationModel;
                 this.featureId = featureId;
-                if (featureConsumer.Connect(desktopConfiguration.Address, desktopConfiguration.SSLPort, desktopConfiguration.PEM))
+                if (consumer.FeatureConsumerService.Connect(desktopConfiguration.Address, desktopConfiguration.SSLPort, desktopConfiguration.PEM))
                 {
-                    featureConsumer.FeatureClient(connectService.GetToken(desktopConfiguration.Id), this.featureId);
+                    consumer.FeatureConsumerService.FeatureClient(connectService.GetToken(desktopConfiguration.Id), this.featureId);
                     return true;
                 }
                 return false;
@@ -116,7 +117,7 @@ namespace Rediscovery.Features.DesktopFeatures
 
         public void Start()
         {
-            featureConsumer.ChangeFeatureState(connectService.GetToken(desktopConfiguration.Id), new CommunicationBase.Models.FeatureState
+            consumer.FeatureConsumerService.ChangeFeatureState(connectService.GetToken(desktopConfiguration.Id), new CommunicationBase.Models.FeatureState
             {
                 FeatureId = featureId,
                 CurrentState = CommunicationBase.Models.FeatureState.State.Start
@@ -125,7 +126,7 @@ namespace Rediscovery.Features.DesktopFeatures
 
         public void Stop()
         {
-            featureConsumer.ChangeFeatureState(connectService.GetToken(desktopConfiguration.Id), new CommunicationBase.Models.FeatureState
+            consumer.FeatureConsumerService.ChangeFeatureState(connectService.GetToken(desktopConfiguration.Id), new CommunicationBase.Models.FeatureState
             {
                 FeatureId = featureId,
                 CurrentState = CommunicationBase.Models.FeatureState.State.Stop
@@ -136,7 +137,7 @@ namespace Rediscovery.Features.DesktopFeatures
         {
             _logger.LogTrace($"{DateTime.Now.ToShortTimeString()} Try to send from Feature. (profileId:{profileId} data:{data})");
             //communicationHub.Send(_connectionManifestFeature.FeatureId, profileId, data);
-            featureConsumer.SendFeatureData(new SharedBase.Feature.FeatureData(null, featureId, profileId, data));
+            consumer.FeatureConsumerService.SendFeatureData(new SharedBase.Feature.FeatureData(null, featureId, profileId, data));
         }
 
         /*public void GetProfil(Guid modelId, Guid featureId, Action<bool, List<FeatureProfil>> callback)

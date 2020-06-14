@@ -13,8 +13,8 @@ namespace Rediscovery.Features.Connection
 {
     public class ConnectService : BaseService, IConnectService
     {
-        private CommunicationAuthenticationConsumer.IAuthenticationConsumerService authenticationConsumer => DependencyService.Get<CommunicationAuthenticationConsumer.IAuthenticationConsumerService>();
-        private CommunicationAuthenticationConsumer.IGreetingConsumerService greetingConsumer => DependencyService.Get<CommunicationAuthenticationConsumer.IGreetingConsumerService>();
+        private IConsumer consumer => DependencyService.Get<IConsumer>();
+        //private CommunicationAuthenticationConsumer.IGreetingConsumerService greetingConsumer => DependencyService.Get<CommunicationAuthenticationConsumer.IGreetingConsumerService>();
         //private CommunicationClientConsumer.IHub communicationHub => DependencyService.Get<CommunicationClientConsumer.IHub>() ?? new CommunicationClientConsumer.Hub();
         private IManifestFeatureEntityManager entityManager => DependencyService.Get<IManifestFeatureEntityManager>() ?? new ManifestFeatureEntityManager();
         private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
@@ -85,18 +85,18 @@ namespace Rediscovery.Features.Connection
             if (desktopConfigurations != null && desktopConfigurations.Count > nextIndex)
             {
                 var item = desktopConfigurations[nextIndex];
-                var reply = greetingConsumer.GreetHost(item.Address, item.Port, deviceData.GreetingDeviceMessage());
+                var reply = consumer.GreetingConsumerService.GreetHost(item.Address, item.Port, deviceData.GreetingDeviceMessage());
                 if (reply.CanConnect == SharedBase.Connection.Enums.AllowConnect.OK)
                 {
                     item.PEM = reply.PEM;
-                    if (authenticationConsumer.Connect(item.Address, item.SSLPort, item.PEM))
+                    if (consumer.AuthenticationConsumerService.Connect(item.Address, item.SSLPort, item.PEM))
                     {
-                        authenticationConsumer.SendWelcome(deviceData.WelcomeDeviceMessage(), deviceReply =>
+                        consumer.AuthenticationConsumerService.SendWelcome(deviceData.WelcomeDeviceMessage(), deviceReply =>
                         {
                             if (deviceReply.State == SharedBase.Connection.Enums.ConnectionState.OK)
                             {
                                 OnSetToken(item.Id, deviceReply.Token);
-                                authenticationConsumer.RequestManifest(deviceReply.Token, manifest =>
+                                consumer.AuthenticationConsumerService.RequestManifest(deviceReply.Token, manifest =>
                                 {
                                     entityManager.AddManifestData(manifest, item.Id, item.DisplayName);
                                 });

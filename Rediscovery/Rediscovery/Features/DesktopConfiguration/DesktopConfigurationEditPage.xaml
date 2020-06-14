@@ -23,7 +23,9 @@
                         <Label Text="Connection Name" FontSize="Medium" />
                         <Entry Text="{Binding Item.DisplayName}" FontSize="Small" />
                         <Label Text="IP Address" FontSize="Medium" />
-                        <Editor Text="{Binding Item.LastKnownAddress}" Keyboard="Url" FontSize="Small" Margin="0" />
+                        <Editor Text="{Binding Item.Address}" Keyboard="Url" FontSize="Small" Margin="0" />
+                        <Label Text="Port" FontSize="Medium" />
+                        <Editor Text="{Binding Item.Port}" Keyboard="Numeric" FontSize="Small" Margin="0" />
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
