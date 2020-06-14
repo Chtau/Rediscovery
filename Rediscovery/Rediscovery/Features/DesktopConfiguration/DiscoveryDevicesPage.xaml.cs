@@ -1,4 +1,6 @@
 ﻿using Rediscovery.Services;
+using SharedBase.Connection;
+using SharedBase.Discovery;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +27,7 @@ namespace Rediscovery.Features.DesktopConfiguration
 
         private async void DevicesFoundControl_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            SharedCoreModels.DiscoveryServiceInfo item = e.SelectedItem as SharedCoreModels.DiscoveryServiceInfo;
+            DiscoveryServiceInfo item = e.SelectedItem as DiscoveryServiceInfo;
             if (item != null)
             {
                 string answer = await DisplayPromptAsync("Save Desktop", "Save new Desktop with the following Name", "Yes", "Cancel", placeholder:"Desktop Name", initialValue:item.Name);
@@ -36,9 +38,10 @@ namespace Rediscovery.Features.DesktopConfiguration
                     {
                         Id = Guid.NewGuid(),
                         DisplayName = answer,
-                        LastKnownAddress = item.IPAddress + ":" + item.Port,
+                        Address = item.IPAddress,
+                        Port = item.Port,
                         AutoConnect = false,
-                        ConnectionState = SharedCoreModels.Enums.ConnectionState.None,
+                        ConnectionState = Enums.ConnectionState.None,
                         LastConnection = null
                     };
                     var result = await desktopStore.AddItemAsync(newDevice);

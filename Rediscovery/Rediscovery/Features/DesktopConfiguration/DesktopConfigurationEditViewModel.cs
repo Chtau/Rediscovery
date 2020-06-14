@@ -65,9 +65,11 @@ namespace Rediscovery.Features.DesktopConfiguration
                 {
                     Id = Guid.NewGuid(),
                     DisplayName = "New",
-                    LastKnownAddress = "192.168.1.100:44341",
+                    Address = "192.168.1.100",
+                    Port = 44341,
+                    SSLPort = 44342,
                     AutoConnect = true,
-                    ConnectionState = SharedCoreModels.Enums.ConnectionState.None,
+                    ConnectionState = SharedBase.Connection.Enums.ConnectionState.None,
                     LastConnection = null
                 };
                 CanEdit = true;
@@ -84,7 +86,7 @@ namespace Rediscovery.Features.DesktopConfiguration
                         try
                         {
                             Item.ConnectionState = state;
-                            if (result)
+                            if (state == SharedBase.Connection.Enums.ConnectionState.OK)
                             {
                                 Item.LastConnection = DateTime.Now;
                                 _userNotification.ShowToast("Successful connected");
@@ -122,7 +124,7 @@ namespace Rediscovery.Features.DesktopConfiguration
                     {
                         try
                         {
-                            Item.ConnectionState = SharedCoreModels.Enums.ConnectionState.None;
+                            Item.ConnectionState = SharedBase.Connection.Enums.ConnectionState.None;
                             _userNotification.ShowToast("Disconnected");
                         }
                         catch (Exception ex)

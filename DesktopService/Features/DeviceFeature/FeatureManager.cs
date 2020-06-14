@@ -36,10 +36,10 @@ namespace DesktopService.Features.DeviceFeature
                         _logger.LogWarning("Service received feature state changed request for [Unknown]");
                         break;
                     case FeatureState.State.Start:
-                        _featureService.StartFeature(featureStateChange.Entity.FeatureId.SafeGuid(), featureStateChange.Sid);
+                        _featureService.StartFeature(featureStateChange.Entity.FeatureId, featureStateChange.Sid);
                         break;
                     case FeatureState.State.Stop:
-                        _featureService.StopFeature(featureStateChange.Entity.FeatureId.SafeGuid(), featureStateChange.Sid);
+                        _featureService.StopFeature(featureStateChange.Entity.FeatureId, featureStateChange.Sid);
                         break;
                     case FeatureState.State.Error:
                         _logger.LogWarning("Service received feature state changed request for [Error]");

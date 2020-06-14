@@ -1,23 +1,145 @@
 ﻿using AngleSharp;
+using Rediscovery.Features.Connection;
 using Rediscovery.Services;
 using SharedBase.Feature;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-[assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.DesktopFeatures.FeatureUIService))]
+[assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.DesktopFeatures.FeatureService))]
 namespace Rediscovery.Features.DesktopFeatures
 {
-    public class FeatureUIService : BaseService, IFeatureUIService
+    public class FeatureService : BaseService, IFeatureService
     {
-        private CommunicationClientConsumer.IHub communicationHub => DependencyService.Get<CommunicationClientConsumer.IHub>() ?? new CommunicationClientConsumer.Hub();
+        public event EventHandler<SharedBase.Feature.FeatureData> ReceivedData;
+        public event EventHandler<List<FeatureProfil>> ReceivedProfiles;
+        public event EventHandler<FeatureSetting> ReceivedSetting;
+        public event EventHandler<Tuple<bool, string>> ReceivedUI;
+
+        //private CommunicationClientConsumer.IHub communicationHub => DependencyService.Get<CommunicationClientConsumer.IHub>() ?? new CommunicationClientConsumer.Hub();
+        private CommunicationFeatureConsumer.IFeatureConsumerService featureConsumer => DependencyService.Get<CommunicationFeatureConsumer.IFeatureConsumerService>();
+        private IConnectService connectService => DependencyService.Get<IConnectService>();
         private Services.IFileSystem fileSystem => DependencyService.Get<Services.IFileSystem>() ?? new Services.FileSystem();
         private IHtmlUIService htmlUIService => DependencyService.Get<IHtmlUIService>() ?? new HtmlUIService();
+        private DesktopConfiguration.DesktopConfigurationModel desktopConfiguration;
+        private Guid featureId;
 
-        public void GetProfil(Guid modelId, Guid featureId, Action<bool, List<FeatureProfil>> callback)
+        public FeatureService()
+        {
+            featureConsumer.ReceiveClientData += FeatureConsumer_ReceiveClientData;
+            featureConsumer.ReceiveFeatureData += FeatureConsumer_ReceiveFeatureData;
+            featureConsumer.ReceiveFeatureStateChangeReply += FeatureConsumer_ReceiveFeatureStateChangeReply;
+        }
+
+        private void FeatureConsumer_ReceiveFeatureStateChangeReply(object sender, CommunicationBase.Models.FeatureState e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private void FeatureConsumer_ReceiveFeatureData(object sender, SharedBase.Feature.FeatureData e)
+        {
+            _logger.LogTrace($"{DateTime.Now.ToShortTimeString()} Feature exchange received. (FeatureId:{e.FeatureId} ProfileId:{e.ProfileId})");
+            if (featureId == e.FeatureId)
+            {
+                ReceivedData?.Invoke(this, e);
+            }
+        }
+
+        private void FeatureConsumer_ReceiveClientData(object sender, CommunicationFeatureConsumer.Models.FeatureClientData e)
+        {
+            if (e.FeatureId == featureId)
+            {
+                ReceivedProfiles?.Invoke(this, e.FeatureProfils);
+                ReceivedSetting?.Invoke(this, e.FeatureSetting);
+
+                string directory = OnArchiveDirectory(featureId);
+                try
+                {
+                    if (System.IO.Directory.Exists(directory))
+                    {
+                        System.IO.Directory.Delete(directory, true);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex);
+                }
+                try
+                {
+                    var stream = new MemoryStream(e.UIArchive);
+                    var archive = new ZipArchive(stream);
+                    if (archive != null)
+                    {
+                        archive.ExtractToDirectory(directory);
+                        Task.Run(async () =>
+                        {
+                            await OnInjectUIDefaults(directory);
+                            ReceivedUI?.Invoke(this, new Tuple<bool, string>(true, directory));
+                        });
+                    }
+                    else
+                    {
+                        _logger.LogInformation($"No UI Archive received for Feature Id:{featureId}");
+                        ReceivedUI?.Invoke(this, new Tuple<bool, string>(false, directory));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex);
+                    ReceivedUI?.Invoke(this, new Tuple<bool, string>(false, directory));
+                }
+            }
+        }
+
+        public bool LoadFeature(DesktopConfiguration.DesktopConfigurationModel configurationModel, Guid featureId)
+        {
+            try
+            {
+                desktopConfiguration = configurationModel;
+                this.featureId = featureId;
+                if (featureConsumer.Connect(desktopConfiguration.Address, desktopConfiguration.SSLPort, desktopConfiguration.PEM))
+                {
+                    featureConsumer.FeatureClient(connectService.GetToken(desktopConfiguration.Id), this.featureId);
+                    return true;
+                }
+                return false;
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex);
+                return false;
+            }
+        }
+
+        public void Start()
+        {
+            featureConsumer.ChangeFeatureState(connectService.GetToken(desktopConfiguration.Id), new CommunicationBase.Models.FeatureState
+            {
+                FeatureId = featureId,
+                CurrentState = CommunicationBase.Models.FeatureState.State.Start
+            });
+        }
+
+        public void Stop()
+        {
+            featureConsumer.ChangeFeatureState(connectService.GetToken(desktopConfiguration.Id), new CommunicationBase.Models.FeatureState
+            {
+                FeatureId = featureId,
+                CurrentState = CommunicationBase.Models.FeatureState.State.Stop
+            });
+        }
+
+        public void Send(string profileId, string data)
+        {
+            _logger.LogTrace($"{DateTime.Now.ToShortTimeString()} Try to send from Feature. (profileId:{profileId} data:{data})");
+            //communicationHub.Send(_connectionManifestFeature.FeatureId, profileId, data);
+            featureConsumer.SendFeatureData(new SharedBase.Feature.FeatureData(null, featureId, profileId, data));
+        }
+
+        /*public void GetProfil(Guid modelId, Guid featureId, Action<bool, List<FeatureProfil>> callback)
         {
             Task.Run(async () =>
             {
@@ -43,9 +165,9 @@ namespace Rediscovery.Features.DesktopFeatures
                     callback?.Invoke(false, null);
                 }
             });
-        }
+        }*/
 
-        public void GetSetting(Guid modelId, Guid featureId, Action<bool, FeatureSetting> callback)
+        /*public void GetSetting(Guid modelId, Guid featureId, Action<bool, FeatureSetting> callback)
         {
             Task.Run(async () =>
             {
@@ -71,9 +193,9 @@ namespace Rediscovery.Features.DesktopFeatures
                     callback?.Invoke(false, null);
                 }
             });
-        }
+        }*/
 
-        public void SaveUI(Guid modelId, Guid featureId, Action<bool, string> callback)
+        /*public void SaveUI(Guid modelId, Guid featureId, Action<bool, string> callback)
         {
             Task.Run(async () =>
             {
@@ -109,7 +231,7 @@ namespace Rediscovery.Features.DesktopFeatures
                     callback?.Invoke(false, directory);
                 }
             });
-        }
+        }*/
 
         public string UIDirectory(Guid featureId)
         {

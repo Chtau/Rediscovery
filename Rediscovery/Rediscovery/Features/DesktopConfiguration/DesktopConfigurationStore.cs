@@ -51,7 +51,9 @@ namespace Rediscovery.Features.DesktopConfiguration
             }
 
             items[index].LastConnection = item.LastConnection;
-            items[index].LastKnownAddress = item.LastKnownAddress;
+            items[index].Address = item.Address;
+            items[index].Port = item.Port;
+            items[index].SSLPort = item.SSLPort;
             items[index].ManifestAppMinimumVersion = item.ManifestAppMinimumVersion;
             items[index].ManifestClientName = item.ManifestClientName;
             items[index].ManifestClientVersion = item.ManifestClientVersion;

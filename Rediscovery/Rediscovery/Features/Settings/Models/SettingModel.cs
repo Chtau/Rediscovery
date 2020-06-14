@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Xamarin.Essentials;
 
 namespace Rediscovery.Features.Settings.Models
 {
@@ -34,7 +33,7 @@ namespace Rediscovery.Features.Settings.Models
         {
             Id = Guid.Empty;
             DiscoveryPort = 8888;
-            DeviceName = DeviceInfo.Name;
+            DeviceName = Xamarin.Essentials.DeviceInfo.Name;
         }
     }
 }

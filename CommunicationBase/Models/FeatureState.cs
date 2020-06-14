@@ -14,7 +14,7 @@ namespace CommunicationBase.Models
             Error = 3
         }
 
-        public string FeatureId { get; set; }
+        public Guid FeatureId { get; set; }
 
         public State CurrentState { get; set; }
     }

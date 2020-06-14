@@ -8,7 +8,7 @@ namespace Rediscovery
 {
     public static class EntityExtensions
     {
-        public static ConnectionConfiguration ConvertToCommunicationConfigurationModel(this DesktopConfigurationModel desktopConfigurationModel)
+        /*public static ConnectionConfiguration ConvertToCommunicationConfigurationModel(this DesktopConfigurationModel desktopConfigurationModel)
         {
             return new ConnectionConfiguration
             {
@@ -18,6 +18,6 @@ namespace Rediscovery
                 State = desktopConfigurationModel.ConnectionState.ConvertToCommunicationEnum(),
                 Token = null
             };
-        }
+        }*/
     }
 }

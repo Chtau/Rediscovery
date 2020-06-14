@@ -119,12 +119,12 @@ namespace CommunicationFeatureProvider.ProtoServices
                     Entity = new CommunicationBase.Models.FeatureState
                     {
                         CurrentState = (CommunicationBase.Models.FeatureState.State)(int)request.FeatureState_,
-                        FeatureId = request.FeatureId
+                        FeatureId = request.FeatureId.SafeGuid()
                     }
                 });
                 return Task.FromResult(new FeatureState
                 {
-                    FeatureId = resultFeatureState.Entity.FeatureId,
+                    FeatureId = resultFeatureState.Entity.FeatureId.ToString(),
                     FeatureState_ = (FeatureState.Types.State)(int)resultFeatureState.Entity.CurrentState
                 });
             } catch (Exception ex)

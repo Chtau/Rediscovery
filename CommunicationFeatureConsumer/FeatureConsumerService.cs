@@ -51,7 +51,7 @@ namespace CommunicationFeatureConsumer
                 {
                     var msg = new Featuredata.FeatureState
                     {
-                        FeatureId = featureState.FeatureId,
+                        FeatureId = featureState.FeatureId.ToString(),
                         FeatureState_ = (Featuredata.FeatureState.Types.State)(int)featureState.CurrentState
                     };
                     var meta = new Metadata();
@@ -62,7 +62,7 @@ namespace CommunicationFeatureConsumer
                     var replyMsg = new CommunicationBase.Models.FeatureState
                     {
                         CurrentState = (CommunicationBase.Models.FeatureState.State)(int)reply.FeatureState_,
-                        FeatureId = reply.FeatureId
+                        FeatureId = reply.FeatureId.SafeGuid()
                     };
                     ReceiveFeatureStateChangeReply?.Invoke(this, replyMsg);
                 }

@@ -1,4 +1,5 @@
 ﻿using Rediscovery.Services;
+using SharedBase.Connection;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -15,8 +16,8 @@ namespace Rediscovery.Converter
         {
             try
             {
-                var valueState = (SharedCoreModels.Enums.ConnectionState)(int)value;
-                return valueState == SharedCoreModels.Enums.ConnectionState.OK;
+                var valueState = (Enums.ConnectionState)(int)value;
+                return valueState == Enums.ConnectionState.OK;
             }
             catch (Exception ex)
             {
@@ -39,8 +40,8 @@ namespace Rediscovery.Converter
         {
             try
             {
-                var valueState = (SharedCoreModels.Enums.ConnectionState)(int)value;
-                return !(valueState == SharedCoreModels.Enums.ConnectionState.OK);
+                var valueState = (Enums.ConnectionState)(int)value;
+                return !(valueState == Enums.ConnectionState.OK);
             }
             catch (Exception ex)
             {

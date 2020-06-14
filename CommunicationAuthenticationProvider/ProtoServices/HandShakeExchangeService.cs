@@ -42,6 +42,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                 });
                 if (allowed == SharedBase.Connection.Enums.AllowConnect.OK)
                 {
+                    // TODO: add SSL Port to the reply (this reduces the User App configuration)
                     reply.PEM = _authenticationManager.GetCertificatePEM(request.DeviceIdentifier);
                 }
                 switch (allowed)

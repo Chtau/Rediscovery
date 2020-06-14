@@ -1,4 +1,5 @@
 ﻿using Rediscovery.Services;
+using SharedBase.Connection;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,29 +17,29 @@ namespace Rediscovery.Converter
         {
             try
             {
-                var valueState = (SharedCoreModels.Enums.ConnectionState)(int)value;
+                var valueState = (Enums.ConnectionState)(int)value;
                 string resultText = "";
                 switch (valueState)
                 {
-                    case SharedCoreModels.Enums.ConnectionState.None:
+                    case Enums.ConnectionState.None:
                         resultText = "";
                         break;
-                    case SharedCoreModels.Enums.ConnectionState.OK:
+                    case Enums.ConnectionState.OK:
                         resultText = "Connected";
                         break;
-                    case SharedCoreModels.Enums.ConnectionState.Error:
+                    case Enums.ConnectionState.Error:
                         resultText = "Connection error";
                         break;
-                    case SharedCoreModels.Enums.ConnectionState.Warning:
+                    case Enums.ConnectionState.Warning:
                         resultText = "Connection warning";
                         break;
-                    case SharedCoreModels.Enums.ConnectionState.Offline:
+                    case Enums.ConnectionState.Offline:
                         resultText = "Offline";
                         break;
-                    case SharedCoreModels.Enums.ConnectionState.Denied:
+                    case Enums.ConnectionState.Denied:
                         resultText = "Access denied";
                         break;
-                    case SharedCoreModels.Enums.ConnectionState.WaitForApprovel:
+                    case Enums.ConnectionState.WaitForApprovel:
                         resultText = "Wait for Approval";
                         break;
                     default:

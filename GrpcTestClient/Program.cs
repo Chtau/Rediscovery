@@ -95,7 +95,7 @@ namespace GrpcTestClient
             featureConsumer.ChangeFeatureState(token, new CommunicationBase.Models.FeatureState
             {
                 CurrentState = CommunicationBase.Models.FeatureState.State.Start,
-                FeatureId = featureId.ToString()
+                FeatureId = featureId
             });
             featureConsumer.SendFeatureData(new FeatureData("1", featureId, "1", $"{DateTime.Now} Client feature data"));
         }
