@@ -1,4 +1,5 @@
 ﻿using CommunicationBase;
+using Rediscovery.Features.Connection.Models;
 using Rediscovery.Features.DesktopConfiguration;
 using Rediscovery.Services;
 using System;
@@ -19,27 +20,27 @@ namespace Rediscovery.Features.Connection
         private IManifestFeatureEntityManager entityManager => DependencyService.Get<IManifestFeatureEntityManager>() ?? new ManifestFeatureEntityManager();
         private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
         private IDeviceData deviceData => DependencyService.Get<IDeviceData>() ?? new DeviceData();
-        private Dictionary<Guid, string> desktopConfigurationToken = new Dictionary<Guid, string>();
+        private Dictionary<Guid, ConnectConfigurationData> desktopConfigurationData = new Dictionary<Guid, ConnectConfigurationData>();
 
         public ConnectService()
         {
             //communicationHub.Init(_logger, "/hubs/connect", "/hubs/feature");
         }
 
-        public string GetToken(Guid configurationId)
+        public ConnectConfigurationData GetData(Guid configurationId)
         {
-            if (desktopConfigurationToken.ContainsKey(configurationId))
-                return desktopConfigurationToken[configurationId];
+            if (desktopConfigurationData.ContainsKey(configurationId))
+                return desktopConfigurationData[configurationId];
             return null;
         }
 
-        private void OnSetToken(Guid configurationId, string token)
+        private void OnSetData(Guid configurationId, ConnectConfigurationData data)
         {
             // TODO: remove Token ...
-            if (desktopConfigurationToken.ContainsKey(configurationId))
-                desktopConfigurationToken[configurationId] = token;
+            if (desktopConfigurationData.ContainsKey(configurationId))
+                desktopConfigurationData[configurationId] = data;
             else
-                desktopConfigurationToken.Add(configurationId,token);
+                desktopConfigurationData.Add(configurationId, data);
         }
 
         public void AutoConnect(Action<string, SharedBase.Connection.Enums.ConnectionState> resultCallback)
@@ -88,14 +89,18 @@ namespace Rediscovery.Features.Connection
                 var reply = consumer.GreetingConsumerService.GreetHost(item.Address, item.Port, deviceData.GreetingDeviceMessage());
                 if (reply.CanConnect == SharedBase.Connection.Enums.AllowConnect.OK)
                 {
-                    item.PEM = reply.PEM;
-                    if (consumer.AuthenticationConsumerService.Connect(item.Address, item.SSLPort, item.PEM))
+                    if (consumer.AuthenticationConsumerService.Connect(item.Address, reply.SSLPort, reply.PEM))
                     {
                         consumer.AuthenticationConsumerService.SendWelcome(deviceData.WelcomeDeviceMessage(), deviceReply =>
                         {
                             if (deviceReply.State == SharedBase.Connection.Enums.ConnectionState.OK)
                             {
-                                OnSetToken(item.Id, deviceReply.Token);
+                                OnSetData(item.Id, new ConnectConfigurationData
+                                {
+                                    Token = deviceReply.Token,
+                                    PEM = reply.PEM,
+                                    SSLPort = reply.SSLPort
+                                });
                                 consumer.AuthenticationConsumerService.RequestManifest(deviceReply.Token, manifest =>
                                 {
                                     entityManager.AddManifestData(manifest, item.Id, item.DisplayName);

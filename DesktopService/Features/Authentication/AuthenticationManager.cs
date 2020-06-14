@@ -96,6 +96,7 @@ namespace DesktopService.Features.Authentication
 
         public string GetCertificatePEM(string deviceIdentifier)
         {
+            // TODO: remove static values and use a Service for PEM
             return Program.CertPEM();
         }
 
@@ -109,6 +110,12 @@ namespace DesktopService.Features.Authentication
                 SupportedFeatures = _featureService.GetFeaturesManifest(),
                 ClientName = "DEV-Desktop"
             };
+        }
+
+        public int GetSSLPort()
+        {
+            // TODO: remove static values and use a Service for Https Port
+            return Program.HostPortHttps;
         }
 
         public async Task<LoginResult> RequestLogin(WelcomeDeviceMessage welcomeDeviceMessage)

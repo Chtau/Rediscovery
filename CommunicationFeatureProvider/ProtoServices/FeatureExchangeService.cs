@@ -155,7 +155,18 @@ namespace CommunicationFeatureProvider.ProtoServices
                 var profiles = _featureManager.GetFeatureProfiles(featureId);
                 var setting = _featureManager.GetFeatureSettings(featureId);
 
-                result.Setting = setting.GetProtoFeatureDetailSetting();
+                if (setting != null)
+                {
+                    result.Setting = setting.GetProtoFeatureDetailSetting();
+                } else
+                {
+                    result.Setting = new FeatureDetailSetting
+                    {
+                        Data = "",
+                        FeatureId = request.FeatureId
+                    };
+                }
+                
                 if (profiles?.Count > 0)
                 {
                     foreach (var item in profiles)

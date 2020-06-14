@@ -63,6 +63,7 @@ namespace CommunicationAuthenticationConsumer
                     }
                     return new GreetingDeviceReply
                     {
+                        SSLPort = reply.SSLPort,
                         PEM = reply.PEM,
                         CanConnect = canConnect
                     };
@@ -72,6 +73,7 @@ namespace CommunicationAuthenticationConsumer
                     _logger.LogError(ex);
                     return new GreetingDeviceReply
                     {
+                        SSLPort = -1,
                         PEM = "",
                         CanConnect = Enums.AllowConnect.Error
                     };

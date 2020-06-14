@@ -18,7 +18,8 @@ message GreetingMessage {
 }
 
 message GreetingReply {
-  string PEM = 1;
+  int32 SSLPort = 1;
+  string PEM = 2;
   enum State {
     None = 0;
     OK = 1;
@@ -26,5 +27,5 @@ message GreetingReply {
     Denied = 3;
     WaitForApprovel = 4;
   }
-  State CanConnect = 2;
+  State CanConnect = 3;
 }

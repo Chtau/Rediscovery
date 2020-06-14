@@ -11,8 +11,6 @@ namespace Rediscovery.Features.DesktopConfiguration
         private string _displayName;
         private string _address;
         private int _port;
-        private int _sslPort;
-        private string _pem;
         private DateTime? _lastConnection = null;
         private bool _autoConnect;
         private SharedBase.Connection.Enums.ConnectionState _connectionState;
@@ -42,18 +40,6 @@ namespace Rediscovery.Features.DesktopConfiguration
         {
             get { return _port; }
             set { SetProperty(ref _port, value); }
-        }
-
-        public int SSLPort
-        {
-            get { return _sslPort; }
-            set { SetProperty(ref _sslPort, value); }
-        }
-
-        public string PEM
-        {
-            get { return _pem; }
-            set { SetProperty(ref _pem, value); }
         }
 
         public DateTime? LastConnection

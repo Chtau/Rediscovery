@@ -102,9 +102,10 @@ namespace Rediscovery.Features.DesktopFeatures
             {
                 desktopConfiguration = configurationModel;
                 this.featureId = featureId;
-                if (consumer.FeatureConsumerService.Connect(desktopConfiguration.Address, desktopConfiguration.SSLPort, desktopConfiguration.PEM))
+                var conData = connectService.GetData(desktopConfiguration.Id);
+                if (consumer.FeatureConsumerService.Connect(desktopConfiguration.Address, conData.SSLPort, conData.PEM))
                 {
-                    consumer.FeatureConsumerService.FeatureClient(connectService.GetToken(desktopConfiguration.Id), this.featureId);
+                    consumer.FeatureConsumerService.FeatureClient(conData.Token, this.featureId);
                     return true;
                 }
                 return false;
@@ -117,7 +118,8 @@ namespace Rediscovery.Features.DesktopFeatures
 
         public void Start()
         {
-            consumer.FeatureConsumerService.ChangeFeatureState(connectService.GetToken(desktopConfiguration.Id), new CommunicationBase.Models.FeatureState
+            var conData = connectService.GetData(desktopConfiguration.Id);
+            consumer.FeatureConsumerService.ChangeFeatureState(conData.Token, new CommunicationBase.Models.FeatureState
             {
                 FeatureId = featureId,
                 CurrentState = CommunicationBase.Models.FeatureState.State.Start
@@ -126,7 +128,8 @@ namespace Rediscovery.Features.DesktopFeatures
 
         public void Stop()
         {
-            consumer.FeatureConsumerService.ChangeFeatureState(connectService.GetToken(desktopConfiguration.Id), new CommunicationBase.Models.FeatureState
+            var conData = connectService.GetData(desktopConfiguration.Id);
+            consumer.FeatureConsumerService.ChangeFeatureState(conData.Token, new CommunicationBase.Models.FeatureState
             {
                 FeatureId = featureId,
                 CurrentState = CommunicationBase.Models.FeatureState.State.Stop

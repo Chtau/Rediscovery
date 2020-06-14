@@ -41,6 +41,11 @@ namespace GrpcTestService.DummyImpl
             };
         }
 
+        public int GetSSLPort()
+        {
+            return 5001;
+        }
+
         public Task<LoginResult> RequestLogin(SharedBase.Connection.WelcomeDeviceMessage welcomeDeviceMessage)
         {
             return Task.FromResult(new LoginResult

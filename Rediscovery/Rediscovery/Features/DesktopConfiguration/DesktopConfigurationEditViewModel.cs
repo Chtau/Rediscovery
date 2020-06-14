@@ -67,7 +67,6 @@ namespace Rediscovery.Features.DesktopConfiguration
                     DisplayName = "New",
                     Address = "192.168.1.100",
                     Port = 44341,
-                    SSLPort = 44342,
                     AutoConnect = true,
                     ConnectionState = SharedBase.Connection.Enums.ConnectionState.None,
                     LastConnection = null
