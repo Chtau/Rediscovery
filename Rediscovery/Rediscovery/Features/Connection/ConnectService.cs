@@ -15,8 +15,6 @@ namespace Rediscovery.Features.Connection
     public class ConnectService : BaseService, IConnectService
     {
         private IConsumer consumer => DependencyService.Get<IConsumer>();
-        //private CommunicationAuthenticationConsumer.IGreetingConsumerService greetingConsumer => DependencyService.Get<CommunicationAuthenticationConsumer.IGreetingConsumerService>();
-        //private CommunicationClientConsumer.IHub communicationHub => DependencyService.Get<CommunicationClientConsumer.IHub>() ?? new CommunicationClientConsumer.Hub();
         private IManifestFeatureEntityManager entityManager => DependencyService.Get<IManifestFeatureEntityManager>() ?? new ManifestFeatureEntityManager();
         private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
         private IDeviceData deviceData => DependencyService.Get<IDeviceData>() ?? new DeviceData();
@@ -24,7 +22,7 @@ namespace Rediscovery.Features.Connection
 
         public ConnectService()
         {
-            //communicationHub.Init(_logger, "/hubs/connect", "/hubs/feature");
+            
         }
 
         public ConnectConfigurationData GetData(Guid configurationId)
@@ -36,7 +34,6 @@ namespace Rediscovery.Features.Connection
 
         private void OnSetData(Guid configurationId, ConnectConfigurationData data)
         {
-            // TODO: remove Token ...
             if (desktopConfigurationData.ContainsKey(configurationId))
                 desktopConfigurationData[configurationId] = data;
             else
@@ -129,32 +126,6 @@ namespace Rediscovery.Features.Connection
                 {
                     resultCallback?.Invoke(null, null, SharedBase.Connection.Enums.ConnectionState.Error);
                 }
-                
-                /*communicationHub.Authenticate(deviceData.GetWelcomeDeviceMessage(), item.ConvertToCommunicationConfigurationModel(), (config, result) =>
-                {
-                    if (result)
-                    {
-                        communicationHub.Connect(config, (conResult, state) =>
-                        {
-                            resultCallback?.Invoke(item, conResult, state.ConvertToSharedCoreEnum());
-                        });
-                    }
-                    else
-                    {
-                        nextIndex++;
-                        if (desktopConfigurations.Count > nextIndex)
-                        {
-                            OnTryConnect(desktopConfigurations, resultCallback, nextIndex);
-                        }
-                        else
-                        {
-                            resultCallback?.Invoke(item, result, config.State.ConvertToSharedCoreEnum());
-                        }
-                    }
-                }, (manifest) =>
-                {
-                    entityManager.AddManifestData(manifest, item.Id, item.DisplayName);
-                });*/
             } else
             {
                 resultCallback?.Invoke(null, null, SharedBase.Connection.Enums.ConnectionState.Error);
@@ -200,7 +171,7 @@ namespace Rediscovery.Features.Connection
 
         public void Disconnect(DesktopConfigurationModel desktopConfigurationModel, Action<bool> resultCallback)
         {
-            //communicationHub.Disconnect();
+            // TODO: disconnect from GRPC consumer
             OnUpdateDesktopConfiguration(desktopConfigurationModel, null, SharedBase.Connection.Enums.ConnectionState.None);
             resultCallback?.Invoke(true);
         }

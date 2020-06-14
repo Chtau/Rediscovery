@@ -21,8 +21,6 @@ namespace Rediscovery.Features.DesktopFeatures
         public event EventHandler<Tuple<bool, string>> ReceivedUI;
 
         private IConsumer consumer => DependencyService.Get<IConsumer>();
-        //private CommunicationClientConsumer.IHub communicationHub => DependencyService.Get<CommunicationClientConsumer.IHub>() ?? new CommunicationClientConsumer.Hub();
-        //private CommunicationFeatureConsumer.IFeatureConsumerService featureConsumer => DependencyService.Get<CommunicationFeatureConsumer.IFeatureConsumerService>();
         private IConnectService connectService => DependencyService.Get<IConnectService>();
         private Services.IFileSystem fileSystem => DependencyService.Get<Services.IFileSystem>() ?? new Services.FileSystem();
         private IHtmlUIService htmlUIService => DependencyService.Get<IHtmlUIService>() ?? new HtmlUIService();
@@ -38,7 +36,7 @@ namespace Rediscovery.Features.DesktopFeatures
 
         private void FeatureConsumer_ReceiveFeatureStateChangeReply(object sender, CommunicationBase.Models.FeatureState e)
         {
-            //throw new NotImplementedException();
+            _logger.LogTrace($"{DateTime.Now.ToShortTimeString()} Feature state changed received. (FeatureId:{e.FeatureId} State:{e.CurrentState})");
         }
 
         private void FeatureConsumer_ReceiveFeatureData(object sender, SharedBase.Feature.FeatureData e)
@@ -146,103 +144,8 @@ namespace Rediscovery.Features.DesktopFeatures
         public void Send(string profileId, string data)
         {
             _logger.LogTrace($"{DateTime.Now.ToShortTimeString()} Try to send from Feature. (profileId:{profileId} data:{data})");
-            //communicationHub.Send(_connectionManifestFeature.FeatureId, profileId, data);
             consumer.FeatureConsumerService.SendFeatureData(new SharedBase.Feature.FeatureData(null, featureId, profileId, data));
         }
-
-        /*public void GetProfil(Guid modelId, Guid featureId, Action<bool, List<FeatureProfil>> callback)
-        {
-            Task.Run(async () =>
-            {
-                try
-                {
-                    var profiles = await communicationHub.GetDeviceFeatureProfils(featureId);
-                    if (profiles != null)
-                    {
-                        callback?.Invoke(true, profiles);
-                    }
-                    else
-                    {
-                        _logger.LogInformation($"No Profiles received for Feature Id:{featureId}");
-                        callback?.Invoke(false, null);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex);
-                }
-                finally
-                {
-                    callback?.Invoke(false, null);
-                }
-            });
-        }*/
-
-        /*public void GetSetting(Guid modelId, Guid featureId, Action<bool, FeatureSetting> callback)
-        {
-            Task.Run(async () =>
-            {
-                try
-                {
-                    var settings = await communicationHub.GetDeviceFeatureSetting(featureId);
-                    if (settings != null)
-                    {
-                        callback?.Invoke(true, settings);
-                    }
-                    else
-                    {
-                        _logger.LogInformation($"No Settings received for Feature Id:{featureId}");
-                        callback?.Invoke(false, null);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex);
-                }
-                finally
-                {
-                    callback?.Invoke(false, null);
-                }
-            });
-        }*/
-
-        /*public void SaveUI(Guid modelId, Guid featureId, Action<bool, string> callback)
-        {
-            Task.Run(async () =>
-            {
-                string directory = OnArchiveDirectory(featureId);
-                try
-                {
-                    if (System.IO.Directory.Exists(directory))
-                    {
-                        System.IO.Directory.Delete(directory, true);
-                    }
-                } catch (Exception ex)
-                {
-                    _logger.LogError(ex);
-                }
-                try
-                {
-                    var archive = await communicationHub.GetUIArchive(featureId);
-                    if (archive != null)
-                    {
-                        archive.ExtractToDirectory(directory);
-                        await OnInjectUIDefaults(directory);
-                        callback?.Invoke(true, directory);
-                    }
-                    else
-                    {
-                        _logger.LogInformation($"No UI Archive received for Feature Id:{featureId}");
-                        callback?.Invoke(false, directory);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex);
-                    callback?.Invoke(false, directory);
-                }
-            });
-        }*/
 
         public string UIDirectory(Guid featureId)
         {
