@@ -15,7 +15,7 @@ namespace GrpcTestClient
         {
             Console.WriteLine("Test Grpc!");
             ConsumeAuthentication();
-            //ConsumeResources();
+            ConsumeResources();
 
             Console.ReadKey();
         }
@@ -102,6 +102,7 @@ namespace GrpcTestClient
 
         private static void ConsumeResources()
         {
+            string pem = "";
             IAuthenticationConsumerService consumerService = new AuthenticationConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
             consumerService.ReceivedManifestReply += (obj, args) =>
             {
@@ -110,16 +111,40 @@ namespace GrpcTestClient
             consumerService.ReceivedWelcomeReply += (obj, args) =>
             {
                 Console.WriteLine($"[ReceivedWelcomeReply] Token:{args.Token} State:{args.State}");
-                ConsumeResource(args.Token);
+                ConsumeResource(args.Token, pem);
             };
-            consumerService.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
-            consumerService.SendWelcome(new SharedBase.Connection.WelcomeDeviceMessage
+            var hand = new GreetingConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
+            var result = hand.GreetHost("192.168.1.100", 44341, new SharedBase.Connection.GreetingDeviceMessage
             {
-                DeviceIdentifier = "80",
+                DeviceIdentifier = "1",
+                DeviceName = "A",
+                DeviceType = "",
+                Idiom = "",
+                Manufacturer = "",
+                Model = "",
+                OSVersion = "",
+                Platform = ""
             });
+            if (result.CanConnect == SharedBase.Connection.Enums.AllowConnect.OK)
+            {
+                pem = result.PEM;
+                //consumerService.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
+                //consumerService.Connect("localhost", 44342, ExportToPEM(GetX509Certificate2()));
+                consumerService.Connect("192.168.1.100", 44342, pem);
+                consumerService.SendWelcome(new SharedBase.Connection.WelcomeDeviceMessage
+                {
+                    DeviceIdentifier = "80",
+                });
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Greeting CanConnect:{result.CanConnect}");
+                Console.ResetColor();
+            }
         }
 
-        private static void ConsumeResource(string token)
+        private static void ConsumeResource(string token, string pem)
         {
             IResourceConsumerService consumerService = new ResourceConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
             consumerService.ReceiveDevices += (obj, args) =>
@@ -128,7 +153,7 @@ namespace GrpcTestClient
                 Console.WriteLine($"[ReceiveDevices] Count:{args.Count}");
                 Console.ResetColor();
             };
-            consumerService.Connect("localhost", 5001, ExportToPEM(GetX509Certificate2()));
+            consumerService.Connect("192.168.1.100", 44342, pem);
             consumerService.ListenDevices(token);
         }
 
