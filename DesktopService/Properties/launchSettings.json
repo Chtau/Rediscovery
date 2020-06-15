@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "DesktopService": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "GRPC_VERBOSITY": "DEBUG",
+        "GRPC_TRACE": "all"
+      }
+    }
+  }
+}
