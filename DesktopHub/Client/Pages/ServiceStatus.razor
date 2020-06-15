@@ -1,12 +1,40 @@
 ﻿@page "/servicestatus"
-@*@inject CommunicationResourceConsumer.IHub _hub*@
+@inject CommunicationAuthenticationConsumer.IGreetingConsumerService greetingConsumer
+@inject CommunicationAuthenticationConsumer.IAuthenticationConsumerService authConsumer
+@inject CommunicationResourceConsumer.IResourceConsumerService resourceConsumer
 
 <h1>Service Status</h1>
 
-<p>Service connected: @connectionState</p>
+<h3>Features</h3>
+
+@if (features == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Version</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var feature in features)
+            {
+                <tr>
+                    <td>@feature.DisplayName</td>
+                    <td>@feature.VersionText</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
 
+    private SharedBase.Device.FeatureDefinitionExtended[] features;
     private bool connectionState = false;
     private CommunicationBase.ConnectionConfiguration connectionConfiguration;
 
@@ -22,10 +50,46 @@
             SSLThumbprint = "50BDB3835C1A37247375702E78409D95AADEC5F5"
         };
 
+        resourceConsumer.ReceiveFeatures += (obj, args) =>
+        {
+            features = args.ToArray();
+        };
+
+        var reply = greetingConsumer.GreetHost("192.168.1.100", 44341, new SharedBase.Connection.GreetingDeviceMessage
+        {
+            DeviceIdentifier = "DesktopHub",
+            DeviceName = "A",
+            DeviceType = "A",
+            Idiom = "A",
+            Manufacturer = "A",
+            Model = "A",
+            OSVersion = "A",
+            Platform = "A"
+        });
+
+        if (reply.CanConnect == SharedBase.Connection.Enums.AllowConnect.OK)
+        {
+            if (authConsumer.Connect("192.168.1.100", 44342, reply.PEM))
+            {
+                authConsumer.SendWelcome(new SharedBase.Connection.WelcomeDeviceMessage
+                {
+                    DeviceIdentifier = "DesktopHub"
+                }, (result) =>
+                {
+                    if (result.State == SharedBase.Connection.Enums.ConnectionState.OK)
+                    {
+                        if (resourceConsumer.Connect("192.168.1.100", 44342, reply.PEM))
+                        {
+                            resourceConsumer.ListenFeatures(result.Token);
+                        }
+                    }
+                });
+            }
+        }
         //_hub.Init(SharedBase.Logging.DiagnosticsLoggerProvider.Instance, "/remote/resource/hub", CommunicationBase.Protocol.HTTPS);
         //_hub.ConnectionStateChanged += _hub_ConnectionStateChanged;
 
-        await InitServiceConnection();
+        //await InitServiceConnection();
     }
 
     private void _hub_ConnectionStateChanged(object sender, bool e)

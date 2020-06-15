@@ -32,7 +32,9 @@ namespace DesktopHub.Server
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            //services.AddSingleton<CommunicationResourceConsumer.IHub, CommunicationResourceConsumer.Hub>();
+            services.AddSingleton<CommunicationAuthenticationConsumer.IGreetingConsumerService, CommunicationAuthenticationConsumer.GreetingConsumerService>(x => new CommunicationAuthenticationConsumer.GreetingConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance));
+            services.AddSingleton<CommunicationAuthenticationConsumer.IAuthenticationConsumerService, CommunicationAuthenticationConsumer.AuthenticationConsumerService>(x => new CommunicationAuthenticationConsumer.AuthenticationConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance));
+            services.AddSingleton<CommunicationResourceConsumer.IResourceConsumerService, CommunicationResourceConsumer.ResourceConsumerService>(x => new CommunicationResourceConsumer.ResourceConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

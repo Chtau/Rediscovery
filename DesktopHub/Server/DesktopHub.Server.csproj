@@ -7,6 +7,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="3.2.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\CommunicationAuthenticationConsumer\CommunicationAuthenticationConsumer.csproj" />
+    <ProjectReference Include="..\..\Communication\CommunicationResourceConsumer.csproj" />
     <ProjectReference Include="..\..\SharedConfigurations\SharedConfigurations.csproj" />
     <ProjectReference Include="..\Client\DesktopHub.Client.csproj" />
     <ProjectReference Include="..\Shared\DesktopHub.Shared.csproj" />
