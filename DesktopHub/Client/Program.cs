@@ -15,7 +15,7 @@ namespace DesktopHub.Client
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.Services.AddSingleton<CommunicationResourceConsumer.IHub, CommunicationResourceConsumer.Hub>();
+            //builder.Services.AddSingleton<CommunicationResourceConsumer.IHub, CommunicationResourceConsumer.Hub>();
             builder.RootComponents.Add<App>("app");
 
             builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });

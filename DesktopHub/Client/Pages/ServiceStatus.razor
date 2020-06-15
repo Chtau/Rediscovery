@@ -1,5 +1,5 @@
 ﻿@page "/servicestatus"
-@inject CommunicationResourceConsumer.IHub _hub
+@*@inject CommunicationResourceConsumer.IHub _hub*@
 
 <h1>Service Status</h1>
 
@@ -22,8 +22,8 @@
             SSLThumbprint = "50BDB3835C1A37247375702E78409D95AADEC5F5"
         };
 
-        _hub.Init(SharedBase.Logging.DiagnosticsLoggerProvider.Instance, "/remote/resource/hub", CommunicationBase.Protocol.HTTPS);
-        _hub.ConnectionStateChanged += _hub_ConnectionStateChanged;
+        //_hub.Init(SharedBase.Logging.DiagnosticsLoggerProvider.Instance, "/remote/resource/hub", CommunicationBase.Protocol.HTTPS);
+        //_hub.ConnectionStateChanged += _hub_ConnectionStateChanged;
 
         await InitServiceConnection();
     }
@@ -44,7 +44,7 @@
     {
         try
         {
-            await _hub.Disconnect();
+            /*await _hub.Disconnect();
             _hub.Authenticate(connectionConfiguration.DisplayName, connectionConfiguration, (resultModel, state) =>
             {
                 if (state)
@@ -66,9 +66,10 @@
                 {
                     string msg = "Could not Authenticate for remote resource access";
                 }
-            });
+            });*/
             return true;
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             System.Diagnostics.Debug.Print(ex.ToString());
             return false;
