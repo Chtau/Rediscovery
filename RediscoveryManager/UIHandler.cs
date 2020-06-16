@@ -10,6 +10,7 @@ namespace RediscoveryManager
 
         public void Start(string[] args)
         {
+            connectToService.TryParseArumgents(args);
             SharedUI.DisplayDefaultTitle();
             string lastInput = null;
             do

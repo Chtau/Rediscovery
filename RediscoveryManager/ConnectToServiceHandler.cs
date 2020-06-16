@@ -18,6 +18,7 @@ namespace RediscoveryManager
 
         IAuthenticationConsumerService consumerService = new AuthenticationConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
         IGreetingConsumerService hand = new GreetingConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
+        private bool isAutoConnectCall = false;
 
         public ConnectToServiceHandler()
         {
@@ -33,8 +34,54 @@ namespace RediscoveryManager
                     Token = args.Token;
                     //consumerService.RequestManifest(args.Token);
                 }
-                DisplayTitle();
+                if (!isAutoConnectCall)
+                {
+                    DisplayTitle();
+                }
             };
+        }
+
+        public void TryParseArumgents(string[] args)
+        {
+            bool autoConnect = false;
+            foreach (var item in args)
+            {
+                if (item.Contains('='))
+                {
+                    var type = item.Split('=')[0].Replace("-", "");
+                    var value = item.Split('=')[1];
+
+                    if (Commands.MatchInput(type, Commands.SetIP))
+                    {
+                        IP = value?.Trim();
+                    }
+                    else if (Commands.MatchInput(type, Commands.SetPort))
+                    {
+                        if (int.TryParse(value?.Trim(), out int p))
+                            Port = p;
+                    }
+                    else if (Commands.MatchInput(type, Commands.SetDeviceIdentifier))
+                    {
+                        DeviceIdentifier = value?.Trim();
+                    }
+                } else
+                {
+                    if (string.Equals(item?.Replace("-", "")?.Trim(), "autoconnect"))
+                    {
+                        autoConnect = true;
+                    }
+                }
+            }
+            if (autoConnect)
+            {
+                if (!string.IsNullOrWhiteSpace(IP)
+                    && Port > 0
+                    && !string.IsNullOrWhiteSpace(DeviceIdentifier))
+                {
+                    Connect();
+                    isAutoConnectCall = true;
+                }
+            }
         }
 
         public void Handle(string[] args)
@@ -70,6 +117,7 @@ namespace RediscoveryManager
                     }
                 } else if (Commands.MatchInput(lastInput, Commands.Connect))
                 {
+                    isAutoConnectCall = false;
                     lastInput = null;
                     Connect();
                 } else
@@ -131,12 +179,12 @@ namespace RediscoveryManager
             {
                 Prefix = "Can connect:",
                 Value = $"{CanConnect}",
-                Color = CanConnect == SharedBase.Connection.Enums.AllowConnect.OK ? ConsoleColor.Green : ConsoleColor.White
+                Color = AllowConnectToColor(CanConnect)
             }, new ConsoleExtensions.WriteParams
             {
                 Prefix = " Connected:",
                 Value = $"{ConnectionState}",
-                Color = ConnectionState == SharedBase.Connection.Enums.ConnectionState.OK ? ConsoleColor.Green : ConsoleColor.White
+                Color = ConnectionStateToColor(ConnectionState)
             });
             Console.WriteLine();
             Console.WriteLine();
@@ -148,6 +196,48 @@ namespace RediscoveryManager
             Console.WriteLine($"{Commands.Back.PutifyStringArray()} = Back to the main menu");
             Console.WriteLine();
             Console.Write("Command:");
+        }
+
+        private ConsoleColor AllowConnectToColor(SharedBase.Connection.Enums.AllowConnect allowConnect)
+        {
+            switch (allowConnect)
+            {
+                case SharedBase.Connection.Enums.AllowConnect.None:
+                    return ConsoleColor.White;
+                case SharedBase.Connection.Enums.AllowConnect.OK:
+                    return ConsoleColor.Green;
+                case SharedBase.Connection.Enums.AllowConnect.Error:
+                    return ConsoleColor.Red;
+                case SharedBase.Connection.Enums.AllowConnect.Denied:
+                    return ConsoleColor.Red;
+                case SharedBase.Connection.Enums.AllowConnect.UnkownDevice:
+                    return ConsoleColor.White;
+                default:
+                    return ConsoleColor.White;
+            }
+        }
+
+        private ConsoleColor ConnectionStateToColor(SharedBase.Connection.Enums.ConnectionState connectionState)
+        {
+            switch (connectionState)
+            {
+                case SharedBase.Connection.Enums.ConnectionState.None:
+                    return ConsoleColor.White;
+                case SharedBase.Connection.Enums.ConnectionState.OK:
+                    return ConsoleColor.Green;
+                case SharedBase.Connection.Enums.ConnectionState.Error:
+                    return ConsoleColor.Red;
+                case SharedBase.Connection.Enums.ConnectionState.Warning:
+                    return ConsoleColor.DarkYellow;
+                case SharedBase.Connection.Enums.ConnectionState.Offline:
+                    return ConsoleColor.White;
+                case SharedBase.Connection.Enums.ConnectionState.Denied:
+                    return ConsoleColor.Red;
+                case SharedBase.Connection.Enums.ConnectionState.WaitForApprovel:
+                    return ConsoleColor.White;
+                default:
+                    return ConsoleColor.White;
+            }
         }
 
         private void Connect()
