@@ -23,7 +23,7 @@ namespace RediscoveryManager
         public readonly static string[] Abort = new string[] { "a", "abort" };
 
         public readonly static string[] SetIP = new string[] { "ip" };
-        public readonly static string[] SetPort = new string[] { "port", "p" };
+        public readonly static string[] SetPort = new string[] { "p", "port" };
         public readonly static string[] SetDeviceIdentifier = new string[] { "di", "deviceidentifier" };
     }
 }

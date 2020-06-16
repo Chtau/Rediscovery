@@ -7,17 +7,35 @@ namespace RediscoveryManager
 {
     public class ConnectToServiceHandler
     {
-        private string ip = "";
-        private int port = 0;
-        private int portSSL = 0;
-        private string deviceIdentifier = "";
-        string token = null;
-        string pem = null;
-        SharedBase.Connection.Enums.AllowConnect canConnect = SharedBase.Connection.Enums.AllowConnect.None;
-        SharedBase.Connection.Enums.ConnectionState connectionState = SharedBase.Connection.Enums.ConnectionState.None;
+        public string IP { get; private set; } = "";
+        public int Port { get; private set; } = 0;
+        public int PortSSL { get; private set; } = 0;
+        public string DeviceIdentifier { get; private set; } = "";
+        public string Token { get; private set; } = null;
+        public string Pem { get; private set; } = null;
+        public SharedBase.Connection.Enums.AllowConnect CanConnect { get; set; } = SharedBase.Connection.Enums.AllowConnect.None;
+        public SharedBase.Connection.Enums.ConnectionState ConnectionState { get; set; } = SharedBase.Connection.Enums.ConnectionState.None;
 
         IAuthenticationConsumerService consumerService = new AuthenticationConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
+        IGreetingConsumerService hand = new GreetingConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
 
+        public ConnectToServiceHandler()
+        {
+            consumerService.ReceivedManifestReply += (obj, args) =>
+            {
+                //Console.WriteLine("[ReceivedManifestReply] Client:" + args.ClientName);
+            };
+            consumerService.ReceivedWelcomeReply += (obj, args) =>
+            {
+                ConnectionState = args.State;
+                if (ConnectionState == SharedBase.Connection.Enums.ConnectionState.OK)
+                {
+                    Token = args.Token;
+                    //consumerService.RequestManifest(args.Token);
+                }
+                DisplayTitle();
+            };
+        }
 
         public void Handle(string[] args)
         {
@@ -31,7 +49,7 @@ namespace RediscoveryManager
                     var result = SetProperty("IP Address");
                     if (!Commands.MatchInput(result, Commands.Abort))
                     {
-                        ip = result;
+                        IP = result;
                     }
                 } else if (Commands.MatchInput(lastInput, Commands.SetPort))
                 {
@@ -40,7 +58,7 @@ namespace RediscoveryManager
                     if (!Commands.MatchInput(result, Commands.Abort))
                     {
                         if (int.TryParse(result, out int p))
-                            port = p;
+                            Port = p;
                     }
                 } else if (Commands.MatchInput(lastInput, Commands.SetDeviceIdentifier))
                 {
@@ -48,7 +66,7 @@ namespace RediscoveryManager
                     var result = SetProperty("DeviceIdentifier");
                     if (!Commands.MatchInput(result, Commands.Abort))
                     {
-                        deviceIdentifier = result;
+                        DeviceIdentifier = result;
                     }
                 } else if (Commands.MatchInput(lastInput, Commands.Connect))
                 {
@@ -94,31 +112,31 @@ namespace RediscoveryManager
             {
                 Color = ConsoleColor.Green,
                 Prefix = "IP: ",
-                Value = ip
+                Value = IP
             });
             ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
             {
                 Color = ConsoleColor.Green,
                 Prefix = "Port: ",
-                Value = port > 0 ? port.ToString() : ""
+                Value = Port > 0 ? Port.ToString() : ""
             });
             ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
             {
                 Color = ConsoleColor.Green,
                 Prefix = "Device Identifier: ",
-                Value = deviceIdentifier
+                Value = DeviceIdentifier
             });
             Console.WriteLine();
             ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
             {
                 Prefix = "Can connect:",
-                Value = $"{canConnect}",
-                Color = canConnect == SharedBase.Connection.Enums.AllowConnect.OK ? ConsoleColor.Green : ConsoleColor.White
+                Value = $"{CanConnect}",
+                Color = CanConnect == SharedBase.Connection.Enums.AllowConnect.OK ? ConsoleColor.Green : ConsoleColor.White
             }, new ConsoleExtensions.WriteParams
             {
                 Prefix = " Connected:",
-                Value = $"{connectionState}",
-                Color = connectionState == SharedBase.Connection.Enums.ConnectionState.OK ? ConsoleColor.Green : ConsoleColor.White
+                Value = $"{ConnectionState}",
+                Color = ConnectionState == SharedBase.Connection.Enums.ConnectionState.OK ? ConsoleColor.Green : ConsoleColor.White
             });
             Console.WriteLine();
             Console.WriteLine();
@@ -134,31 +152,15 @@ namespace RediscoveryManager
 
         private void Connect()
         {
-            consumerService.ReceivedManifestReply += (obj, args) =>
+            CanConnect = SharedBase.Connection.Enums.AllowConnect.None;
+            ConnectionState = SharedBase.Connection.Enums.ConnectionState.None;
+            Pem = null;
+            Token = null;
+            PortSSL = 0;
+
+            var result = hand.GreetHost(IP, Port, new SharedBase.Connection.GreetingDeviceMessage
             {
-                //Console.WriteLine("[ReceivedManifestReply] Client:" + args.ClientName);
-            };
-            consumerService.ReceivedWelcomeReply += (obj, args) =>
-            {
-                connectionState = args.State;
-                //Console.WriteLine($"[ReceivedWelcomeReply] Token:{args.Token} State:{args.State}");
-                if (connectionState == SharedBase.Connection.Enums.ConnectionState.OK)
-                {
-                    token = args.Token;
-                    //consumerService.RequestManifest(args.Token);
-                }
-                else
-                {
-                    /*Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"[ReceivedWelcomeReply] No authorization! State:{args.State}");
-                    Console.ResetColor();*/
-                }
-                DisplayTitle();
-            };
-            var hand = new GreetingConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
-            var result = hand.GreetHost(ip, port, new SharedBase.Connection.GreetingDeviceMessage
-            {
-                DeviceIdentifier = deviceIdentifier,
+                DeviceIdentifier = DeviceIdentifier,
                 DeviceName = "",
                 DeviceType = "",
                 Idiom = "",
@@ -167,15 +169,15 @@ namespace RediscoveryManager
                 OSVersion = "",
                 Platform = ""
             });
-            canConnect = result.CanConnect;
-            if (canConnect == SharedBase.Connection.Enums.AllowConnect.OK)
+            CanConnect = result.CanConnect;
+            if (CanConnect == SharedBase.Connection.Enums.AllowConnect.OK)
             {
-                pem = result.PEM;
-                portSSL = result.SSLPort;
-                consumerService.Connect(ip, portSSL, pem);
+                Pem = result.PEM;
+                PortSSL = result.SSLPort;
+                consumerService.Connect(IP, PortSSL, Pem);
                 consumerService.SendWelcome(new SharedBase.Connection.WelcomeDeviceMessage
                 {
-                    DeviceIdentifier = deviceIdentifier,
+                    DeviceIdentifier = DeviceIdentifier,
                 });
             }
             else
