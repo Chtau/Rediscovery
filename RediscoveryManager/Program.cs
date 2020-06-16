@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunicationAuthenticationConsumer;
+using System;
 
 namespace RediscoveryManager
 {

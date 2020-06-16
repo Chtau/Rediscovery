@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunicationAuthenticationConsumer;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,7 +9,15 @@ namespace RediscoveryManager
     {
         private string ip = "";
         private int port = 0;
+        private int portSSL = 0;
         private string deviceIdentifier = "";
+        string token = null;
+        string pem = null;
+        SharedBase.Connection.Enums.AllowConnect canConnect = SharedBase.Connection.Enums.AllowConnect.None;
+        SharedBase.Connection.Enums.ConnectionState connectionState = SharedBase.Connection.Enums.ConnectionState.None;
+
+        IAuthenticationConsumerService consumerService = new AuthenticationConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
+
 
         public void Handle(string[] args)
         {
@@ -41,6 +50,10 @@ namespace RediscoveryManager
                     {
                         deviceIdentifier = result;
                     }
+                } else if (Commands.MatchInput(lastInput, Commands.Connect))
+                {
+                    lastInput = null;
+                    Connect();
                 } else
                 {
                     lastInput = Console.ReadLine();
@@ -75,32 +88,100 @@ namespace RediscoveryManager
         private void DisplayTitle()
         {
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Connect to Service");
-            Console.ResetColor();
-            Console.Write("IP:");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write(ip);
-            Console.ResetColor();
-            Console.Write(Environment.NewLine);
-            Console.Write("Port:");
-            Console.ForegroundColor = ConsoleColor.Green;
-            if (port > 0)
-                Console.Write(port.ToString());
-            Console.ResetColor();
-            Console.Write(Environment.NewLine);
-            Console.Write("Device Identifier:");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write(deviceIdentifier);
-            Console.ResetColor();
-            Console.Write(Environment.NewLine);
+            Console.WriteLine();
+            ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
+            {
+                Color = ConsoleColor.Green,
+                Prefix = "IP: ",
+                Value = ip
+            });
+            ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
+            {
+                Color = ConsoleColor.Green,
+                Prefix = "Port: ",
+                Value = port > 0 ? port.ToString() : ""
+            });
+            ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
+            {
+                Color = ConsoleColor.Green,
+                Prefix = "Device Identifier: ",
+                Value = deviceIdentifier
+            });
+            Console.WriteLine();
+            ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
+            {
+                Prefix = "Can connect:",
+                Value = $"{canConnect}",
+                Color = canConnect == SharedBase.Connection.Enums.AllowConnect.OK ? ConsoleColor.Green : ConsoleColor.White
+            }, new ConsoleExtensions.WriteParams
+            {
+                Prefix = " Connected:",
+                Value = $"{connectionState}",
+                Color = connectionState == SharedBase.Connection.Enums.ConnectionState.OK ? ConsoleColor.Green : ConsoleColor.White
+            });
+            Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine($"{Commands.SetIP.PutifyStringArray()} = set the IP Address");
             Console.WriteLine($"{Commands.SetPort.PutifyStringArray()} = set the Port");
             Console.WriteLine($"{Commands.SetDeviceIdentifier.PutifyStringArray()} = set Device identifier");
+            Console.WriteLine($"{Commands.Connect.PutifyStringArray()} = Establish a connection");
+            Console.WriteLine();
             Console.WriteLine($"{Commands.Back.PutifyStringArray()} = Back to the main menu");
             Console.WriteLine();
-            Console.WriteLine("Command:");
+            Console.Write("Command:");
+        }
+
+        private void Connect()
+        {
+            consumerService.ReceivedManifestReply += (obj, args) =>
+            {
+                //Console.WriteLine("[ReceivedManifestReply] Client:" + args.ClientName);
+            };
+            consumerService.ReceivedWelcomeReply += (obj, args) =>
+            {
+                connectionState = args.State;
+                //Console.WriteLine($"[ReceivedWelcomeReply] Token:{args.Token} State:{args.State}");
+                if (connectionState == SharedBase.Connection.Enums.ConnectionState.OK)
+                {
+                    token = args.Token;
+                    //consumerService.RequestManifest(args.Token);
+                }
+                else
+                {
+                    /*Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"[ReceivedWelcomeReply] No authorization! State:{args.State}");
+                    Console.ResetColor();*/
+                }
+                DisplayTitle();
+            };
+            var hand = new GreetingConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
+            var result = hand.GreetHost(ip, port, new SharedBase.Connection.GreetingDeviceMessage
+            {
+                DeviceIdentifier = deviceIdentifier,
+                DeviceName = "",
+                DeviceType = "",
+                Idiom = "",
+                Manufacturer = "",
+                Model = "",
+                OSVersion = "",
+                Platform = ""
+            });
+            canConnect = result.CanConnect;
+            if (canConnect == SharedBase.Connection.Enums.AllowConnect.OK)
+            {
+                pem = result.PEM;
+                portSSL = result.SSLPort;
+                consumerService.Connect(ip, portSSL, pem);
+                consumerService.SendWelcome(new SharedBase.Connection.WelcomeDeviceMessage
+                {
+                    DeviceIdentifier = deviceIdentifier,
+                });
+            }
+            else
+            {
+                
+            }
         }
     }
 }

@@ -30,7 +30,7 @@ namespace RediscoveryManager
             Console.WriteLine($"{Commands.Connect.PutifyStringArray()} = Connect to Service");
             Console.WriteLine($"{Commands.Exit.PutifyStringArray()} = Application exit");
             Console.WriteLine();
-            Console.WriteLine("Command:");
+            Console.Write("Command:");
         }
     }
 }
