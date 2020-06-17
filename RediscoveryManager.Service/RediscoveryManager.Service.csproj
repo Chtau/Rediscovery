@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommunicationAuthenticationConsumer\CommunicationAuthenticationConsumer.csproj" />
+    <ProjectReference Include="..\Communication\CommunicationResourceConsumer.csproj" />
+    <ProjectReference Include="..\SharedModels\SharedBase.csproj" />
+  </ItemGroup>
+
+</Project>
