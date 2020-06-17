@@ -18,6 +18,8 @@ namespace RediscoveryManager.Service
         public ObservableCollection<SharedBase.Device.FeatureDefinitionExtended> Features { get; set; } = new ObservableCollection<SharedBase.Device.FeatureDefinitionExtended>();
 
         public event EventHandler<SharedBase.Connection.Enums.ConnectionState> AfterConnecting;
+        public event EventHandler DeviceCollectionChanged;
+        public event EventHandler FeaturesCollectionChanged;
 
         private readonly IAuthenticationConsumerService authenticationConsumer;
         private readonly IGreetingConsumerService greetingConsumer;
@@ -56,6 +58,7 @@ namespace RediscoveryManager.Service
                 {
                     ActiveDevices.Add(item);
                 }
+                DeviceCollectionChanged?.Invoke(this, EventArgs.Empty);
             };
             resourceConsumer.ReceiveDeleteDevicesResult += (obj, args) =>
             {
@@ -68,6 +71,7 @@ namespace RediscoveryManager.Service
                 {
                     Devices.Add(item);
                 }
+                DeviceCollectionChanged?.Invoke(this, EventArgs.Empty);
             };
             resourceConsumer.ReceiveFeatureDetailProfileDeleteResult += (obj, args) =>
             {
@@ -92,6 +96,7 @@ namespace RediscoveryManager.Service
                 {
                     Features.Add(item);
                 }
+                FeaturesCollectionChanged?.Invoke(this, EventArgs.Empty);
             };
             resourceConsumer.ReceivePendingDevices += (obj, args) =>
             {
@@ -100,6 +105,7 @@ namespace RediscoveryManager.Service
                 {
                     PendingDevices.Add(item);
                 }
+                DeviceCollectionChanged?.Invoke(this, EventArgs.Empty);
             };
             resourceConsumer.ReceiveResolvePendingDevicesResult += (obj, args) =>
             {

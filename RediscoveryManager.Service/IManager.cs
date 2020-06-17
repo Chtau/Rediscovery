@@ -14,6 +14,8 @@ namespace RediscoveryManager.Service
         ObservableCollection<SharedBase.Device.DeviceInfo> Devices { get; set; }
         ObservableCollection<SharedBase.Device.FeatureDefinitionExtended> Features { get; set; }
         event EventHandler<SharedBase.Connection.Enums.ConnectionState> AfterConnecting;
+        event EventHandler DeviceCollectionChanged;
+        event EventHandler FeaturesCollectionChanged;
         bool TryConnect(string ip, int port, string deviceIdentifier);
         void Disconnect();
     }
