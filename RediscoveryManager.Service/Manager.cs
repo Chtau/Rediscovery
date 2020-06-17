@@ -16,10 +16,14 @@ namespace RediscoveryManager.Service
         public ObservableCollection<SharedBase.Device.DeviceInfo> PendingDevices { get; set; } = new ObservableCollection<SharedBase.Device.DeviceInfo>();
         public ObservableCollection<SharedBase.Device.DeviceInfo> Devices { get; set; } = new ObservableCollection<SharedBase.Device.DeviceInfo>();
         public ObservableCollection<SharedBase.Device.FeatureDefinitionExtended> Features { get; set; } = new ObservableCollection<SharedBase.Device.FeatureDefinitionExtended>();
+        public SharedBase.Connection.Manifest Manifest { get; private set; }
 
         public event EventHandler<SharedBase.Connection.Enums.ConnectionState> AfterConnecting;
         public event EventHandler DeviceCollectionChanged;
         public event EventHandler FeaturesCollectionChanged;
+        public event EventHandler<Guid> PendingDeviceResolved;
+        public event EventHandler<Guid> DeviceDeleted;
+        public event EventHandler ManifestChanged;
 
         private readonly IAuthenticationConsumerService authenticationConsumer;
         private readonly IGreetingConsumerService greetingConsumer;
@@ -35,7 +39,8 @@ namespace RediscoveryManager.Service
 
             authenticationConsumer.ReceivedManifestReply += (obj, args) =>
             {
-                
+                Manifest = args;
+                ManifestChanged?.Invoke(this, EventArgs.Empty);
             };
             authenticationConsumer.ReceivedWelcomeReply += (obj, args) =>
             {
@@ -62,7 +67,8 @@ namespace RediscoveryManager.Service
             };
             resourceConsumer.ReceiveDeleteDevicesResult += (obj, args) =>
             {
-
+                if (args.result)
+                    DeviceDeleted?.Invoke(this, args.deviceId);
             };
             resourceConsumer.ReceiveDevices += (obj, args) =>
             {
@@ -109,7 +115,7 @@ namespace RediscoveryManager.Service
             };
             resourceConsumer.ReceiveResolvePendingDevicesResult += (obj, args) =>
             {
-
+                PendingDeviceResolved?.Invoke(this, args.deviceId);
             };
             resourceConsumer.ReceiveUpdateDevices += (obj, args) =>
             {
@@ -126,11 +132,6 @@ namespace RediscoveryManager.Service
                 IP = ip,
                 Port = port,
                 DeviceIdentifier = deviceIdentifier
-            };
-            ManagerConnectionState = new Models.ManagerConnectionState
-            {
-                CanConnect = SharedBase.Connection.Enums.AllowConnect.None,
-                ConnectionState = SharedBase.Connection.Enums.ConnectionState.None
             };
 
             var result = greetingConsumer.GreetHost(CurrentConnection.IP, CurrentConnection.Port, new SharedBase.Connection.GreetingDeviceMessage
@@ -158,8 +159,30 @@ namespace RediscoveryManager.Service
             return ManagerConnectionState.CanConnect == SharedBase.Connection.Enums.AllowConnect.OK;
         }
 
+        public void TryResolvePendingDevice(Guid deviceId, bool resolve)
+        {
+            resourceConsumer.ResolvePendingDevice(CurrentConnection?.Token, deviceId, resolve);
+        }
+
+        public void TryDeleteDevice(Guid deviceId)
+        {
+            resourceConsumer.DeleteDevice(CurrentConnection?.Token, deviceId);
+        }
+
         public void Disconnect()
         {
+            ManagerConnectionState = new Models.ManagerConnectionState
+            {
+                CanConnect = SharedBase.Connection.Enums.AllowConnect.None,
+                ConnectionState = SharedBase.Connection.Enums.ConnectionState.None
+            };
+            Manifest = null;
+            CurrentConnection = new Models.CurrentConnection
+            {
+                IP = null,
+                Port = 0,
+                DeviceIdentifier = null
+            };
             if (tokenSource != null)
             {
                 try
