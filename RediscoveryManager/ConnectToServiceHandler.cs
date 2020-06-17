@@ -7,17 +7,6 @@ namespace RediscoveryManager
 {
     public class ConnectToServiceHandler
     {
-        public string IP { get; private set; } = "";
-        public int Port { get; private set; } = 0;
-        public int PortSSL { get; private set; } = 0;
-        public string DeviceIdentifier { get; private set; } = "";
-        public string Token { get; private set; } = null;
-        public string Pem { get; private set; } = null;
-        public SharedBase.Connection.Enums.AllowConnect CanConnect { get; set; } = SharedBase.Connection.Enums.AllowConnect.None;
-        public SharedBase.Connection.Enums.ConnectionState ConnectionState { get; set; } = SharedBase.Connection.Enums.ConnectionState.None;
-
-        IAuthenticationConsumerService consumerService = new AuthenticationConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
-        IGreetingConsumerService hand = new GreetingConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
         private bool isAutoConnectCall = false;
 
         public ConnectToServiceHandler()

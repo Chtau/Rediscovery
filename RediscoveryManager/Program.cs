@@ -1,4 +1,5 @@
 ﻿using CommunicationAuthenticationConsumer;
+using RediscoveryManager.Service;
 using System;
 
 namespace RediscoveryManager
@@ -7,7 +8,8 @@ namespace RediscoveryManager
     {
         static void Main(string[] args)
         {
-            var uiHandler = new UIHandler();
+            IManager manager = new Manager(null);
+            var uiHandler = new UIHandler(manager);
             uiHandler.Start(args);
         }
     }

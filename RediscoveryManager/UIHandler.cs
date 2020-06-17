@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RediscoveryManager.Service;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,10 +8,17 @@ namespace RediscoveryManager
     public class UIHandler
     {
         private ConnectToServiceHandler connectToService = new ConnectToServiceHandler();
+        private readonly IManager _manager;
+
+        public UIHandler(IManager manager)
+        {
+            _manager = manager;
+        }
 
         public void Start(string[] args)
         {
-            connectToService.TryParseArumgents(args);
+            TryParseConnectionArguments(args);
+            //connectToService.TryParseArumgents(args);
             SharedUI.DisplayDefaultTitle();
             string lastInput = null;
             do
@@ -30,6 +38,11 @@ namespace RediscoveryManager
             {
                 connectToService.Handle(args);
             }
+        }
+
+        private void TryParseConnectionArguments(string[] args)
+        {
+
         }
     }
 }
