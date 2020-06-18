@@ -7,12 +7,13 @@ namespace RediscoveryManager
 {
     public class UIHandler
     {
-        private ConnectToServiceHandler connectToService = new ConnectToServiceHandler();
+        private readonly ConnectToServiceHandler _connectToService;
         private readonly IManager _manager;
 
         public UIHandler(IManager manager)
         {
             _manager = manager;
+            _connectToService = new ConnectToServiceHandler(_manager);
         }
 
         public void Start(string[] args)
@@ -35,7 +36,7 @@ namespace RediscoveryManager
 
             } else if (Commands.MatchInput(input, Commands.Connect))
             {
-                connectToService.Handle(args);
+                _connectToService.Handle(args);
             }
         }
 

@@ -8,7 +8,7 @@ namespace RediscoveryManager.Service
     public interface IManager
     {
         Models.ManagerConnectionState ManagerConnectionState { get; }
-        Models.CurrentConnection CurrentConnection { get; }
+        Models.CurrentConnection CurrentConnection { get; set; }
         SharedBase.Connection.Manifest Manifest { get; }
         ObservableCollection<SharedBase.Device.DeviceInfo> ActiveDevices { get; set; }
         ObservableCollection<SharedBase.Device.DeviceInfo> PendingDevices { get; set; }

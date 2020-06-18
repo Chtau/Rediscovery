@@ -1,4 +1,5 @@
 ﻿using CommunicationAuthenticationConsumer;
+using RediscoveryManager.Service;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,70 +8,19 @@ namespace RediscoveryManager
 {
     public class ConnectToServiceHandler
     {
+        private readonly IManager _manager;
         private bool isAutoConnectCall = false;
 
-        public ConnectToServiceHandler()
+        public ConnectToServiceHandler(IManager manager)
         {
-            consumerService.ReceivedManifestReply += (obj, args) =>
+            _manager = manager;
+            _manager.AfterConnecting += (obj, args) =>
             {
-                //Console.WriteLine("[ReceivedManifestReply] Client:" + args.ClientName);
-            };
-            consumerService.ReceivedWelcomeReply += (obj, args) =>
-            {
-                ConnectionState = args.State;
-                if (ConnectionState == SharedBase.Connection.Enums.ConnectionState.OK)
-                {
-                    Token = args.Token;
-                    //consumerService.RequestManifest(args.Token);
-                }
                 if (!isAutoConnectCall)
                 {
                     DisplayTitle();
                 }
             };
-        }
-
-        public void TryParseArumgents(string[] args)
-        {
-            bool autoConnect = false;
-            foreach (var item in args)
-            {
-                if (item.Contains('='))
-                {
-                    var type = item.Split('=')[0].Replace("-", "");
-                    var value = item.Split('=')[1];
-
-                    if (Commands.MatchInput(type, Commands.SetIP))
-                    {
-                        IP = value?.Trim();
-                    }
-                    else if (Commands.MatchInput(type, Commands.SetPort))
-                    {
-                        if (int.TryParse(value?.Trim(), out int p))
-                            Port = p;
-                    }
-                    else if (Commands.MatchInput(type, Commands.SetDeviceIdentifier))
-                    {
-                        DeviceIdentifier = value?.Trim();
-                    }
-                } else
-                {
-                    if (string.Equals(item?.Replace("-", "")?.Trim(), "autoconnect"))
-                    {
-                        autoConnect = true;
-                    }
-                }
-            }
-            if (autoConnect)
-            {
-                if (!string.IsNullOrWhiteSpace(IP)
-                    && Port > 0
-                    && !string.IsNullOrWhiteSpace(DeviceIdentifier))
-                {
-                    Connect();
-                    isAutoConnectCall = true;
-                }
-            }
         }
 
         public void Handle(string[] args)
@@ -85,7 +35,7 @@ namespace RediscoveryManager
                     var result = SetProperty("IP Address");
                     if (!Commands.MatchInput(result, Commands.Abort))
                     {
-                        IP = result;
+                        _manager.CurrentConnection.IP = result;
                     }
                 } else if (Commands.MatchInput(lastInput, Commands.SetPort))
                 {
@@ -94,7 +44,7 @@ namespace RediscoveryManager
                     if (!Commands.MatchInput(result, Commands.Abort))
                     {
                         if (int.TryParse(result, out int p))
-                            Port = p;
+                            _manager.CurrentConnection.Port = p;
                     }
                 } else if (Commands.MatchInput(lastInput, Commands.SetDeviceIdentifier))
                 {
@@ -102,7 +52,7 @@ namespace RediscoveryManager
                     var result = SetProperty("DeviceIdentifier");
                     if (!Commands.MatchInput(result, Commands.Abort))
                     {
-                        DeviceIdentifier = result;
+                        _manager.CurrentConnection.DeviceIdentifier = result;
                     }
                 } else if (Commands.MatchInput(lastInput, Commands.Connect))
                 {
@@ -149,31 +99,31 @@ namespace RediscoveryManager
             {
                 Color = ConsoleColor.Green,
                 Prefix = "IP: ",
-                Value = IP
+                Value = _manager.CurrentConnection.IP
             });
             ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
             {
                 Color = ConsoleColor.Green,
                 Prefix = "Port: ",
-                Value = Port > 0 ? Port.ToString() : ""
+                Value = _manager.CurrentConnection.Port > 0 ? _manager.CurrentConnection.Port.ToString() : ""
             });
             ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
             {
                 Color = ConsoleColor.Green,
                 Prefix = "Device Identifier: ",
-                Value = DeviceIdentifier
+                Value = _manager.CurrentConnection.DeviceIdentifier
             });
             Console.WriteLine();
             ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
             {
                 Prefix = "Can connect:",
-                Value = $"{CanConnect}",
-                Color = AllowConnectToColor(CanConnect)
+                Value = $"{_manager.ManagerConnectionState.CanConnect}",
+                Color = AllowConnectToColor(_manager.ManagerConnectionState.CanConnect)
             }, new ConsoleExtensions.WriteParams
             {
                 Prefix = " Connected:",
-                Value = $"{ConnectionState}",
-                Color = ConnectionStateToColor(ConnectionState)
+                Value = $"{_manager.ManagerConnectionState.ConnectionState}",
+                Color = ConnectionStateToColor(_manager.ManagerConnectionState.ConnectionState)
             });
             Console.WriteLine();
             Console.WriteLine();
