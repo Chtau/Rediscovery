@@ -9,14 +9,14 @@ namespace RediscoveryManager
     public class ConnectToServiceHandler
     {
         private readonly IManager _manager;
-        private bool isAutoConnectCall = false;
+        private bool isInternalConnectCall = false;
 
         public ConnectToServiceHandler(IManager manager)
         {
             _manager = manager;
             _manager.AfterConnecting += (obj, args) =>
             {
-                if (!isAutoConnectCall)
+                if (isInternalConnectCall)
                 {
                     DisplayTitle();
                 }
@@ -56,9 +56,9 @@ namespace RediscoveryManager
                     }
                 } else if (Commands.MatchInput(lastInput, Commands.Connect))
                 {
-                    isAutoConnectCall = false;
+                    isInternalConnectCall = true;
                     lastInput = null;
-                    Connect();
+                    _manager.TryConnect();
                 } else
                 {
                     lastInput = Console.ReadLine();
@@ -176,42 +176,6 @@ namespace RediscoveryManager
                     return ConsoleColor.White;
                 default:
                     return ConsoleColor.White;
-            }
-        }
-
-        private void Connect()
-        {
-            CanConnect = SharedBase.Connection.Enums.AllowConnect.None;
-            ConnectionState = SharedBase.Connection.Enums.ConnectionState.None;
-            Pem = null;
-            Token = null;
-            PortSSL = 0;
-
-            var result = hand.GreetHost(IP, Port, new SharedBase.Connection.GreetingDeviceMessage
-            {
-                DeviceIdentifier = DeviceIdentifier,
-                DeviceName = "",
-                DeviceType = "",
-                Idiom = "",
-                Manufacturer = "",
-                Model = "",
-                OSVersion = "",
-                Platform = ""
-            });
-            CanConnect = result.CanConnect;
-            if (CanConnect == SharedBase.Connection.Enums.AllowConnect.OK)
-            {
-                Pem = result.PEM;
-                PortSSL = result.SSLPort;
-                consumerService.Connect(IP, PortSSL, Pem);
-                consumerService.SendWelcome(new SharedBase.Connection.WelcomeDeviceMessage
-                {
-                    DeviceIdentifier = DeviceIdentifier,
-                });
-            }
-            else
-            {
-                
             }
         }
     }
