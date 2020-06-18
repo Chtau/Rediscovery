@@ -18,7 +18,6 @@ namespace RediscoveryManager
         public void Start(string[] args)
         {
             TryParseConnectionArguments(args);
-            //connectToService.TryParseArumgents(args);
             SharedUI.DisplayDefaultTitle();
             string lastInput = null;
             do
@@ -42,7 +41,18 @@ namespace RediscoveryManager
 
         private void TryParseConnectionArguments(string[] args)
         {
-
+            int port = 0;
+            var deviceIdentifier = Arguments.TryParseArgumentValue(args, Arguments.SetDeviceIdentifier);
+            var ip = Arguments.TryParseArgumentValue(args, Arguments.SetIP);
+            var portString = Arguments.TryParseArgumentValue(args, Arguments.SetPort);
+            int.TryParse(portString, out port);
+            var autoConnect = Arguments.TryParseArgumentMatch(args, Arguments.Autoconnect);
+            if (!string.IsNullOrWhiteSpace(ip) || port > 0 || !string.IsNullOrWhiteSpace(deviceIdentifier))
+            {
+                _manager.SetConnectionValues(ip, port, deviceIdentifier);
+                if (autoConnect)
+                    _manager.TryConnect();
+            }
         }
     }
 }

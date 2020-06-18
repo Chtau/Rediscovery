@@ -19,7 +19,8 @@ namespace RediscoveryManager.Service
         event EventHandler FeaturesCollectionChanged;
         event EventHandler<Guid> PendingDeviceResolved;
         event EventHandler ManifestChanged;
-        bool TryConnect(string ip, int port, string deviceIdentifier);
+        void SetConnectionValues(string ip, int port, string deviceIdentifier);
+        bool TryConnect();
         void Disconnect();
         void TryResolvePendingDevice(Guid deviceId, bool resolve);
         void TryDeleteDevice(Guid deviceId);

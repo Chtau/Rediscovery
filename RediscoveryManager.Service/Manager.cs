@@ -123,16 +123,10 @@ namespace RediscoveryManager.Service
             };
         }
 
-        public bool TryConnect(string ip, int port, string deviceIdentifier)
+        public bool TryConnect()
         {
             Disconnect();
             tokenSource = new System.Threading.CancellationTokenSource();
-            CurrentConnection = new Models.CurrentConnection
-            {
-                IP = ip,
-                Port = port,
-                DeviceIdentifier = deviceIdentifier
-            };
 
             var result = greetingConsumer.GreetHost(CurrentConnection.IP, CurrentConnection.Port, new SharedBase.Connection.GreetingDeviceMessage
             {
@@ -177,12 +171,6 @@ namespace RediscoveryManager.Service
                 ConnectionState = SharedBase.Connection.Enums.ConnectionState.None
             };
             Manifest = null;
-            CurrentConnection = new Models.CurrentConnection
-            {
-                IP = null,
-                Port = 0,
-                DeviceIdentifier = null
-            };
             if (tokenSource != null)
             {
                 try
@@ -194,6 +182,16 @@ namespace RediscoveryManager.Service
                     System.Diagnostics.Debug.Fail(ex.ToString());
                 }
             }
+        }
+
+        public void SetConnectionValues(string ip, int port, string deviceIdentifier)
+        {
+            CurrentConnection = new Models.CurrentConnection
+            {
+                IP = ip,
+                Port = port,
+                DeviceIdentifier = deviceIdentifier
+            };
         }
     }
 }
