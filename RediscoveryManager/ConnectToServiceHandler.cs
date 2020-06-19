@@ -8,12 +8,10 @@ using System.Threading.Tasks;
 
 namespace RediscoveryManager
 {
-    public class ConnectToServiceHandler
+    public class ConnectToServiceHandler : BaseDisplay
     {
         private const string DisplayName = "connect";
         private readonly IManager _manager;
-
-        private bool isWriting = false;
 
         public ConnectToServiceHandler(IManager manager)
         {
@@ -22,10 +20,7 @@ namespace RediscoveryManager
             {
                 if (string.Equals(SharedUI.CurrentDisplay, DisplayName))
                 {
-                    do
-                    {
-                        Thread.Sleep(20);
-                    } while (isWriting);
+                    WaitForWriting();
                     DisplayTitle();
                 }
             };

@@ -12,8 +12,6 @@ namespace RediscoveryManager
         private readonly ConnectToServiceHandler _connectToService;
         private readonly IManager _manager;
 
-        private bool isWriting = false;
-
         public UIHandler(IManager manager)
         {
             SharedUI.CurrentDisplay = DisplayName;
@@ -23,10 +21,7 @@ namespace RediscoveryManager
             {
                 if (string.Equals(SharedUI.CurrentDisplay, DisplayName))
                 {
-                    do
-                    {
-                        Thread.Sleep(20);
-                    } while (isWriting);
+                    WaitForWriting();
                     DisplayDefaultTitle();
                 }
             };
