@@ -6,6 +6,8 @@ namespace RediscoveryManager
 {
     public static class SharedUI
     {
+        public static string CurrentDisplay = null;
+
         public static bool ResetOrExit(string input)
         {
             if (Commands.MatchInput(input, Commands.Exit))

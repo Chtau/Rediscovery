@@ -3,21 +3,29 @@ using RediscoveryManager.Service;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace RediscoveryManager
 {
     public class ConnectToServiceHandler
     {
+        private const string DisplayName = "connect";
         private readonly IManager _manager;
-        private bool isInternalConnectCall = false;
+
+        private bool isWriting = false;
 
         public ConnectToServiceHandler(IManager manager)
         {
             _manager = manager;
             _manager.AfterConnecting += (obj, args) =>
             {
-                if (isInternalConnectCall)
+                if (string.Equals(SharedUI.CurrentDisplay, DisplayName))
                 {
+                    do
+                    {
+                        Thread.Sleep(20);
+                    } while (isWriting);
                     DisplayTitle();
                 }
             };
@@ -25,6 +33,7 @@ namespace RediscoveryManager
 
         public void Handle(string[] args)
         {
+            SharedUI.CurrentDisplay = DisplayName;
             DisplayTitle();
             string lastInput = null;
             do
@@ -56,7 +65,6 @@ namespace RediscoveryManager
                     }
                 } else if (Commands.MatchInput(lastInput, Commands.Connect))
                 {
-                    isInternalConnectCall = true;
                     lastInput = null;
                     _manager.TryConnect();
                 } else
@@ -92,6 +100,7 @@ namespace RediscoveryManager
 
         private void DisplayTitle()
         {
+            isWriting = true;
             Console.Clear();
             Console.WriteLine("Connect to Service");
             Console.WriteLine();
@@ -135,6 +144,7 @@ namespace RediscoveryManager
             Console.WriteLine($"{Commands.Back.PutifyStringArray()} = Back to the main menu");
             Console.WriteLine();
             Console.Write("Command:");
+            isWriting = false;
         }
     }
 }

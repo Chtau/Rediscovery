@@ -2,18 +2,34 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace RediscoveryManager
 {
-    public class UIHandler
+    public class UIHandler : BaseDisplay
     {
+        private const string DisplayName = "main";
         private readonly ConnectToServiceHandler _connectToService;
         private readonly IManager _manager;
 
+        private bool isWriting = false;
+
         public UIHandler(IManager manager)
         {
+            SharedUI.CurrentDisplay = DisplayName;
             _manager = manager;
             _connectToService = new ConnectToServiceHandler(_manager);
+            _manager.AfterConnecting += (obj, args) =>
+            {
+                if (string.Equals(SharedUI.CurrentDisplay, DisplayName))
+                {
+                    do
+                    {
+                        Thread.Sleep(20);
+                    } while (isWriting);
+                    DisplayDefaultTitle();
+                }
+            };
         }
 
         public void Start(string[] args)
@@ -22,6 +38,7 @@ namespace RediscoveryManager
             string lastInput = null;
             do
             {
+                SharedUI.CurrentDisplay = DisplayName;
                 DisplayDefaultTitle();
                 lastInput = Console.ReadLine();
                 SwitchMenu(lastInput, args);
@@ -35,6 +52,7 @@ namespace RediscoveryManager
 
             } else if (Commands.MatchInput(input, Commands.Connect))
             {
+
                 _connectToService.Handle(args);
             }
         }
@@ -57,6 +75,7 @@ namespace RediscoveryManager
 
         private void DisplayDefaultTitle()
         {
+            isWriting = true;
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Rediscovery Manager");
@@ -75,6 +94,7 @@ namespace RediscoveryManager
             Console.WriteLine($"{Commands.Exit.PutifyStringArray()} = Application exit");
             Console.WriteLine();
             Console.Write("Command:");
+            isWriting = false;
         }
     }
 }
