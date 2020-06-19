@@ -19,11 +19,17 @@ namespace RediscoveryManager
         public readonly static string[] Exit = new string[] { "exit", "quit", "q" };
         public readonly static string[] Help = new string[] { "h", "help", "?" };
         public readonly static string[] Connect = new string[] { "c", "connect" };
+        public readonly static string[] PendingDevices = new string[] { "pd", "pendingdevices" };
         public readonly static string[] Back = new string[] { "b", "back" };
         public readonly static string[] Abort = new string[] { "a", "abort" };
 
         public readonly static string[] SetIP = new string[] { "ip" };
         public readonly static string[] SetPort = new string[] { "p", "port" };
         public readonly static string[] SetDeviceIdentifier = new string[] { "di", "deviceidentifier" };
+
+        public readonly static string[] Previous = new string[] { "p", "-" };
+        public readonly static string[] Next = new string[] { "n", "+" };
+        public readonly static string[] Accept = new string[] { "a" };
+        public readonly static string[] Deny = new string[] { "d" };
     }
 }

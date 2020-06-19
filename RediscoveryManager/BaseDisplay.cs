@@ -16,5 +16,21 @@ namespace RediscoveryManager
                 Thread.Sleep(20);
             } while (isWriting);
         }
+
+        public virtual void Handle(string[] args) { }
+        internal virtual void DisplayTitle() { }
+
+        internal virtual bool ResetOrBack(string input)
+        {
+            if (Commands.MatchInput(input, Commands.Back))
+            {
+                return false;
+            }
+            else
+            {
+                DisplayTitle();
+                return true;
+            }
+        }
     }
 }

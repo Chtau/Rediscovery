@@ -26,7 +26,7 @@ namespace RediscoveryManager
             };
         }
 
-        public void Handle(string[] args)
+        public override void Handle(string[] args)
         {
             SharedUI.CurrentDisplay = DisplayName;
             DisplayTitle();
@@ -80,20 +80,7 @@ namespace RediscoveryManager
             return Console.ReadLine();
         }
 
-        private bool ResetOrBack(string input)
-        {
-            if (Commands.MatchInput(input, Commands.Back))
-            {
-                return false;
-            }
-            else
-            {
-                DisplayTitle();
-                return true;
-            }
-        }
-
-        private void DisplayTitle()
+        internal override void DisplayTitle()
         {
             isWriting = true;
             Console.Clear();
