@@ -118,12 +118,12 @@ namespace RediscoveryManager
             {
                 Prefix = "Can connect:",
                 Value = $"{_manager.ManagerConnectionState.CanConnect}",
-                Color = AllowConnectToColor(_manager.ManagerConnectionState.CanConnect)
+                Color = SharedUI.AllowConnectToColor(_manager.ManagerConnectionState.CanConnect)
             }, new ConsoleExtensions.WriteParams
             {
                 Prefix = " Connected:",
                 Value = $"{_manager.ManagerConnectionState.ConnectionState}",
-                Color = ConnectionStateToColor(_manager.ManagerConnectionState.ConnectionState)
+                Color = SharedUI.ConnectionStateToColor(_manager.ManagerConnectionState.ConnectionState)
             });
             Console.WriteLine();
             Console.WriteLine();
@@ -135,48 +135,6 @@ namespace RediscoveryManager
             Console.WriteLine($"{Commands.Back.PutifyStringArray()} = Back to the main menu");
             Console.WriteLine();
             Console.Write("Command:");
-        }
-
-        private ConsoleColor AllowConnectToColor(SharedBase.Connection.Enums.AllowConnect allowConnect)
-        {
-            switch (allowConnect)
-            {
-                case SharedBase.Connection.Enums.AllowConnect.None:
-                    return ConsoleColor.White;
-                case SharedBase.Connection.Enums.AllowConnect.OK:
-                    return ConsoleColor.Green;
-                case SharedBase.Connection.Enums.AllowConnect.Error:
-                    return ConsoleColor.Red;
-                case SharedBase.Connection.Enums.AllowConnect.Denied:
-                    return ConsoleColor.Red;
-                case SharedBase.Connection.Enums.AllowConnect.UnkownDevice:
-                    return ConsoleColor.White;
-                default:
-                    return ConsoleColor.White;
-            }
-        }
-
-        private ConsoleColor ConnectionStateToColor(SharedBase.Connection.Enums.ConnectionState connectionState)
-        {
-            switch (connectionState)
-            {
-                case SharedBase.Connection.Enums.ConnectionState.None:
-                    return ConsoleColor.White;
-                case SharedBase.Connection.Enums.ConnectionState.OK:
-                    return ConsoleColor.Green;
-                case SharedBase.Connection.Enums.ConnectionState.Error:
-                    return ConsoleColor.Red;
-                case SharedBase.Connection.Enums.ConnectionState.Warning:
-                    return ConsoleColor.DarkYellow;
-                case SharedBase.Connection.Enums.ConnectionState.Offline:
-                    return ConsoleColor.White;
-                case SharedBase.Connection.Enums.ConnectionState.Denied:
-                    return ConsoleColor.Red;
-                case SharedBase.Connection.Enums.ConnectionState.WaitForApprovel:
-                    return ConsoleColor.White;
-                default:
-                    return ConsoleColor.White;
-            }
         }
     }
 }

@@ -19,11 +19,10 @@ namespace RediscoveryManager
         public void Start(string[] args)
         {
             TryParseConnectionArguments(args);
-            SharedUI.DisplayDefaultTitle();
             string lastInput = null;
             do
             {
-
+                DisplayDefaultTitle();
                 lastInput = Console.ReadLine();
                 SwitchMenu(lastInput, args);
             } while (SharedUI.ResetOrExit(lastInput));
@@ -54,6 +53,28 @@ namespace RediscoveryManager
                 if (autoConnect)
                     _manager.TryConnect();
             }
+        }
+
+        private void DisplayDefaultTitle()
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Rediscovery Manager");
+            Console.ResetColor();
+            Console.WriteLine();
+            ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
+            {
+                Prefix = "Connected:",
+                Value = $"{_manager.ManagerConnectionState.ConnectionState}",
+                Color = SharedUI.ConnectionStateToColor(_manager.ManagerConnectionState.ConnectionState)
+            });
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine($"{Commands.Help.PutifyStringArray()} = shows help for the current context");
+            Console.WriteLine($"{Commands.Connect.PutifyStringArray()} = Connect to Service");
+            Console.WriteLine($"{Commands.Exit.PutifyStringArray()} = Application exit");
+            Console.WriteLine();
+            Console.Write("Command:");
         }
     }
 }
