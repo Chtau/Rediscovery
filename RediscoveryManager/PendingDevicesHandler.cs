@@ -75,7 +75,7 @@ namespace RediscoveryManager
             {
                 Color = ConsoleColor.Green,
                 Prefix = "Pending Devices: ",
-                Value = _manager.PendingDevices?.Count.ToString()
+                Value = currentNavigationIndex.ToString() + " / " + _manager.PendingDevices?.Count.ToString()
             });
             Console.WriteLine();
             Console.WriteLine();
