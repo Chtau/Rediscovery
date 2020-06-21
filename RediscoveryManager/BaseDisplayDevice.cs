@@ -8,12 +8,15 @@ namespace RediscoveryManager
     public abstract class BaseDisplayDevice : BaseDisplay
     {
         internal int currentNavigationIndex = 0;
-        internal string DisplayDeviceTitle = "Pending Devices: ";
 
         internal virtual void WriteMenu()
         {
-            Console.WriteLine($"{Commands.Accept.PutifyStringArray()} = Accept access request");
-            Console.WriteLine($"{Commands.Deny.PutifyStringArray()} = Deny access request");
+            
+        }
+
+        internal virtual string WriteTitle()
+        {
+            return "";
         }
 
         internal virtual IList<SharedBase.Device.DeviceInfo> DeviceCollection()
@@ -28,8 +31,8 @@ namespace RediscoveryManager
             ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
             {
                 Color = ConsoleColor.Green,
-                Prefix = DisplayDeviceTitle,
-                Value = currentNavigationIndex.ToString() + " / " + DeviceCollection()?.Count.ToString()
+                Prefix = WriteTitle(),
+                Value = (currentNavigationIndex + 1).ToString() + " / " + DeviceCollection()?.Count.ToString()
             });
             Console.WriteLine();
             Console.WriteLine();

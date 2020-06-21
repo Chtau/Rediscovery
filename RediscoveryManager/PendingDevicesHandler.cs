@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RediscoveryManager
 {
-    public class PendingDevicesHandler : BaseDisplay
+    public class PendingDevicesHandler : BaseDisplayDevice
     {
         private const string DisplayName = "pendingdevices";
         private readonly IManager _manager;
@@ -23,6 +23,22 @@ namespace RediscoveryManager
                     DisplayTitle();
                 }
             };
+        }
+
+        internal override void WriteMenu()
+        {
+            Console.WriteLine($"{Commands.Accept.PutifyStringArray()} = Accept access request");
+            Console.WriteLine($"{Commands.Deny.PutifyStringArray()} = Deny access request");
+        }
+
+        internal override string WriteTitle()
+        {
+            return "Pending Devices: ";
+        }
+
+        internal override IList<SharedBase.Device.DeviceInfo> DeviceCollection()
+        {
+            return _manager.PendingDevices;
         }
 
         public override void Handle(string[] args)
@@ -65,7 +81,5 @@ namespace RediscoveryManager
                 }
             } while (ResetOrBack(lastInput));
         }
-
-        
     }
 }
