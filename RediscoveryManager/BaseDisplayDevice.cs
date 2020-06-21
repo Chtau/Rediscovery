@@ -1,12 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace RediscoveryManager
 {
     public abstract class BaseDisplayDevice : BaseDisplay
     {
+        internal int currentNavigationIndex = 0;
+        internal string DisplayDeviceTitle = "Pending Devices: ";
 
+        internal virtual void WriteMenu()
+        {
+            Console.WriteLine($"{Commands.Accept.PutifyStringArray()} = Accept access request");
+            Console.WriteLine($"{Commands.Deny.PutifyStringArray()} = Deny access request");
+        }
+
+        internal virtual IList<SharedBase.Device.DeviceInfo> DeviceCollection()
+        {
+            return new List<SharedBase.Device.DeviceInfo>();
+        }
 
         internal override void DisplayTitle()
         {
@@ -15,22 +28,21 @@ namespace RediscoveryManager
             ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
             {
                 Color = ConsoleColor.Green,
-                Prefix = "Pending Devices: ",
-                Value = currentNavigationIndex.ToString() + " / " + _manager.PendingDevices?.Count.ToString()
+                Prefix = DisplayDeviceTitle,
+                Value = currentNavigationIndex.ToString() + " / " + DeviceCollection()?.Count.ToString()
             });
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine($"{Commands.Previous.PutifyStringArray()} = Previous device");
             Console.WriteLine($"{Commands.Next.PutifyStringArray()} = Next device");
-            Console.WriteLine($"{Commands.Accept.PutifyStringArray()} = Accept access request");
-            Console.WriteLine($"{Commands.Deny.PutifyStringArray()} = Deny access request");
+            WriteMenu();
             Console.WriteLine();
             Console.WriteLine($"{Commands.Back.PutifyStringArray()} = Back to the main menu");
             Console.WriteLine();
 
-            if (_manager.PendingDevices?.Count > 0)
+            if (DeviceCollection()?.Count > 0)
             {
-                var item = _manager.PendingDevices[currentNavigationIndex];
+                var item = DeviceCollection()[currentNavigationIndex];
                 Console.WriteLine();
                 ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
                 {

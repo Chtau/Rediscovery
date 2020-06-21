@@ -9,7 +9,6 @@ namespace RediscoveryManager
     {
         private const string DisplayName = "pendingdevices";
         private readonly IManager _manager;
-        private int currentNavigationIndex = 0;
 
         public PendingDevicesHandler(IManager manager)
         {
