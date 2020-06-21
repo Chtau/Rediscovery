@@ -19,9 +19,19 @@ namespace RediscoveryManager
             return "";
         }
 
+        internal virtual string DisplayIdentifierName()
+        {
+            return "";
+        }
+
         internal virtual IList<SharedBase.Device.DeviceInfo> DeviceCollection()
         {
             return new List<SharedBase.Device.DeviceInfo>();
+        }
+
+        internal virtual bool HandleSubMenu(string[] args, string lastInput)
+        {
+            return false;
         }
 
         internal override void DisplayTitle()
@@ -83,6 +93,38 @@ namespace RediscoveryManager
 
             Console.Write("Command:");
             isWriting = false;
+        }
+
+        public override void Handle(string[] args)
+        {
+            SharedUI.CurrentDisplay = DisplayIdentifierName();
+            DisplayTitle();
+            string lastInput = null;
+            do
+            {
+                if (DeviceCollection()?.Count > 0 && Commands.MatchInput(lastInput, Commands.Previous))
+                {
+                    lastInput = null;
+                    if (currentNavigationIndex == 0)
+                        currentNavigationIndex = DeviceCollection().Count - 1;
+                    else
+                        currentNavigationIndex--;
+                }
+                else if (DeviceCollection()?.Count > 0 && Commands.MatchInput(lastInput, Commands.Next))
+                {
+                    lastInput = null;
+                    currentNavigationIndex++;
+                    if (currentNavigationIndex >= DeviceCollection().Count)
+                        currentNavigationIndex = 0;
+                }
+                else
+                {
+                    if (HandleSubMenu(args, lastInput))
+                        lastInput = null;
+                    else
+                        lastInput = Console.ReadKey().KeyChar.ToString();
+                }
+            } while (ResetOrBack(lastInput));
         }
     }
 }

@@ -41,45 +41,21 @@ namespace RediscoveryManager
             return _manager.PendingDevices;
         }
 
-        public override void Handle(string[] args)
+        internal override bool HandleSubMenu(string[] args, string lastInput)
         {
-            SharedUI.CurrentDisplay = DisplayName;
-            DisplayTitle();
-            string lastInput = null;
-            do
+            if (_manager.PendingDevices?.Count > 0 && Commands.MatchInput(lastInput, Commands.Accept))
             {
-                if (_manager.PendingDevices?.Count > 0 && Commands.MatchInput(lastInput, Commands.Previous))
-                {
-                    lastInput = null;
-                    if (currentNavigationIndex == 0)
-                        currentNavigationIndex = _manager.PendingDevices.Count - 1;
-                    else
-                        currentNavigationIndex--;
-                }
-                else if (_manager.PendingDevices?.Count > 0 && Commands.MatchInput(lastInput, Commands.Next))
-                {
-                    lastInput = null;
-                    currentNavigationIndex++;
-                    if (currentNavigationIndex >= _manager.PendingDevices.Count)
-                        currentNavigationIndex = 0;
-                }
-                else if (_manager.PendingDevices?.Count > 0 && Commands.MatchInput(lastInput, Commands.Accept))
-                {
-                    lastInput = null;
-                    var item = _manager.PendingDevices[currentNavigationIndex];
-                    _manager.TryResolvePendingDevice(item.Id, true);
-                }
-                else if (_manager.PendingDevices?.Count > 0 && Commands.MatchInput(lastInput, Commands.Deny))
-                {
-                    lastInput = null;
-                    var item = _manager.PendingDevices[currentNavigationIndex];
-                    _manager.TryResolvePendingDevice(item.Id, false);
-                }
-                else
-                {
-                    lastInput = Console.ReadKey().KeyChar.ToString();
-                }
-            } while (ResetOrBack(lastInput));
+                var item = _manager.PendingDevices[currentNavigationIndex];
+                _manager.TryResolvePendingDevice(item.Id, true);
+                return true;
+            }
+            else if (_manager.PendingDevices?.Count > 0 && Commands.MatchInput(lastInput, Commands.Deny))
+            {
+                var item = _manager.PendingDevices[currentNavigationIndex];
+                _manager.TryResolvePendingDevice(item.Id, false);
+                return true;
+            }
+            return false;
         }
     }
 }
