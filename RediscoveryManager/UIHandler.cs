@@ -12,6 +12,7 @@ namespace RediscoveryManager
         private readonly ConnectToServiceHandler _connectToService;
         private readonly PendingDevicesHandler _pendingDevicesHandler;
         private readonly AllDevicesHandler _allDevicesHandler;
+        private readonly ActiveDevicesHandler _activeDevicesHandler;
         private readonly IManager _manager;
 
         public UIHandler(IManager manager)
@@ -21,6 +22,7 @@ namespace RediscoveryManager
             _connectToService = new ConnectToServiceHandler(_manager);
             _pendingDevicesHandler = new PendingDevicesHandler(_manager);
             _allDevicesHandler = new AllDevicesHandler(_manager);
+            _activeDevicesHandler = new ActiveDevicesHandler(_manager);
             _manager.AfterConnecting += (obj, args) =>
             {
                 if (string.Equals(SharedUI.CurrentDisplay, DisplayName))
@@ -60,6 +62,10 @@ namespace RediscoveryManager
             {
                 _allDevicesHandler.Handle(args);
             }
+            else if (Commands.MatchInput(input, Commands.ActiveDevices))
+            {
+                _activeDevicesHandler.Handle(args);
+            }
         }
 
         private void TryParseConnectionArguments(string[] args)
@@ -97,6 +103,7 @@ namespace RediscoveryManager
             Console.WriteLine($"{Commands.Help.PutifyStringArray()} = shows help for the current context");
             Console.WriteLine($"{Commands.Connect.PutifyStringArray()} = Connect to Service");
             Console.WriteLine($"{Commands.AllDevices.PutifyStringArray()} = View all Devices");
+            Console.WriteLine($"{Commands.ActiveDevices.PutifyStringArray()} = View active Devices");
             Console.WriteLine($"{Commands.PendingDevices.PutifyStringArray()} = Manage pending Device requests");
             Console.WriteLine($"{Commands.Exit.PutifyStringArray()} = Application exit");
             Console.WriteLine();
