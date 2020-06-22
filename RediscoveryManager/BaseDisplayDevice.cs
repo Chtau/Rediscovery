@@ -81,12 +81,16 @@ namespace RediscoveryManager
                     Prefix = "OS: ",
                     Value = item.OSVersion
                 });
-                ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
+                if (item.RequestTime.HasValue)
                 {
-                    Color = ConsoleColor.White,
-                    Prefix = "OS: ",
-                    Value = $"{item.RequestTime}"
-                });
+                    ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
+                    {
+                        Color = ConsoleColor.White,
+                        Prefix = "Requested at: ",
+                        Value = $"{item.RequestTime}"
+                    });
+                }
+
                 Console.WriteLine();
                 Console.WriteLine();
             }
