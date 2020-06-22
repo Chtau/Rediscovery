@@ -42,7 +42,7 @@ namespace RediscoveryManager
             {
                 Color = ConsoleColor.Green,
                 Prefix = WriteTitle(),
-                Value = (currentNavigationIndex + 1).ToString() + " / " + DeviceCollection()?.Count.ToString()
+                Value = OnGetTitlePageIndex()
             });
             Console.WriteLine();
             Console.WriteLine();
@@ -97,6 +97,20 @@ namespace RediscoveryManager
 
             Console.Write("Command:");
             isWriting = false;
+        }
+
+        private string OnGetTitlePageIndex()
+        {
+            string retVal = "";
+            if (DeviceCollection() == null || DeviceCollection().Count == 0)
+            {
+                retVal = " no devices";
+            } else
+            {
+                retVal = (currentNavigationIndex + 1).ToString() + " / " + DeviceCollection()?.Count.ToString();
+            }
+            
+            return retVal;
         }
 
         public override void Handle(string[] args)
