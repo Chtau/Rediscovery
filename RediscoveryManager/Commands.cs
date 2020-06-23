@@ -22,6 +22,7 @@ namespace RediscoveryManager
         public readonly static string[] PendingDevices = new string[] { "pd", "pendingdevices" };
         public readonly static string[] AllDevices = new string[] { "d", "devices" };
         public readonly static string[] ActiveDevices = new string[] { "ad", "activedevices" };
+        public readonly static string[] Manifest = new string[] { "m", "manifest" };
         public readonly static string[] Back = new string[] { "b", "back" };
         public readonly static string[] Abort = new string[] { "a", "abort" };
 
@@ -33,5 +34,7 @@ namespace RediscoveryManager
         public readonly static string[] Next = new string[] { "n", "+" };
         public readonly static string[] Accept = new string[] { "a" };
         public readonly static string[] Deny = new string[] { "d" };
+
+        public readonly static string[] Features = new string[] { "f", "features" };
     }
 }
