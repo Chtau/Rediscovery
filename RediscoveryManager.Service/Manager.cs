@@ -48,6 +48,7 @@ namespace RediscoveryManager.Service
                 if (ManagerConnectionState.ConnectionState == SharedBase.Connection.Enums.ConnectionState.OK)
                 {
                     CurrentConnection.Token = args.Token;
+                    authenticationConsumer.RequestManifest(CurrentConnection.Token);
                     resourceConsumer.Connect(CurrentConnection.IP, CurrentConnection.PortSSL, CurrentConnection.Pem);
                     resourceConsumer.ListenDevices(CurrentConnection.Token, tokenSource);
                     resourceConsumer.ListenActiveDevices(CurrentConnection.Token, tokenSource);
