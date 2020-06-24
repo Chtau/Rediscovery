@@ -14,6 +14,7 @@ namespace RediscoveryManager
         private readonly AllDevicesHandler _allDevicesHandler;
         private readonly ActiveDevicesHandler _activeDevicesHandler;
         private readonly ManifestHandler _manifestHandler;
+        private readonly FeatureHandler _featureHandler;
         private readonly IManager _manager;
 
         public UIHandler(IManager manager)
@@ -25,6 +26,7 @@ namespace RediscoveryManager
             _allDevicesHandler = new AllDevicesHandler(_manager);
             _activeDevicesHandler = new ActiveDevicesHandler(_manager);
             _manifestHandler = new ManifestHandler(_manager);
+            _featureHandler = new FeatureHandler(_manager);
             _manager.AfterConnecting += (obj, args) =>
             {
                 if (string.Equals(SharedUI.CurrentDisplay, DisplayName))
@@ -72,6 +74,10 @@ namespace RediscoveryManager
             {
                 _manifestHandler.Handle(args);
             }
+            else if (Commands.MatchInput(input, Commands.Features))
+            {
+                _featureHandler.Handle(args);
+            }
         }
 
         private void TryParseConnectionArguments(string[] args)
@@ -112,6 +118,7 @@ namespace RediscoveryManager
             Console.WriteLine($"{Commands.ActiveDevices.PutifyStringArray()} = View active Devices");
             Console.WriteLine($"{Commands.PendingDevices.PutifyStringArray()} = Manage pending Device requests");
             Console.WriteLine($"{Commands.Manifest.PutifyStringArray()} = Service manifest");
+            Console.WriteLine($"{Commands.Features.PutifyStringArray()} = Service features");
             Console.WriteLine($"{Commands.Exit.PutifyStringArray()} = Application exit");
             Console.WriteLine();
             Console.Write("Command:");
