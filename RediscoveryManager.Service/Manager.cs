@@ -10,8 +10,8 @@ namespace RediscoveryManager.Service
 {
     public class Manager : IManager
     {
-        public Models.ManagerConnectionState ManagerConnectionState { get; private set; }
-        public Models.CurrentConnection CurrentConnection { get; set; }
+        public Models.ManagerConnectionState ManagerConnectionState { get; private set; } = new Models.ManagerConnectionState();
+        public Models.CurrentConnection CurrentConnection { get; set; } = new Models.CurrentConnection();
         public ObservableCollection<SharedBase.Device.DeviceInfo> ActiveDevices { get; set; } = new ObservableCollection<SharedBase.Device.DeviceInfo>();
         public ObservableCollection<SharedBase.Device.DeviceInfo> PendingDevices { get; set; } = new ObservableCollection<SharedBase.Device.DeviceInfo>();
         public ObservableCollection<SharedBase.Device.DeviceInfo> Devices { get; set; } = new ObservableCollection<SharedBase.Device.DeviceInfo>();
