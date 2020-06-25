@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link type="text/css" rel="stylesheet" href="./css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+    <div id="container">
+        <output></output>
+        <div id="input-line" class="input-line">
+            <div class="prompt"></div><div><input class="cmdline" autofocus /></div>
+        </div>
+    </div>
+    <script type="text/javascript" src="./js/terminal.js"></script>
+    <script>
+        function log(str) {
+            //var div = document.getElementById('result');
+            //div.innerHTML = JSON.stringify(str);
+        }
+        function featureReceive(data) {
+            // data received => {"ProcessRunning":true,"Title":"title.mp4","Artist":null,"Info":null}
+            //log(data);
+            term.output(data);
+        }
+        function profileChanged(data) {
+            //log(data);
+        }
+        function send(command) {
+            //var model = { CommandIndex: index };
+            //log(model);
+            featureSend(command);
+        }
+
+        (function () {
+            document.querySelector("#input-line > div.prompt").innerText = '$ ';
+
+            // Initialize a new terminal object
+            var term = new Terminal('#input-line .cmdline', '#container output');
+            term.init();
+
+            setInterval(function () {
+                var headerDate = document.getElementById('header-date');
+                if (headerDate) {
+                    document.getElementById('header-date').innerText = new Date();
+                }
+                //term.output('@date ' + new Date());
+            }, 1000);
+
+            this.addEventListener('command', function (e) {
+                //console.log(e);
+                send(e.detail);
+            }, false);
+        })();
+    </script>
+</body>
+</html>
