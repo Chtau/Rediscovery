@@ -85,14 +85,10 @@ namespace DesktopFeatureMediaPlayer
                 Version = new PluginVersion() { Major = 0, Minor = 0 },
                 Author = "Christoph Taucher",
                 Documentation = null,
-                HasProfiles = true,
-                ProfileUIReadonly = true,
-                HasSettings = false,
-                SettingUIReadonly = true,
                 Website = null,
                 PluginDirectory = PluginDirectory,
-                ProfileUIElementName = "JSONComponent",
-                SettingUIElementName = null
+                HasSettingConfiguration = false,
+                HasProfilConfiguration = false
             };
         }
 

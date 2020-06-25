@@ -6,8 +6,6 @@ namespace SharedBase.Device
 {
     public interface IFeatureProfileDefinition
     {
-        bool HasProfiles { get; set; }
-        bool ProfileUIReadonly { get; set; }
-        string ProfileUIElementName { get; set; }
+        bool HasProfilConfiguration { get; set; }
     }
 }

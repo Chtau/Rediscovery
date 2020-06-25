@@ -39,14 +39,10 @@ namespace DesktopFeatureConsole
                 Version = new PluginVersion() { Major = 0, Minor = 0 },
                 Author = "Christoph Taucher",
                 Documentation = null,
-                HasProfiles = false,
-                ProfileUIReadonly = false,
-                SettingUIReadonly = false,
-                HasSettings = false,
                 Website = null,
                 PluginDirectory = PluginDirectory,
-                ProfileUIElementName = null,
-                SettingUIElementName = null
+                HasProfilConfiguration = false,
+                HasSettingConfiguration = false
             };
         }
 

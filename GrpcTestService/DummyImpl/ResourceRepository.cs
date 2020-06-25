@@ -33,17 +33,13 @@ namespace GrpcTestService.DummyImpl
                     DisplayName = "A",
                     Documentation = null,
                     FeatureIntegrationPoint = SharedBase.Device.IntegrationPoint.Desktop,
-                    HasProfiles = true,
-                    HasSettings = true,
                     Id = Guid.NewGuid(),
                     MinimalControlIntegrationPoint = new SharedBase.Core.Version() {  Major = 0, Minor = 0, Patch = 0 },
                     MinimalFeatureIntegrationPoint = new SharedBase.Core.Version() {  Major = 0, Minor = 0, Patch = 0 },
                     Version = new SharedBase.Core.Version() {  Major = 0, Minor = 0, Patch = 0 },
                     PluginDirectory = null,
-                    ProfileUIElementName = null,
-                    ProfileUIReadonly = true,
-                    SettingUIElementName = null,
-                    SettingUIReadonly = true,
+                    HasProfilConfiguration = false,
+                    HasSettingConfiguration = false,
                     Website = null
                 }
             };

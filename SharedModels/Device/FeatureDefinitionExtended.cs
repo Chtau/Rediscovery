@@ -11,12 +11,8 @@ namespace SharedBase.Device
         public string Documentation { get; set; }
         public string Website { get; set; }
         public string PluginDirectory { get; set; }
-        public bool HasProfiles { get; set; }
-        public bool ProfileUIReadonly { get; set; }
-        public string ProfileUIElementName { get; set; }
-        public bool HasSettings { get; set; }
-        public bool SettingUIReadonly { get; set; }
-        public string SettingUIElementName { get; set; }
+        public bool HasProfilConfiguration { get; set; }
+        public bool HasSettingConfiguration { get; set; }
         public IntegrationPoint ControlIntegrationPoint { get; set; }
         public IntegrationPoint FeatureIntegrationPoint { get; set; }
     }

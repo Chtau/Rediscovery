@@ -30,17 +30,9 @@ namespace PluginFeature.Models
 
         public string PluginDirectory { get; set; }
 
-        public bool HasProfiles { get; set; }
+        public bool HasProfilConfiguration { get; set; }
 
-        public bool ProfileUIReadonly { get; set; }
-
-        public string ProfileUIElementName { get; set; }
-
-        public bool HasSettings { get; set; }
-
-        public bool SettingUIReadonly { get; set; }
-
-        public string SettingUIElementName { get; set; }
+        public bool HasSettingConfiguration { get; set; }
 
         public PluginIntegration ControlIntegrationPoint { get; set; }
 

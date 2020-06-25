@@ -10,12 +10,8 @@ message FeatureDefinitionExtended {
     string documentation = 7;
     string website = 8;
     string pluginDirectory = 9;
-    bool hasProfiles = 10;
-    bool profileUIReadonly = 11;
-    string profileUIElementName = 12;
-    bool hasSettings = 13;
-    bool settingUIReadonly = 14;
-    string settingUIElementName = 15;
+    bool hasProfilConfiguration = 10;
+    bool hasSettingConfiguration = 11;
     enum IntegrationPoint {
         Desktop = 0;
         Mobile = 1;

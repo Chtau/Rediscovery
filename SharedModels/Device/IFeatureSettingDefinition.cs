@@ -6,8 +6,6 @@ namespace SharedBase.Device
 {
     public interface IFeatureSettingDefinition
     {
-        bool HasSettings { get; set; }
-        bool SettingUIReadonly { get; set; }
-        string SettingUIElementName { get; set; }
+        bool HasSettingConfiguration { get; set; }
     }
 }
