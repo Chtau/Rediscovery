@@ -90,53 +90,6 @@ namespace AppControlPanel.ViewModels
             }
         }
 
-        public void StartItem(AppViewModel model)
-        {
-            model.AppLaunchState = _applicationStartService.Start(model.AppModel,
-                proc =>
-                {
-                    model.AdditionalProcesses.Add(proc);
-                });
-        }
-
-        public void StopItem(AppViewModel model)
-        {
-            _applicationWatchService.Watch(model, (state, prcId) =>
-            {
-                model.AppLaunchState = state;
-                model.ProcessId = prcId;
-                if (model.AppLaunchState == AppViewModel.LaunchState.Running)
-                {
-                    try
-                    {
-                        var prc = System.Diagnostics.Process.GetProcessById(model.ProcessId.Value);
-                        if (prc != null)
-                            prc.Kill(true);
-                        if (model.AdditionalProcesses.Count > 0)
-                        {
-                            for (int i = 0; i < model.AdditionalProcesses.Count; i++)
-                            {
-                                try
-                                {
-                                    var prcTmp = System.Diagnostics.Process.GetProcessById(model.AdditionalProcesses[i]);
-                                    if (prcTmp != null)
-                                        prcTmp.Kill(true);
-                                }
-                                catch (Exception ex)
-                                {
-                                    System.Diagnostics.Debug.Print("Stop additional Process Exception:" + ex.ToString());
-                                }
-                            }
-                            model.AdditionalProcesses.Clear();
-                        }
-                    } catch (Exception ex)
-                    {
-                        System.Diagnostics.Debug.Print("Stop Process Exception:" + ex.ToString());
-                    }
-                }
-            });
-        }
-
         public void OpenSettings()
         {
             try

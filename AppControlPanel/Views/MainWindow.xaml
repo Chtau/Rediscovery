@@ -38,11 +38,11 @@
               <Button Foreground="{Binding AppLaunchState, Converter={StaticResource LaunchForeColor}}"
                     Background="{Binding AppLaunchState, Converter={StaticResource LaunchBackColor}}"
                     IsEnabled="{Binding !IsRunning}"
-                    Command="{Binding $parent[Window].DataContext.StartItem}" CommandParameter="{Binding .}">Start</Button>
+                    Command="{Binding StartItem}" CommandParameter="{Binding .}">Start</Button>
               <Button Foreground="White"
                       Background="DarkRed"
                       IsEnabled="{Binding IsRunning}"
-                      Command="{Binding $parent[Window].DataContext.StopItem}" CommandParameter="{Binding .}">Stop</Button>
+                      Command="{Binding StopItem}" CommandParameter="{Binding .}">Stop</Button>
             </StackPanel>
             <TextBlock Grid.Column="2" Margin="10,0" Text="{Binding AppLaunchState, Converter={StaticResource LaunchTextColor}}" TextAlignment="Center" VerticalAlignment="Center"/>
             <StackPanel Grid.Column="3" Orientation="Horizontal">
