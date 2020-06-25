@@ -15,9 +15,6 @@ service ResourceExchange {
 
   rpc Features (google.protobuf.Empty) returns (stream FeatureList);
   rpc FeatureDetail (FeatureDetailRequest) returns (FeatureDetails);
-  rpc FeatureDetailProfileDelete (FeatureDetailProfileDeleteRequest) returns (FeatureDetailProfileDeleteRequest);
-  rpc FeatureDetailProfileSave (FeatureDetailProfileSaveRequest) returns (FeatureDetailProfileSaveRequest);
-  rpc FeatureDetailSettingSave (FeatureDetailSettingSaveRequest) returns (FeatureDetailSettingSaveRequest);
 }
 
 message DeviceInfoList {
@@ -51,39 +48,4 @@ message FeatureDetails {
     string featureId = 1;
     FeatureDetailSetting setting = 2;
     repeated FeatureDetailProfile profiles = 3;
-    bytes settingUI = 4;
-    bytes profileUI = 5;
-}
-
-message FeatureDetailProfileDeleteRequest {
-    string featureId = 1;
-    string profileId = 2;
-    ActionResult result = 3;
-    enum ActionResult {
-        None = 0;
-        Ok = 1;
-        Error = 2;
-    }
-}
-
-message FeatureDetailProfileSaveRequest {
-    string featureId = 1;
-    FeatureDetailProfile profile = 2;
-    ActionResult result = 3;
-    enum ActionResult {
-        None = 0;
-        Ok = 1;
-        Error = 2;
-    }
-}
-
-message FeatureDetailSettingSaveRequest {
-    string featureId = 1;
-    FeatureDetailSetting setting = 2;
-    ActionResult result = 3;
-    enum ActionResult {
-        None = 0;
-        Ok = 1;
-        Error = 2;
-    }
 }

@@ -16,10 +16,5 @@ namespace CommunicationResourceProvider
         bool ResolvePendingAuthenticationDevices(Guid deviceId, bool accept);
         List<FeatureProfil> GetResourceDeviceFeatureProfiles(Guid featureId);
         FeatureSetting GetResourceDeviceFeatureSettings(Guid featureId);
-        byte[] GetResourceDeviceFeatureSettingsUI(Guid featureId);
-        byte[] GetResourceDeviceFeatureProfilesUI(Guid featureId);
-        bool SaveFeatureSettings(Guid featureId, FeatureSetting deviceFeatureSetting);
-        bool SaveFeatureProfile(Guid featureId, FeatureProfil deviceFeatureProfil);
-        bool DeleteFeatureProfile(Guid featureId, string profileId);
     }
 }

@@ -80,19 +80,7 @@ namespace RediscoveryManager.Service
                 }
                 DeviceCollectionChanged?.Invoke(this, EventArgs.Empty);
             };
-            resourceConsumer.ReceiveFeatureDetailProfileDeleteResult += (obj, args) =>
-            {
-
-            };
-            resourceConsumer.ReceiveFeatureDetailProfileSave += (obj, args) =>
-            {
-
-            };
             resourceConsumer.ReceiveFeatureDetails += (obj, args) =>
-            {
-
-            };
-            resourceConsumer.ReceiveFeatureDetailSettingSave += (obj, args) =>
             {
 
             };

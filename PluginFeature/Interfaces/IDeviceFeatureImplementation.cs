@@ -28,14 +28,10 @@ namespace PluginFeature.Interfaces
         void Unregister(string deviceId);
 
         string GetUIArchivePath();
-        string GetSettingsUIArchivePath();
-        string GetProfilesUIArchivePath();
-
+        void OpenSettingConfiguration();
+        void OpenProfileConfiguration();
         PluginFeatureSetting GetSettingsObject();
 
         List<PluginFeatureProfil> GetProfiles();
-        bool SaveSetting(PluginFeatureSetting deviceFeatureSetting);
-        bool SaveProfile(PluginFeatureProfil deviceFeatureProfil);
-        bool DeleteProfile(string profileId);
     }
 }

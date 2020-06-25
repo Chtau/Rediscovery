@@ -116,49 +116,5 @@ namespace DesktopService.Features.DeviceFeature
         {
             deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.Unregister(sid);
         }
-
-        /// <summary>
-        /// get the ZIP archive path from 'settingui.zip'
-        /// </summary>
-        /// <param name="featureId"></param>
-        /// <returns></returns>
-        public string GetFeatureSettingsUIArchivePath(Guid featureId)
-        {
-            return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetSettingsUIArchivePath();
-        }
-
-        /// <summary>
-        /// get the ZIP archive path from 'profileui.zip'
-        /// </summary>
-        /// <param name="featureId"></param>
-        /// <returns></returns>
-        public string GetFeatureProfilesUIArchivePath(Guid featureId)
-        {
-            return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetProfilesUIArchivePath();
-        }
-
-        public bool SaveFeatureSettings(Guid featureId, FeatureSetting deviceFeatureSetting)
-        {
-            var result = deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.SaveSetting(deviceFeatureSetting?.GetPluginFeatureSetting()) ?? false;
-            if (result)
-                SettingChanged?.Invoke(this, EventArgs.Empty);
-            return result;
-        }
-
-        public bool SaveFeatureProfile(Guid featureId, FeatureProfil deviceFeatureProfil)
-        {
-            var result = deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.SaveProfile(deviceFeatureProfil?.GetPluginFeatureProfil()) ?? false;
-            if (result)
-                ProfilesChanged?.Invoke(this, EventArgs.Empty);
-            return result;
-        }
-
-        public bool DeleteFeatureProfile(Guid featureId, string profileId)
-        {
-            var result = deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.DeleteProfile(profileId) ?? false;
-            if (result)
-                ProfilesChanged?.Invoke(this, EventArgs.Empty);
-            return result;
-        }
     }
 }

@@ -296,99 +296,6 @@ namespace CommunicationResourceConsumer
             });
         }
 
-        public void FeatureDetailProfileDelete(string token, Guid featureId, string profileId)
-        {
-            Task.Run(async () =>
-            {
-                var cts = new CancellationTokenSource();
-                try
-                {
-                    var meta = new Metadata();
-                    meta.AddAuthorizationHeader(token);
-                    _logger.LogTrace("Consumer send profile delete request");
-                    var msg = new Resources.FeatureDetailProfileDeleteRequest
-                    {
-                        FeatureId = featureId.ToString(),
-                        ProfileId = profileId,
-                        Result = Resources.FeatureDetailProfileDeleteRequest.Types.ActionResult.None
-                    };
-                    var reply = await resourceExchangeClient.FeatureDetailProfileDeleteAsync(msg, cancellationToken: cts.Token, headers: meta);
-                    (Guid featureId, string profileId, bool result) result = (reply.FeatureId.SafeGuid(), reply.ProfileId, reply.Result == Resources.FeatureDetailProfileDeleteRequest.Types.ActionResult.Ok ? true : false);
-                    ReceiveFeatureDetailProfileDeleteResult?.Invoke(this, result);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex);
-                }
-                finally
-                {
-                    cts.Cancel();
-                }
-            });
-        }
-
-        public void FeatureDetailProfileSave(string token, FeatureProfil profil)
-        {
-            Task.Run(async () =>
-            {
-                var cts = new CancellationTokenSource();
-                try
-                {
-                    var meta = new Metadata();
-                    meta.AddAuthorizationHeader(token);
-                    _logger.LogTrace("Consumer send profile save request");
-                    var msg = new Resources.FeatureDetailProfileSaveRequest
-                    {
-                        FeatureId = profil.FeatureId.ToString(),
-                        Profile = profil.GetProtoFeatureDetailProfile(),
-                        Result = Resources.FeatureDetailProfileSaveRequest.Types.ActionResult.None
-                    };
-                    var reply = await resourceExchangeClient.FeatureDetailProfileSaveAsync(msg, cancellationToken: cts.Token, headers: meta);
-                    (FeatureProfil profile, bool result) result = (reply.Profile.GetDeviceFeatureProfil(), reply.Result == Resources.FeatureDetailProfileSaveRequest.Types.ActionResult.Ok ? true : false);
-                    ReceiveFeatureDetailProfileSave?.Invoke(this, result);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex);
-                }
-                finally
-                {
-                    cts.Cancel();
-                }
-            });
-        }
-
-        public void FeatureDetailSettingSave(string token, FeatureSetting setting)
-        {
-            Task.Run(async () =>
-            {
-                var cts = new CancellationTokenSource();
-                try
-                {
-                    var meta = new Metadata();
-                    meta.AddAuthorizationHeader(token);
-                    _logger.LogTrace("Consumer send setting save request");
-                    var msg = new Resources.FeatureDetailSettingSaveRequest
-                    {
-                        FeatureId = setting.FeatureId.ToString(),
-                        Setting = setting.GetProtoFeatureDetailSetting(),
-                        Result = Resources.FeatureDetailSettingSaveRequest.Types.ActionResult.None
-                    };
-                    var reply = await resourceExchangeClient.FeatureDetailSettingSaveAsync(msg, cancellationToken: cts.Token, headers: meta);
-                    (FeatureSetting setting, bool result) result = (reply.Setting.GetDeviceFeatureSetting(), reply.Result == Resources.FeatureDetailSettingSaveRequest.Types.ActionResult.Ok ? true : false);
-                    ReceiveFeatureDetailSettingSave?.Invoke(this, result);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex);
-                }
-                finally
-                {
-                    cts.Cancel();
-                }
-            });
-        }
-
         public void FeatureDetail(string token, FeatureSetting setting)
         {
             Task.Run(async () =>
@@ -408,8 +315,6 @@ namespace CommunicationResourceConsumer
                     {
                         FeatureId = reply.FeatureId.SafeGuid(),
                         Setting = reply.Setting.GetDeviceFeatureSetting(),
-                        ProfileUI = reply.ProfileUI.ToByteArray(),
-                        SettingUI = reply.SettingUI.ToByteArray(),
                         Profils = new List<FeatureProfil>()
                     };
                     if (reply.Profiles.Count > 0)

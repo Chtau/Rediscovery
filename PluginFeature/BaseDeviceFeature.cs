@@ -135,29 +135,14 @@ namespace PluginFeature
             return null;
         }
 
-        public string GetSettingsUIArchivePath()
+        public virtual void OpenSettingConfiguration()
         {
-            return OnGetUIZipPath("settingui.zip", "SettingUI");
+            
         }
 
-        public string GetProfilesUIArchivePath()
+        public virtual void OpenProfileConfiguration()
         {
-            return OnGetUIZipPath("profileui.zip", "ProfileUI");
-        }
-
-        public virtual bool SaveSetting(PluginFeatureSetting deviceFeatureSetting)
-        {
-            return false;
-        }
-
-        public virtual bool SaveProfile(PluginFeatureProfil deviceFeatureProfil)
-        {
-            return false;
-        }
-
-        public virtual bool DeleteProfile(string profileId)
-        {
-            return false;
+            
         }
     }
 }

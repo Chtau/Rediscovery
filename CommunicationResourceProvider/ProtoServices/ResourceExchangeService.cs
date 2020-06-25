@@ -286,15 +286,11 @@ namespace CommunicationResourceProvider.ProtoServices
             {
                 Guid featureId = request.FeatureId.SafeGuid();
                 var settings = _resourcesRepository.GetResourceDeviceFeatureSettings(featureId);
-                var settingsUI = _resourcesRepository.GetResourceDeviceFeatureSettingsUI(featureId);
                 var profiles = _resourcesRepository.GetResourceDeviceFeatureProfiles(featureId);
-                var profilesUI = _resourcesRepository.GetResourceDeviceFeatureProfilesUI(featureId);
 
                 var reply = new FeatureDetails
                 {
                     FeatureId = request.FeatureId,
-                    ProfileUI = Google.Protobuf.ByteString.CopyFrom(profilesUI),
-                    SettingUI = Google.Protobuf.ByteString.CopyFrom(settingsUI),
                     Setting = settings.GetProtoFeatureDetailSetting()
                 };
                 if (profiles?.Count > 0)
@@ -313,93 +309,6 @@ namespace CommunicationResourceProvider.ProtoServices
                 return Task.FromResult(new FeatureDetails
                 {
                     FeatureId = request.FeatureId
-                });
-            }
-        }
-
-        [Authorize(Policy = "ResourceConsumer")]
-        public override Task<FeatureDetailProfileDeleteRequest> FeatureDetailProfileDelete(FeatureDetailProfileDeleteRequest request, ServerCallContext context)
-        {
-            try
-            {
-                var featureId = request.FeatureId.SafeGuid();
-                var profileId = request.ProfileId;
-                var result = _resourcesRepository.DeleteFeatureProfile(featureId, profileId);
-                if (result)
-                    _resourceManager.FeatureDetailProfileDelete(featureId, profileId);
-                return Task.FromResult(new FeatureDetailProfileDeleteRequest
-                {
-                    FeatureId = request.FeatureId,
-                    ProfileId = request.ProfileId,
-                    Result = result ? FeatureDetailProfileDeleteRequest.Types.ActionResult.Ok : FeatureDetailProfileDeleteRequest.Types.ActionResult.Error
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "FeatureDetailProfileDelete");
-                return Task.FromResult(new FeatureDetailProfileDeleteRequest
-                {
-                    FeatureId = request.FeatureId,
-                    ProfileId = request.ProfileId,
-                    Result = FeatureDetailProfileDeleteRequest.Types.ActionResult.Error
-                });
-            }
-        }
-
-        [Authorize(Policy = "ResourceConsumer")]
-        public override Task<FeatureDetailProfileSaveRequest> FeatureDetailProfileSave(FeatureDetailProfileSaveRequest request, ServerCallContext context)
-        {
-            try
-            {
-                var featureId = request.FeatureId.SafeGuid();
-                var profile = request.Profile.GetDeviceFeatureProfil();
-                var result = _resourcesRepository.SaveFeatureProfile(featureId, profile);
-                if (result)
-                    _resourceManager.FeatureDetailProfileDelete(featureId, profile.Id);
-                return Task.FromResult(new FeatureDetailProfileSaveRequest
-                {
-                    Result = result ? FeatureDetailProfileSaveRequest.Types.ActionResult.Ok : FeatureDetailProfileSaveRequest.Types.ActionResult.Error,
-                    FeatureId = request.FeatureId,
-                    Profile = request.Profile
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "FeatureDetailProfileSave");
-                return Task.FromResult(new FeatureDetailProfileSaveRequest
-                {
-                    Result = FeatureDetailProfileSaveRequest.Types.ActionResult.Error,
-                    FeatureId = request.FeatureId,
-                    Profile = request.Profile
-                });
-            }
-        }
-
-        [Authorize(Policy = "ResourceConsumer")]
-        public override Task<FeatureDetailSettingSaveRequest> FeatureDetailSettingSave(FeatureDetailSettingSaveRequest request, ServerCallContext context)
-        {
-            try
-            {
-                var featureId = request.FeatureId.SafeGuid();
-                var setting = request.Setting.GetDeviceFeatureSetting();
-                var result = _resourcesRepository.SaveFeatureSettings(featureId, setting);
-                if (result)
-                    _resourceManager.FeatureDetailSettingSave(featureId, setting);
-                return Task.FromResult(new FeatureDetailSettingSaveRequest
-                {
-                    FeatureId = request.FeatureId,
-                    Result = result ? FeatureDetailSettingSaveRequest.Types.ActionResult.Ok : FeatureDetailSettingSaveRequest.Types.ActionResult.Error,
-                    Setting = request.Setting
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "FeatureDetailSettingSave");
-                return Task.FromResult(new FeatureDetailSettingSaveRequest
-                {
-                    FeatureId = request.FeatureId,
-                    Result = FeatureDetailSettingSaveRequest.Types.ActionResult.Error,
-                    Setting = request.Setting
                 });
             }
         }

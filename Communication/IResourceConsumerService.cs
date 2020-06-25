@@ -15,9 +15,6 @@ namespace CommunicationResourceConsumer
         event EventHandler<SharedBase.Device.DeviceInfo> ReceiveUpdateDevices;
         event EventHandler<(Guid deviceId, bool result)> ReceiveDeleteDevicesResult;
         event EventHandler<(Guid deviceId, bool accept)> ReceiveResolvePendingDevicesResult;
-        event EventHandler<(Guid featureId, string profileId, bool result)> ReceiveFeatureDetailProfileDeleteResult;
-        event EventHandler<(FeatureProfil profile, bool result)> ReceiveFeatureDetailProfileSave;
-        event EventHandler<(FeatureSetting setting, bool result)> ReceiveFeatureDetailSettingSave;
         event EventHandler<Models.FeatureDetail> ReceiveFeatureDetails;
 
         bool Connect(string ipAddress, int port, string certificatePEM);
@@ -28,9 +25,6 @@ namespace CommunicationResourceConsumer
         void UpdateDevice(string token, SharedBase.Device.DeviceInfo deviceInfo);
         void DeleteDevice(string token, Guid deviceId);
         void ResolvePendingDevice(string token, Guid deviceId, bool accept);
-        void FeatureDetailProfileDelete(string token, Guid featureId, string profileId);
-        void FeatureDetailProfileSave(string token, FeatureProfil profil);
-        void FeatureDetailSettingSave(string token, FeatureSetting setting);
         void FeatureDetail(string token, FeatureSetting setting);
     }
 }
