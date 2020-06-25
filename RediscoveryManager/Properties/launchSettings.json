@@ -1,8 +1,7 @@
 {
   "profiles": {
     "RediscoveryManager": {
-      "commandName": "Project",
-      "commandLineArgs": "-ip=192.168.1.100 -port=44341 -deviceidentifier=DesktopHub -autoconnect"
+      "commandName": "Project"
     }
   }
 }
