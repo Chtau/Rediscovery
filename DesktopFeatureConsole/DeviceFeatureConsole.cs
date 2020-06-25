@@ -18,7 +18,12 @@ namespace DesktopFeatureConsole
 
         private void Terminal_Output(object sender, CommandQueue<string, List<string>> e)
         {
-            var data = new PluginFeatureData(e.DeviceId, GetDeviceFeatureInfo().Id, null, e.OutgoingData[e.OutgoingData.Count - 1]);
+            var line = e.OutgoingData[e.OutgoingData.Count - 1];
+            var model = new Models.TerminalData
+            {
+                Line = line
+            };
+            var data = new PluginFeatureData(e.DeviceId, GetDeviceFeatureInfo().Id, null, Newtonsoft.Json.JsonConvert.SerializeObject(model));
             OnSendData(this, new PluginExchangeEntity<PluginFeatureData>
             {
                 Sid = e.DeviceId,

@@ -44,6 +44,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
 
         private void ViewModel_ReceivedData(object sender, object e)
         {
+            System.Diagnostics.Debug.Print(e?.ToString());
             hybridWebView.SetModel(e?.ToString());
         }
 

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
+    <div id="result"></div>
     <div id="container">
         <output></output>
         <div id="input-line" class="input-line">
@@ -15,42 +16,50 @@
     <script type="text/javascript" src="./js/terminal.js"></script>
     <script>
         function log(str) {
-            //var div = document.getElementById('result');
-            //div.innerHTML = JSON.stringify(str);
+            var div = document.getElementById('result');
+            div.innerHTML += "<p>" + JSON.stringify(str) + "</p>";
+            logger(str);
         }
         function featureReceive(data) {
-            // data received => {"ProcessRunning":true,"Title":"title.mp4","Artist":null,"Info":null}
-            //log(data);
-            term.output(data);
+            // data received => {"Line":""}
+            log(data.Line);
+            this.term.output(data.Line);
+            try {
+                
+            } catch (ex) { log(ex); }
         }
         function profileChanged(data) {
             //log(data);
         }
         function send(command) {
-            //var model = { CommandIndex: index };
-            //log(model);
-            featureSend(command);
+            try {
+                featureSend(command);
+            } catch (ex) { log(ex); }
         }
 
         (function () {
-            document.querySelector("#input-line > div.prompt").innerText = '$ ';
+            try {            
+                document.querySelector("#input-line > div.prompt").innerText = '$ ';
 
-            // Initialize a new terminal object
-            var term = new Terminal('#input-line .cmdline', '#container output');
-            term.init();
+                // Initialize a new terminal object
+                const term = new Terminal('#input-line .cmdline', '#container output');
+                term.init();
 
-            setInterval(function () {
-                var headerDate = document.getElementById('header-date');
-                if (headerDate) {
-                    document.getElementById('header-date').innerText = new Date();
-                }
-                //term.output('@date ' + new Date());
-            }, 1000);
+                setInterval(function () {
+                    var headerDate = document.getElementById('header-date');
+                    if (headerDate) {
+                        document.getElementById('header-date').innerText = new Date();
+                    }
+                }, 1000);
 
-            this.addEventListener('command', function (e) {
-                //console.log(e);
-                send(e.detail);
-            }, false);
+                this.addEventListener('command', function (e) {
+                    try {
+                        send(e.detail);
+                    } catch (ex) { log(ex); }
+                }, false);
+            } catch (ex) {
+                log(ex);
+            }
         })();
     </script>
 </body>

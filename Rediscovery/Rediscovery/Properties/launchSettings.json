@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "DesktopService": {
+    "Rediscovery": {
       "commandName": "Project",
       "environmentVariables": {
         "GRPC_VERBOSITY": "DEBUG",

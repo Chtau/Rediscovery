@@ -127,7 +127,7 @@ namespace CommunicationFeatureConsumer
                         Data = deviceFeatureData.Data,
                         DeviceId = deviceFeatureData.DeviceId,
                         FeatureId = deviceFeatureData.FeatureId.ToString(),
-                        ProfileId = deviceFeatureData.ProfileId
+                        ProfileId = deviceFeatureData.ProfileId.EmptyIfNull()
                     });
                 });
             }
