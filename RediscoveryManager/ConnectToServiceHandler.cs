@@ -26,7 +26,7 @@ namespace RediscoveryManager
             };
         }
 
-        public override void Handle(string[] args)
+        public override void Handle()
         {
             SharedUI.CurrentDisplay = DisplayName;
             DisplayTitle();

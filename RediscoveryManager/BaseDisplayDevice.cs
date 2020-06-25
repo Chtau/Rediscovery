@@ -29,7 +29,7 @@ namespace RediscoveryManager
             return new List<SharedBase.Device.DeviceInfo>();
         }
 
-        internal virtual bool HandleSubMenu(string[] args, string lastInput)
+        internal virtual bool HandleSubMenu(string lastInput)
         {
             return false;
         }
@@ -113,7 +113,7 @@ namespace RediscoveryManager
             return retVal;
         }
 
-        public override void Handle(string[] args)
+        public override void Handle()
         {
             SharedUI.CurrentDisplay = DisplayIdentifierName();
             DisplayTitle();
@@ -137,7 +137,7 @@ namespace RediscoveryManager
                 }
                 else
                 {
-                    if (HandleSubMenu(args, lastInput))
+                    if (HandleSubMenu(lastInput))
                         lastInput = null;
                     else
                         lastInput = Console.ReadKey().KeyChar.ToString();

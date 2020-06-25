@@ -37,62 +37,51 @@ namespace RediscoveryManager
             };
         }
 
-        public void Start(string[] args)
+        public void Start(SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration connectionConfiguration)
         {
-            TryParseConnectionArguments(args);
+            if (!string.IsNullOrWhiteSpace(connectionConfiguration.IP) || connectionConfiguration.Port > 0 || !string.IsNullOrWhiteSpace(connectionConfiguration.DeviceIdentifier))
+            {
+                _manager.SetConnectionValues(connectionConfiguration.IP, connectionConfiguration.Port, connectionConfiguration.DeviceIdentifier);
+                if (connectionConfiguration.AutoConnect)
+                    _manager.TryConnect();
+            }
             string lastInput = null;
             do
             {
                 SharedUI.CurrentDisplay = DisplayName;
                 DisplayDefaultTitle();
                 lastInput = Console.ReadLine();
-                SwitchMenu(lastInput, args);
+                SwitchMenu(lastInput, connectionConfiguration);
             } while (SharedUI.ResetOrExit(lastInput));
         }
 
-        private void SwitchMenu(string input, string[] args)
+        private void SwitchMenu(string input, SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration connectionConfiguration)
         {
             if (Commands.MatchInput(input, Commands.Help))
             {
 
             } else if (Commands.MatchInput(input, Commands.Connect))
             {
-                _connectToService.Handle(args);
+                _connectToService.Handle();
             } else if (Commands.MatchInput(input, Commands.PendingDevices))
             {
-                _pendingDevicesHandler.Handle(args);
+                _pendingDevicesHandler.Handle();
             }
             else if (Commands.MatchInput(input, Commands.AllDevices))
             {
-                _allDevicesHandler.Handle(args);
+                _allDevicesHandler.Handle();
             }
             else if (Commands.MatchInput(input, Commands.ActiveDevices))
             {
-                _activeDevicesHandler.Handle(args);
+                _activeDevicesHandler.Handle();
             }
             else if (Commands.MatchInput(input, Commands.Manifest))
             {
-                _manifestHandler.Handle(args);
+                _manifestHandler.Handle();
             }
             else if (Commands.MatchInput(input, Commands.Features))
             {
-                _featureHandler.Handle(args);
-            }
-        }
-
-        private void TryParseConnectionArguments(string[] args)
-        {
-            int port = 0;
-            var deviceIdentifier = Arguments.TryParseArgumentValue(args, Arguments.SetDeviceIdentifier);
-            var ip = Arguments.TryParseArgumentValue(args, Arguments.SetIP);
-            var portString = Arguments.TryParseArgumentValue(args, Arguments.SetPort);
-            int.TryParse(portString, out port);
-            var autoConnect = Arguments.TryParseArgumentMatch(args, Arguments.Autoconnect);
-            if (!string.IsNullOrWhiteSpace(ip) || port > 0 || !string.IsNullOrWhiteSpace(deviceIdentifier))
-            {
-                _manager.SetConnectionValues(ip, port, deviceIdentifier);
-                if (autoConnect)
-                    _manager.TryConnect();
+                _featureHandler.Handle();
             }
         }
 

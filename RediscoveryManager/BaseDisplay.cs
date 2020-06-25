@@ -17,7 +17,7 @@ namespace RediscoveryManager
             } while (isWriting);
         }
 
-        public virtual void Handle(string[] args) { }
+        public virtual void Handle() { }
         internal virtual void DisplayTitle() { }
 
         internal virtual bool ResetOrBack(string input)

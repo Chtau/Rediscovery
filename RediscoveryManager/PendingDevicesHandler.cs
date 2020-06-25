@@ -41,7 +41,7 @@ namespace RediscoveryManager
             return _manager.PendingDevices;
         }
 
-        internal override bool HandleSubMenu(string[] args, string lastInput)
+        internal override bool HandleSubMenu(string lastInput)
         {
             if (_manager.PendingDevices?.Count > 0 && Commands.MatchInput(lastInput, Commands.Accept))
             {
