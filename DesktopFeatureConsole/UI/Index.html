@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
-    <div id="result"></div>
     <div id="container">
         <output></output>
         <div id="input-line" class="input-line">
@@ -15,6 +14,7 @@
     </div>
     <script type="text/javascript" src="./js/terminal.js"></script>
     <script>
+        const term = undefined;
         function log(str) {
             var div = document.getElementById('result');
             div.innerHTML += "<p>" + JSON.stringify(str) + "</p>";
@@ -22,14 +22,10 @@
         }
         function featureReceive(data) {
             // data received => {"Line":""}
-            log(data.Line);
             this.term.output(data.Line);
-            try {
-                
-            } catch (ex) { log(ex); }
         }
         function profileChanged(data) {
-            //log(data);
+            log(data);
         }
         function send(command) {
             try {
@@ -38,12 +34,10 @@
         }
 
         (function () {
-            try {            
+            try {
                 document.querySelector("#input-line > div.prompt").innerText = '$ ';
-
-                // Initialize a new terminal object
-                const term = new Terminal('#input-line .cmdline', '#container output');
-                term.init();
+                this.term = new Terminal('#input-line .cmdline', '#container output');
+                this.term.init();
 
                 setInterval(function () {
                     var headerDate = document.getElementById('header-date');
