@@ -1,28 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using DesktopFeatureConsole.Models;
 using PluginFeature;
+using PluginFeature.Interfaces;
 using PluginFeature.Models;
 
 namespace DesktopFeatureConsole
 {
     public class DeviceFeatureConsole : BaseDeviceFeature
     {
-        private readonly Terminal terminal;
+        private Terminal terminal;
 
         public DeviceFeatureConsole()
         {
-            terminal = new Terminal();
+            
+        }
+
+        public override void Init(string pluginDirectory, IPluginLogger pluginLogger)
+        {
+            base.Init(pluginDirectory, pluginLogger);
+            terminal = new Terminal(pluginLogger);
             terminal.Output += Terminal_Output;
         }
 
-        private void Terminal_Output(object sender, CommandQueue<string, List<string>> e)
+        private void Terminal_Output(object sender, CommandQueue<string, List<TerminalData>> e)
         {
-            var line = e.OutgoingData[e.OutgoingData.Count - 1];
-            var model = new Models.TerminalData
-            {
-                Line = line
-            };
+            var model = e.OutgoingData[e.OutgoingData.Count - 1];
             var data = new PluginFeatureData(e.DeviceId, GetDeviceFeatureInfo().Id, null, Newtonsoft.Json.JsonConvert.SerializeObject(model));
             OnSendData(this, new PluginExchangeEntity<PluginFeatureData>
             {
@@ -64,11 +68,19 @@ namespace DesktopFeatureConsole
             {
                 if (!string.IsNullOrWhiteSpace(data.Entity.Data?.ToString()))
                 {
-                    terminal.NewCommand(new CommandQueue<string, List<string>>
+                    var commandModel = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.CommandModel>(data.Entity.Data?.ToString());
+                    if (commandModel != null)
                     {
-                        IncomingData = data.Entity.Data.ToString(),
-                        DeviceId = data.Entity.DeviceId,
-                    });
+                        terminal.NewCommand(new CommandQueue<string, List<TerminalData>>
+                        {
+                            IncomingData = commandModel.Input,
+                            DeviceId = data.Entity.DeviceId,
+                        });
+                    }
+                    else
+                    {
+                        pluginLogger?.LogCritical("MediaPlayer: Unknown object from Data received");
+                    }
                 }
             }
         }

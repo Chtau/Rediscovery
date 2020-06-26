@@ -46,7 +46,8 @@
 
                 this.addEventListener('command', function (e) {
                     try {
-                        send(e.detail);
+                        var model = { Input: e.detail };
+                        send(model);
                     } catch (ex) { log(ex); }
                 }, false);
             } catch (ex) {

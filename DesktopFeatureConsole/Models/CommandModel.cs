@@ -4,9 +4,8 @@ using System.Text;
 
 namespace DesktopFeatureConsole.Models
 {
-    public class TerminalData
+    public class CommandModel
     {
-        public string Line { get; set; }
-        public bool IsError { get; set; }
+        public string Input { get; set; }
     }
 }
