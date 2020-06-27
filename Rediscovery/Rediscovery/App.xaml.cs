@@ -43,7 +43,7 @@ namespace Rediscovery
             });
         }
 
-        public void OpenWithIntent(Features.Plugins.Models.IntentReceivedModel intentReceivedModel)
+        public void OpenWithIntent(Features.ClientFeatures.Models.IntentReceivedModel intentReceivedModel)
         {
             System.Diagnostics.Debug.Print($"Open with Intent");
         }

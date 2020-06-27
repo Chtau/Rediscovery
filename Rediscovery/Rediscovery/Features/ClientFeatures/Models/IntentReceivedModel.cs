@@ -4,7 +4,7 @@ using System.Data;
 using System.Net.Mime;
 using System.Text;
 
-namespace Rediscovery.Features.Plugins.Models
+namespace Rediscovery.Features.ClientFeatures.Models
 {
     public class IntentReceivedModel
     {
