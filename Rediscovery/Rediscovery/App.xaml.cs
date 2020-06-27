@@ -42,5 +42,10 @@ namespace Rediscovery
 
             });
         }
+
+        public void PDFIntent(string url)
+        {
+            System.Diagnostics.Debug.Print($"PDF Intent: {url}");
+        }
     }
 }
