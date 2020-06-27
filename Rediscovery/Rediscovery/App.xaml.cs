@@ -43,9 +43,9 @@ namespace Rediscovery
             });
         }
 
-        public void PDFIntent(string url)
+        public void OpenWithIntent(Features.Plugins.Models.IntentReceivedModel intentReceivedModel)
         {
-            System.Diagnostics.Debug.Print($"PDF Intent: {url}");
+            System.Diagnostics.Debug.Print($"Open with Intent");
         }
     }
 }

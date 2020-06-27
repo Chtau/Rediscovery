@@ -30,22 +30,29 @@ namespace Rediscovery.Droid
 
             if (Intent.Action == Intent.ActionSend)
             {
-                var pdf = Intent.ClipData.GetItemAt(0);
+                byte[] content = null;
+                string uri = null;
+                string textContent = null;
+                string htmlContent = null;
+                string mime = null;
+                string title = null;
 
-                var uriFromExtras = Intent.GetParcelableExtra(Intent.ExtraStream) as Android.Net.Uri;
-                var subject = Intent.GetStringExtra(Intent.ExtraSubject);
+                var item = Intent.ClipData.GetItemAt(0);
+                uri = item.Uri?.ToString();
+                textContent = item.Text;
+                htmlContent = item.HtmlText;
+                mime = Intent.Type;
 
-                var pdfStream = ContentResolver.OpenInputStream(pdf.Uri);
+                title = Intent.GetStringExtra(Intent.ExtraTitle);
+                if (item.Uri != null)
+                {
+                    var stream = ContentResolver.OpenInputStream(item.Uri);
 
-                var memOfPdf = new System.IO.MemoryStream();
-                pdfStream.CopyTo(memOfPdf);
-
-                var docsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-                var filePath = System.IO.Path.Combine(docsPath, "temp.pdf");
-
-                System.IO.File.WriteAllBytes(filePath, memOfPdf.ToArray());
-
-                app.PDFIntent(filePath);
+                    var memOfData = new System.IO.MemoryStream();
+                    stream.CopyTo(memOfData);
+                    content = memOfData.ToArray();
+                }
+                app.OpenWithIntent(new Features.Plugins.Models.IntentReceivedModel(content, uri, textContent, htmlContent, mime, title));
             }
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
