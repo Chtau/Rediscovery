@@ -52,7 +52,7 @@ namespace Rediscovery.Droid
                     stream.CopyTo(memOfData);
                     content = memOfData.ToArray();
                 }
-                app.OpenWithIntent(new Features.Plugins.Models.IntentReceivedModel(content, uri, textContent, htmlContent, mime, title));
+                app.OpenWithIntent(new Features.DesktopFeatures.Models.IntentReceivedModel(content, uri, textContent, htmlContent, mime, title));
             }
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
