@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PluginFeature.Interfaces
 {
-    public interface IClientFeatureImplementation : IBaseFeatureImplementation<PluginFeatureData, PluginFeatureDefinition>
+    public interface IClientFeatureImplementation : IBaseFeatureImplementation<PluginFeatureDataClient, PluginFeatureDefinitionClient>
     {
         
     }

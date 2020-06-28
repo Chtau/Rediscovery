@@ -6,12 +6,6 @@ namespace PluginFeature.Models
 {
     public class PluginFeatureDefinition
     {
-        public enum PluginIntegration
-        {
-            Desktop = 0,
-            Mobile = 1
-        }
-
         public Guid Id { get; set; }
 
         public string DisplayName { get; set; }
@@ -34,8 +28,8 @@ namespace PluginFeature.Models
 
         public bool HasSettingConfiguration { get; set; }
 
-        public PluginIntegration ControlIntegrationPoint { get; set; }
+        public Enums.PluginIntegration ControlIntegrationPoint { get; set; }
 
-        public PluginIntegration FeatureIntegrationPoint { get; set; }
+        public Enums.PluginIntegration FeatureIntegrationPoint { get; set; }
     }
 }
