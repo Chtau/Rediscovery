@@ -10,6 +10,7 @@ namespace Rediscovery
     public partial class App : Application
     {
         private IConnectService connect => DependencyService.Get<IConnectService>() ?? new ConnectService();
+        private Features.DesktopFeatures.IClientFeatureService clientFeatureService => DependencyService.Get<Features.DesktopFeatures.IClientFeatureService>() ?? new Features.DesktopFeatures.ClientFeatureService();
 
         public App()
         {
@@ -45,7 +46,7 @@ namespace Rediscovery
 
         public void OpenWithIntent(Features.DesktopFeatures.Models.IntentReceivedModel intentReceivedModel)
         {
-            System.Diagnostics.Debug.Print($"Open with Intent");
+            clientFeatureService.OpenWithIntentReceived(intentReceivedModel);
         }
     }
 }
