@@ -27,13 +27,13 @@ namespace DesktopService.Features.Plugins
             };
         }
 
-        public static SharedBase.Device.IntegrationPoint GetIntegrationPoint(this PluginFeature.Models.PluginFeatureDefinition.PluginIntegration pluginIntegration)
+        public static SharedBase.Device.IntegrationPoint GetIntegrationPoint(this PluginFeature.Enums.PluginIntegration pluginIntegration)
         {
             switch (pluginIntegration)
             {
-                case PluginFeature.Models.PluginFeatureDefinition.PluginIntegration.Desktop:
+                case PluginFeature.Enums.PluginIntegration.Desktop:
                     return SharedBase.Device.IntegrationPoint.Desktop;
-                case PluginFeature.Models.PluginFeatureDefinition.PluginIntegration.Mobile:
+                case PluginFeature.Enums.PluginIntegration.Mobile:
                     return SharedBase.Device.IntegrationPoint.Mobile;
                 default:
                     return SharedBase.Device.IntegrationPoint.Desktop;

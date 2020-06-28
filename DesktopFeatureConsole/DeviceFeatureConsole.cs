@@ -41,8 +41,8 @@ namespace DesktopFeatureConsole
             {
                 DisplayName = "Console",
                 Id = new Guid("558AC5BD-5B76-433D-8CD7-BCBB7596AAA1"),
-                ControlIntegrationPoint = PluginFeatureDefinition.PluginIntegration.Mobile,
-                FeatureIntegrationPoint = PluginFeatureDefinition.PluginIntegration.Desktop,
+                ControlIntegrationPoint = Enums.PluginIntegration.Mobile,
+                FeatureIntegrationPoint = Enums.PluginIntegration.Desktop,
                 MinimalControlIntegrationPoint = new PluginVersion() { Major = 0, Minor = 0 },
                 MinimalFeatureIntegrationPoint = new PluginVersion() { Major = 0, Minor = 0 },
                 Version = new PluginVersion() { Major = 0, Minor = 0 },

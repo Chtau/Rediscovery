@@ -78,8 +78,8 @@ namespace DesktopFeatureMediaPlayer
             {
                 DisplayName = "Mediaplayer",
                 Id = new Guid("D5B218BC-8F36-4100-9262-71155265DAD7"),
-                ControlIntegrationPoint = PluginFeatureDefinition.PluginIntegration.Mobile,
-                FeatureIntegrationPoint = PluginFeatureDefinition.PluginIntegration.Desktop,
+                ControlIntegrationPoint = Enums.PluginIntegration.Mobile,
+                FeatureIntegrationPoint = Enums.PluginIntegration.Desktop,
                 MinimalControlIntegrationPoint = new PluginVersion() { Major = 0, Minor = 0 },
                 MinimalFeatureIntegrationPoint = new PluginVersion() { Major = 0, Minor = 0 },
                 Version = new PluginVersion() { Major = 0, Minor = 0 },
