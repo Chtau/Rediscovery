@@ -39,7 +39,7 @@ namespace DesktopFeatureConsole
         {
             return new PluginFeatureDefinition
             {
-                DisplayName = "Console",
+                DisplayName = "Terminal",
                 Id = new Guid("558AC5BD-5B76-433D-8CD7-BCBB7596AAA1"),
                 ControlIntegrationPoint = Enums.PluginIntegration.Mobile,
                 FeatureIntegrationPoint = Enums.PluginIntegration.Desktop,
@@ -79,7 +79,7 @@ namespace DesktopFeatureConsole
                     }
                     else
                     {
-                        pluginLogger?.LogCritical("MediaPlayer: Unknown object from Data received");
+                        pluginLogger?.LogCritical("Terminal: Unknown object from Data received");
                     }
                 }
             }

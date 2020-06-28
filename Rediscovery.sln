@@ -63,7 +63,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationHearthbeatCons
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RediscoveryManager", "RediscoveryManager\RediscoveryManager.csproj", "{46BBBA2E-EFB1-4539-A992-5398AE6D5D95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RediscoveryManager.Service", "RediscoveryManager.Service\RediscoveryManager.Service.csproj", "{D07422C4-6403-429D-8381-5B3CA8472F6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RediscoveryManager.Service", "RediscoveryManager.Service\RediscoveryManager.Service.csproj", "{D07422C4-6403-429D-8381-5B3CA8472F6B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientFeatureFileExchange", "ClientFeatureFileExchange\ClientFeatureFileExchange.csproj", "{206CE889-7F47-4D9D-833B-1F0651340F39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -453,6 +455,18 @@ Global
 		{D07422C4-6403-429D-8381-5B3CA8472F6B}.Release|x64.Build.0 = Release|Any CPU
 		{D07422C4-6403-429D-8381-5B3CA8472F6B}.Release|x86.ActiveCfg = Release|Any CPU
 		{D07422C4-6403-429D-8381-5B3CA8472F6B}.Release|x86.Build.0 = Release|Any CPU
+		{206CE889-7F47-4D9D-833B-1F0651340F39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{206CE889-7F47-4D9D-833B-1F0651340F39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{206CE889-7F47-4D9D-833B-1F0651340F39}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{206CE889-7F47-4D9D-833B-1F0651340F39}.Debug|x64.Build.0 = Debug|Any CPU
+		{206CE889-7F47-4D9D-833B-1F0651340F39}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{206CE889-7F47-4D9D-833B-1F0651340F39}.Debug|x86.Build.0 = Debug|Any CPU
+		{206CE889-7F47-4D9D-833B-1F0651340F39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{206CE889-7F47-4D9D-833B-1F0651340F39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{206CE889-7F47-4D9D-833B-1F0651340F39}.Release|x64.ActiveCfg = Release|Any CPU
+		{206CE889-7F47-4D9D-833B-1F0651340F39}.Release|x64.Build.0 = Release|Any CPU
+		{206CE889-7F47-4D9D-833B-1F0651340F39}.Release|x86.ActiveCfg = Release|Any CPU
+		{206CE889-7F47-4D9D-833B-1F0651340F39}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
