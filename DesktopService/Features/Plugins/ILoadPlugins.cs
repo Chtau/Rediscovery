@@ -10,5 +10,6 @@ namespace DesktopService.Features.Plugins
     {
         Assembly LoadPlugin(string path);
         IEnumerable<IDeviceFeatureImplementation> CreateDesktopPluginFeature(Assembly assembly, string path);
+        IEnumerable<IClientFeatureImplementation> CreateClientPluginFeature(Assembly assembly, string path);
     }
 }

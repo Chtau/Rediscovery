@@ -59,8 +59,35 @@ namespace DesktopService.Features.Plugins
             if (count == 0)
             {
                 string availableTypes = string.Join(",", assembly.GetTypes().Select(t => t.FullName));
-                throw new ApplicationException(
+                _pluginLogger.LogWarning(
                     $"Can't find any type which implements IDeviceFeatureImplementation in {assembly} from {assembly.Location}.\n" +
+                    $"Available types: {availableTypes}");
+            }
+        }
+
+        public IEnumerable<IClientFeatureImplementation> CreateClientPluginFeature(Assembly assembly, string path)
+        {
+            int count = 0;
+
+            foreach (Type type in assembly.GetTypes())
+            {
+                if (typeof(IClientFeatureImplementation).IsAssignableFrom(type))
+                {
+                    IClientFeatureImplementation result = Activator.CreateInstance(type) as IClientFeatureImplementation;
+                    if (result != null)
+                    {
+                        result.Init(path, _pluginLogger);
+                        count++;
+                        yield return result;
+                    }
+                }
+            }
+
+            if (count == 0)
+            {
+                string availableTypes = string.Join(",", assembly.GetTypes().Select(t => t.FullName));
+                _pluginLogger.LogWarning(
+                    $"Can't find any type which implements IClientFeatureImplementation in {assembly} from {assembly.Location}.\n" +
                     $"Available types: {availableTypes}");
             }
         }

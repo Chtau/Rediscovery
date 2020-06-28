@@ -17,6 +17,7 @@ namespace DesktopService.Features.DeviceFeature
     public class FeatureService : IFeatureService
     {
         private List<IDeviceFeatureImplementation> deviceFeatureImplementations = new List<IDeviceFeatureImplementation>();
+        private List<IClientFeatureImplementation> clientFeatureImplementations = new List<IClientFeatureImplementation>();
         private readonly SharedConfigurations.DesktopService.Models.AppConfiguration _appSettings;
         private readonly Features.Plugins.ILoadPlugins _loadPlugins;
         private readonly ILogger<FeatureService> _logger;
@@ -98,6 +99,23 @@ namespace DesktopService.Features.DeviceFeature
                         RespondToClient?.Invoke(this, e.GetExchangeEntity());
                     };
                     deviceFeatureImplementations.Add(item);
+                }
+            }
+            IEnumerable<IClientFeatureImplementation> clientPluginFeatures = _appSettings.Plugins?.SelectMany(pluginPath =>
+            {
+                Assembly pluginAssembly = _loadPlugins.LoadPlugin(pluginPath);
+                return _loadPlugins.CreateClientPluginFeature(pluginAssembly, Path.GetDirectoryName(pluginPath));
+            })?.ToList();
+            if (clientPluginFeatures?.Count() > 0)
+            {
+                foreach (var item in clientPluginFeatures)
+                {
+                    item.SendData += (object sender, PluginExchangeEntity<PluginFeatureDataClient> e) =>
+                    {
+                        _logger.LogTrace($"Feature (id: {item.GetDeviceFeatureInfo().Id} profile: {e.Entity.ProfileId}) response =>" + e.Entity.Data);
+                        // TODO: RespondToClient?.Invoke(this, e.GetExchangeEntity());
+                    };
+                    clientFeatureImplementations.Add(item);
                 }
             }
         }
