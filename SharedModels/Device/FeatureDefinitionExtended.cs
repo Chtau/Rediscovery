@@ -15,5 +15,7 @@ namespace SharedBase.Device
         public bool HasSettingConfiguration { get; set; }
         public IntegrationPoint ControlIntegrationPoint { get; set; }
         public IntegrationPoint FeatureIntegrationPoint { get; set; }
+        public int NativeResources { get; set; }
+        public bool IsClientImplementation { get; set; }
     }
 }

@@ -82,6 +82,8 @@ public static class EntityExtensions
             HasSettingConfiguration = featureDefinitionExtended.HasSettingConfiguration,
             Version = SharedBase.Core.Version.ConvertTo(featureDefinitionExtended.Version),
             Website = featureDefinitionExtended.Website,
+            NativeResources = featureDefinitionExtended.NativeResources,
+            IsClientImplementation = featureDefinitionExtended.IsClientImplementation
         };
     }
 

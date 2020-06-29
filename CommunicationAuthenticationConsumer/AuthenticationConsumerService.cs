@@ -127,6 +127,8 @@ namespace CommunicationAuthenticationConsumer
                         HasSettingConfiguration = item.HasSettingConfiguration,
                         Version = SharedBase.Core.Version.ConvertTo(item.Version),
                         Website = item.Website,
+                        IsClientImplementation = item.IsClientImplementation,
+                        NativeResources = item.NativeResources
                     });
                 }
             }

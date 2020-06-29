@@ -18,6 +18,8 @@ message FeatureDefinitionExtended {
     }
     IntegrationPoint controlIntegrationPoint = 16;
     IntegrationPoint featureIntegrationPoint = 17;
+    int32 nativeResources = 18;
+    bool isClientImplementation = 19;
 }
 
 message FeatureDetailSetting {

@@ -1,4 +1,5 @@
-﻿using SharedBase.Feature;
+﻿using Microsoft.Net.Http.Headers;
+using SharedBase.Feature;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,7 +24,31 @@ namespace DesktopService.Features.Plugins
                 HasProfilConfiguration = entity.HasProfilConfiguration,
                 HasSettingConfiguration = entity.HasSettingConfiguration,
                 Version = entity.Version.GetVersion(),
-                Website = entity.Website
+                Website = entity.Website,
+                IsClientImplementation = false,
+                NativeResources = 0
+            };
+        }
+
+        public static SharedBase.Device.FeatureDefinitionExtended GetFeatureDefinitionExtended(this PluginFeature.Models.PluginFeatureDefinitionClient entity)
+        {
+            return new SharedBase.Device.FeatureDefinitionExtended
+            {
+                Author = entity.Author,
+                ControlIntegrationPoint = entity.ControlIntegrationPoint.GetIntegrationPoint(),
+                DisplayName = entity.DisplayName,
+                Documentation = entity.Documentation,
+                FeatureIntegrationPoint = entity.FeatureIntegrationPoint.GetIntegrationPoint(),
+                Id = entity.Id,
+                MinimalControlIntegrationPoint = entity.MinimalControlIntegrationPoint.GetVersion(),
+                MinimalFeatureIntegrationPoint = entity.MinimalFeatureIntegrationPoint.GetVersion(),
+                PluginDirectory = entity.PluginDirectory,
+                HasProfilConfiguration = entity.HasProfilConfiguration,
+                HasSettingConfiguration = entity.HasSettingConfiguration,
+                Version = entity.Version.GetVersion(),
+                Website = entity.Website,
+                IsClientImplementation = true,
+                NativeResources = (int)entity.NativeResources
             };
         }
 
