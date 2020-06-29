@@ -63,8 +63,6 @@ namespace RediscoveryManager
             });
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine($"{Commands.Features.PutifyStringArray()} = View supported Features");
-            Console.WriteLine();
             Console.WriteLine($"{Commands.Back.PutifyStringArray()} = Back to the main menu");
             Console.WriteLine();
             Console.Write("Command:");
