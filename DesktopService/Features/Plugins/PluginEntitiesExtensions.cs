@@ -114,11 +114,6 @@ namespace DesktopService.Features.Plugins
             };
         }
 
-        public static PluginFeature.Models.PluginFeatureData GetPluginFeatureData(this FeatureData featureData)
-        {
-            return new PluginFeature.Models.PluginFeatureData(featureData.DeviceId, featureData.FeatureId, featureData.ProfileId, featureData.Data);
-        }
-
         public static ExchangeEntity<FeatureData> GetExchangeEntity(this PluginFeature.Models.PluginExchangeEntity<PluginFeature.Models.PluginFeatureData> exchangeEntity)
         {
             return new ExchangeEntity<FeatureData>
@@ -128,9 +123,24 @@ namespace DesktopService.Features.Plugins
             };
         }
 
+        public static PluginFeature.Models.PluginFeatureData GetPluginFeatureData(this FeatureData featureData)
+        {
+            return new PluginFeature.Models.PluginFeatureData(featureData.DeviceId, featureData.FeatureId, featureData.ProfileId, featureData.Data);
+        }
+
+        public static PluginFeature.Models.PluginFeatureDataClient GetPluginFeatureDataClient(this FeatureData featureData)
+        {
+            return new PluginFeature.Models.PluginFeatureDataClient(featureData.DeviceId, featureData.FeatureId, featureData.ProfileId, featureData.Data, (PluginFeature.Enums.ClientNativeResources)featureData.NativeResourceType);
+        }
+
         public static FeatureData GetFeatureData(this PluginFeature.Models.PluginFeatureData featureData)
         {
             return new FeatureData(featureData.DeviceId, featureData.FeatureId, featureData.ProfileId, featureData.Data);
+        }
+
+        public static FeatureData GetFeatureData(this PluginFeature.Models.PluginFeatureDataClient featureDataClient)
+        {
+            return new FeatureData(featureDataClient.DeviceId, featureDataClient.FeatureId, featureDataClient.ProfileId, featureDataClient.Data, true, (int)featureDataClient.NativeResourceType);
         }
     }
 }

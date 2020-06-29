@@ -95,7 +95,7 @@ namespace CommunicationFeatureConsumer
                         {
                             await foreach (var message in call.ResponseStream.ReadAllAsync())
                             {
-                                ReceiveFeatureData?.Invoke(this, new FeatureData(message.DeviceId, message.FeatureId.SafeGuid(), message.ProfileId, message.Data));
+                                ReceiveFeatureData?.Invoke(this, new FeatureData(message.DeviceId, message.FeatureId.SafeGuid(), message.ProfileId, message.Data, message.IsClientImplementation, message.NativeResourceType));
                             }
                         });
                         do

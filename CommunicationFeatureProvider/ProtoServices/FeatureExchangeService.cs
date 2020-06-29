@@ -74,7 +74,7 @@ namespace CommunicationFeatureProvider.ProtoServices
                     {
                         _featureManager.ReceivedData(new ExchangeEntity<FeatureData>
                         {
-                            Entity = new FeatureData(message.DeviceId, message.FeatureId.SafeGuid(), message.ProfileId, message.Data),
+                            Entity = new FeatureData(message.DeviceId, message.FeatureId.SafeGuid(), message.ProfileId, message.Data, message.IsClientImplementation, message.NativeResourceType),
                             Sid = sid
                         });
                     }
