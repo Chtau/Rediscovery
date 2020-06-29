@@ -114,7 +114,25 @@ namespace DesktopService.Features.Plugins
             };
         }
 
+        public static PluginFeature.Models.PluginExchangeEntity<PluginFeature.Models.PluginFeatureDataClient> GetPluginExchangeEntityClient(this ExchangeEntity<FeatureData> exchangeEntity)
+        {
+            return new PluginFeature.Models.PluginExchangeEntity<PluginFeature.Models.PluginFeatureDataClient>
+            {
+                Entity = exchangeEntity.Entity?.GetPluginFeatureDataClient(),
+                Sid = exchangeEntity.Sid
+            };
+        }
+
         public static ExchangeEntity<FeatureData> GetExchangeEntity(this PluginFeature.Models.PluginExchangeEntity<PluginFeature.Models.PluginFeatureData> exchangeEntity)
+        {
+            return new ExchangeEntity<FeatureData>
+            {
+                Entity = exchangeEntity.Entity?.GetFeatureData(),
+                Sid = exchangeEntity.Sid
+            };
+        }
+
+        public static ExchangeEntity<FeatureData> GetExchangeEntity(this PluginFeature.Models.PluginExchangeEntity<PluginFeature.Models.PluginFeatureDataClient> exchangeEntity)
         {
             return new ExchangeEntity<FeatureData>
             {

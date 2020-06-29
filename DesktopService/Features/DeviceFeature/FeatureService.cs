@@ -36,9 +36,14 @@ namespace DesktopService.Features.DeviceFeature
             Load();
         }
 
-        public IDeviceFeatureImplementation GetFeature(Guid featureId)
+        public IDeviceFeatureImplementation GetFeatureDevice(Guid featureId)
         {
             return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId);
+        }
+
+        public IClientFeatureImplementation GetFeatureClient(Guid featureId)
+        {
+            return clientFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId);
         }
 
         /// <summary>
@@ -79,6 +84,22 @@ namespace DesktopService.Features.DeviceFeature
                     _logger.LogError(ex, $"Could not get Feature definition of Plugin: \"{nameof(item)}\"");
                 }
             }
+            foreach (var item in clientFeatureImplementations)
+            {
+                try
+                {
+                    var def = item.GetDeviceFeatureInfo()?.GetFeatureDefinitionExtended();
+                    if (def != null && string.IsNullOrWhiteSpace(def.PluginDirectory))
+                    {
+                        def.PluginDirectory = item.PluginDirectory;
+                    }
+                    manifest.Add(def);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Could not get Feature definition of Plugin: \"{nameof(item)}\"");
+                }
+            }
             return manifest;
         }
 
@@ -113,7 +134,7 @@ namespace DesktopService.Features.DeviceFeature
                     item.SendData += (object sender, PluginExchangeEntity<PluginFeatureDataClient> e) =>
                     {
                         _logger.LogTrace($"Feature (id: {item.GetDeviceFeatureInfo().Id} profile: {e.Entity.ProfileId}) response =>" + e.Entity.Data);
-                        // TODO: RespondToClient?.Invoke(this, e.GetExchangeEntity());
+                        RespondToClient?.Invoke(this, e.GetExchangeEntity());
                     };
                     clientFeatureImplementations.Add(item);
                 }
@@ -122,17 +143,25 @@ namespace DesktopService.Features.DeviceFeature
 
         public void ReceiveData(Guid featureId, ExchangeEntity<FeatureData> data)
         {
-            deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.ReceiveData(data?.GetPluginExchangeEntity());
+            if (data?.Entity?.IsClientImplementation == true)
+            {
+                clientFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.ReceiveData(data?.GetPluginExchangeEntityClient());
+            } else
+            {
+                deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.ReceiveData(data?.GetPluginExchangeEntity());
+            }
         }
 
         public void StartFeature(Guid featureId, string sid)
         {
             deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.Register(sid);
+            clientFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.Register(sid);
         }
 
         public void StopFeature(Guid featureId, string sid)
         {
             deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.Unregister(sid);
+            clientFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.Unregister(sid);
         }
     }
 }
