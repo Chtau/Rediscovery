@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace Rediscovery.Features.DesktopFeatures
 {
@@ -28,6 +29,11 @@ namespace Rediscovery.Features.DesktopFeatures
         {
             OnLoadFeatures();
             entityManager.ConnectionManifestFeatures.CollectionChanged += ConnectionManifestFeatures_CollectionChanged;
+        }
+
+        public void ResetIsOpen()
+        {
+            ConnectionManifestFeaturesControl?.ForEach(x => x.IsOpen = false);
         }
 
         private void OnLoadFeatures()

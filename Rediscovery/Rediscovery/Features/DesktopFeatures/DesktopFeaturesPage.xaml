@@ -32,6 +32,7 @@
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <StackLayout Padding="10, 0, 0, 0" Grid.Column="0" Grid.RowSpan="2" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
                                         <Image IsVisible="{Binding FeatureFeatureIntegrationPoint, Converter={StaticResource featureIntegrationConverter}, ConverterParameter=0}" Source="computer_line.png"></Image>
@@ -53,6 +54,20 @@
                        LineBreakMode="NoWrap"
                        Style="{DynamicResource ListItemDetailTextStyle}"
                        FontSize="13" />
+                                    </StackLayout>
+                                    <StackLayout Padding="15, 0" Grid.ColumnSpan="2" Grid.Row="2" IsVisible="{Binding IsOpen}">
+                                        <Label LineBreakMode="NoWrap">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="Version: " TextColor="Black" FontSize="13" FontAttributes="Bold" />
+                                                    <Span Text="{Binding FeatureVersion}" FontSize="13" Style="{DynamicResource ListItemDetailTextStyle}"/>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                        <Label Text="{Binding FeatureDescription}" 
+                                           LineBreakMode="NoWrap"
+                                           Style="{DynamicResource ListItemDetailTextStyle}"
+                                           FontSize="13" />
                                     </StackLayout>
                                 </Grid>
                             </ViewCell>

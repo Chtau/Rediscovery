@@ -17,6 +17,7 @@ namespace Rediscovery.Features.Connection.Models
         private string _featureDisplayName;
         private Guid _featureId;
         private string _featureVersion;
+        private string _featureDescription;
         private string _featureMinFeatureIntegrationPoint;
         private string _featureMinControlIntegrationPoint;
         private IntegrationPoint _featureFeatureIntegrationPoint;
@@ -61,6 +62,12 @@ namespace Rediscovery.Features.Connection.Models
             set { SetProperty(ref _featureVersion, value); }
         }
 
+        public string FeatureDescription
+        {
+            get { return _featureDescription; }
+            set { SetProperty(ref _featureDescription, value); }
+        }
+
         public string FeatureMinFeatureIntegrationPoint
         {
             get { return _featureMinFeatureIntegrationPoint; }
@@ -93,5 +100,12 @@ namespace Rediscovery.Features.Connection.Models
         }
 
         public ObservableCollection<FeatureProfil> Profiles { get; set; }
+
+        private bool isOpen;
+        public bool IsOpen
+        {
+            get { return isOpen; }
+            set { SetProperty(ref isOpen, value); }
+        }
     }
 }

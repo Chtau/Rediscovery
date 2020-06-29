@@ -31,7 +31,14 @@ namespace Rediscovery.Features.DesktopFeatures
             Features.Connection.Models.ConnectionManifestFeature item = args.SelectedItem as Features.Connection.Models.ConnectionManifestFeature;
             if (item != null)
             {
-                await Navigation.PushModalAsync(new NavigationPage(new FeaturePage.FeatureView.FeatureView(item.ConfigurationId, item)));
+                if (item.FeatureFeatureIntegrationPoint == SharedBase.Device.IntegrationPoint.Desktop)
+                {
+                    await Navigation.PushModalAsync(new NavigationPage(new FeaturePage.FeatureView.FeatureView(item.ConfigurationId, item)));
+                } else
+                {
+                    viewModel.ResetIsOpen();
+                    item.IsOpen = true;
+                }
                 FeatureControl.SelectedItem = null;
             }
         }
