@@ -20,6 +20,7 @@ message FeatureDefinitionExtended {
     IntegrationPoint featureIntegrationPoint = 17;
     int32 nativeResources = 18;
     bool isClientImplementation = 19;
+    string clientDescription = 20;
 }
 
 message FeatureDetailSetting {

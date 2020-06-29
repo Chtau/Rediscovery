@@ -93,7 +93,7 @@ namespace CommunicationAuthenticationConsumer
                         AppMinimumVersion = SharedBase.Core.Version.ConvertTo(reply.AppMinimumVersion),
                         ClientName = reply.ClientName,
                         ClientVersion = SharedBase.Core.Version.ConvertTo(reply.ClientVersion),
-                        SupportedFeatures = OnGetFeatures(reply.SupportedFeatures)
+                        SupportedFeatures = OnGetFeatures(reply.SupportedFeatures),
                     };
                     callback?.Invoke(replyMsg);
                     ReceivedManifestReply?.Invoke(this, replyMsg);
@@ -128,7 +128,8 @@ namespace CommunicationAuthenticationConsumer
                         Version = SharedBase.Core.Version.ConvertTo(item.Version),
                         Website = item.Website,
                         IsClientImplementation = item.IsClientImplementation,
-                        NativeResources = item.NativeResources
+                        NativeResources = item.NativeResources,
+                        ClientDescription = item.ClientDescription,
                     });
                 }
             }

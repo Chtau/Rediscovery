@@ -25,7 +25,8 @@ namespace ClientFeatureFileExchange
                 PluginDirectory = PluginDirectory,
                 HasProfilConfiguration = false,
                 HasSettingConfiguration = false,
-                NativeResources = Enums.ClientNativeResources.OpenWithIntent
+                NativeResources = Enums.ClientNativeResources.OpenWithIntent,
+                ClientDescription = "Allows to send Files from the Mobile device to a Desktop via the Share functions."
             };
         }
 

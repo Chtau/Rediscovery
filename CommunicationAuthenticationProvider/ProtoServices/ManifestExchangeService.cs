@@ -44,6 +44,9 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                         HasSettingConfiguration = item.HasSettingConfiguration,
                         Version = item.Version.ToString().EmptyIfNull(),
                         Website = item.Website.EmptyIfNull(),
+                        ClientDescription = item.ClientDescription.EmptyIfNull(),
+                        IsClientImplementation = item.IsClientImplementation,
+                        NativeResources = item.NativeResources
                     });
                 }
             }

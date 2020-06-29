@@ -26,6 +26,7 @@ namespace DesktopService.Features.Plugins
                 Version = entity.Version.GetVersion(),
                 Website = entity.Website,
                 IsClientImplementation = false,
+                ClientDescription = null,
                 NativeResources = 0
             };
         }
@@ -48,6 +49,7 @@ namespace DesktopService.Features.Plugins
                 Version = entity.Version.GetVersion(),
                 Website = entity.Website,
                 IsClientImplementation = true,
+                ClientDescription = entity.ClientDescription,
                 NativeResources = (int)entity.NativeResources
             };
         }

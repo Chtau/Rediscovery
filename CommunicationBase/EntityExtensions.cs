@@ -21,7 +21,10 @@ public static class EntityExtensions
             HasProfilConfiguration = featureDefinitionExtended.HasProfilConfiguration,
             HasSettingConfiguration = featureDefinitionExtended.HasSettingConfiguration,
             Version = featureDefinitionExtended.Version.ToString(),
-            Website = featureDefinitionExtended.Website.EmptyIfNull()
+            Website = featureDefinitionExtended.Website.EmptyIfNull(),
+            IsClientImplementation = featureDefinitionExtended.IsClientImplementation,
+            ClientDescription = featureDefinitionExtended.ClientDescription.EmptyIfNull(),
+            NativeResources = featureDefinitionExtended.NativeResources
         };
     }
 
@@ -83,7 +86,8 @@ public static class EntityExtensions
             Version = SharedBase.Core.Version.ConvertTo(featureDefinitionExtended.Version),
             Website = featureDefinitionExtended.Website,
             NativeResources = featureDefinitionExtended.NativeResources,
-            IsClientImplementation = featureDefinitionExtended.IsClientImplementation
+            IsClientImplementation = featureDefinitionExtended.IsClientImplementation,
+            ClientDescription = featureDefinitionExtended.ClientDescription,
         };
     }
 

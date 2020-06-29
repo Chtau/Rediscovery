@@ -55,7 +55,7 @@
                        Style="{DynamicResource ListItemDetailTextStyle}"
                        FontSize="13" />
                                     </StackLayout>
-                                    <StackLayout Padding="15, 0" Grid.ColumnSpan="2" Grid.Row="2" IsVisible="{Binding IsOpen}">
+                                    <StackLayout Padding="15, 0, 15, 10" Grid.ColumnSpan="2" Grid.Row="2" IsVisible="{Binding IsOpen}">
                                         <Label LineBreakMode="NoWrap">
                                             <Label.FormattedText>
                                                 <FormattedString>
@@ -65,7 +65,7 @@
                                             </Label.FormattedText>
                                         </Label>
                                         <Label Text="{Binding FeatureDescription}" 
-                                           LineBreakMode="NoWrap"
+                                           LineBreakMode="WordWrap"
                                            Style="{DynamicResource ListItemDetailTextStyle}"
                                            FontSize="13" />
                                     </StackLayout>

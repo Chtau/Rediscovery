@@ -17,5 +17,6 @@ namespace SharedBase.Device
         public IntegrationPoint FeatureIntegrationPoint { get; set; }
         public int NativeResources { get; set; }
         public bool IsClientImplementation { get; set; }
+        public string ClientDescription { get; set; }
     }
 }

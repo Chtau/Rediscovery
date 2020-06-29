@@ -7,5 +7,6 @@ namespace PluginFeature.Models
     public class PluginFeatureDefinitionClient : PluginFeatureDefinition
     {
         public Enums.ClientNativeResources NativeResources { get; set; } = Enums.ClientNativeResources.None;
+        public string ClientDescription { get; set; }
     }
 }

@@ -68,6 +68,7 @@ namespace Rediscovery.Features.Connection
                         FeatureMinControlIntegrationPoint = SharedBase.Core.Version.ConvertFrom(item.MinimalControlIntegrationPoint),
                         FeatureMinFeatureIntegrationPoint = SharedBase.Core.Version.ConvertFrom(item.MinimalFeatureIntegrationPoint),
                         FeatureVersion = SharedBase.Core.Version.ConvertFrom(item.Version),
+                        FeatureDescription = item.ClientDescription
                     };
                     var connectionManifestFeature = ConnectionManifestFeatures.FirstOrDefault(x => x.ConfigurationId == configurationId && x.FeatureId == feature.FeatureId);
                     if (connectionManifestFeature != null)
