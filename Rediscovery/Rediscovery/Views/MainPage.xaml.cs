@@ -1,4 +1,5 @@
-﻿using Rediscovery.Services;
+﻿using Rediscovery.Features.DesktopFeatures;
+using Rediscovery.Services;
 using System;
 using System.ComponentModel;
 using System.Net;
@@ -15,14 +16,31 @@ namespace Rediscovery.Views
     [DesignTimeVisible(false)]
     public partial class MainPage : TabbedPage
     {
+        private SharedBase.Logging.ILogger _logger => DependencyService.Get<SharedBase.Logging.ILogger>() ?? new Logger();
+        private Features.DesktopFeatures.IClientFeatureService clientFeatureService => DependencyService.Get<Features.DesktopFeatures.IClientFeatureService>() ?? new Features.DesktopFeatures.ClientFeatureService();
         private MainPageViewModel viewModel;
 
         public MainPage()
         {
             InitializeComponent();
 
+            clientFeatureService.OpenFeatureSelectDialog += ClientFeatureService_OpenFeatureSelectDialog;
+
             BindingContext = viewModel = new MainPageViewModel();
             viewModel.Load();
+        }
+
+        private async void ClientFeatureService_OpenFeatureSelectDialog(object sender, System.Collections.Generic.IEnumerable<Features.Connection.Models.ConnectionManifestFeature> e)
+        {
+            var model = new ClientFeatureSelectionViewModel(e);
+            await Navigation.PushModalAsync(new NavigationPage(new ClientFeatureSelectionPage(model)));
+            if (model.SelectedFeature != null)
+            {
+                _logger.LogDebug($"[OpenFeatureSelectDialog] Feature (FeatureId:{model.SelectedFeature.FeatureId}) selected");
+            } else
+            {
+                _logger.LogWarning("[OpenFeatureSelectDialog] user selected no feature to use");
+            }
         }
     }
 }

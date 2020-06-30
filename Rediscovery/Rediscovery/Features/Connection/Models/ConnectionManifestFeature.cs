@@ -107,5 +107,12 @@ namespace Rediscovery.Features.Connection.Models
             get { return isOpen; }
             set { SetProperty(ref isOpen, value); }
         }
+
+        private SharedBase.Enums.ClientNativeResources featureNativeResource;
+        public SharedBase.Enums.ClientNativeResources FeatureNativeResource
+        {
+            get { return featureNativeResource; }
+            set { SetProperty(ref featureNativeResource, value); }
+        }
     }
 }

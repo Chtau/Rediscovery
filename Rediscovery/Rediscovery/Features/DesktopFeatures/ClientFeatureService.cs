@@ -14,12 +14,14 @@ namespace Rediscovery.Features.DesktopFeatures
     {
         private IManifestFeatureEntityManager entityManager => DependencyService.Get<IManifestFeatureEntityManager>() ?? new ManifestFeatureEntityManager();
 
+        public event EventHandler<IEnumerable<Connection.Models.ConnectionManifestFeature>> OpenFeatureSelectDialog;
+
         public void OpenWithIntentReceived(IntentReceivedModel intentReceivedModel)
         {
-            var featuresForOpenWith = entityManager.ConnectionManifestFeatures?.Where(x => x.FeatureFeatureIntegrationPoint == SharedBase.Device.IntegrationPoint.Mobile);
+            var featuresForOpenWith = entityManager.ConnectionManifestFeatures?.Where(x => x.FeatureFeatureIntegrationPoint == SharedBase.Device.IntegrationPoint.Mobile && x.FeatureNativeResource.HasFlag(SharedBase.Enums.ClientNativeResources.OpenWithIntent));
             if (featuresForOpenWith?.Count() > 0)
             {
-
+                
             } else
             {
                 _logger.LogWarning("No Feature found which supports [OpenWithIntent]");
