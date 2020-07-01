@@ -18,10 +18,11 @@ namespace Rediscovery.Features.DesktopFeatures
 
         public void OpenWithIntentReceived(IntentReceivedModel intentReceivedModel)
         {
+            // TODO: handle if we are not connected to any device
             var featuresForOpenWith = entityManager.ConnectionManifestFeatures?.Where(x => x.FeatureFeatureIntegrationPoint == SharedBase.Device.IntegrationPoint.Mobile && x.FeatureNativeResource.HasFlag(SharedBase.Enums.ClientNativeResources.OpenWithIntent));
             if (featuresForOpenWith?.Count() > 0)
             {
-                
+                OpenFeatureSelectDialog?.Invoke(this, featuresForOpenWith);
             } else
             {
                 _logger.LogWarning("No Feature found which supports [OpenWithIntent]");

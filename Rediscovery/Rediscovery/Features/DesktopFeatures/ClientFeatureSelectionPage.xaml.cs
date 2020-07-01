@@ -26,7 +26,7 @@ namespace Rediscovery.Features.DesktopFeatures
             Features.Connection.Models.ConnectionManifestFeature item = args.SelectedItem as Features.Connection.Models.ConnectionManifestFeature;
             if (item != null)
             {
-                viewModel.SelectedFeature = item;
+                viewModel.SetSelectedFeaturer(item);
                 FeatureControl.SelectedItem = null;
                 await Navigation.PopModalAsync();
             }

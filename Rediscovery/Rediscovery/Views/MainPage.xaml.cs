@@ -32,15 +32,18 @@ namespace Rediscovery.Views
 
         private async void ClientFeatureService_OpenFeatureSelectDialog(object sender, System.Collections.Generic.IEnumerable<Features.Connection.Models.ConnectionManifestFeature> e)
         {
-            var model = new ClientFeatureSelectionViewModel(e);
+            var model = new ClientFeatureSelectionViewModel(e, (feature) =>
+            {
+                if (feature != null)
+                {
+                    _logger.LogDebug($"[OpenFeatureSelectDialog] Feature (FeatureId:{feature.FeatureId}) selected");
+                }
+                else
+                {
+                    _logger.LogWarning("[OpenFeatureSelectDialog] user selected no feature to use");
+                }
+            });
             await Navigation.PushModalAsync(new NavigationPage(new ClientFeatureSelectionPage(model)));
-            if (model.SelectedFeature != null)
-            {
-                _logger.LogDebug($"[OpenFeatureSelectDialog] Feature (FeatureId:{model.SelectedFeature.FeatureId}) selected");
-            } else
-            {
-                _logger.LogWarning("[OpenFeatureSelectDialog] user selected no feature to use");
-            }
         }
     }
 }

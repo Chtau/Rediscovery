@@ -9,16 +9,23 @@ namespace Rediscovery.Features.DesktopFeatures
 {
     public class ClientFeatureSelectionViewModel : BaseViewModel
     {
-        public ObservableCollection<Features.Connection.Models.ConnectionManifestFeature> Features { get; set; } = new ObservableCollection<Features.Connection.Models.ConnectionManifestFeature>();
-        public Features.Connection.Models.ConnectionManifestFeature SelectedFeature { get; set; }
+        private readonly Action<Connection.Models.ConnectionManifestFeature> _callback;
 
-        public ClientFeatureSelectionViewModel(IEnumerable<Connection.Models.ConnectionManifestFeature> features)
+        public ObservableCollection<Features.Connection.Models.ConnectionManifestFeature> Features { get; set; } = new ObservableCollection<Features.Connection.Models.ConnectionManifestFeature>();
+
+        public ClientFeatureSelectionViewModel(IEnumerable<Connection.Models.ConnectionManifestFeature> features, Action<Connection.Models.ConnectionManifestFeature> callback)
         {
+            _callback = callback;
             Features.Clear();
             foreach (var item in features)
             {
                 Features.Add(item);
             }
+        }
+
+        public void SetSelectedFeaturer(Features.Connection.Models.ConnectionManifestFeature feature)
+        {
+            _callback?.Invoke(feature);
         }
     }
 }
