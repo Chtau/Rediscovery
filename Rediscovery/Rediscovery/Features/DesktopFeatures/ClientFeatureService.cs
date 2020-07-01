@@ -19,6 +19,7 @@ namespace Rediscovery.Features.DesktopFeatures
         public void OpenWithIntentReceived(IntentReceivedModel intentReceivedModel)
         {
             // TODO: handle if we are not connected to any device
+            // TODO: if we are not connected with a device but this intent in a queue to allow the user to connect and then proceed with the action
             var featuresForOpenWith = entityManager.ConnectionManifestFeatures?.Where(x => x.FeatureFeatureIntegrationPoint == SharedBase.Device.IntegrationPoint.Mobile && x.FeatureNativeResource.HasFlag(SharedBase.Enums.ClientNativeResources.OpenWithIntent));
             if (featuresForOpenWith?.Count() > 0)
             {
