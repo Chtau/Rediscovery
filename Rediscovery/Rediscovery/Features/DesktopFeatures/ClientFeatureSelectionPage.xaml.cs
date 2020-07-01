@@ -20,5 +20,16 @@ namespace Rediscovery.Features.DesktopFeatures
 
             BindingContext = viewModel = model;
         }
+
+        async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
+        {
+            Features.Connection.Models.ConnectionManifestFeature item = args.SelectedItem as Features.Connection.Models.ConnectionManifestFeature;
+            if (item != null)
+            {
+                viewModel.SelectedFeature = item;
+                FeatureControl.SelectedItem = null;
+                await Navigation.PopModalAsync();
+            }
+        }
     }
 }
