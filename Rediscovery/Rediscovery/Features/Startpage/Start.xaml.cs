@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,12 @@ namespace Rediscovery.Features.Startpage
         {
             InitializeComponent();
             BindingContext = viewModel = new StartViewModel();
+        }
+
+        private async void ClientFeatureQueue_Clicked(object sender, EventArgs e)
+        {
+            bool answer = await DisplayAlert("Client feature", "Request are waiting to be send to a remote device, try to send again?", "Send", "Cancel");
+            Debug.WriteLine("Answer: " + answer);
         }
     }
 }

@@ -11,7 +11,6 @@
             xmlns:settings="clr-namespace:Rediscovery.Features.Settings"
             xmlns:startpage="clr-namespace:Rediscovery.Features.Startpage"
             x:Class="Rediscovery.Views.MainPage">
-
     <TabbedPage.Children>
         <NavigationPage Title="Rediscovery">
             <NavigationPage.Icon>
