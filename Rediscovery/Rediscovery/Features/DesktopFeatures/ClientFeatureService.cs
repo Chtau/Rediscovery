@@ -34,6 +34,8 @@ namespace Rediscovery.Features.DesktopFeatures
             MissingSupport
         }
 
+        private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
+        private DesktopFeatures.IFeatureService featureService => DependencyService.Get<DesktopFeatures.IFeatureService>() ?? new DesktopFeatures.FeatureService();
         private IManifestFeatureEntityManager entityManager => DependencyService.Get<IManifestFeatureEntityManager>() ?? new ManifestFeatureEntityManager();
 
         public event EventHandler<IEnumerable<Connection.Models.ConnectionManifestFeature>> OpenFeatureSelectDialog;
@@ -91,21 +93,12 @@ namespace Rediscovery.Features.DesktopFeatures
 
         private void OnSendResource(QueueItem queueItem, Connection.Models.ConnectionManifestFeature feature)
         {
-            switch (queueItem.NativeResources)
+            var config = desktopStore.GetItem(feature.ConfigurationId);
+            if (featureService.LoadFeature(config, feature.FeatureId))
             {
-                case SharedBase.Enums.ClientNativeResources.None:
-                    break;
-                case SharedBase.Enums.ClientNativeResources.OpenWithIntent:
-                    OnOpenWithIntentReceived((IntentReceivedModel)queueItem.Data, feature);
-                    break;
-                default:
-                    break;
+                featureService.Start();
+                featureService.Send(null, Newtonsoft.Json.JsonConvert.SerializeObject(queueItem.Data), true, (int)queueItem.NativeResources);
             }
-        }
-
-        private void OnOpenWithIntentReceived(IntentReceivedModel intentReceivedModel, Connection.Models.ConnectionManifestFeature feature)
-        {
-            // TODO: check if the feature has resource setting (resource setting object should be stored in a generic serialized object in the manifest)
         }
     }
 }

@@ -143,11 +143,11 @@ namespace Rediscovery.Features.DesktopFeatures
             });
         }
 
-        public void Send(string profileId, string data)
+        public void Send(string profileId, string data, bool isClientImplementation = false, int nativeResourceType = 0)
         {
             
             _logger.LogTrace($"{DateTime.Now.ToShortTimeString()} Try to send from Feature. (profileId:{profileId} data:{data})");
-            consumer.FeatureConsumerService.SendFeatureData(new SharedBase.Feature.FeatureData(deviceData.GetDeviceIdentifier(), featureId, profileId, data));
+            consumer.FeatureConsumerService.SendFeatureData(new SharedBase.Feature.FeatureData(deviceData.GetDeviceIdentifier(), featureId, profileId, data, isClientImplementation, nativeResourceType));
         }
 
         public string UIDirectory(Guid featureId)

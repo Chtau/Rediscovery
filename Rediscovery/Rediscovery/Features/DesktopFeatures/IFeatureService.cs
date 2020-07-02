@@ -17,6 +17,6 @@ namespace Rediscovery.Features.DesktopFeatures
         bool LoadFeature(DesktopConfiguration.DesktopConfigurationModel configurationModel, Guid featureId);
         void Start();
         void Stop();
-        void Send(string profileId, string data);
+        void Send(string profileId, string data, bool isClientImplementation = false, int nativeResourceType = 0);
     }
 }
