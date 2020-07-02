@@ -37,6 +37,7 @@ namespace Rediscovery.Views
                 if (feature != null)
                 {
                     _logger.LogDebug($"[OpenFeatureSelectDialog] Feature (FeatureId:{feature.FeatureId}) selected");
+                    clientFeatureService.SelectFeatureSelected(feature);
                 }
                 else
                 {

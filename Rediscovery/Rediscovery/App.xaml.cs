@@ -46,7 +46,7 @@ namespace Rediscovery
 
         public void OpenWithIntent(Features.DesktopFeatures.Models.IntentReceivedModel intentReceivedModel)
         {
-            clientFeatureService.OpenWithIntentReceived(intentReceivedModel);
+            clientFeatureService.Invoke("File", intentReceivedModel, SharedBase.Enums.ClientNativeResources.OpenWithIntent);
         }
     }
 }
