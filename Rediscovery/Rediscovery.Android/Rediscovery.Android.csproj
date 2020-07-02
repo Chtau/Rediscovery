@@ -166,6 +166,10 @@
     <Folder Include="Resources\drawable-xxxhdpi\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\PluginFeature\PluginFeature.csproj">
+      <Project>{d2fd1e6d-19d0-43de-a3a5-376c7a83429a}</Project>
+      <Name>PluginFeature</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rediscovery\Rediscovery.csproj">
       <Project>{F416A246-2605-4061-B5AA-C0CE118FAED5}</Project>
       <Name>Rediscovery</Name>

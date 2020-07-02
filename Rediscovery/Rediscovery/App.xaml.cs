@@ -44,7 +44,7 @@ namespace Rediscovery
             });
         }
 
-        public void OpenWithIntent(Features.DesktopFeatures.Models.IntentReceivedModel intentReceivedModel)
+        public void OpenWithIntent(PluginFeature.Models.ClientResources.OpenWithIntent intentReceivedModel)
         {
             string title = "";
             if (!string.IsNullOrWhiteSpace(intentReceivedModel?.Title))

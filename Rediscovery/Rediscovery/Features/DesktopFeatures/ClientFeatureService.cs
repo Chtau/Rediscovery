@@ -1,5 +1,4 @@
 ﻿using Rediscovery.Features.Connection;
-using Rediscovery.Features.DesktopFeatures.Models;
 using Rediscovery.Services;
 using System;
 using System.Collections.Generic;

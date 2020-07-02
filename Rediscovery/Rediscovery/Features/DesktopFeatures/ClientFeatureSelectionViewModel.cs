@@ -1,5 +1,4 @@
-﻿using Rediscovery.Features.DesktopFeatures.Models;
-using Rediscovery.ViewModels;
+﻿using Rediscovery.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

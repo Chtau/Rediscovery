@@ -37,6 +37,7 @@ namespace ClientFeatureFileExchange
             {
                 if (!string.IsNullOrWhiteSpace(data.Entity.Data?.ToString()))
                 {
+                    var openWithIntent = Newtonsoft.Json.JsonConvert.DeserializeObject<PluginFeature.Models.ClientResources.OpenWithIntent>(data.Entity.Data);
                     pluginLogger.LogError("TODO: implement handle received [OpenWithIntent]");
                 }
             }
