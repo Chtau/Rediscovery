@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Rediscovery.Features.DesktopFeatures;
+using Rediscovery.Services;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -13,18 +15,37 @@ namespace Rediscovery.Features.Startpage
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Start : ContentPage
     {
+        private const string QueuedData = "Queued data:";
+
+        private SharedBase.Logging.ILogger _logger => DependencyService.Get<SharedBase.Logging.ILogger>() ?? new Logger();
+        private Features.DesktopFeatures.IClientFeatureService clientFeatureService => DependencyService.Get<Features.DesktopFeatures.IClientFeatureService>() ?? new Features.DesktopFeatures.ClientFeatureService();
         StartViewModel viewModel;
 
         public Start()
         {
             InitializeComponent();
             BindingContext = viewModel = new StartViewModel();
+            clientFeatureService.ClientQueueDisplay += ClientFeatureService_ClientQueueDisplay;
+            ClientFeatureQueue.IsVisible = clientFeatureService.HasQueueItem;
+            ClientFeatureQueue.Text = QueuedData + " " + clientFeatureService.CurrentQueueItem?.QueueInfoText;
+        }
+
+        private void ClientFeatureService_ClientQueueDisplay(object sender, ClientFeatureService.QueueItem e)
+        {
+            ClientFeatureQueue.IsVisible = clientFeatureService.HasQueueItem;
+            if (clientFeatureService.HasQueueItem)
+                ClientFeatureQueue.Text = QueuedData + " " + e.QueueInfoText;
         }
 
         private async void ClientFeatureQueue_Clicked(object sender, EventArgs e)
         {
-            bool answer = await DisplayAlert("Client feature", "Request are waiting to be send to a remote device, try to send again?", "Send", "Cancel");
-            Debug.WriteLine("Answer: " + answer);
+            string message = "Request are waiting to be send to a remote device, try to send again?";
+            message += Environment.NewLine + Environment.NewLine + clientFeatureService.CurrentQueueItem?.QueueInfoText;
+            bool answer = await DisplayAlert("Client feature", message, "Send", "Cancel");
+            if (answer)
+            {
+                clientFeatureService.InvokeCurrentQueue();
+            }
         }
     }
 }

@@ -46,7 +46,18 @@ namespace Rediscovery
 
         public void OpenWithIntent(Features.DesktopFeatures.Models.IntentReceivedModel intentReceivedModel)
         {
-            clientFeatureService.Invoke("File", intentReceivedModel, SharedBase.Enums.ClientNativeResources.OpenWithIntent);
+            string title = "";
+            if (!string.IsNullOrWhiteSpace(intentReceivedModel?.Title))
+            {
+                title = "File: " + intentReceivedModel.Title;
+            } else if (!string.IsNullOrWhiteSpace(intentReceivedModel?.Uri))
+            {
+                title = "Url: " + intentReceivedModel.Uri;
+            } else
+            {
+                title = "Share data";
+            }
+            clientFeatureService.Invoke(title, intentReceivedModel, SharedBase.Enums.ClientNativeResources.OpenWithIntent);
         }
     }
 }

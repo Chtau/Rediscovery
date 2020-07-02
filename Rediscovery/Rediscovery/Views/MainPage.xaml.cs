@@ -25,9 +25,29 @@ namespace Rediscovery.Views
             InitializeComponent();
 
             clientFeatureService.OpenFeatureSelectDialog += ClientFeatureService_OpenFeatureSelectDialog;
-
+            clientFeatureService.RemoteFeatureRequest += ClientFeatureService_RemoteFeatureRequest;
             BindingContext = viewModel = new MainPageViewModel();
             viewModel.Load();
+        }
+
+        private void ClientFeatureService_RemoteFeatureRequest(object sender, ClientFeatureService.RemoteFeatureRequestState e)
+        {
+            string message = "";
+            switch (e)
+            {
+                case ClientFeatureService.RemoteFeatureRequestState.NoFeatures:
+                    message = "No remote features found. Check if you are connected to a device.";
+                    break;
+                case ClientFeatureService.RemoteFeatureRequestState.MissingSupport:
+                    message = "The devices you are currently connected don't support the request.";
+                    break;
+                default:
+                    break;
+            }
+            if (!string.IsNullOrWhiteSpace(message))
+            {
+                DisplayAlert("Client feature", message, "Cancel");
+            }
         }
 
         private async void ClientFeatureService_OpenFeatureSelectDialog(object sender, System.Collections.Generic.IEnumerable<Features.Connection.Models.ConnectionManifestFeature> e)

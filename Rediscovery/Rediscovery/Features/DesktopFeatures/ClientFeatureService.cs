@@ -28,13 +28,24 @@ namespace Rediscovery.Features.DesktopFeatures
             }
         }
 
+        public enum RemoteFeatureRequestState
+        {
+            NoFeatures,
+            MissingSupport
+        }
 
         private IManifestFeatureEntityManager entityManager => DependencyService.Get<IManifestFeatureEntityManager>() ?? new ManifestFeatureEntityManager();
 
         public event EventHandler<IEnumerable<Connection.Models.ConnectionManifestFeature>> OpenFeatureSelectDialog;
         public event EventHandler<QueueItem> ClientQueueDisplay;
+        public event EventHandler<RemoteFeatureRequestState> RemoteFeatureRequest;
 
         public QueueItem CurrentQueueItem { get; private set; }
+
+        public bool HasQueueItem
+        {
+            get { return CurrentQueueItem != null; }
+        }
 
         public bool Invoke(string queueInfoText, object data, SharedBase.Enums.ClientNativeResources clientNativeResources)
         {
@@ -45,12 +56,24 @@ namespace Rediscovery.Features.DesktopFeatures
                 OnSelectFeature(clientNativeResources);
                 return true;
             }
+            RemoteFeatureRequest?.Invoke(this, RemoteFeatureRequestState.NoFeatures);
+            return false;
+        }
+
+        public bool InvokeCurrentQueue()
+        {
+            if (CurrentQueueItem != null)
+            {
+                return Invoke(CurrentQueueItem.QueueInfoText, CurrentQueueItem.Data, CurrentQueueItem.NativeResources);
+            }
             return false;
         }
 
         public void SelectFeatureSelected(Connection.Models.ConnectionManifestFeature feature)
         {
             OnSendResource(CurrentQueueItem, feature);
+            CurrentQueueItem = null;
+            ClientQueueDisplay?.Invoke(this, CurrentQueueItem);
         }
 
         private void OnSelectFeature(SharedBase.Enums.ClientNativeResources clientNativeResources)
@@ -62,7 +85,7 @@ namespace Rediscovery.Features.DesktopFeatures
             }
             else
             {
-                _logger.LogWarning("No Feature found which supports [OpenWithIntent]");
+                RemoteFeatureRequest?.Invoke(this, RemoteFeatureRequestState.MissingSupport);
             }
         }
 
@@ -82,10 +105,7 @@ namespace Rediscovery.Features.DesktopFeatures
 
         private void OnOpenWithIntentReceived(IntentReceivedModel intentReceivedModel, Connection.Models.ConnectionManifestFeature feature)
         {
-            // TODO: handle if we are not connected to any device
-            // TODO: if we are not connected with a device but this intent in a queue to allow the user to connect and then proceed with the action
             // TODO: check if the feature has resource setting (resource setting object should be stored in a generic serialized object in the manifest)
-            
         }
     }
 }

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:flex="clr-namespace:Flex.Controls;assembly=Flex"
              mc:Ignorable="d"
              Title="Rediscovery v0.0.0"
              x:Class="Rediscovery.Features.Startpage.Start">
@@ -35,7 +36,11 @@
                 </Label>
             </StackLayout>
             <StackLayout Grid.Row="1">
-                <Button x:Name="ClientFeatureQueue" Clicked="ClientFeatureQueue_Clicked" Text="Data waiting to send"/>
+                <flex:FlexButton 
+                    x:Name="ClientFeatureQueue"  IsVisible="false" Clicked="ClientFeatureQueue_Clicked" Text="Queued data:"
+                        Icon="share_forward_fill.png"
+                    Margin="5"
+                    Style="{StaticResource LargeFlexButton}"/>
             </StackLayout>
         </Grid>
     </ContentPage.Content>
