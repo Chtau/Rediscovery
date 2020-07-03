@@ -1,14 +1,14 @@
 syntax = "proto3";
 
-package hearthbeat;
+package heartbeat;
 
-service HearthbeatExchange {
+service HeartbeatExchange {
   rpc Beat (stream PingMessage) returns (stream PongMessage);
 }
 
 message PingMessage {
   uint64 pingTime = 1;
-  uint32 lastRoundTripTicks = 2;
+  uint64 lastRoundTripTicks = 2;
   Command command = 3;
 
   enum Command {
@@ -18,7 +18,7 @@ message PingMessage {
 
 message PongMessage {
   uint64 pongTime = 1;
-  uint32 lastRoundTripTicks = 2;
+  uint64 lastRoundTripTicks = 2;
   Command command = 3;
 
   enum Command {

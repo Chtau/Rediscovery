@@ -10,11 +10,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CommunicationBase\CommunicationBase.csproj" />
-    <ProjectReference Include="..\SharedCoreModels\SharedCoreModels.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="..\Proto\hearthbeat.proto" GrpcServices="Server" Link="Protos\hearthbeat.proto" />
+    <Protobuf Include="..\Proto\heartbeat.proto" GrpcServices="Server" Link="Protos\heartbeat.proto" />
   </ItemGroup>
 
 </Project>
