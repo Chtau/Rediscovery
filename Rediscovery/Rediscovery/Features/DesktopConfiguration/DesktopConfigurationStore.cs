@@ -57,7 +57,7 @@ namespace Rediscovery.Features.DesktopConfiguration
             items[index].ManifestClientName = item.ManifestClientName;
             items[index].ManifestClientVersion = item.ManifestClientVersion;
             items[index].AutoConnect = item.AutoConnect;
-            items[index].ConnectionState = item.ConnectionState;
+            //items[index].ConnectionState = item.ConnectionState;
             items[index].DisplayName = item.DisplayName;
             var result = json.SetFileContent(items, filePath());
             return await Task.FromResult(new Tuple<bool, DesktopConfigurationModel>(result, items[index]));
