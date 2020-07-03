@@ -126,7 +126,10 @@ namespace Rediscovery.Features.Connection
                     }
                 } else
                 {
-                    resultCallback?.Invoke(null, null, SharedBase.Connection.Enums.ConnectionState.Error);
+                    if (reply.Offline)
+                        resultCallback?.Invoke(null, null, SharedBase.Connection.Enums.ConnectionState.Offline);
+                    else
+                        resultCallback?.Invoke(null, null, SharedBase.Connection.Enums.ConnectionState.Error);
                 }
             } else
             {

@@ -9,5 +9,6 @@ namespace SharedBase.Connection
         public int SSLPort { get; set; }
         public string PEM { get; set; }
         public SharedBase.Connection.Enums.AllowConnect CanConnect { get; set; }
+        public bool Offline { get; set; }
     }
 }

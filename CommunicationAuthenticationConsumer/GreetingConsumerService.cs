@@ -20,12 +20,12 @@ namespace CommunicationAuthenticationConsumer
 
         public GreetingDeviceReply GreetHost(string host, int port, GreetingDeviceMessage greetingDevice, int secondsTimeout = 2)
         {
+            var cts = new CancellationTokenSource();
             var task = Task.Run(async () =>
             {
                 try
                 {
                     _logger.LogTrace("Consumer request Greeting");
-                    var cts = new CancellationTokenSource();
                     var channel = new Channel(host, port, ChannelCredentials.Insecure);
                     var client = new Handshake.HandShakeExchange.HandShakeExchangeClient(channel);
                     var msg = new Handshake.GreetingMessage
@@ -65,7 +65,8 @@ namespace CommunicationAuthenticationConsumer
                     {
                         SSLPort = reply.SSLPort,
                         PEM = reply.PEM,
-                        CanConnect = canConnect
+                        CanConnect = canConnect,
+                        Offline = false
                     };
                 }
                 catch (Exception ex)
@@ -75,12 +76,30 @@ namespace CommunicationAuthenticationConsumer
                     {
                         SSLPort = -1,
                         PEM = "",
-                        CanConnect = Enums.AllowConnect.Error
+                        CanConnect = Enums.AllowConnect.Error,
+                        Offline = false
                     };
                 }
             });
-            Task.WaitAll(task);
-            return task.GetAwaiter().GetResult();
+            var taskTimeout = Task.Run(async () =>
+            {
+                await Task.Delay(TimeSpan.FromSeconds(secondsTimeout));
+                return new GreetingDeviceReply
+                {
+                    SSLPort = -1,
+                    PEM = "",
+                    CanConnect = Enums.AllowConnect.Error,
+                    Offline = true
+                };
+            });
+            var index = Task.WaitAny(task, taskTimeout);
+            if (index == 0)
+                return task.GetAwaiter().GetResult();
+            else
+            {
+                cts.Cancel();
+                return taskTimeout.GetAwaiter().GetResult();
+            }
         }
     }
 }
