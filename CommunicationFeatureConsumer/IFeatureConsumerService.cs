@@ -10,6 +10,7 @@ namespace CommunicationFeatureConsumer
     public interface IFeatureConsumerService
     {
         bool Connect(string ipAddress, int port, string certificatePEM);
+        bool Disconnect();
 
         event EventHandler<FeatureState> ReceiveFeatureStateChangeReply;
         void ChangeFeatureState(string token, FeatureState featureState);

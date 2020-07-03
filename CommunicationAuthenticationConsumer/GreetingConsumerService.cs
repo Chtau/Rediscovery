@@ -13,15 +13,31 @@ namespace CommunicationAuthenticationConsumer
     {
         private readonly ILogger _logger;
 
+        private Channel channel = null;
+        private CancellationTokenSource cts = null;
+
         public GreetingConsumerService(ILogger logger)
         {
             _logger = logger;
         }
 
+        public bool Disconnect()
+        {
+            try
+            {
+                cts?.Cancel();
+                channel?.ShutdownAsync().GetAwaiter();
+                return true;
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex);
+                return false;
+            }
+        }
+
         public GreetingDeviceReply GreetHost(string host, int port, GreetingDeviceMessage greetingDevice, int secondsTimeout = 2)
         {
-            var cts = new CancellationTokenSource();
-            Channel channel = null;
+            cts = new CancellationTokenSource();
             var task = Task.Run(async () =>
             {
                 try

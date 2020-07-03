@@ -22,6 +22,11 @@ namespace CommunicationFeatureConsumer
         private IClientStreamWriter<DeviceFeatureData> _responseStream;
         private readonly ILogger _logger;
 
+        private Channel channel = null;
+        private CancellationTokenSource ctsChangeFeatureState = null;
+        private CancellationTokenSource ctsStartFeatureData = null;
+        private CancellationTokenSource ctsFeatureClient = null;
+
         public FeatureConsumerService(ILogger logger)
         {
             _logger = logger;
@@ -32,10 +37,27 @@ namespace CommunicationFeatureConsumer
             try
             {
                 var channelCredentials = new SslCredentials(certificatePEM);
-                Channel channel = new Channel(ipAddress, port, channelCredentials);
+                channel = new Channel(ipAddress, port, channelCredentials);
                 exchangeClient = new FeatureExchange.FeatureExchangeClient(channel);
                 return exchangeClient != null;
             } catch (Exception ex)
+            {
+                _logger.LogError(ex);
+                return false;
+            }
+        }
+
+        public bool Disconnect()
+        {
+            try
+            {
+                ctsFeatureClient?.Cancel();
+                ctsStartFeatureData?.Cancel();
+                ctsChangeFeatureState?.Cancel();
+                channel?.ShutdownAsync().GetAwaiter();
+                return true;
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex);
                 return false;
@@ -46,7 +68,7 @@ namespace CommunicationFeatureConsumer
         {
             Task.Run(async () =>
             {
-                var cts = new CancellationTokenSource();
+                ctsChangeFeatureState = new CancellationTokenSource();
                 try
                 {
                     var msg = new Featuredata.FeatureState
@@ -57,7 +79,7 @@ namespace CommunicationFeatureConsumer
                     var meta = new Metadata();
                     meta.AddAuthorizationHeader(token);
                     _logger.LogTrace("Consumer send change feature state request");
-                    var reply = await exchangeClient.ChangeFeatureStateAsync(msg, cancellationToken: cts.Token, headers: meta);
+                    var reply = await exchangeClient.ChangeFeatureStateAsync(msg, cancellationToken: ctsChangeFeatureState.Token, headers: meta);
                     _logger.LogTrace("Consumer reply for feature state change");
                     var replyMsg = new CommunicationBase.Models.FeatureState
                     {
@@ -72,7 +94,7 @@ namespace CommunicationFeatureConsumer
                 }
                 finally
                 {
-                    cts.Cancel();
+                    ctsChangeFeatureState.Cancel();
                 }
             });
         }
@@ -82,12 +104,14 @@ namespace CommunicationFeatureConsumer
             Task.Run(async () =>
             {
                 if (cts == null)
-                    cts = new CancellationTokenSource();
+                    ctsStartFeatureData = new CancellationTokenSource();
+                else
+                    ctsStartFeatureData = cts;
                 try
                 {
                     var meta = new Metadata();
                     meta.AddAuthorizationHeader(token);
-                    using (var call = exchangeClient.ExchangeStream(headers: meta, cancellationToken: cts.Token))
+                    using (var call = exchangeClient.ExchangeStream(headers: meta, cancellationToken: ctsStartFeatureData.Token))
                     {
                         _responseStream = call.RequestStream;
 
@@ -101,7 +125,7 @@ namespace CommunicationFeatureConsumer
                         do
                         {
                             await Task.Delay(100);
-                        } while (!cts.IsCancellationRequested);
+                        } while (!ctsStartFeatureData.IsCancellationRequested);
                     }
                 }
                 catch (Exception ex)
@@ -111,7 +135,7 @@ namespace CommunicationFeatureConsumer
                 finally
                 {
                     _responseStream = null;
-                    cts.Cancel();
+                    ctsStartFeatureData.Cancel();
                 }
             });
         }
@@ -122,15 +146,21 @@ namespace CommunicationFeatureConsumer
             {
                 Task.Run(async () =>
                 {
-                    await _responseStream.WriteAsync(new DeviceFeatureData
+                    try
                     {
-                        Data = deviceFeatureData.Data,
-                        DeviceId = deviceFeatureData.DeviceId,
-                        FeatureId = deviceFeatureData.FeatureId.ToString(),
-                        ProfileId = deviceFeatureData.ProfileId.EmptyIfNull(),
-                        IsClientImplementation = deviceFeatureData.IsClientImplementation,
-                        NativeResourceType = deviceFeatureData.NativeResourceType
-                    });
+                        await _responseStream.WriteAsync(new DeviceFeatureData
+                        {
+                            Data = deviceFeatureData.Data,
+                            DeviceId = deviceFeatureData.DeviceId,
+                            FeatureId = deviceFeatureData.FeatureId.ToString(),
+                            ProfileId = deviceFeatureData.ProfileId.EmptyIfNull(),
+                            IsClientImplementation = deviceFeatureData.IsClientImplementation,
+                            NativeResourceType = deviceFeatureData.NativeResourceType
+                        });
+                    } catch (Exception ex)
+                    {
+                        _logger.LogError(ex);
+                    }
                 });
             }
         }
@@ -139,7 +169,7 @@ namespace CommunicationFeatureConsumer
         {
             Task.Run(async () =>
             {
-                var cts = new CancellationTokenSource();
+                ctsFeatureClient = new CancellationTokenSource();
                 try
                 {
                     var msg = new Featuredata.FeatureRequest
@@ -149,7 +179,7 @@ namespace CommunicationFeatureConsumer
                     var meta = new Metadata();
                     meta.AddAuthorizationHeader(token);
                     _logger.LogTrace("Consumer send request to get feature client data");
-                    var reply = await exchangeClient.FeatureClientAsync(msg, cancellationToken: cts.Token, headers: meta);
+                    var reply = await exchangeClient.FeatureClientAsync(msg, cancellationToken: ctsFeatureClient.Token, headers: meta);
                     var replyMsg = new Models.FeatureClientData
                     {
                         FeatureId = reply.FeatureId.SafeGuid(),
@@ -175,7 +205,7 @@ namespace CommunicationFeatureConsumer
                 }
                 finally
                 {
-                    cts.Cancel();
+                    ctsFeatureClient.Cancel();
                 }
             });
         }

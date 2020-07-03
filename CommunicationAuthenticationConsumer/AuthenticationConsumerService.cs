@@ -19,6 +19,10 @@ namespace CommunicationAuthenticationConsumer
         private Manifest.ManifestExchange.ManifestExchangeClient manifestClient;
         private readonly ILogger _logger;
 
+        private Channel channel = null;
+        private CancellationTokenSource ctsRequestManifest = null;
+        private CancellationTokenSource ctsWelcome = null;
+
         public AuthenticationConsumerService(ILogger logger)
         {
             _logger = logger;
@@ -29,11 +33,27 @@ namespace CommunicationAuthenticationConsumer
             try
             {
                 var channelCredentials = new SslCredentials(certificatePEM);
-                Channel channel = new Channel(ipAddress, port, channelCredentials);
+                channel = new Channel(ipAddress, port, channelCredentials);
                 authenticationClient = new Authentication.AuthentionExchange.AuthentionExchangeClient(channel);
                 manifestClient = new Manifest.ManifestExchange.ManifestExchangeClient(channel);
                 return authenticationClient != null;
             } catch (Exception ex)
+            {
+                _logger.LogError(ex);
+                return false;
+            }
+        }
+
+        public bool Disconnect()
+        {
+            try
+            {
+                ctsWelcome?.Cancel();
+                ctsRequestManifest?.Cancel();
+                channel?.ShutdownAsync().GetAwaiter();
+                return true;
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex);
                 return false;
@@ -51,13 +71,13 @@ namespace CommunicationAuthenticationConsumer
                 };
                 try
                 {
-                    var cts = new CancellationTokenSource();
+                    ctsWelcome = new CancellationTokenSource();
                     var msg = new Authentication.WelcomeDeviceMessage
                     {
                         DeviceIdentifier = message.DeviceIdentifier,
                     };
                     _logger.LogTrace("Consumer Welcome send Welcome");
-                    var reply = await authenticationClient.WelcomeAsync(msg, cancellationToken: cts.Token);
+                    var reply = await authenticationClient.WelcomeAsync(msg, cancellationToken: ctsWelcome.Token);
                     _logger.LogTrace("Consumer Welcome reply received");
                     replyMsg = new WelcomeDeviceReply
                     {
@@ -84,10 +104,10 @@ namespace CommunicationAuthenticationConsumer
                 try
                 {
                     _logger.LogTrace("Consumer request Manifest");
-                    var cts = new CancellationTokenSource();
+                    ctsRequestManifest = new CancellationTokenSource();
                     var meta = new Metadata();
                     meta.AddAuthorizationHeader(token);
-                    var reply = await manifestClient.DeviceAsync(new Google.Protobuf.WellKnownTypes.Empty(), headers: meta, cancellationToken: cts.Token);
+                    var reply = await manifestClient.DeviceAsync(new Google.Protobuf.WellKnownTypes.Empty(), headers: meta, cancellationToken: ctsRequestManifest.Token);
                     var replyMsg = new SharedBase.Connection.Manifest
                     {
                         AppMinimumVersion = SharedBase.Core.Version.ConvertTo(reply.AppMinimumVersion),

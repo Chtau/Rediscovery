@@ -9,5 +9,6 @@ namespace Rediscovery.Services
         CommunicationAuthenticationConsumer.AuthenticationConsumerService AuthenticationConsumerService { get; }
         CommunicationAuthenticationConsumer.GreetingConsumerService GreetingConsumerService { get; }
         CommunicationFeatureConsumer.FeatureConsumerService FeatureConsumerService { get; }
+        bool Disconnect();
     }
 }

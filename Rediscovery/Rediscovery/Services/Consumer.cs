@@ -24,5 +24,17 @@ namespace Rediscovery.Services
         public GreetingConsumerService GreetingConsumerService => greetingConsumerService;
 
         public FeatureConsumerService FeatureConsumerService => featureConsumerService;
+
+        public bool Disconnect()
+        {
+            var retVal = true;
+            if (AuthenticationConsumerService?.Disconnect() == false)
+                retVal = false;
+            if (FeatureConsumerService?.Disconnect() == false)
+                retVal = false;
+            if (GreetingConsumerService?.Disconnect() == false)
+                retVal = false;
+            return retVal;
+        }
     }
 }

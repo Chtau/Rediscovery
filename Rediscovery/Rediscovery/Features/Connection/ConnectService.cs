@@ -176,7 +176,7 @@ namespace Rediscovery.Features.Connection
 
         public void Disconnect(DesktopConfigurationModel desktopConfigurationModel, Action<bool> resultCallback)
         {
-            // TODO: disconnect from GRPC consumer
+            consumer.Disconnect();
             OnUpdateDesktopConfiguration(desktopConfigurationModel, null, SharedBase.Connection.Enums.ConnectionState.None);
             resultCallback?.Invoke(true);
         }
