@@ -21,12 +21,13 @@ namespace CommunicationAuthenticationConsumer
         public GreetingDeviceReply GreetHost(string host, int port, GreetingDeviceMessage greetingDevice, int secondsTimeout = 2)
         {
             var cts = new CancellationTokenSource();
+            Channel channel = null;
             var task = Task.Run(async () =>
             {
                 try
                 {
                     _logger.LogTrace("Consumer request Greeting");
-                    var channel = new Channel(host, port, ChannelCredentials.Insecure);
+                    channel = new Channel(host, port, ChannelCredentials.Insecure);
                     var client = new Handshake.HandShakeExchange.HandShakeExchangeClient(channel);
                     var msg = new Handshake.GreetingMessage
                     {
@@ -93,6 +94,7 @@ namespace CommunicationAuthenticationConsumer
                 };
             });
             var index = Task.WaitAny(task, taskTimeout);
+            channel?.ShutdownAsync().GetAwaiter();
             if (index == 0)
                 return task.GetAwaiter().GetResult();
             else
