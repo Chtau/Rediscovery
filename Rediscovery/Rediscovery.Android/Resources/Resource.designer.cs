@@ -11676,9 +11676,6 @@ namespace Rediscovery.Droid
 			// aapt resource value: 0x7F070158
 			public const int wifi_off = 2131165528;
 			
-			// aapt resource value: 0x7F070159
-			public const int xamarin_logo = 2131165529;
-			
 			static Drawable()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
