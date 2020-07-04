@@ -16,9 +16,6 @@ namespace DesktopService
 {
     internal class Program
     {
-        // TODO: https://docs.microsoft.com/en-us/aspnet/core/signalr/dotnet-client?view=aspnetcore-2.2
-        // TODO: https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/windows-service?view=aspnetcore-2.2&tabs=visual-studio
-
         // TODO: remove static values and replace with service
 
         public static string HostIpAddress = "127.0.0.1";
@@ -53,8 +50,6 @@ namespace DesktopService
                 HostIpAddress = vals[1].Trim();
             }
 
-            //System.Threading.Thread.Sleep(30000);
-            //CreateHostBuilder(args).Build().Run();
             var isService = false;// !(Debugger.IsAttached || args.Contains("--console"));
 
             if (isService)
