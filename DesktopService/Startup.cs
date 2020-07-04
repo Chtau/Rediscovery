@@ -32,11 +32,8 @@ namespace DesktopService
                 .AddJsonFile(SharedConfigurations.DesktopService.ConfigFileNames.AppSettings, optional: false, reloadOnChange: true);
 
             Configuration = builder.Build();
-            /*var host = new HostBuilder();
-            host.RunConsoleAsync().GetAwaiter().GetResult();*/
         }
 
-        // Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
@@ -53,41 +50,6 @@ namespace DesktopService
             var appSettings = appSettingsSection.Get<SharedConfigurations.DesktopService.Models.AppConfiguration>();
             var identitySettings = identitySettingsSection.Get<SharedConfigurations.DesktopService.Models.IdentityConfiguration>();
             var roleSettings = identitySettingsSection.Get<SharedConfigurations.DesktopService.Models.RoleConfiguration>();
-            //var key = Encoding.ASCII.GetBytes(identitySettings.Secret);
-            /*services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-                
-                options.Events = new JwtBearerEvents
-                {
-                    OnMessageReceived = context =>
-                    {
-                        var accessToken = context.Request.Query["access_token"];
-
-                        var path = context.HttpContext.Request.Path;
-                        if (!string.IsNullOrEmpty(accessToken) &&
-                            (path.StartsWithSegments("/hubs/") || (path.HasValue ? path.Value.StartsWith("/hubs/") : false)))
-                        {
-                            // Read the token out of the query string
-                            context.Token = accessToken;
-                        }
-                        return Task.CompletedTask;
-                    }
-                };
-            });*/
 
             services.AddHostedService<Worker>();
 
@@ -114,21 +76,9 @@ namespace DesktopService
             services.AddSingleton<Features.Plugins.ILoadPlugins, Features.Plugins.LoadPlugins>();
         }
 
-        // Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
             app.UseCertificateServiceDefaults();
-            /*loggerFactory.AddInternalLogger();
-            loggerFactory.AddInternalLogger(new InternalLoggerConfiguration
-            {
-                LogLevel = LogLevel.Debug,
-                Color = ConsoleColor.Gray
-            });
-            loggerFactory.AddInternalLogger(c =>
-            {
-                c.LogLevel = LogLevel.Information;
-                c.Color = ConsoleColor.Blue;
-            });*/
             loggerFactory.AddRemoteLogger(o =>
             {
                 o.RemoteResourcesLiveLogger = app.ApplicationServices.GetRequiredService<Features.RemoteResources.IRemoteResourcesLiveLogger>();

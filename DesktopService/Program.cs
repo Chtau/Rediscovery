@@ -73,10 +73,7 @@ namespace DesktopService
 
             if (isService)
             {
-                // To run the app without the CustomWebHostService change the
-                // next line to host.RunAsService();
-                //host.RunAsCustomService();
-                //host.RunAsService();
+                
             }
             // set static resources before we run to provide the HostBuilder with the updated resources
             var resources = (Services.IStaticResources)host.Services.GetService(typeof(Services.IStaticResources));
