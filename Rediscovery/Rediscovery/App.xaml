@@ -16,11 +16,11 @@
             <converter:ConnectionStateReverseBoolConverter x:Key="connectionStateReverseBoolConverter"/>
             <converter:FeatureIntegrationConverter x:Key="featureIntegrationConverter"/>
             <!--Global Styles-->
-            <Color x:Key="Primary">#2196F3</Color>
+            <Color x:Key="Primary">#00796B</Color>
             <Color x:Key="Foreground">#ffffff</Color>
-            <Color x:Key="PrimaryHighlight">#8EA4D2</Color>
+            <Color x:Key="PrimaryHighlight">#003742</Color>
             <Color x:Key="ForegroundHighlight">#49516F</Color>
-            <Color x:Key="NavigationPrimary">#2196F3</Color>
+            <Color x:Key="NavigationPrimary">#00796B</Color>
             <Style TargetType="NavigationPage">
                 <Setter Property="BarBackgroundColor" Value="{StaticResource NavigationPrimary}" />
                 <Setter Property="BarTextColor" Value="White" />
