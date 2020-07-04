@@ -9,5 +9,6 @@ namespace SharedCommandArguments.Service
         public const string CommandPortHttps = "--porthttps:";
         public const string CommandPort = "--port:";
         public const string CommandIP = "--ip:";
+        public const string DesktopName = "--desktopname:";
     }
 }

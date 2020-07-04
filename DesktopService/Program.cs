@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.WindowsServices;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,6 +10,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
@@ -16,16 +19,14 @@ namespace DesktopService
 {
     internal class Program
     {
-        // TODO: remove static values and replace with service
-
-        public static string HostIpAddress = "127.0.0.1";
-        public static ushort HostPort = 44341;
-        public static ushort HostPortHttps = 44342;
-        public static string ExePath = null;
-        public static X509Certificate2 X509Certificate2;
-
         public static void Main(string[] args)
         {
+            string DesktopName = "Desktop";
+            string HostIpAddress = "127.0.0.1";
+            ushort HostPort = 44341;
+            ushort HostPortHttps = 44342;
+            string ExePath = null;
+
             HostIpAddress = SharedFeatureFunctions.NetworkAddress.GetIpAddr();
             ExePath = Process.GetCurrentProcess().MainModule.FileName;
 
@@ -49,6 +50,12 @@ namespace DesktopService
                 var vals = valueArg.Split(':');
                 HostIpAddress = vals[1].Trim();
             }
+            if (args.Any(x => x.StartsWith(SharedCommandArguments.Service.Arguments.DesktopName, StringComparison.OrdinalIgnoreCase)))
+            {
+                var valueArg = args.First(x => x.StartsWith(SharedCommandArguments.Service.Arguments.DesktopName, StringComparison.OrdinalIgnoreCase));
+                var vals = valueArg.Split(':');
+                DesktopName = vals[1].Trim();
+            }
 
             var isService = false;// !(Debugger.IsAttached || args.Contains("--console"));
 
@@ -70,12 +77,26 @@ namespace DesktopService
                 // next line to host.RunAsService();
                 //host.RunAsCustomService();
                 //host.RunAsService();
-                host.Run();
             }
-            else
+            // set static resources before we run to provide the HostBuilder with the updated resources
+            var resources = (Services.IStaticResources)host.Services.GetService(typeof(Services.IStaticResources));
+            resources.ExePath = ExePath;
+            resources.HostIpAddress = HostIpAddress;
+            resources.HostPort = HostPort;
+            resources.HostPortHttps = HostPortHttps;
+            resources.X509Certificate2 = GetX509Certificate2(HostIpAddress);
+            resources.PEM = CertPEM(resources.X509Certificate2);
+
+            Version version = Assembly.GetEntryAssembly().GetName().Version;
+            resources.ServiceManifest = new SharedBase.Connection.Manifest
             {
-                host.Run();
-            }
+                AppMinimumVersion = new SharedBase.Core.Version() { Major = 0, Minor = 0, Patch = 0, Label = null },
+                ClientVersion = new SharedBase.Core.Version() { Major = version.Major, Minor = version.Minor, Patch = version.Revision, Label = null },
+                SupportedFeatures = new System.Collections.Generic.List<SharedBase.Device.FeatureDefinitionExtended>(),
+                ClientName = DesktopName
+            };
+
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -84,33 +105,21 @@ namespace DesktopService
         {
             webBuilder.ConfigureKestrel(serverOptions =>
             {
+                var res = serverOptions.ApplicationServices.GetService<Services.IStaticResources>();
                 serverOptions.ConfigureHttpsDefaults(op =>
                 {
-                    //op.AllowAnyClientCertificate();
-                    //op.ServerCertificate = GetX509Certificate2();
-                    op.ServerCertificate = GetX509Certificate2(HostIpAddress);
+                    op.ServerCertificate = res.X509Certificate2;
                 });
 
-                //serverOptions.Listen(System.Net.IPAddress.Parse("192.168.1.100"), 44341);
-                serverOptions.Listen(System.Net.IPAddress.Parse(HostIpAddress), HostPort, so =>
+                serverOptions.Listen(System.Net.IPAddress.Parse(res.HostIpAddress), res.HostPort, so =>
                 {
                     so.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
                 });
-                serverOptions.Listen(System.Net.IPAddress.Parse(HostIpAddress), HostPortHttps, (lo) =>
+                serverOptions.Listen(System.Net.IPAddress.Parse(res.HostIpAddress), res.HostPortHttps, (lo) =>
                 {
                     lo.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
                     lo.UseHttps();
                 });
-                /*serverOptions.ListenLocalhost(HostPort);
-                serverOptions.ListenLocalhost(HostPortHttps, (lo) =>
-                {
-                    lo.UseHttps();
-                });
-                serverOptions.ListenAnyIP(HostPort);
-                serverOptions.ListenAnyIP(HostPortHttps, (lo) =>
-                {
-                    lo.UseHttps();
-                });*/
                 serverOptions.ConfigureEndpointDefaults(listenOptions =>
                 {
                     // Configure endpoint defaults
@@ -123,21 +132,15 @@ namespace DesktopService
         private static X509Certificate2 GetX509Certificate2(string host)
         {
             var pfx = CertificateService.ServerCertificate.CreatePfx(host, "1234", "Rediscovery");
-            X509Certificate2 = new X509Certificate2(pfx, "1234");
-            //X509Certificate2 = CertificateService.ServerCertificate.Create(HostIpAddress);
-            //X509Certificate2 = new X509Certificate2(Path.Combine(@"C:\DEV\TMP", "development.pfx"), "1234");
-            //var cert = new X509Certificate2(Path.Combine(@"C:\DEV\Code\Workspaces\Repos\Rediscovery\TestSignalR", "dev_localhost.pfx"), "1234");
-            //Console.WriteLine(cert.FriendlyName + " Issuer:" + cert.Issuer + " Thumbprint:" + cert.Thumbprint);
-            //return cert;
-            return X509Certificate2;
+            return new X509Certificate2(pfx, "1234");
         }
 
-        public static string CertPEM()
+        private static string CertPEM(X509Certificate2 cert)
         {
             StringBuilder builder = new StringBuilder();
 
             builder.AppendLine("-----BEGIN CERTIFICATE-----");
-            builder.AppendLine(Convert.ToBase64String(X509Certificate2.Export(X509ContentType.Cert), Base64FormattingOptions.InsertLineBreaks));
+            builder.AppendLine(Convert.ToBase64String(cert.Export(X509ContentType.Cert), Base64FormattingOptions.InsertLineBreaks));
             builder.AppendLine("-----END CERTIFICATE-----");
 
             return builder.ToString();

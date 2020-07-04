@@ -18,13 +18,15 @@ namespace DesktopService.Features.Authentication
         private readonly Features.DeviceFeature.IFeatureService _featureService;
         private readonly IRoleResolver _roleResolver;
         private readonly SharedConfigurations.DesktopService.Models.IdentityConfiguration _identitySetting;
+        private readonly Services.IStaticResources _staticResources;
 
         public AuthenticationManager(ILoggerFactory loggerFactory,
             DALDesktopService.Repository.IDevicePendingAuthenticationRepository devicePendingAuthenticationRepository,
             DALDesktopService.Repository.IDeviceRepository deviceRepository,
             Features.DeviceFeature.IFeatureService featureService,
             IRoleResolver roleResolver,
-            IOptions<SharedConfigurations.DesktopService.Models.IdentityConfiguration> settingOptions)
+            IOptions<SharedConfigurations.DesktopService.Models.IdentityConfiguration> settingOptions,
+            Services.IStaticResources staticResources)
         {
             _logger = loggerFactory.CreateLogger<AuthenticationManager>();
             _devicePendingAuthenticationRepository = devicePendingAuthenticationRepository;
@@ -32,6 +34,7 @@ namespace DesktopService.Features.Authentication
             _featureService = featureService;
             _roleResolver = roleResolver;
             _identitySetting = settingOptions.Value;
+            _staticResources = staticResources;
         }
 
         public async Task<bool> AddPendingApprovel(GreetingDeviceMessage greetingDeviceMessage)
@@ -96,26 +99,23 @@ namespace DesktopService.Features.Authentication
 
         public string GetCertificatePEM(string deviceIdentifier)
         {
-            // TODO: remove static values and use a Service for PEM
-            return Program.CertPEM();
+            return _staticResources.PEM;
         }
 
         public SharedBase.Connection.Manifest GetManifest()
         {
-            // TODO: impl. Manifest creation from real data
             return new SharedBase.Connection.Manifest
             {
-                AppMinimumVersion = new SharedBase.Core.Version() { Major = 0, Minor = 0, Patch = 0, Label = null },
-                ClientVersion = new SharedBase.Core.Version() { Major = 0, Minor = 0, Patch = 0, Label = null },
-                SupportedFeatures = _featureService.GetFeaturesManifest(),
-                ClientName = "DEV-Desktop"
+                AppMinimumVersion = _staticResources.ServiceManifest.AppMinimumVersion,
+                ClientName = _staticResources.ServiceManifest.ClientName,
+                ClientVersion = _staticResources.ServiceManifest.ClientVersion,
+                SupportedFeatures = _featureService.GetFeaturesManifest()
             };
         }
 
         public int GetSSLPort()
         {
-            // TODO: remove static values and use a Service for Https Port
-            return Program.HostPortHttps;
+            return _staticResources.HostPortHttps;
         }
 
         public async Task<LoginResult> RequestLogin(WelcomeDeviceMessage welcomeDeviceMessage)

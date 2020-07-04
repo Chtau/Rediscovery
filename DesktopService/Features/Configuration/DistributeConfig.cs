@@ -12,14 +12,17 @@ namespace DesktopService.Features.Configuration
         private readonly SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration _remoteResourceSettings;
         private readonly ILogger<DistributeConfig> _logger;
         private readonly SharedConfigurations.DesktopService.Models.AppConfiguration _appSettings;
+        private readonly Services.IStaticResources _staticResources;
 
         public DistributeConfig(ILoggerFactory loggerFactory, 
             IOptions<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration> remoteResourceSettings,
-            IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> appOptions)
+            IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> appOptions,
+            Services.IStaticResources staticResources)
         {
             _logger = loggerFactory.CreateLogger<DistributeConfig>();
             _remoteResourceSettings = remoteResourceSettings.Value;
             _appSettings = appOptions.Value;
+            _staticResources = staticResources;
         }
 
         public void Share()
@@ -28,8 +31,8 @@ namespace DesktopService.Features.Configuration
             string discoveryPath = System.IO.Path.GetDirectoryName(_remoteResourceSettings.RediscoveryDiscoveryServicePath);
             var serviceInfo = new SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration
             {
-                IP = Program.HostIpAddress,
-                Port = Program.HostPort,
+                IP = _staticResources.HostIpAddress,
+                Port = _staticResources.HostPort,
                 MetaInfo = null,
                 Name = "Rediscovery"
             };
@@ -53,13 +56,13 @@ namespace DesktopService.Features.Configuration
             }
             fwRules.Add(new SharedConfigurations.Hub.Models.FirewallRulesConfiguration
             {
-                ExePath = Program.ExePath,
+                ExePath = _staticResources.ExePath,
                 RuleName = _appSettings.FirewallRuleName
             });
             var hubConfig = new SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration
             {
-                IP = Program.HostIpAddress,
-                Port = Program.HostPort,
+                IP = _staticResources.HostIpAddress,
+                Port = _staticResources.HostPort,
                 DesktopHubApplicationKey = _remoteResourceSettings.RediscoveryDesktopHubApplicationKey
             };
             OnUpdateRemoteConfiguration(Path.Combine(hubPath, SharedConfigurations.DesktopHub.ConfigFileNames.AppSettings), SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration.SectionName, hubConfig);

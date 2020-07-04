@@ -96,14 +96,13 @@ namespace DesktopService
             {
                 c.ConnectionString = System.IO.Path.Combine(AppFolders.GetUserFolder(appSettings.AppDataFolder), "rediscovery.db");
             });
-            services.AddCertificateService(config =>
-            {
-                config.DnsIp = Program.HostIpAddress;
-            });
+            services.AddCertificateService();
 
             services.AddAuthenticationProvider<AuthenticationManager>(identitySettings.Secret, roleSettings.DeviceRoleName, roleSettings.ResourceConsumerRoleName);
             services.AddFeatureProvider<FeatureManager>();
             services.AddResourceProvider<RemoteResourcesRepository, ResourceManager>();
+
+            services.AddSingleton<Services.IStaticResources, Services.StaticResources>();
 
             services.AddSingleton<IConfigurationRoot>(Configuration);
             services.AddSingleton<Features.RemoteResources.IRemoteResourcesLiveLogger, Features.RemoteResources.RemoteResourcesLiveLogger>();
