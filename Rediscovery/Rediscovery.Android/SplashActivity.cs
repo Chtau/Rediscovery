@@ -29,15 +29,15 @@ namespace Rediscovery.Droid
 
         async void OnStartup()
         {
-            /*if (Intent.Action == Intent.ActionSend)
+            var intent = new Intent(Application.Context, typeof(MainActivity));
+            if (Intent.Action == Intent.ActionSend)
             {
-                StartActivity(new Intent(Intent, typeof(MainActivity)));
-                //StartActivity(new Intent(Application.Context, typeof(MainActivity)));
-            } else
-            {
-                StartActivity(new Intent(Application.Context, typeof(MainActivity)));
-            }*/
-            StartActivity(new Intent(Application.Context, typeof(MainActivity)));
+                intent.PutExtras(Intent);
+                intent.SetAction(Intent.ActionSend);
+                intent.ClipData = Intent.ClipData;
+                intent.SetType(Intent.Type);
+            }
+            StartActivity(intent);
         }
     }
 }
