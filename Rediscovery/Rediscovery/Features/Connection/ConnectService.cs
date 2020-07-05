@@ -20,10 +20,15 @@ namespace Rediscovery.Features.Connection
         private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
         private IDeviceData deviceData => DependencyService.Get<IDeviceData>() ?? new DeviceData();
         private Dictionary<Guid, ConnectConfigurationData> desktopConfigurationData = new Dictionary<Guid, ConnectConfigurationData>();
+        private Dictionary<Guid, CommunicationHeartbeatConsumer.RoundTripResult> lastHeartbeatStates = new Dictionary<Guid, CommunicationHeartbeatConsumer.RoundTripResult>();
 
-        public ConnectService()
+        public event EventHandler<Guid> HeartbeatStateChanges;
+
+        public CommunicationHeartbeatConsumer.RoundTripResult GetHeartbeat(Guid desktopConfigurationId)
         {
-            
+            if (lastHeartbeatStates.ContainsKey(desktopConfigurationId))
+                return lastHeartbeatStates[desktopConfigurationId];
+            return new CommunicationHeartbeatConsumer.RoundTripResult(desktopConfigurationId.ToString(), false);
         }
 
         public ConnectConfigurationData GetData(Guid configurationId)
@@ -154,7 +159,6 @@ namespace Rediscovery.Features.Connection
             }
         }
 
-        private Dictionary<Guid, bool> lastHeartbeatStates = new Dictionary<Guid, bool>();
         private void HeartbeatConsumerService_ReceivedBeatRoundtrip(object sender, CommunicationHeartbeatConsumer.RoundTripResult e)
         {
             try
@@ -165,11 +169,11 @@ namespace Rediscovery.Features.Connection
                     bool shouldUpdate = false;
                     if (lastHeartbeatStates.ContainsKey(desktopConfigurationId))
                     {
-                        if (lastHeartbeatStates[desktopConfigurationId] != e.OK)
+                        if (lastHeartbeatStates[desktopConfigurationId]?.OK != e.OK)
                             shouldUpdate = true;
                     } else
                     {
-                        lastHeartbeatStates.Add(desktopConfigurationId, e.OK);
+                        lastHeartbeatStates.Add(desktopConfigurationId, e);
                         shouldUpdate = true;
                     }
                     if (shouldUpdate)
@@ -177,6 +181,7 @@ namespace Rediscovery.Features.Connection
                         var item = desktopStore.GetItem(desktopConfigurationId);
                         item.ConnectionState = e.OK ? SharedBase.Connection.Enums.ConnectionState.OK : SharedBase.Connection.Enums.ConnectionState.None;
                         desktopStore.UpdateItem(item);
+                        HeartbeatStateChanges?.Invoke(this, desktopConfigurationId);
                     }
                 }
             }

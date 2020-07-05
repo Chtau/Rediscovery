@@ -12,6 +12,8 @@ namespace CommunicationHeartbeatConsumer
 {
     public class HeartbeatConsumer : IHeartbeatConsumer
     {
+        // TODO: we need to add some timer for disconnections of the network or service
+
         public event EventHandler<RoundTripResult> ReceivedBeatRoundtrip;
 
         private readonly ILogger _logger;

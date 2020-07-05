@@ -49,9 +49,13 @@ namespace Rediscovery.Features.DesktopConfiguration
                 IsLoading = false
             };
 
+            connectService.HeartbeatStateChanges += ConnectService_HeartbeatStateChanges;
+
             if (item != null)
             {
                 Title = "Edit Device";
+                var round = connectService.GetHeartbeat(item.Id);
+                item.ConnectionState = round.OK ? SharedBase.Connection.Enums.ConnectionState.OK : SharedBase.Connection.Enums.ConnectionState.None;
                 Item = item;
                 IsConnectEnabled = true;
                 CanEdit = true;
@@ -153,6 +157,19 @@ namespace Rediscovery.Features.DesktopConfiguration
             });
             Connect.ChangeCanExecute();
             Disconnect.ChangeCanExecute();
+        }
+
+        private void ConnectService_HeartbeatStateChanges(object sender, Guid desktopConfigurationId)
+        {
+            try
+            {
+                var round = connectService.GetHeartbeat(desktopConfigurationId);
+                Item.ConnectionState = round.OK ? SharedBase.Connection.Enums.ConnectionState.OK : SharedBase.Connection.Enums.ConnectionState.None;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+            }
         }
 
         public async Task Save()
