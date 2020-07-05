@@ -3,21 +3,11 @@ syntax = "proto3";
 package heartbeat;
 
 service HeartbeatExchange {
-  rpc Beat (stream PingMessage) returns (stream PongMessage);
+  rpc Beat (stream PingPongMessage) returns (stream PingPongMessage);
 }
 
-message PingMessage {
-  uint64 pingTime = 1;
-  uint64 lastRoundTripTicks = 2;
-  Command command = 3;
-
-  enum Command {
-    Beat = 0;
-  }
-}
-
-message PongMessage {
-  uint64 pongTime = 1;
+message PingPongMessage {
+  uint64 ticks = 1;
   uint64 lastRoundTripTicks = 2;
   Command command = 3;
 

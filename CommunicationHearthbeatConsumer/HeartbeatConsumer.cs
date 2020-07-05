@@ -16,7 +16,7 @@ namespace CommunicationHeartbeatConsumer
 
         private readonly ILogger _logger;
         private HeartbeatExchange.HeartbeatExchangeClient exchangeClient;
-        private IClientStreamWriter<PingMessage> _requestStream;
+        private IClientStreamWriter<PingPongMessage> _requestStream;
 
         private Channel channel = null;
         private CancellationTokenSource ctsBeat = null;
@@ -74,38 +74,25 @@ namespace CommunicationHeartbeatConsumer
                     using (var call = exchangeClient.Beat(headers: meta, cancellationToken: ctsBeat.Token))
                     {
                         _requestStream = call.RequestStream;
-                        var offsetDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 0, 0, 0);
-                        await _requestStream.WriteAsync(new PingMessage
+                        await _requestStream.WriteAsync(new PingPongMessage
                         {
-                            Command = PingMessage.Types.Command.Beat,
+                            Command = PingPongMessage.Types.Command.Beat,
                             LastRoundTripTicks = 0,
-                            PingTime = (ulong)(DateTime.UtcNow.Ticks - offsetDate.Ticks)
+                            Ticks = (ulong)DateTime.UtcNow.Ticks
                         });
 
                         var readTask = Task.Run(async () =>
                         {
                             await foreach (var message in call.ResponseStream.ReadAllAsync())
                             {
+                                message.LastRoundTripTicks = (ulong)DateTime.UtcNow.Ticks - message.Ticks;
+
                                 ReceivedBeatRoundtrip?.Invoke(this, new TimeSpan((long)message.LastRoundTripTicks));
 
-                                var offsetDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 0, 0, 0);
-                                var now = (ulong)(DateTime.UtcNow.Ticks - offsetDate.Ticks);
-                                var pong = message.PongTime;
-                                if (pong > now)
-                                {
-                                    _logger.LogWarning($"Heartbeat received a Pong time which is in the future. (Ping:{new DateTime((long)now)} Pong:{new DateTime((long)pong)})");
-                                    pong = now;
-                                }
-                                ulong roundTrip = now - pong;
-
                                 await Task.Delay(PingResponseWaitingMilliseconds);
-                                
-                                await _requestStream.WriteAsync(new PingMessage
-                                {
-                                    Command = PingMessage.Types.Command.Beat,
-                                    LastRoundTripTicks = roundTrip,
-                                    PingTime = (ulong)(DateTime.UtcNow.Ticks - offsetDate.Ticks)
-                        });
+
+                                message.Ticks = (ulong)DateTime.UtcNow.Ticks;
+                                await _requestStream.WriteAsync(message);
                             }
                         });
                         do
