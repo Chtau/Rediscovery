@@ -15,5 +15,25 @@ namespace SharedConfigurations.DesktopService.Models
         public string ServiceDisplayName { get; set; }
 
         public string[] Plugins { get; set; }
+        
+        public string DesktopName { get; set; }
+
+        public string ServiceVersion { get; set; }
+
+        public string AppMinimumVersion { get; set; }
+
+        public string HostIpAddress { get; set; }
+
+        public ushort? HostPort { get; set; }
+
+        public ushort? HostPortHttps { get; set; }
+
+        public string ServerCertificatePassword { get; set; }
+
+        public string ServerCertificateFriendlyName { get; set; }
+
+        public string DatabasePath { get; set; }
+
+        public string RemoteLogger { get; set; }
     }
 }

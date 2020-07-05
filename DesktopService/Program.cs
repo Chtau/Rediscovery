@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting.WindowsServices;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -26,6 +27,8 @@ namespace DesktopService
             ushort HostPort = 44341;
             ushort HostPortHttps = 44342;
             string ExePath = null;
+            string certPW = "1234";
+            string certFN = "Rediscovery";
 
             HostIpAddress = SharedFeatureFunctions.NetworkAddress.GetIpAddr();
             ExePath = Process.GetCurrentProcess().MainModule.FileName;
@@ -76,19 +79,48 @@ namespace DesktopService
                 
             }
             // set static resources before we run to provide the HostBuilder with the updated resources
+            var appConfig = (IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration>)host.Services.GetService(typeof(IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration>));
             var resources = (Services.IStaticResources)host.Services.GetService(typeof(Services.IStaticResources));
+
             resources.ExePath = ExePath;
-            resources.HostIpAddress = HostIpAddress;
-            resources.HostPort = HostPort;
-            resources.HostPortHttps = HostPortHttps;
-            resources.X509Certificate2 = GetX509Certificate2(HostIpAddress);
+            if (!string.IsNullOrWhiteSpace(appConfig?.Value?.HostIpAddress))
+                resources.HostIpAddress = appConfig?.Value?.HostIpAddress;
+            else
+                resources.HostIpAddress = HostIpAddress;
+            if (appConfig?.Value?.HostPort.HasValue == true)
+                resources.HostPort = appConfig.Value.HostPort.Value;
+            else
+                resources.HostPort = HostPort;
+            if (appConfig?.Value?.HostPortHttps.HasValue == true)
+                resources.HostPortHttps = appConfig.Value.HostPortHttps.Value;
+            else
+                resources.HostPortHttps = HostPortHttps;
+
+            if (!string.IsNullOrWhiteSpace(appConfig?.Value?.ServerCertificatePassword))
+                certPW = appConfig?.Value?.ServerCertificatePassword;
+            if (!string.IsNullOrWhiteSpace(appConfig?.Value?.ServerCertificateFriendlyName))
+                certFN = appConfig?.Value?.ServerCertificateFriendlyName;
+
+            resources.X509Certificate2 = GetX509Certificate2(HostIpAddress, certPW, certFN);
             resources.PEM = CertPEM(resources.X509Certificate2);
 
             Version version = Assembly.GetEntryAssembly().GetName().Version;
+
+            SharedBase.Core.Version appMinimumVersion = new SharedBase.Core.Version() { Major = 0, Minor = 0, Patch = 0, Label = null };
+            if (!string.IsNullOrWhiteSpace(appConfig?.Value?.AppMinimumVersion))
+            {
+                appMinimumVersion = SharedBase.Core.Version.ConvertTo(appConfig.Value?.AppMinimumVersion);
+            }
+            SharedBase.Core.Version clientVersion = new SharedBase.Core.Version() { Major = 0, Minor = 0, Patch = 0, Label = null };
+            if (!string.IsNullOrWhiteSpace(appConfig?.Value?.AppMinimumVersion))
+            {
+                clientVersion = SharedBase.Core.Version.ConvertTo(appConfig.Value?.ServiceVersion);
+            }
+
             resources.ServiceManifest = new SharedBase.Connection.Manifest
             {
-                AppMinimumVersion = new SharedBase.Core.Version() { Major = 0, Minor = 0, Patch = 0, Label = null },
-                ClientVersion = new SharedBase.Core.Version() { Major = version.Major, Minor = version.Minor, Patch = version.Revision, Label = null },
+                AppMinimumVersion = appMinimumVersion,
+                ClientVersion = clientVersion,
                 SupportedFeatures = new System.Collections.Generic.List<SharedBase.Device.FeatureDefinitionExtended>(),
                 ClientName = DesktopName
             };
@@ -126,10 +158,10 @@ namespace DesktopService
             .UseStartup<Startup>();
         });
 
-        private static X509Certificate2 GetX509Certificate2(string host)
+        private static X509Certificate2 GetX509Certificate2(string host, string password, string friendlyName)
         {
-            var pfx = CertificateService.ServerCertificate.CreatePfx(host, "1234", "Rediscovery");
-            return new X509Certificate2(pfx, "1234");
+            var pfx = CertificateService.ServerCertificate.CreatePfx(host, password, friendlyName);
+            return new X509Certificate2(pfx, password);
         }
 
         private static string CertPEM(X509Certificate2 cert)
