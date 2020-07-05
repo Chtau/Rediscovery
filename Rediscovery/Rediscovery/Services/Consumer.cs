@@ -1,5 +1,6 @@
 ﻿using CommunicationAuthenticationConsumer;
 using CommunicationFeatureConsumer;
+using CommunicationHeartbeatConsumer;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,12 +12,14 @@ namespace Rediscovery.Services
         private AuthenticationConsumerService authenticationConsumerService;
         private GreetingConsumerService greetingConsumerService;
         private FeatureConsumerService featureConsumerService;
+        private HeartbeatConsumer heartbeatConsumerService;
 
         public Consumer()
         {
             authenticationConsumerService = new AuthenticationConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
             greetingConsumerService = new GreetingConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
             featureConsumerService = new FeatureConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
+            heartbeatConsumerService = new HeartbeatConsumer(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
         }
 
         public AuthenticationConsumerService AuthenticationConsumerService => authenticationConsumerService;
@@ -24,6 +27,8 @@ namespace Rediscovery.Services
         public GreetingConsumerService GreetingConsumerService => greetingConsumerService;
 
         public FeatureConsumerService FeatureConsumerService => featureConsumerService;
+
+        public HeartbeatConsumer HeartbeatConsumerService => heartbeatConsumerService;
 
         public bool Disconnect()
         {
@@ -33,6 +38,8 @@ namespace Rediscovery.Services
             if (FeatureConsumerService?.Disconnect() == false)
                 retVal = false;
             if (GreetingConsumerService?.Disconnect() == false)
+                retVal = false;
+            if (HeartbeatConsumerService?.Disconnect() == false)
                 retVal = false;
             return retVal;
         }

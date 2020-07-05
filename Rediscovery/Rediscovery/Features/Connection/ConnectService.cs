@@ -104,6 +104,7 @@ namespace Rediscovery.Features.Connection
                                 {
                                     entityManager.AddManifestData(manifest, item.Id, item.DisplayName);
                                 });
+                                OnConnectHeartbeat(item.Address, reply.SSLPort, reply.PEM, deviceReply.Token);
                                 resultCallback?.Invoke(item, deviceReply.Token, deviceReply.State);
                             }
                             else
@@ -135,6 +136,27 @@ namespace Rediscovery.Features.Connection
             {
                 resultCallback?.Invoke(null, null, SharedBase.Connection.Enums.ConnectionState.Error);
             }
+        }
+
+        private void OnConnectHeartbeat(string ipAddress, int port, string pem, string token)
+        {
+            try
+            {
+                if (consumer.HeartbeatConsumerService.Connect(ipAddress, port, pem))
+                {
+                    consumer.HeartbeatConsumerService.ReceivedBeatRoundtrip += HeartbeatConsumerService_ReceivedBeatRoundtrip;
+                    consumer.HeartbeatConsumerService.StartBeat(token);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+            }
+        }
+
+        private void HeartbeatConsumerService_ReceivedBeatRoundtrip(object sender, TimeSpan e)
+        {
+            _logger.LogTrace($"[Heartbeat] round trip received. ({e.TotalMilliseconds} ms)");
         }
 
         private void OnResetDesktopConfigurationState()
