@@ -11,6 +11,6 @@ namespace CommunicationHeartbeatConsumer
         event EventHandler<RoundTripResult> ReceivedBeatRoundtrip;
         bool Connect(string ipAddress, int port, string certificatePEM);
         bool Disconnect();
-        void StartBeat(string token, CancellationTokenSource cts = null);
+        void StartBeat(string identifier, string token, CancellationTokenSource cts = null);
     }
 }

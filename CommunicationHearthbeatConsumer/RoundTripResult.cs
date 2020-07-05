@@ -6,20 +6,17 @@ namespace CommunicationHeartbeatConsumer
 {
     public class RoundTripResult
     {
+        public string Identifier { get; set; }
+
         public TimeSpan? PingPongTime { get; set; }
 
         public DateTime? PingStartDatetimeUTC { get; set; }
 
         public bool OK { get; set; }
 
-        public string IPAdress { get; set; }
-
-        public int Port { get; set; }
-
-        public RoundTripResult(string ipAdress, int port, bool ok, TimeSpan? pingPongTime = null, DateTime? pingStartDatetimeUTC = null)
+        public RoundTripResult(string identifier, bool ok, TimeSpan? pingPongTime = null, DateTime? pingStartDatetimeUTC = null)
         {
-            IPAdress = ipAdress;
-            Port = port;
+            Identifier = identifier;
             OK = ok;
             PingPongTime = pingPongTime;
             PingStartDatetimeUTC = pingStartDatetimeUTC;

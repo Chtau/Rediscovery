@@ -104,7 +104,7 @@ namespace Rediscovery.Features.Connection
                                 {
                                     entityManager.AddManifestData(manifest, item.Id, item.DisplayName);
                                 });
-                                OnConnectHeartbeat(item.Address, reply.SSLPort, reply.PEM, deviceReply.Token);
+                                OnConnectHeartbeat(item.Address, reply.SSLPort, reply.PEM, deviceReply.Token, item.Id);
                                 resultCallback?.Invoke(item, deviceReply.Token, deviceReply.State);
                             }
                             else
@@ -138,14 +138,14 @@ namespace Rediscovery.Features.Connection
             }
         }
 
-        private void OnConnectHeartbeat(string ipAddress, int port, string pem, string token)
+        private void OnConnectHeartbeat(string ipAddress, int port, string pem, string token, Guid desktopConfigurationId)
         {
             try
             {
                 if (consumer.HeartbeatConsumerService.Connect(ipAddress, port, pem))
                 {
                     consumer.HeartbeatConsumerService.ReceivedBeatRoundtrip += HeartbeatConsumerService_ReceivedBeatRoundtrip;
-                    consumer.HeartbeatConsumerService.StartBeat(token);
+                    consumer.HeartbeatConsumerService.StartBeat(desktopConfigurationId.ToString(), token);
                 }
             }
             catch (Exception ex)
@@ -154,15 +154,43 @@ namespace Rediscovery.Features.Connection
             }
         }
 
+        private Dictionary<Guid, bool> lastHeartbeatStates = new Dictionary<Guid, bool>();
         private void HeartbeatConsumerService_ReceivedBeatRoundtrip(object sender, CommunicationHeartbeatConsumer.RoundTripResult e)
         {
-            _logger.LogTrace($"[Heartbeat] round trip received. ({e.PingPongTime?.TotalMilliseconds} ms)");
+            try
+            {
+                _logger.LogTrace($"[Heartbeat] round trip received. ({e.PingPongTime?.TotalMilliseconds} ms)");
+                if (!string.IsNullOrWhiteSpace(e.Identifier) && Guid.TryParse(e.Identifier, out Guid desktopConfigurationId))
+                {
+                    bool shouldUpdate = false;
+                    if (lastHeartbeatStates.ContainsKey(desktopConfigurationId))
+                    {
+                        if (lastHeartbeatStates[desktopConfigurationId] != e.OK)
+                            shouldUpdate = true;
+                    } else
+                    {
+                        lastHeartbeatStates.Add(desktopConfigurationId, e.OK);
+                        shouldUpdate = true;
+                    }
+                    if (shouldUpdate)
+                    {
+                        var item = desktopStore.GetItem(desktopConfigurationId);
+                        item.ConnectionState = e.OK ? SharedBase.Connection.Enums.ConnectionState.OK : SharedBase.Connection.Enums.ConnectionState.None;
+                        desktopStore.UpdateItem(item);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+            }
         }
 
         private void OnResetDesktopConfigurationState()
         {
             try
             {
+                lastHeartbeatStates.Clear();
                 var items = desktopStore.GetItems()?.ToList();
                 if (items != null)
                 {
@@ -198,6 +226,7 @@ namespace Rediscovery.Features.Connection
 
         public void Disconnect(DesktopConfigurationModel desktopConfigurationModel, Action<bool> resultCallback)
         {
+            lastHeartbeatStates.Clear();
             consumer.Disconnect();
             OnUpdateDesktopConfiguration(desktopConfigurationModel, null, SharedBase.Connection.Enums.ConnectionState.None);
             resultCallback?.Invoke(true);
