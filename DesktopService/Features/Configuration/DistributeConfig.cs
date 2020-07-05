@@ -34,7 +34,7 @@ namespace DesktopService.Features.Configuration
                 IP = _staticResources.HostIpAddress,
                 Port = _staticResources.HostPort,
                 MetaInfo = null,
-                Name = "Rediscovery"
+                Name = _appSettings.DesktopName
             };
             OnUpdateRemoteConfiguration(Path.Combine(discoveryPath, SharedConfigurations.DiscoveryService.ConfigFileNames.AppSettings), SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration.SectionName, serviceInfo);
             /*var serviceInfoHub = new SharedConfigurations.Hub.Models.ServiceInfoConfiguration

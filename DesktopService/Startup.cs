@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -55,9 +56,18 @@ namespace DesktopService
             services.AddHostedService<Worker>();
 
             services.AddLogging();
+
+            string dbPath = System.IO.Path.Combine(AppFolders.GetUserFolder(appSettings.AppDataFolder), "rediscovery.db");
+            if (!string.IsNullOrWhiteSpace(appSettings.DatabasePath))
+            {
+                var dir = System.IO.Path.GetDirectoryName(appSettings.DatabasePath);
+                if (System.IO.Directory.Exists(dir))
+                    dbPath = appSettings.DatabasePath;
+            }
+
             services.AddDAL((c) =>
             {
-                c.ConnectionString = System.IO.Path.Combine(AppFolders.GetUserFolder(appSettings.AppDataFolder), "rediscovery.db");
+                c.ConnectionString = dbPath;
             });
             services.AddCertificateService();
 
@@ -81,10 +91,17 @@ namespace DesktopService
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
             app.UseCertificateServiceDefaults();
+
+            var appSettings = app.ApplicationServices.GetRequiredService<IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration>>();
+            var remoteLogLevel = LogLevel.None;
+            if (Enum.TryParse(typeof(LogLevel), appSettings?.Value?.RemoteLogger, out object obj))
+            {
+                remoteLogLevel = (LogLevel)obj;
+            }
             loggerFactory.AddRemoteLogger(o =>
             {
                 o.RemoteResourcesLiveLogger = app.ApplicationServices.GetRequiredService<Features.RemoteResources.IRemoteResourcesLiveLogger>();
-                o.LogLevel = LogLevel.Trace; //TODO: make log level a configuration option
+                o.LogLevel = remoteLogLevel;
             });
 
             app.UseCors(builder =>
