@@ -154,9 +154,9 @@ namespace Rediscovery.Features.Connection
             }
         }
 
-        private void HeartbeatConsumerService_ReceivedBeatRoundtrip(object sender, TimeSpan e)
+        private void HeartbeatConsumerService_ReceivedBeatRoundtrip(object sender, CommunicationHeartbeatConsumer.RoundTripResult e)
         {
-            _logger.LogTrace($"[Heartbeat] round trip received. ({e.TotalMilliseconds} ms)");
+            _logger.LogTrace($"[Heartbeat] round trip received. ({e.PingPongTime?.TotalMilliseconds} ms)");
         }
 
         private void OnResetDesktopConfigurationState()

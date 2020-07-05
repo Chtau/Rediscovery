@@ -12,7 +12,7 @@ namespace CommunicationHeartbeatConsumer
 {
     public class HeartbeatConsumer : IHeartbeatConsumer
     {
-        public event EventHandler<TimeSpan> ReceivedBeatRoundtrip;
+        public event EventHandler<RoundTripResult> ReceivedBeatRoundtrip;
 
         private readonly ILogger _logger;
         private HeartbeatExchange.HeartbeatExchangeClient exchangeClient;
@@ -20,6 +20,9 @@ namespace CommunicationHeartbeatConsumer
 
         private Channel channel = null;
         private CancellationTokenSource ctsBeat = null;
+        private RoundTripResult lastRoundTripResult = null;
+        private string ipAddress = null;
+        private int port = 0;
 
         public int PingResponseWaitingMilliseconds { get; set; } = 1000;
 
@@ -30,6 +33,8 @@ namespace CommunicationHeartbeatConsumer
 
         public bool Connect(string ipAddress, int port, string certificatePEM)
         {
+            this.ipAddress = ipAddress;
+            this.port = port;
             try
             {
                 var channelCredentials = new SslCredentials(certificatePEM);
@@ -56,6 +61,19 @@ namespace CommunicationHeartbeatConsumer
             {
                 _logger.LogError(ex);
                 return false;
+            } finally
+            {
+                if (lastRoundTripResult == null)
+                {
+                    lastRoundTripResult = new RoundTripResult(ipAddress, port, false);
+                }
+                else
+                {
+                    lastRoundTripResult.PingPongTime = null;
+                    lastRoundTripResult.PingStartDatetimeUTC = null;
+                    lastRoundTripResult.OK = false;
+                }
+                ReceivedBeatRoundtrip?.Invoke(this, lastRoundTripResult);
             }
         }
 
@@ -87,7 +105,8 @@ namespace CommunicationHeartbeatConsumer
                             {
                                 message.LastRoundTripTicks = (ulong)DateTime.UtcNow.Ticks - message.Ticks;
 
-                                ReceivedBeatRoundtrip?.Invoke(this, new TimeSpan((long)message.LastRoundTripTicks));
+                                lastRoundTripResult = new RoundTripResult(ipAddress, port, true, new TimeSpan((long)message.LastRoundTripTicks), new DateTime((long)message.Ticks));
+                                ReceivedBeatRoundtrip?.Invoke(this, lastRoundTripResult);
 
                                 await Task.Delay(PingResponseWaitingMilliseconds);
 
@@ -107,6 +126,16 @@ namespace CommunicationHeartbeatConsumer
                 }
                 finally
                 {
+                    if (lastRoundTripResult == null)
+                    {
+                        lastRoundTripResult = new RoundTripResult(ipAddress, port, false);
+                    } else
+                    {
+                        lastRoundTripResult.PingPongTime = null;
+                        lastRoundTripResult.PingStartDatetimeUTC = null;
+                        lastRoundTripResult.OK = false;
+                    }
+                    ReceivedBeatRoundtrip?.Invoke(this, lastRoundTripResult);
                     _requestStream = null;
                     ctsBeat.Cancel();
                 }
