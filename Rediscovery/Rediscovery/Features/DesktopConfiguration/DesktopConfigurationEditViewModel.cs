@@ -63,15 +63,14 @@ namespace Rediscovery.Features.DesktopConfiguration
             }
             else
             {
-                // TODO: change default Values for new connection
                 IsConnectEnabled = false;
                 Title = "New Device";
                 Item = new DesktopConfigurationModel
                 {
                     Id = Guid.NewGuid(),
                     DisplayName = "New",
-                    Address = "192.168.1.100",
-                    Port = 44341,
+                    Address = "",
+                    Port = -1,
                     AutoConnect = true,
                     ConnectionState = SharedBase.Connection.Enums.ConnectionState.None,
                     LastConnection = null

@@ -33,7 +33,7 @@
                             </StackLayout>
                             <StackLayout Grid.Column="1">
                                 <Label Text="Port" FontSize="Medium" />
-                                <Editor Text="{Binding Item.Port}" Keyboard="Numeric" FontSize="Small" Margin="0" />
+                                <Editor Text="{Binding Item.Port, Converter={StaticResource IntMinusEmptyConverter}}" Keyboard="Numeric" FontSize="Small" Margin="0" />
                             </StackLayout>
                         </Grid>
                         <Grid>

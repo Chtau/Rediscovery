@@ -16,6 +16,7 @@
             <converter:ConnectionStateReverseBoolConverter x:Key="connectionStateReverseBoolConverter"/>
             <converter:FeatureIntegrationConverter x:Key="featureIntegrationConverter"/>
             <converter:TimespanConverter x:Key="timespanConverter"/>
+            <converter:IntMinusEmptyConverter x:Key="IntMinusEmptyConverter"/>
             <!--Global Styles-->
             <Color x:Key="Primary">#00796B</Color>
             <Color x:Key="Foreground">#ffffff</Color>
