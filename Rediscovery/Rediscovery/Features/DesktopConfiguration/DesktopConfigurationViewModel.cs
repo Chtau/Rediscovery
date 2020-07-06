@@ -42,6 +42,7 @@ namespace Rediscovery.Features.DesktopConfiguration
                 if (item != null)
                 {
                     item.ConnectionState = round.OK ? SharedBase.Connection.Enums.ConnectionState.OK : SharedBase.Connection.Enums.ConnectionState.None;
+                    item.PingPingTime = round.PingPongTime;
                 }
             }
             catch (Exception ex)

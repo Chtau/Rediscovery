@@ -15,6 +15,7 @@
             <converter:ConnectionStateBoolConverter x:Key="connectionStateBoolConverter"/>
             <converter:ConnectionStateReverseBoolConverter x:Key="connectionStateReverseBoolConverter"/>
             <converter:FeatureIntegrationConverter x:Key="featureIntegrationConverter"/>
+            <converter:TimespanConverter x:Key="timespanConverter"/>
             <!--Global Styles-->
             <Color x:Key="Primary">#00796B</Color>
             <Color x:Key="Foreground">#ffffff</Color>

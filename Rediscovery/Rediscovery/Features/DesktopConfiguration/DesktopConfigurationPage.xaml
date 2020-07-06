@@ -46,6 +46,8 @@
                                     <StackLayout Padding="10, 0" Grid.Row="1" Orientation="Horizontal">
                                         <Label Text="{Binding ConnectionState, Converter={StaticResource connectionStateConverter}}" 
                                     LineBreakMode="NoWrap" FontSize="13" Style="{DynamicResource ListItemDetailTextStyle}"/>
+                                        <Label Padding="10, 0" Text="{Binding PingPingTime, Converter={StaticResource timespanConverter}}" 
+                                    LineBreakMode="NoWrap" FontSize="13" Style="{DynamicResource ListItemDetailTextStyle}"/>
                                     </StackLayout>
                                 </Grid>
                             </ViewCell>

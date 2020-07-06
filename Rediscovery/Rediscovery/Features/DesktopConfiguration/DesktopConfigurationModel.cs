@@ -17,6 +17,7 @@ namespace Rediscovery.Features.DesktopConfiguration
         private string _manifestClientName;
         private string _manifestClientVersion;
         private string _manifestAppMinimumVersion;
+        private TimeSpan? _pingPingTime;
 
         public Guid Id
         {
@@ -76,6 +77,12 @@ namespace Rediscovery.Features.DesktopConfiguration
         {
             get { return _manifestAppMinimumVersion; }
             set { SetProperty(ref _manifestAppMinimumVersion, value); }
+        }
+
+        public TimeSpan? PingPingTime
+        {
+            get { return _pingPingTime; }
+            set { SetProperty(ref _pingPingTime, value); }
         }
     }
 }

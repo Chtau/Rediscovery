@@ -52,6 +52,8 @@
                             <Label Grid.Column="1" Grid.Row="1" Text="{Binding Item.ConnectionState, Converter={StaticResource connectionStateConverter}}" FontSize="Medium"/>
                             <Label Grid.Column="0" Grid.Row="2" Text="LastConnection:" FontSize="Medium" />
                             <Label Grid.Column="1" Grid.Row="2" Text="{Binding Item.LastConnection}" FontSize="Medium"/>
+                            <Label Grid.Column="0" Grid.Row="3" Text="Time:" FontSize="Medium" />
+                            <Label Grid.Column="1" Grid.Row="3" Text="{Binding Item.PingPingTime, Converter={StaticResource timespanConverter}}" FontSize="Medium"/>
                         </Grid>
                     </StackLayout>
                 </ScrollView>

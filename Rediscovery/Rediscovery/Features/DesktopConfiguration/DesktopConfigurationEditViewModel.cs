@@ -56,6 +56,7 @@ namespace Rediscovery.Features.DesktopConfiguration
                 Title = "Edit Device";
                 var round = connectService.GetHeartbeat(item.Id);
                 item.ConnectionState = round.OK ? SharedBase.Connection.Enums.ConnectionState.OK : SharedBase.Connection.Enums.ConnectionState.None;
+                item.PingPingTime = round.PingPongTime;
                 Item = item;
                 IsConnectEnabled = true;
                 CanEdit = true;
@@ -165,6 +166,7 @@ namespace Rediscovery.Features.DesktopConfiguration
             {
                 var round = connectService.GetHeartbeat(desktopConfigurationId);
                 Item.ConnectionState = round.OK ? SharedBase.Connection.Enums.ConnectionState.OK : SharedBase.Connection.Enums.ConnectionState.None;
+                Item.PingPingTime = round.PingPongTime;
             }
             catch (Exception ex)
             {
