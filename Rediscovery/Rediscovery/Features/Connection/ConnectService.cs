@@ -163,14 +163,21 @@ namespace Rediscovery.Features.Connection
         {
             try
             {
-                _logger.LogTrace($"[Heartbeat] round trip received. ({e.PingPongTime?.TotalMilliseconds} ms)");
+                if (e.OK)
+                    _logger.LogTrace($"[Heartbeat] round trip received. ({e.PingPongTime?.TotalMilliseconds} ms)");
+                else
+                    _logger.LogTrace($"[Heartbeat] round trip abort received.");
+
                 if (!string.IsNullOrWhiteSpace(e.Identifier) && Guid.TryParse(e.Identifier, out Guid desktopConfigurationId))
                 {
                     bool shouldUpdate = false;
                     if (lastHeartbeatStates.ContainsKey(desktopConfigurationId))
                     {
                         if (lastHeartbeatStates[desktopConfigurationId]?.OK != e.OK)
+                        {
+                            lastHeartbeatStates[desktopConfigurationId].OK = e.OK;
                             shouldUpdate = true;
+                        }
                     } else
                     {
                         lastHeartbeatStates.Add(desktopConfigurationId, e);
@@ -181,8 +188,10 @@ namespace Rediscovery.Features.Connection
                         var item = desktopStore.GetItem(desktopConfigurationId);
                         item.ConnectionState = e.OK ? SharedBase.Connection.Enums.ConnectionState.OK : SharedBase.Connection.Enums.ConnectionState.None;
                         desktopStore.UpdateItem(item);
-                        HeartbeatStateChanges?.Invoke(this, desktopConfigurationId);
                     }
+                    lastHeartbeatStates[desktopConfigurationId].PingPongTime = e.PingPongTime;
+                    lastHeartbeatStates[desktopConfigurationId].PingStartDatetimeUTC = e.PingStartDatetimeUTC;
+                    HeartbeatStateChanges?.Invoke(this, desktopConfigurationId);
                 }
             }
             catch (Exception ex)

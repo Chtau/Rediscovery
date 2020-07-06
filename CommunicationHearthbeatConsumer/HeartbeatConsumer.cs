@@ -89,7 +89,10 @@ namespace CommunicationHeartbeatConsumer
                             {
                                 message.LastRoundTripTicks = (ulong)DateTime.UtcNow.Ticks - message.Ticks;
 
-                                ReceivedBeatRoundtrip?.Invoke(this, new RoundTripResult(identifier, true, new TimeSpan((long)message.LastRoundTripTicks), new DateTime((long)message.Ticks)));
+                                if (channel.State == ChannelState.Shutdown || channel.State == ChannelState.TransientFailure)
+                                    ReceivedBeatRoundtrip?.Invoke(this, new RoundTripResult(identifier, false));
+                                else
+                                    ReceivedBeatRoundtrip?.Invoke(this, new RoundTripResult(identifier, true, new TimeSpan((long)message.LastRoundTripTicks), new DateTime((long)message.Ticks)));
 
                                 await Task.Delay(PingResponseWaitingMilliseconds);
 
@@ -117,4 +120,3 @@ namespace CommunicationHeartbeatConsumer
         }
     }
 }
- 
