@@ -26,34 +26,29 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
-                                    <StackLayout Padding="10, 10, 10, 0" Grid.Row="0" Orientation="Horizontal">
-                                        <Label Text="{Binding Name}" 
-                       LineBreakMode="NoWrap" 
-                       Style="{DynamicResource ListItemTextStyle}" 
-                       FontSize="16" />
-                                        <Label Text="{Binding IPAddress}" 
-                       LineBreakMode="NoWrap"
-                       Style="{DynamicResource ListItemDetailTextStyle}"
-                       FontSize="13"
-                                               VerticalTextAlignment="End"/>
-                                    </StackLayout>
-                                    <StackLayout Padding="10, 0" Grid.Row="1" Orientation="Horizontal">
-                                        <Label Text="{Binding DesktopName}" 
-                       LineBreakMode="NoWrap"
-                       Style="{DynamicResource ListItemDetailTextStyle}"
-                       FontSize="13" />
-                                        <Label Text="{Binding DesktopOS}" 
-                       LineBreakMode="NoWrap"
-                       Style="{DynamicResource ListItemDetailTextStyle}"
-                       FontSize="13"
-                                               VerticalTextAlignment="End"/>
-                                    </StackLayout>
-                                </Grid>
+                                <Frame BorderColor="Orange" CornerRadius="10" HasShadow="True" Padding="5" Margin="5">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Image Grid.Column="0" Source="computer_line.png"></Image>
+                                        <Grid Grid.Column="1" Padding="10, 0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.Row="0" Grid.Column="0" Text="{Binding Name}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="16" />
+                                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding IPAddress}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemDetailTextStyle}" FontSize="13" VerticalTextAlignment="Center"/>
+                                            <Label Grid.Row="1" Grid.Column="0" Text="{Binding DesktopName}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemDetailTextStyle}" FontSize="13" />
+                                            <Label Grid.Row="1" Grid.Column="1" Text="{Binding DesktopOS}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemDetailTextStyle}" FontSize="13" VerticalTextAlignment="Center"/>
+                                        </Grid>
+                                    </Grid>
+                                </Frame>
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
