@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -20,7 +21,7 @@ namespace Rediscovery.Services
         {
             Task.Run(async () =>
             {
-                var listTasks = new Dictionary<DateTime, Task>();
+                var listTasks = new Dictionary<DateTime, Tuple<CancellationTokenSource, Task>>();
                 var removeKeys = new List<DateTime>();
                 SettingModel setting = (await Store.GetItemsAsync()).FirstOrDefault();
                 if (setting == null)
@@ -42,7 +43,7 @@ namespace Rediscovery.Services
                         {
                             try
                             {
-                                listTasks[item].Dispose();
+                                listTasks[item].Item1.Cancel();
                             }
                             catch (Exception ex)
                             {
@@ -53,7 +54,8 @@ namespace Rediscovery.Services
                     }
                     await Task.Delay(1100);
                     running = interupt.Invoke();
-                    listTasks.Add(DateTime.UtcNow, Task.Run(async () =>
+                    var token = new CancellationTokenSource();
+                    listTasks.Add(DateTime.UtcNow, new Tuple<CancellationTokenSource, Task>(token, Task.Run(async () =>
                     {
                         try
                         {
@@ -88,7 +90,7 @@ namespace Rediscovery.Services
                         {
                             _logger.LogError(ex);
                         }
-                    }));
+                    }, token.Token)));
                 } while (running);
                 foreach (var item in listTasks)
                 {
@@ -100,7 +102,7 @@ namespace Rediscovery.Services
                     {
                         try
                         {
-                            listTasks[item].Dispose();
+                            listTasks[item].Item1.Cancel();
                         }
                         catch (Exception ex)
                         {

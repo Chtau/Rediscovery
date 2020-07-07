@@ -19,6 +19,7 @@ namespace SharedBase.Discovery
 
         public ushort Port { get; set; }
 
+        [Obsolete("DesktopName should only be used")]
         public string Name { get; set; }
 
         public string DesktopName { get; set; }
