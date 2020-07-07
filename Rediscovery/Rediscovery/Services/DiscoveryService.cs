@@ -20,6 +20,8 @@ namespace Rediscovery.Services
         {
             Task.Run(async () =>
             {
+                var listTasks = new Dictionary<DateTime, Task>();
+                var removeKeys = new List<DateTime>();
                 SettingModel setting = (await Store.GetItemsAsync()).FirstOrDefault();
                 if (setting == null)
                 {
@@ -28,41 +30,85 @@ namespace Rediscovery.Services
                 bool running = true;
                 do
                 {
-                    try
+                    running = interupt.Invoke();
+                    foreach (var item in listTasks)
                     {
-                        running = interupt.Invoke();
-                        await Task.Delay(1000);
-                        var ServerEp = new IPEndPoint(IPAddress.Any, 0);
-                        var Client = new UdpClient();
-                        var RequestData = Encoding.ASCII.GetBytes("RediscoveryClient");
-
-                        Client.EnableBroadcast = true;
-                        // broadcast don't work in the vs android emulator due to virtual network problems... 
-                        int sendBytes = Client.Send(RequestData, RequestData.Length, new IPEndPoint(IPAddress.Broadcast, setting.DiscoveryPort));
-                        if (sendBytes == RequestData.Length)
-                        {
-                            await Task.Run(() =>
-                            {
-                                var ServerResponseData = Client.Receive(ref ServerEp);
-                                var ServerResponse = Encoding.ASCII.GetString(ServerResponseData);
-                                //callbackAnswer?.Invoke(ServerEp.Address.ToString());
-                                var serviceInfo = new SharedBase.Discovery.DiscoveryServiceInfo();
-                                serviceInfo.Parse(ServerResponse);
-                                callbackAnswer?.Invoke(serviceInfo);
-                                _logger.LogTrace($"Received {serviceInfo} from {ServerEp.Address}");
-
-                                Client.Close();
-                            });
-                        } else
-                        {
-                            _logger.LogInformation($"No valid Broadcast send (byte miss match Expected bytes:{RequestData.Length} send bytes:{sendBytes})");
-                        }
-                        running = interupt.Invoke();
-                    } catch (Exception ex)
-                    {
-                        _logger.LogError(ex);
+                        if (DateTime.UtcNow - item.Key > TimeSpan.FromSeconds(5))
+                            removeKeys.Add(item.Key);
                     }
+                    if (removeKeys.Count > 0)
+                    {
+                        foreach (var item in removeKeys)
+                        {
+                            try
+                            {
+                                listTasks[item].Dispose();
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError(ex);
+                            }
+                        }
+                        removeKeys.Clear();
+                    }
+                    await Task.Delay(1000);
+                    running = interupt.Invoke();
+                    listTasks.Add(DateTime.UtcNow, Task.Run(async () =>
+                    {
+                        try
+                        {
+                            var ServerEp = new IPEndPoint(IPAddress.Any, 0);
+                            var Client = new UdpClient();
+                            var RequestData = Encoding.ASCII.GetBytes("RediscoveryClient");
+
+                            Client.EnableBroadcast = true;
+                            // broadcast don't work in the vs android emulator due to virtual network problems... 
+                            int sendBytes = Client.Send(RequestData, RequestData.Length, new IPEndPoint(IPAddress.Broadcast, setting.DiscoveryPort));
+                            if (sendBytes == RequestData.Length)
+                            {
+                                await Task.Run(() =>
+                                {
+                                    var ServerResponseData = Client.Receive(ref ServerEp);
+                                    var ServerResponse = Encoding.ASCII.GetString(ServerResponseData);
+                                    //callbackAnswer?.Invoke(ServerEp.Address.ToString());
+                                    var serviceInfo = new SharedBase.Discovery.DiscoveryServiceInfo();
+                                    serviceInfo.Parse(ServerResponse);
+                                    callbackAnswer?.Invoke(serviceInfo);
+                                    _logger.LogTrace($"Received {serviceInfo} from {ServerEp.Address}");
+
+                                    Client.Close();
+                                });
+                            }
+                            else
+                            {
+                                _logger.LogInformation($"No valid Broadcast send (byte miss match Expected bytes:{RequestData.Length} send bytes:{sendBytes})");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex);
+                        }
+                    }));
                 } while (running);
+                foreach (var item in listTasks)
+                {
+                    removeKeys.Add(item.Key);
+                }
+                if (removeKeys.Count > 0)
+                {
+                    foreach (var item in removeKeys)
+                    {
+                        try
+                        {
+                            listTasks[item].Dispose();
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex);
+                        }
+                    }
+                    removeKeys.Clear();
+                }
             });
         }
     }
