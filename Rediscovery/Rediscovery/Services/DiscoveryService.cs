@@ -33,7 +33,7 @@ namespace Rediscovery.Services
                     running = interupt.Invoke();
                     foreach (var item in listTasks)
                     {
-                        if (DateTime.UtcNow - item.Key > TimeSpan.FromSeconds(5))
+                        if (DateTime.UtcNow - item.Key > TimeSpan.FromSeconds(1))
                             removeKeys.Add(item.Key);
                     }
                     if (removeKeys.Count > 0)
@@ -51,7 +51,7 @@ namespace Rediscovery.Services
                         }
                         removeKeys.Clear();
                     }
-                    await Task.Delay(1000);
+                    await Task.Delay(1100);
                     running = interupt.Invoke();
                     listTasks.Add(DateTime.UtcNow, Task.Run(async () =>
                     {
