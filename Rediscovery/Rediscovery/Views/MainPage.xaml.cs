@@ -19,8 +19,8 @@ namespace Rediscovery.Views
     {
         private SharedBase.Logging.ILogger _logger => DependencyService.Get<SharedBase.Logging.ILogger>() ?? new Logger();
         private Features.DesktopFeatures.IClientFeatureService clientFeatureService => DependencyService.Get<Features.DesktopFeatures.IClientFeatureService>() ?? new Features.DesktopFeatures.ClientFeatureService();
-        //private MainPageViewModel viewModel;
         private Dictionary<int, NavigationPage> MenuPages = new Dictionary<int, NavigationPage>();
+        public int ActiveMenu { get; set; } = 0;
 
         public MainPage()
         {
@@ -28,11 +28,11 @@ namespace Rediscovery.Views
 
             clientFeatureService.OpenFeatureSelectDialog += ClientFeatureService_OpenFeatureSelectDialog;
             clientFeatureService.RemoteFeatureRequest += ClientFeatureService_RemoteFeatureRequest;
-            //BindingContext = viewModel = new MainPageViewModel();
-            //viewModel.Load();
             MasterBehavior = MasterBehavior.Popover;
 
             MenuPages.Add((int)Sidebar.SidebarItemType.Home, (NavigationPage)Detail);
+            ActiveMenu = (int)Sidebar.SidebarItemType.Home;
+            sidebarDrawer.SetMenuActive(ActiveMenu);
         }
 
         public async Task NavigateFromMenu(int id)
@@ -60,6 +60,8 @@ namespace Rediscovery.Views
 
             if (newPage != null && Detail != newPage)
             {
+                ActiveMenu = id;
+                sidebarDrawer.SetMenuActive(ActiveMenu);
                 Detail = newPage;
 
                 if (Device.RuntimePlatform == Device.Android)

@@ -14,7 +14,7 @@
             x:Class="Rediscovery.Views.MainPage">
 
     <MasterDetailPage.Master>
-        <sidebar:SidebarDrawer />
+        <sidebar:SidebarDrawer x:Name="sidebarDrawer"/>
     </MasterDetailPage.Master>
 
     <MasterDetailPage.Detail>
