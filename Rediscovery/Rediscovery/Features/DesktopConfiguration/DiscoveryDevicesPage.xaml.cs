@@ -30,7 +30,7 @@ namespace Rediscovery.Features.DesktopConfiguration
             DiscoveryServiceInfo item = e.SelectedItem as DiscoveryServiceInfo;
             if (item != null)
             {
-                string answer = await DisplayPromptAsync("Save Desktop", "Save new Desktop with the following Name", "Yes", "Cancel", placeholder:"Desktop Name", initialValue:item.Name);
+                string answer = await DisplayPromptAsync("Save Desktop", "Save new Desktop with the following Name", "Yes", "Cancel", placeholder:"Desktop Name", initialValue:item.DesktopName);
                 if (!string.IsNullOrWhiteSpace(answer))
                 {
                     viewModel.StopDiscoveryCommand.Execute(null);
