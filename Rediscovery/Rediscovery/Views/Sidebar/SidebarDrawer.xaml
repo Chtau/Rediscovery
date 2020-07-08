@@ -7,27 +7,42 @@
              x:Class="Rediscovery.Views.Sidebar.SidebarDrawer"
              Title="Menu">
     <StackLayout VerticalOptions="FillAndExpand">
-        <ListView x:Name="ListViewMenu"
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackLayout Grid.Row="0" VerticalOptions="Center" HorizontalOptions="Center">
+                <Image Source="SidebarLogo.png"/>
+            </StackLayout>
+            <ScrollView Grid.Row="1">
+                <ListView x:Name="ListViewMenu"
                     HasUnevenRows="True">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <BoxView IsVisible="{Binding IsActive}" Grid.Column="0" HorizontalOptions="FillAndExpand" WidthRequest="5" Color="{StaticResource Primary}"/>
-                            <BoxView IsVisible="{Binding IsActive, Converter={StaticResource reverseBoolConverter}}" Grid.Column="0" HorizontalOptions="FillAndExpand" WidthRequest="5" Color="#D3D3D3"/>
-                            <StackLayout Grid.Column="1" Orientation="Horizontal" Padding="0,10,10,10">
-                                <Image IsVisible="{Binding IsActive}" Source="{Binding Icon}"/>
-                                <Image IsVisible="{Binding IsActive, Converter={StaticResource reverseBoolConverter}}" Source="{Binding IconNotActive}"/>
-                                <Label Text="{Binding Title}" d:Text="{Binding .}" FontSize="20" VerticalTextAlignment="Center"/>
-                            </StackLayout>
-                        </Grid>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <BoxView IsVisible="{Binding IsActive}" Grid.Column="0" HorizontalOptions="FillAndExpand" WidthRequest="5" Color="{StaticResource Primary}"/>
+                                    <BoxView IsVisible="{Binding IsActive, Converter={StaticResource reverseBoolConverter}}" Grid.Column="0" HorizontalOptions="FillAndExpand" WidthRequest="5" Color="#D3D3D3"/>
+                                    <StackLayout Grid.Column="1" Orientation="Horizontal" Padding="0,10,10,10">
+                                        <Image IsVisible="{Binding IsActive}" Source="{Binding Icon}"/>
+                                        <Image IsVisible="{Binding IsActive, Converter={StaticResource reverseBoolConverter}}" Source="{Binding IconNotActive}"/>
+                                        <Label Text="{Binding Title}" d:Text="{Binding .}" FontSize="20" VerticalTextAlignment="Center"/>
+                                    </StackLayout>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </ScrollView>
+            <StackLayout Grid.Row="2">
+                <Label x:Name="versionText" Text="" VerticalOptions="Start" HorizontalOptions="CenterAndExpand" />
+            </StackLayout>
+        </Grid>
     </StackLayout>
 </ContentPage>

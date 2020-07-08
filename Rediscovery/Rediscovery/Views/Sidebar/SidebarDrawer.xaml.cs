@@ -21,6 +21,8 @@ namespace Rediscovery.Views.Sidebar
         {
             InitializeComponent();
 
+            versionText.Text = "Rediscovery Mobile Client Version " + App.ClientVersion.ToString();
+
             menuItems = new List<SidebarMenuItem>
             {
                 new SidebarMenuItem {Id = SidebarItemType.Home, Title="Home", Icon = "home_fill_primary.png", IconNotActive = "home_fill_lightgray.png" },

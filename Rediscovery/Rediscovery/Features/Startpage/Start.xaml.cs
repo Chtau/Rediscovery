@@ -24,6 +24,9 @@ namespace Rediscovery.Features.Startpage
         public Start()
         {
             InitializeComponent();
+
+            versionText.Text = "Rediscovery Mobile Client Version " + App.ClientVersion.ToString();
+
             BindingContext = viewModel = new StartViewModel();
             clientFeatureService.ClientQueueDisplay += ClientFeatureService_ClientQueueDisplay;
             ClientFeatureQueue.IsVisible = clientFeatureService.HasQueueItem;

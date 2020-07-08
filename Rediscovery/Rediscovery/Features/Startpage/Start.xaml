@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:flex="clr-namespace:Flex.Controls;assembly=Flex"
              mc:Ignorable="d"
-             Title="Rediscovery v0.0.0"
+             Title="Rediscovery"
              x:Class="Rediscovery.Features.Startpage.Start">
     <ContentPage.Content>
         <Grid>
@@ -14,7 +14,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <StackLayout Margin="25" Grid.Row="0">
-                <Label FontSize="Medium" Text="Rediscovery Mobile Client Version 0.0.0"
+                <Label x:Name="versionText" FontSize="Medium" Text="Rediscovery Mobile Client Version 0.0.0"
                 VerticalOptions="Start" 
                 HorizontalOptions="CenterAndExpand" />
                 <Label VerticalOptions="Start" Margin="0,15,0,0"
