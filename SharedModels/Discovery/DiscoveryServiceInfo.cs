@@ -9,7 +9,6 @@ namespace SharedBase.Discovery
         private const string KeyIP = "ip";
         private const string KeyMeta = "meta";
         private const string KeyPort = "port";
-        private const string KeyName = "name";
         private const string KeyDesktopName = "desktopname";
         private const string KeyDesktopOS = "desktopos";
 
@@ -19,16 +18,13 @@ namespace SharedBase.Discovery
 
         public ushort Port { get; set; }
 
-        [Obsolete("DesktopName should only be used")]
-        public string Name { get; set; }
-
         public string DesktopName { get; set; }
 
         public string DesktopOS { get; set; }
 
         public override string ToString()
         {
-            return $"{KeyIP}:{IPAddress};{KeyMeta}:{Metadata};{KeyPort}:{Port};{KeyName}:{Name};{KeyDesktopName}:{DesktopName};{KeyDesktopOS}:{DesktopOS}";
+            return $"{KeyIP}:{IPAddress};{KeyMeta}:{Metadata};{KeyPort}:{Port};{KeyDesktopName}:{DesktopName};{KeyDesktopOS}:{DesktopOS}";
         }
 
         public void Parse(string value)
@@ -65,9 +61,6 @@ namespace SharedBase.Discovery
                                 case KeyPort:
                                     if (ushort.TryParse(keyValue[1], out ushort port))
                                         Port = port;
-                                    break;
-                                case KeyName:
-                                    Name = keyValue[1];
                                     break;
                                 case KeyDesktopName:
                                     DesktopName = keyValue[1];

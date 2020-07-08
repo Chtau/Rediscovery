@@ -35,7 +35,7 @@ namespace Rediscovery.Features.DesktopConfiguration
                 _userNotification.ShowToast("Start discover devices");
                 discoveryService.Boardcast((answer) =>
                 {
-                    var item = FoundDevices.FirstOrDefault(x => x.Name == answer.Name);
+                    var item = FoundDevices.FirstOrDefault(x => x.DesktopName == answer.DesktopName);
                     if (item != null)
                     {
                         item.IPAddress = answer.IPAddress;
