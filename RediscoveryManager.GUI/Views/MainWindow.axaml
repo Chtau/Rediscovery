@@ -3,7 +3,8 @@
         xmlns:vm="clr-namespace:RediscoveryManager.GUI.ViewModels;assembly=RediscoveryManager.GUI"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" 
+        Width="500" Height="400"
         x:Class="RediscoveryManager.GUI.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="RediscoveryManager.GUI">
@@ -12,6 +13,28 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+  <TabControl>
+    <TabItem Header="Circle" VerticalContentAlignment="Center">
+      <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    </TabItem>
+    <TabItem>
+      <TabItem.Header>
+        <TextBlock VerticalAlignment="Center">Triangle</TextBlock>
+      </TabItem.Header>
+      <StackPanel>
+        <TextBlock Text="I am in the triangle page ! I'll put a button to show you that each page contains what you want." HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Button>A button in the triangle page !</Button>
+      </StackPanel>
+    </TabItem>
+    <TabItem>
+      <TabItem.Header>
+        <TextBlock VerticalAlignment="Center">Square</TextBlock>
+      </TabItem.Header>
+      <StackPanel Orientation="Horizontal">
+        <TextBlock Text="Square : " HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Rectangle Fill="Blue" Width="63" Height="41"/>
+      </StackPanel>
+    </TabItem>
+  </TabControl>
 
 </Window>
