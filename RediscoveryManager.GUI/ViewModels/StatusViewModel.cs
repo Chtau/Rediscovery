@@ -25,6 +25,20 @@ namespace RediscoveryManager.GUI.ViewModels
             }
         }
 
+        //private SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration _connectionConfiguration;
+        public SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration ConnectionConfiguration { get; set; }
+        /*{
+            get
+            {
+                if (_connectionConfiguration == null)
+                    _connectionConfiguration = Locator.Current.GetService<SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration>();
+                return _connectionConfiguration;
+            }
+            set
+            {
+                _connectionConfiguration = value;
+            }
+        }*/
         public SharedBase.Connection.Enums.ConnectionState State { get; set; }
         public bool CanConnect { get; set; }
         public bool CanDisconnect { get; set; }
@@ -33,6 +47,7 @@ namespace RediscoveryManager.GUI.ViewModels
         {
             _manager = Locator.Current.GetService<IManager>();
             _logger = Locator.Current.GetService<SharedBase.Logging.ILogger>();
+            ConnectionConfiguration = Locator.Current.GetService<SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration>();
 
             _manager.AfterConnecting += (obj, args) =>
             {
@@ -64,18 +79,23 @@ namespace RediscoveryManager.GUI.ViewModels
             {
                 var model = new ConnectionConfigurationViewModel
                 {
-                    DeviceIdentifier = null,
-                    IPAddress = null,
-                    Port = null
+                    DeviceIdentifier = ConnectionConfiguration.DeviceIdentifier,
+                    IPAddress = ConnectionConfiguration.IP,
+                    Port = ConnectionConfiguration.Port
                 };
                 var configDialog = new Windows.ConnectionConfiguration(model);
-                var desktopApp = (IClassicDesktopStyleApplicationLifetime)App.Current.ApplicationLifetime;
-                var result = await configDialog.ShowDialog<bool>(desktopApp.MainWindow);
+                var result = await configDialog.ShowDialog<bool>(Program.MainWindow);
                 if (result)
                 {
-                    if (!string.IsNullOrWhiteSpace(model.IPAddress) && (model.Port.HasValue && model.Port.Value > 0) && !string.IsNullOrWhiteSpace(model.DeviceIdentifier))
+                    ConnectionConfiguration.DeviceIdentifier = model.DeviceIdentifier;
+                    if (model.Port.HasValue)
+                        ConnectionConfiguration.Port = model.Port.Value;
+                    else
+                        ConnectionConfiguration.Port = -1;
+                    ConnectionConfiguration.IP = model.IPAddress;
+                    if (!string.IsNullOrWhiteSpace(ConnectionConfiguration.IP) && (ConnectionConfiguration.Port > 0) && !string.IsNullOrWhiteSpace(ConnectionConfiguration.DeviceIdentifier))
                     {
-                        _manager.SetConnectionValues(model.IPAddress, model.Port.Value, model.DeviceIdentifier);
+                        _manager.SetConnectionValues(ConnectionConfiguration.IP, ConnectionConfiguration.Port, ConnectionConfiguration.DeviceIdentifier);
                         Connect();
                     } else
                     {
