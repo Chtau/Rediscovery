@@ -14,6 +14,7 @@ namespace RediscoveryManager.GUI.ViewModels
     {
         private readonly IManager _manager;
         private readonly SharedBase.Logging.ILogger _logger;
+        private readonly Shared.ISharedEvents _sharedEvents;
         private Notifications.INotificationService _notification;
 
         public Notifications.INotificationService Notification
@@ -88,6 +89,7 @@ namespace RediscoveryManager.GUI.ViewModels
         {
             _manager = Locator.Current.GetService<IManager>();
             _logger = Locator.Current.GetService<SharedBase.Logging.ILogger>();
+            _sharedEvents = Locator.Current.GetService<Shared.ISharedEvents>();
             ConnectionConfiguration = Locator.Current.GetService<SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration>();
 
             _manager.AfterConnecting += (obj, args) =>
@@ -115,10 +117,17 @@ namespace RediscoveryManager.GUI.ViewModels
         {
             try
             {
-                _manager.SetConnectionValues(ConnectionConfiguration.IP, ConnectionConfiguration.Port, ConnectionConfiguration.DeviceIdentifier);
-                _manager.TryConnect();
-                State = _manager.ManagerConnectionState.ConnectionState;
-                AllowConnect = _manager.ManagerConnectionState.CanConnect;
+                _sharedEvents.InvokeLoading(this, true);
+                CanConnect = false;
+                CanDisconnect = false;
+                Task.Run(() =>
+                {
+                    _manager.SetConnectionValues(ConnectionConfiguration.IP, ConnectionConfiguration.Port, ConnectionConfiguration.DeviceIdentifier);
+                    _manager.TryConnect();
+                    State = _manager.ManagerConnectionState.ConnectionState;
+                    AllowConnect = _manager.ManagerConnectionState.CanConnect;
+                    _sharedEvents.InvokeLoading(this, false);
+                });
             }
             catch (Exception ex)
             {

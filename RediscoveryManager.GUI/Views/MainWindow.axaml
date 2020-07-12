@@ -25,32 +25,34 @@
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
     <StackPanel Grid.Row="0">
       <pages:Status/>
     </StackPanel>
     <TabControl Grid.Row="1">
-    <TabItem Header="Devices" VerticalContentAlignment="Center">
-      <pages:Devices/>
-    </TabItem>
-    <TabItem Header="Active Devices" VerticalContentAlignment="Center">
-      <pages:ActiveDevices/>
-    </TabItem>
-    <TabItem Header="Pending Devices" VerticalContentAlignment="Center">
-      <pages:PendingDevices/>
-    </TabItem>
-    <TabItem>
-      <TabItem.Header>
-        <TextBlock VerticalAlignment="Center">Manifest</TextBlock>
-      </TabItem.Header>
-      <pages:Manifest/>
-    </TabItem>
-    <TabItem>
-      <TabItem.Header>
-        <TextBlock VerticalAlignment="Center">Features</TextBlock>
-      </TabItem.Header>
-      <pages:Features/>
-    </TabItem>
-  </TabControl>
+      <TabItem Header="Devices" VerticalContentAlignment="Center">
+        <pages:Devices/>
+      </TabItem>
+      <TabItem Header="Active Devices" VerticalContentAlignment="Center">
+        <pages:ActiveDevices/>
+      </TabItem>
+      <TabItem Header="Pending Devices" VerticalContentAlignment="Center">
+        <pages:PendingDevices/>
+      </TabItem>
+      <TabItem>
+        <TabItem.Header>
+          <TextBlock VerticalAlignment="Center">Manifest</TextBlock>
+        </TabItem.Header>
+        <pages:Manifest/>
+      </TabItem>
+      <TabItem>
+        <TabItem.Header>
+          <TextBlock VerticalAlignment="Center">Features</TextBlock>
+        </TabItem.Header>
+        <pages:Features/>
+      </TabItem>
+    </TabControl>
+    <ProgressBar Grid.Row="2" IsIndeterminate="True" IsVisible="{Binding IsLoading}" Foreground="{DynamicResource PrimaryBrush}" Background="{DynamicResource PrimaryLightBrush}"/>
   </Grid>
 </Window>

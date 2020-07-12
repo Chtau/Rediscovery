@@ -13,13 +13,17 @@
       <converter:IntNotMinusStringValueConverter x:Key="intNotMinusString"/>
       <Color x:Key="WarningColor">#E54848</Color>
       <SolidColorBrush x:Key="WarningColorBrush" Color="{DynamicResource WarningColor}"></SolidColorBrush>
+      <Color x:Key="PrimaryLightColor">#40008080</Color>
+      <Color x:Key="PrimaryColor">#008080</Color>
+      <SolidColorBrush x:Key="PrimaryLightBrush" Color="{DynamicResource PrimaryLightColor}"></SolidColorBrush>
+      <SolidColorBrush x:Key="PrimaryBrush" Color="{DynamicResource PrimaryColor}"></SolidColorBrush>
     </Application.Resources>
 
   <Application.Styles>
       <StyleInclude Source="avares://Avalonia.Themes.Default/DefaultTheme.xaml"/>
         <StyleInclude Source="avares://Avalonia.Themes.Default/Accents/BaseLight.xaml"/>
     <Style Selector="Button.Primary">
-      <Setter Property="Background" Value="Teal"/>
+      <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
       <Setter Property="Foreground" Value="White"/>
     </Style>
     <Style Selector="Button.Warning">
