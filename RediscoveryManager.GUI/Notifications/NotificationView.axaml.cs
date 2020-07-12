@@ -1,18 +1,14 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Splat;
 
-namespace RediscoveryManager.GUI.Views
+namespace RediscoveryManager.GUI.Notifications
 {
-    public class MainWindow : Window
+    public class NotificationView : UserControl
     {
-        public MainWindow()
+        public NotificationView()
         {
-            InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
+            this.InitializeComponent();
         }
 
         private void InitializeComponent()

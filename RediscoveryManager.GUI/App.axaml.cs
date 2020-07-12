@@ -28,6 +28,7 @@ namespace RediscoveryManager.GUI
                 {
                     DataContext = new MainWindowViewModel(),
                 };
+                RegisterDependencies(desktop.MainWindow);
             }
 
             base.OnFrameworkInitializationCompleted();
@@ -37,6 +38,11 @@ namespace RediscoveryManager.GUI
         {
             Locator.CurrentMutable.RegisterConstant(SharedBase.Logging.DiagnosticsLoggerProvider.Instance, typeof(SharedBase.Logging.ILogger));
             Locator.CurrentMutable.RegisterConstant(new Manager(SharedBase.Logging.DiagnosticsLoggerProvider.Instance), typeof(IManager));
+        }
+
+        private void RegisterDependencies(Window window)
+        {
+            Locator.CurrentMutable.RegisterConstant(new Notifications.NotificationService(window), typeof(Notifications.INotificationService));
         }
     }
 }

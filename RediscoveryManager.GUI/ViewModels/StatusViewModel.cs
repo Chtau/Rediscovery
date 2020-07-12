@@ -13,6 +13,17 @@ namespace RediscoveryManager.GUI.ViewModels
     {
         private readonly IManager _manager;
         private readonly SharedBase.Logging.ILogger _logger;
+        private Notifications.INotificationService _notification;
+
+        public Notifications.INotificationService Notification
+        {
+            get
+            {
+                if (_notification == null)
+                    _notification = Locator.Current.GetService<Notifications.INotificationService>();
+                return _notification;
+            }
+        }
 
         public SharedBase.Connection.Enums.ConnectionState State { get; set; }
         public bool CanConnect { get; set; }
@@ -68,7 +79,7 @@ namespace RediscoveryManager.GUI.ViewModels
                         Connect();
                     } else
                     {
-                        // TODO: not all values are valid
+                        Notification.Show("Connection configuration", "Connection configuration is missing some Values");
                     }
                 }
             } catch (Exception ex)
