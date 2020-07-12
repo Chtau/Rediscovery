@@ -9,6 +9,7 @@
 
     <Application.Resources>
       <converter:ConnectionStateColorConverter x:Key="connectionStateColor"/>
+      <converter:AllowConnectColorConverter x:Key="allowConnectColor"/>
       <converter:IntNotMinusStringValueConverter x:Key="intNotMinusString"/>
       <Color x:Key="WarningColor">#E54848</Color>
       <SolidColorBrush x:Key="WarningColorBrush" Color="{DynamicResource WarningColor}"></SolidColorBrush>

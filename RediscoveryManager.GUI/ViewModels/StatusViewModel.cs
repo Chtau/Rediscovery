@@ -27,7 +27,17 @@ namespace RediscoveryManager.GUI.ViewModels
         }
 
         public SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration ConnectionConfiguration { get; set; }
-        //this.RaiseAndSetIfChanged(ref appLaunchState, value);
+
+        private SharedBase.Connection.Enums.AllowConnect allowConnect;
+        public SharedBase.Connection.Enums.AllowConnect AllowConnect
+        {
+            get { return allowConnect; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref allowConnect, value);
+            }
+        }
+
         private SharedBase.Connection.Enums.ConnectionState state;
         public SharedBase.Connection.Enums.ConnectionState State
         {
@@ -82,6 +92,7 @@ namespace RediscoveryManager.GUI.ViewModels
 
             _manager.AfterConnecting += (obj, args) =>
             {
+                AllowConnect = _manager.ManagerConnectionState.CanConnect;
                 State = _manager.ManagerConnectionState.ConnectionState;
             };
             State = _manager.ManagerConnectionState.ConnectionState;
@@ -106,6 +117,8 @@ namespace RediscoveryManager.GUI.ViewModels
             {
                 _manager.SetConnectionValues(ConnectionConfiguration.IP, ConnectionConfiguration.Port, ConnectionConfiguration.DeviceIdentifier);
                 _manager.TryConnect();
+                State = _manager.ManagerConnectionState.ConnectionState;
+                AllowConnect = _manager.ManagerConnectionState.CanConnect;
             }
             catch (Exception ex)
             {

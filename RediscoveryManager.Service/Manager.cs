@@ -19,6 +19,7 @@ namespace RediscoveryManager.Service
         public SharedBase.Connection.Manifest Manifest { get; private set; }
 
         public event EventHandler<SharedBase.Connection.Enums.ConnectionState> AfterConnecting;
+        public event EventHandler<SharedBase.Connection.Enums.AllowConnect> GreetingsReply;
         public event EventHandler DeviceCollectionChanged;
         public event EventHandler FeaturesCollectionChanged;
         public event EventHandler<Guid> PendingDeviceResolved;
@@ -36,7 +37,6 @@ namespace RediscoveryManager.Service
             authenticationConsumer = new AuthenticationConsumerService(logger ?? SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
             greetingConsumer = new GreetingConsumerService(logger ?? SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
             resourceConsumer = new ResourceConsumerService(logger ?? SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
-
             authenticationConsumer.ReceivedManifestReply += (obj, args) =>
             {
                 Manifest = args;
@@ -139,6 +139,7 @@ namespace RediscoveryManager.Service
                     DeviceIdentifier = CurrentConnection.DeviceIdentifier,
                 });
             }
+            GreetingsReply?.Invoke(this, ManagerConnectionState.CanConnect);
             return ManagerConnectionState.CanConnect == SharedBase.Connection.Enums.AllowConnect.OK;
         }
 
