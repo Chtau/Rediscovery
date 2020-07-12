@@ -20,6 +20,12 @@ namespace RediscoveryManager.GUI.Windows
         public ConnectionConfiguration(ConnectionConfigurationViewModel viewModel) : this()
         {
             DataContext = model = viewModel;
+            model.Close += Model_Close;
+        }
+
+        private void Model_Close(object sender, bool e)
+        {
+            Close(e);
         }
 
         private void InitializeComponent()

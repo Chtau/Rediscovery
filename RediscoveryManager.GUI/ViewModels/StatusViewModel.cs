@@ -5,6 +5,7 @@ using Splat;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace RediscoveryManager.GUI.ViewModels
 {
@@ -31,7 +32,14 @@ namespace RediscoveryManager.GUI.ViewModels
 
         public void Connect()
         {
-
+            try
+            {
+                _manager.TryConnect();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+            }
         }
 
         public void Disconnect()
@@ -39,7 +47,7 @@ namespace RediscoveryManager.GUI.ViewModels
 
         }
 
-        public void EditConnection()
+        public async Task EditConnection()
         {
             try
             {
@@ -51,7 +59,18 @@ namespace RediscoveryManager.GUI.ViewModels
                 };
                 var configDialog = new Windows.ConnectionConfiguration(model);
                 var desktopApp = (IClassicDesktopStyleApplicationLifetime)App.Current.ApplicationLifetime;
-                configDialog.ShowDialog(desktopApp.MainWindow);
+                var result = await configDialog.ShowDialog<bool>(desktopApp.MainWindow);
+                if (result)
+                {
+                    if (!string.IsNullOrWhiteSpace(model.IPAddress) && (model.Port.HasValue && model.Port.Value > 0) && !string.IsNullOrWhiteSpace(model.DeviceIdentifier))
+                    {
+                        _manager.SetConnectionValues(model.IPAddress, model.Port.Value, model.DeviceIdentifier);
+                        Connect();
+                    } else
+                    {
+                        // TODO: not all values are valid
+                    }
+                }
             } catch (Exception ex)
             {
                 _logger.LogError(ex);

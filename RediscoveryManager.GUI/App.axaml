@@ -10,10 +10,24 @@
     <Application.Resources>
       <converter:ConnectionStateColorConverter x:Key="connectionStateColor"/>
       <converter:IntNotMinusStringValueConverter x:Key="intNotMinusString"/>
+      <Color x:Key="WarningColor">#E54848</Color>
+      <SolidColorBrush x:Key="WarningColorBrush" Color="{DynamicResource WarningColor}"></SolidColorBrush>
     </Application.Resources>
 
   <Application.Styles>
       <StyleInclude Source="avares://Avalonia.Themes.Default/DefaultTheme.xaml"/>
         <StyleInclude Source="avares://Avalonia.Themes.Default/Accents/BaseLight.xaml"/>
-    </Application.Styles>
+    <Style Selector="Button.Primary">
+      <Setter Property="Background" Value="Teal"/>
+      <Setter Property="Foreground" Value="White"/>
+    </Style>
+    <Style Selector="Button.Warning">
+      <Setter Property="Background" Value="{DynamicResource WarningColorBrush}"/>
+      <Setter Property="Foreground" Value="White"/>
+    </Style>
+    <Style Selector="Button.Ok">
+      <Setter Property="Background" Value="Green"/>
+      <Setter Property="Foreground" Value="White"/>
+    </Style>
+  </Application.Styles>
 </Application>
