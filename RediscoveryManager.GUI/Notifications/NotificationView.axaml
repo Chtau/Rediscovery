@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              x:Class="RediscoveryManager.GUI.Notifications.NotificationView">
-  <Border Padding="12" MinHeight="20" Background="DodgerBlue">
+  <Border Padding="12" MinHeight="20" Background="DodgerBlue" BorderBrush="Blue">
     <Grid ColumnDefinitions="Auto,*">
       <Panel Margin="0,0,12,0" Width="25" Height="25" VerticalAlignment="Top">
         <TextBlock Text="&#xE115;" FontFamily="Segoe UI Symbol" FontSize="20" TextAlignment="Center" VerticalAlignment="Center"/>
@@ -11,8 +11,8 @@
       <DockPanel Grid.Column="1">
         <TextBlock DockPanel.Dock="Top" Text="{Binding Title}" FontWeight="Medium" />
         <StackPanel Spacing="20" DockPanel.Dock="Bottom" Margin="0,8,0,0" Orientation="Horizontal">
-          <Button Content="No" DockPanel.Dock="Right" NotificationCard.CloseOnClick="True" Command="{Binding NoCommand}"  Margin="0,0,8,0" />
-          <Button Content="Yes" DockPanel.Dock="Right" NotificationCard.CloseOnClick="True" Command="{Binding YesCommand}"/>
+          <Button Classes="Ok" BorderBrush="Black" Content="Yes" DockPanel.Dock="Right" NotificationCard.CloseOnClick="True" Command="{Binding YesCommand}"/>
+          <Button Classes="Warning" BorderBrush="Black" Content="No" DockPanel.Dock="Right" NotificationCard.CloseOnClick="True" Command="{Binding NoCommand}"  Margin="0,0,8,0" />
         </StackPanel>
         <TextBlock Text="{Binding Message}" TextWrapping="Wrap" Opacity=".8" Margin="0,8,0,0"/>
       </DockPanel>

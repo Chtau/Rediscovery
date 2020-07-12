@@ -45,8 +45,8 @@ namespace RediscoveryManager.GUI
             {
                 DataContext = new MainWindowViewModel()
             };
-            app.Run(MainWindow);
             RegisterDependencies(MainWindow);
+            app.Run(MainWindow);
         }
 
         private static void RegisterDependencies()

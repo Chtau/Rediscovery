@@ -14,10 +14,21 @@ namespace RediscoveryManager.GUI.ViewModels
         private readonly IManager _manager;
         private readonly SharedBase.Logging.ILogger _logger;
         private readonly Shared.ISharedEvents _sharedEvents;
+        private Notifications.INotificationService _notification;
+
+        public Notifications.INotificationService Notification
+        {
+            get
+            {
+                if (_notification == null)
+                    _notification = Locator.Current.GetService<Notifications.INotificationService>();
+                return _notification;
+            }
+        }
 
         private ObservableCollection<DeviceInfoViewModelExtension> items;
-        public ObservableCollection<DeviceInfoViewModelExtension> Items 
-        { 
+        public ObservableCollection<DeviceInfoViewModelExtension> Items
+        {
             get { return items; }
             set
             {
@@ -36,19 +47,28 @@ namespace RediscoveryManager.GUI.ViewModels
                 var newCollection = new List<DeviceInfoViewModelExtension>();
                 foreach (var item in _manager.Devices)
                 {
-                    var newItem = new DeviceInfoViewModelExtension(item);
+                    var newItem = new DeviceInfoViewModelExtension(item, OnDeviceDeleteCallback);
                     newCollection.Add(newItem);
                 }
                 Items = new ObservableCollection<DeviceInfoViewModelExtension>(newCollection);
             };
         }
 
-        public void DeleteDevice(SharedBase.Device.DeviceInfo deviceInfo)
+        private void OnDeviceDeleteCallback(DeviceInfoViewModelExtension item)
         {
-            // TODO: add callback for the user control view model
-            System.Diagnostics.Debug.Print("Delete device");
+            try
+            {
+                Notification.Show("Delete Device", $"Are you sure you want to delete the Device \"{item.Name}\" ?", result =>
+                {
+                    if (result)
+                    {
+                        _manager.TryDeleteDevice(item.Id);
+                    }
+                });
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex);
+            }
         }
-
-        
     }
 }

@@ -162,6 +162,15 @@ namespace RediscoveryManager.Service
                 ConnectionState = SharedBase.Connection.Enums.ConnectionState.None
             };
             Manifest = null;
+            Devices.Clear();
+            ActiveDevices.Clear();
+            PendingDevices.Clear();
+            Features.Clear();
+            AfterConnecting?.Invoke(this, ManagerConnectionState.ConnectionState);
+            GreetingsReply?.Invoke(this, ManagerConnectionState.CanConnect);
+            DeviceCollectionChanged?.Invoke(this, EventArgs.Empty);
+            FeaturesCollectionChanged?.Invoke(this, EventArgs.Empty);
+            ManifestChanged?.Invoke(this, EventArgs.Empty);
             if (tokenSource != null)
             {
                 try

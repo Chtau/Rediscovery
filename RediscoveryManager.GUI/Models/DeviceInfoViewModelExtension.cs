@@ -6,7 +6,9 @@ namespace RediscoveryManager.GUI.Models
 {
     public class DeviceInfoViewModelExtension : SharedBase.Device.DeviceInfo
     {
-        public DeviceInfoViewModelExtension(SharedBase.Device.DeviceInfo oldBase)
+        public Action<DeviceInfoViewModelExtension> DeleteCallback { get; set; }
+
+        public DeviceInfoViewModelExtension(SharedBase.Device.DeviceInfo oldBase, Action<DeviceInfoViewModelExtension> deleteCallback)
         {
             base.AllowAccess = oldBase.AllowAccess;
             base.DeviceType = oldBase.DeviceType;
@@ -19,11 +21,13 @@ namespace RediscoveryManager.GUI.Models
             base.OSVersion = oldBase.OSVersion;
             base.Platform = oldBase.Platform;
             base.RequestTime = oldBase.RequestTime;
+
+            DeleteCallback = deleteCallback;
         }
 
         public void DeleteDevice()
         {
-            System.Diagnostics.Debug.Print("Delete device");
+            DeleteCallback?.Invoke(this);
         }
     }
 }
