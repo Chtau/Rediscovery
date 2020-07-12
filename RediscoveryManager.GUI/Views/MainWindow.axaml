@@ -8,9 +8,7 @@
         Width="500" Height="400"
         x:Class="RediscoveryManager.GUI.Views.MainWindow"
         Icon="/Assets/rediscovery.ico"
-        Foreground="{DynamicResource ThemeForegroundBrush}"
-        FontSize="{DynamicResource FontSizeNormal}"
-        Title="RediscoveryManager.GUI">
+        Title="Rediscovery Manager">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>

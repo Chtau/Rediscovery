@@ -6,9 +6,12 @@ namespace RediscoveryManager.GUI.Pages
 {
     public class Status : UserControl
     {
+        private readonly ViewModels.StatusViewModel model;
+
         public Status()
         {
             this.InitializeComponent();
+            DataContext = model = new ViewModels.StatusViewModel();
         }
 
         private void InitializeComponent()
