@@ -5,7 +5,6 @@
     <ApplicationIcon>Assets\rediscovery.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
     <AvaloniaResource Include="Assets\**" />
     <AvaloniaResource Include="**\*.xaml">
       <SubType>Designer</SubType>

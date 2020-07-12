@@ -13,8 +13,10 @@
       <converter:IntNotMinusStringValueConverter x:Key="intNotMinusString"/>
       <Color x:Key="WarningColor">#E54848</Color>
       <SolidColorBrush x:Key="WarningColorBrush" Color="{DynamicResource WarningColor}"></SolidColorBrush>
+      <Color x:Key="PrimaryLightHoverColor">#66008080</Color>
       <Color x:Key="PrimaryLightColor">#40008080</Color>
       <Color x:Key="PrimaryColor">#008080</Color>
+      <SolidColorBrush x:Key="PrimaryLightHoverBrush" Color="{DynamicResource PrimaryLightHoverColor}"></SolidColorBrush>
       <SolidColorBrush x:Key="PrimaryLightBrush" Color="{DynamicResource PrimaryLightColor}"></SolidColorBrush>
       <SolidColorBrush x:Key="PrimaryBrush" Color="{DynamicResource PrimaryColor}"></SolidColorBrush>
     </Application.Resources>

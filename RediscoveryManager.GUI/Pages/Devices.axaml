@@ -4,5 +4,40 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="RediscoveryManager.GUI.Pages.Devices">
-    Welcome to Avalonia!
+  <StackPanel>
+    <ScrollViewer Name="scroller" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+      <ItemsRepeater Name="repeater" Background="Transparent" Items="{Binding Items}">
+        <ItemsRepeater.ItemTemplate>
+          <DataTemplate>
+            <Border Margin="5, 5, 5, 0" Background="{DynamicResource PrimaryLightBrush}" BorderThickness="2" BorderBrush="{DynamicResource PrimaryBrush}">
+              <Grid Margin="5">
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="Auto"/>
+                  <RowDefinition Height="Auto"/>
+                  <RowDefinition Height="Auto"/>
+                  <RowDefinition Height="Auto"/>
+                  <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0" Margin="0, 0, 10, 0" Text="Identifier"/>
+                <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Identifier}"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" Margin="0, 0, 10, 0" Text="Name"/>
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Name}"/>
+                <TextBlock Grid.Column="0" Grid.Row="2" Margin="0, 0, 10, 0" Text="Model"/>
+                <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding Model}"/>
+                <TextBlock Grid.Column="0" Grid.Row="3" Margin="0, 0, 10, 0" Text="OS"/>
+                <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding OSVersion}"/>
+                <StackPanel Grid.ColumnSpan="2" Grid.Row="4">
+                  <Button Classes="Warning" Command="{Binding DeleteDevice}" HorizontalAlignment="Left">Delete</Button>
+                </StackPanel>
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ItemsRepeater.ItemTemplate>
+      </ItemsRepeater>
+    </ScrollViewer>
+  </StackPanel>
 </UserControl>
