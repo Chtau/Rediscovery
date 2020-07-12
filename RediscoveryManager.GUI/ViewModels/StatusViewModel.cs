@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using ReactiveUI;
 using RediscoveryManager.Service;
 using Splat;
 using System;
@@ -25,23 +26,53 @@ namespace RediscoveryManager.GUI.ViewModels
             }
         }
 
-        //private SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration _connectionConfiguration;
         public SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration ConnectionConfiguration { get; set; }
-        /*{
-            get
-            {
-                if (_connectionConfiguration == null)
-                    _connectionConfiguration = Locator.Current.GetService<SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration>();
-                return _connectionConfiguration;
-            }
+        //this.RaiseAndSetIfChanged(ref appLaunchState, value);
+        private SharedBase.Connection.Enums.ConnectionState state;
+        public SharedBase.Connection.Enums.ConnectionState State
+        {
+            get { return state; }
             set
             {
-                _connectionConfiguration = value;
+                this.RaiseAndSetIfChanged(ref state, value);
+                switch (state)
+                {
+                    case SharedBase.Connection.Enums.ConnectionState.None:
+                    case SharedBase.Connection.Enums.ConnectionState.Error:
+                    case SharedBase.Connection.Enums.ConnectionState.Warning:
+                    case SharedBase.Connection.Enums.ConnectionState.Offline:
+                    case SharedBase.Connection.Enums.ConnectionState.Denied:
+                    case SharedBase.Connection.Enums.ConnectionState.WaitForApprovel:
+                        CanDisconnect = false;
+                        CanConnect = true;
+                        break;
+                    case SharedBase.Connection.Enums.ConnectionState.OK:
+                        CanDisconnect = true;
+                        CanConnect = false;
+                        break;
+                    default:
+                        break;
+                }
             }
-        }*/
-        public SharedBase.Connection.Enums.ConnectionState State { get; set; }
-        public bool CanConnect { get; set; }
-        public bool CanDisconnect { get; set; }
+        }
+        private bool canConnect;
+        public bool CanConnect 
+        { 
+            get { return canConnect; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref canConnect, value);
+            }
+        }
+        private bool canDisconnect;
+        public bool CanDisconnect 
+        { 
+            get { return canDisconnect; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref canDisconnect, value);
+            }
+        }
 
         public StatusViewModel()
         {
@@ -54,12 +85,26 @@ namespace RediscoveryManager.GUI.ViewModels
                 State = _manager.ManagerConnectionState.ConnectionState;
             };
             State = _manager.ManagerConnectionState.ConnectionState;
+            if (!string.IsNullOrWhiteSpace(ConnectionConfiguration.IP) && (ConnectionConfiguration.Port > 0) && !string.IsNullOrWhiteSpace(ConnectionConfiguration.DeviceIdentifier))
+            {
+                CanConnect = true;
+                CanDisconnect = false;
+            } else
+            {
+                CanConnect = false;
+                CanDisconnect = false;
+            }
+            if (ConnectionConfiguration.AutoConnect)
+            {
+                Connect();
+            }
         }
 
         public void Connect()
         {
             try
             {
+                _manager.SetConnectionValues(ConnectionConfiguration.IP, ConnectionConfiguration.Port, ConnectionConfiguration.DeviceIdentifier);
                 _manager.TryConnect();
             }
             catch (Exception ex)
@@ -70,7 +115,15 @@ namespace RediscoveryManager.GUI.ViewModels
 
         public void Disconnect()
         {
-
+            try
+            {
+                _manager.Disconnect();
+                State = _manager.ManagerConnectionState.ConnectionState;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+            }
         }
 
         public async Task EditConnection()
@@ -95,7 +148,7 @@ namespace RediscoveryManager.GUI.ViewModels
                     ConnectionConfiguration.IP = model.IPAddress;
                     if (!string.IsNullOrWhiteSpace(ConnectionConfiguration.IP) && (ConnectionConfiguration.Port > 0) && !string.IsNullOrWhiteSpace(ConnectionConfiguration.DeviceIdentifier))
                     {
-                        _manager.SetConnectionValues(ConnectionConfiguration.IP, ConnectionConfiguration.Port, ConnectionConfiguration.DeviceIdentifier);
+                        Disconnect();
                         Connect();
                     } else
                     {
