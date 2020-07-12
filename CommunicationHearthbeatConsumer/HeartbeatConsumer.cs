@@ -87,7 +87,7 @@ namespace CommunicationHeartbeatConsumer
                             {
                                 message.LastRoundTripTicks = (ulong)DateTime.UtcNow.Ticks - message.Ticks;
 
-                                if (channel.State == ChannelState.Shutdown || channel.State == ChannelState.TransientFailure)
+                                if (channel.State == ChannelState.Shutdown || channel.State == ChannelState.TransientFailure || channel.State == ChannelState.Idle)
                                     ReceivedBeatRoundtrip?.Invoke(this, new RoundTripResult(identifier, false));
                                 else
                                     ReceivedBeatRoundtrip?.Invoke(this, new RoundTripResult(identifier, true, new TimeSpan((long)message.LastRoundTripTicks), new DateTime((long)message.Ticks)));
@@ -101,6 +101,9 @@ namespace CommunicationHeartbeatConsumer
                         do
                         {
                             await Task.Delay(100);
+                            if (channel != null && (channel.State == ChannelState.Shutdown || channel.State == ChannelState.TransientFailure
+                                || channel.State == ChannelState.Idle))
+                                ReceivedBeatRoundtrip?.Invoke(this, new RoundTripResult(identifier, false));
                         } while (!ctsBeat.IsCancellationRequested);
                     }
                 }

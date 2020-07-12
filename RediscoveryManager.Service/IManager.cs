@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunicationHeartbeatConsumer;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
@@ -16,6 +17,7 @@ namespace RediscoveryManager.Service
         ObservableCollection<SharedBase.Device.FeatureDefinitionExtended> Features { get; set; }
         event EventHandler<SharedBase.Connection.Enums.ConnectionState> AfterConnecting;
         event EventHandler<SharedBase.Connection.Enums.AllowConnect> GreetingsReply;
+        event EventHandler<RoundTripResult> RoundTripReceived;
         event EventHandler DeviceCollectionChanged;
         event EventHandler FeaturesCollectionChanged;
         event EventHandler<Guid> PendingDeviceResolved;

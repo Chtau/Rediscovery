@@ -92,6 +92,13 @@ namespace RediscoveryManager.GUI.ViewModels
             _sharedEvents = Locator.Current.GetService<Shared.ISharedEvents>();
             ConnectionConfiguration = Locator.Current.GetService<SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration>();
 
+            _manager.RoundTripReceived += (obj, args) =>
+            {
+                if (!args.OK)
+                {
+                    Disconnect();
+                }
+            };
             _manager.AfterConnecting += (obj, args) =>
             {
                 AllowConnect = _manager.ManagerConnectionState.CanConnect;

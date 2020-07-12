@@ -1,4 +1,5 @@
 ﻿using CommunicationAuthenticationConsumer;
+using CommunicationHeartbeatConsumer;
 using CommunicationResourceConsumer;
 using SharedBase.Logging;
 using System;
@@ -21,6 +22,7 @@ namespace RediscoveryManager.Service
 
         public event EventHandler<SharedBase.Connection.Enums.ConnectionState> AfterConnecting;
         public event EventHandler<SharedBase.Connection.Enums.AllowConnect> GreetingsReply;
+        public event EventHandler<RoundTripResult> RoundTripReceived;
         public event EventHandler DeviceCollectionChanged;
         public event EventHandler FeaturesCollectionChanged;
         public event EventHandler<Guid> PendingDeviceResolved;
@@ -30,6 +32,7 @@ namespace RediscoveryManager.Service
         private readonly IAuthenticationConsumerService authenticationConsumer;
         private readonly IGreetingConsumerService greetingConsumer;
         private readonly IResourceConsumerService resourceConsumer;
+        private readonly IHeartbeatConsumer heartbeatConsumer;
 
         private System.Threading.CancellationTokenSource tokenSource;
 
@@ -38,6 +41,7 @@ namespace RediscoveryManager.Service
             authenticationConsumer = new AuthenticationConsumerService(logger ?? SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
             greetingConsumer = new GreetingConsumerService(logger ?? SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
             resourceConsumer = new ResourceConsumerService(logger ?? SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
+            heartbeatConsumer = new HeartbeatConsumer(logger ?? SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
             authenticationConsumer.ReceivedManifestReply += (obj, args) =>
             {
                 Manifest = args;
@@ -55,6 +59,8 @@ namespace RediscoveryManager.Service
                     resourceConsumer.ListenActiveDevices(CurrentConnection.Token, tokenSource);
                     resourceConsumer.ListenPendingDevices(CurrentConnection.Token, tokenSource);
                     resourceConsumer.ListenFeatures(CurrentConnection.Token, tokenSource);
+                    heartbeatConsumer.Connect(CurrentConnection.IP, CurrentConnection.PortSSL, CurrentConnection.Pem);
+                    heartbeatConsumer.StartBeat(CurrentConnection.DeviceIdentifier, CurrentConnection.Token, tokenSource);
                 }
                 AfterConnecting?.Invoke(this, ManagerConnectionState.ConnectionState);
             };
@@ -110,6 +116,10 @@ namespace RediscoveryManager.Service
             resourceConsumer.ReceiveUpdateDevices += (obj, args) =>
             {
 
+            };
+            heartbeatConsumer.ReceivedBeatRoundtrip += (obj, args) =>
+            {
+                RoundTripReceived?.Invoke(this, args);
             };
         }
 
