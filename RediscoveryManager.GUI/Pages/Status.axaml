@@ -3,14 +3,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="RediscoveryManager.GUI.Pages.Status">
-  <StackPanel Margin="15">
+             x:Class="RediscoveryManager.GUI.Pages.Status" Background="{DynamicResource PrimaryLightBrush}">
+  <StackPanel Margin="15" Orientation="Horizontal">
     <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 15">
       <Button Classes="Ok" Command="{Binding Connect}" IsEnabled="{Binding CanConnect}" Margin="0, 0, 5, 0">Connect</Button>
       <Button Classes="Warning" Command="{Binding Disconnect}" IsEnabled="{Binding CanDisconnect}" Margin="0, 0, 5, 0">Disconnect</Button>
       <Button Classes="Primary" Command="{Binding EditConnection}">Edit connection</Button>
     </StackPanel>
-    <Grid>
+    <Grid Margin="15, 0, 0, 0">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
         <RowDefinition Height="Auto"/>
