@@ -29,8 +29,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedCommandArguments", "S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PluginFeature", "PluginFeature\PluginFeature.csproj", "{D2FD1E6D-19D0-43DE-A3A5-376C7A83429A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Desktop.Hub", "Rediscovery.Desktop.Hub\Rediscovery.Desktop.Hub.csproj", "{D42C6043-DD12-4FAE-99BE-FF7C5E6E43AA}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppControlPanel", "AppControlPanel\AppControlPanel.csproj", "{7F62F8C0-D13D-4A2B-8CB7-13C719C0CABF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationResourceConsumer", "Communication\CommunicationResourceConsumer.csproj", "{34CEE8B3-475B-4704-9B8C-06F237B51193}"
@@ -67,7 +65,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RediscoveryManager.Service"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientFeatureFileExchange", "ClientFeatureFileExchange\ClientFeatureFileExchange.csproj", "{206CE889-7F47-4D9D-833B-1F0651340F39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RediscoveryManager.GUI", "RediscoveryManager.GUI\RediscoveryManager.GUI.csproj", "{FD064DEB-6858-44A3-BE20-EB42F4633410}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RediscoveryManager.GUI", "RediscoveryManager.GUI\RediscoveryManager.GUI.csproj", "{FD064DEB-6858-44A3-BE20-EB42F4633410}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -241,18 +239,6 @@ Global
 		{D2FD1E6D-19D0-43DE-A3A5-376C7A83429A}.Release|x64.Build.0 = Release|Any CPU
 		{D2FD1E6D-19D0-43DE-A3A5-376C7A83429A}.Release|x86.ActiveCfg = Release|Any CPU
 		{D2FD1E6D-19D0-43DE-A3A5-376C7A83429A}.Release|x86.Build.0 = Release|Any CPU
-		{D42C6043-DD12-4FAE-99BE-FF7C5E6E43AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D42C6043-DD12-4FAE-99BE-FF7C5E6E43AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D42C6043-DD12-4FAE-99BE-FF7C5E6E43AA}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{D42C6043-DD12-4FAE-99BE-FF7C5E6E43AA}.Debug|x64.Build.0 = Debug|Any CPU
-		{D42C6043-DD12-4FAE-99BE-FF7C5E6E43AA}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{D42C6043-DD12-4FAE-99BE-FF7C5E6E43AA}.Debug|x86.Build.0 = Debug|Any CPU
-		{D42C6043-DD12-4FAE-99BE-FF7C5E6E43AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D42C6043-DD12-4FAE-99BE-FF7C5E6E43AA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D42C6043-DD12-4FAE-99BE-FF7C5E6E43AA}.Release|x64.ActiveCfg = Release|Any CPU
-		{D42C6043-DD12-4FAE-99BE-FF7C5E6E43AA}.Release|x64.Build.0 = Release|Any CPU
-		{D42C6043-DD12-4FAE-99BE-FF7C5E6E43AA}.Release|x86.ActiveCfg = Release|Any CPU
-		{D42C6043-DD12-4FAE-99BE-FF7C5E6E43AA}.Release|x86.Build.0 = Release|Any CPU
 		{7F62F8C0-D13D-4A2B-8CB7-13C719C0CABF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7F62F8C0-D13D-4A2B-8CB7-13C719C0CABF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F62F8C0-D13D-4A2B-8CB7-13C719C0CABF}.Debug|x64.ActiveCfg = Debug|Any CPU
