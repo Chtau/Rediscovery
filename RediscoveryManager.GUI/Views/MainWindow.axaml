@@ -42,15 +42,15 @@
       </TabItem>
       <TabItem>
         <TabItem.Header>
-          <TextBlock VerticalAlignment="Center">Manifest</TextBlock>
-        </TabItem.Header>
-        <pages:Manifest/>
-      </TabItem>
-      <TabItem>
-        <TabItem.Header>
           <TextBlock VerticalAlignment="Center">Features</TextBlock>
         </TabItem.Header>
         <pages:Features/>
+      </TabItem>
+      <TabItem>
+        <TabItem.Header>
+          <TextBlock VerticalAlignment="Center">Manifest</TextBlock>
+        </TabItem.Header>
+        <pages:Manifest/>
       </TabItem>
     </TabControl>
     <ProgressBar Grid.Row="2" IsIndeterminate="True" IsVisible="{Binding IsLoading}" Foreground="{DynamicResource PrimaryBrush}" Background="{DynamicResource PrimaryLightBrush}"/>

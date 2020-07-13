@@ -5,7 +5,25 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="RediscoveryManager.GUI.Pages.Manifest">
   <StackPanel>
-    <TextBlock Text="I am in the triangle page ! I'll put a button to show you that each page contains what you want." HorizontalAlignment="Left" VerticalAlignment="Center"/>
-    <Button>A button in the triangle page !</Button>
+    <Border Margin="5, 5, 5, 0" Background="{DynamicResource PrimaryLightBrush}" BorderThickness="2" BorderBrush="{DynamicResource PrimaryBrush}">
+      <Grid Margin="5">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock MinWidth="50" Grid.Column="0" Grid.Row="0" Margin="0, 0, 10, 0" Text="Service Name:"/>
+        <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Item.Name}"/>
+        <TextBlock Grid.Column="0" Grid.Row="1" Margin="0, 0, 10, 0" Text="ClientVersion:"/>
+        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Item.Version}"/>
+        <TextBlock Grid.Column="0" Grid.Row="2" Margin="0, 0, 10, 0" Text="AppMinimumVersion:"/>
+        <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding Item.MinimumVersion}"/>
+      </Grid>
+    </Border>
   </StackPanel>
 </UserControl>

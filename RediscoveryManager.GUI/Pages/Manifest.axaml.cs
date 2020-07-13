@@ -6,9 +6,12 @@ namespace RediscoveryManager.GUI.Pages
 {
     public class Manifest : UserControl
     {
+        private readonly ViewModels.ManifestViewModel model;
+
         public Manifest()
         {
             this.InitializeComponent();
+            DataContext = model = new ViewModels.ManifestViewModel();
         }
 
         private void InitializeComponent()
