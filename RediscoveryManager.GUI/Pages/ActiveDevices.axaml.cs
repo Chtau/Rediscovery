@@ -6,9 +6,12 @@ namespace RediscoveryManager.GUI.Pages
 {
     public class ActiveDevices : UserControl
     {
+        private readonly ViewModels.ActiveDevicesViewModel model;
+
         public ActiveDevices()
         {
             this.InitializeComponent();
+            DataContext = model = new ViewModels.ActiveDevicesViewModel();
         }
 
         private void InitializeComponent()
