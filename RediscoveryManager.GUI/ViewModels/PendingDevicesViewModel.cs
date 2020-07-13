@@ -9,7 +9,7 @@ using System.Text;
 
 namespace RediscoveryManager.GUI.ViewModels
 {
-    public class ActiveDevicesViewModel : ViewModelBase
+    public class PendingDevicesViewModel : ViewModelBase
     {
         private readonly IManager _manager;
         private readonly SharedBase.Logging.ILogger _logger;
@@ -36,7 +36,7 @@ namespace RediscoveryManager.GUI.ViewModels
             }
         }
 
-        public ActiveDevicesViewModel()
+        public PendingDevicesViewModel()
         {
             _manager = Locator.Current.GetService<IManager>();
             _logger = Locator.Current.GetService<SharedBase.Logging.ILogger>();
@@ -45,13 +45,28 @@ namespace RediscoveryManager.GUI.ViewModels
             _manager.DeviceCollectionChanged += (obj, args) =>
             {
                 var newCollection = new List<DeviceInfoViewModelExtension>();
-                foreach (var item in _manager.ActiveDevices)
+                foreach (var item in _manager.PendingDevices)
                 {
-                    var newItem = new DeviceInfoViewModelExtension(item, null);
+                    var newItem = new DeviceInfoViewModelExtension(item, OnDeviceResolveCallback);
                     newCollection.Add(newItem);
                 }
                 Items = new ObservableCollection<DeviceInfoViewModelExtension>(newCollection);
             };
+        }
+
+        private void OnDeviceResolveCallback(DeviceInfoViewModelExtension item)
+        {
+            try
+            {
+                Notification.Show("Allow Device", $"The Device \"{item.Name}\" want to access the service, allow it ?", result =>
+                {
+                    _manager.TryResolvePendingDevice(item.Id, result);
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+            }
         }
     }
 }

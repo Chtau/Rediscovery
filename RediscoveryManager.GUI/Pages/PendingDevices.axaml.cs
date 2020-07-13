@@ -6,9 +6,12 @@ namespace RediscoveryManager.GUI.Pages
 {
     public class PendingDevices : UserControl
     {
+        private readonly ViewModels.PendingDevicesViewModel model;
+
         public PendingDevices()
         {
             this.InitializeComponent();
+            DataContext = model = new ViewModels.PendingDevicesViewModel();
         }
 
         private void InitializeComponent()

@@ -39,9 +39,6 @@
                   <TextBlock Grid.Column="0" Grid.Row="3" Margin="0, 0, 10, 0" Text="OS:"/>
                   <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding OSVersion}"/>
                 </Grid>
-                <StackPanel Grid.ColumnSpan="2" Grid.Row="1" Margin="5">
-                  <Button Classes="Warning" Command="{Binding DeleteDevice}" HorizontalAlignment="Left">Delete</Button>
-                </StackPanel>
                 <Grid Margin="10,5,0,0" Grid.Column="1" Grid.Row="0">
                   <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
