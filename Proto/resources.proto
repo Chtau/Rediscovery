@@ -15,6 +15,8 @@ service ResourceExchange {
 
   rpc Features (google.protobuf.Empty) returns (stream FeatureList);
   rpc FeatureDetail (FeatureDetailRequest) returns (FeatureDetails);
+
+  rpc HeartbeatStatistic (google.protobuf.Empty) returns (stream HeartbeatStatisticList);
 }
 
 message DeviceInfoList {
@@ -48,4 +50,16 @@ message FeatureDetails {
     string featureId = 1;
     FeatureDetailSetting setting = 2;
     repeated FeatureDetailProfile profiles = 3;
+}
+
+message HeartbeatStatisticList {
+    repeated HeartbeatStatisticItem beats = 1;
+}
+
+message HeartbeatStatisticItem {
+    string deviceId = 1;
+    uint64 pingPongTime = 2;
+    uint64 pingStartDatetimeUTC = 3;
+    bool oK = 4;
+    uint64 resultReceived = 5;
 }

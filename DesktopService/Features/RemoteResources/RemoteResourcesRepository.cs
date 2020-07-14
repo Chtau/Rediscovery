@@ -5,6 +5,7 @@ using DesktopService.Map;
 using Microsoft.Extensions.Logging;
 using PluginFeature.Models;
 using SharedBase.Feature;
+using SharedBase.Statistics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,17 +20,20 @@ namespace DesktopService.Features.RemoteResources
         private readonly DALDesktopService.Repository.IDeviceRepository _deviceRepository;
         private readonly DALDesktopService.Repository.IDevicePendingAuthenticationRepository _devicePendingAuthenticationRepository;
         private readonly DeviceFeature.IFeatureService _featureService;
+        private readonly CommunicationHeartbeatProvider.IHeartbeatStatistic _heartbeatStatistic;
         private readonly ILogger<RemoteResourcesRepository> _logger;
 
         public RemoteResourcesRepository(
             DeviceFeature.IFeatureService featureService,
             DALDesktopService.Repository.IDeviceRepository deviceRepository,
             DALDesktopService.Repository.IDevicePendingAuthenticationRepository devicePendingAuthenticationRepository,
+            CommunicationHeartbeatProvider.IHeartbeatStatistic heartbeatStatistic,
             ILoggerFactory loggerFactory)
         {
             _featureService = featureService;
             _deviceRepository = deviceRepository;
             _devicePendingAuthenticationRepository = devicePendingAuthenticationRepository;
+            _heartbeatStatistic = heartbeatStatistic;
             _logger = loggerFactory.CreateLogger<RemoteResourcesRepository>();
         }
 
@@ -127,6 +131,33 @@ namespace DesktopService.Features.RemoteResources
         public FeatureSetting GetResourceDeviceFeatureSettings(Guid featureId)
         {
             return _featureService.GetFeatureSettings(featureId);
+        }
+
+        public List<SharedBase.Statistics.HeartbeatStatisticItem> GetHeartbeatStatistic()
+        {
+            var retVal = new List<SharedBase.Statistics.HeartbeatStatisticItem>();
+            try
+            {
+                var items = _heartbeatStatistic.Get();
+                foreach (var item in items)
+                {
+                    var y = from x in item.Value
+                            select new HeartbeatStatisticItem
+                            {
+                                DeviceId = x.DeviceId,
+                                OK = x.OK,
+                                PingPongTime = x.PingPongTime,
+                                PingStartDatetimeUTC = x.PingStartDatetimeUTC,
+                                ResultReceived = x.ResultReceived
+                            };
+                    retVal.AddRange(y);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"GetHeartbeatStatistic error collection statistic");
+            }
+            return retVal;
         }
     }
 }

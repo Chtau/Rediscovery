@@ -16,6 +16,7 @@ namespace CommunicationResourceConsumer
         event EventHandler<(Guid deviceId, bool result)> ReceiveDeleteDevicesResult;
         event EventHandler<(Guid deviceId, bool accept)> ReceiveResolvePendingDevicesResult;
         event EventHandler<Models.FeatureDetail> ReceiveFeatureDetails;
+        event EventHandler<List<SharedBase.Statistics.HeartbeatStatisticItem>> ReceiveHeartbeatStatistic;
 
         bool Connect(string ipAddress, int port, string certificatePEM);
         void ListenActiveDevices(string token, CancellationTokenSource cts = null);
@@ -26,5 +27,6 @@ namespace CommunicationResourceConsumer
         void DeleteDevice(string token, Guid deviceId);
         void ResolvePendingDevice(string token, Guid deviceId, bool accept);
         void FeatureDetail(string token, FeatureSetting setting);
+        void ListenHeartbeatStatistic(string token, CancellationTokenSource cts = null);
     }
 }

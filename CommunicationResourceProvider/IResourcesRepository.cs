@@ -16,5 +16,6 @@ namespace CommunicationResourceProvider
         bool ResolvePendingAuthenticationDevices(Guid deviceId, bool accept);
         List<FeatureProfil> GetResourceDeviceFeatureProfiles(Guid featureId);
         FeatureSetting GetResourceDeviceFeatureSettings(Guid featureId);
+        List<SharedBase.Statistics.HeartbeatStatisticItem> GetHeartbeatStatistic();
     }
 }

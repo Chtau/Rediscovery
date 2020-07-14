@@ -23,6 +23,7 @@ namespace CommunicationResourceProvider.ProtoServices
         private Dictionary<string, IServerStreamWriter<DeviceInfoList>> responseStreamsDevices = new Dictionary<string, IServerStreamWriter<DeviceInfoList>>();
         private Dictionary<string, IServerStreamWriter<FeatureList>> responseStreamsFeatures = new Dictionary<string, IServerStreamWriter<FeatureList>>();
         private Dictionary<string, IServerStreamWriter<DeviceInfoList>> responseStreamsPendingDevices = new Dictionary<string, IServerStreamWriter<DeviceInfoList>>();
+        private Dictionary<string, IServerStreamWriter<HeartbeatStatisticList>> responseStreamsHeartbeatStatistic = new Dictionary<string, IServerStreamWriter<HeartbeatStatisticList>>();
 
         public ResourceExchangeService(ILoggerFactory loggerFactory, IResourcesRepository resourcesRepository, IResourceManager resourceManager)
         {
@@ -48,6 +49,10 @@ namespace CommunicationResourceProvider.ProtoServices
             _resourceManager.SendPendingDevicesChanged += (obj, args) =>
             {
                 OnSendToAll(OnSendPendingDevices, responseStreamsPendingDevices);
+            };
+            _resourceManager.SendHeartbeatChanged += (obj, args) =>
+            {
+                OnSendToAll(OnSendHeartbeatStatistics, responseStreamsHeartbeatStatistic);
             };
         }
 
@@ -440,6 +445,79 @@ namespace CommunicationResourceProvider.ProtoServices
                 {
                     sendAction(item.Key);
                 }
+            }
+        }
+
+        [Authorize(Policy = "ResourceConsumer")]
+        public override async Task HeartbeatStatistic(Empty request, IServerStreamWriter<HeartbeatStatisticList> responseStream, ServerCallContext context)
+        {
+            string sid = null;
+            try
+            {
+                var user = context.GetHttpContext().User;
+                sid = user.Claims.GetSid();
+                if (responseStreamsHeartbeatStatistic.ContainsKey(sid))
+                    responseStreamsHeartbeatStatistic[sid] = responseStream;
+                else
+                    responseStreamsHeartbeatStatistic.Add(sid, responseStream);
+
+                OnSendHeartbeatStatistics(sid);
+                do
+                {
+                    await Task.Delay(100);
+                } while (!context.CancellationToken.IsCancellationRequested);
+
+                await Task.FromResult(true);
+            }
+            catch (System.OperationCanceledException)
+            {
+                _logger.LogTrace("Heartbeat Statistic connection was canceled from Context Cancellation Token");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "HeartbeatStatistic");
+            }
+            finally
+            {
+                if (!string.IsNullOrWhiteSpace(sid))
+                {
+                    if (responseStreamsHeartbeatStatistic.ContainsKey(sid))
+                        responseStreamsHeartbeatStatistic.Remove(sid);
+                }
+            }
+        }
+
+        private void OnSendHeartbeatStatistics(string sid)
+        {
+            if (responseStreamsHeartbeatStatistic.ContainsKey(sid))
+            {
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        var heartbeatStatistics = _resourcesRepository.GetHeartbeatStatistic();
+                        var reply = new HeartbeatStatisticList();
+                        if (heartbeatStatistics?.Count > 0)
+                        {
+                            foreach (var item in heartbeatStatistics)
+                            {
+                                reply.Beats.Add(new HeartbeatStatisticItem
+                                {
+                                    DeviceId = item.DeviceId,
+                                    OK = item.OK,
+                                    PingPongTime = (ulong)(item.PingPongTime?.Ticks),
+                                    PingStartDatetimeUTC = item.PingStartDatetimeUTC.DatetimeTicksLong(),
+                                    ResultReceived = item.ResultReceived.DatetimeTicksLong()
+                                });
+                            }
+                        }
+                        await responseStreamsHeartbeatStatistic[sid].WriteAsync(reply);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "OnSendHeartbeatStatistics write to response Stream");
+                    }
+                });
             }
         }
     }

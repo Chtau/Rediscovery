@@ -2,6 +2,7 @@
 using Grpc.Core;
 using SharedBase.Feature;
 using SharedBase.Logging;
+using SharedBase.Statistics;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,6 +24,7 @@ namespace CommunicationResourceConsumer
         public event EventHandler<(FeatureProfil profile, bool result)> ReceiveFeatureDetailProfileSave;
         public event EventHandler<(FeatureSetting setting, bool result)> ReceiveFeatureDetailSettingSave;
         public event EventHandler<Models.FeatureDetail> ReceiveFeatureDetails;
+        public event EventHandler<List<HeartbeatStatisticItem>> ReceiveHeartbeatStatistic;
 
         private readonly ILogger _logger;
 
@@ -325,6 +327,54 @@ namespace CommunicationResourceConsumer
                         }
                     }
                     ReceiveFeatureDetails?.Invoke(this, result);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex);
+                }
+                finally
+                {
+                    cts.Cancel();
+                }
+            });
+        }
+
+        public void ListenHeartbeatStatistic(string token, CancellationTokenSource cts = null)
+        {
+            Task.Run(async () =>
+            {
+                if (cts == null)
+                    cts = new CancellationTokenSource();
+                try
+                {
+                    var meta = new Metadata();
+                    meta.AddAuthorizationHeader(token);
+                    using (var call = resourceExchangeClient.HeartbeatStatistic(new Google.Protobuf.WellKnownTypes.Empty(), headers: meta, cancellationToken: cts.Token))
+                    {
+                        var readTask = Task.Run(async () =>
+                        {
+                            await foreach (var message in call.ResponseStream.ReadAllAsync())
+                            {
+                                var result = new List<SharedBase.Statistics.HeartbeatStatisticItem>();
+                                foreach (var item in message.Beats)
+                                {
+                                    result.Add(new HeartbeatStatisticItem
+                                    {
+                                        DeviceId = item.DeviceId,
+                                        OK = item.OK,
+                                        PingPongTime = new TimeSpan((long)item.PingPongTime),
+                                        PingStartDatetimeUTC = item.PingStartDatetimeUTC.TicksLongDatetime(),
+                                        ResultReceived = item.ResultReceived.TicksLongDatetimeNotNull()
+                                    });
+                                }
+                                ReceiveHeartbeatStatistic?.Invoke(this, result);
+                            }
+                        });
+                        do
+                        {
+                            await Task.Delay(100);
+                        } while (!cts.IsCancellationRequested);
+                    }
                 }
                 catch (Exception ex)
                 {

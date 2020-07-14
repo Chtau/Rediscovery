@@ -12,6 +12,7 @@ namespace CommunicationResourceProvider
         event EventHandler SendActiveDevicesChanged;
         event EventHandler SendPendingDevicesChanged;
         event EventHandler SendFeaturesChanged;
+        event EventHandler SendHeartbeatChanged;
         void DeleteDevice(Guid deviceId);
         void UpdateDevice(SharedBase.Device.DeviceInfo deviceInfo);
         void ResolvePendingDevice(Guid deviceId, bool accept);
