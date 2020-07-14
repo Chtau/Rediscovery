@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using CommunicationHeartbeatProvider;
+using Grpc.Core;
 using Heartbeat;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
@@ -13,11 +14,13 @@ namespace CommunicationHearthbeatProvider.ProtoServices
     {
         private readonly ILogger<HeartbeatExchangeService> _logger;
         private readonly CommunicationHeartbeatProvider.IConfiguration _configuration;
+        private readonly IHeartbeatStatistic _heartbeatStatistic;
 
-        public HeartbeatExchangeService(ILoggerFactory loggerFactory, CommunicationHeartbeatProvider.IConfiguration configuration)
+        public HeartbeatExchangeService(ILoggerFactory loggerFactory, CommunicationHeartbeatProvider.IConfiguration configuration, IHeartbeatStatistic heartbeatStatistic)
         {
             _logger = loggerFactory.CreateLogger<HeartbeatExchangeService>();
             _configuration = configuration;
+            _heartbeatStatistic = heartbeatStatistic;
         }
 
         [Authorize(Policy = "DeviceAndConsumer")]
@@ -34,6 +37,10 @@ namespace CommunicationHearthbeatProvider.ProtoServices
                             try
                             {
                                 await responseStream.WriteAsync(message);
+                                
+                                var user = context.GetHttpContext().User;
+                                string sid = user.Claims.GetSid();
+                                _heartbeatStatistic.NewBeat(new CommunicationHeartbeatProvider.HeartbeatResult(sid, true, new TimeSpan((long)message.LastRoundTripTicks), new DateTime((long)message.Ticks)));
                             }
                             catch (Exception ex)
                             {
