@@ -53,7 +53,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
             return list;
         }
 
-        [Authorize(Policy = "Device")]
+        [Authorize(Policy = "DeviceAndConsumer")]
         public override Task<ManifestReply> Device(Empty request, ServerCallContext context)
         {
             var manifest = new ManifestReply
