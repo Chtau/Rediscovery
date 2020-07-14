@@ -20,7 +20,7 @@ namespace CommunicationHearthbeatProvider.ProtoServices
             _configuration = configuration;
         }
 
-        [Authorize(Policy = "Device")]
+        [Authorize(Policy = "DeviceAndConsumer")]
         public override async Task Beat(IAsyncStreamReader<PingPongMessage> requestStream, IServerStreamWriter<PingPongMessage> responseStream, ServerCallContext context)
         {
             try

@@ -51,7 +51,7 @@ namespace DesktopService
 
             var appSettings = appSettingsSection.Get<SharedConfigurations.DesktopService.Models.AppConfiguration>();
             var identitySettings = identitySettingsSection.Get<SharedConfigurations.DesktopService.Models.IdentityConfiguration>();
-            var roleSettings = identitySettingsSection.Get<SharedConfigurations.DesktopService.Models.RoleConfiguration>();
+            var roleSettings = rolesSection.Get<SharedConfigurations.DesktopService.Models.RoleConfiguration>();
 
             services.AddHostedService<Worker>();
 

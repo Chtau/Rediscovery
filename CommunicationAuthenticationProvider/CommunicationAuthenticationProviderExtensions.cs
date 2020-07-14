@@ -34,6 +34,15 @@ namespace CommunicationAuthenticationProvider
             TokenSigningKey = Encoding.ASCII.GetBytes(tokenSigningKeySecret);
             services.AddAuthorization(options =>
             {
+                options.AddPolicy("DeviceAndConsumer", policy =>
+                {
+                    if (!string.IsNullOrWhiteSpace(deviceRole) || !string.IsNullOrWhiteSpace(resourceConsumerRole))
+                    {
+                        policy.RequireRole(deviceRole, resourceConsumerRole);
+                    }
+                        
+                    policy.RequireAuthenticatedUser();
+                });
                 options.AddPolicy("Device", policy =>
                 {
                     if (!string.IsNullOrWhiteSpace(deviceRole))
