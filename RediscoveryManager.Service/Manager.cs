@@ -18,6 +18,7 @@ namespace RediscoveryManager.Service
         public ObservableCollection<SharedBase.Device.DeviceInfo> PendingDevices { get; set; } = new ObservableCollection<SharedBase.Device.DeviceInfo>();
         public ObservableCollection<SharedBase.Device.DeviceInfo> Devices { get; set; } = new ObservableCollection<SharedBase.Device.DeviceInfo>();
         public ObservableCollection<SharedBase.Device.FeatureDefinitionExtended> Features { get; set; } = new ObservableCollection<SharedBase.Device.FeatureDefinitionExtended>();
+        public ObservableCollection<SharedBase.Statistics.HeartbeatStatisticItem> HeartbeatStatistics { get; set; } = new ObservableCollection<SharedBase.Statistics.HeartbeatStatisticItem>();
         public SharedBase.Connection.Manifest Manifest { get; private set; }
 
         public event EventHandler<SharedBase.Connection.Enums.ConnectionState> AfterConnecting;
@@ -28,6 +29,7 @@ namespace RediscoveryManager.Service
         public event EventHandler<Guid> PendingDeviceResolved;
         public event EventHandler<Guid> DeviceDeleted;
         public event EventHandler ManifestChanged;
+        public event EventHandler HeartbeatStatisticsChanged;
 
         private readonly IAuthenticationConsumerService authenticationConsumer;
         private readonly IGreetingConsumerService greetingConsumer;
@@ -59,6 +61,7 @@ namespace RediscoveryManager.Service
                     resourceConsumer.ListenActiveDevices(CurrentConnection.Token, tokenSource);
                     resourceConsumer.ListenPendingDevices(CurrentConnection.Token, tokenSource);
                     resourceConsumer.ListenFeatures(CurrentConnection.Token, tokenSource);
+                    resourceConsumer.ListenHeartbeatStatistic(CurrentConnection.Token, tokenSource);
                     heartbeatConsumer.Connect(CurrentConnection.IP, CurrentConnection.PortSSL, CurrentConnection.Pem);
                     heartbeatConsumer.StartBeat(CurrentConnection.DeviceIdentifier, CurrentConnection.Token, tokenSource);
                 }
@@ -116,6 +119,15 @@ namespace RediscoveryManager.Service
             resourceConsumer.ReceiveUpdateDevices += (obj, args) =>
             {
 
+            };
+            resourceConsumer.ReceiveHeartbeatStatistic += (obj, args) =>
+            {
+                HeartbeatStatistics.Clear();
+                foreach (var item in args)
+                {
+                    HeartbeatStatistics.Add(item);
+                }
+                HeartbeatStatisticsChanged?.Invoke(this, EventArgs.Empty);
             };
             heartbeatConsumer.ReceivedBeatRoundtrip += (obj, args) =>
             {
@@ -176,11 +188,13 @@ namespace RediscoveryManager.Service
             ActiveDevices.Clear();
             PendingDevices.Clear();
             Features.Clear();
+            HeartbeatStatistics.Clear();
             AfterConnecting?.Invoke(this, ManagerConnectionState.ConnectionState);
             GreetingsReply?.Invoke(this, ManagerConnectionState.CanConnect);
             DeviceCollectionChanged?.Invoke(this, EventArgs.Empty);
             FeaturesCollectionChanged?.Invoke(this, EventArgs.Empty);
             ManifestChanged?.Invoke(this, EventArgs.Empty);
+            HeartbeatStatisticsChanged?.Invoke(this, EventArgs.Empty);
             if (tokenSource != null)
             {
                 try
