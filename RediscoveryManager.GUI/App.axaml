@@ -11,6 +11,8 @@
       <converter:ConnectionStateColorConverter x:Key="connectionStateColor"/>
       <converter:AllowConnectColorConverter x:Key="allowConnectColor"/>
       <converter:IntNotMinusStringValueConverter x:Key="intNotMinusString"/>
+      <converter:DateToTimeOnlyConverter x:Key="dateToTimeOnlyConverter"/>
+      <converter:TimespanConverter x:Key="timespanConverter"/>
       <Color x:Key="WarningColor">#E54848</Color>
       <SolidColorBrush x:Key="WarningColorBrush" Color="{DynamicResource WarningColor}"></SolidColorBrush>
       <Color x:Key="PrimaryLightHoverColor">#66008080</Color>
@@ -22,6 +24,7 @@
     </Application.Resources>
 
   <Application.Styles>
+    <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Default.xaml"/>
       <StyleInclude Source="avares://Avalonia.Themes.Default/DefaultTheme.xaml"/>
         <StyleInclude Source="avares://Avalonia.Themes.Default/Accents/BaseLight.xaml"/>
     <Style Selector="Button.Primary">

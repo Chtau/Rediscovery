@@ -52,6 +52,12 @@
         </TabItem.Header>
         <pages:Manifest/>
       </TabItem>
+      <TabItem>
+        <TabItem.Header>
+          <TextBlock VerticalAlignment="Center">Heartbeats</TextBlock>
+        </TabItem.Header>
+        <pages:HeartbeatStatistics/>
+      </TabItem>
     </TabControl>
     <ProgressBar Grid.Row="2" IsIndeterminate="True" IsVisible="{Binding IsLoading}" Foreground="{DynamicResource PrimaryBrush}" Background="{DynamicResource PrimaryLightBrush}"/>
   </Grid>

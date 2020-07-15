@@ -123,7 +123,7 @@ namespace RediscoveryManager.Service
             resourceConsumer.ReceiveHeartbeatStatistic += (obj, args) =>
             {
                 HeartbeatStatistics.Clear();
-                foreach (var item in args)
+                foreach (var item in args?.OrderByDescending(x => x.ResultReceived))
                 {
                     HeartbeatStatistics.Add(item);
                 }

@@ -1,0 +1,15 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="RediscoveryManager.GUI.Pages.HeartbeatStatistics">
+  <DataGrid Name="dataGrid1" Margin="12" CanUserResizeColumns="True" CanUserReorderColumns="True">
+    <DataGrid.Columns>
+      <DataGridTextColumn Header="Device" Binding="{Binding DeviceId}" Width="4*" />
+      <DataGridTextColumn Header="Ping/Pong" Binding="{Binding PingPongTime, Mode=OneWay, Converter={StaticResource timespanConverter}}" Width="4*" />
+      <DataGridTextColumn Header="OK" Binding="{Binding OK}" Width="2*" />
+      <DataGridTextColumn Header="Received" Binding="{Binding PingStartDatetimeUTC, Mode=OneWay, Converter={StaticResource dateToTimeOnlyConverter}}" Width="4*" />
+    </DataGrid.Columns>
+  </DataGrid>
+</UserControl>

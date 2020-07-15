@@ -23,6 +23,8 @@ namespace DesktopService.Features.RemoteResources
         private readonly CommunicationHeartbeatProvider.IHeartbeatStatistic _heartbeatStatistic;
         private readonly ILogger<RemoteResourcesRepository> _logger;
 
+        public event EventHandler HeartbeatStatisticsChanged;
+
         public RemoteResourcesRepository(
             DeviceFeature.IFeatureService featureService,
             DALDesktopService.Repository.IDeviceRepository deviceRepository,
@@ -34,7 +36,13 @@ namespace DesktopService.Features.RemoteResources
             _deviceRepository = deviceRepository;
             _devicePendingAuthenticationRepository = devicePendingAuthenticationRepository;
             _heartbeatStatistic = heartbeatStatistic;
+            _heartbeatStatistic.UpdatedHeartbeatStatics += _heartbeatStatistic_UpdatedHeartbeatStatics;
             _logger = loggerFactory.CreateLogger<RemoteResourcesRepository>();
+        }
+
+        private void _heartbeatStatistic_UpdatedHeartbeatStatics(object sender, Dictionary<string, List<CommunicationHeartbeatProvider.HeartbeatResult>> e)
+        {
+            HeartbeatStatisticsChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public List<SharedBase.Device.FeatureDefinitionExtended> GetResourceDeviceFeature()

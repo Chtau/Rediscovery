@@ -9,7 +9,7 @@ namespace CommunicationHeartbeatProvider
     {
         private readonly ILogger<HeartbeatStatistic> _logger;
         private Dictionary<string, List<HeartbeatResult>> data = new Dictionary<string, List<HeartbeatResult>>();
-        private DateTime lastUpdatedStaticEvent = DateTime.UtcNow;
+        private DateTime lastUpdatedStaticEvent = DateTime.UtcNow.AddMinutes(-1);
         private DateTime lastClearStatic = DateTime.UtcNow;
 
         public event EventHandler<Dictionary<string, List<HeartbeatResult>>> UpdatedHeartbeatStatics;
@@ -28,7 +28,7 @@ namespace CommunicationHeartbeatProvider
                 else
                     data.Add(heartbeatResult.DeviceId, new List<HeartbeatResult>() { heartbeatResult });
 
-                if (lastUpdatedStaticEvent.AddMinutes(1) < DateTime.UtcNow)
+                if (lastUpdatedStaticEvent.AddSeconds(10) < DateTime.UtcNow)
                 {
                     lastUpdatedStaticEvent = DateTime.UtcNow;
                     UpdatedHeartbeatStatics?.Invoke(this, data);

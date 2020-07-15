@@ -54,6 +54,10 @@ namespace CommunicationResourceProvider.ProtoServices
             {
                 OnSendToAll(OnSendHeartbeatStatistics, responseStreamsHeartbeatStatistic);
             };
+            _resourcesRepository.HeartbeatStatisticsChanged += (obj, args) =>
+            {
+                OnSendToAll(OnSendHeartbeatStatistics, responseStreamsHeartbeatStatistic);
+            };
         }
 
         [Authorize(Policy = "ResourceConsumer")]
