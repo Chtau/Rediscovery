@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+package logger;
+
+service LoggerExchange {
+  rpc Add (stream LogEntry) returns (google.protobuf.Empty);
+}
+
+message LogEntry {
+   LoggerType loggerType = 1;
+   string id = 2;
+   string message = 3;
+   string module = 4;
+   uint64 time = 5;
+
+  enum LoggerType {
+    Trace = 0;
+    Debug = 1;
+    Information = 2;
+    Warning = 3;
+    Error = 4;
+    Critical = 5;
+  }
+}
