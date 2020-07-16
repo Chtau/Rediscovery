@@ -36,7 +36,9 @@ namespace SharedBase.Logging
 
         public DateTime Time { get; set; }
 
-        public static LoggerEntry CreateEntry(string module, string message, LoggerType loggerType)
+        public string Sid { get; set; }
+
+        public static LoggerEntry CreateEntry(string module, string message, LoggerType loggerType, string sid)
         {
             return new LoggerEntry
             {
@@ -45,6 +47,7 @@ namespace SharedBase.Logging
                 Message = message,
                 Module = module,
                 Time = DateTime.Now,
+                Sid = sid
             };
         }
     }

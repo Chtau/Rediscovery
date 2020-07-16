@@ -1,0 +1,30 @@
+﻿using CommunicationLoggerProvider.ProtoService;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace CommunicationLoggerProvider
+{
+    public static class CommunicationLoggerProviderExtensions
+    {
+        public static IApplicationBuilder UseLoggerProvider(this IApplicationBuilder app)
+        {
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGrpcService<LoggerExchangeService>();
+            });
+            return app;
+        }
+
+        public static IServiceCollection AddLoggerProvider<TDirectLogger>(this IServiceCollection services)
+            where TDirectLogger : class, IDirectLogger
+        {
+            services.AddSingleton<IDirectLogger, TDirectLogger>();
+            services.AddSingleton<ILoggerHandler, LoggerHandler>();
+            services.AddGrpc();
+            return services;
+        }
+    }
+}
