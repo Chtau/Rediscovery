@@ -16,6 +16,11 @@ namespace CommunicationLoggerConsumer
 
         private Channel channel = null;
 
+        public LoggerConsumer()
+        {
+            _logger = new DirectLogger();
+        }
+
         public LoggerConsumer(IDirectLogger logger)
         {
             _logger = logger;
