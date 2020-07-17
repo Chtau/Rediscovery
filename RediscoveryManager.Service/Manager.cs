@@ -1,5 +1,6 @@
 ﻿using CommunicationAuthenticationConsumer;
 using CommunicationHeartbeatConsumer;
+using CommunicationLoggerConsumer;
 using CommunicationResourceConsumer;
 using SharedBase.Logging;
 using System;
@@ -20,6 +21,7 @@ namespace RediscoveryManager.Service
         public ObservableCollection<SharedBase.Device.FeatureDefinitionExtended> Features { get; set; } = new ObservableCollection<SharedBase.Device.FeatureDefinitionExtended>();
         public ObservableCollection<SharedBase.Statistics.HeartbeatStatisticItem> HeartbeatStatistics { get; set; } = new ObservableCollection<SharedBase.Statistics.HeartbeatStatisticItem>();
         public SharedBase.Connection.Manifest Manifest { get; private set; }
+        public ObservableCollection<LoggerEntry> LoggerEntires { get; set; }
 
         public event EventHandler<SharedBase.Connection.Enums.ConnectionState> AfterConnecting;
         public event EventHandler<SharedBase.Connection.Enums.AllowConnect> GreetingsReply;
@@ -30,11 +32,13 @@ namespace RediscoveryManager.Service
         public event EventHandler<Guid> DeviceDeleted;
         public event EventHandler ManifestChanged;
         public event EventHandler HeartbeatStatisticsChanged;
+        public event EventHandler LoggerEntiresChanged;
 
         private readonly IAuthenticationConsumerService authenticationConsumer;
         private readonly IGreetingConsumerService greetingConsumer;
         private readonly IResourceConsumerService resourceConsumer;
         private readonly IHeartbeatConsumer heartbeatConsumer;
+        private readonly ILoggerConsumer loggerConsumer;
 
         private System.Threading.CancellationTokenSource tokenSource;
 
@@ -44,6 +48,7 @@ namespace RediscoveryManager.Service
             greetingConsumer = new GreetingConsumerService(logger ?? SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
             resourceConsumer = new ResourceConsumerService(logger ?? SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
             heartbeatConsumer = new HeartbeatConsumer(logger ?? SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
+            loggerConsumer = new LoggerConsumer();
             authenticationConsumer.ReceivedManifestReply += (obj, args) =>
             {
                 Manifest = args;
@@ -64,6 +69,7 @@ namespace RediscoveryManager.Service
                     resourceConsumer.ListenHeartbeatStatistic(CurrentConnection.Token, tokenSource);
                     heartbeatConsumer.Connect(CurrentConnection.IP, CurrentConnection.PortSSL, CurrentConnection.Pem);
                     heartbeatConsumer.StartBeat(CurrentConnection.DeviceIdentifier, CurrentConnection.Token, tokenSource);
+                    loggerConsumer.Connect(CurrentConnection.IP, CurrentConnection.PortSSL, CurrentConnection.Pem, CurrentConnection.Token);
                 }
                 AfterConnecting?.Invoke(this, ManagerConnectionState.ConnectionState);
             };
@@ -129,6 +135,10 @@ namespace RediscoveryManager.Service
                 }
                 HeartbeatStatisticsChanged?.Invoke(this, EventArgs.Empty);
             };
+            /*resourceConsumer.ReceiveLoggerEntiresChanged += (obj, args) =>
+            {
+                
+            };*/
             heartbeatConsumer.ReceivedBeatRoundtrip += (obj, args) =>
             {
                 RoundTripReceived?.Invoke(this, args);
@@ -189,12 +199,14 @@ namespace RediscoveryManager.Service
             PendingDevices.Clear();
             Features.Clear();
             HeartbeatStatistics.Clear();
+            LoggerEntires.Clear();
             AfterConnecting?.Invoke(this, ManagerConnectionState.ConnectionState);
             GreetingsReply?.Invoke(this, ManagerConnectionState.CanConnect);
             DeviceCollectionChanged?.Invoke(this, EventArgs.Empty);
             FeaturesCollectionChanged?.Invoke(this, EventArgs.Empty);
             ManifestChanged?.Invoke(this, EventArgs.Empty);
             HeartbeatStatisticsChanged?.Invoke(this, EventArgs.Empty);
+            LoggerEntiresChanged?.Invoke(this, EventArgs.Empty);
             if (tokenSource != null)
             {
                 try
@@ -216,6 +228,11 @@ namespace RediscoveryManager.Service
                 Port = port,
                 DeviceIdentifier = deviceIdentifier
             };
+        }
+
+        public void RemoteLogEntry(SharedBase.Logging.LoggerEntry loggerEntry)
+        {
+            loggerConsumer.LogEntry(loggerEntry);
         }
     }
 }

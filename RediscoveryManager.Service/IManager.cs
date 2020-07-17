@@ -16,6 +16,7 @@ namespace RediscoveryManager.Service
         ObservableCollection<SharedBase.Device.DeviceInfo> Devices { get; set; }
         ObservableCollection<SharedBase.Device.FeatureDefinitionExtended> Features { get; set; }
         ObservableCollection<SharedBase.Statistics.HeartbeatStatisticItem> HeartbeatStatistics { get; set; }
+        ObservableCollection<SharedBase.Logging.LoggerEntry> LoggerEntires { get; set; }
         event EventHandler<SharedBase.Connection.Enums.ConnectionState> AfterConnecting;
         event EventHandler<SharedBase.Connection.Enums.AllowConnect> GreetingsReply;
         event EventHandler<RoundTripResult> RoundTripReceived;
@@ -24,10 +25,12 @@ namespace RediscoveryManager.Service
         event EventHandler<Guid> PendingDeviceResolved;
         event EventHandler ManifestChanged;
         event EventHandler HeartbeatStatisticsChanged;
+        event EventHandler LoggerEntiresChanged;
         void SetConnectionValues(string ip, int port, string deviceIdentifier);
         bool TryConnect();
         void Disconnect();
         void TryResolvePendingDevice(Guid deviceId, bool resolve);
         void TryDeleteDevice(Guid deviceId);
+        void RemoteLogEntry(SharedBase.Logging.LoggerEntry loggerEntry);
     }
 }

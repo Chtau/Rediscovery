@@ -15,6 +15,7 @@ namespace CommunicationLoggerConsumer
         private Logger.LoggerExchange.LoggerExchangeClient exchangeClient;
 
         private Channel channel = null;
+        private string authorizationToken = null;
 
         public LoggerConsumer()
         {
@@ -26,10 +27,11 @@ namespace CommunicationLoggerConsumer
             _logger = logger;
         }
 
-        public bool Connect(string ipAddress, int port, string certificatePEM)
+        public bool Connect(string ipAddress, int port, string certificatePEM, string authorizationToken)
         {
             try
             {
+                this.authorizationToken = authorizationToken;
                 var channelCredentials = new SslCredentials(certificatePEM);
                 channel = new Channel(ipAddress, port, channelCredentials);
                 exchangeClient = new Logger.LoggerExchange.LoggerExchangeClient(channel);
@@ -56,14 +58,14 @@ namespace CommunicationLoggerConsumer
             }
         }
 
-        public void LogEntry(string token, LoggerEntry loggerEntry)
+        public void LogEntry(LoggerEntry loggerEntry)
         {
             Task.Run(async () =>
             {
                 try
                 {
                     var meta = new Metadata();
-                    meta.AddAuthorizationHeader(token);
+                    meta.AddAuthorizationHeader(authorizationToken);
                     using (var call = exchangeClient.Add(headers: meta))
                     {
                         var requestStream = call.RequestStream;
