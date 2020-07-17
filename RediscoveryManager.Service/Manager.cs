@@ -21,7 +21,7 @@ namespace RediscoveryManager.Service
         public ObservableCollection<SharedBase.Device.FeatureDefinitionExtended> Features { get; set; } = new ObservableCollection<SharedBase.Device.FeatureDefinitionExtended>();
         public ObservableCollection<SharedBase.Statistics.HeartbeatStatisticItem> HeartbeatStatistics { get; set; } = new ObservableCollection<SharedBase.Statistics.HeartbeatStatisticItem>();
         public SharedBase.Connection.Manifest Manifest { get; private set; }
-        public ObservableCollection<LoggerEntry> LoggerEntires { get; set; }
+        public ObservableCollection<LoggerEntry> LoggerEntires { get; set; } = new ObservableCollection<LoggerEntry>();
 
         public event EventHandler<SharedBase.Connection.Enums.ConnectionState> AfterConnecting;
         public event EventHandler<SharedBase.Connection.Enums.AllowConnect> GreetingsReply;

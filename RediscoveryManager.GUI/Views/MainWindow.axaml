@@ -6,7 +6,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" 
-        Width="500" Height="400"
+        Width="550" Height="400"
         x:Class="RediscoveryManager.GUI.Views.MainWindow"
         Icon="/Assets/rediscovery.ico"
         Title="Rediscovery Manager">
@@ -57,6 +57,12 @@
           <TextBlock VerticalAlignment="Center">Heartbeats</TextBlock>
         </TabItem.Header>
         <pages:HeartbeatStatistics/>
+      </TabItem>
+      <TabItem>
+        <TabItem.Header>
+          <TextBlock VerticalAlignment="Center">Logs</TextBlock>
+        </TabItem.Header>
+        <pages:Logger/>
       </TabItem>
     </TabControl>
     <ProgressBar Grid.Row="2" IsIndeterminate="True" IsVisible="{Binding IsLoading}" Foreground="{DynamicResource PrimaryBrush}" Background="{DynamicResource PrimaryLightBrush}"/>
