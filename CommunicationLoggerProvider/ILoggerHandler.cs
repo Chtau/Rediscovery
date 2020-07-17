@@ -6,9 +6,12 @@ namespace CommunicationLoggerProvider
 {
     public interface ILoggerHandler
     {
-        event EventHandler<List<SharedBase.Logging.LoggerEntry>> EntriesChanged;
+        bool Pause { get; set; }
+        int MaxEntires { get; set; }
+        event EventHandler EntriesChanged;
 
         void NewEntry(SharedBase.Logging.LoggerEntry loggerEntry);
         List<SharedBase.Logging.LoggerEntry> Get();
+        void ClearEntries();
     }
 }

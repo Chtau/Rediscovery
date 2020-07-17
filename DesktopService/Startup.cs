@@ -2,6 +2,7 @@
 using CommunicationAuthenticationProvider;
 using CommunicationFeatureProvider;
 using CommunicationHeartbeatProvider;
+using CommunicationLoggerProvider;
 using CommunicationResourceProvider;
 using DALDesktopService;
 using DesktopService.Features.Authentication;
@@ -75,6 +76,7 @@ namespace DesktopService
             services.AddFeatureProvider<FeatureManager>();
             services.AddResourceProvider<RemoteResourcesRepository, ResourceManager>();
             services.AddHeartbeatProvider<CommunicationHeartbeatProvider.Configuration>();
+            services.AddLoggerProvider<CommunicationLoggerProvider.DirectLogger>();
 
             services.AddSingleton<Services.IStaticResources, Services.StaticResources>();
 
@@ -119,6 +121,7 @@ namespace DesktopService
             app.UseAuthorization();
             app.UseResourceProvider();
             app.UseHeartbeatProvider();
+            app.UseLoggerProvider();
             app.UseFeatureProvider();
             app.UseAuthenticationProvider();
             app.UseEndpoints(endpoints =>

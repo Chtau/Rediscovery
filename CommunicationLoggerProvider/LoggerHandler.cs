@@ -9,18 +9,38 @@ namespace CommunicationLoggerProvider
     {
         private readonly IDirectLogger _directLogger;
 
+        private List<LoggerEntry> logEntries = new List<LoggerEntry>();
+        public bool Pause { get; set; }
+        public int MaxEntires { get; set; } = 100;
+
         public LoggerHandler(IDirectLogger directLogger)
         {
             _directLogger = directLogger;
         }
 
-        public event EventHandler<List<LoggerEntry>> EntriesChanged;
+        public event EventHandler EntriesChanged;
+
+        public void ClearEntries()
+        {
+            try
+            {
+                Pause = true;
+                logEntries.Clear();
+            }
+            catch (Exception ex)
+            {
+                _directLogger.LogException(ex);
+            } finally
+            {
+                Pause = false;
+            }
+        }
 
         public List<LoggerEntry> Get()
         {
             try
             {
-
+                return logEntries;
             }
             catch (Exception ex)
             {
@@ -33,7 +53,13 @@ namespace CommunicationLoggerProvider
         {
             try
             {
-
+                if (!Pause)
+                {
+                    if (logEntries.Count > MaxEntires)
+                        ClearEntries();
+                    logEntries.Add(loggerEntry);
+                    EntriesChanged?.Invoke(this, EventArgs.Empty);
+                }
             } catch (Exception ex)
             {
                 _directLogger.LogException(ex);
