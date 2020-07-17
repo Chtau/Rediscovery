@@ -24,6 +24,7 @@ namespace CommunicationResourceProvider.ProtoServices
         private Dictionary<string, IServerStreamWriter<FeatureList>> responseStreamsFeatures = new Dictionary<string, IServerStreamWriter<FeatureList>>();
         private Dictionary<string, IServerStreamWriter<DeviceInfoList>> responseStreamsPendingDevices = new Dictionary<string, IServerStreamWriter<DeviceInfoList>>();
         private Dictionary<string, IServerStreamWriter<HeartbeatStatisticList>> responseStreamsHeartbeatStatistic = new Dictionary<string, IServerStreamWriter<HeartbeatStatisticList>>();
+        private Dictionary<string, IServerStreamWriter<LogEntiresList>> responseStreamsLoggerEntires = new Dictionary<string, IServerStreamWriter<LogEntiresList>>();
 
         public ResourceExchangeService(ILoggerFactory loggerFactory, IResourcesRepository resourcesRepository, IResourceManager resourceManager)
         {
@@ -57,6 +58,10 @@ namespace CommunicationResourceProvider.ProtoServices
             _resourcesRepository.HeartbeatStatisticsChanged += (obj, args) =>
             {
                 OnSendToAll(OnSendHeartbeatStatistics, responseStreamsHeartbeatStatistic);
+            };
+            _resourcesRepository.LoggerEntiresChanged += (obj, args) =>
+            {
+                OnSendToAll(OnSendLoggerEntires, responseStreamsLoggerEntires);
             };
         }
 
@@ -520,6 +525,105 @@ namespace CommunicationResourceProvider.ProtoServices
                     catch (Exception ex)
                     {
                         _logger.LogError(ex, "OnSendHeartbeatStatistics write to response Stream");
+                    }
+                });
+            }
+        }
+
+        [Authorize(Policy = "ResourceConsumer")]
+        public override async Task LoggerEntires(Empty request, IServerStreamWriter<LogEntiresList> responseStream, ServerCallContext context)
+        {
+            string sid = null;
+            try
+            {
+                var user = context.GetHttpContext().User;
+                sid = user.Claims.GetSid();
+                if (responseStreamsLoggerEntires.ContainsKey(sid))
+                    responseStreamsLoggerEntires[sid] = responseStream;
+                else
+                    responseStreamsLoggerEntires.Add(sid, responseStream);
+
+                OnSendLoggerEntires(sid);
+                do
+                {
+                    await Task.Delay(100);
+                } while (!context.CancellationToken.IsCancellationRequested);
+
+                await Task.FromResult(true);
+            }
+            catch (System.OperationCanceledException)
+            {
+                _logger.LogTrace("LoggerEntires connection was canceled from Context Cancellation Token");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "LoggerEntires");
+            }
+            finally
+            {
+                if (!string.IsNullOrWhiteSpace(sid))
+                {
+                    if (responseStreamsLoggerEntires.ContainsKey(sid))
+                        responseStreamsLoggerEntires.Remove(sid);
+                }
+            }
+        }
+
+        private void OnSendLoggerEntires(string sid)
+        {
+            if (responseStreamsLoggerEntires.ContainsKey(sid))
+            {
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        var loggerEntries = _resourcesRepository.GetLoggerEntires();
+                        var reply = new LogEntiresList();
+                        if (loggerEntries?.Count > 0)
+                        {
+                            foreach (var item in loggerEntries)
+                            {
+                                LogEntry.Types.LoggerType loggerType = LogEntry.Types.LoggerType.Information;
+                                switch (item.LogLevel)
+                                {
+                                    case SharedBase.Logging.LoggerEntry.LoggerType.Trace:
+                                        loggerType = LogEntry.Types.LoggerType.Trace;
+                                        break;
+                                    case SharedBase.Logging.LoggerEntry.LoggerType.Debug:
+                                        loggerType = LogEntry.Types.LoggerType.Debug;
+                                        break;
+                                    case SharedBase.Logging.LoggerEntry.LoggerType.Information:
+                                        loggerType = LogEntry.Types.LoggerType.Information;
+                                        break;
+                                    case SharedBase.Logging.LoggerEntry.LoggerType.Warning:
+                                        loggerType = LogEntry.Types.LoggerType.Warning;
+                                        break;
+                                    case SharedBase.Logging.LoggerEntry.LoggerType.Error:
+                                        loggerType = LogEntry.Types.LoggerType.Error;
+                                        break;
+                                    case SharedBase.Logging.LoggerEntry.LoggerType.Critical:
+                                        loggerType = LogEntry.Types.LoggerType.Critical;
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                                reply.Entires.Add(new LogEntry
+                                {
+                                    Id = item.Id,
+                                    LoggerType = loggerType,
+                                    Message = item.Message,
+                                    Module = item.Module,
+                                    Time = item.Time.DatetimeTicksLong(),
+                                    DeviceId = item.Sid
+                                });
+                            }
+                        }
+                        await responseStreamsLoggerEntires[sid].WriteAsync(reply);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "OnSendLoggerEntires write to response Stream");
                     }
                 });
             }

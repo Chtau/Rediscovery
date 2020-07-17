@@ -67,6 +67,7 @@ namespace RediscoveryManager.Service
                     resourceConsumer.ListenPendingDevices(CurrentConnection.Token, tokenSource);
                     resourceConsumer.ListenFeatures(CurrentConnection.Token, tokenSource);
                     resourceConsumer.ListenHeartbeatStatistic(CurrentConnection.Token, tokenSource);
+                    resourceConsumer.ListenLoggerEntires(CurrentConnection.Token, tokenSource);
                     heartbeatConsumer.Connect(CurrentConnection.IP, CurrentConnection.PortSSL, CurrentConnection.Pem);
                     heartbeatConsumer.StartBeat(CurrentConnection.DeviceIdentifier, CurrentConnection.Token, tokenSource);
                     loggerConsumer.Connect(CurrentConnection.IP, CurrentConnection.PortSSL, CurrentConnection.Pem, CurrentConnection.Token);
@@ -135,10 +136,15 @@ namespace RediscoveryManager.Service
                 }
                 HeartbeatStatisticsChanged?.Invoke(this, EventArgs.Empty);
             };
-            /*resourceConsumer.ReceiveLoggerEntiresChanged += (obj, args) =>
+            resourceConsumer.ReceiveLoggerEntires += (obj, args) =>
             {
-                
-            };*/
+                LoggerEntires.Clear();
+                foreach (var item in args?.OrderByDescending(x => x.Time))
+                {
+                    LoggerEntires.Add(item);
+                }
+                LoggerEntiresChanged?.Invoke(this, EventArgs.Empty);
+            };
             heartbeatConsumer.ReceivedBeatRoundtrip += (obj, args) =>
             {
                 RoundTripReceived?.Invoke(this, args);

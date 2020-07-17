@@ -25,6 +25,7 @@ namespace CommunicationResourceConsumer
         public event EventHandler<(FeatureSetting setting, bool result)> ReceiveFeatureDetailSettingSave;
         public event EventHandler<Models.FeatureDetail> ReceiveFeatureDetails;
         public event EventHandler<List<HeartbeatStatisticItem>> ReceiveHeartbeatStatistic;
+        public event EventHandler<List<LoggerEntry>> ReceiveLoggerEntires;
 
         private readonly ILogger _logger;
 
@@ -368,6 +369,80 @@ namespace CommunicationResourceConsumer
                                     });
                                 }
                                 ReceiveHeartbeatStatistic?.Invoke(this, result);
+                            }
+                        });
+                        do
+                        {
+                            await Task.Delay(100);
+                        } while (!cts.IsCancellationRequested);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex);
+                }
+                finally
+                {
+                    cts.Cancel();
+                }
+            });
+        }
+
+        public void ListenLoggerEntires(string token, CancellationTokenSource cts = null)
+        {
+            Task.Run(async () =>
+            {
+                if (cts == null)
+                    cts = new CancellationTokenSource();
+                try
+                {
+                    var meta = new Metadata();
+                    meta.AddAuthorizationHeader(token);
+                    using (var call = resourceExchangeClient.LoggerEntires(new Google.Protobuf.WellKnownTypes.Empty(), headers: meta, cancellationToken: cts.Token))
+                    {
+                        var readTask = Task.Run(async () =>
+                        {
+                            await foreach (var message in call.ResponseStream.ReadAllAsync())
+                            {
+                                var result = new List<SharedBase.Logging.LoggerEntry>();
+                                foreach (var item in message.Entires)
+                                {
+                                    LoggerEntry.LoggerType loggerType = LoggerEntry.LoggerType.Information;
+                                    switch (item.LoggerType)
+                                    {
+                                        case Resources.LogEntry.Types.LoggerType.Trace:
+                                            loggerType = LoggerEntry.LoggerType.Trace;
+                                            break;
+                                        case Resources.LogEntry.Types.LoggerType.Debug:
+                                            loggerType = LoggerEntry.LoggerType.Debug;
+                                            break;
+                                        case Resources.LogEntry.Types.LoggerType.Information:
+                                            loggerType = LoggerEntry.LoggerType.Information;
+                                            break;
+                                        case Resources.LogEntry.Types.LoggerType.Warning:
+                                            loggerType = LoggerEntry.LoggerType.Warning;
+                                            break;
+                                        case Resources.LogEntry.Types.LoggerType.Error:
+                                            loggerType = LoggerEntry.LoggerType.Error;
+                                            break;
+                                        case Resources.LogEntry.Types.LoggerType.Critical:
+                                            loggerType = LoggerEntry.LoggerType.Critical;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+
+                                    result.Add(new LoggerEntry
+                                    {
+                                        Id = item.Id,
+                                        LogLevel = loggerType,
+                                        Message = item.Message,
+                                        Module = item.Module,
+                                        Sid = item.DeviceId,
+                                        Time = item.Time.TicksLongDatetimeNotNull()
+                                    });
+                                }
+                                ReceiveLoggerEntires?.Invoke(this, result);
                             }
                         });
                         do

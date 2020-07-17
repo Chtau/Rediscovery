@@ -17,6 +17,7 @@ service ResourceExchange {
   rpc FeatureDetail (FeatureDetailRequest) returns (FeatureDetails);
 
   rpc HeartbeatStatistic (google.protobuf.Empty) returns (stream HeartbeatStatisticList);
+  rpc LoggerEntires (google.protobuf.Empty) returns (stream LogEntiresList);
 }
 
 message DeviceInfoList {
@@ -62,4 +63,26 @@ message HeartbeatStatisticItem {
     uint64 pingStartDatetimeUTC = 3;
     bool oK = 4;
     uint64 resultReceived = 5;
+}
+
+message LogEntiresList {
+    repeated LogEntry entires = 1;
+}
+
+message LogEntry {
+   LoggerType loggerType = 1;
+   string id = 2;
+   string message = 3;
+   string module = 4;
+   uint64 time = 5;
+   string deviceId = 6;
+
+  enum LoggerType {
+    Trace = 0;
+    Debug = 1;
+    Information = 2;
+    Warning = 3;
+    Error = 4;
+    Critical = 5;
+  }
 }
