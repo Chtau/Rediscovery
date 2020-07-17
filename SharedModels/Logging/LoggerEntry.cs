@@ -38,7 +38,7 @@ namespace SharedBase.Logging
 
         public string Sid { get; set; }
 
-        public static LoggerEntry CreateEntry(string module, string message, LoggerType loggerType, string sid)
+        public static LoggerEntry CreateEntry(string module, string message, LoggerType loggerType, string sid = null)
         {
             return new LoggerEntry
             {

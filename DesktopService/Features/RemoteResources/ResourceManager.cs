@@ -18,6 +18,7 @@ namespace DesktopService.Features.RemoteResources
         public event EventHandler SendPendingDevicesChanged;
         public event EventHandler SendFeaturesChanged;
         public event EventHandler SendHeartbeatChanged;
+        public event EventHandler SendLoggerEntriesChanged;
 
         public ResourceManager(ILoggerFactory loggerFactory)
         {

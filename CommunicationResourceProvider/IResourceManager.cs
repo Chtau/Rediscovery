@@ -13,12 +13,12 @@ namespace CommunicationResourceProvider
         event EventHandler SendPendingDevicesChanged;
         event EventHandler SendFeaturesChanged;
         event EventHandler SendHeartbeatChanged;
+        event EventHandler SendLoggerEntriesChanged;
         void DeleteDevice(Guid deviceId);
         void UpdateDevice(SharedBase.Device.DeviceInfo deviceInfo);
         void ResolvePendingDevice(Guid deviceId, bool accept);
         void FeatureDetailProfileDelete(Guid featureId, string profileId);
         void FeatureDetailProfileSave(Guid featureId, FeatureProfil deviceFeatureProfil);
         void FeatureDetailSettingSave(Guid featureId, FeatureSetting deviceFeatureSetting);
-        
     }
 }

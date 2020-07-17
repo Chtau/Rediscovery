@@ -48,8 +48,7 @@ namespace DesktopDiscoveryService
                 Port = serviceInfoSettings.Port,
                 IPAddress = serviceInfoSettings.IP,
                 Metadata = serviceInfoSettings.MetaInfo,
-                Name = serviceInfoSettings.Name,
-                DesktopName = Environment.MachineName,
+                DesktopName = !string.IsNullOrWhiteSpace(serviceInfoSettings.Name) ? serviceInfoSettings.Name : Environment.MachineName,
                 DesktopOS = System.Runtime.InteropServices.RuntimeInformation.OSDescription
             };
 

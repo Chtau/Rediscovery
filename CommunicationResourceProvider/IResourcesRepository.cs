@@ -18,5 +18,7 @@ namespace CommunicationResourceProvider
         FeatureSetting GetResourceDeviceFeatureSettings(Guid featureId);
         List<SharedBase.Statistics.HeartbeatStatisticItem> GetHeartbeatStatistic();
         event EventHandler HeartbeatStatisticsChanged;
+        List<SharedBase.Logging.LoggerEntry> GetLoggerEntires();
+        event EventHandler LoggerEntiresChanged;
     }
 }

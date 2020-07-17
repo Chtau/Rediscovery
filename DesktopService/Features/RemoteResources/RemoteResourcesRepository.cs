@@ -5,6 +5,7 @@ using DesktopService.Map;
 using Microsoft.Extensions.Logging;
 using PluginFeature.Models;
 using SharedBase.Feature;
+using SharedBase.Logging;
 using SharedBase.Statistics;
 using System;
 using System.Collections.Generic;
@@ -21,15 +22,18 @@ namespace DesktopService.Features.RemoteResources
         private readonly DALDesktopService.Repository.IDevicePendingAuthenticationRepository _devicePendingAuthenticationRepository;
         private readonly DeviceFeature.IFeatureService _featureService;
         private readonly CommunicationHeartbeatProvider.IHeartbeatStatistic _heartbeatStatistic;
+        private readonly CommunicationLoggerProvider.ILoggerHandler _loggerHandler;
         private readonly ILogger<RemoteResourcesRepository> _logger;
 
         public event EventHandler HeartbeatStatisticsChanged;
+        public event EventHandler LoggerEntiresChanged;
 
         public RemoteResourcesRepository(
             DeviceFeature.IFeatureService featureService,
             DALDesktopService.Repository.IDeviceRepository deviceRepository,
             DALDesktopService.Repository.IDevicePendingAuthenticationRepository devicePendingAuthenticationRepository,
             CommunicationHeartbeatProvider.IHeartbeatStatistic heartbeatStatistic,
+            CommunicationLoggerProvider.ILoggerHandler loggerHandler,
             ILoggerFactory loggerFactory)
         {
             _featureService = featureService;
@@ -37,7 +41,14 @@ namespace DesktopService.Features.RemoteResources
             _devicePendingAuthenticationRepository = devicePendingAuthenticationRepository;
             _heartbeatStatistic = heartbeatStatistic;
             _heartbeatStatistic.UpdatedHeartbeatStatics += _heartbeatStatistic_UpdatedHeartbeatStatics;
+            _loggerHandler = loggerHandler;
+            _loggerHandler.EntriesChanged += _loggerHandler_EntriesChanged;
             _logger = loggerFactory.CreateLogger<RemoteResourcesRepository>();
+        }
+
+        private void _loggerHandler_EntriesChanged(object sender, EventArgs e)
+        {
+            LoggerEntiresChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void _heartbeatStatistic_UpdatedHeartbeatStatics(object sender, Dictionary<string, List<CommunicationHeartbeatProvider.HeartbeatResult>> e)
@@ -164,6 +175,20 @@ namespace DesktopService.Features.RemoteResources
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"GetHeartbeatStatistic error collection statistic");
+            }
+            return retVal;
+        }
+
+        public List<LoggerEntry> GetLoggerEntires()
+        {
+            var retVal = new List<LoggerEntry>();
+            try
+            {
+                return _loggerHandler.Get();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"GetLoggerEntires error collection");
             }
             return retVal;
         }
