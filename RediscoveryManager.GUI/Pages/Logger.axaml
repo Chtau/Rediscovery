@@ -4,13 +4,30 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="RediscoveryManager.GUI.Pages.Logger">
-  <DataGrid Name="dataGrid1" Margin="12" CanUserResizeColumns="True" CanUserReorderColumns="True">
-    <DataGrid.Columns>
-      <DataGridTextColumn Header="Sid" Binding="{Binding Sid}" Width="4*" />
-      <DataGridTextColumn Header="Time" Binding="{Binding Time, Mode=OneWay, Converter={StaticResource dateToTimeOnlyConverter}}" Width="4*" />
-      <DataGridTextColumn Header="LogLevel" Binding="{Binding LogLevel}" Width="3*" />
-      <DataGridTextColumn Header="Module" Binding="{Binding Module}" Width="4*" />
-      <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="5*" />
-    </DataGrid.Columns>
-  </DataGrid>
+  <Grid Margin="12, 0">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <Grid Grid.Row="0" Margin="0,0,0,5">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="Auto"/>
+      </Grid.ColumnDefinitions>
+      <StackPanel Grid.Column="1" Orientation="Horizontal">
+        <Button Classes="Primary" Command="{Binding Pause}" IsVisible="{Binding !UpdatePause}" Margin="0, 0, 5, 0">Pause</Button>
+        <Button Classes="Primary" Command="{Binding Pause}" IsVisible="{Binding UpdatePause}" Margin="0, 0, 5, 0">Resume</Button>
+        <Button Classes="Warning" Command="{Binding ClearLog}">Clear</Button>
+      </StackPanel>
+    </Grid>
+    <DataGrid Grid.Row="1" Name="dataGrid1" CanUserResizeColumns="True" CanUserReorderColumns="True">
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="Sid" Binding="{Binding Sid}" Width="4*" />
+        <DataGridTextColumn Header="Time" Binding="{Binding Time, Mode=OneWay, Converter={StaticResource dateToTimeOnlyConverter}}" Width="4*" />
+        <DataGridTextColumn Header="LogLevel" Binding="{Binding LogLevel}" Width="3*" />
+        <DataGridTextColumn Header="Module" Binding="{Binding Module}" Width="4*" />
+        <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="5*" />
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
 </UserControl>
