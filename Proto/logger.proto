@@ -1,10 +1,9 @@
 syntax = "proto3";
 
-import "google/protobuf/empty.proto";
 package logger;
 
 service LoggerExchange {
-  rpc Add (stream LogEntry) returns (google.protobuf.Empty);
+  rpc Add (stream LogEntry) returns (stream LogState);
 }
 
 message LogEntry {
@@ -22,4 +21,8 @@ message LogEntry {
     Error = 4;
     Critical = 5;
   }
+}
+
+message LogState {
+    bool ok = 1;
 }

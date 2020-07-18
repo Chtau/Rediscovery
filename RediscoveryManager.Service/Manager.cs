@@ -71,7 +71,8 @@ namespace RediscoveryManager.Service
                     resourceConsumer.ListenLoggerEntires(CurrentConnection.Token, tokenSource);
                     heartbeatConsumer.Connect(CurrentConnection.IP, CurrentConnection.PortSSL, CurrentConnection.Pem);
                     heartbeatConsumer.StartBeat(CurrentConnection.DeviceIdentifier, CurrentConnection.Token, tokenSource);
-                    loggerConsumer.Connect(CurrentConnection.IP, CurrentConnection.PortSSL, CurrentConnection.Pem, CurrentConnection.Token);
+                    loggerConsumer.Connect(CurrentConnection.IP, CurrentConnection.PortSSL, CurrentConnection.Pem);
+                    loggerConsumer.StartLogger(CurrentConnection.Token, tokenSource);
                 }
                 AfterConnecting?.Invoke(this, ManagerConnectionState.ConnectionState);
             };

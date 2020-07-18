@@ -96,6 +96,8 @@ namespace CommunicationHeartbeatConsumer
 
                                 message.Ticks = (ulong)DateTime.UtcNow.Ticks;
                                 await _requestStream.WriteAsync(message);
+                                // TODO: only for test
+                                _logger.LogTrace("New Heartbeat send");
                             }
                         });
                         do
