@@ -20,8 +20,17 @@ namespace RediscoveryManager.GUI.Pages
                 Dispatcher.UIThread.InvokeAsync(() =>
                 {
                     var dg1 = this.FindControl<DataGrid>("dataGrid1");
-                    dg1.IsReadOnly = true;
-
+                    dg1.IsReadOnly = false;
+                    dg1.BeginningEdit += (obj, args) =>
+                    {
+                        args.Cancel = true;
+                        var entry = args.Row.DataContext as SharedBase.Logging.LoggerEntry;
+                        if (entry != null)
+                        {
+                            model.ShowDetail(entry);
+                        }
+                    };
+                    
                     var collectionView1 = new DataGridCollectionView(model.Items);
                     collectionView1.GroupDescriptions.Add(new DataGridPathGroupDescription("Sid"));
                     dg1.Items = collectionView1;

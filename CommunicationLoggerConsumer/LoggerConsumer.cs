@@ -82,30 +82,6 @@ namespace CommunicationLoggerConsumer
                     using (var call = exchangeClient.Add(headers: meta, cancellationToken: ctsLogger.Token))
                     {
                         _requestStream = call.RequestStream;
-                        /*await _requestStream.WriteAsync(new PingPongMessage
-                        {
-                            Command = PingPongMessage.Types.Command.Beat,
-                            LastRoundTripTicks = 0,
-                            Ticks = (ulong)DateTime.UtcNow.Ticks
-                        });*/
-
-                        /*var readTask = Task.Run(async () =>
-                        {
-                            await foreach (var message in call.ResponseStream.ReadAllAsync())
-                            {
-                                message.LastRoundTripTicks = (ulong)DateTime.UtcNow.Ticks - message.Ticks;
-
-                                if (channel.State == ChannelState.Shutdown || channel.State == ChannelState.TransientFailure || channel.State == ChannelState.Idle)
-                                    ReceivedBeatRoundtrip?.Invoke(this, new RoundTripResult(identifier, false));
-                                else
-                                    ReceivedBeatRoundtrip?.Invoke(this, new RoundTripResult(identifier, true, new TimeSpan((long)message.LastRoundTripTicks), new DateTime((long)message.Ticks)));
-
-                                await Task.Delay(PingResponseWaitingMilliseconds);
-
-                                message.Ticks = (ulong)DateTime.UtcNow.Ticks;
-                                await _requestStream.WriteAsync(message);
-                            }
-                        });*/
                         do
                         {
                             await Task.Delay(100);
@@ -163,47 +139,6 @@ namespace CommunicationLoggerConsumer
                         Module = loggerEntry.Module,
                         Time = loggerEntry.Time.DatetimeTicksLong(),
                     });
-                    /*
-                    var meta = new Metadata();
-                    //meta.AddAuthorizationHeader(authorizationToken);
-                    using (var call = exchangeClient.Add(headers: meta))
-                    {
-                        var requestStream = call.RequestStream;
-
-                        var logLevel = Logger.LogEntry.Types.LoggerType.Information;
-                        switch (loggerEntry.LogLevel)
-                        {
-                            case LoggerEntry.LoggerType.Trace:
-                                logLevel = Logger.LogEntry.Types.LoggerType.Trace;
-                                break;
-                            case LoggerEntry.LoggerType.Debug:
-                                logLevel = Logger.LogEntry.Types.LoggerType.Debug;
-                                break;
-                            case LoggerEntry.LoggerType.Information:
-                                logLevel = Logger.LogEntry.Types.LoggerType.Information;
-                                break;
-                            case LoggerEntry.LoggerType.Warning:
-                                logLevel = Logger.LogEntry.Types.LoggerType.Warning;
-                                break;
-                            case LoggerEntry.LoggerType.Error:
-                                logLevel = Logger.LogEntry.Types.LoggerType.Error;
-                                break;
-                            case LoggerEntry.LoggerType.Critical:
-                                logLevel = Logger.LogEntry.Types.LoggerType.Critical;
-                                break;
-                            default:
-                                break;
-                        }
-
-                        await requestStream.WriteAsync(new Logger.LogEntry
-                        {
-                            Id = loggerEntry.Id,
-                            LoggerType = logLevel,
-                            Message = loggerEntry.Message,
-                            Module = loggerEntry.Module,
-                            Time = loggerEntry.Time.DatetimeTicksLong(),
-                        });
-                    }*/
                 }
                 catch (Exception ex)
                 {

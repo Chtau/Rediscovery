@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace RediscoveryManager.GUI.ViewModels
 {
@@ -20,6 +21,16 @@ namespace RediscoveryManager.GUI.ViewModels
             set
             {
                 this.RaiseAndSetIfChanged(ref items, value);
+            }
+        }
+
+        private bool updatePause;
+        public bool UpdatePause
+        {
+            get { return updatePause; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref updatePause, value);
             }
         }
 
@@ -39,13 +50,72 @@ namespace RediscoveryManager.GUI.ViewModels
 
         private void OnSetItems()
         {
-            var newCollection = new List<SharedBase.Logging.LoggerEntry>();
-            foreach (var item in _manager.LoggerEntires)
+            if (!updatePause)
             {
-                newCollection.Add(item);
+                var newCollection = new List<SharedBase.Logging.LoggerEntry>();
+                foreach (var item in _manager.LoggerEntires)
+                {
+                    newCollection.Add(item);
+                }
+                Items = new ObservableCollection<SharedBase.Logging.LoggerEntry>(newCollection);
+                ItemsChanged?.Invoke(this, EventArgs.Empty);
             }
-            Items = new ObservableCollection<SharedBase.Logging.LoggerEntry>(newCollection);
-            ItemsChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void Pause()
+        {
+            try
+            {
+                UpdatePause = !UpdatePause;
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex);
+            }
+        }
+
+        public void ClearLog()
+        {
+            try
+            {
+                UpdatePause = true;
+                Items = new ObservableCollection<SharedBase.Logging.LoggerEntry>();
+                ItemsChanged?.Invoke(this, EventArgs.Empty);
+                // TODO: send a message to clear the log on the service
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+            } finally
+            {
+                UpdatePause = false;
+            }
+        }
+
+        private SharedBase.Logging.LoggerEntry currentDialog = null;
+        public async Task ShowDetail(SharedBase.Logging.LoggerEntry loggerEntry)
+        {
+            try
+            {
+                if (currentDialog != null)
+                    return;
+                currentDialog = loggerEntry;
+                var model = new LoggerEntryViewModel
+                {
+                    Id = loggerEntry.Id,
+                    LogLevel = loggerEntry.LogLevel,
+                    Message = loggerEntry.Message,
+                    Module = loggerEntry.Module,
+                    Sid = loggerEntry.Sid,
+                    Time = loggerEntry.Time
+                };
+                var logEntryDialog = new Windows.LoggerEntry(model);
+                var result = await logEntryDialog.ShowDialog<bool>(Program.MainWindow);
+                currentDialog = null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+            }
         }
     }
 }
