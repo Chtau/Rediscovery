@@ -10,6 +10,8 @@ namespace RediscoveryManager.GUI.Pages
     {
         private readonly ViewModels.LoggerViewModel model;
 
+        private int lastClickIndex = -1;
+
         public Logger()
         {
             this.InitializeComponent();
@@ -23,12 +25,17 @@ namespace RediscoveryManager.GUI.Pages
                     dg1.IsReadOnly = false;
                     dg1.BeginningEdit += (obj, args) =>
                     {
-                        args.Cancel = true;
-                        var entry = args.Row.DataContext as SharedBase.Logging.LoggerEntry;
-                        if (entry != null)
+                        var curIndex = args.Row.GetIndex();
+                        if (curIndex != lastClickIndex)
                         {
-                            model.ShowDetail(entry);
+                            lastClickIndex = curIndex;
+                            var entry = args.Row.DataContext as SharedBase.Logging.LoggerEntry;
+                            if (entry != null)
+                            {
+                                model.ShowDetail(entry);
+                            }
                         }
+                        args.Cancel = true;
                     };
                     
                     var collectionView1 = new DataGridCollectionView(model.Items);

@@ -91,14 +91,10 @@ namespace RediscoveryManager.GUI.ViewModels
             }
         }
 
-        private SharedBase.Logging.LoggerEntry currentDialog = null;
-        public async Task ShowDetail(SharedBase.Logging.LoggerEntry loggerEntry)
+        public void ShowDetail(SharedBase.Logging.LoggerEntry loggerEntry)
         {
             try
             {
-                if (currentDialog != null)
-                    return;
-                currentDialog = loggerEntry;
                 var model = new LoggerEntryViewModel
                 {
                     Id = loggerEntry.Id,
@@ -109,8 +105,7 @@ namespace RediscoveryManager.GUI.ViewModels
                     Time = loggerEntry.Time
                 };
                 var logEntryDialog = new Windows.LoggerEntry(model);
-                var result = await logEntryDialog.ShowDialog<bool>(Program.MainWindow);
-                currentDialog = null;
+                logEntryDialog.Show();
             }
             catch (Exception ex)
             {
