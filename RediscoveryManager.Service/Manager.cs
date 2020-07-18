@@ -42,12 +42,13 @@ namespace RediscoveryManager.Service
 
         private System.Threading.CancellationTokenSource tokenSource;
 
-        public Manager(ILogger logger)
+        public Manager()
         {
-            authenticationConsumer = new AuthenticationConsumerService(logger ?? SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
-            greetingConsumer = new GreetingConsumerService(logger ?? SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
-            resourceConsumer = new ResourceConsumerService(logger ?? SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
-            heartbeatConsumer = new HeartbeatConsumer(logger ?? SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
+            SharedBase.Logging.EventLoggerProvider.Instance.LogNewEntry += Instance_LogNewEntry;
+            authenticationConsumer = new AuthenticationConsumerService(SharedBase.Logging.EventLoggerProvider.Instance);
+            greetingConsumer = new GreetingConsumerService(SharedBase.Logging.EventLoggerProvider.Instance);
+            resourceConsumer = new ResourceConsumerService(SharedBase.Logging.EventLoggerProvider.Instance);
+            heartbeatConsumer = new HeartbeatConsumer(SharedBase.Logging.EventLoggerProvider.Instance);
             loggerConsumer = new LoggerConsumer();
             authenticationConsumer.ReceivedManifestReply += (obj, args) =>
             {
@@ -151,6 +152,11 @@ namespace RediscoveryManager.Service
             };
         }
 
+        private void Instance_LogNewEntry(object sender, LoggerEntry e)
+        {
+            RemoteLogEntry(e);
+        }
+
         public bool TryConnect()
         {
             Disconnect();
@@ -238,7 +244,8 @@ namespace RediscoveryManager.Service
 
         public void RemoteLogEntry(SharedBase.Logging.LoggerEntry loggerEntry)
         {
-            loggerConsumer.LogEntry(loggerEntry);
+            if (loggerConsumer?.IsConnect == true)
+                loggerConsumer.LogEntry(loggerEntry);
         }
     }
 }

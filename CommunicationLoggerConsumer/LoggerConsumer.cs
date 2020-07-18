@@ -17,6 +17,14 @@ namespace CommunicationLoggerConsumer
         private Channel channel = null;
         private string authorizationToken = null;
 
+        public bool IsConnect
+        {
+            get
+            {
+                return channel != null && channel.State != ChannelState.Shutdown && channel.State != ChannelState.TransientFailure;
+            }
+        }
+
         public LoggerConsumer()
         {
             _logger = new DirectLogger();

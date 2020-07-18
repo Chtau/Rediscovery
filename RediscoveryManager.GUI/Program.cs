@@ -53,8 +53,9 @@ namespace RediscoveryManager.GUI
         {
             var connectSettings = Program.Configuration.GetSection(SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration.SectionName).Get<SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration>();
             Locator.CurrentMutable.RegisterConstant(connectSettings, typeof(SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration));
+            var manager = new Manager();
+            Locator.CurrentMutable.RegisterConstant(manager, typeof(IManager));
             Locator.CurrentMutable.RegisterConstant(SharedBase.Logging.DiagnosticsLoggerProvider.Instance, typeof(SharedBase.Logging.ILogger));
-            Locator.CurrentMutable.RegisterConstant(new Manager(SharedBase.Logging.DiagnosticsLoggerProvider.Instance), typeof(IManager));
             Locator.CurrentMutable.RegisterConstant(new Shared.SharedEvents(), typeof(Shared.ISharedEvents));
         }
 
