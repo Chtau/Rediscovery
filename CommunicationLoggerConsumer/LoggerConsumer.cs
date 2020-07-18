@@ -19,6 +19,8 @@ namespace CommunicationLoggerConsumer
         private Channel channel = null;
         private CancellationTokenSource ctsLogger = null;
 
+        public event EventHandler<SharedBase.Logging.LogCommandConfigResult> LoggerCommandExecuted;
+
         public bool IsConnect
         {
             get
@@ -143,6 +145,49 @@ namespace CommunicationLoggerConsumer
                 catch (Exception ex)
                 {
                     _logger.LogException(ex);
+                }
+            });
+        }
+
+        public void LoggerCommand(string token, LogCommandConfig logCommandConfig)
+        {
+            Task.Run(async () =>
+            {
+                var cts = new CancellationTokenSource();
+                try
+                {
+                    var meta = new Metadata();
+                    meta.AddAuthorizationHeader(token);
+
+                    Logger.LogCommandConfig.Types.Command commandType = Logger.LogCommandConfig.Types.Command.Clear;
+                    switch (logCommandConfig.CommandType)
+                    {
+                        case LogCommandConfig.Command.Clear:
+                            commandType = Logger.LogCommandConfig.Types.Command.Clear;
+                            break;
+                        case LogCommandConfig.Command.ChangeLogLevel:
+                            commandType = Logger.LogCommandConfig.Types.Command.ChangeLogLevel;
+                            break;
+                        default:
+                            break;
+                    }
+                    Logger.LogCommandConfig logCommand = new Logger.LogCommandConfig
+                    {
+                        Id = logCommandConfig.Id.ToString(),
+                        Data = logCommandConfig.Data,
+                        LogCommand = commandType
+                    };
+
+                    var reply = await exchangeClient.LoggerCommandAsync(logCommand, cancellationToken: cts.Token, headers: meta);
+                    LoggerCommandExecuted?.Invoke(this, new LogCommandConfigResult { Id = new Guid(reply.Id), Result = reply.Ok });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogException(ex);
+                }
+                finally
+                {
+                    cts.Cancel();
                 }
             });
         }

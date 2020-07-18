@@ -13,5 +13,6 @@ namespace CommunicationLoggerProvider
         void NewEntry(SharedBase.Logging.LoggerEntry loggerEntry);
         List<SharedBase.Logging.LoggerEntry> Get();
         void ClearEntries();
+        bool ExecuteCommand(SharedBase.Logging.LogCommandConfig logCommandConfig);
     }
 }

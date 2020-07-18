@@ -33,6 +33,7 @@ namespace RediscoveryManager.Service
         public event EventHandler ManifestChanged;
         public event EventHandler HeartbeatStatisticsChanged;
         public event EventHandler LoggerEntiresChanged;
+        public event EventHandler<SharedBase.Logging.LogCommandConfigResult> LoggerCommandExecuted;
 
         private readonly IAuthenticationConsumerService authenticationConsumer;
         private readonly IGreetingConsumerService greetingConsumer;
@@ -151,6 +152,10 @@ namespace RediscoveryManager.Service
             {
                 RoundTripReceived?.Invoke(this, args);
             };
+            loggerConsumer.LoggerCommandExecuted += (obj, args) =>
+            {
+                LoggerCommandExecuted?.Invoke(this, args);
+            };
         }
 
         private void Instance_LogNewEntry(object sender, LoggerEntry e)
@@ -247,6 +252,15 @@ namespace RediscoveryManager.Service
         {
             if (loggerConsumer?.IsConnect == true)
                 loggerConsumer.LogEntry(loggerEntry);
+        }
+
+        public bool RemoteLogExecuteCommand(LogCommandConfig logCommandConfig)
+        {
+            if (loggerConsumer?.IsConnect == true)
+            {
+                loggerConsumer.LoggerCommand(CurrentConnection.Token, logCommandConfig);
+            }
+            return false;
         }
     }
 }

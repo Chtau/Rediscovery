@@ -91,5 +91,42 @@ namespace CommunicationLoggerProvider.ProtoService
                 _directLogger.LogException(ex);
             }
         }
+
+        [Authorize(Policy = "ResourceConsumer")]
+        public override Task<LogCommandState> LoggerCommand(LogCommandConfig request, ServerCallContext context)
+        {
+            try
+            {
+                SharedBase.Logging.LogCommandConfig.Command cmdType = SharedBase.Logging.LogCommandConfig.Command.Clear;
+                switch (request.LogCommand)
+                {
+                    case LogCommandConfig.Types.Command.Clear:
+                        cmdType = SharedBase.Logging.LogCommandConfig.Command.Clear;
+                        break;
+                    case LogCommandConfig.Types.Command.ChangeLogLevel:
+                        cmdType = SharedBase.Logging.LogCommandConfig.Command.ChangeLogLevel;
+                        break;
+                    default:
+                        break;
+                }
+                var cmdId = new Guid(request.Id);
+
+                var logCommand = new SharedBase.Logging.LogCommandConfig
+                {
+                    Id = cmdId,
+                    Data = request.Data,
+                    CommandType = cmdType
+                };
+                if (_loggerHandler.ExecuteCommand(logCommand))
+                {
+                    return Task.FromResult(new LogCommandState { Id = request.Id, Ok = true });
+                }
+            }
+            catch (Exception ex)
+            {
+                _directLogger.LogException(ex);
+            }
+            return Task.FromResult(new LogCommandState { Id = request.Id, Ok = false });
+        }
     }
 }

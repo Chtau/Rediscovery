@@ -26,11 +26,13 @@ namespace RediscoveryManager.Service
         event EventHandler ManifestChanged;
         event EventHandler HeartbeatStatisticsChanged;
         event EventHandler LoggerEntiresChanged;
+        event EventHandler<SharedBase.Logging.LogCommandConfigResult> LoggerCommandExecuted;
         void SetConnectionValues(string ip, int port, string deviceIdentifier);
         bool TryConnect();
         void Disconnect();
         void TryResolvePendingDevice(Guid deviceId, bool resolve);
         void TryDeleteDevice(Guid deviceId);
         void RemoteLogEntry(SharedBase.Logging.LoggerEntry loggerEntry);
+        bool RemoteLogExecuteCommand(SharedBase.Logging.LogCommandConfig logCommandConfig);
     }
 }

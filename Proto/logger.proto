@@ -4,6 +4,7 @@ package logger;
 
 service LoggerExchange {
   rpc Add (stream LogEntry) returns (stream LogState);
+  rpc LoggerCommand (LogCommandConfig) returns (LogCommandState);
 }
 
 message LogEntry {
@@ -25,4 +26,19 @@ message LogEntry {
 
 message LogState {
     bool ok = 1;
+}
+
+message LogCommandConfig {
+    string id = 1;
+    enum Command {
+        Clear = 0;
+        ChangeLogLevel = 1;
+    }
+    Command logCommand = 2;
+    string data = 3;
+}
+
+message LogCommandState {
+    string id = 1;
+    bool ok = 2;
 }

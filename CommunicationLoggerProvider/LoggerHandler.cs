@@ -10,6 +10,7 @@ namespace CommunicationLoggerProvider
         private readonly IDirectLogger _directLogger;
 
         private List<LoggerEntry> logEntries = new List<LoggerEntry>();
+        private SharedBase.Logging.LoggerEntry.LoggerType logLevel = LoggerEntry.LoggerType.Trace;
         public bool Pause { get; set; }
         public int MaxEntires { get; set; } = 100;
 
@@ -57,13 +58,47 @@ namespace CommunicationLoggerProvider
                 {
                     if (logEntries.Count > MaxEntires)
                         ClearEntries();
-                    logEntries.Add(loggerEntry);
-                    EntriesChanged?.Invoke(this, EventArgs.Empty);
+                    if (OnAllowedLogLevel(loggerEntry.LogLevel))
+                    {
+                        logEntries.Add(loggerEntry);
+                        EntriesChanged?.Invoke(this, EventArgs.Empty);
+                    }
                 }
             } catch (Exception ex)
             {
                 _directLogger.LogException(ex);
             }
+        }
+
+        private bool OnAllowedLogLevel(SharedBase.Logging.LoggerEntry.LoggerType loggerType)
+        {
+            return (int)loggerType >= (int)logLevel;
+        }
+
+        public bool ExecuteCommand(LogCommandConfig logCommandConfig)
+        {
+            try
+            {
+                if (logCommandConfig.CommandType == LogCommandConfig.Command.Clear)
+                {
+                    ClearEntries();
+                    return true;
+                } else if (logCommandConfig.CommandType == LogCommandConfig.Command.ChangeLogLevel)
+                {
+                    if (int.TryParse(logCommandConfig.Data, out int level))
+                    {
+                        var newLogLevel = (SharedBase.Logging.LoggerEntry.LoggerType)level;
+                        logLevel = newLogLevel;
+                        ClearEntries();
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _directLogger.LogException(ex);
+            }
+            return false;
         }
     }
 }
