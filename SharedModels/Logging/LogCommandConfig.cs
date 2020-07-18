@@ -14,8 +14,9 @@ namespace SharedBase.Logging
         public Guid Id { get; set; }
         public enum Command
         {
-            Clear = 0,
-            ChangeLogLevel = 1
+            State = 0,
+            Clear = 1,
+            ChangeLogLevel = 2
         }
 
         public Command CommandType { get; set; }

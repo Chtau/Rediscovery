@@ -104,6 +104,8 @@ namespace CommunicationLoggerConsumer
 
         public void LogEntry(LoggerEntry loggerEntry)
         {
+            if (_requestStream == null)
+                return;
             Task.Run(async () =>
             {
                 try
@@ -159,7 +161,7 @@ namespace CommunicationLoggerConsumer
                     var meta = new Metadata();
                     meta.AddAuthorizationHeader(token);
 
-                    Logger.LogCommandConfig.Types.Command commandType = Logger.LogCommandConfig.Types.Command.Clear;
+                    Logger.LogCommandConfig.Types.Command commandType = Logger.LogCommandConfig.Types.Command.State;
                     switch (logCommandConfig.CommandType)
                     {
                         case LogCommandConfig.Command.Clear:
@@ -167,6 +169,9 @@ namespace CommunicationLoggerConsumer
                             break;
                         case LogCommandConfig.Command.ChangeLogLevel:
                             commandType = Logger.LogCommandConfig.Types.Command.ChangeLogLevel;
+                            break;
+                        case LogCommandConfig.Command.State:
+                            commandType = Logger.LogCommandConfig.Types.Command.State;
                             break;
                         default:
                             break;
@@ -179,7 +184,7 @@ namespace CommunicationLoggerConsumer
                     };
 
                     var reply = await exchangeClient.LoggerCommandAsync(logCommand, cancellationToken: cts.Token, headers: meta);
-                    LoggerCommandExecuted?.Invoke(this, new LogCommandConfigResult { Id = new Guid(reply.Id), Result = reply.Ok });
+                    LoggerCommandExecuted?.Invoke(this, new LogCommandConfigResult { Id = new Guid(reply.Id), Result = reply.Ok, Data = reply.Data });
                 }
                 catch (Exception ex)
                 {

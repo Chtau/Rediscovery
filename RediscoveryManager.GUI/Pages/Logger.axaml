@@ -15,7 +15,7 @@
         <ColumnDefinition Width="Auto"/>
       </Grid.ColumnDefinitions>
       <StackPanel Grid.Column="1" Orientation="Horizontal">
-        <ComboBox x:Name="logLevelComboBox" Items="{Binding LogLevels}" SelectedItem="{Binding CurrentLevel}">
+        <ComboBox Margin="0, 0, 5, 0" x:Name="logLevelComboBox" Items="{Binding LogLevels}" SelectedItem="{Binding CurrentLevel}">
           <ComboBox.ItemTemplate>
             <DataTemplate>
               <TextBlock Text="{Binding Name}" Tag="{Binding Level}"/>

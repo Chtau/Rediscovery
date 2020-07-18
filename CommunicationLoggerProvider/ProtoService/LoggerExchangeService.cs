@@ -2,6 +2,7 @@
 using Grpc.Core;
 using Logger;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -97,7 +98,7 @@ namespace CommunicationLoggerProvider.ProtoService
         {
             try
             {
-                SharedBase.Logging.LogCommandConfig.Command cmdType = SharedBase.Logging.LogCommandConfig.Command.Clear;
+                SharedBase.Logging.LogCommandConfig.Command cmdType = SharedBase.Logging.LogCommandConfig.Command.State;
                 switch (request.LogCommand)
                 {
                     case LogCommandConfig.Types.Command.Clear:
@@ -105,6 +106,9 @@ namespace CommunicationLoggerProvider.ProtoService
                         break;
                     case LogCommandConfig.Types.Command.ChangeLogLevel:
                         cmdType = SharedBase.Logging.LogCommandConfig.Command.ChangeLogLevel;
+                        break;
+                    case LogCommandConfig.Types.Command.State:
+                        cmdType = SharedBase.Logging.LogCommandConfig.Command.State;
                         break;
                     default:
                         break;
@@ -117,16 +121,14 @@ namespace CommunicationLoggerProvider.ProtoService
                     Data = request.Data,
                     CommandType = cmdType
                 };
-                if (_loggerHandler.ExecuteCommand(logCommand))
-                {
-                    return Task.FromResult(new LogCommandState { Id = request.Id, Ok = true });
-                }
+                var result = _loggerHandler.ExecuteCommand(logCommand);
+                return Task.FromResult(new LogCommandState { Id = result.Id.ToString(), Ok = result.Result, Data = result.Data.EmptyIfNull(), });
             }
             catch (Exception ex)
             {
                 _directLogger.LogException(ex);
             }
-            return Task.FromResult(new LogCommandState { Id = request.Id, Ok = false });
+            return Task.FromResult(new LogCommandState { Id = request.Id, Ok = false, Data = "" });
         }
     }
 }

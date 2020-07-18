@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace CommunicationLoggerProvider
 {
@@ -75,14 +76,19 @@ namespace CommunicationLoggerProvider
             return (int)loggerType >= (int)logLevel;
         }
 
-        public bool ExecuteCommand(LogCommandConfig logCommandConfig)
+        public LogCommandConfigResult ExecuteCommand(LogCommandConfig logCommandConfig)
         {
             try
             {
                 if (logCommandConfig.CommandType == LogCommandConfig.Command.Clear)
                 {
                     ClearEntries();
-                    return true;
+                    return new LogCommandConfigResult
+                    {
+                        Data = "",
+                        Id = logCommandConfig.Id,
+                        Result = true
+                    };
                 } else if (logCommandConfig.CommandType == LogCommandConfig.Command.ChangeLogLevel)
                 {
                     if (int.TryParse(logCommandConfig.Data, out int level))
@@ -90,15 +96,37 @@ namespace CommunicationLoggerProvider
                         var newLogLevel = (SharedBase.Logging.LoggerEntry.LoggerType)level;
                         logLevel = newLogLevel;
                         ClearEntries();
-                        return true;
+                        return new LogCommandConfigResult
+                        {
+                            Data = "",
+                            Id = logCommandConfig.Id,
+                            Result = true
+                        };
                     }
+                } else if (logCommandConfig.CommandType == LogCommandConfig.Command.State)
+                {
+                    var state = new LoggerState
+                    {
+                        Level = logLevel
+                    };
+                    return new LogCommandConfigResult
+                    {
+                        Data = Newtonsoft.Json.JsonConvert.SerializeObject(state),
+                        Id = logCommandConfig.Id,
+                        Result = true
+                    };
                 }
             }
             catch (Exception ex)
             {
                 _directLogger.LogException(ex);
             }
-            return false;
+            return new LogCommandConfigResult
+            {
+                Data = "",
+                Id = logCommandConfig.Id,
+                Result = false
+            };
         }
     }
 }

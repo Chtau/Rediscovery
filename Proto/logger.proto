@@ -31,8 +31,9 @@ message LogState {
 message LogCommandConfig {
     string id = 1;
     enum Command {
-        Clear = 0;
-        ChangeLogLevel = 1;
+        State = 0;
+        Clear = 1;
+        ChangeLogLevel = 2;
     }
     Command logCommand = 2;
     string data = 3;
@@ -41,4 +42,5 @@ message LogCommandConfig {
 message LogCommandState {
     string id = 1;
     bool ok = 2;
+    string data = 3;
 }

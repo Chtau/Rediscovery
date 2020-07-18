@@ -4,6 +4,7 @@ using Splat;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,7 +38,8 @@ namespace RediscoveryManager.GUI.ViewModels
             set
             {
                 this.RaiseAndSetIfChanged(ref currentLevel, value);
-                OnAfterLogLevelChanged();
+                if (!internalLogLevelChange)
+                    OnAfterLogLevelChanged();
             }
         }
 
@@ -63,6 +65,9 @@ namespace RediscoveryManager.GUI.ViewModels
 
         public event EventHandler ItemsChanged;
 
+        private Guid stateCommandId = Guid.NewGuid();
+        private bool internalLogLevelChange = false;
+
         public LoggerViewModel()
         {
             _manager = Locator.Current.GetService<IManager>();
@@ -80,11 +85,34 @@ namespace RediscoveryManager.GUI.ViewModels
             _manager.LoggerCommandExecuted += (obj, args) =>
             {
                 System.Diagnostics.Debug.Print($"Logger command executed Id:{args.Id} Result:{args.Result}");
+                if (args.Id == stateCommandId)
+                {
+                    var loggerState = Newtonsoft.Json.JsonConvert.DeserializeObject<SharedBase.Logging.LoggerState>(args.Data);
+                    if (loggerState != null)
+                    {
+                        var llItem = LogLevels.FirstOrDefault(x => x.Level == (int)loggerState.Level);
+                        if (llItem != null)
+                        {
+                            internalLogLevelChange = true;
+                            CurrentLevel = llItem;
+                            internalLogLevelChange = false;
+                        }
+                    }
+                }
             };
             _manager.LoggerEntiresChanged += (obj, args) =>
             {
                 OnSetItems();
             };
+            _manager.AfterConnecting += (obj, args) =>
+            {
+                _manager.RemoteLogExecuteCommand(new SharedBase.Logging.LogCommandConfig
+                {
+                    CommandType = SharedBase.Logging.LogCommandConfig.Command.State,
+                    Id = stateCommandId
+                });
+            };
+            
             OnSetItems();
         }
 

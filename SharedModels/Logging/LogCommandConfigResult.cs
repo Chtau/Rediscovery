@@ -8,5 +8,6 @@ namespace SharedBase.Logging
     {
         public Guid Id { get; set; }
         public bool Result { get; set; }
+        public string Data { get; set; }
     }
 }

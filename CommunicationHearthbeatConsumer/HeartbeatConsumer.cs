@@ -95,7 +95,10 @@ namespace CommunicationHeartbeatConsumer
                                 await Task.Delay(PingResponseWaitingMilliseconds);
 
                                 message.Ticks = (ulong)DateTime.UtcNow.Ticks;
-                                await _requestStream.WriteAsync(message);
+                                if (_requestStream != null)
+                                {
+                                    await _requestStream.WriteAsync(message);
+                                }
                                 // TODO: only for test
                                 _logger.LogTrace("New Heartbeat send");
                             }
