@@ -81,7 +81,6 @@ namespace DesktopService
             services.AddSingleton<Services.IStaticResources, Services.StaticResources>();
 
             services.AddSingleton<IConfigurationRoot>(Configuration);
-            services.AddSingleton<Features.RemoteResources.IRemoteResourcesLiveLogger, Features.RemoteResources.RemoteResourcesLiveLogger>();
             services.AddSingleton<IFeatureService, FeatureService>();
             services.AddSingleton<IRoleResolver, RoleResolver>();
             services.AddSingleton<Features.Configuration.IDistributeConfig, Features.Configuration.DistributeConfig>();
@@ -102,7 +101,8 @@ namespace DesktopService
             }
             loggerFactory.AddRemoteLogger(o =>
             {
-                o.RemoteResourcesLiveLogger = app.ApplicationServices.GetRequiredService<Features.RemoteResources.IRemoteResourcesLiveLogger>();
+                if (!string.IsNullOrWhiteSpace(appSettings?.Value?.RemoteLoggerModuleName))
+                    o.LoggingModuleName = appSettings?.Value?.RemoteLoggerModuleName;
                 o.LogLevel = remoteLogLevel;
             });
 

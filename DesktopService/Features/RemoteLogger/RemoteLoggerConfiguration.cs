@@ -9,6 +9,6 @@ namespace DesktopService.Features.Logger
     {
         public LogLevel LogLevel { get; set; } = LogLevel.Warning;
         public int EventId { get; set; } = 0;
-        public Features.RemoteResources.IRemoteResourcesLiveLogger RemoteResourcesLiveLogger { get; set; }
+        public string LoggingModuleName { get; set; } = "Service";
     }
 }

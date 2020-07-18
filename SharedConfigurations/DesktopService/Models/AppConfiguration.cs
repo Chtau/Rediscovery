@@ -35,5 +35,6 @@ namespace SharedConfigurations.DesktopService.Models
         public string DatabasePath { get; set; }
 
         public string RemoteLogger { get; set; }
+        public string RemoteLoggerModuleName { get; set; }
     }
 }

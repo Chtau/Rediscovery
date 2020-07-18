@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CommunicationLoggerProvider;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,6 +10,7 @@ namespace DesktopService.Features.Logger
     {
         private readonly string _name;
         private readonly RemoteLoggerConfiguration _config;
+        private readonly ILoggerHandler _loggerHandler;
 
         public RemoteLogger(string name, RemoteLoggerConfiguration config)
         {
@@ -35,12 +37,13 @@ namespace DesktopService.Features.Logger
 
             if (_config.EventId == 0 || _config.EventId == eventId.Id)
             {
-                _config.RemoteResourcesLiveLogger.Log(new SharedBase.Logging.LoggerEntry
+                _loggerHandler?.NewEntry(new SharedBase.Logging.LoggerEntry
                 {
                     Id = eventId.Id.ToString(),
                     LogLevel = GetLoggerType(logLevel),
                     Message = formatter(state, exception),
-                    Time = DateTime.Now
+                    Time = DateTime.Now,
+                    Module = _config.LoggingModuleName
                 });
             }
         }
