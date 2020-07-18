@@ -17,7 +17,7 @@ namespace Rediscovery.Views
     [DesignTimeVisible(false)]
     public partial class MainPage : MasterDetailPage
     {
-        private SharedBase.Logging.ILogger _logger => DependencyService.Get<SharedBase.Logging.ILogger>() ?? new Logger();
+        internal Services.ILoggerEvent _logger => DependencyService.Get<Services.ILoggerEvent>() ?? new Services.Logger();
         private Features.DesktopFeatures.IClientFeatureService clientFeatureService => DependencyService.Get<Features.DesktopFeatures.IClientFeatureService>() ?? new Features.DesktopFeatures.ClientFeatureService();
         private Dictionary<int, NavigationPage> MenuPages = new Dictionary<int, NavigationPage>();
         public int ActiveMenu { get; set; } = 0;

@@ -13,7 +13,7 @@ namespace Rediscovery.Views.Sidebar
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SidebarDrawer : ContentPage
     {
-        internal SharedBase.Logging.ILogger _logger => DependencyService.Get<SharedBase.Logging.ILogger>() ?? new Logger();
+        internal Services.ILoggerEvent _logger => DependencyService.Get<Services.ILoggerEvent>() ?? new Services.Logger();
         MainPage RootPage { get => Application.Current.MainPage as MainPage; }
         List<SidebarMenuItem> menuItems;
 

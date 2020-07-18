@@ -10,6 +10,7 @@ namespace Rediscovery.Services
         CommunicationAuthenticationConsumer.GreetingConsumerService GreetingConsumerService { get; }
         CommunicationFeatureConsumer.FeatureConsumerService FeatureConsumerService { get; }
         CommunicationHeartbeatConsumer.HeartbeatConsumer HeartbeatConsumerService { get; }
+        CommunicationLoggerConsumer.LoggerConsumer LoggerConsumer { get; }
         bool Disconnect();
     }
 }

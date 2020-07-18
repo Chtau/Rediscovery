@@ -9,11 +9,9 @@ using Xamarin.Forms;
 
 namespace Rediscovery.Converter
 {
-    public class ConnectionStateConverter : IValueConverter
+    public class ConnectionStateConverter : BaseValueConverter
     {
-        internal SharedBase.Logging.ILogger _logger => DependencyService.Get<SharedBase.Logging.ILogger>() ?? new Logger();
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             try
             {
@@ -54,7 +52,7 @@ namespace Rediscovery.Converter
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

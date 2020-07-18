@@ -6,9 +6,9 @@ using Xamarin.Forms;
 
 namespace Rediscovery.Converter
 {
-    public class TimespanConverter : IValueConverter
+    public class TimespanConverter : BaseValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value != null && value is TimeSpan timeSpan)
             {
@@ -20,11 +20,6 @@ namespace Rediscovery.Converter
                 return retVal;
             }
             return "";
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
         }
     }
 }

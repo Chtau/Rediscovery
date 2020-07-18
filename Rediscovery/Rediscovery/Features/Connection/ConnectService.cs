@@ -2,6 +2,7 @@
 using Rediscovery.Features.Connection.Models;
 using Rediscovery.Features.DesktopConfiguration;
 using Rediscovery.Services;
+using SharedBase.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,10 +20,22 @@ namespace Rediscovery.Features.Connection
         private IManifestFeatureEntityManager entityManager => DependencyService.Get<IManifestFeatureEntityManager>() ?? new ManifestFeatureEntityManager();
         private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
         private IDeviceData deviceData => DependencyService.Get<IDeviceData>() ?? new DeviceData();
+        private ILoggerEvent loggerEvent => DependencyService.Get<ILoggerEvent>() ?? new Services.Logger();
+
         private Dictionary<Guid, ConnectConfigurationData> desktopConfigurationData = new Dictionary<Guid, ConnectConfigurationData>();
         private Dictionary<Guid, CommunicationHeartbeatConsumer.RoundTripResult> lastHeartbeatStates = new Dictionary<Guid, CommunicationHeartbeatConsumer.RoundTripResult>();
 
         public event EventHandler<Guid> HeartbeatStateChanges;
+
+        public ConnectService()
+        {
+            loggerEvent.EntryAdded += LoggerEvent_EntryAdded;
+        }
+
+        private void LoggerEvent_EntryAdded(object sender, LoggerEntry e)
+        {
+            consumer?.LoggerConsumer?.LogEntry(e);
+        }
 
         public CommunicationHeartbeatConsumer.RoundTripResult GetHeartbeat(Guid desktopConfigurationId)
         {
@@ -109,6 +122,7 @@ namespace Rediscovery.Features.Connection
                                 {
                                     entityManager.AddManifestData(manifest, item.Id, item.DisplayName);
                                 });
+                                OnConnectLogger(item.Address, reply.SSLPort, reply.PEM, deviceReply.Token);
                                 OnConnectHeartbeat(item.Address, reply.SSLPort, reply.PEM, deviceReply.Token, item.Id);
                                 resultCallback?.Invoke(item, deviceReply.Token, deviceReply.State);
                             }
@@ -192,6 +206,21 @@ namespace Rediscovery.Features.Connection
                     lastHeartbeatStates[desktopConfigurationId].PingPongTime = e.PingPongTime;
                     lastHeartbeatStates[desktopConfigurationId].PingStartDatetimeUTC = e.PingStartDatetimeUTC;
                     HeartbeatStateChanges?.Invoke(this, desktopConfigurationId);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+            }
+        }
+
+        private void OnConnectLogger(string ipAddress, int port, string pem, string token)
+        {
+            try
+            {
+                if (consumer.LoggerConsumer.Connect(ipAddress, port, pem))
+                {
+                    consumer.LoggerConsumer.StartLogger(token);
                 }
             }
             catch (Exception ex)

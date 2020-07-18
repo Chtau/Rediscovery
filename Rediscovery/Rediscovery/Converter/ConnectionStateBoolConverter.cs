@@ -8,11 +8,9 @@ using Xamarin.Forms;
 
 namespace Rediscovery.Converter
 {
-    public class ConnectionStateBoolConverter : IValueConverter
+    public class ConnectionStateBoolConverter : BaseValueConverter
     {
-        internal SharedBase.Logging.ILogger _logger => DependencyService.Get<SharedBase.Logging.ILogger>() ?? new Logger();
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             try
             {
@@ -25,18 +23,11 @@ namespace Rediscovery.Converter
                 return false;
             }
         }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
     }
 
-    public class ConnectionStateReverseBoolConverter : IValueConverter
+    public class ConnectionStateReverseBoolConverter : BaseValueConverter
     {
-        internal SharedBase.Logging.ILogger _logger => DependencyService.Get<SharedBase.Logging.ILogger>() ?? new Logger();
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             try
             {
@@ -48,11 +39,6 @@ namespace Rediscovery.Converter
                 _logger.LogError(ex);
                 return !false;
             }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
         }
     }
 }

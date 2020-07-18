@@ -6,9 +6,9 @@ using Xamarin.Forms;
 
 namespace Rediscovery.Converter
 {
-    public class IntMinusEmptyConverter : IValueConverter
+    public class IntMinusEmptyConverter : BaseValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value != null && value is int val && val >= 0)
             {
@@ -17,7 +17,7 @@ namespace Rediscovery.Converter
             return null;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string valString = value?.ToString();
             if (!string.IsNullOrWhiteSpace(valString) && int.TryParse(valString, out int ret))
