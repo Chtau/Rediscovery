@@ -99,8 +99,6 @@ namespace CommunicationHeartbeatConsumer
                                 {
                                     await _requestStream.WriteAsync(message);
                                 }
-                                // TODO: only for test
-                                _logger.LogTrace("New Heartbeat send");
                             }
                         });
                         do
