@@ -15,6 +15,13 @@
         <ColumnDefinition Width="Auto"/>
       </Grid.ColumnDefinitions>
       <StackPanel Grid.Column="1" Orientation="Horizontal">
+        <ComboBox x:Name="logLevelComboBox" Items="{Binding LogLevels}" SelectedItem="{Binding CurrentLevel}">
+          <ComboBox.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding Name}" Tag="{Binding Level}"/>
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
         <Button Classes="Primary" Command="{Binding Pause}" IsVisible="{Binding !UpdatePause}" Margin="0, 0, 5, 0">Pause</Button>
         <Button Classes="Primary" Command="{Binding Pause}" IsVisible="{Binding UpdatePause}" Margin="0, 0, 5, 0">Resume</Button>
         <Button Classes="Warning" Command="{Binding ClearLog}">Clear</Button>

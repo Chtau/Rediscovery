@@ -174,7 +174,7 @@ namespace CommunicationLoggerConsumer
                     Logger.LogCommandConfig logCommand = new Logger.LogCommandConfig
                     {
                         Id = logCommandConfig.Id.ToString(),
-                        Data = logCommandConfig.Data,
+                        Data = logCommandConfig.Data.EmptyIfNull(),
                         LogCommand = commandType
                     };
 
