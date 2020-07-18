@@ -24,7 +24,7 @@ namespace RediscoveryManager
                 connection = argCon;
             if (connectSettings != null)
                 connection = connectSettings;
-            IManager manager = new Manager(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
+            IManager manager = new Manager();
             var uiHandler = new UIHandler(manager);
             uiHandler.Start(connection);
         }
