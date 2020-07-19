@@ -112,7 +112,11 @@ namespace CommunicationResourceProvider.ProtoServices
                 {
                     try
                     {
-                        var devices = _resourcesRepository.GetResourceActiveDeviceInfo();
+                        var ids = _resourcesRepository.GetResourceActiveDeviceIds();
+                        var devicesInfo = _resourcesRepository.GetResourceDeviceInfo();
+                        var devices = (from x in devicesInfo
+                                       join y in ids on x.Identifier equals y
+                                       select x)?.ToList();
                         var reply = new DeviceInfoList();
                         if (devices?.Count > 0)
                         {

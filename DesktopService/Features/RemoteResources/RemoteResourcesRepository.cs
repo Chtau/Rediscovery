@@ -22,10 +22,12 @@ namespace DesktopService.Features.RemoteResources
         private readonly DALDesktopService.Repository.IDevicePendingAuthenticationRepository _devicePendingAuthenticationRepository;
         private readonly DeviceFeature.IFeatureService _featureService;
         private readonly CommunicationHeartbeatProvider.IHeartbeatStatistic _heartbeatStatistic;
+        private readonly CommunicationHeartbeatProvider.IHeartbeatActive _heartbeatActive;
         private readonly CommunicationLoggerProvider.ILoggerHandler _loggerHandler;
         private readonly ILogger<RemoteResourcesRepository> _logger;
 
         public event EventHandler HeartbeatStatisticsChanged;
+        public event EventHandler HeartbeatActiveIDsChanged;
         public event EventHandler LoggerEntiresChanged;
 
         public RemoteResourcesRepository(
@@ -33,6 +35,7 @@ namespace DesktopService.Features.RemoteResources
             DALDesktopService.Repository.IDeviceRepository deviceRepository,
             DALDesktopService.Repository.IDevicePendingAuthenticationRepository devicePendingAuthenticationRepository,
             CommunicationHeartbeatProvider.IHeartbeatStatistic heartbeatStatistic,
+            CommunicationHeartbeatProvider.IHeartbeatActive heartbeatActive,
             CommunicationLoggerProvider.ILoggerHandler loggerHandler,
             ILoggerFactory loggerFactory)
         {
@@ -41,9 +44,16 @@ namespace DesktopService.Features.RemoteResources
             _devicePendingAuthenticationRepository = devicePendingAuthenticationRepository;
             _heartbeatStatistic = heartbeatStatistic;
             _heartbeatStatistic.UpdatedHeartbeatStatics += _heartbeatStatistic_UpdatedHeartbeatStatics;
+            _heartbeatActive = heartbeatActive;
+            _heartbeatActive.ActiveSIDsChanged += _heartbeatActive_ActiveSIDsChanged;
             _loggerHandler = loggerHandler;
             _loggerHandler.EntriesChanged += _loggerHandler_EntriesChanged;
             _logger = loggerFactory.CreateLogger<RemoteResourcesRepository>();
+        }
+
+        private void _heartbeatActive_ActiveSIDsChanged(object sender, EventArgs e)
+        {
+            HeartbeatActiveIDsChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void _loggerHandler_EntriesChanged(object sender, EventArgs e)
@@ -72,6 +82,7 @@ namespace DesktopService.Features.RemoteResources
                     ).ToList();
         }
 
+        [Obsolete("Active devices are now from the heartbeat")]
         public List<SharedBase.Device.DeviceInfo> GetResourceActiveDeviceInfo()
         {
             var allUsers = from x in CommunicationFeatureProvider.FeatureActiveDevices.Devices select new Guid(x);
@@ -191,6 +202,11 @@ namespace DesktopService.Features.RemoteResources
                 _logger.LogError(ex, $"GetLoggerEntires error collection");
             }
             return retVal;
+        }
+
+        public List<string> GetResourceActiveDeviceIds()
+        {
+            return _heartbeatActive.GetActiveSIDs();
         }
     }
 }

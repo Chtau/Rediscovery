@@ -9,7 +9,7 @@ namespace CommunicationResourceProvider
     {
         List<SharedBase.Device.FeatureDefinitionExtended> GetResourceDeviceFeature();
         List<SharedBase.Device.DeviceInfo> GetResourceDeviceInfo();
-        List<SharedBase.Device.DeviceInfo> GetResourceActiveDeviceInfo();
+        List<string> GetResourceActiveDeviceIds();
         bool DeleteDeviceInfo(Guid id);
         SharedBase.Device.DeviceInfo UpdateDeviceInfo(SharedBase.Device.DeviceInfo deviceInfo);
         List<SharedBase.Device.DeviceInfo> GetResourcePendingAuthenticationDevices();
@@ -20,5 +20,6 @@ namespace CommunicationResourceProvider
         event EventHandler HeartbeatStatisticsChanged;
         List<SharedBase.Logging.LoggerEntry> GetLoggerEntires();
         event EventHandler LoggerEntiresChanged;
+        event EventHandler HeartbeatActiveIDsChanged;
     }
 }
