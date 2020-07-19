@@ -37,8 +37,7 @@ namespace DesktopService.Features.Logger
 
             if (_config.EventId == 0 || _config.EventId == eventId.Id)
             {
-                var instance = _config?.GetLoggerHandlerInstance();
-                instance?.NewEntry(new SharedBase.Logging.LoggerEntry
+                _config?.GetLoggerHandlerInstance()?.NewEntry(new SharedBase.Logging.LoggerEntry
                 {
                     Id = eventId.Id.ToString(),
                     LogLevel = GetLoggerType(logLevel),
