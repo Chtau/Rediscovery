@@ -14,6 +14,7 @@ namespace CommunicationLoggerProvider
         private SharedBase.Logging.LoggerEntry.LoggerType logLevel = LoggerEntry.LoggerType.Trace;
         public bool Pause { get; set; }
         public int MaxEntires { get; set; } = 100;
+        private DateTime lastEntiresChangedEvent = DateTime.UtcNow.AddMinutes(-1);
 
         public LoggerHandler(IDirectLogger directLogger)
         {
@@ -62,8 +63,11 @@ namespace CommunicationLoggerProvider
                     if (OnAllowedLogLevel(loggerEntry.LogLevel))
                     {
                         logEntries.Add(loggerEntry);
-                        // TODO: restrict event how often it is fired
-                        EntriesChanged?.Invoke(this, EventArgs.Empty);
+                        if (lastEntiresChangedEvent.AddSeconds(10) < DateTime.UtcNow)
+                        {
+                            lastEntiresChangedEvent = DateTime.UtcNow;
+                            EntriesChanged?.Invoke(this, EventArgs.Empty);
+                        }
                     }
                 }
             } catch (Exception ex)
