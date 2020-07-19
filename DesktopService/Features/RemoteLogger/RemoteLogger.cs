@@ -45,9 +45,8 @@ namespace DesktopService.Features.Logger
                     Message = formatter(state, exception),
                     Time = DateTime.Now,
                     Module = _config.LoggingModuleName,
-                    Sid = "DesktopService"
+                    Sid = !string.IsNullOrWhiteSpace(_config.LoggingModuleName) ? _config.LoggingModuleName : "DesktopService"
                 });
-                // TODO: need configuration for LoggerEntry [Sid] Property
             }
         }
 
