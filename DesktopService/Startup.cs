@@ -104,6 +104,7 @@ namespace DesktopService
                 if (!string.IsNullOrWhiteSpace(appSettings?.Value?.RemoteLoggerModuleName))
                     o.LoggingModuleName = appSettings?.Value?.RemoteLoggerModuleName;
                 o.LogLevel = remoteLogLevel;
+                o.GetLoggerHandlerInstance = () => { return app.ApplicationServices.GetRequiredService<ILoggerHandler>(); };
             });
 
             app.UseCors(builder =>

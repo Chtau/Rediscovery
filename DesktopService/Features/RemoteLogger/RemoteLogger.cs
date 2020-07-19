@@ -37,14 +37,17 @@ namespace DesktopService.Features.Logger
 
             if (_config.EventId == 0 || _config.EventId == eventId.Id)
             {
-                _loggerHandler?.NewEntry(new SharedBase.Logging.LoggerEntry
+                var instance = _config?.GetLoggerHandlerInstance();
+                instance?.NewEntry(new SharedBase.Logging.LoggerEntry
                 {
                     Id = eventId.Id.ToString(),
                     LogLevel = GetLoggerType(logLevel),
                     Message = formatter(state, exception),
                     Time = DateTime.Now,
-                    Module = _config.LoggingModuleName
+                    Module = _config.LoggingModuleName,
+                    Sid = "DesktopService"
                 });
+                // TODO: need configuration for LoggerEntry [Sid] Property
             }
         }
 

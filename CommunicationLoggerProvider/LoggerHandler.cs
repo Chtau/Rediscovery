@@ -62,6 +62,7 @@ namespace CommunicationLoggerProvider
                     if (OnAllowedLogLevel(loggerEntry.LogLevel))
                     {
                         logEntries.Add(loggerEntry);
+                        // TODO: restrict event how often it is fired
                         EntriesChanged?.Invoke(this, EventArgs.Empty);
                     }
                 }
