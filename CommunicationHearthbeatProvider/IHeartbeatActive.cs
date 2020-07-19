@@ -11,5 +11,6 @@ namespace CommunicationHeartbeatProvider
         List<string> GetActiveSIDs();
         HeartbeatActiveDeviceDetail Detail(string sid);
         void TryAdd(HeartbeatActiveDeviceDetail deviceDetail);
+        void TryRemove(string sid);
     }
 }

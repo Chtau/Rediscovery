@@ -23,6 +23,7 @@ namespace CommunicationHeartbeatProvider
         {
             services.AddGrpc();
             services.AddSingleton<IConfiguration, TConfiguration>();
+            services.AddSingleton<IHeartbeatActive, HeartbeatActive>();
             services.AddSingleton<IHeartbeatStatistic, HeartbeatStatistic>();
             return services;
         }
