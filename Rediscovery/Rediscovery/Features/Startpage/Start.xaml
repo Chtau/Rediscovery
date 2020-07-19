@@ -12,6 +12,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <StackLayout Margin="25" Grid.Row="0">
                 <Label x:Name="versionText" FontSize="Medium" Text="Rediscovery Mobile Client Version 0.0.0"
@@ -36,6 +37,9 @@
                 </Label>
             </StackLayout>
             <StackLayout Grid.Row="1">
+                <!-- show connect overview -->
+            </StackLayout>
+            <StackLayout Grid.Row="2">
                 <flex:FlexButton 
                     x:Name="ClientFeatureQueue"  IsVisible="false" Clicked="ClientFeatureQueue_Clicked" Text="Queued data:"
                         Icon="share_forward_fill.png"
