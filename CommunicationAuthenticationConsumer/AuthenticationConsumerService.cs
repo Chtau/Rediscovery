@@ -87,7 +87,7 @@ namespace CommunicationAuthenticationConsumer
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.Print(ex.ToString());
+                    _logger.LogError(ex);
                     replyMsg.State = Enums.ConnectionState.Error;
                 } finally
                 {
@@ -120,7 +120,7 @@ namespace CommunicationAuthenticationConsumer
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.Print(ex.ToString());
+                    _logger.LogError(ex);
                 }
             });
         }

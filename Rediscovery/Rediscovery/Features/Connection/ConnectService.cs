@@ -103,7 +103,7 @@ namespace Rediscovery.Features.Connection
             {
                 var item = desktopConfigurations[nextIndex];
                 var setting = settingStore.GetItem(Guid.Empty);
-                var reply = consumer.GreetingConsumerService.GreetHost(item.Address, item.Port, deviceData.GreetingDeviceMessage(), setting.ConnectTimeout);
+                var reply = consumer.GreetingConsumerService.GreetHost(item.Address, item.Port, deviceData.GreetingDeviceMessage(), setting == null ? 2 : setting.ConnectTimeout);
                 if (reply.CanConnect == SharedBase.Connection.Enums.AllowConnect.OK)
                 {
                     if (consumer.AuthenticationConsumerService.Connect(item.Address, reply.SSLPort, reply.PEM))
@@ -135,6 +135,8 @@ namespace Rediscovery.Features.Connection
                                 }
                                 else
                                 {
+                                    if (item.ConnectionState == SharedBase.Connection.Enums.ConnectionState.None)
+                                        item.ConnectionState = deviceReply.State;
                                     resultCallback?.Invoke(item, null, item.ConnectionState);
                                 }
                             }
