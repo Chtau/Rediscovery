@@ -31,6 +31,7 @@ namespace Rediscovery.Features.Startpage
             clientFeatureService.ClientQueueDisplay += ClientFeatureService_ClientQueueDisplay;
             ClientFeatureQueue.IsVisible = clientFeatureService.HasQueueItem;
             ClientFeatureQueue.Text = QueuedData + " " + clientFeatureService.CurrentQueueItem?.QueueInfoText;
+            viewModel.UpdateGetQuickConnectItem();
         }
 
         private void ClientFeatureService_ClientQueueDisplay(object sender, ClientFeatureService.QueueItem e)
