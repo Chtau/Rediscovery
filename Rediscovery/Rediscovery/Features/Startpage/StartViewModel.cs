@@ -17,6 +17,7 @@ namespace Rediscovery.Features.Startpage
         private IConnectService connectService => DependencyService.Get<IConnectService>() ?? new ConnectService();
 
         public Command OpenUrlCommand { get; set; }
+        public Command QuickConnectCommand { get; set; }
 
         public StartViewModel()
         {
@@ -24,6 +25,27 @@ namespace Rediscovery.Features.Startpage
             {
                 await Launcher.OpenAsync(url);
             });
+            QuickConnectCommand = new Command(() =>
+            {
+                connectService.Connect(desktopConfigurationModel, (result, state) =>
+                {
+                    if (state == SharedBase.Connection.Enums.ConnectionState.OK)
+                    {
+                        _userNotification.ShowToast("Successful connected");
+                    }
+                    else
+                    {
+                        _userNotification.ShowToast("Not connected");
+                    }
+                    UpdateGetQuickConnectItem();
+                });
+            });
+            connectService.HeartbeatStateChanges += ConnectService_HeartbeatStateChanges;
+        }
+
+        private void ConnectService_HeartbeatStateChanges(object sender, Guid e)
+        {
+            UpdateGetQuickConnectItem();
         }
 
         public void UpdateGetQuickConnectItem()
@@ -33,17 +55,38 @@ namespace Rediscovery.Features.Startpage
                 var items = desktopConfigStore.GetItems();
                 if (items?.Count() == 1)
                     DesktopConfiguration = items.First();
+                else
+                {
+                    var item = items.OrderByDescending(x => x.LastConnection.Value).FirstOrDefault();
+                    if (item != null)
+                    {
+                        DesktopConfiguration = item;
+                    }
+                }
+                if (DesktopConfiguration != null)
+                {
+                    var lastHeartbeat = connectService.GetHeartbeat(DesktopConfiguration.Id);
+                    IsConnect = lastHeartbeat.OK;
+                    PingPongTime = lastHeartbeat.PingPongTime;
+                } else
+                {
+                    IsConnect = false;
+                    PingPongTime = null;
+                }
             } catch (Exception ex)
             {
                 _logger.LogError(ex);
             }
         }
 
-        // TODO: Show quick connect menu (last connected or near know network or if we have only one configuration)
-        // if we are connect show to which configuration we are connected
-        // if we have no configuration inform the user that we must add a configuration
+        private bool noConfiguration;
+        public bool NoConfiguration
+        {
+            get { return noConfiguration; }
+            set { SetProperty(ref noConfiguration, value); }
+        }
 
-        bool isConnect;
+        private bool isConnect;
         public bool IsConnect
         {
             get { return isConnect; }
@@ -55,6 +98,13 @@ namespace Rediscovery.Features.Startpage
         {
             get { return desktopConfigurationModel; }
             set { SetProperty(ref desktopConfigurationModel, value); }
+        }
+
+        private TimeSpan? pingPongTime;
+        public TimeSpan? PingPongTime
+        {
+            get { return pingPongTime; }
+            set { SetProperty(ref pingPongTime, value); }
         }
     }
 }

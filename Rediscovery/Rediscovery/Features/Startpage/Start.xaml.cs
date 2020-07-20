@@ -1,5 +1,7 @@
 ﻿using Rediscovery.Features.DesktopFeatures;
 using Rediscovery.Services;
+using Rediscovery.Views;
+using Rediscovery.Views.Sidebar;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,6 +19,8 @@ namespace Rediscovery.Features.Startpage
     {
         private const string QueuedData = "Queued data:";
 
+        MainPage RootPage { get => Application.Current.MainPage as MainPage; }
+
         internal Services.ILoggerEvent _logger => DependencyService.Get<Services.ILoggerEvent>() ?? new Services.Logger();
         private Features.DesktopFeatures.IClientFeatureService clientFeatureService => DependencyService.Get<Features.DesktopFeatures.IClientFeatureService>() ?? new Features.DesktopFeatures.ClientFeatureService();
         StartViewModel viewModel;
@@ -31,6 +35,19 @@ namespace Rediscovery.Features.Startpage
             clientFeatureService.ClientQueueDisplay += ClientFeatureService_ClientQueueDisplay;
             ClientFeatureQueue.IsVisible = clientFeatureService.HasQueueItem;
             ClientFeatureQueue.Text = QueuedData + " " + clientFeatureService.CurrentQueueItem?.QueueInfoText;
+            viewModel.UpdateGetQuickConnectItem();
+
+            AddConfiguration.Clicked += AddConfiguration_Clicked;
+        }
+
+        private async void AddConfiguration_Clicked(object sender, EventArgs e)
+        {
+            await RootPage.NavigateFromMenu((int)SidebarItemType.DesktopConfiguration);
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
             viewModel.UpdateGetQuickConnectItem();
         }
 
