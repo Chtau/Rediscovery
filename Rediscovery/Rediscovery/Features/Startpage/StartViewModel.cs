@@ -54,14 +54,21 @@ namespace Rediscovery.Features.Startpage
             {
                 var items = desktopConfigStore.GetItems();
                 if (items?.Count() == 1)
-                    DesktopConfiguration = items.First();
-                else
                 {
+                    NoConfiguration = false;
+                    DesktopConfiguration = items.First();
+                }
+                else if (items?.Count() > 1)
+                {
+                    NoConfiguration = false;
                     var item = items.OrderByDescending(x => x.LastConnection.Value).FirstOrDefault();
                     if (item != null)
                     {
                         DesktopConfiguration = item;
                     }
+                } else
+                {
+                    NoConfiguration = true;
                 }
                 if (DesktopConfiguration != null)
                 {

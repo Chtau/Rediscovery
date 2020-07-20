@@ -56,49 +56,51 @@
                         </Grid>
                     </Frame>
                 </StackLayout>
-                <StackLayout IsVisible="{Binding IsConnect}">
-                    <Frame BorderColor="{StaticResource Primary}" CornerRadius="5" HasShadow="True" Padding="10, 5, 5, 5" Margin="5">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
-                                <Label FontSize="Medium" Text="Connect to"/>
-                                <Label FontSize="Medium" FontAttributes="Bold" Text="{Binding DesktopConfiguration.DisplayName}"/>
-                            </StackLayout>
-                            <StackLayout Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-                                <Label Text="Timings:" FontSize="Medium" />
-                                <Label Text="{Binding PingPongTime, Converter={StaticResource timespanConverter}}" FontSize="Medium"/>
-                            </StackLayout>
-                        </Grid>
-                    </Frame>
-                </StackLayout>
-                <StackLayout IsVisible="{Binding IsConnect, Converter={StaticResource reverseBoolConverter}}">
-                    <Frame BorderColor="{StaticResource Primary}" CornerRadius="5" HasShadow="True" Padding="10, 5, 5, 5" Margin="5">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <StackLayout Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal">
-                                <Label FontAttributes="Bold" FontSize="Large" Text="Quick connect"/>
-                            </StackLayout>
-                            <StackLayout Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
-                                <Label Text="Connection Name:"/>
-                                <Label FontAttributes="Bold" Text="{Binding DesktopConfiguration.DisplayName}"/>
-                            </StackLayout>
-                            <flex:FlexButton Grid.RowSpan="2" Grid.Column="1" x:Name="QuickConnectButton" Icon="remote_control_fill.png"
+                <StackLayout IsVisible="{Binding NoConfiguration, Converter={StaticResource reverseBoolConverter}}">
+                    <StackLayout IsVisible="{Binding IsConnect}">
+                        <Frame BorderColor="{StaticResource Primary}" CornerRadius="5" HasShadow="True" Padding="10, 5, 5, 5" Margin="5">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+                                    <Label FontSize="Medium" Text="Connect to"/>
+                                    <Label FontSize="Medium" FontAttributes="Bold" Text="{Binding DesktopConfiguration.DisplayName}"/>
+                                </StackLayout>
+                                <StackLayout Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                                    <Label Text="Timings:" FontSize="Medium" />
+                                    <Label Text="{Binding PingPongTime, Converter={StaticResource timespanConverter}}" FontSize="Medium"/>
+                                </StackLayout>
+                            </Grid>
+                        </Frame>
+                    </StackLayout>
+                    <StackLayout IsVisible="{Binding IsConnect, Converter={StaticResource reverseBoolConverter}}">
+                        <Frame BorderColor="{StaticResource Primary}" CornerRadius="5" HasShadow="True" Padding="10, 5, 5, 5" Margin="5">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackLayout Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+                                    <Label FontAttributes="Bold" FontSize="Large" Text="Quick connect"/>
+                                </StackLayout>
+                                <StackLayout Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
+                                    <Label Text="Connection Name:"/>
+                                    <Label FontAttributes="Bold" Text="{Binding DesktopConfiguration.DisplayName}"/>
+                                </StackLayout>
+                                <flex:FlexButton Grid.RowSpan="2" Grid.Column="1" x:Name="QuickConnectButton" Icon="remote_control_fill.png"
                     Margin="5" Padding="5" Style="{StaticResource LargeFlexButton}" ClickedCommand="{Binding QuickConnectCommand}"/>
-                        </Grid>
-                    </Frame>
+                            </Grid>
+                        </Frame>
+                    </StackLayout>
                 </StackLayout>
             </StackLayout>
             <StackLayout Grid.Row="2">
