@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="com.companyname" android:installLocation="auto">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="0.1" package="com.Rediscovery" android:installLocation="auto">
 	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28" />
-  <!--TODO: remove android:usesCleartextTraffic="true" as soon as we switch to https on the service-->
-	<application android:label="Rediscovery.Android" android:usesCleartextTraffic="true"></application>
+	<!--TODO: remove android:usesCleartextTraffic="true" as soon as we switch to https on the service-->
+	<application android:label="Rediscovery" android:usesCleartextTraffic="true" android:icon="@drawable/SidebarLogo"></application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
