@@ -16,6 +16,6 @@ namespace CommunicationAuthenticationProvider
         Task<bool> AddPendingApprovel(SharedBase.Connection.GreetingDeviceMessage greetingDeviceMessage);
         string GetCertificatePEM(string deviceIdentifier);
         int GetSSLPort();
-        Task<SharedBase.Connection.Enums.AllowConnect> AllowedToLogin(string deviceIdentifier);
+        Task<SharedBase.Connection.Enums.AllowConnect> AllowedToLogin(string deviceIdentifier, GreetingDeviceMessage greetingDeviceMessage);
     }
 }

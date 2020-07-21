@@ -81,7 +81,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
             {
                 try
                 {
-                    var canConnect = await _authenticationManager.AllowedToLogin(e.DeviceIdentifier);
+                    var canConnect = await _authenticationManager.AllowedToLogin(e.DeviceIdentifier, e);
                     if (canConnect == SharedBase.Connection.Enums.AllowConnect.OK)
                     {
                         return canConnect;

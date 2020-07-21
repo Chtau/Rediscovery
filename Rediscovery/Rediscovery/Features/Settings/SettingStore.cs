@@ -3,6 +3,7 @@ using Rediscovery.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -55,7 +56,10 @@ namespace Rediscovery.Features.Settings
 
         public async Task<SettingModel> GetItemAsync(Guid id)
         {
-            return await Task.FromResult(json.GetFileContent<SettingModel>(filePath()));
+            var item = await Task.FromResult(json.GetFileContent<SettingModel>(filePath()));
+            if (item == null)
+                return new SettingModel();
+            return item;
         }
 
         public IEnumerable<SettingModel> GetItems(bool forceRefresh = false)

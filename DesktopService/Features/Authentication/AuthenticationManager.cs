@@ -68,13 +68,37 @@ namespace DesktopService.Features.Authentication
             return false;
         }
 
-        public async Task<Enums.AllowConnect> AllowedToLogin(string deviceIdentifier)
+        public async Task<Enums.AllowConnect> AllowedToLogin(string deviceIdentifier, GreetingDeviceMessage greetingDeviceMessage)
         {
             try
             {
-                if (_identitySetting.AnonymousLogin)
-                    return Enums.AllowConnect.OK;
                 var u = await _deviceRepository.GetByDeviceIdentifier(deviceIdentifier);
+                if (_identitySetting.AnonymousLogin)
+                {
+                    if (u == null)
+                    {
+                        u = await _deviceRepository.SaveDevice(new DALDesktopService.Models.Device
+                        {
+                            DeviceIdentifier = greetingDeviceMessage.DeviceIdentifier,
+                            DeviceName = greetingDeviceMessage.DeviceName,
+                            DeviceType = greetingDeviceMessage.DeviceType,
+                            Idiom = greetingDeviceMessage.Idiom,
+                            Manufacturer = greetingDeviceMessage.Manufacturer,
+                            Model = greetingDeviceMessage.Model,
+                            OSVersion = greetingDeviceMessage.OSVersion,
+                            Platform = greetingDeviceMessage.Platform,
+                            Id = Guid.NewGuid(),
+                            AllowAccess = true,
+                            Role = _roleResolver.GetRole(deviceIdentifier)
+                        });
+                        return Enums.AllowConnect.OK;
+                    } else if (u.AllowAccess)
+                    {
+                        return Enums.AllowConnect.OK;
+                        
+                    }
+                    return Enums.AllowConnect.Denied;
+                }
                 if (u != null)
                 {
                     if (u.AllowAccess)
