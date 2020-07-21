@@ -1,11 +1,13 @@
 ﻿using Rediscovery.Features.Connection;
 using Rediscovery.Features.DesktopConfiguration;
+using Rediscovery.Models;
 using Rediscovery.Services;
 using Rediscovery.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -19,26 +21,53 @@ namespace Rediscovery.Features.Startpage
         public Command OpenUrlCommand { get; set; }
         public Command QuickConnectCommand { get; set; }
 
+        public LoadBinding Load { get; set; }
+
         public StartViewModel()
         {
+            Load = new LoadBinding
+            {
+                IsLoading = false
+            };
+
             OpenUrlCommand = new Command<string>(async (url) =>
             {
                 await Launcher.OpenAsync(url);
             });
             QuickConnectCommand = new Command(() =>
             {
-                connectService.Connect(desktopConfigurationModel, (result, state) =>
+                Load.IsLoading = true;
+                QuickConnectCommand.ChangeCanExecute();
+                Task.Run(() =>
                 {
-                    if (state == SharedBase.Connection.Enums.ConnectionState.OK)
+                    try
                     {
-                        _userNotification.ShowToast("Successful connected");
+                        connectService.Connect(desktopConfigurationModel, (result, state) =>
+                        {
+                            if (state == SharedBase.Connection.Enums.ConnectionState.OK)
+                            {
+                                _userNotification.ShowToast("Successful connected");
+                            }
+                            else
+                            {
+                                _userNotification.ShowToast("Not connected");
+                            }
+                            UpdateGetQuickConnectItem();
+                        });
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        _userNotification.ShowToast("Not connected");
+                        _logger.LogError(ex);
                     }
-                    UpdateGetQuickConnectItem();
+                    finally
+                    {
+                        Load.IsLoading = false;
+                        QuickConnectCommand.ChangeCanExecute();
+                    }
                 });
+            }, () =>
+            {
+                return !Load.IsLoading;
             });
             connectService.HeartbeatStateChanges += ConnectService_HeartbeatStateChanges;
         }
