@@ -27,6 +27,7 @@ namespace SharedConfigurations.DesktopService.Models
         public ushort? HostPort { get; set; }
 
         public ushort? HostPortHttps { get; set; }
+        public bool? HostSSLActive { get; set; }
 
         public string ServerCertificatePassword { get; set; }
 

@@ -17,5 +17,6 @@ namespace CommunicationAuthenticationProvider
         string GetCertificatePEM(string deviceIdentifier);
         int GetSSLPort();
         Task<SharedBase.Connection.Enums.AllowConnect> AllowedToLogin(string deviceIdentifier, GreetingDeviceMessage greetingDeviceMessage);
+        bool GetSSLActive();
     }
 }

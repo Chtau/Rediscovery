@@ -14,5 +14,6 @@ namespace DesktopService.Services
         public X509Certificate2 X509Certificate2 { get; set; }
         public string PEM { get; set; }
         public SharedBase.Connection.Manifest ServiceManifest { get; set; }
+        public bool SSLActive { get; set; }
     }
 }

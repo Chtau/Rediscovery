@@ -95,6 +95,10 @@ namespace DesktopService
                 resources.HostPortHttps = appConfig.Value.HostPortHttps.Value;
             else
                 resources.HostPortHttps = HostPortHttps;
+            if (appConfig?.Value?.HostSSLActive.HasValue == true)
+                resources.SSLActive = appConfig.Value.HostSSLActive.Value;
+            else
+                resources.SSLActive = false;
 
             if (!string.IsNullOrWhiteSpace(appConfig?.Value?.ServerCertificatePassword))
                 certPW = appConfig?.Value?.ServerCertificatePassword;

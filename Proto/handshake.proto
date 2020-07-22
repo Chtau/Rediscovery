@@ -28,4 +28,5 @@ message GreetingReply {
     WaitForApprovel = 4;
   }
   State CanConnect = 3;
+  bool sslActive = 4;
 }

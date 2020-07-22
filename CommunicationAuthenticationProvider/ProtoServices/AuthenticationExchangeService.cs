@@ -27,6 +27,9 @@ namespace CommunicationAuthenticationProvider.ProtoServices
 
         public override async Task<WelcomeDeviceReply> Welcome(WelcomeDeviceMessage request, ServerCallContext context)
         {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Welcome message received");
+            Console.ResetColor();
             var welcomeDeviceReply = new WelcomeDeviceReply
             {
                 ConnectionState = WelcomeDeviceReply.Types.State.Offline,

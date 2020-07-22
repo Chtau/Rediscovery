@@ -23,8 +23,10 @@ namespace CommunicationAuthenticationProvider.ProtoServices
         {
             var reply = new GreetingReply
             {
+                SSLPort = -1,
                 PEM = "",
-                CanConnect = GreetingReply.Types.State.None
+                CanConnect = GreetingReply.Types.State.None,
+                SslActive = false,
             };
             try
             {
@@ -42,8 +44,11 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                 });
                 if (allowed == SharedBase.Connection.Enums.AllowConnect.OK)
                 {
-                    reply.SSLPort = _authenticationManager.GetSSLPort();
-                    reply.PEM = _authenticationManager.GetCertificatePEM(request.DeviceIdentifier);
+                    if (_authenticationManager.GetSSLActive())
+                    {
+                        reply.SSLPort = _authenticationManager.GetSSLPort();
+                        reply.PEM = _authenticationManager.GetCertificatePEM(request.DeviceIdentifier);
+                    }
                 }
                 switch (allowed)
                 {

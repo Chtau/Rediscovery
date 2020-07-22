@@ -33,7 +33,8 @@ namespace CommunicationAuthenticationConsumer
             try
             {
                 var channelCredentials = new SslCredentials(certificatePEM);
-                channel = new Channel(ipAddress, port, channelCredentials);
+                //channel = new Channel(ipAddress, port, channelCredentials);
+                channel = new Channel(ipAddress, 44341, ChannelCredentials.Insecure);
                 authenticationClient = new Authentication.AuthentionExchange.AuthentionExchangeClient(channel);
                 manifestClient = new Manifest.ManifestExchange.ManifestExchangeClient(channel);
                 return authenticationClient != null;
@@ -77,7 +78,7 @@ namespace CommunicationAuthenticationConsumer
                         DeviceIdentifier = message.DeviceIdentifier,
                     };
                     _logger.LogTrace("Consumer Welcome send Welcome");
-                    var reply = await authenticationClient.WelcomeAsync(msg);//, cancellationToken: ctsWelcome.Token
+                    var reply = await authenticationClient.WelcomeAsync(msg, cancellationToken: ctsWelcome.Token);
                     _logger.LogTrace("Consumer Welcome reply received");
                     replyMsg = new WelcomeDeviceReply
                     {
