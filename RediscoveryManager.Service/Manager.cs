@@ -63,16 +63,16 @@ namespace RediscoveryManager.Service
                 {
                     CurrentConnection.Token = args.Token;
                     authenticationConsumer.RequestManifest(CurrentConnection.Token);
-                    resourceConsumer.Connect(CurrentConnection.IP, CurrentConnection.PortSSL, CurrentConnection.Pem);
+                    resourceConsumer.Connect(CurrentConnection.ConnectionConfiguration);
                     resourceConsumer.ListenDevices(CurrentConnection.Token, tokenSource);
                     resourceConsumer.ListenActiveDevices(CurrentConnection.Token, tokenSource);
                     resourceConsumer.ListenPendingDevices(CurrentConnection.Token, tokenSource);
                     resourceConsumer.ListenFeatures(CurrentConnection.Token, tokenSource);
                     resourceConsumer.ListenHeartbeatStatistic(CurrentConnection.Token, tokenSource);
                     resourceConsumer.ListenLoggerEntires(CurrentConnection.Token, tokenSource);
-                    heartbeatConsumer.Connect(CurrentConnection.IP, CurrentConnection.PortSSL, CurrentConnection.Pem);
+                    heartbeatConsumer.Connect(CurrentConnection.ConnectionConfiguration);
                     heartbeatConsumer.StartBeat(CurrentConnection.DeviceIdentifier, CurrentConnection.Token, tokenSource);
-                    loggerConsumer.Connect(CurrentConnection.IP, CurrentConnection.PortSSL, CurrentConnection.Pem);
+                    loggerConsumer.Connect(CurrentConnection.ConnectionConfiguration);
                     loggerConsumer.StartLogger(CurrentConnection.Token, tokenSource);
                 }
                 AfterConnecting?.Invoke(this, ManagerConnectionState.ConnectionState);
@@ -184,7 +184,8 @@ namespace RediscoveryManager.Service
             {
                 CurrentConnection.Pem = result.PEM;
                 CurrentConnection.PortSSL = result.SSLPort;
-                authenticationConsumer.Connect(CurrentConnection.IP, CurrentConnection.PortSSL, CurrentConnection.Pem);
+                CurrentConnection.UseSSL = result.UseSSL;
+                authenticationConsumer.Connect(CurrentConnection.ConnectionConfiguration);
                 authenticationConsumer.SendWelcome(new SharedBase.Connection.WelcomeDeviceMessage
                 {
                     DeviceIdentifier = CurrentConnection.DeviceIdentifier,

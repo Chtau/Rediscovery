@@ -28,13 +28,11 @@ namespace CommunicationAuthenticationConsumer
             _logger = logger;
         }
 
-        public bool Connect(string ipAddress, int port, string certificatePEM)
+        public bool Connect(ConsumerConnectionConfiguration connectionConfiguration)
         {
             try
             {
-                var channelCredentials = new SslCredentials(certificatePEM);
-                //channel = new Channel(ipAddress, port, channelCredentials);
-                channel = new Channel(ipAddress, 44341, ChannelCredentials.Insecure);
+                channel = ChannelHelper.CreateChannel(connectionConfiguration);
                 authenticationClient = new Authentication.AuthentionExchange.AuthentionExchangeClient(channel);
                 manifestClient = new Manifest.ManifestExchange.ManifestExchangeClient(channel);
                 return authenticationClient != null;

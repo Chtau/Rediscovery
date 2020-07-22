@@ -137,6 +137,11 @@ namespace DesktopService.Features.Authentication
             };
         }
 
+        public bool GetSSLActive()
+        {
+            return _staticResources.SSLActive;
+        }
+
         public int GetSSLPort()
         {
             return _staticResources.HostPortHttps;

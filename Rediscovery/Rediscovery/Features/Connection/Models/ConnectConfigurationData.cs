@@ -9,5 +9,7 @@ namespace Rediscovery.Features.Connection.Models
         public string Token { get; set; }
         public string PEM { get; set; }
         public int SSLPort { get; set; }
+        public bool UseSSL { get; set; }
+        public int Port { get; set; }
     }
 }

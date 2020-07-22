@@ -106,7 +106,15 @@ namespace Rediscovery.Features.Connection
                 var reply = consumer.GreetingConsumerService.GreetHost(item.Address, item.Port, deviceData.GreetingDeviceMessage(), setting == null ? 2 : setting.ConnectTimeout);
                 if (reply.CanConnect == SharedBase.Connection.Enums.AllowConnect.OK)
                 {
-                    if (consumer.AuthenticationConsumerService.Connect(item.Address, reply.SSLPort, reply.PEM))
+                    CommunicationBase.ConsumerConnectionConfiguration connectionConfiguration = new ConsumerConnectionConfiguration
+                    {
+                        UseSSL = reply.UseSSL,
+                        CertificatePEM = reply.PEM,
+                        IPAddress = item.Address,
+                        Port = item.Port,
+                        SSLPort = reply.SSLPort
+                    };
+                    if (consumer.AuthenticationConsumerService.Connect(connectionConfiguration))
                     {
                         consumer.AuthenticationConsumerService.SendWelcome(deviceData.WelcomeDeviceMessage(), deviceReply =>
                         {
@@ -116,14 +124,16 @@ namespace Rediscovery.Features.Connection
                                 {
                                     Token = deviceReply.Token,
                                     PEM = reply.PEM,
-                                    SSLPort = reply.SSLPort
+                                    SSLPort = reply.SSLPort,
+                                    UseSSL = reply.UseSSL,
+                                    Port = item.Port,
                                 });
                                 consumer.AuthenticationConsumerService.RequestManifest(deviceReply.Token, manifest =>
                                 {
                                     entityManager.AddManifestData(manifest, item.Id, item.DisplayName);
                                 });
-                                OnConnectLogger(item.Address, reply.SSLPort, reply.PEM, deviceReply.Token);
-                                OnConnectHeartbeat(item.Address, reply.SSLPort, reply.PEM, deviceReply.Token, item.Id);
+                                OnConnectLogger(connectionConfiguration, deviceReply.Token);
+                                OnConnectHeartbeat(connectionConfiguration, deviceReply.Token, item.Id);
                                 resultCallback?.Invoke(item, deviceReply.Token, deviceReply.State);
                             }
                             else
@@ -159,11 +169,11 @@ namespace Rediscovery.Features.Connection
             }
         }
 
-        private void OnConnectHeartbeat(string ipAddress, int port, string pem, string token, Guid desktopConfigurationId)
+        private void OnConnectHeartbeat(CommunicationBase.ConsumerConnectionConfiguration connectionConfiguration, string token, Guid desktopConfigurationId)
         {
             try
             {
-                if (consumer.HeartbeatConsumerService.Connect(ipAddress, port, pem))
+                if (consumer.HeartbeatConsumerService.Connect(connectionConfiguration))
                 {
                     consumer.HeartbeatConsumerService.ReceivedBeatRoundtrip += HeartbeatConsumerService_ReceivedBeatRoundtrip;
                     consumer.HeartbeatConsumerService.StartBeat(desktopConfigurationId.ToString(), token);
@@ -216,11 +226,11 @@ namespace Rediscovery.Features.Connection
             }
         }
 
-        private void OnConnectLogger(string ipAddress, int port, string pem, string token)
+        private void OnConnectLogger(CommunicationBase.ConsumerConnectionConfiguration connectionConfiguration, string token)
         {
             try
             {
-                if (consumer.LoggerConsumer.Connect(ipAddress, port, pem))
+                if (consumer.LoggerConsumer.Connect(connectionConfiguration))
                 {
                     consumer.LoggerConsumer.StartLogger(token);
                 }

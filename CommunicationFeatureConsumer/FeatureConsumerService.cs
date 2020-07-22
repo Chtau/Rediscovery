@@ -32,12 +32,11 @@ namespace CommunicationFeatureConsumer
             _logger = logger;
         }
 
-        public bool Connect(string ipAddress, int port, string certificatePEM)
+        public bool Connect(ConsumerConnectionConfiguration connectionConfiguration)
         {
             try
             {
-                var channelCredentials = new SslCredentials(certificatePEM);
-                channel = new Channel(ipAddress, port, channelCredentials);
+                channel = ChannelHelper.CreateChannel(connectionConfiguration);
                 exchangeClient = new FeatureExchange.FeatureExchangeClient(channel);
                 return exchangeClient != null;
             } catch (Exception ex)

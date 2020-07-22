@@ -36,12 +36,11 @@ namespace CommunicationResourceConsumer
             _logger = logger;
         }
 
-        public bool Connect(string ipAddress, int port, string certificatePEM)
+        public bool Connect(ConsumerConnectionConfiguration connectionConfiguration)
         {
             try
             {
-                var channelCredentials = new SslCredentials(certificatePEM);
-                Channel channel = new Channel(ipAddress, port, channelCredentials);
+                Channel channel = ChannelHelper.CreateChannel(connectionConfiguration);
                 resourceExchangeClient = new Resources.ResourceExchange.ResourceExchangeClient(channel);
                 return resourceExchangeClient != null;
             } catch (Exception ex)

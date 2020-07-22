@@ -109,7 +109,15 @@ namespace Rediscovery.Features.DesktopFeatures
                 desktopConfiguration = configurationModel;
                 this.featureId = featureId;
                 var conData = connectService.GetData(desktopConfiguration.Id);
-                if (consumer.FeatureConsumerService.Connect(desktopConfiguration.Address, conData.SSLPort, conData.PEM))
+                CommunicationBase.ConsumerConnectionConfiguration connectionConfiguration = new CommunicationBase.ConsumerConnectionConfiguration
+                {
+                    SSLPort = conData.SSLPort,
+                    CertificatePEM = conData.PEM,
+                    IPAddress = desktopConfiguration.Address,
+                    Port = conData.Port,
+                    UseSSL = conData.UseSSL
+                };
+                if (consumer.FeatureConsumerService.Connect(connectionConfiguration))
                 {
                     consumer.FeatureConsumerService.FeatureClient(conData.Token, this.featureId);
                     consumer.FeatureConsumerService.StartFeatureData(conData.Token);

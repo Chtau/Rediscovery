@@ -12,5 +12,21 @@ namespace RediscoveryManager.Service.Models
         public string DeviceIdentifier { get; set; } = "";
         public string Token { get; set; } = null;
         public string Pem { get; set; } = null;
+        public bool UseSSL { get; set; } = false;
+
+        public CommunicationBase.ConsumerConnectionConfiguration ConnectionConfiguration
+        {
+            get
+            {
+                return new CommunicationBase.ConsumerConnectionConfiguration
+                {
+                    CertificatePEM = Pem,
+                    IPAddress = IP,
+                    Port = Port,
+                    SSLPort = PortSSL,
+                    UseSSL = UseSSL
+                };
+            }
+        }
     }
 }

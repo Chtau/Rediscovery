@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunicationBase;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -10,7 +11,7 @@ namespace CommunicationLoggerConsumer
         event EventHandler<SharedBase.Logging.LogCommandConfigResult> LoggerCommandExecuted;
 
         bool IsConnect { get; }
-        bool Connect(string ipAddress, int port, string certificatePEM);
+        bool Connect(ConsumerConnectionConfiguration connectionConfiguration);
         bool Disconnect();
         void StartLogger(string token, CancellationTokenSource cts = null);
         void LogEntry(SharedBase.Logging.LoggerEntry loggerEntry);

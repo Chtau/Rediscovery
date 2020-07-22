@@ -83,7 +83,8 @@ namespace CommunicationAuthenticationConsumer
                         SSLPort = reply.SSLPort,
                         PEM = reply.PEM,
                         CanConnect = canConnect,
-                        Offline = false
+                        Offline = false,
+                        UseSSL = reply.SslActive
                     };
                 }
                 catch (Exception ex)
@@ -94,7 +95,8 @@ namespace CommunicationAuthenticationConsumer
                         SSLPort = -1,
                         PEM = "",
                         CanConnect = Enums.AllowConnect.Error,
-                        Offline = false
+                        Offline = false,
+                        UseSSL = false
                     };
                 }
             });
@@ -106,7 +108,8 @@ namespace CommunicationAuthenticationConsumer
                     SSLPort = -1,
                     PEM = "",
                     CanConnect = Enums.AllowConnect.Error,
-                    Offline = true
+                    Offline = true,
+                    UseSSL = false
                 };
             });
             var index = Task.WaitAny(task, taskTimeout);

@@ -1,4 +1,5 @@
-﻿using SharedBase.Feature;
+﻿using CommunicationBase;
+using SharedBase.Feature;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,7 +20,7 @@ namespace CommunicationResourceConsumer
         event EventHandler<List<SharedBase.Statistics.HeartbeatStatisticItem>> ReceiveHeartbeatStatistic;
         event EventHandler<List<SharedBase.Logging.LoggerEntry>> ReceiveLoggerEntires;
 
-        bool Connect(string ipAddress, int port, string certificatePEM);
+        bool Connect(ConsumerConnectionConfiguration connectionConfiguration);
         void ListenActiveDevices(string token, CancellationTokenSource cts = null);
         void ListenPendingDevices(string token, CancellationTokenSource cts = null);
         void ListenDevices(string token, CancellationTokenSource cts = null);

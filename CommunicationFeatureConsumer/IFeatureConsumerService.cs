@@ -1,4 +1,5 @@
-﻿using CommunicationBase.Models;
+﻿using CommunicationBase;
+using CommunicationBase.Models;
 using SharedBase.Feature;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace CommunicationFeatureConsumer
 {
     public interface IFeatureConsumerService
     {
-        bool Connect(string ipAddress, int port, string certificatePEM);
+        bool Connect(ConsumerConnectionConfiguration connectionConfiguration);
         bool Disconnect();
 
         event EventHandler<FeatureState> ReceiveFeatureStateChangeReply;
