@@ -19,12 +19,12 @@ namespace CommunicationResourceProvider.ProtoServices
         private readonly IResourcesRepository _resourcesRepository;
         private readonly IResourceManager _resourceManager;
 
-        private Dictionary<string, IServerStreamWriter<DeviceInfoList>> responseStreamsActiveDevices = new Dictionary<string, IServerStreamWriter<DeviceInfoList>>();
-        private Dictionary<string, IServerStreamWriter<DeviceInfoList>> responseStreamsDevices = new Dictionary<string, IServerStreamWriter<DeviceInfoList>>();
-        private Dictionary<string, IServerStreamWriter<FeatureList>> responseStreamsFeatures = new Dictionary<string, IServerStreamWriter<FeatureList>>();
-        private Dictionary<string, IServerStreamWriter<DeviceInfoList>> responseStreamsPendingDevices = new Dictionary<string, IServerStreamWriter<DeviceInfoList>>();
-        private Dictionary<string, IServerStreamWriter<HeartbeatStatisticList>> responseStreamsHeartbeatStatistic = new Dictionary<string, IServerStreamWriter<HeartbeatStatisticList>>();
-        private Dictionary<string, IServerStreamWriter<LogEntiresList>> responseStreamsLoggerEntires = new Dictionary<string, IServerStreamWriter<LogEntiresList>>();
+        private static Dictionary<string, IServerStreamWriter<DeviceInfoList>> responseStreamsActiveDevices = new Dictionary<string, IServerStreamWriter<DeviceInfoList>>();
+        private static Dictionary<string, IServerStreamWriter<DeviceInfoList>> responseStreamsDevices = new Dictionary<string, IServerStreamWriter<DeviceInfoList>>();
+        private static Dictionary<string, IServerStreamWriter<FeatureList>> responseStreamsFeatures = new Dictionary<string, IServerStreamWriter<FeatureList>>();
+        private static Dictionary<string, IServerStreamWriter<DeviceInfoList>> responseStreamsPendingDevices = new Dictionary<string, IServerStreamWriter<DeviceInfoList>>();
+        private static Dictionary<string, IServerStreamWriter<HeartbeatStatisticList>> responseStreamsHeartbeatStatistic = new Dictionary<string, IServerStreamWriter<HeartbeatStatisticList>>();
+        private static Dictionary<string, IServerStreamWriter<LogEntiresList>> responseStreamsLoggerEntires = new Dictionary<string, IServerStreamWriter<LogEntiresList>>();
 
         public ResourceExchangeService(ILoggerFactory loggerFactory, IResourcesRepository resourcesRepository, IResourceManager resourceManager)
         {
@@ -214,9 +214,9 @@ namespace CommunicationResourceProvider.ProtoServices
             {
                 var deviceId = request.Id.SafeGuid();
                 var result = _resourcesRepository.DeleteDeviceInfo(deviceId);
-                OnSendAllDevices();
                 if (result)
                     _resourceManager.DeleteDevice(deviceId);
+                OnSendAllDevices();
                 return Task.FromResult(new DeviceChangeRequest
                 {
                     Id = request.Id,
