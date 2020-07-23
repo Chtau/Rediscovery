@@ -63,6 +63,10 @@ namespace CommunicationResourceProvider.ProtoServices
             {
                 OnSendToAll(OnSendLoggerEntires, responseStreamsLoggerEntires);
             };
+            _resourcesRepository.HeartbeatActiveIDsChanged += (obj, args) =>
+            {
+                OnSendToAll(OnSendActiveDevices, responseStreamsActiveDevices);
+            };
         }
 
         [Authorize(Policy = "ResourceConsumer")]
