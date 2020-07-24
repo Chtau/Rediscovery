@@ -5,6 +5,7 @@ using Rediscovery.Services;
 using Rediscovery.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,14 +18,19 @@ namespace Rediscovery.Features.Startpage
     {
         public IDataStoreGuid<DesktopConfigurationModel> desktopConfigStore => DependencyService.Get<IDataStoreGuid<DesktopConfigurationModel>>() ?? new DesktopConfigurationStore();
         private IConnectService connectService => DependencyService.Get<IConnectService>() ?? new ConnectService();
+        private IManifestFeatureEntityManager entityManager => DependencyService.Get<IManifestFeatureEntityManager>() ?? new ManifestFeatureEntityManager();
 
         public Command OpenUrlCommand { get; set; }
         public Command QuickConnectCommand { get; set; }
+        public Command QuickFeatureCommand { get; set; }
 
         public LoadBinding Load { get; set; }
 
+        public event EventHandler<Features.Connection.Models.ConnectionManifestFeature> QuickFeatureSelected;
+
         public StartViewModel()
         {
+            entityManager.ConnectionManifestFeatures.CollectionChanged += ConnectionManifestFeatures_CollectionChanged;
             Load = new LoadBinding
             {
                 IsLoading = false
@@ -69,7 +75,55 @@ namespace Rediscovery.Features.Startpage
             {
                 return !Load.IsLoading;
             });
+            QuickFeatureCommand = new Command<Features.Connection.Models.ConnectionManifestFeature>(async (feature) =>
+            {
+                if (feature != null)
+                {
+                    if (feature.FeatureFeatureIntegrationPoint == SharedBase.Device.IntegrationPoint.Desktop)
+                    {
+                        QuickFeatureSelected?.Invoke(this, feature);
+                    }
+                }
+            });
             connectService.HeartbeatStateChanges += ConnectService_HeartbeatStateChanges;
+        }
+
+        private void ConnectionManifestFeatures_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            try
+            {
+                if (e.OldItems != null)
+                {
+                    foreach (Features.Connection.Models.ConnectionManifestFeature item in e.OldItems)
+                    {
+                        if (ConnectionManifestFeaturesControl.Contains(item))
+                            ConnectionManifestFeaturesControl.Remove(item);
+                    }
+                }
+                if (e.NewItems != null)
+                {
+                    foreach (Features.Connection.Models.ConnectionManifestFeature item in e.NewItems)
+                    {
+                        if (item.FeatureFeatureIntegrationPoint == SharedBase.Device.IntegrationPoint.Desktop)
+                            ConnectionManifestFeaturesControl.Add(item);
+                    }
+                }
+                while (ConnectionManifestFeaturesControl.Count > 2)
+                {
+                    ConnectionManifestFeaturesControl.RemoveAt(0);
+                }
+                if (ConnectionManifestFeaturesControl.Count > 0 && IsConnect)
+                {
+                    ShowQuickFeatures = true;
+                } else
+                {
+                    ShowQuickFeatures = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+            }
         }
 
         private void ConnectService_HeartbeatStateChanges(object sender, Guid e)
@@ -142,5 +196,14 @@ namespace Rediscovery.Features.Startpage
             get { return pingPongTime; }
             set { SetProperty(ref pingPongTime, value); }
         }
+        
+        private bool showQuickFeatures;
+        public bool ShowQuickFeatures
+        {
+            get { return showQuickFeatures; }
+            set { SetProperty(ref showQuickFeatures, value); }
+        }
+
+        public ObservableCollection<Features.Connection.Models.ConnectionManifestFeature> ConnectionManifestFeaturesControl { get; set; } = new ObservableCollection<Features.Connection.Models.ConnectionManifestFeature>();
     }
 }

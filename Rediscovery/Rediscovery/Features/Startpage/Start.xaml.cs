@@ -32,12 +32,18 @@ namespace Rediscovery.Features.Startpage
             versionText.Text = "Rediscovery Mobile Client Version " + App.ClientVersion.ToString();
 
             BindingContext = viewModel = new StartViewModel();
+            viewModel.QuickFeatureSelected += ViewModel_QuickFeatureSelected;
             clientFeatureService.ClientQueueDisplay += ClientFeatureService_ClientQueueDisplay;
             ClientFeatureQueue.IsVisible = clientFeatureService.HasQueueItem;
             ClientFeatureQueue.Text = QueuedData + " " + clientFeatureService.CurrentQueueItem?.QueueInfoText;
             viewModel.UpdateGetQuickConnectItem();
 
             AddConfiguration.Clicked += AddConfiguration_Clicked;
+        }
+
+        private async void ViewModel_QuickFeatureSelected(object sender, Connection.Models.ConnectionManifestFeature e)
+        {
+            await Navigation.PushModalAsync(new NavigationPage(new DesktopFeatures.FeaturePage.FeatureView.FeatureView(e.ConfigurationId, e)));
         }
 
         private async void AddConfiguration_Clicked(object sender, EventArgs e)

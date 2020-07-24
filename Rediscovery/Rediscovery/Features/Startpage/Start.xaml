@@ -7,11 +7,13 @@
              xmlns:startpage="clr-namespace:Rediscovery.Features.Startpage"
              mc:Ignorable="d"
              Title="Rediscovery"
+             x:Name="startpage"
              x:Class="Rediscovery.Features.Startpage.Start">
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
@@ -37,7 +39,39 @@
                     </Label.FormattedText>
                 </Label>
             </StackLayout>
-            <StackLayout Grid.Row="1">
+            <StackLayout Grid.Row="1" HeightRequest="150">
+                <StackLayout IsVisible="{Binding ShowQuickFeatures}">
+                    <ListView x:Name="QuickFeatureControl" 
+                ItemsSource="{Binding ConnectionManifestFeaturesControl}"
+                VerticalOptions="FillAndExpand"
+                              SelectionMode="None"
+                 HasUnevenRows="true">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Frame BorderColor="{StaticResource Primary}" CornerRadius="5" HasShadow="True" Padding="10, 5, 5, 5" Margin="5">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+                                                <Label FontSize="Medium" Text="{Binding FeatureDisplayName}"/>
+                                            </StackLayout>
+                                            <flex:FlexButton Grid.Row="0" Grid.Column="1" x:Name="QuickFeatureButton" Icon="computer_line.png" Margin="5" Padding="5" Style="{StaticResource LargeFlexButton}"
+                                                             ClickedCommand="{Binding BindingContext.QuickFeatureCommand, Source={x:Reference startpage} }" ClickedCommandParameter="{Binding .}"/>
+                                        </Grid>
+                                    </Frame>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackLayout>
+            </StackLayout>
+            <StackLayout Grid.Row="2">
                 <StackLayout IsVisible="{Binding NoConfiguration}">
                     <Frame BorderColor="{StaticResource Primary}" CornerRadius="5" HasShadow="True" Padding="10, 5, 5, 5" Margin="5">
                         <Grid>
@@ -103,7 +137,7 @@
                     </StackLayout>
                 </StackLayout>
             </StackLayout>
-            <StackLayout Grid.Row="2">
+            <StackLayout Grid.Row="3">
                 <flex:FlexButton 
                     x:Name="ClientFeatureQueue"  IsVisible="false" Clicked="ClientFeatureQueue_Clicked" Text="Queued data:"
                         Icon="share_forward_fill.png"
