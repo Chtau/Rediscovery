@@ -17,7 +17,7 @@ namespace CommunicationFeatureProvider.ProtoServices
     {
         private readonly ILogger<FeatureExchangeService> _logger;
         private readonly IFeatureManager _featureManager;
-        private Dictionary<string, IServerStreamWriter<Featuredata.DeviceFeatureData>> responseStreams = new Dictionary<string, IServerStreamWriter<Featuredata.DeviceFeatureData>>();
+        private static Dictionary<string, IServerStreamWriter<Featuredata.DeviceFeatureData>> responseStreams = new Dictionary<string, IServerStreamWriter<Featuredata.DeviceFeatureData>>();
 
         public FeatureExchangeService(ILoggerFactory loggerFactory, IFeatureManager featureManager)
         {
