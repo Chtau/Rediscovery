@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <Version>0.0.0.1</Version>
+    <Authors>Christoph Taucher</Authors>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/Chtau/Rediscovery</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Chtau/Rediscovery</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +27,13 @@
     <Protobuf Include="..\Proto\authentication.proto" GrpcServices="Client" Link="Protos\authentication.proto" />
     <Protobuf Include="..\Proto\manifest.proto" GrpcServices="Client" Link="Protos\manifest.proto" />
     <Protobuf Include="..\Proto\handshake.proto" GrpcServices="Client" Link="Protos\handshake.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 

@@ -26,8 +26,17 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Platforms>AnyCPU;x86;x64</Platforms>
-    <AssemblyVersion>0.0.0.0</AssemblyVersion>
-    <FileVersion>0.0.0.0</FileVersion>
+    <AssemblyVersion>0.0.0.1</AssemblyVersion>
+    <FileVersion>0.0.0.1</FileVersion>
+    <Version>0.0.0.1</Version>
+    <PackageId>RediscoveryDesktopService</PackageId>
+    <Authors>Christoph Taucher</Authors>
+    <Company>Christoph Taucher</Company>
+    <Product>RediscoveryDesktopService</Product>
+    <Description>Rediscovery Service to provide features to a connected Device.</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/Chtau/Rediscovery</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Chtau/Rediscovery</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -60,6 +69,10 @@
   <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
     </None>
   </ItemGroup>
 

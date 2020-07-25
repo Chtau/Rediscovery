@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <Version>0.0.0.1</Version>
+    <Authors>Christoph Taucher</Authors>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/Chtau/Rediscovery</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Chtau/Rediscovery</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,6 +15,13 @@
     <ProjectReference Include="..\CommunicationLoggerConsumer\CommunicationLoggerConsumer.csproj" />
     <ProjectReference Include="..\Communication\CommunicationResourceConsumer.csproj" />
     <ProjectReference Include="..\SharedModels\SharedBase.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

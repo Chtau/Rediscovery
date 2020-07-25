@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Version>0.0.0.1</Version>
+    <Authors>Christoph Taucher</Authors>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/Chtau/Rediscovery</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Chtau/Rediscovery</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +20,13 @@
 
   <ItemGroup>
     <Protobuf Include="..\Proto\logger.proto" GrpcServices="Server" Link="Protos\logger.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

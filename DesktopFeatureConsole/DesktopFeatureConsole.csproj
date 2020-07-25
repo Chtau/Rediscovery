@@ -6,6 +6,11 @@
     <OutputType>Library</OutputType>
     <StartupObject></StartupObject>
     <Platforms>AnyCPU;x86;x64</Platforms>
+    <Version>0.0.0.1</Version>
+    <Authors>Christoph Taucher</Authors>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/Chtau/Rediscovery</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Chtau/Rediscovery</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,6 +33,10 @@
     </None>
     <None Update="UI\js\terminal.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
     </None>
   </ItemGroup>
 

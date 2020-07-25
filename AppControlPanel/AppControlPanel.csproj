@@ -3,6 +3,13 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <ApplicationIcon>Assets\rediscovery.ico</ApplicationIcon>
+    <PackageId>RediscoveryAppControlPanel</PackageId>
+    <Version>0.0.0.1</Version>
+    <Authors>Christoph Taucher</Authors>
+    <Product>RediscoveryAppControlPanel</Product>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/Chtau/Rediscovery</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Chtau/Rediscovery</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Models\" />
@@ -35,6 +42,10 @@
   <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
     </None>
   </ItemGroup>
 </Project>
