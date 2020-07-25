@@ -18,6 +18,7 @@ namespace DesktopService.Features.Plugins
 
         private List<string> filePaths = new List<string>();
         private List<string> directoryPaths = new List<string>();
+        private List<string> missingPluginImplementation = new List<string>();
 
         public LoadPlugins(ILoggerFactory loggerFactory, IPluginLogger pluginLogger,
             IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> appOptions)
@@ -31,6 +32,10 @@ namespace DesktopService.Features.Plugins
         {
             try
             {
+                missingPluginImplementation.Clear();
+                filePaths.Clear();
+                directoryPaths.Clear();
+
                 if (_appSettings.Plugins?.Count() > 0)
                 {
                     foreach (var pluginPath in _appSettings.Plugins)
@@ -73,7 +78,7 @@ namespace DesktopService.Features.Plugins
                     var result = CreateDesktopPluginFeature(pluginAssembly, Path.GetDirectoryName(pluginPath));
                     if (!(result?.Count() > 0))
                     {
-                        //missingPluginImplementation.Add(pluginPath);
+                        missingPluginImplementation.Add(pluginPath);
                     }
                     return result;
                 }
@@ -92,13 +97,18 @@ namespace DesktopService.Features.Plugins
                     var result = CreateClientPluginFeature(pluginAssembly, Path.GetDirectoryName(pluginPath));
                     if (!(result?.Count() > 0))
                     {
-                        //missingPluginImplementation.Add(pluginPath);
+                        missingPluginImplementation.Add(pluginPath);
                     }
                     return result;
                 }
                 else
                     return new List<IClientFeatureImplementation>();
             })?.ToList()?.Where(x => x != null);
+        }
+
+        public IEnumerable<string> GetMissingFeatureImplementationsInFilePaths()
+        {
+            return filePaths.Except(missingPluginImplementation);
         }
 
         private Assembly LoadPlugin(string path)

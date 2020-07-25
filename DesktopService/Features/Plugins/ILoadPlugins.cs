@@ -11,8 +11,6 @@ namespace DesktopService.Features.Plugins
         void LoadPaths();
         IEnumerable<IDeviceFeatureImplementation> GetDeviceFeatureImplementations();
         IEnumerable<IClientFeatureImplementation> GetClientFeatureImplementations();
-        //Assembly LoadPlugin(string path);
-        //IEnumerable<IDeviceFeatureImplementation> CreateDesktopPluginFeature(Assembly assembly, string path);
-        //IEnumerable<IClientFeatureImplementation> CreateClientPluginFeature(Assembly assembly, string path);
+        IEnumerable<string> GetMissingFeatureImplementationsInFilePaths();
     }
 }

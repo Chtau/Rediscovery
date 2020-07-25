@@ -110,6 +110,15 @@ namespace DesktopService.Features.DeviceFeature
             IEnumerable<IDeviceFeatureImplementation> desktopPluginFeatures = _loadPlugins.GetDeviceFeatureImplementations();
             IEnumerable<IClientFeatureImplementation> clientPluginFeatures = _loadPlugins.GetClientFeatureImplementations();
 
+            var missing = _loadPlugins.GetMissingFeatureImplementationsInFilePaths();
+            if (missing?.Count() > 0)
+            {
+                foreach (var missingImpl in missing)
+                {
+                    _logger.LogWarning($"Could not find a feature implementation in the configuration path:{missingImpl}");
+                }
+            }
+
             if (desktopPluginFeatures?.Count() > 0)
             {
                 _logger.LogInformation($"Loaded {desktopPluginFeatures.Count()} feature Desktop Plugins");
