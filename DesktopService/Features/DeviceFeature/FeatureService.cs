@@ -11,6 +11,7 @@ using System.IO.Compression;
 using Microsoft.Extensions.Logging;
 using DesktopService.Features.Plugins;
 using SharedBase.Feature;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace DesktopService.Features.DeviceFeature
 {
@@ -105,16 +106,47 @@ namespace DesktopService.Features.DeviceFeature
 
         public void Load()
         {
+            var missingPluginImplementation = new List<string>();
             IEnumerable<IDeviceFeatureImplementation> desktopPluginFeatures = _appSettings.Plugins?.SelectMany(pluginPath =>
             {
                 Assembly pluginAssembly = _loadPlugins.LoadPlugin(pluginPath);
                 if (pluginAssembly != null)
-                    return _loadPlugins.CreateDesktopPluginFeature(pluginAssembly, Path.GetDirectoryName(pluginPath));
+                {
+                    var result = _loadPlugins.CreateDesktopPluginFeature(pluginAssembly, Path.GetDirectoryName(pluginPath));
+                    if (!(result?.Count() > 0))
+                        missingPluginImplementation.Add(pluginPath);
+                    return result;
+                }
                 else
                     return new List<IDeviceFeatureImplementation>();
             })?.ToList()?.Where(x => x != null);
+
+            IEnumerable<IClientFeatureImplementation> clientPluginFeatures = _appSettings.Plugins?.SelectMany(pluginPath =>
+            {
+                Assembly pluginAssembly = _loadPlugins.LoadPlugin(pluginPath);
+                if (pluginAssembly != null)
+                {
+                    var result = _loadPlugins.CreateClientPluginFeature(pluginAssembly, Path.GetDirectoryName(pluginPath));
+                    if (!(result?.Count() > 0))
+                        missingPluginImplementation.Add(pluginPath);
+                    return result;
+                }
+                else
+                    return new List<IClientFeatureImplementation>();
+            })?.ToList()?.Where(x => x != null);
+
+            var missing = _appSettings.Plugins?.Except(missingPluginImplementation);
+            if (missing?.Count() > 0)
+            {
+                foreach (var missingImpl in missing)
+                {
+                    _logger.LogWarning($"Could not find a feature implementation in the configuration path:{missingImpl}");
+                }
+            }
+
             if (desktopPluginFeatures?.Count() > 0)
             {
+                _logger.LogInformation($"Loaded {desktopPluginFeatures.Count()} feature Desktop Plugins");
                 foreach (var item in desktopPluginFeatures)
                 {
                     item.SendData += (object sender, PluginExchangeEntity<PluginFeatureData> e) =>
@@ -124,17 +156,14 @@ namespace DesktopService.Features.DeviceFeature
                     };
                     deviceFeatureImplementations.Add(item);
                 }
-            }
-            IEnumerable<IClientFeatureImplementation> clientPluginFeatures = _appSettings.Plugins?.SelectMany(pluginPath =>
+            } else
             {
-                Assembly pluginAssembly = _loadPlugins.LoadPlugin(pluginPath);
-                if (pluginAssembly != null)
-                    return _loadPlugins.CreateClientPluginFeature(pluginAssembly, Path.GetDirectoryName(pluginPath));
-                else
-                    return new List<IClientFeatureImplementation>();
-            })?.ToList()?.Where(x => x != null);
+                _logger.LogInformation($"No feature Desktop Plugins loaded");
+            }
+
             if (clientPluginFeatures?.Count() > 0)
             {
+                _logger.LogInformation($"Loaded {clientPluginFeatures.Count()} feature Client Plugins");
                 foreach (var item in clientPluginFeatures)
                 {
                     item.SendData += (object sender, PluginExchangeEntity<PluginFeatureDataClient> e) =>
@@ -144,6 +173,10 @@ namespace DesktopService.Features.DeviceFeature
                     };
                     clientFeatureImplementations.Add(item);
                 }
+            }
+            else
+            {
+                _logger.LogInformation($"No feature Client Plugins loaded");
             }
         }
 

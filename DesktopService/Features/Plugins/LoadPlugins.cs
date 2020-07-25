@@ -27,7 +27,7 @@ namespace DesktopService.Features.Plugins
                 PluginLoadContext loadContext = new PluginLoadContext(path);
                 var result = loadContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(path)));
                 if (result != null)
-                    _logger.LogInformation($"Plugin successful loaded (Assembly:\"{result.GetName()}\" Path:\"{path}\")");
+                    _logger.LogInformation($"Plugin successful loaded (Assembly:\"{result.GetName().Name}\" Path:\"{path}\")");
                 else
                     _logger.LogCritical($"Failed to load Plugin (Path:\"{path}\")");
                 return result;
@@ -58,10 +58,10 @@ namespace DesktopService.Features.Plugins
 
             if (count == 0)
             {
-                string availableTypes = string.Join(",", assembly.GetTypes().Select(t => t.FullName));
+                /*string availableTypes = string.Join(",", assembly.GetTypes().Select(t => t.FullName));
                 _pluginLogger.LogWarning(
                     $"Can't find any type which implements IDeviceFeatureImplementation in {assembly} from {assembly.Location}.\n" +
-                    $"Available types: {availableTypes}");
+                    $"Available types: {availableTypes}");*/
             }
         }
 
@@ -85,10 +85,10 @@ namespace DesktopService.Features.Plugins
 
             if (count == 0)
             {
-                string availableTypes = string.Join(",", assembly.GetTypes().Select(t => t.FullName));
+                /*string availableTypes = string.Join(",", assembly.GetTypes().Select(t => t.FullName));
                 _pluginLogger.LogWarning(
                     $"Can't find any type which implements IClientFeatureImplementation in {assembly} from {assembly.Location}.\n" +
-                    $"Available types: {availableTypes}");
+                    $"Available types: {availableTypes}");*/
             }
         }
     }
