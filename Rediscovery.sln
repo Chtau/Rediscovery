@@ -49,10 +49,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationAuthentication
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationFeatureConsumer", "CommunicationFeatureConsumer\CommunicationFeatureConsumer.csproj", "{1FB3B6F6-F47F-49CE-ADF2-113764CD8157}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrpcTestService", "GrpcTestService\GrpcTestService.csproj", "{CCB408E5-7323-48DC-8B6B-082407F76DE2}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrpcTestClient", "GrpcTestClient\GrpcTestClient.csproj", "{E73E4ADE-BCC4-4DD9-BAFB-47314193F4AB}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationAuthenticationConsumer", "CommunicationAuthenticationConsumer\CommunicationAuthenticationConsumer.csproj", "{AA6DF67B-764A-4A57-A41F-2884CB4F30E5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationHeartbeatProvider", "CommunicationHearthbeatProvider\CommunicationHeartbeatProvider.csproj", "{ECEEE68C-A5CE-4875-AFA2-E6A20541EED0}"
@@ -67,9 +63,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientFeatureFileExchange",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RediscoveryManager.GUI", "RediscoveryManager.GUI\RediscoveryManager.GUI.csproj", "{FD064DEB-6858-44A3-BE20-EB42F4633410}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationLoggerProvider", "CommunicationLoggerProvider\CommunicationLoggerProvider.csproj", "{537F9A3F-A269-42BC-8808-6F53135C5614}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationLoggerProvider", "CommunicationLoggerProvider\CommunicationLoggerProvider.csproj", "{537F9A3F-A269-42BC-8808-6F53135C5614}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationLoggerConsumer", "CommunicationLoggerConsumer\CommunicationLoggerConsumer.csproj", "{BFE0D360-5DFA-4752-80AF-7CB13BF98E71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationLoggerConsumer", "CommunicationLoggerConsumer\CommunicationLoggerConsumer.csproj", "{BFE0D360-5DFA-4752-80AF-7CB13BF98E71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -363,30 +359,6 @@ Global
 		{1FB3B6F6-F47F-49CE-ADF2-113764CD8157}.Release|x64.Build.0 = Release|Any CPU
 		{1FB3B6F6-F47F-49CE-ADF2-113764CD8157}.Release|x86.ActiveCfg = Release|Any CPU
 		{1FB3B6F6-F47F-49CE-ADF2-113764CD8157}.Release|x86.Build.0 = Release|Any CPU
-		{CCB408E5-7323-48DC-8B6B-082407F76DE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CCB408E5-7323-48DC-8B6B-082407F76DE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CCB408E5-7323-48DC-8B6B-082407F76DE2}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{CCB408E5-7323-48DC-8B6B-082407F76DE2}.Debug|x64.Build.0 = Debug|Any CPU
-		{CCB408E5-7323-48DC-8B6B-082407F76DE2}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{CCB408E5-7323-48DC-8B6B-082407F76DE2}.Debug|x86.Build.0 = Debug|Any CPU
-		{CCB408E5-7323-48DC-8B6B-082407F76DE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CCB408E5-7323-48DC-8B6B-082407F76DE2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CCB408E5-7323-48DC-8B6B-082407F76DE2}.Release|x64.ActiveCfg = Release|Any CPU
-		{CCB408E5-7323-48DC-8B6B-082407F76DE2}.Release|x64.Build.0 = Release|Any CPU
-		{CCB408E5-7323-48DC-8B6B-082407F76DE2}.Release|x86.ActiveCfg = Release|Any CPU
-		{CCB408E5-7323-48DC-8B6B-082407F76DE2}.Release|x86.Build.0 = Release|Any CPU
-		{E73E4ADE-BCC4-4DD9-BAFB-47314193F4AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E73E4ADE-BCC4-4DD9-BAFB-47314193F4AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E73E4ADE-BCC4-4DD9-BAFB-47314193F4AB}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{E73E4ADE-BCC4-4DD9-BAFB-47314193F4AB}.Debug|x64.Build.0 = Debug|Any CPU
-		{E73E4ADE-BCC4-4DD9-BAFB-47314193F4AB}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{E73E4ADE-BCC4-4DD9-BAFB-47314193F4AB}.Debug|x86.Build.0 = Debug|Any CPU
-		{E73E4ADE-BCC4-4DD9-BAFB-47314193F4AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E73E4ADE-BCC4-4DD9-BAFB-47314193F4AB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E73E4ADE-BCC4-4DD9-BAFB-47314193F4AB}.Release|x64.ActiveCfg = Release|Any CPU
-		{E73E4ADE-BCC4-4DD9-BAFB-47314193F4AB}.Release|x64.Build.0 = Release|Any CPU
-		{E73E4ADE-BCC4-4DD9-BAFB-47314193F4AB}.Release|x86.ActiveCfg = Release|Any CPU
-		{E73E4ADE-BCC4-4DD9-BAFB-47314193F4AB}.Release|x86.Build.0 = Release|Any CPU
 		{AA6DF67B-764A-4A57-A41F-2884CB4F30E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AA6DF67B-764A-4A57-A41F-2884CB4F30E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA6DF67B-764A-4A57-A41F-2884CB4F30E5}.Debug|x64.ActiveCfg = Debug|Any CPU
