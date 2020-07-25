@@ -8,8 +8,11 @@ namespace DesktopService.Features.Plugins
 {
     public interface ILoadPlugins
     {
-        Assembly LoadPlugin(string path);
-        IEnumerable<IDeviceFeatureImplementation> CreateDesktopPluginFeature(Assembly assembly, string path);
-        IEnumerable<IClientFeatureImplementation> CreateClientPluginFeature(Assembly assembly, string path);
+        void LoadPaths();
+        IEnumerable<IDeviceFeatureImplementation> GetDeviceFeatureImplementations();
+        IEnumerable<IClientFeatureImplementation> GetClientFeatureImplementations();
+        //Assembly LoadPlugin(string path);
+        //IEnumerable<IDeviceFeatureImplementation> CreateDesktopPluginFeature(Assembly assembly, string path);
+        //IEnumerable<IClientFeatureImplementation> CreateClientPluginFeature(Assembly assembly, string path);
     }
 }

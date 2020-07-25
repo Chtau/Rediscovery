@@ -106,43 +106,9 @@ namespace DesktopService.Features.DeviceFeature
 
         public void Load()
         {
-            var missingPluginImplementation = new List<string>();
-            IEnumerable<IDeviceFeatureImplementation> desktopPluginFeatures = _appSettings.Plugins?.SelectMany(pluginPath =>
-            {
-                Assembly pluginAssembly = _loadPlugins.LoadPlugin(pluginPath);
-                if (pluginAssembly != null)
-                {
-                    var result = _loadPlugins.CreateDesktopPluginFeature(pluginAssembly, Path.GetDirectoryName(pluginPath));
-                    if (!(result?.Count() > 0))
-                        missingPluginImplementation.Add(pluginPath);
-                    return result;
-                }
-                else
-                    return new List<IDeviceFeatureImplementation>();
-            })?.ToList()?.Where(x => x != null);
-
-            IEnumerable<IClientFeatureImplementation> clientPluginFeatures = _appSettings.Plugins?.SelectMany(pluginPath =>
-            {
-                Assembly pluginAssembly = _loadPlugins.LoadPlugin(pluginPath);
-                if (pluginAssembly != null)
-                {
-                    var result = _loadPlugins.CreateClientPluginFeature(pluginAssembly, Path.GetDirectoryName(pluginPath));
-                    if (!(result?.Count() > 0))
-                        missingPluginImplementation.Add(pluginPath);
-                    return result;
-                }
-                else
-                    return new List<IClientFeatureImplementation>();
-            })?.ToList()?.Where(x => x != null);
-
-            var missing = _appSettings.Plugins?.Except(missingPluginImplementation);
-            if (missing?.Count() > 0)
-            {
-                foreach (var missingImpl in missing)
-                {
-                    _logger.LogWarning($"Could not find a feature implementation in the configuration path:{missingImpl}");
-                }
-            }
+            _loadPlugins.LoadPaths();
+            IEnumerable<IDeviceFeatureImplementation> desktopPluginFeatures = _loadPlugins.GetDeviceFeatureImplementations();
+            IEnumerable<IClientFeatureImplementation> clientPluginFeatures = _loadPlugins.GetClientFeatureImplementations();
 
             if (desktopPluginFeatures?.Count() > 0)
             {

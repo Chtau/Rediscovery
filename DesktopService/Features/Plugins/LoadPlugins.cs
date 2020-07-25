@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using PluginFeature.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -13,14 +14,94 @@ namespace DesktopService.Features.Plugins
     {
         private readonly IPluginLogger _pluginLogger;
         private readonly ILogger<LoadPlugins> _logger;
+        private readonly SharedConfigurations.DesktopService.Models.AppConfiguration _appSettings;
 
-        public LoadPlugins(ILoggerFactory loggerFactory, IPluginLogger pluginLogger)
+        private List<string> filePaths = new List<string>();
+        private List<string> directoryPaths = new List<string>();
+
+        public LoadPlugins(ILoggerFactory loggerFactory, IPluginLogger pluginLogger,
+            IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> appOptions)
         {
             _logger = loggerFactory.CreateLogger<LoadPlugins>();
             _pluginLogger = pluginLogger;
+            _appSettings = appOptions.Value;
         }
 
-        public Assembly LoadPlugin(string path)
+        public void LoadPaths()
+        {
+            try
+            {
+                if (_appSettings.Plugins?.Count() > 0)
+                {
+                    foreach (var pluginPath in _appSettings.Plugins)
+                    {
+                        if (Directory.Exists(pluginPath))
+                            directoryPaths.Add(pluginPath);
+                        else
+                        {
+                            if (File.Exists(pluginPath))
+                                filePaths.Add(pluginPath);
+                        }
+                    }
+                }
+
+                string defaultPluginDirectory = "plugins";
+                if (Directory.Exists(defaultPluginDirectory))
+                {
+                    // sub directories are plugins
+                    var subDirs = Directory.EnumerateDirectories(defaultPluginDirectory);
+                    if (subDirs?.Count() > 0)
+                        directoryPaths.AddRange(subDirs);
+                    // zip files in default plugin directory are plugins
+                    var files = Directory.EnumerateFiles(defaultPluginDirectory, "*.zip");
+                    if (files?.Count() > 0)
+                        filePaths.AddRange(files);
+                }
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+            }
+        }
+
+        public IEnumerable<IDeviceFeatureImplementation> GetDeviceFeatureImplementations()
+        {
+            return filePaths.SelectMany(pluginPath =>
+            {
+                Assembly pluginAssembly = LoadPlugin(pluginPath);
+                if (pluginAssembly != null)
+                {
+                    var result = CreateDesktopPluginFeature(pluginAssembly, Path.GetDirectoryName(pluginPath));
+                    if (!(result?.Count() > 0))
+                    {
+                        //missingPluginImplementation.Add(pluginPath);
+                    }
+                    return result;
+                }
+                else
+                    return new List<IDeviceFeatureImplementation>();
+            })?.ToList()?.Where(x => x != null);
+        }
+
+        public IEnumerable<IClientFeatureImplementation> GetClientFeatureImplementations()
+        {
+            return filePaths.SelectMany(pluginPath =>
+            {
+                Assembly pluginAssembly = LoadPlugin(pluginPath);
+                if (pluginAssembly != null)
+                {
+                    var result = CreateClientPluginFeature(pluginAssembly, Path.GetDirectoryName(pluginPath));
+                    if (!(result?.Count() > 0))
+                    {
+                        //missingPluginImplementation.Add(pluginPath);
+                    }
+                    return result;
+                }
+                else
+                    return new List<IClientFeatureImplementation>();
+            })?.ToList()?.Where(x => x != null);
+        }
+
+        private Assembly LoadPlugin(string path)
         {
             if (System.IO.File.Exists(path))
             {
@@ -38,7 +119,7 @@ namespace DesktopService.Features.Plugins
             return null;
         }
 
-        public IEnumerable<IDeviceFeatureImplementation> CreateDesktopPluginFeature(Assembly assembly, string path)
+        private IEnumerable<IDeviceFeatureImplementation> CreateDesktopPluginFeature(Assembly assembly, string path)
         {
             int count = 0;
 
@@ -65,7 +146,7 @@ namespace DesktopService.Features.Plugins
             }
         }
 
-        public IEnumerable<IClientFeatureImplementation> CreateClientPluginFeature(Assembly assembly, string path)
+        private IEnumerable<IClientFeatureImplementation> CreateClientPluginFeature(Assembly assembly, string path)
         {
             int count = 0;
 
