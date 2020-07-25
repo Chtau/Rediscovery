@@ -33,7 +33,7 @@ namespace DesktopService.Features.Plugins
                 return result;
             } else
             {
-                _logger.LogWarning("Request Plugin on Path:\"{path}\" does not exist.");
+                _logger.LogWarning($"Request Plugin on Configuration Path:\"{path}\" does not exist.");
             }
             return null;
         }

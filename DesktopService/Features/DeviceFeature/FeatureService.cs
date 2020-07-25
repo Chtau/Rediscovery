@@ -108,8 +108,11 @@ namespace DesktopService.Features.DeviceFeature
             IEnumerable<IDeviceFeatureImplementation> desktopPluginFeatures = _appSettings.Plugins?.SelectMany(pluginPath =>
             {
                 Assembly pluginAssembly = _loadPlugins.LoadPlugin(pluginPath);
-                return _loadPlugins.CreateDesktopPluginFeature(pluginAssembly, Path.GetDirectoryName(pluginPath));
-            })?.ToList();
+                if (pluginAssembly != null)
+                    return _loadPlugins.CreateDesktopPluginFeature(pluginAssembly, Path.GetDirectoryName(pluginPath));
+                else
+                    return new List<IDeviceFeatureImplementation>();
+            })?.ToList()?.Where(x => x != null);
             if (desktopPluginFeatures?.Count() > 0)
             {
                 foreach (var item in desktopPluginFeatures)
@@ -125,8 +128,11 @@ namespace DesktopService.Features.DeviceFeature
             IEnumerable<IClientFeatureImplementation> clientPluginFeatures = _appSettings.Plugins?.SelectMany(pluginPath =>
             {
                 Assembly pluginAssembly = _loadPlugins.LoadPlugin(pluginPath);
-                return _loadPlugins.CreateClientPluginFeature(pluginAssembly, Path.GetDirectoryName(pluginPath));
-            })?.ToList();
+                if (pluginAssembly != null)
+                    return _loadPlugins.CreateClientPluginFeature(pluginAssembly, Path.GetDirectoryName(pluginPath));
+                else
+                    return new List<IClientFeatureImplementation>();
+            })?.ToList()?.Where(x => x != null);
             if (clientPluginFeatures?.Count() > 0)
             {
                 foreach (var item in clientPluginFeatures)
