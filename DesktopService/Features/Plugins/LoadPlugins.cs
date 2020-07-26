@@ -227,8 +227,8 @@ namespace DesktopService.Features.Plugins
                         if (!alreadyAddedPlugins.Contains(id))
                         {
                             alreadyAddedPlugins.Add(id);
-                            // TODO: we need to make sure we use the complete (absolute) path for the plugin directory
-                            result.Init(path, _pluginLogger);
+                            var absPath = Path.GetFullPath(path);
+                            result.Init(absPath, _pluginLogger);
                             yield return result;
                         }
                     }
@@ -249,8 +249,8 @@ namespace DesktopService.Features.Plugins
                         if (!alreadyAddedPlugins.Contains(id))
                         {
                             alreadyAddedPlugins.Add(id);
-                            // TODO: we need to make sure we use the complete (absolute) path for the plugin directory
-                            result.Init(path, _pluginLogger);
+                            var absPath = Path.GetFullPath(path);
+                            result.Init(absPath, _pluginLogger);
                             yield return result;
                         }
                     }
