@@ -7,6 +7,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace DesktopService.Features.Plugins
@@ -59,9 +60,14 @@ namespace DesktopService.Features.Plugins
                 }
 
                 string defaultPluginDirectory = "plugins";
+                string ignorePluginBackupDirectory = Path.Combine(defaultPluginDirectory, ".ignore");
                 if (!Directory.Exists(defaultPluginDirectory))
                 {
                     Directory.CreateDirectory(defaultPluginDirectory);
+                }
+                if (!Directory.Exists(ignorePluginBackupDirectory))
+                {
+                    Directory.CreateDirectory(ignorePluginBackupDirectory);
                 }
 
                 // zip files in default plugin directory are plugins
@@ -77,7 +83,8 @@ namespace DesktopService.Features.Plugins
                         {
                             archive.ExtractToDirectory(defaultPluginDirectory, true);
                         }
-                        File.Delete(path);
+                        // TODO: zip archives should be copied to a [.ignore] directory and then deleted if the parent directory is the default
+                        //File.Delete(path);
                     } catch (Exception ex)
                     {
                         _logger.LogError(ex.ToString());
@@ -89,8 +96,7 @@ namespace DesktopService.Features.Plugins
                 var subDirs = Directory.EnumerateDirectories(defaultPluginDirectory);
                 if (subDirs?.Count() > 0)
                     directoryPaths.AddRange(subDirs);
-
-                // search for plugin assemblies in the directories
+                ResolveAssembliesPathFromDirectories();
 
                 LoadAssemblies();
             } catch (Exception ex)
@@ -128,6 +134,38 @@ namespace DesktopService.Features.Plugins
         public IEnumerable<string> GetMissingFeatureImplementationsInFilePaths()
         {
             return filePaths.Except(missingPluginImplementation);
+        }
+
+        private void ResolveAssembliesPathFromDirectories()
+        {
+            try
+            {
+                // search for plugin assemblies in the directories
+                foreach (var dir in directoryPaths)
+                {
+                    var files = Directory.EnumerateFiles(dir, "*.dll");
+                    if (files?.Count() > 0)
+                    {
+                        foreach (var file in files)
+                        {
+                            Assembly pluginAssembly = LoadPlugin(file);
+                            if (pluginAssembly != null)
+                            {
+                                var result = pluginAssembly.GetTypes().Any(x => (typeof(IDeviceFeatureImplementation).IsAssignableFrom(x) || typeof(IClientFeatureImplementation).IsAssignableFrom(x)));
+                                if (result)
+                                {
+                                    filePaths.Add(file);
+                                }
+                            }
+                        }
+                    }
+                }
+                directoryPaths.Clear();
+            }
+            catch (Exception ex1)
+            {
+                _logger.LogError(ex1.ToString());
+            }
         }
 
         private void LoadAssemblies()
