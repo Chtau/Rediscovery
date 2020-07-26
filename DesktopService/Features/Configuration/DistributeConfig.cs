@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,41 +28,10 @@ namespace DesktopService.Features.Configuration
 
         public void Share()
         {
+            // TODO: add shared settings for RediscoveryManager & RediscoveryManager.GUI
             string hubPath = System.IO.Path.GetDirectoryName(_remoteResourceSettings.RediscoveryDesktopHubPath);
-            string discoveryPath = System.IO.Path.GetDirectoryName(_remoteResourceSettings.RediscoveryDiscoveryServicePath);
 
-            // TODO: we do nothing here with the firewall rules
-            var fwRules = new List<SharedConfigurations.Hub.Models.FirewallRulesConfiguration>();
-
-            fwRules.Add(new SharedConfigurations.Hub.Models.FirewallRulesConfiguration
-            {
-                ExePath = _staticResources.ExePath,
-                RuleName = _appSettings.FirewallRuleName
-            });
-
-            if (!string.IsNullOrWhiteSpace(discoveryPath) && System.IO.Directory.Exists(discoveryPath))
-            {
-                // Update settings for discovery service
-                var serviceInfo = new SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration
-                {
-                    IP = _staticResources.HostIpAddress,
-                    Port = _staticResources.HostPort,
-                    MetaInfo = null,
-                    Name = _appSettings.DesktopName
-                };
-                OnUpdateRemoteConfiguration(Path.Combine(discoveryPath, SharedConfigurations.DiscoveryService.ConfigFileNames.AppSettings), SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration.SectionName, serviceInfo);
-
-                // Add firewall rule for discovery service
-                var fwDiscovery = OnReadRemoteConfiguration<SharedConfigurations.DiscoveryService.Models.DiscoveryConfiguration>(Path.Combine(discoveryPath, SharedConfigurations.DiscoveryService.ConfigFileNames.AppSettings), SharedConfigurations.DiscoveryService.Models.DiscoveryConfiguration.SectionName);
-                if (fwDiscovery != null)
-                {
-                    fwRules.Add(new SharedConfigurations.Hub.Models.FirewallRulesConfiguration
-                    {
-                        ExePath = _remoteResourceSettings.RediscoveryDiscoveryServicePath,
-                        RuleName = fwDiscovery.FirewallRuleName
-                    });
-                }
-            }
+            HandleDiscoveryService();
 
             if (!string.IsNullOrWhiteSpace(hubPath) && System.IO.Directory.Exists(hubPath))
             {
@@ -73,6 +43,45 @@ namespace DesktopService.Features.Configuration
                     DesktopHubApplicationKey = _remoteResourceSettings.RediscoveryDesktopHubApplicationKey
                 };
                 OnUpdateRemoteConfiguration(Path.Combine(hubPath, SharedConfigurations.DesktopHub.ConfigFileNames.AppSettings), SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration.SectionName, hubConfig);
+            }
+        }
+
+        private void HandleDiscoveryService()
+        {
+            try
+            {
+                string discoveryPath = System.IO.Path.GetDirectoryName(_remoteResourceSettings.RediscoveryDiscoveryServicePath);
+                if (string.IsNullOrWhiteSpace(discoveryPath))
+                {
+                    var dirInfo = Directory.GetParent(_staticResources.ExePath);
+                    var parentPath = dirInfo.Parent.FullName;
+                    var discoveryFolder = Path.Combine(parentPath, "DiscoveryService");
+                    if (Directory.Exists(discoveryFolder))
+                        discoveryPath = discoveryFolder;
+                }
+
+                if (!string.IsNullOrWhiteSpace(discoveryPath) && System.IO.Directory.Exists(discoveryPath))
+                {
+                    // Update settings for discovery service
+                    var serviceInfo = new SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration
+                    {
+                        IP = _staticResources.HostIpAddress,
+                        Port = _staticResources.HostPort,
+                        MetaInfo = null,
+                        Name = _appSettings.DesktopName
+                    };
+                    OnUpdateRemoteConfiguration(Path.Combine(discoveryPath, SharedConfigurations.DiscoveryService.ConfigFileNames.AppSettings), SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration.SectionName, serviceInfo);
+
+                    // Add firewall rule for discovery service
+                    var fwDiscovery = OnReadRemoteConfiguration<SharedConfigurations.DiscoveryService.Models.DiscoveryConfiguration>(Path.Combine(discoveryPath, SharedConfigurations.DiscoveryService.ConfigFileNames.AppSettings), SharedConfigurations.DiscoveryService.Models.DiscoveryConfiguration.SectionName);
+                    if (fwDiscovery != null)
+                    {
+
+                    }
+                }
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
             }
         }
 

@@ -59,7 +59,7 @@ namespace DesktopService.Features.Plugins
                     }
                 }
 
-                string defaultPluginDirectory = "plugins";
+                string defaultPluginDirectory = "Plugins";
                 string ignorePluginBackupDirectory = Path.Combine(defaultPluginDirectory, ".ignore");
                 if (!Directory.Exists(defaultPluginDirectory))
                 {
