@@ -84,6 +84,8 @@ namespace DesktopService
 
             resources.ExePath = ExePath;
             resources.DiscoveryServiceFolderName = "DiscoveryService";
+            resources.ManagerFolderName = "Manager";
+            resources.ManagerGUIFolderName = "ManagerGUI";
             resources.PluginFolderName = "Plugins";
             resources.PluginHiddenBackupFolderName = ".ignore";
             if (!string.IsNullOrWhiteSpace(appConfig?.Value?.HostIpAddress))

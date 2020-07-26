@@ -28,21 +28,71 @@ namespace DesktopService.Features.Configuration
 
         public void Share()
         {
-            // TODO: add shared settings for RediscoveryManager & RediscoveryManager.GUI
-            string hubPath = System.IO.Path.GetDirectoryName(_remoteResourceSettings.RediscoveryDesktopHubPath);
-
             HandleDiscoveryService();
+            HandleManager();
+            HandleManagerGUI();
+        }
 
-            if (!string.IsNullOrWhiteSpace(hubPath) && System.IO.Directory.Exists(hubPath))
+        private void HandleManager()
+        {
+            try
             {
-                // TODO: no longer needed
-                var hubConfig = new SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration
+                string managerPath = System.IO.Path.GetDirectoryName(_remoteResourceSettings.RediscoveryManagerPath);
+                if (string.IsNullOrWhiteSpace(managerPath))
                 {
-                    IP = _staticResources.HostIpAddress,
-                    Port = _staticResources.HostPort,
-                    DesktopHubApplicationKey = _remoteResourceSettings.RediscoveryDesktopHubApplicationKey
-                };
-                OnUpdateRemoteConfiguration(Path.Combine(hubPath, SharedConfigurations.DesktopHub.ConfigFileNames.AppSettings), SharedConfigurations.DesktopHub.Models.RemoteResourceConfiguration.SectionName, hubConfig);
+                    var dirInfo = Directory.GetParent(_staticResources.ExePath);
+                    var parentPath = dirInfo.Parent.FullName;
+                    var managerFolder = Path.Combine(parentPath, _staticResources.ManagerFolderName);
+                    if (Directory.Exists(managerFolder))
+                        managerPath = managerFolder;
+                }
+
+                if (!string.IsNullOrWhiteSpace(managerPath) && System.IO.Directory.Exists(managerPath))
+                {
+                    var config = new SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration
+                    {
+                        IP = _staticResources.HostIpAddress,
+                        Port = _staticResources.HostPort,
+                        DeviceIdentifier = _remoteResourceSettings.RediscoveryManagerDeviceIdentifier,
+                        AutoConnect = _remoteResourceSettings.RediscoveryManagerAutoConnect
+                    };
+                    OnUpdateRemoteConfiguration(Path.Combine(managerPath, SharedConfigurations.RediscoveryManager.ConfigFileNames.AppSettings), SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration.SectionName, config);
+                }
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+            }
+        }
+
+        private void HandleManagerGUI()
+        {
+            try
+            {
+                string managerPath = System.IO.Path.GetDirectoryName(_remoteResourceSettings.RediscoveryManagerGUIPath);
+                if (string.IsNullOrWhiteSpace(managerPath))
+                {
+                    var dirInfo = Directory.GetParent(_staticResources.ExePath);
+                    var parentPath = dirInfo.Parent.FullName;
+                    var managerFolder = Path.Combine(parentPath, _staticResources.ManagerGUIFolderName);
+                    if (Directory.Exists(managerFolder))
+                        managerPath = managerFolder;
+                }
+
+                if (!string.IsNullOrWhiteSpace(managerPath) && System.IO.Directory.Exists(managerPath))
+                {
+                    var config = new SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration
+                    {
+                        IP = _staticResources.HostIpAddress,
+                        Port = _staticResources.HostPort,
+                        DeviceIdentifier = _remoteResourceSettings.RediscoveryManagerDeviceIdentifier,
+                        AutoConnect = _remoteResourceSettings.RediscoveryManagerAutoConnect
+                    };
+                    OnUpdateRemoteConfiguration(Path.Combine(managerPath, SharedConfigurations.RediscoveryManager.GUI.ConfigFileNames.AppSettings), SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration.SectionName, config);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
             }
         }
 

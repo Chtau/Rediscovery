@@ -16,6 +16,8 @@ namespace DesktopService.Services
         public SharedBase.Connection.Manifest ServiceManifest { get; set; }
         public bool SSLActive { get; set; }
         public string DiscoveryServiceFolderName { get; set; }
+        public string ManagerFolderName { get; set; }
+        public string ManagerGUIFolderName { get; set; }
         public string PluginFolderName { get; set; }
         public string PluginHiddenBackupFolderName { get; set; }
     }
