@@ -67,7 +67,8 @@ namespace DesktopService.Features.Plugins
                 }
                 if (!Directory.Exists(ignorePluginBackupDirectory))
                 {
-                    Directory.CreateDirectory(ignorePluginBackupDirectory);
+                    var dirInfo = Directory.CreateDirectory(ignorePluginBackupDirectory);
+                    dirInfo.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
                 }
 
                 // zip files in default plugin directory are plugins
@@ -83,8 +84,10 @@ namespace DesktopService.Features.Plugins
                         {
                             archive.ExtractToDirectory(defaultPluginDirectory, true);
                         }
-                        // TODO: zip archives should be copied to a [.ignore] directory and then deleted if the parent directory is the default
-                        //File.Delete(path);
+                        var fName = Path.GetFileName(path);
+                        var targetPath = Path.Combine(ignorePluginBackupDirectory, fName);
+                        File.Copy(path, targetPath, true);
+                        File.Delete(path);
                     } catch (Exception ex)
                     {
                         _logger.LogError(ex.ToString());
@@ -107,12 +110,14 @@ namespace DesktopService.Features.Plugins
 
         public IEnumerable<IDeviceFeatureImplementation> GetDeviceFeatureImplementations()
         {
+            var ids = new List<Guid>();
             return pluginAssemblies.SelectMany(pluginAssembly =>
             {
-                var result = CreateDesktopPluginFeature(pluginAssembly.Assembly, Path.GetDirectoryName(pluginAssembly.PluginPath));
+                var result = CreateDesktopPluginFeature(pluginAssembly.Assembly, Path.GetDirectoryName(pluginAssembly.PluginPath), ids).ToList();
                 if (!(result?.Count() > 0))
                 {
                     missingPluginImplementation.Add(pluginAssembly.PluginPath);
+                    return new List<IDeviceFeatureImplementation>();
                 }
                 return result;
             })?.ToList()?.Where(x => x != null);
@@ -120,9 +125,10 @@ namespace DesktopService.Features.Plugins
 
         public IEnumerable<IClientFeatureImplementation> GetClientFeatureImplementations()
         {
+            var ids = new List<Guid>();
             return pluginAssemblies.SelectMany(pluginAssembly =>
             {
-                var result = CreateClientPluginFeature(pluginAssembly.Assembly, Path.GetDirectoryName(pluginAssembly.PluginPath));
+                var result = CreateClientPluginFeature(pluginAssembly.Assembly, Path.GetDirectoryName(pluginAssembly.PluginPath), ids).ToList();
                 if (!(result?.Count() > 0))
                 {
                     missingPluginImplementation.Add(pluginAssembly.PluginPath);
@@ -208,10 +214,8 @@ namespace DesktopService.Features.Plugins
             return null;
         }
 
-        private IEnumerable<IDeviceFeatureImplementation> CreateDesktopPluginFeature(Assembly assembly, string path)
+        private IEnumerable<IDeviceFeatureImplementation> CreateDesktopPluginFeature(Assembly assembly, string path, List<Guid> alreadyAddedPlugins)
         {
-            int count = 0;
-
             foreach (Type type in assembly.GetTypes())
             {
                 if (typeof(IDeviceFeatureImplementation).IsAssignableFrom(type))
@@ -219,26 +223,21 @@ namespace DesktopService.Features.Plugins
                     IDeviceFeatureImplementation result = Activator.CreateInstance(type) as IDeviceFeatureImplementation;
                     if (result != null)
                     {
-                        result.Init(path, _pluginLogger);
-                        count++;
-                        yield return result;
+                        var id = result.GetDeviceFeatureInfo().Id;
+                        if (!alreadyAddedPlugins.Contains(id))
+                        {
+                            alreadyAddedPlugins.Add(id);
+                            // TODO: we need to make sure we use the complete (absolute) path for the plugin directory
+                            result.Init(path, _pluginLogger);
+                            yield return result;
+                        }
                     }
                 }
             }
-
-            if (count == 0)
-            {
-                /*string availableTypes = string.Join(",", assembly.GetTypes().Select(t => t.FullName));
-                _pluginLogger.LogWarning(
-                    $"Can't find any type which implements IDeviceFeatureImplementation in {assembly} from {assembly.Location}.\n" +
-                    $"Available types: {availableTypes}");*/
-            }
         }
 
-        private IEnumerable<IClientFeatureImplementation> CreateClientPluginFeature(Assembly assembly, string path)
+        private IEnumerable<IClientFeatureImplementation> CreateClientPluginFeature(Assembly assembly, string path, List<Guid> alreadyAddedPlugins)
         {
-            int count = 0;
-
             foreach (Type type in assembly.GetTypes())
             {
                 if (typeof(IClientFeatureImplementation).IsAssignableFrom(type))
@@ -246,19 +245,16 @@ namespace DesktopService.Features.Plugins
                     IClientFeatureImplementation result = Activator.CreateInstance(type) as IClientFeatureImplementation;
                     if (result != null)
                     {
-                        result.Init(path, _pluginLogger);
-                        count++;
-                        yield return result;
+                        var id = result.GetDeviceFeatureInfo().Id;
+                        if (!alreadyAddedPlugins.Contains(id))
+                        {
+                            alreadyAddedPlugins.Add(id);
+                            // TODO: we need to make sure we use the complete (absolute) path for the plugin directory
+                            result.Init(path, _pluginLogger);
+                            yield return result;
+                        }
                     }
                 }
-            }
-
-            if (count == 0)
-            {
-                /*string availableTypes = string.Join(",", assembly.GetTypes().Select(t => t.FullName));
-                _pluginLogger.LogWarning(
-                    $"Can't find any type which implements IClientFeatureImplementation in {assembly} from {assembly.Location}.\n" +
-                    $"Available types: {availableTypes}");*/
             }
         }
     }
