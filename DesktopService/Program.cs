@@ -83,6 +83,9 @@ namespace DesktopService
             var resources = (Services.IStaticResources)host.Services.GetService(typeof(Services.IStaticResources));
 
             resources.ExePath = ExePath;
+            resources.DiscoveryServiceFolderName = "DiscoveryService";
+            resources.PluginFolderName = "Plugins";
+            resources.PluginHiddenBackupFolderName = ".ignore";
             if (!string.IsNullOrWhiteSpace(appConfig?.Value?.HostIpAddress))
                 resources.HostIpAddress = appConfig?.Value?.HostIpAddress;
             else

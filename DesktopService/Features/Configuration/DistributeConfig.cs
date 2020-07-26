@@ -55,7 +55,7 @@ namespace DesktopService.Features.Configuration
                 {
                     var dirInfo = Directory.GetParent(_staticResources.ExePath);
                     var parentPath = dirInfo.Parent.FullName;
-                    var discoveryFolder = Path.Combine(parentPath, "DiscoveryService");
+                    var discoveryFolder = Path.Combine(parentPath, _staticResources.DiscoveryServiceFolderName);
                     if (Directory.Exists(discoveryFolder))
                         discoveryPath = discoveryFolder;
                 }

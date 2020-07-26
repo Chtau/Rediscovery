@@ -20,9 +20,12 @@ namespace DesktopService.Features.Plugins
             public string PluginPath { get; set; }
         }
 
+        private const string PluginPackageExtension = ".zip";
+
         private readonly IPluginLogger _pluginLogger;
         private readonly ILogger<LoadPlugins> _logger;
         private readonly SharedConfigurations.DesktopService.Models.AppConfiguration _appSettings;
+        private readonly Services.IStaticResources _staticResources;
 
         private List<string> filePaths = new List<string>();
         private List<string> directoryPaths = new List<string>();
@@ -30,11 +33,13 @@ namespace DesktopService.Features.Plugins
         private List<PluginAssembly> pluginAssemblies = new List<PluginAssembly>();
 
         public LoadPlugins(ILoggerFactory loggerFactory, IPluginLogger pluginLogger,
-            IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> appOptions)
+            IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> appOptions,
+            Services.IStaticResources staticResources)
         {
             _logger = loggerFactory.CreateLogger<LoadPlugins>();
             _pluginLogger = pluginLogger;
             _appSettings = appOptions.Value;
+            _staticResources = staticResources;
         }
 
         public void LoadPaths()
@@ -59,8 +64,8 @@ namespace DesktopService.Features.Plugins
                     }
                 }
 
-                string defaultPluginDirectory = "Plugins";
-                string ignorePluginBackupDirectory = Path.Combine(defaultPluginDirectory, ".ignore");
+                string defaultPluginDirectory = _staticResources.PluginFolderName;
+                string ignorePluginBackupDirectory = Path.Combine(defaultPluginDirectory, _staticResources.PluginHiddenBackupFolderName);
                 if (!Directory.Exists(defaultPluginDirectory))
                 {
                     Directory.CreateDirectory(defaultPluginDirectory);
@@ -72,11 +77,11 @@ namespace DesktopService.Features.Plugins
                 }
 
                 // zip files in default plugin directory are plugins
-                var files = Directory.EnumerateFiles(defaultPluginDirectory, "*.zip");
+                var files = Directory.EnumerateFiles(defaultPluginDirectory, $"*{PluginPackageExtension}");
                 if (files?.Count() > 0)
                     filePaths.AddRange(files);
 
-                foreach (var path in filePaths.Where(x => x.EndsWith(".zip")))
+                foreach (var path in filePaths.Where(x => x.EndsWith(PluginPackageExtension)))
                 {
                     try
                     {
@@ -93,7 +98,7 @@ namespace DesktopService.Features.Plugins
                         _logger.LogError(ex.ToString());
                     }
                 }
-                filePaths = filePaths.Where(x => !x.EndsWith(".zip")).ToList();
+                filePaths = filePaths.Where(x => !x.EndsWith(PluginPackageExtension)).ToList();
 
                 // sub directories are plugins
                 var subDirs = Directory.EnumerateDirectories(defaultPluginDirectory);

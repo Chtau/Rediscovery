@@ -15,5 +15,8 @@ namespace DesktopService.Services
         string PEM { get; set; }
         SharedBase.Connection.Manifest ServiceManifest { get; set; }
         bool SSLActive { get; set; }
+        string DiscoveryServiceFolderName { get; set; }
+        string PluginFolderName { get; set; }
+        string PluginHiddenBackupFolderName { get; set; }
     }
 }
