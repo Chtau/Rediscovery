@@ -43,16 +43,25 @@ The manager should have pretty much the same functions the Manager GUI but in th
 
 Main service to provide all features and is required run if you want to use any other desktop application.
 
+After the service is started it will update the settings for Manager, ManagerGUI and Discovery service with the public IP Address and adds a Firewall Rule (Firewall rule may require Administration privileges).
+
 ### Discovery Service
 
 This service allows you to use the discovery function on the Android application and remove the need to manual configuration the desktop on Android.
 
+After starting the Discovery service will add a Firewall rule (this may require Administration privileges).
 
 ## Android
 
 ![Android Start](./Resources/Docs/Android_Start.png)
+
+### Connect
+
 ![Android device found](./Resources/Docs/Android_Discover_device_found.jpg)
 ![Android device found](./Resources/Docs/Android_Device_connected.png)
+
+### Features
+
 ![Android device found](./Resources/Docs/Android_Features.png)
 ![Android device found](./Resources/Docs/Android_MediaPlayer.png)
 ![Android device found](./Resources/Docs/Android_Terminal.png)
