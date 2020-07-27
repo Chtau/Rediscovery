@@ -6,6 +6,9 @@ The available functions on the remote device and the control UI on Android are a
 With the plugin system everybody with a little coding knowledge should be able to create functions and a UI to easy remote execute any task.
 Execute Android functions from a desktop is not integrated yet, but it will come.
 
+
+Feedback and Contributions are very welcome!
+
 ### Goal
 
 The Goal of Rediscovery is to create a Bi directional remote control Crossplatform software with the ability of ease to extend.
@@ -66,3 +69,17 @@ After starting the Discovery service will add a Firewall rule (this may require 
 ![Android device found](./Resources/Docs/Android_MediaPlayer.png)
 ![Android device found](./Resources/Docs/Android_Terminal.png)
 ![Android device found](./Resources/Docs/Android_Send_File.png)
+
+
+## Upcoming
+
+* Call Android features from Desktop via Plugins
+* Linux Release
+* More Plugins
+* Plugin Manager
+* More Documentation
+
+
+## License
+
+[MIT](LICENSE) © [Christoph Taucher](https://github.com/Chtau)
