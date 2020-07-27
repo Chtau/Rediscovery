@@ -47,3 +47,13 @@ Main service to provide all features and is required run if you want to use any 
 
 This service allows you to use the discovery function on the Android application and remove the need to manual configuration the desktop on Android.
 
+
+## Android
+
+![Android Start](./Resources/Docs/Android_Start.png)
+![Android device found](./Resources/Docs/Android_Discover_device_found.jpg)
+![Android device found](./Resources/Docs/Android_Device_connected.png)
+![Android device found](./Resources/Docs/Android_Features.png)
+![Android device found](./Resources/Docs/Android_MediaPlayer.png)
+![Android device found](./Resources/Docs/Android_Terminal.png)
+![Android device found](./Resources/Docs/Android_Send_File.png)
