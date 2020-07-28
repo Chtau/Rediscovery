@@ -47,6 +47,9 @@ The manager should have pretty much the same functions the Manager GUI but in th
 Main service to provide all features and is required run if you want to use any other desktop application.
 
 After the service is started it will update the settings for Manager, ManagerGUI and Discovery service with the public IP Address and adds a Firewall Rule (Firewall rule may require Administration privileges).
+Settings of the other applications can only be updated if they are in specific folders in the same directory as the service folder (See default folder structure from releases).
+If you use a different structure you can set the paths to the other applications in the service settings (Settings Key:`RemoteResourceSettings`).
+
 
 ### Discovery Service
 
