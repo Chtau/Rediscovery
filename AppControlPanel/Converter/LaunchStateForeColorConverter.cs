@@ -16,13 +16,13 @@ namespace AppControlPanel.Converter
                 switch (state)
                 {
                     case ViewModels.AppViewModel.LaunchState.None:
+                    case ViewModels.AppViewModel.LaunchState.NotRunning:
                         return Brushes.Black;
                     case ViewModels.AppViewModel.LaunchState.Running:
                     case ViewModels.AppViewModel.LaunchState.Starting:
                     case ViewModels.AppViewModel.LaunchState.Error:
                     case ViewModels.AppViewModel.LaunchState.NotFound:
                     case ViewModels.AppViewModel.LaunchState.ErrorStarting:
-                    case ViewModels.AppViewModel.LaunchState.NotRunning:
                         return Brushes.White;
                     default:
                         return Brushes.Black;
