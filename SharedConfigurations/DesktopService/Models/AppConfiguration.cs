@@ -12,8 +12,6 @@ namespace SharedConfigurations.DesktopService.Models
 
         public string FirewallRuleName { get; set; }
 
-        public string ServiceDisplayName { get; set; }
-
         public string[] Plugins { get; set; }
 
         public string DesktopName { get; set; }
@@ -36,6 +34,5 @@ namespace SharedConfigurations.DesktopService.Models
         public string DatabasePath { get; set; }
 
         public string RemoteLogger { get; set; }
-        public string RemoteLoggerModuleName { get; set; }
     }
 }

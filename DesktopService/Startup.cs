@@ -101,10 +101,9 @@ namespace DesktopService
             }
             loggerFactory.AddRemoteLogger(o =>
             {
-                if (!string.IsNullOrWhiteSpace(appSettings?.Value?.RemoteLoggerModuleName))
-                    o.LoggingModuleName = appSettings?.Value?.RemoteLoggerModuleName;
+                o.LoggingModuleName = "DesktopService";
                 o.LogLevel = remoteLogLevel;
-                o.GetLoggerHandlerInstance = () => { return app.ApplicationServices.GetRequiredService<ILoggerHandler>(); };
+                o.GetLoggerHandlerInstance = () => app.ApplicationServices.GetRequiredService<ILoggerHandler>();
             });
 
             app.UseCors(builder =>
