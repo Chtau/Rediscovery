@@ -10,30 +10,31 @@ namespace Rediscovery.Services
 {
     public class Consumer : IConsumer
     {
-        private AuthenticationConsumerService authenticationConsumerService;
-        private GreetingConsumerService greetingConsumerService;
-        private FeatureConsumerService featureConsumerService;
-        private HeartbeatConsumer heartbeatConsumerService;
-        private LoggerConsumer loggerConsumer;
-
         public Consumer()
         {
-            authenticationConsumerService = new AuthenticationConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
-            greetingConsumerService = new GreetingConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
-            featureConsumerService = new FeatureConsumerService(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
-            heartbeatConsumerService = new HeartbeatConsumer(SharedBase.Logging.DiagnosticsLoggerProvider.Instance);
-            loggerConsumer = new LoggerConsumer();
+            SharedBase.Logging.EventLoggerProvider.Instance.LogNewEntry += Instance_LogNewEntry;
+            AuthenticationConsumerService = new AuthenticationConsumerService(SharedBase.Logging.EventLoggerProvider.Instance);
+            GreetingConsumerService = new GreetingConsumerService(SharedBase.Logging.EventLoggerProvider.Instance);
+            FeatureConsumerService = new FeatureConsumerService(SharedBase.Logging.EventLoggerProvider.Instance);
+            HeartbeatConsumerService = new HeartbeatConsumer(SharedBase.Logging.EventLoggerProvider.Instance);
+            LoggerConsumer = new LoggerConsumer();
         }
 
-        public AuthenticationConsumerService AuthenticationConsumerService => authenticationConsumerService;
+        private void Instance_LogNewEntry(object sender, SharedBase.Logging.LoggerEntry e)
+        {
+            if (LoggerConsumer?.IsConnect == true)
+                LoggerConsumer.LogEntry(e);
+        }
 
-        public GreetingConsumerService GreetingConsumerService => greetingConsumerService;
+        public AuthenticationConsumerService AuthenticationConsumerService { get; }
 
-        public FeatureConsumerService FeatureConsumerService => featureConsumerService;
+        public GreetingConsumerService GreetingConsumerService { get; }
 
-        public HeartbeatConsumer HeartbeatConsumerService => heartbeatConsumerService;
+        public FeatureConsumerService FeatureConsumerService { get; }
 
-        public LoggerConsumer LoggerConsumer => loggerConsumer;
+        public HeartbeatConsumer HeartbeatConsumerService { get; }
+
+        public LoggerConsumer LoggerConsumer { get; }
 
         public bool Disconnect()
         {

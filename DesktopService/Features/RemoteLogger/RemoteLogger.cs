@@ -10,7 +10,6 @@ namespace DesktopService.Features.Logger
     {
         private readonly string _name;
         private readonly RemoteLoggerConfiguration _config;
-        private readonly ILoggerHandler _loggerHandler;
 
         public RemoteLogger(string name, RemoteLoggerConfiguration config)
         {

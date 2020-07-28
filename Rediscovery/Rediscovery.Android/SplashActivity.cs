@@ -20,14 +20,14 @@ namespace Rediscovery.Droid
         protected override void OnResume()
         {
             base.OnResume();
-            Task startupWork = new Task(() => { OnStartup(); });
+            Task startupWork = new Task(() => OnStartup());
             startupWork.Start();
         }
 
         // Prevent the back button from canceling the startup process
         public override void OnBackPressed() { }
 
-        async void OnStartup()
+        private void OnStartup()
         {
             var intent = new Intent(Application.Context, typeof(MainActivity));
             if (Intent.Action == Intent.ActionSend)

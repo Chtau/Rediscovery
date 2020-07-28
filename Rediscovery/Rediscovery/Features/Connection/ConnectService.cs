@@ -22,8 +22,8 @@ namespace Rediscovery.Features.Connection
         private IDeviceData deviceData => DependencyService.Get<IDeviceData>() ?? new DeviceData();
         private ILoggerEvent loggerEvent => DependencyService.Get<ILoggerEvent>() ?? new Services.Logger();
 
-        private Dictionary<Guid, ConnectConfigurationData> desktopConfigurationData = new Dictionary<Guid, ConnectConfigurationData>();
-        private Dictionary<Guid, CommunicationHeartbeatConsumer.RoundTripResult> lastHeartbeatStates = new Dictionary<Guid, CommunicationHeartbeatConsumer.RoundTripResult>();
+        private readonly Dictionary<Guid, ConnectConfigurationData> _desktopConfigurationData = new Dictionary<Guid, ConnectConfigurationData>();
+        private readonly Dictionary<Guid, CommunicationHeartbeatConsumer.RoundTripResult> _lastHeartbeatStates = new Dictionary<Guid, CommunicationHeartbeatConsumer.RoundTripResult>();
 
         public event EventHandler<Guid> HeartbeatStateChanges;
 
@@ -39,24 +39,24 @@ namespace Rediscovery.Features.Connection
 
         public CommunicationHeartbeatConsumer.RoundTripResult GetHeartbeat(Guid desktopConfigurationId)
         {
-            if (lastHeartbeatStates.ContainsKey(desktopConfigurationId))
-                return lastHeartbeatStates[desktopConfigurationId];
+            if (_lastHeartbeatStates.ContainsKey(desktopConfigurationId))
+                return _lastHeartbeatStates[desktopConfigurationId];
             return new CommunicationHeartbeatConsumer.RoundTripResult(desktopConfigurationId.ToString(), false);
         }
 
         public ConnectConfigurationData GetData(Guid configurationId)
         {
-            if (desktopConfigurationData.ContainsKey(configurationId))
-                return desktopConfigurationData[configurationId];
+            if (_desktopConfigurationData.ContainsKey(configurationId))
+                return _desktopConfigurationData[configurationId];
             return null;
         }
 
         private void OnSetData(Guid configurationId, ConnectConfigurationData data)
         {
-            if (desktopConfigurationData.ContainsKey(configurationId))
-                desktopConfigurationData[configurationId] = data;
+            if (_desktopConfigurationData.ContainsKey(configurationId))
+                _desktopConfigurationData[configurationId] = data;
             else
-                desktopConfigurationData.Add(configurationId, data);
+                _desktopConfigurationData.Add(configurationId, data);
         }
 
         public void AutoConnect(Action<string, SharedBase.Connection.Enums.ConnectionState> resultCallback)
@@ -128,10 +128,7 @@ namespace Rediscovery.Features.Connection
                                     UseSSL = reply.UseSSL,
                                     Port = item.Port,
                                 });
-                                consumer.AuthenticationConsumerService.RequestManifest(deviceReply.Token, manifest =>
-                                {
-                                    entityManager.AddManifestData(manifest, item.Id, item.DisplayName);
-                                });
+                                consumer.AuthenticationConsumerService.RequestManifest(deviceReply.Token, manifest => entityManager.AddManifestData(manifest, item.Id, item.DisplayName));
                                 OnConnectLogger(connectionConfiguration, deviceReply.Token);
                                 OnConnectHeartbeat(connectionConfiguration, deviceReply.Token, item.Id);
                                 resultCallback?.Invoke(item, deviceReply.Token, deviceReply.State);
@@ -192,21 +189,21 @@ namespace Rediscovery.Features.Connection
                 if (e.OK)
                     _logger.LogTrace($"[Heartbeat] round trip received. ({e.PingPongTime?.TotalMilliseconds} ms)");
                 else
-                    _logger.LogTrace($"[Heartbeat] round trip abort received.");
+                    _logger.LogTrace("[Heartbeat] round trip abort received.");
 
                 if (!string.IsNullOrWhiteSpace(e.Identifier) && Guid.TryParse(e.Identifier, out Guid desktopConfigurationId))
                 {
                     bool shouldUpdate = false;
-                    if (lastHeartbeatStates.ContainsKey(desktopConfigurationId))
+                    if (_lastHeartbeatStates.ContainsKey(desktopConfigurationId))
                     {
-                        if (lastHeartbeatStates[desktopConfigurationId]?.OK != e.OK)
+                        if (_lastHeartbeatStates[desktopConfigurationId]?.OK != e.OK)
                         {
-                            lastHeartbeatStates[desktopConfigurationId].OK = e.OK;
+                            _lastHeartbeatStates[desktopConfigurationId].OK = e.OK;
                             shouldUpdate = true;
                         }
                     } else
                     {
-                        lastHeartbeatStates.Add(desktopConfigurationId, e);
+                        _lastHeartbeatStates.Add(desktopConfigurationId, e);
                         shouldUpdate = true;
                     }
                     if (shouldUpdate)
@@ -215,8 +212,8 @@ namespace Rediscovery.Features.Connection
                         item.ConnectionState = e.OK ? SharedBase.Connection.Enums.ConnectionState.OK : SharedBase.Connection.Enums.ConnectionState.None;
                         desktopStore.UpdateItem(item);
                     }
-                    lastHeartbeatStates[desktopConfigurationId].PingPongTime = e.PingPongTime;
-                    lastHeartbeatStates[desktopConfigurationId].PingStartDatetimeUTC = e.PingStartDatetimeUTC;
+                    _lastHeartbeatStates[desktopConfigurationId].PingPongTime = e.PingPongTime;
+                    _lastHeartbeatStates[desktopConfigurationId].PingStartDatetimeUTC = e.PingStartDatetimeUTC;
                     HeartbeatStateChanges?.Invoke(this, desktopConfigurationId);
                 }
             }
@@ -245,7 +242,7 @@ namespace Rediscovery.Features.Connection
         {
             try
             {
-                lastHeartbeatStates.Clear();
+                _lastHeartbeatStates.Clear();
                 var items = desktopStore.GetItems()?.ToList();
                 if (items != null)
                 {
@@ -281,7 +278,7 @@ namespace Rediscovery.Features.Connection
 
         public void Disconnect(DesktopConfigurationModel desktopConfigurationModel, Action<bool> resultCallback)
         {
-            lastHeartbeatStates.Clear();
+            _lastHeartbeatStates.Clear();
             consumer.Disconnect();
             OnUpdateDesktopConfiguration(desktopConfigurationModel, null, SharedBase.Connection.Enums.ConnectionState.None);
             resultCallback?.Invoke(true);

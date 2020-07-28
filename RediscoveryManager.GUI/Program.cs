@@ -14,7 +14,7 @@ using Splat;
 
 namespace RediscoveryManager.GUI
 {
-    class Program
+    public static class Program
     {
         public static IConfigurationRoot Configuration { get; private set; }
         public static Window MainWindow { get; private set; }

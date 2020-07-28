@@ -36,10 +36,7 @@ namespace Rediscovery.Features.Startpage
                 IsLoading = false
             };
 
-            OpenUrlCommand = new Command<string>(async (url) =>
-            {
-                await Launcher.OpenAsync(url);
-            });
+            OpenUrlCommand = new Command<string>(async (url) => await Launcher.OpenAsync(url));
             QuickConnectCommand = new Command(() =>
             {
                 Load.IsLoading = true;
@@ -75,7 +72,7 @@ namespace Rediscovery.Features.Startpage
             {
                 return !Load.IsLoading;
             });
-            QuickFeatureCommand = new Command<Features.Connection.Models.ConnectionManifestFeature>(async (feature) =>
+            QuickFeatureCommand = new Command<Features.Connection.Models.ConnectionManifestFeature>((feature) =>
             {
                 if (feature != null)
                 {
@@ -183,7 +180,7 @@ namespace Rediscovery.Features.Startpage
             set { SetProperty(ref isConnect, value); }
         }
 
-        DesktopConfigurationModel desktopConfigurationModel;
+        private DesktopConfigurationModel desktopConfigurationModel;
         public DesktopConfigurationModel DesktopConfiguration
         {
             get { return desktopConfigurationModel; }
@@ -196,7 +193,7 @@ namespace Rediscovery.Features.Startpage
             get { return pingPongTime; }
             set { SetProperty(ref pingPongTime, value); }
         }
-        
+
         private bool showQuickFeatures;
         public bool ShowQuickFeatures
         {

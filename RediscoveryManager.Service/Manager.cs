@@ -35,49 +35,49 @@ namespace RediscoveryManager.Service
         public event EventHandler LoggerEntiresChanged;
         public event EventHandler<SharedBase.Logging.LogCommandConfigResult> LoggerCommandExecuted;
 
-        private readonly IAuthenticationConsumerService authenticationConsumer;
-        private readonly IGreetingConsumerService greetingConsumer;
-        private readonly IResourceConsumerService resourceConsumer;
-        private readonly IHeartbeatConsumer heartbeatConsumer;
-        private readonly ILoggerConsumer loggerConsumer;
+        private readonly IAuthenticationConsumerService _authenticationConsumer;
+        private readonly IGreetingConsumerService _greetingConsumer;
+        private readonly IResourceConsumerService _resourceConsumer;
+        private readonly IHeartbeatConsumer _heartbeatConsumer;
+        private readonly ILoggerConsumer _loggerConsumer;
 
         private System.Threading.CancellationTokenSource tokenSource;
 
         public Manager()
         {
             SharedBase.Logging.EventLoggerProvider.Instance.LogNewEntry += Instance_LogNewEntry;
-            authenticationConsumer = new AuthenticationConsumerService(SharedBase.Logging.EventLoggerProvider.Instance);
-            greetingConsumer = new GreetingConsumerService(SharedBase.Logging.EventLoggerProvider.Instance);
-            resourceConsumer = new ResourceConsumerService(SharedBase.Logging.EventLoggerProvider.Instance);
-            heartbeatConsumer = new HeartbeatConsumer(SharedBase.Logging.EventLoggerProvider.Instance);
-            loggerConsumer = new LoggerConsumer();
-            authenticationConsumer.ReceivedManifestReply += (obj, args) =>
+            _authenticationConsumer = new AuthenticationConsumerService(SharedBase.Logging.EventLoggerProvider.Instance);
+            _greetingConsumer = new GreetingConsumerService(SharedBase.Logging.EventLoggerProvider.Instance);
+            _resourceConsumer = new ResourceConsumerService(SharedBase.Logging.EventLoggerProvider.Instance);
+            _heartbeatConsumer = new HeartbeatConsumer(SharedBase.Logging.EventLoggerProvider.Instance);
+            _loggerConsumer = new LoggerConsumer();
+            _authenticationConsumer.ReceivedManifestReply += (obj, args) =>
             {
                 Manifest = args;
                 ManifestChanged?.Invoke(this, EventArgs.Empty);
             };
-            authenticationConsumer.ReceivedWelcomeReply += (obj, args) =>
+            _authenticationConsumer.ReceivedWelcomeReply += (obj, args) =>
             {
                 ManagerConnectionState.ConnectionState = args.State;
                 if (ManagerConnectionState.ConnectionState == SharedBase.Connection.Enums.ConnectionState.OK)
                 {
                     CurrentConnection.Token = args.Token;
-                    authenticationConsumer.RequestManifest(CurrentConnection.Token);
-                    resourceConsumer.Connect(CurrentConnection.ConnectionConfiguration);
-                    resourceConsumer.ListenDevices(CurrentConnection.Token, tokenSource);
-                    resourceConsumer.ListenActiveDevices(CurrentConnection.Token, tokenSource);
-                    resourceConsumer.ListenPendingDevices(CurrentConnection.Token, tokenSource);
-                    resourceConsumer.ListenFeatures(CurrentConnection.Token, tokenSource);
-                    resourceConsumer.ListenHeartbeatStatistic(CurrentConnection.Token, tokenSource);
-                    resourceConsumer.ListenLoggerEntires(CurrentConnection.Token, tokenSource);
-                    heartbeatConsumer.Connect(CurrentConnection.ConnectionConfiguration);
-                    heartbeatConsumer.StartBeat(CurrentConnection.DeviceIdentifier, CurrentConnection.Token, tokenSource);
-                    loggerConsumer.Connect(CurrentConnection.ConnectionConfiguration);
-                    loggerConsumer.StartLogger(CurrentConnection.Token, tokenSource);
+                    _authenticationConsumer.RequestManifest(CurrentConnection.Token);
+                    _resourceConsumer.Connect(CurrentConnection.ConnectionConfiguration);
+                    _resourceConsumer.ListenDevices(CurrentConnection.Token, tokenSource);
+                    _resourceConsumer.ListenActiveDevices(CurrentConnection.Token, tokenSource);
+                    _resourceConsumer.ListenPendingDevices(CurrentConnection.Token, tokenSource);
+                    _resourceConsumer.ListenFeatures(CurrentConnection.Token, tokenSource);
+                    _resourceConsumer.ListenHeartbeatStatistic(CurrentConnection.Token, tokenSource);
+                    _resourceConsumer.ListenLoggerEntires(CurrentConnection.Token, tokenSource);
+                    _heartbeatConsumer.Connect(CurrentConnection.ConnectionConfiguration);
+                    _heartbeatConsumer.StartBeat(CurrentConnection.DeviceIdentifier, CurrentConnection.Token, tokenSource);
+                    _loggerConsumer.Connect(CurrentConnection.ConnectionConfiguration);
+                    _loggerConsumer.StartLogger(CurrentConnection.Token, tokenSource);
                 }
                 AfterConnecting?.Invoke(this, ManagerConnectionState.ConnectionState);
             };
-            resourceConsumer.ReceiveActiveDevices += (obj, args) =>
+            _resourceConsumer.ReceiveActiveDevices += (obj, args) =>
             {
                 ActiveDevices.Clear();
                 foreach (var item in args)
@@ -86,12 +86,12 @@ namespace RediscoveryManager.Service
                 }
                 DeviceCollectionChanged?.Invoke(this, EventArgs.Empty);
             };
-            resourceConsumer.ReceiveDeleteDevicesResult += (obj, args) =>
+            _resourceConsumer.ReceiveDeleteDevicesResult += (obj, args) =>
             {
                 if (args.result)
                     DeviceDeleted?.Invoke(this, args.deviceId);
             };
-            resourceConsumer.ReceiveDevices += (obj, args) =>
+            _resourceConsumer.ReceiveDevices += (obj, args) =>
             {
                 Devices.Clear();
                 foreach (var item in args)
@@ -100,11 +100,11 @@ namespace RediscoveryManager.Service
                 }
                 DeviceCollectionChanged?.Invoke(this, EventArgs.Empty);
             };
-            resourceConsumer.ReceiveFeatureDetails += (obj, args) =>
+            /*_resourceConsumer.ReceiveFeatureDetails += (obj, args) =>
             {
 
-            };
-            resourceConsumer.ReceiveFeatures += (obj, args) =>
+            };*/
+            _resourceConsumer.ReceiveFeatures += (obj, args) =>
             {
                 Features.Clear();
                 foreach (var item in args)
@@ -113,7 +113,7 @@ namespace RediscoveryManager.Service
                 }
                 FeaturesCollectionChanged?.Invoke(this, EventArgs.Empty);
             };
-            resourceConsumer.ReceivePendingDevices += (obj, args) =>
+            _resourceConsumer.ReceivePendingDevices += (obj, args) =>
             {
                 PendingDevices.Clear();
                 foreach (var item in args)
@@ -122,15 +122,12 @@ namespace RediscoveryManager.Service
                 }
                 DeviceCollectionChanged?.Invoke(this, EventArgs.Empty);
             };
-            resourceConsumer.ReceiveResolvePendingDevicesResult += (obj, args) =>
-            {
-                PendingDeviceResolved?.Invoke(this, args.deviceId);
-            };
-            resourceConsumer.ReceiveUpdateDevices += (obj, args) =>
+            _resourceConsumer.ReceiveResolvePendingDevicesResult += (obj, args) => PendingDeviceResolved?.Invoke(this, args.deviceId);
+            /*_resourceConsumer.ReceiveUpdateDevices += (obj, args) =>
             {
 
-            };
-            resourceConsumer.ReceiveHeartbeatStatistic += (obj, args) =>
+            };*/
+            _resourceConsumer.ReceiveHeartbeatStatistic += (obj, args) =>
             {
                 HeartbeatStatistics.Clear();
                 foreach (var item in args?.OrderByDescending(x => x.ResultReceived))
@@ -139,7 +136,7 @@ namespace RediscoveryManager.Service
                 }
                 HeartbeatStatisticsChanged?.Invoke(this, EventArgs.Empty);
             };
-            resourceConsumer.ReceiveLoggerEntires += (obj, args) =>
+            _resourceConsumer.ReceiveLoggerEntires += (obj, args) =>
             {
                 LoggerEntires.Clear();
                 foreach (var item in args?.OrderByDescending(x => x.Time))
@@ -148,14 +145,8 @@ namespace RediscoveryManager.Service
                 }
                 LoggerEntiresChanged?.Invoke(this, EventArgs.Empty);
             };
-            heartbeatConsumer.ReceivedBeatRoundtrip += (obj, args) =>
-            {
-                RoundTripReceived?.Invoke(this, args);
-            };
-            loggerConsumer.LoggerCommandExecuted += (obj, args) =>
-            {
-                LoggerCommandExecuted?.Invoke(this, args);
-            };
+            _heartbeatConsumer.ReceivedBeatRoundtrip += (obj, args) => RoundTripReceived?.Invoke(this, args);
+            _loggerConsumer.LoggerCommandExecuted += (obj, args) => LoggerCommandExecuted?.Invoke(this, args);
         }
 
         private void Instance_LogNewEntry(object sender, LoggerEntry e)
@@ -168,7 +159,7 @@ namespace RediscoveryManager.Service
             Disconnect();
             tokenSource = new System.Threading.CancellationTokenSource();
 
-            var result = greetingConsumer.GreetHost(CurrentConnection.IP, CurrentConnection.Port, new SharedBase.Connection.GreetingDeviceMessage
+            var result = _greetingConsumer.GreetHost(CurrentConnection.IP, CurrentConnection.Port, new SharedBase.Connection.GreetingDeviceMessage
             {
                 DeviceIdentifier = CurrentConnection.DeviceIdentifier,
                 DeviceName = "",
@@ -185,8 +176,8 @@ namespace RediscoveryManager.Service
                 CurrentConnection.Pem = result.PEM;
                 CurrentConnection.PortSSL = result.SSLPort;
                 CurrentConnection.UseSSL = result.UseSSL;
-                authenticationConsumer.Connect(CurrentConnection.ConnectionConfiguration);
-                authenticationConsumer.SendWelcome(new SharedBase.Connection.WelcomeDeviceMessage
+                _authenticationConsumer.Connect(CurrentConnection.ConnectionConfiguration);
+                _authenticationConsumer.SendWelcome(new SharedBase.Connection.WelcomeDeviceMessage
                 {
                     DeviceIdentifier = CurrentConnection.DeviceIdentifier,
                 });
@@ -197,12 +188,12 @@ namespace RediscoveryManager.Service
 
         public void TryResolvePendingDevice(Guid deviceId, bool resolve)
         {
-            resourceConsumer.ResolvePendingDevice(CurrentConnection?.Token, deviceId, resolve);
+            _resourceConsumer.ResolvePendingDevice(CurrentConnection?.Token, deviceId, resolve);
         }
 
         public void TryDeleteDevice(Guid deviceId)
         {
-            resourceConsumer.DeleteDevice(CurrentConnection?.Token, deviceId);
+            _resourceConsumer.DeleteDevice(CurrentConnection?.Token, deviceId);
         }
 
         public void Disconnect()
@@ -251,15 +242,15 @@ namespace RediscoveryManager.Service
 
         public void RemoteLogEntry(SharedBase.Logging.LoggerEntry loggerEntry)
         {
-            if (loggerConsumer?.IsConnect == true)
-                loggerConsumer.LogEntry(loggerEntry);
+            if (_loggerConsumer?.IsConnect == true)
+                _loggerConsumer.LogEntry(loggerEntry);
         }
 
         public bool RemoteLogExecuteCommand(LogCommandConfig logCommandConfig)
         {
-            if (loggerConsumer?.IsConnect == true)
+            if (_loggerConsumer?.IsConnect == true)
             {
-                loggerConsumer.LoggerCommand(CurrentConnection.Token, logCommandConfig);
+                _loggerConsumer.LoggerCommand(CurrentConnection.Token, logCommandConfig);
             }
             return false;
         }

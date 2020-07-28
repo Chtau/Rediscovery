@@ -23,32 +23,24 @@ namespace Rediscovery
             MainPage = new MainPage();
         }
 
-        protected async override void OnStart()
+        protected override void OnStart()
         {
             OnRestart();
         }
 
-        protected async override void OnSleep()
-        {
-            
-        }
-
-        protected async override void OnResume()
+        protected override void OnResume()
         {
             OnRestart();
         }
 
         private void OnRestart()
         {
-            connect.AutoConnect((result, state) =>
-            {
-
-            });
+            connect.AutoConnect((result, state) => System.Diagnostics.Debug.Print($"AutoConnect Result:{result} State:{state}"));
         }
 
         public void OpenWithIntent(PluginFeature.Models.ClientResources.OpenWithIntent intentReceivedModel)
         {
-            string title = "";
+            string title;
             if (!string.IsNullOrWhiteSpace(intentReceivedModel?.Title))
             {
                 title = "File: " + intentReceivedModel.Title;

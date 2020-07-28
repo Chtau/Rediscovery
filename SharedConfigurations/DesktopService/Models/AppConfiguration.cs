@@ -15,7 +15,7 @@ namespace SharedConfigurations.DesktopService.Models
         public string ServiceDisplayName { get; set; }
 
         public string[] Plugins { get; set; }
-        
+
         public string DesktopName { get; set; }
 
         public string ServiceVersion { get; set; }
