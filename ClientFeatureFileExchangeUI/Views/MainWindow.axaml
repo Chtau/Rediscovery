@@ -3,15 +3,55 @@
         xmlns:vm="clr-namespace:ClientFeatureFileExchangeUI.ViewModels;assembly=ClientFeatureFileExchangeUI"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" Width="500" Height="350"
         x:Class="ClientFeatureFileExchangeUI.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="ClientFeatureFileExchangeUI">
+        Title="File exchange">
 
-    <Design.DataContext>
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
-
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
+  <TabControl>
+    <TabItem Header="Send">
+      <Grid Margin="5">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="*"/>
+          <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+          <Button Background="Teal" Foreground="White" Command="{Binding OpenFileSelect}">Select Files\Folders</Button>
+        </StackPanel>
+        <ScrollViewer Name="scroller" Grid.Row="1"
+                    HorizontalScrollBarVisibility="Auto"
+                    VerticalScrollBarVisibility="Auto">
+          <ItemsRepeater Name="repeater" Background="Transparent" Items="{Binding SendFiles}">
+            <ItemsRepeater.ItemTemplate>
+              <DataTemplate>
+                <Border BorderThickness="2" BorderBrush="Teal" Padding="5" Margin="0,0,0,1">
+                  <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                      <TextBlock Text="File:"/>
+                      <TextBlock Margin="5,0,0,0" FontWeight="Bold" Text="{Binding FileName}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                      <TextBlock Text="Path:"/>
+                      <TextBlock Margin="5,0,0,0" Text="{Binding Path}"/>
+                    </StackPanel>
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsRepeater.ItemTemplate>
+          </ItemsRepeater>
+        </ScrollViewer>
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
+          <Button Background="Red" Foreground="White" Command="{Binding ClearFileFolderSelections}">Clear selection List</Button>
+          <Button Margin="15,0,0,0" Background="Teal" Foreground="White" Command="{Binding SendToDevice}">Send to Device</Button>
+        </StackPanel>
+      </Grid>
+    </TabItem>
+    <TabItem Header="Received">
+      <StackPanel Orientation="Vertical" Spacing="8">
+        <TextBlock>This is the second page in the TabControl.</TextBlock>
+      </StackPanel>
+    </TabItem>
+  </TabControl>
+  
 </Window>
