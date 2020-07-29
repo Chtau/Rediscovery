@@ -18,5 +18,6 @@ namespace SharedBase.Device
         public int NativeResources { get; set; }
         public bool IsClientImplementation { get; set; }
         public string ClientDescription { get; set; }
+        public string DesktopExecutable { get; set; }
     }
 }

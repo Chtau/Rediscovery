@@ -38,8 +38,9 @@
                 <TextBlock Grid.Column="0" Grid.Row="3" Margin="0, 0, 10, 0" Text="Control integration:"/>
                 <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding ControlIntegrationPoint}"/>
               </Grid>
-              <StackPanel Grid.ColumnSpan="2" Grid.Row="1" Margin="5">
+              <StackPanel Grid.ColumnSpan="2" Grid.Row="1" Margin="5" Orientation="Horizontal">
                 <Button Classes="Primary" Command="{Binding OpenFolder}" HorizontalAlignment="Left">Open Folder</Button>
+                <Button Margin="15,0,0,0" Classes="Primary" Command="{Binding OpenDesktopExecuteable}" HorizontalAlignment="Left">Desktop GUI</Button>
               </StackPanel>
               <Grid Margin="10,5,0,0" Grid.Column="1" Grid.Row="0">
                 <Grid.RowDefinitions>

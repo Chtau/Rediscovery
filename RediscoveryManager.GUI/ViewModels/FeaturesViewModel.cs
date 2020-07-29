@@ -47,13 +47,25 @@ namespace RediscoveryManager.GUI.ViewModels
                 var newCollection = new List<FeatureDefinitionExtendedViewModelExtension>();
                 foreach (var item in _manager.Features)
                 {
-                    newCollection.Add(new FeatureDefinitionExtendedViewModelExtension(item, OnOpenFolderCallback));
+                    newCollection.Add(new FeatureDefinitionExtendedViewModelExtension(item, OnOpenFolderCallback, OnOpenDesktopExecutableCallback));
                 }
                 Items = new ObservableCollection<FeatureDefinitionExtendedViewModelExtension>(newCollection);
             };
         }
 
         private void OnOpenFolderCallback(FeatureDefinitionExtendedViewModelExtension item)
+        {
+            try
+            {
+                OpenDirectory(item.PluginDirectory);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+            }
+        }
+
+        private void OnOpenDesktopExecutableCallback(FeatureDefinitionExtendedViewModelExtension item)
         {
             try
             {

@@ -14,5 +14,6 @@ namespace SharedBase.Device
     {
         IntegrationPoint ControlIntegrationPoint { get; set; }
         IntegrationPoint FeatureIntegrationPoint { get; set; }
+        string DesktopExecutable { get; set; }
     }
 }

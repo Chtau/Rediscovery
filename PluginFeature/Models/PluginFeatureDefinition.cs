@@ -31,5 +31,7 @@ namespace PluginFeature.Models
         public Enums.PluginIntegration ControlIntegrationPoint { get; set; }
 
         public Enums.PluginIntegration FeatureIntegrationPoint { get; set; }
+
+        public string DesktopExecutable { get; set; }
     }
 }

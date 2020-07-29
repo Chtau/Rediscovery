@@ -7,9 +7,12 @@ namespace RediscoveryManager.GUI.Models
     public class FeatureDefinitionExtendedViewModelExtension : SharedBase.Device.FeatureDefinitionExtended
     {
         private Action<FeatureDefinitionExtendedViewModelExtension> onOpenFolderCallback;
+        private Action<FeatureDefinitionExtendedViewModelExtension> onOpenDesktopExecutableCallback;
 
-        public FeatureDefinitionExtendedViewModelExtension(SharedBase.Device.FeatureDefinitionExtended feature, Action<FeatureDefinitionExtendedViewModelExtension> onOpenFolderCallback)
+        public FeatureDefinitionExtendedViewModelExtension(SharedBase.Device.FeatureDefinitionExtended feature, Action<FeatureDefinitionExtendedViewModelExtension> onOpenFolderCallback,
+            Action<FeatureDefinitionExtendedViewModelExtension> onOpenDesktopExecutableCallback)
         {
+            this.onOpenDesktopExecutableCallback = onOpenDesktopExecutableCallback;
             this.onOpenFolderCallback = onOpenFolderCallback;
             this.Author = feature.Author;
             this.ClientDescription = feature.ClientDescription;
@@ -27,11 +30,17 @@ namespace RediscoveryManager.GUI.Models
             this.PluginDirectory = feature.PluginDirectory;
             this.Version = feature.Version;
             this.Website = feature.Website;
+            this.DesktopExecutable = feature.DesktopExecutable;
         }
 
         public void OpenFolder()
         {
             onOpenFolderCallback?.Invoke(this);
+        }
+
+        public void OpenDesktopExecutable()
+        {
+            onOpenDesktopExecutableCallback?.Invoke(this);
         }
     }
 }
