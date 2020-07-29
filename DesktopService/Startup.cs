@@ -58,7 +58,7 @@ namespace DesktopService
 
             services.AddLogging();
 
-            string dbPath = System.IO.Path.Combine(AppFolders.GetUserFolder(appSettings.AppDataFolder), "rediscovery.db");
+            string dbPath = System.IO.Path.Combine(SharedFeatureFunctions.File.GetUserFolder(appSettings.AppDataFolder), "rediscovery.db");
             if (!string.IsNullOrWhiteSpace(appSettings.DatabasePath))
             {
                 var dir = System.IO.Path.GetDirectoryName(appSettings.DatabasePath);

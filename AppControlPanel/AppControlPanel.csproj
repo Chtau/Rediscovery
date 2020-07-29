@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharedConfigurations\SharedConfigurations.csproj" />
+    <ProjectReference Include="..\SharedFeatureFunctions\SharedFeatureFunctions.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json">

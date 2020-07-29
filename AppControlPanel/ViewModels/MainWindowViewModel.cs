@@ -94,8 +94,8 @@ namespace AppControlPanel.ViewModels
         {
             try
             {
-                string path = System.IO.Path.Combine(Shared.GetApplicationFolder(), SharedConfigurations.AppControlPanel.ConfigFileNames.AppSettings);
-                Shared.OpenWithDefaultProgram(path);
+                string path = System.IO.Path.Combine(SharedFeatureFunctions.File.GetApplicationFolder(), SharedConfigurations.AppControlPanel.ConfigFileNames.AppSettings);
+                SharedFeatureFunctions.File.OpenWithDefaultProgram(path);
             }
             catch (Exception ex)
             {

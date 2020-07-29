@@ -18,7 +18,7 @@ namespace AppControlPanel.Services
                 {
                     if (System.IO.Directory.Exists(appViewModel.CommandLineWorkingDirectory))
                     {
-                        if (Shared.ProcessRunCommandLine(appViewModel.CommandLineCommand, appViewModel.CommandLineWorkingDirectory ?? appViewModel.WorkingDirectory, null, appViewModel.RunAs, appViewModel.HideShell.HasValue ? appViewModel.HideShell.Value : false, processIdCallback))
+                        if (SharedFeatureFunctions.Process.CommandLine(appViewModel.CommandLineCommand, appViewModel.CommandLineWorkingDirectory ?? appViewModel.WorkingDirectory, null, appViewModel.RunAs, appViewModel.HideShell.HasValue ? appViewModel.HideShell.Value : false, processIdCallback))
                             return ViewModels.AppViewModel.LaunchState.Starting;
                         else
                             return ViewModels.AppViewModel.LaunchState.ErrorStarting;
@@ -41,7 +41,7 @@ namespace AppControlPanel.Services
                     else
                     {
                         // search in parent and all child folders from the parent
-                        var parentDirInfo = System.IO.Directory.GetParent(Shared.GetApplicationFolder());
+                        var parentDirInfo = System.IO.Directory.GetParent(SharedFeatureFunctions.File.GetApplicationFolder());
                         var foundPaths = System.IO.Directory.GetFiles(parentDirInfo.FullName, appViewModel.ExecuteableName, System.IO.SearchOption.AllDirectories);
                         if (foundPaths?.Length > 0)
                             path = foundPaths[0];
@@ -49,7 +49,7 @@ namespace AppControlPanel.Services
 
                     if (!string.IsNullOrWhiteSpace(path))
                     {
-                        if (Shared.ProcessRun(path, appViewModel.ExecuteArguments, null, appViewModel.RunAs, appViewModel.HideShell.HasValue ? appViewModel.HideShell.Value : false, appViewModel.WorkingDirectory, processIdCallback))
+                        if (SharedFeatureFunctions.Process.Run(path, appViewModel.ExecuteArguments, null, appViewModel.RunAs, appViewModel.HideShell.HasValue ? appViewModel.HideShell.Value : false, appViewModel.WorkingDirectory, processIdCallback))
                             return ViewModels.AppViewModel.LaunchState.Starting;
                         else
                             return ViewModels.AppViewModel.LaunchState.ErrorStarting;

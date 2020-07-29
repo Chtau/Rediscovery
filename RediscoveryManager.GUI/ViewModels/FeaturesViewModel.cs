@@ -1,6 +1,7 @@
 ﻿using ReactiveUI;
 using RediscoveryManager.GUI.Models;
 using RediscoveryManager.Service;
+using SharedFeatureFunctions;
 using Splat;
 using System;
 using System.Collections.Generic;
@@ -57,7 +58,7 @@ namespace RediscoveryManager.GUI.ViewModels
         {
             try
             {
-                OpenDirectory(item.PluginDirectory);
+                File.OpenDirectory(item.PluginDirectory);
             }
             catch (Exception ex)
             {
@@ -69,36 +70,12 @@ namespace RediscoveryManager.GUI.ViewModels
         {
             try
             {
-                OpenDirectory(item.PluginDirectory);
+                File.OpenDirectory(item.PluginDirectory);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex);
             }
-        }
-
-        private static void OpenDirectory(string directory, string filename = null, string extension = null)
-        {
-            if (!string.IsNullOrWhiteSpace(extension))
-            {
-                if (!extension.StartsWith("."))
-                    extension = "." + extension;
-            }
-            string filePath;
-            if (!string.IsNullOrWhiteSpace(filename))
-            {
-                if (!string.IsNullOrWhiteSpace(extension))
-                    filePath = System.IO.Path.Combine(directory, filename + extension);
-                else
-                    filePath = System.IO.Path.Combine(directory, filename);
-            }
-            else
-            {
-                filePath = directory;
-            }
-            string argument = "/select, \"" + filePath + "\"";
-
-            System.Diagnostics.Process.Start("explorer.exe", argument);
         }
     }
 }
