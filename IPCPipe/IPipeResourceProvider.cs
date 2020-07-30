@@ -4,7 +4,6 @@ using System.Text;
 
 namespace IPCPipe
 {
-    [Obsolete("Replace with SignalR")]
     public interface IPipeResourceProvider
     {
         void Provide(string hub, Func<string, string> resourceCallback);

@@ -20,6 +20,8 @@ namespace IPCPipe
             return server;
         }
 
+        public NamedPipeServerStream LastServerStream { get; private set; }
+
         public override void Listen(string hub, Action<string> callback = null)
         {
             if (!hubs.ContainsKey(hub))
@@ -32,12 +34,12 @@ namespace IPCPipe
                         {
                             try
                             {
-                                var server = (NamedPipeServerStream)OnCreateHub(hub);
+                                LastServerStream = (NamedPipeServerStream)OnCreateHub(hub);
                                 System.Diagnostics.Debug.Print("Wait for Client connection");
-                                server.WaitForConnection();
-                                OnReadStream(server, callback);
-                                if (server.IsConnected)
-                                    server.Disconnect();
+                                LastServerStream.WaitForConnection();
+                                OnReadStream(LastServerStream, callback);
+                                if (LastServerStream.IsConnected)
+                                    LastServerStream.Disconnect();
                             } catch (Exception ex)
                             {
                                 System.Diagnostics.Debug.Print("IPC Listen Server Loop Exception:" + ex.ToString());

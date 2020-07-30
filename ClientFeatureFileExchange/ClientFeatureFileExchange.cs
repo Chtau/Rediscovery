@@ -5,11 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ClientFeatureFileExchange
 {
     public class ClientFeatureFileExchange : BaseClientFeature
     {
+        private IPCPipe.IPipeServer ipcServer;
+        private IPCPipe.IPipeClient pipeClient;
+
         public override void Init(string pluginDirectory, IPluginLogger pluginLogger)
         {
             base.Init(pluginDirectory, pluginLogger);
@@ -20,6 +24,33 @@ namespace ClientFeatureFileExchange
             {
                 pluginLogger.LogError(ex.ToString());
             }
+
+            pipeClient = new IPCPipe.PipeClient();
+            pipeClient.TryConnect("7C7BE7CA-DE13-4975-A099-C64FA1581E4A");
+            ipcServer = new IPCPipe.PipeServer();
+            //ipcServer.DataReceived += IpcServer_DataReceived;
+            ipcServer.Listen("7C7BE7CA-DE13-4975-A099-C64FA1581E4A", (data) =>
+            {
+                System.Diagnostics.Debug.Print($"IPCServer Hub received data:{data}");
+            });
+            Task.Run(async () =>
+            {
+                do
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(15));
+                    using (StreamWriter writer = new StreamWriter(ipcServer.LastServerStream))
+                    {
+                        writer.Write("hello");
+                        writer.Flush();
+                    }
+                } while (true);
+                //pipeClient.Send("7C7BE7CA-DE13-4975-A099-C64FA1581E4A", "hello");
+            });
+        }
+
+        private void IpcServer_DataReceived(object sender, string e)
+        {
+            System.Diagnostics.Debug.Print("IPC Hub received data");
         }
 
         public override PluginFeatureDefinitionClient GetDeviceFeatureInfo()
