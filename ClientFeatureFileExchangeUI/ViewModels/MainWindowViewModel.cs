@@ -13,7 +13,8 @@ namespace ClientFeatureFileExchangeUI.ViewModels
         private readonly Window _window;
 
         public ObservableCollection<SelectedFileViewModel> SendFiles { get; } = new ObservableCollection<SelectedFileViewModel>();
-
+        public ObservableCollection<SelectedFileViewModel> ReceivedFiles { get; } = new ObservableCollection<SelectedFileViewModel>();
+        
         public MainWindowViewModel(Window window)
         {
             _window = window;
@@ -69,6 +70,42 @@ namespace ClientFeatureFileExchangeUI.ViewModels
             {
                 // TODO: implement send files/folders to the device via the plugin
             } catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Print(ex.ToString());
+            }
+        }
+
+        public void ReceivedCheckChanges()
+        {
+            try
+            {
+                // TODO: implement received files
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Print(ex.ToString());
+            }
+        }
+
+        public void DeleteSelectReceivedFile()
+        {
+            try
+            {
+                // TODO: implement delete received files
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Print(ex.ToString());
+            }
+        }
+
+        public void OpenSelectedReceivedFile()
+        {
+            try
+            {
+                // TODO: implement open received files
+            }
+            catch (Exception ex)
             {
                 System.Diagnostics.Debug.Print(ex.ToString());
             }

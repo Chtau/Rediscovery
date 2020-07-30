@@ -48,9 +48,42 @@
       </Grid>
     </TabItem>
     <TabItem Header="Received">
-      <StackPanel Orientation="Vertical" Spacing="8">
-        <TextBlock>This is the second page in the TabControl.</TextBlock>
-      </StackPanel>
+      <Grid Margin="5">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="*"/>
+          <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+          <Button Background="Teal" Foreground="White" Command="{Binding ReceivedCheckChanges}">Check changes</Button>
+        </StackPanel>
+        <ScrollViewer Name="scrollerReceived" Grid.Row="1"
+                    HorizontalScrollBarVisibility="Auto"
+                    VerticalScrollBarVisibility="Auto">
+          <ItemsRepeater Name="repeaterReceived" Background="Transparent" Items="{Binding ReceivedFiles}">
+            <ItemsRepeater.ItemTemplate>
+              <DataTemplate>
+                <Border BorderThickness="2" BorderBrush="Teal" Padding="5" Margin="0,0,0,1">
+                  <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                      <TextBlock Text="File:"/>
+                      <TextBlock Margin="5,0,0,0" FontWeight="Bold" Text="{Binding FileName}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                      <TextBlock Text="Path:"/>
+                      <TextBlock Margin="5,0,0,0" Text="{Binding Path}"/>
+                    </StackPanel>
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsRepeater.ItemTemplate>
+          </ItemsRepeater>
+        </ScrollViewer>
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
+          <Button Background="Red" Foreground="White" Command="{Binding DeleteSelectReceivedFile}">Delete selected Files</Button>
+          <Button Margin="15,0,0,0" Background="Teal" Foreground="White" Command="{Binding OpenSelectedReceivedFile}">Open selected File</Button>
+        </StackPanel>
+      </Grid>
     </TabItem>
   </TabControl>
   
