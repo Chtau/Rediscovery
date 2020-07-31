@@ -11,8 +11,7 @@ namespace ClientFeatureFileExchange
 {
     public class ClientFeatureFileExchange : BaseClientFeature
     {
-        private IPCPipe.IPipeServer ipcServer;
-        private IPCPipe.IPipeClient pipeClient;
+        private IPCPipe.IPipeExchange pipeExchange;
 
         public override void Init(string pluginDirectory, IPluginLogger pluginLogger)
         {
@@ -25,28 +24,19 @@ namespace ClientFeatureFileExchange
                 pluginLogger.LogError(ex.ToString());
             }
 
-            pipeClient = new IPCPipe.PipeClient();
-            //pipeClient.TryConnect("7C7BE7CA-DE13-4975-A099-C64FA1581E4A_1");
-            ipcServer = new IPCPipe.PipeServer();
-            //ipcServer.DataReceived += IpcServer_DataReceived;
-            ipcServer.Listen("7C7BE7CA-DE13-4975-A099-C64FA1581E4A", (data) =>
+            pipeExchange = new IPCPipe.PipeExchange();
+            pipeExchange.Init("7C7BE7CA-DE13-4975-A099-C64FA1581E4A", "A", "B");
+            pipeExchange.DataReceived += (obj, args) =>
             {
-                System.Diagnostics.Debug.Print($"IPCServer on {nameof(ClientFeatureFileExchange)} Hub received data:{data}");
-            });
+                System.Diagnostics.Debug.Print($"IPCServer on {nameof(ClientFeatureFileExchange)} Hub received data:{args}");
+            };
             Task.Run(async () =>
             {
                 do
                 {
                     await Task.Delay(TimeSpan.FromSeconds(15));
-                    /*using (StreamWriter writer = new StreamWriter(ipcServer.LastServerStream))
-                    {
-                        writer.Write("hello");
-                        writer.Flush();
-                    }*/
-                    pipeClient.TryConnect("7C7BE7CA-DE13-4975-A099-C64FA1581E4A_1");
-                    pipeClient.Send("7C7BE7CA-DE13-4975-A099-C64FA1581E4A_1", $"Hello {DateTime.Now}");
+                    pipeExchange.Send($"Hello {DateTime.Now}");
                 } while (true);
-                //pipeClient.Send("7C7BE7CA-DE13-4975-A099-C64FA1581E4A", "hello");
             });
         }
 
