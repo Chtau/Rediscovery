@@ -19,14 +19,20 @@ namespace ClientFeatureFileExchangeUI.Views
             DataContext = viewModel = new MainWindowViewModel((Window)this.VisualRoot);
 
             pipeClient = new IPCPipe.PipeClient();
-            pipeClient.DataReceived += PipeClient_DataReceived;
+            //pipeClient.DataReceived += PipeClient_DataReceived;
             pipeClient.TryConnect("7C7BE7CA-DE13-4975-A099-C64FA1581E4A");
             pipeClient.Send("7C7BE7CA-DE13-4975-A099-C64FA1581E4A", "test");
+            var ipcServer = new IPCPipe.PipeServer();
+            ipcServer.Listen("7C7BE7CA-DE13-4975-A099-C64FA1581E4A_1", (data) =>
+            {
+                System.Diagnostics.Debug.Print($"IPCServer on {nameof(MainWindow)} Hub received data:{data}");
+                pipeClient.Send("7C7BE7CA-DE13-4975-A099-C64FA1581E4A", "test");
+            });
         }
 
         private void PipeClient_DataReceived(object sender, string e)
         {
-            System.Diagnostics.Debug.Print($"IPCClient Hub received data:{e}");
+            System.Diagnostics.Debug.Print($"IPCClient on {nameof(MainWindow)} Hub received data:{e}");
         }
 
         private void InitializeComponent()

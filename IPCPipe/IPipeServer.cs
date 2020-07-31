@@ -11,6 +11,5 @@ namespace IPCPipe
         void Listen(string hub, Action<string> callback = null);
         void Send(string hub, string data);
         void Disconnect(string hub = null);
-        NamedPipeServerStream LastServerStream { get; }
     }
 }

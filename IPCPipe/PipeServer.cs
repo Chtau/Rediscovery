@@ -11,7 +11,7 @@ namespace IPCPipe
     {
         internal override PipeStream OnCreateHub(string hub)
         {
-            var server = new NamedPipeServerStream(hub);
+            var server = new NamedPipeServerStream(hub, PipeDirection.InOut);
             //server.WaitForConnection();
             if (base.hubs.ContainsKey(hub))
                 base.hubs[hub] = server;
@@ -19,8 +19,6 @@ namespace IPCPipe
                 base.hubs.Add(hub, server);
             return server;
         }
-
-        public NamedPipeServerStream LastServerStream { get; private set; }
 
         public override void Listen(string hub, Action<string> callback = null)
         {
@@ -34,12 +32,12 @@ namespace IPCPipe
                         {
                             try
                             {
-                                LastServerStream = (NamedPipeServerStream)OnCreateHub(hub);
+                                var serverStream = (NamedPipeServerStream)OnCreateHub(hub);
                                 System.Diagnostics.Debug.Print("Wait for Client connection");
-                                LastServerStream.WaitForConnection();
-                                OnReadStream(LastServerStream, callback);
-                                if (LastServerStream.IsConnected)
-                                    LastServerStream.Disconnect();
+                                serverStream.WaitForConnection();
+                                OnReadStream(serverStream, callback);
+                                if (serverStream.IsConnected)
+                                    serverStream.Disconnect();
                             } catch (Exception ex)
                             {
                                 System.Diagnostics.Debug.Print("IPC Listen Server Loop Exception:" + ex.ToString());
