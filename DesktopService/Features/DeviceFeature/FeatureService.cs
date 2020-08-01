@@ -136,17 +136,7 @@ namespace DesktopService.Features.DeviceFeature
                         RespondToClient?.Invoke(this, e.GetExchangeEntity());
                     };
                     _deviceFeatureImplementations.Add(item);
-                    if (item is IFeatureDesktopUICommunicaton desktopUICommunicaton)
-                    {
-                        var pipeExchange = new IPCPipe.PipeExchange();
-                        pipeExchange.Init(featureId.ToString(), "out", "in");
-                        pipeExchange.DataReceived += (obj, args) =>
-                        {
-                            _logger.LogTrace($"Received Pipe communication for Feature Id:{featureId} Data:{args}");
-                            // TODO: we need to inject this data to the Plugin Interface
-                        };
-                        _pipeExchanges.Add(featureId, pipeExchange);
-                    }
+                    OnAddFeatureDesktopUICommunication(item, featureId);
                 }
             } else
             {
@@ -165,22 +155,43 @@ namespace DesktopService.Features.DeviceFeature
                         RespondToClient?.Invoke(this, e.GetExchangeEntity());
                     };
                     _clientFeatureImplementations.Add(item);
-                    if (item is IFeatureDesktopUICommunicaton desktopUICommunicaton)
-                    {
-                        var pipeExchange = new IPCPipe.PipeExchange();
-                        pipeExchange.Init(featureId.ToString(), "out", "in");
-                        pipeExchange.DataReceived += (obj, args) =>
-                        {
-                            _logger.LogTrace($"Received Pipe communication for Feature Id:{featureId} Data:{args}");
-                            // TODO: we need to inject this data to the Plugin Interface
-                        };
-                        _pipeExchanges.Add(featureId, pipeExchange);
-                    }
+                    OnAddFeatureDesktopUICommunication(item, featureId);
                 }
             }
             else
             {
                 _logger.LogInformation($"No feature Client Plugins loaded");
+            }
+        }
+
+        private void OnAddFeatureDesktopUICommunication<T>(T item, Guid featureId)
+        {
+            if (item is IFeatureDesktopUICommunicaton desktopUICommunicaton)
+            {
+                var pipeExchange = new IPCPipe.PipeExchange();
+                pipeExchange.Init(featureId.ToString(), "out", "in");
+                pipeExchange.DataReceived += (obj, args) =>
+                {
+                    try
+                    {
+                        desktopUICommunicaton.ReceivedChangesFromUI(args);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.ToString());
+                    }
+                };
+                desktopUICommunicaton.SendChangesToUI += (obj, args) =>
+                {
+                    try
+                    {
+                        pipeExchange.Send(args);
+                    } catch (Exception ex)
+                    {
+                        _logger.LogError(ex.ToString());
+                    }
+                };
+                _pipeExchanges.Add(featureId, pipeExchange);
             }
         }
 

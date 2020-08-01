@@ -13,7 +13,7 @@ namespace ClientFeatureFileExchange
     {
         private IPCPipe.IPipeExchange pipeExchange;
 
-        public event EventHandler<string> UISendChanges;
+        public event EventHandler<string> SendChangesToUI;
 
         public override void Init(string pluginDirectory, IPluginLogger pluginLogger)
         {
@@ -177,7 +177,7 @@ namespace ClientFeatureFileExchange
             return System.IO.Path.Combine(PluginDirectory, "config.json");
         }
 
-        public void UIReceivedChanges(string data)
+        public void ReceivedChangesFromUI(string data)
         {
             throw new NotImplementedException();
         }

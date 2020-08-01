@@ -6,7 +6,7 @@ namespace PluginFeature.Interfaces
 {
     public interface IFeatureDesktopUICommunicaton
     {
-        event EventHandler<string> UISendChanges;
-        void UIReceivedChanges(string data);
+        event EventHandler<string> SendChangesToUI;
+        void ReceivedChangesFromUI(string data);
     }
 }
