@@ -17,11 +17,12 @@ namespace DesktopService.Features.DeviceFeature
 {
     public class FeatureService : IFeatureService
     {
-        private List<IDeviceFeatureImplementation> deviceFeatureImplementations = new List<IDeviceFeatureImplementation>();
-        private List<IClientFeatureImplementation> clientFeatureImplementations = new List<IClientFeatureImplementation>();
+        private readonly List<IDeviceFeatureImplementation> _deviceFeatureImplementations = new List<IDeviceFeatureImplementation>();
+        private readonly List<IClientFeatureImplementation> _clientFeatureImplementations = new List<IClientFeatureImplementation>();
         private readonly SharedConfigurations.DesktopService.Models.AppConfiguration _appSettings;
         private readonly Features.Plugins.ILoadPlugins _loadPlugins;
         private readonly ILogger<FeatureService> _logger;
+        private readonly Dictionary<string, IPCPipe.IPipeExchange> _pipeExchanges = new Dictionary<string, IPCPipe.IPipeExchange>();
 
         public event EventHandler ProfilesChanged;
         public event EventHandler SettingChanged;
@@ -39,12 +40,12 @@ namespace DesktopService.Features.DeviceFeature
 
         public IDeviceFeatureImplementation GetFeatureDevice(Guid featureId)
         {
-            return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId);
+            return _deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId);
         }
 
         public IClientFeatureImplementation GetFeatureClient(Guid featureId)
         {
-            return clientFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId);
+            return _clientFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId);
         }
 
         /// <summary>
@@ -54,23 +55,23 @@ namespace DesktopService.Features.DeviceFeature
         /// <returns></returns>
         public string GetFeatureUIArchivePath(Guid featureId)
         {
-            return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetUIArchivePath();
+            return _deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetUIArchivePath();
         }
 
         public List<FeatureProfil> GetFeatureProfiles(Guid featureId)
         {
-            return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetProfiles()?.GetFeatureProfils();
+            return _deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetProfiles()?.GetFeatureProfils();
         }
 
         public FeatureSetting GetFeatureSettings(Guid featureId)
         {
-            return deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetSettingsObject()?.GetFeatureSetting();
+            return _deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetSettingsObject()?.GetFeatureSetting();
         }
 
         public List<SharedBase.Device.FeatureDefinitionExtended> GetFeaturesManifest()
         {
             var manifest = new List<SharedBase.Device.FeatureDefinitionExtended>();
-            foreach (var item in deviceFeatureImplementations)
+            foreach (var item in _deviceFeatureImplementations)
             {
                 try
                 {
@@ -85,7 +86,7 @@ namespace DesktopService.Features.DeviceFeature
                     _logger.LogError(ex, $"Could not get Feature definition of Plugin: \"{nameof(item)}\"");
                 }
             }
-            foreach (var item in clientFeatureImplementations)
+            foreach (var item in _clientFeatureImplementations)
             {
                 try
                 {
@@ -129,7 +130,7 @@ namespace DesktopService.Features.DeviceFeature
                         _logger.LogTrace($"Feature (id: {item.GetDeviceFeatureInfo().Id} profile: {e.Entity.ProfileId}) response =>" + e.Entity.Data);
                         RespondToClient?.Invoke(this, e.GetExchangeEntity());
                     };
-                    deviceFeatureImplementations.Add(item);
+                    _deviceFeatureImplementations.Add(item);
                 }
             } else
             {
@@ -146,7 +147,7 @@ namespace DesktopService.Features.DeviceFeature
                         _logger.LogTrace($"Feature (id: {item.GetDeviceFeatureInfo().Id} profile: {e.Entity.ProfileId}) response =>" + e.Entity.Data);
                         RespondToClient?.Invoke(this, e.GetExchangeEntity());
                     };
-                    clientFeatureImplementations.Add(item);
+                    _clientFeatureImplementations.Add(item);
                 }
             }
             else
@@ -159,23 +160,23 @@ namespace DesktopService.Features.DeviceFeature
         {
             if (data?.Entity?.IsClientImplementation == true)
             {
-                clientFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.ReceiveData(data?.GetPluginExchangeEntityClient());
+                _clientFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.ReceiveData(data?.GetPluginExchangeEntityClient());
             } else
             {
-                deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.ReceiveData(data?.GetPluginExchangeEntity());
+                _deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.ReceiveData(data?.GetPluginExchangeEntity());
             }
         }
 
         public void StartFeature(Guid featureId, string sid)
         {
-            deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.Register(sid);
-            clientFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.Register(sid);
+            _deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.Register(sid);
+            _clientFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.Register(sid);
         }
 
         public void StopFeature(Guid featureId, string sid)
         {
-            deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.Unregister(sid);
-            clientFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.Unregister(sid);
+            _deviceFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.Unregister(sid);
+            _clientFeatureImplementations.FirstOrDefault(x => x.GetDeviceFeatureInfo().Id == featureId)?.Unregister(sid);
         }
     }
 }
