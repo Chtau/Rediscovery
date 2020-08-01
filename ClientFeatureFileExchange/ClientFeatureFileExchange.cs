@@ -9,9 +9,11 @@ using System.Threading.Tasks;
 
 namespace ClientFeatureFileExchange
 {
-    public class ClientFeatureFileExchange : BaseClientFeature
+    public class ClientFeatureFileExchange : BaseClientFeature, IFeatureDesktopUICommunicaton
     {
         private IPCPipe.IPipeExchange pipeExchange;
+
+        public event EventHandler<string> UISendChanges;
 
         public override void Init(string pluginDirectory, IPluginLogger pluginLogger)
         {
@@ -173,6 +175,11 @@ namespace ClientFeatureFileExchange
         private string ConfigurationPath()
         {
             return System.IO.Path.Combine(PluginDirectory, "config.json");
+        }
+
+        public void UIReceivedChanges(string data)
+        {
+            throw new NotImplementedException();
         }
     }
 }

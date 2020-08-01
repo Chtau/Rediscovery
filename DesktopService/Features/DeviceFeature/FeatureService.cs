@@ -22,7 +22,7 @@ namespace DesktopService.Features.DeviceFeature
         private readonly SharedConfigurations.DesktopService.Models.AppConfiguration _appSettings;
         private readonly Features.Plugins.ILoadPlugins _loadPlugins;
         private readonly ILogger<FeatureService> _logger;
-        private readonly Dictionary<string, IPCPipe.IPipeExchange> _pipeExchanges = new Dictionary<string, IPCPipe.IPipeExchange>();
+        private readonly Dictionary<Guid, IPCPipe.IPipeExchange> _pipeExchanges = new Dictionary<Guid, IPCPipe.IPipeExchange>();
 
         public event EventHandler ProfilesChanged;
         public event EventHandler SettingChanged;
@@ -107,6 +107,10 @@ namespace DesktopService.Features.DeviceFeature
 
         public void Load()
         {
+            _deviceFeatureImplementations.Clear();
+            _clientFeatureImplementations.Clear();
+            _pipeExchanges.Clear();
+
             _loadPlugins.LoadPaths();
             IEnumerable<IDeviceFeatureImplementation> desktopPluginFeatures = _loadPlugins.GetDeviceFeatureImplementations();
             IEnumerable<IClientFeatureImplementation> clientPluginFeatures = _loadPlugins.GetClientFeatureImplementations();
@@ -125,12 +129,24 @@ namespace DesktopService.Features.DeviceFeature
                 _logger.LogInformation($"Loaded {desktopPluginFeatures.Count()} feature Desktop Plugins");
                 foreach (var item in desktopPluginFeatures)
                 {
+                    Guid featureId = item.GetDeviceFeatureInfo().Id;
                     item.SendData += (object sender, PluginExchangeEntity<PluginFeatureData> e) =>
                     {
-                        _logger.LogTrace($"Feature (id: {item.GetDeviceFeatureInfo().Id} profile: {e.Entity.ProfileId}) response =>" + e.Entity.Data);
+                        _logger.LogTrace($"Feature (id: {featureId} profile: {e.Entity.ProfileId}) response =>" + e.Entity.Data);
                         RespondToClient?.Invoke(this, e.GetExchangeEntity());
                     };
                     _deviceFeatureImplementations.Add(item);
+                    if (item is IFeatureDesktopUICommunicaton desktopUICommunicaton)
+                    {
+                        var pipeExchange = new IPCPipe.PipeExchange();
+                        pipeExchange.Init(featureId.ToString(), "out", "in");
+                        pipeExchange.DataReceived += (obj, args) =>
+                        {
+                            _logger.LogTrace($"Received Pipe communication for Feature Id:{featureId} Data:{args}");
+                            // TODO: we need to inject this data to the Plugin Interface
+                        };
+                        _pipeExchanges.Add(featureId, pipeExchange);
+                    }
                 }
             } else
             {
@@ -142,12 +158,24 @@ namespace DesktopService.Features.DeviceFeature
                 _logger.LogInformation($"Loaded {clientPluginFeatures.Count()} feature Client Plugins");
                 foreach (var item in clientPluginFeatures)
                 {
+                    Guid featureId = item.GetDeviceFeatureInfo().Id;
                     item.SendData += (object sender, PluginExchangeEntity<PluginFeatureDataClient> e) =>
                     {
-                        _logger.LogTrace($"Feature (id: {item.GetDeviceFeatureInfo().Id} profile: {e.Entity.ProfileId}) response =>" + e.Entity.Data);
+                        _logger.LogTrace($"Feature (id: {featureId} profile: {e.Entity.ProfileId}) response =>" + e.Entity.Data);
                         RespondToClient?.Invoke(this, e.GetExchangeEntity());
                     };
                     _clientFeatureImplementations.Add(item);
+                    if (item is IFeatureDesktopUICommunicaton desktopUICommunicaton)
+                    {
+                        var pipeExchange = new IPCPipe.PipeExchange();
+                        pipeExchange.Init(featureId.ToString(), "out", "in");
+                        pipeExchange.DataReceived += (obj, args) =>
+                        {
+                            _logger.LogTrace($"Received Pipe communication for Feature Id:{featureId} Data:{args}");
+                            // TODO: we need to inject this data to the Plugin Interface
+                        };
+                        _pipeExchanges.Add(featureId, pipeExchange);
+                    }
                 }
             }
             else
