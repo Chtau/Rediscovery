@@ -15,6 +15,8 @@ namespace ClientFeatureFileExchange
 
         public event EventHandler<string> SendChangesToUI;
 
+        // TODO: desktop service should provide a working directory for plugin specific data (ServiceWorkingDir\[FeatureId])
+
         public override void Init(string pluginDirectory, IPluginLogger pluginLogger)
         {
             base.Init(pluginDirectory, pluginLogger);
