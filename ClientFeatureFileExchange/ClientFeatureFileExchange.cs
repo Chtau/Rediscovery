@@ -81,14 +81,16 @@ namespace ClientFeatureFileExchange
                             string file = SaveFileBytes(config.WorkingFolder, openWithIntent.Title, openWithIntent.Content, config.FallbackFileExtensionContent);
                             pluginLogger.LogInformation($"Save file to {file}");
                             ProcessStart(config.StartProcessName, file);
-                            SendChangesToUI?.Invoke(this, $"New File:{file}");
+                            var stringData = $"file;{file}";
+                            SendChangesToUI?.Invoke(this, stringData);
                         }
                         else if (!string.IsNullOrWhiteSpace(openWithIntent.HtmlContent))
                         {
                             string file = SaveFileText(config.WorkingFolder, openWithIntent.Title, openWithIntent.HtmlContent, config.FallbackFileExtensionHtml);
                             pluginLogger.LogInformation($"Save HTML file to {file}");
                             ProcessStart(config.StartProcessName, file);
-                            SendChangesToUI?.Invoke(this, $"New File:{file}");
+                            var stringData = $"file;{file}";
+                            SendChangesToUI?.Invoke(this, stringData);
                         }
                         else if (!string.IsNullOrWhiteSpace(openWithIntent.TextContent))
                         {
@@ -98,13 +100,16 @@ namespace ClientFeatureFileExchange
                                 pluginLogger.LogInformation($"Open TextContent as URL {openWithIntent.TextContent}");
                                 ProcessStart(config.StartProcessName, openWithIntent.TextContent);
                                 SendChangesToUI?.Invoke(this, $"New Text Content Url:{openWithIntent.TextContent}");
+                                var stringData = $"text;{openWithIntent.TextContent}";
+                                SendChangesToUI?.Invoke(this, stringData);
                             }
                             else
                             {
                                 string file = SaveFileText(config.WorkingFolder, openWithIntent.Title, openWithIntent.TextContent, config.FallbackFileExtensionText);
                                 pluginLogger.LogInformation($"Save Text file to {file}");
                                 ProcessStart(config.StartProcessName, file);
-                                SendChangesToUI?.Invoke(this, $"New File:{file}");
+                                var stringData = $"file;{file}";
+                                SendChangesToUI?.Invoke(this, stringData);
                             }
                         }
                         else if (!string.IsNullOrWhiteSpace(openWithIntent.Uri))
@@ -114,7 +119,8 @@ namespace ClientFeatureFileExchange
                             {
                                 pluginLogger.LogInformation($"Open Uri as URL {openWithIntent.Uri}");
                                 ProcessStart(config.StartProcessName, openWithIntent.Uri);
-                                SendChangesToUI?.Invoke(this, $"New Url:{openWithIntent.Uri}");
+                                var stringData = $"url;{openWithIntent.Uri}";
+                                SendChangesToUI?.Invoke(this, stringData);
                             }
                         }
                         else
@@ -184,7 +190,7 @@ namespace ClientFeatureFileExchange
 
         public void ReceivedChangesFromUI(string data)
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.Print($"UI send data: {data}");
         }
     }
 }
