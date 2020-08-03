@@ -15,8 +15,6 @@ namespace ClientFeatureFileExchange
 
         public event EventHandler<string> SendChangesToUI;
 
-        // TODO: desktop service should provide a working directory for plugin specific data (ServiceWorkingDir\[FeatureId])
-
         public override void Init(string pluginDirectory, IPluginLogger pluginLogger)
         {
             base.Init(pluginDirectory, pluginLogger);
@@ -29,7 +27,7 @@ namespace ClientFeatureFileExchange
             }
 
             pipeExchange = new IPCPipe.PipeExchange();
-            pipeExchange.Init("7C7BE7CA-DE13-4975-A099-C64FA1581E4A", "A", "B");
+            pipeExchange.Init(GetDeviceFeatureInfo().Id.ToString(), "A", "B");
             pipeExchange.DataReceived += (obj, args) =>
             {
                 System.Diagnostics.Debug.Print($"IPCServer on {nameof(ClientFeatureFileExchange)} Hub received data:{args}");

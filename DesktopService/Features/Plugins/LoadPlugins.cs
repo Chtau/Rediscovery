@@ -233,7 +233,7 @@ namespace DesktopService.Features.Plugins
                         {
                             alreadyAddedPlugins.Add(id);
                             var absPath = Path.GetFullPath(path);
-                            result.Init(absPath, _pluginLogger);
+                            result.Init(OnGetFeatureWorkingDirectory(absPath, id), _pluginLogger);
                             yield return result;
                         }
                     }
@@ -255,12 +255,33 @@ namespace DesktopService.Features.Plugins
                         {
                             alreadyAddedPlugins.Add(id);
                             var absPath = Path.GetFullPath(path);
-                            result.Init(absPath, _pluginLogger);
+                            result.Init(OnGetFeatureWorkingDirectory(absPath, id), _pluginLogger);
                             yield return result;
                         }
                     }
                 }
             }
+        }
+
+        private string OnGetFeatureWorkingDirectory(string absPath, Guid featureId)
+        {
+            string path = absPath;
+            try
+            {
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                path = Path.Combine(path, featureId.ToString().Replace("-", ""));
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+            }
+            return path;
         }
     }
 }
