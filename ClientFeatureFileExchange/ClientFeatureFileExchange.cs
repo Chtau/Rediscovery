@@ -11,8 +11,6 @@ namespace ClientFeatureFileExchange
 {
     public class ClientFeatureFileExchange : BaseClientFeature, IFeatureDesktopUICommunicaton
     {
-        private IPCPipe.IPipeExchange pipeExchange;
-
         public event EventHandler<string> SendChangesToUI;
 
         public override void Init(string pluginDirectory, IPluginLogger pluginLogger)
@@ -25,21 +23,6 @@ namespace ClientFeatureFileExchange
             {
                 pluginLogger.LogError(ex.ToString());
             }
-
-            pipeExchange = new IPCPipe.PipeExchange();
-            pipeExchange.Init(GetDeviceFeatureInfo().Id.ToString(), "A", "B");
-            pipeExchange.DataReceived += (obj, args) =>
-            {
-                System.Diagnostics.Debug.Print($"IPCServer on {nameof(ClientFeatureFileExchange)} Hub received data:{args}");
-            };
-            Task.Run(async () =>
-            {
-                do
-                {
-                    await Task.Delay(TimeSpan.FromSeconds(15));
-                    pipeExchange.Send($"Hello {DateTime.Now}");
-                } while (true);
-            });
         }
 
         public override PluginFeatureDefinitionClient GetDeviceFeatureInfo()
