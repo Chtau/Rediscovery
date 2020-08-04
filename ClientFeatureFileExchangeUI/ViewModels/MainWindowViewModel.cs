@@ -5,6 +5,8 @@ using DynamicData;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace ClientFeatureFileExchangeUI.ViewModels
@@ -153,20 +155,15 @@ namespace ClientFeatureFileExchangeUI.ViewModels
         {
             try
             {
-                // TODO: implement send files/folders to the device via the plugin
+                if (SendFiles.Count > 0)
+                {
+                    var files = (from x in SendFiles
+                                 select x.FullPath).ToList();
+                    var fileList = Newtonsoft.Json.JsonConvert.SerializeObject(files);
+                    _pipeExchange.Send($"sendfiles;{fileList}");
+                    SendFiles.Clear();
+                }
             } catch (Exception ex)
-            {
-                System.Diagnostics.Debug.Print(ex.ToString());
-            }
-        }
-
-        public void ReceivedCheckChanges()
-        {
-            try
-            {
-                // TODO: implement received files
-            }
-            catch (Exception ex)
             {
                 System.Diagnostics.Debug.Print(ex.ToString());
             }
