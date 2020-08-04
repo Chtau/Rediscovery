@@ -51,8 +51,11 @@ namespace ClientFeatureFileExchangeUI.ViewModels
                                 var model = new SelectedFileViewModel
                                 {
                                     FileName = fileName,
-                                    Path = path
+                                    Path = path,
+                                    FullPath = content
                                 };
+                                model.OpenFile += Model_OpenFile;
+                                model.DeleteFile += Model_DeleteFile;
                                 Dispatcher.UIThread.InvokeAsync(() =>
                                 {
                                     ReceivedFiles.Add(model);
@@ -71,6 +74,30 @@ namespace ClientFeatureFileExchangeUI.ViewModels
                             break;
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Print(ex.ToString());
+            }
+        }
+
+        private void Model_DeleteFile(object sender, SelectedFileViewModel e)
+        {
+            try
+            {
+                _pipeExchange.Send($"delete;{e.FullPath}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Print(ex.ToString());
+            }
+        }
+
+        private void Model_OpenFile(object sender, SelectedFileViewModel e)
+        {
+            try
+            {
+                _pipeExchange.Send($"open;{e.FullPath}");
             }
             catch (Exception ex)
             {
@@ -138,30 +165,6 @@ namespace ClientFeatureFileExchangeUI.ViewModels
             try
             {
                 // TODO: implement received files
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.Print(ex.ToString());
-            }
-        }
-
-        public void DeleteSelectReceivedFile()
-        {
-            try
-            {
-                // TODO: implement delete received files
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.Print(ex.ToString());
-            }
-        }
-
-        public void OpenSelectedReceivedFile()
-        {
-            try
-            {
-                // TODO: implement open received files
             }
             catch (Exception ex)
             {
