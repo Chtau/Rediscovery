@@ -4,6 +4,7 @@ using PluginFeature.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -174,6 +175,61 @@ namespace ClientFeatureFileExchange
         public void ReceivedChangesFromUI(string data)
         {
             System.Diagnostics.Debug.Print($"UI send data: {data}");
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(data) && data.Contains(";"))
+                {
+                    string[] comData = data.Split(";");
+                    string command = comData[0].ToLower();
+                    string content = comData[1];
+
+                    var config = Configuration.GetConfigurations(ConfigurationPath());
+
+                    switch (command)
+                    {
+                        case "sendfiles":
+                            break;
+                        case "open":
+                            if (!string.IsNullOrWhiteSpace(content))
+                            {
+                                if (System.IO.File.Exists(content))
+                                {
+                                    ProcessStart(config.StartProcessName, content);
+                                } else
+                                {
+                                    pluginLogger.LogWarning($"Received \"open\" File command from UI but the file no longer exists (File:{content}).");
+                                }
+                            } else
+                            {
+                                pluginLogger.LogWarning($"Received \"open\" File command from UI but content which should be file path is empty.");
+                            }
+                            break;
+                        case "delete":
+                            if (!string.IsNullOrWhiteSpace(content))
+                            {
+                                if (System.IO.File.Exists(content))
+                                {
+                                    File.Delete(content);
+                                }
+                                else
+                                {
+                                    pluginLogger.LogWarning($"Received \"delete\" File command from UI but the file no longer exists (File:{content}).");
+                                }
+                            }
+                            else
+                            {
+                                pluginLogger.LogWarning($"Received \"delete\" File command from UI but content which should be file path is empty.");
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                pluginLogger.LogError(ex.ToString());
+            }
         }
     }
 }
