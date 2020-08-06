@@ -189,15 +189,29 @@ namespace ClientFeatureFileExchange
                     {
                         case "sendfiles":
                             // TODO: we need a selection to a specific device
-                            foreach (var deviceId in RegisteredDevices)
+                            
+                            var filePaths = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(content);
+                            if (filePaths?.Count > 0)
                             {
-                                var featureData = new PluginFeatureDataClient(deviceId, GetDeviceFeatureInfo().Id, null, null, Enums.ClientNativeResources.None);
+                                foreach (var file in filePaths)
+                                {
+                                    if (System.IO.File.Exists(file))
+                                    {
+                                        // TODO: read all file content and fill a model with file content and file name to send to client
+                                    }
+                                }
+                                
+                            }
+
+                            /*foreach (var deviceId in RegisteredDevices)
+                            {
+                                var featureData = new PluginFeatureDataClient(deviceId, GetDeviceFeatureInfo().Id, null, filesData, Enums.ClientNativeResources.None);
                                 OnSendData(this, new PluginExchangeEntity<PluginFeatureDataClient>
                                 {
                                     Sid = deviceId,
                                     Entity = featureData
                                 });
-                            }
+                            }*/
                             break;
                         case "open":
                             if (!string.IsNullOrWhiteSpace(content))
