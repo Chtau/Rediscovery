@@ -188,6 +188,16 @@ namespace ClientFeatureFileExchange
                     switch (command)
                     {
                         case "sendfiles":
+                            // TODO: we need a selection to a specific device
+                            foreach (var deviceId in RegisteredDevices)
+                            {
+                                var featureData = new PluginFeatureDataClient(deviceId, GetDeviceFeatureInfo().Id, null, null, Enums.ClientNativeResources.None);
+                                OnSendData(this, new PluginExchangeEntity<PluginFeatureDataClient>
+                                {
+                                    Sid = deviceId,
+                                    Entity = featureData
+                                });
+                            }
                             break;
                         case "open":
                             if (!string.IsNullOrWhiteSpace(content))
