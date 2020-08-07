@@ -190,6 +190,7 @@ namespace ClientFeatureFileExchange
                         case "sendfiles":
                             // TODO: we need a selection to a specific device
                             // TODO: should we select a folder on the selected device already or should we use a default folder on the device
+                            // TODO: we should get the device folder structor via client resource 
                             
                             var filePaths = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(content);
                             if (filePaths?.Count > 0)
