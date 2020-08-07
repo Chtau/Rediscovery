@@ -4,6 +4,7 @@ using PluginFeature.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
@@ -191,7 +192,8 @@ namespace ClientFeatureFileExchange
                             // TODO: we need a selection to a specific device
                             // TODO: should we select a folder on the selected device already or should we use a default folder on the device
                             // TODO: we should get the device folder structor via client resource 
-                            
+                            // TODO: should we send every single file or use a single zip archive (zip archive would also solve file name creation problem)
+
                             var filePaths = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(content);
                             if (filePaths?.Count > 0)
                             {
@@ -200,6 +202,15 @@ namespace ClientFeatureFileExchange
                                     if (System.IO.File.Exists(file))
                                     {
                                         // TODO: read all file content and fill a model with file content and file name to send to client
+                                        // TODO: only for implementation test
+                                        var deviceId = RegisteredDevices.First();
+                                        var fileContent = Convert.ToBase64String(File.ReadAllBytes(file));
+                                        var featureData = new PluginFeatureDataClient(deviceId, GetDeviceFeatureInfo().Id, null, fileContent, Enums.ClientNativeResources.FileTransfer);
+                                        OnSendData(this, new PluginExchangeEntity<PluginFeatureDataClient>
+                                        {
+                                            Sid = deviceId,
+                                            Entity = featureData
+                                        });
                                     }
                                 }
                                 

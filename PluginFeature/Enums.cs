@@ -16,7 +16,8 @@ namespace PluginFeature
         public enum ClientNativeResources
         {
             None = 0,
-            OpenWithIntent = 1
+            OpenWithIntent = 1,
+            FileTransfer = 2
         }
     }
 }
