@@ -219,7 +219,7 @@ namespace ClientFeatureFileExchange
                                             File.Delete(archivePath);
                                         ZipFile.CreateFromDirectory(sendDir, archivePath);
 
-                                        var deviceId = ActiveDevices.First();
+                                        var deviceId = ActiveDevices.First().Key;
                                         var archiveContent = Convert.ToBase64String(File.ReadAllBytes(archivePath));
                                         var featureData = new PluginFeatureDataClient(deviceId, GetDeviceFeatureInfo().Id, null, archiveContent, Enums.ClientNativeResources.FileTransfer);
                                         OnSendData(this, new PluginExchangeEntity<PluginFeatureDataClient>

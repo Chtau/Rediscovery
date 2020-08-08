@@ -39,11 +39,10 @@ namespace DesktopService.Features.DeviceFeature
             Load();
         }
 
-        public void ActiveDevicesChanged(params string[] devices)
+        public void ActiveDevicesChanged(Dictionary<string, string> devices)
         {
             try
             {
-                // TODO: we also should set device Name not only the id (for better display in the UI)
                 if (_clientFeatureImplementations?.Count > 0)
                 {
                     foreach (var clientFeature in _clientFeatureImplementations)

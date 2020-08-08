@@ -8,12 +8,13 @@ namespace PluginFeature
 {
     public class BaseClientFeature : BaseFeature<PluginFeatureDataClient, PluginFeatureDefinitionClient>, IClientFeatureImplementation
     {
-        public List<string> ActiveDevices = new List<string>();
+        public Dictionary<string, string> ActiveDevices = new Dictionary<string, string>();
 
-        public void SetDevices(params string[] deviceIds)
+        public void SetDevices(Dictionary<string, string> devices)
         {
             ActiveDevices.Clear();
-            ActiveDevices.AddRange(deviceIds);
+            if (devices != null )
+                ActiveDevices = devices;
         }
     }
 }

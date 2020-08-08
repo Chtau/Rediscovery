@@ -53,8 +53,17 @@ namespace DesktopService.Features.RemoteResources
 
         private void _heartbeatActive_ActiveSIDsChanged(object sender, EventArgs e)
         {
-            HeartbeatActiveIDsChanged?.Invoke(this, EventArgs.Empty);
-            _featureService?.ActiveDevicesChanged(_heartbeatActive?.GetActiveSIDs()?.ToArray());
+            try
+            {
+                HeartbeatActiveIDsChanged?.Invoke(this, EventArgs.Empty);
+                var devices = (from x in _heartbeatActive.GetActiveSIDs()
+                               join y in  _deviceRepository.GetAll().GetAwaiter().GetResult() on x equals y.DeviceIdentifier
+                              select new KeyValuePair<string, string>(x, y.DeviceName)).ToDictionary(x => x.Key, y => y.Value);
+                _featureService?.ActiveDevicesChanged(devices);
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+            }
         }
 
         private void _loggerHandler_EntriesChanged(object sender, EventArgs e)
