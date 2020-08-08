@@ -4,6 +4,7 @@ using PluginFeature.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Mime;
 using System.Text;
@@ -191,21 +192,36 @@ namespace ClientFeatureFileExchange
                         case "sendfiles":
                             // TODO: we need a selection to a specific device
                             // TODO: should we select a folder on the selected device already or should we use a default folder on the device
-                            // TODO: we should get the device folder structor via client resource 
-                            // TODO: should we send every single file or use a single zip archive (zip archive would also solve file name creation problem)
 
                             var filePaths = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(content);
                             if (filePaths?.Count > 0)
                             {
+                                var archiveName = $"{GetDeviceFeatureInfo().Id.ToString().Replace("-", "")}_{DateTime.Now.ToString("yyyyMMddHHmmss")}";
+                                var sendDir = Path.Combine(PluginDirectory, archiveName);
+                                if (!Directory.Exists(sendDir))
+                                    Directory.CreateDirectory(sendDir);
+                                var filesToUse = new List<string>();
                                 foreach (var file in filePaths)
                                 {
                                     if (System.IO.File.Exists(file))
                                     {
-                                        // TODO: read all file content and fill a model with file content and file name to send to client
-                                        // TODO: only for implementation test
+                                        string fileName = Path.GetFileName(file);
+                                        string targetFile = Path.Combine(sendDir, fileName);
+                                        File.Copy(file, targetFile);
+                                    }
+                                }
+                                if (System.IO.Directory.Exists(sendDir))
+                                {
+                                    if (Directory.GetFiles(sendDir).Length > 0)
+                                    {
+                                        string archivePath = Path.Combine(PluginDirectory, archiveName + ".zip");
+                                        if (File.Exists(archivePath))
+                                            File.Delete(archivePath);
+                                        ZipFile.CreateFromDirectory(sendDir, archivePath);
+
                                         var deviceId = RegisteredDevices.First();
-                                        var fileContent = Convert.ToBase64String(File.ReadAllBytes(file));
-                                        var featureData = new PluginFeatureDataClient(deviceId, GetDeviceFeatureInfo().Id, null, fileContent, Enums.ClientNativeResources.FileTransfer);
+                                        var archiveContent = Convert.ToBase64String(File.ReadAllBytes(archivePath));
+                                        var featureData = new PluginFeatureDataClient(deviceId, GetDeviceFeatureInfo().Id, null, archiveContent, Enums.ClientNativeResources.FileTransfer);
                                         OnSendData(this, new PluginExchangeEntity<PluginFeatureDataClient>
                                         {
                                             Sid = deviceId,
@@ -213,18 +229,7 @@ namespace ClientFeatureFileExchange
                                         });
                                     }
                                 }
-                                
                             }
-
-                            /*foreach (var deviceId in RegisteredDevices)
-                            {
-                                var featureData = new PluginFeatureDataClient(deviceId, GetDeviceFeatureInfo().Id, null, filesData, Enums.ClientNativeResources.None);
-                                OnSendData(this, new PluginExchangeEntity<PluginFeatureDataClient>
-                                {
-                                    Sid = deviceId,
-                                    Entity = featureData
-                                });
-                            }*/
                             break;
                         case "open":
                             if (!string.IsNullOrWhiteSpace(content))
