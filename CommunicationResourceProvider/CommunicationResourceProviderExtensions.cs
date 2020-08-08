@@ -12,6 +12,8 @@ namespace CommunicationResourceProvider
     {
         public static IApplicationBuilder UseResourceProvider(this IApplicationBuilder app)
         {
+            var resourceRepository = app.ApplicationServices.GetRequiredService<IResourcesRepository>();
+            var resourceManager = app.ApplicationServices.GetRequiredService<IResourceManager>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<ResourceExchangeService>();

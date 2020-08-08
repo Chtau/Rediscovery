@@ -11,6 +11,7 @@ namespace CommunicationFeatureProvider
     {
         public static IApplicationBuilder UseFeatureProvider(this IApplicationBuilder app)
         {
+            var featureManager = app.ApplicationServices.GetRequiredService<IFeatureManager>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<FeatureExchangeService>();

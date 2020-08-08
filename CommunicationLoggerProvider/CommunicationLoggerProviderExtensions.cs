@@ -11,6 +11,8 @@ namespace CommunicationLoggerProvider
     {
         public static IApplicationBuilder UseLoggerProvider(this IApplicationBuilder app)
         {
+            var directLogger = app.ApplicationServices.GetRequiredService<IDirectLogger>();
+            var loggerHandler = app.ApplicationServices.GetRequiredService<ILoggerHandler>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<LoggerExchangeService>();

@@ -11,6 +11,9 @@ namespace CommunicationHeartbeatProvider
     {
         public static IApplicationBuilder UseHeartbeatProvider(this IApplicationBuilder app)
         {
+            var config = app.ApplicationServices.GetRequiredService<IConfiguration>();
+            var heartbeatActive = app.ApplicationServices.GetRequiredService<IHeartbeatActive>();
+            var heartbeatStatistic = app.ApplicationServices.GetRequiredService<IHeartbeatStatistic>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<HeartbeatExchangeService>();

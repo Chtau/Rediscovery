@@ -16,6 +16,8 @@ namespace CommunicationAuthenticationProvider
 
         public static IApplicationBuilder UseAuthenticationProvider(this IApplicationBuilder app)
         {
+            var tokenService = app.ApplicationServices.GetRequiredService<Services.ITokenService>();
+            var authenticationManager = app.ApplicationServices.GetRequiredService<IAuthenticationManager>();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
