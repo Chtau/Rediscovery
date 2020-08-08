@@ -207,7 +207,7 @@ namespace ClientFeatureFileExchange
                                     {
                                         string fileName = Path.GetFileName(file);
                                         string targetFile = Path.Combine(sendDir, fileName);
-                                        File.Copy(file, targetFile);
+                                        File.Copy(file, targetFile, true);
                                     }
                                 }
                                 if (System.IO.Directory.Exists(sendDir))
@@ -219,7 +219,7 @@ namespace ClientFeatureFileExchange
                                             File.Delete(archivePath);
                                         ZipFile.CreateFromDirectory(sendDir, archivePath);
 
-                                        var deviceId = RegisteredDevices.First();
+                                        var deviceId = ActiveDevices.First();
                                         var archiveContent = Convert.ToBase64String(File.ReadAllBytes(archivePath));
                                         var featureData = new PluginFeatureDataClient(deviceId, GetDeviceFeatureInfo().Id, null, archiveContent, Enums.ClientNativeResources.FileTransfer);
                                         OnSendData(this, new PluginExchangeEntity<PluginFeatureDataClient>

@@ -7,6 +7,6 @@ namespace PluginFeature.Interfaces
 {
     public interface IClientFeatureImplementation : IBaseFeatureImplementation<PluginFeatureDataClient, PluginFeatureDefinitionClient>
     {
-        
+        void SetDevices(params string[] deviceIds);
     }
 }

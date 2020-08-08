@@ -128,7 +128,8 @@ namespace ClientFeatureFileExchangeUI.ViewModels
                         SendFiles.Add(new SelectedFileViewModel
                         {
                             FileName = fileName,
-                            Path = path
+                            Path = path,
+                            FullPath = item
                         });
                     }
                 }

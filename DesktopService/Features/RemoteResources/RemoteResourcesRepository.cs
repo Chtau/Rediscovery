@@ -54,6 +54,7 @@ namespace DesktopService.Features.RemoteResources
         private void _heartbeatActive_ActiveSIDsChanged(object sender, EventArgs e)
         {
             HeartbeatActiveIDsChanged?.Invoke(this, EventArgs.Empty);
+            _featureService?.ActiveDevicesChanged(_heartbeatActive?.GetActiveSIDs()?.ToArray());
         }
 
         private void _loggerHandler_EntriesChanged(object sender, EventArgs e)

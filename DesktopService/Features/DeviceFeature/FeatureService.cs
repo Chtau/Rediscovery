@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using DesktopService.Features.Plugins;
 using SharedBase.Feature;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using CommunicationResourceProvider;
 
 namespace DesktopService.Features.DeviceFeature
 {
@@ -36,6 +37,24 @@ namespace DesktopService.Features.DeviceFeature
             _appSettings = appOptions.Value;
             _loadPlugins = loadPlugins;
             Load();
+        }
+
+        public void ActiveDevicesChanged(params string[] devices)
+        {
+            try
+            {
+                // TODO: we also should set device Name not only the id (for better display in the UI)
+                if (_clientFeatureImplementations?.Count > 0)
+                {
+                    foreach (var clientFeature in _clientFeatureImplementations)
+                    {
+                        clientFeature.SetDevices(devices);
+                    }
+                }
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+            }
         }
 
         public IDeviceFeatureImplementation GetFeatureDevice(Guid featureId)

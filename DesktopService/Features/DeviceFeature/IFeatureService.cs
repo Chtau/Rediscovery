@@ -29,5 +29,6 @@ namespace DesktopService.Features.DeviceFeature
         void ReceiveData(Guid featureId, ExchangeEntity<FeatureData> data);
         void StartFeature(Guid featureId, string sid);
         void StopFeature(Guid featureId, string sid);
+        void ActiveDevicesChanged(params string[] devices);
     }
 }
