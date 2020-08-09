@@ -162,7 +162,8 @@ namespace ClientFeatureFileExchangeUI.ViewModels
                                  select x.FullPath).ToList();
                     var fileList = Newtonsoft.Json.JsonConvert.SerializeObject(files);
                     _pipeExchange.Send($"sendfiles;{fileList}");
-                    SendFiles.Clear();
+                    // TODO: plugin must confirm it sends the files before we remove it from the list
+                    //SendFiles.Clear();
                 }
             } catch (Exception ex)
             {
