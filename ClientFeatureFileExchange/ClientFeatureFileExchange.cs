@@ -222,6 +222,7 @@ namespace ClientFeatureFileExchange
                                         var deviceId = ActiveDevices.First().Key;
                                         var archiveContent = Convert.ToBase64String(File.ReadAllBytes(archivePath));
                                         var featureData = new PluginFeatureDataClient(deviceId, GetDeviceFeatureInfo().Id, null, archiveContent, Enums.ClientNativeResources.FileTransfer);
+                                        // TODO: before the service can send a message to the client the client must start to accept messages
                                         OnSendData(this, new PluginExchangeEntity<PluginFeatureDataClient>
                                         {
                                             Sid = deviceId,
