@@ -3,7 +3,6 @@ using SharedBase.Device;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CommunicationHeartbeatProvider
@@ -11,7 +10,7 @@ namespace CommunicationHeartbeatProvider
     public class HeartbeatActive : IHeartbeatActive
     {
         private readonly ILogger<HeartbeatActive> _logger;
-        private Dictionary<string, SharedBase.Device.HeartbeatActiveDeviceDetail> activeDeviceDetails = new Dictionary<string, SharedBase.Device.HeartbeatActiveDeviceDetail>();
+        private readonly Dictionary<string, SharedBase.Device.HeartbeatActiveDeviceDetail> _activeDeviceDetails = new Dictionary<string, SharedBase.Device.HeartbeatActiveDeviceDetail>();
         private DateTime lastChangedEvent = DateTime.UtcNow.AddMinutes(-1);
         private DateTime lastRemoveChangedEvent = DateTime.UtcNow.AddMinutes(-1);
 
@@ -29,25 +28,25 @@ namespace CommunicationHeartbeatProvider
             {
                 Task.Run(async () =>
                 {
-                    do
+                    while (true)
                     {
                         await Task.Delay(TimeSpan.FromMinutes(1));
                         var timeoutDateTime = DateTime.UtcNow.AddMinutes(-1);
-                        var timeoutIds = (from x in activeDeviceDetails
-                                         where x.Value.LastBeat < timeoutDateTime
-                                         select x.Key.ToLower())?.ToList();
+                        var timeoutIds = (from x in _activeDeviceDetails
+                                          where x.Value.LastBeat < timeoutDateTime
+                                          select x.Key.ToLower())?.ToList();
                         if (timeoutIds?.Count > 0)
                         {
                             foreach (var id in timeoutIds)
                             {
-                                if (activeDeviceDetails.ContainsKey(id))
+                                if (_activeDeviceDetails.ContainsKey(id))
                                 {
-                                    activeDeviceDetails.Remove(id);
+                                    _activeDeviceDetails.Remove(id);
                                 }
                             }
                             ActiveSIDsChanged?.Invoke(this, EventArgs.Empty);
                         }
-                    } while (true);
+                    }
                 });
             }
             catch (Exception ex)
@@ -59,15 +58,15 @@ namespace CommunicationHeartbeatProvider
         public HeartbeatActiveDeviceDetail Detail(string sid)
         {
             string id = sid.ToLower();
-            if (activeDeviceDetails.ContainsKey(id))
-                return activeDeviceDetails[id];
+            if (_activeDeviceDetails.ContainsKey(id))
+                return _activeDeviceDetails[id];
             return null;
         }
 
         public List<string> GetActiveSIDs()
         {
-            return (from x in activeDeviceDetails
-                   select x.Value.Sid)?.ToList();
+            return (from x in _activeDeviceDetails
+                    select x.Value.Sid)?.ToList();
         }
 
         public void TryAdd(HeartbeatActiveDeviceDetail deviceDetail)
@@ -77,12 +76,13 @@ namespace CommunicationHeartbeatProvider
                 if (deviceDetail == null || string.IsNullOrWhiteSpace(deviceDetail.Sid))
                     return;
                 string id = deviceDetail.Sid.ToLower();
-                if (activeDeviceDetails.ContainsKey(id))
+                if (_activeDeviceDetails.ContainsKey(id))
                 {
-                    activeDeviceDetails[id].LastBeat = deviceDetail.LastBeat;
-                } else
+                    _activeDeviceDetails[id].LastBeat = deviceDetail.LastBeat;
+                }
+                else
                 {
-                    activeDeviceDetails.Add(id, deviceDetail);
+                    _activeDeviceDetails.Add(id, deviceDetail);
                 }
 
                 if (lastChangedEvent.AddSeconds(10) < DateTime.UtcNow)
@@ -102,9 +102,9 @@ namespace CommunicationHeartbeatProvider
             try
             {
                 string id = sid.ToLower();
-                if (activeDeviceDetails.ContainsKey(id))
+                if (_activeDeviceDetails.ContainsKey(id))
                 {
-                    activeDeviceDetails.Remove(id);
+                    _activeDeviceDetails.Remove(id);
 
                     if (lastRemoveChangedEvent.AddSeconds(10) < DateTime.UtcNow)
                     {

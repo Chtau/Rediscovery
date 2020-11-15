@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using Xamarin.Forms;
 
 namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
@@ -17,8 +16,11 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
         private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
 
         public event EventHandler<Tuple<Guid, string>> UIDataReady;
+
         public event EventHandler<Tuple<Guid, Guid>> UIDataNoArchive;
+
         public event EventHandler<object> ReceivedFeatureData;
+
         public event EventHandler<object> ProfilChanged;
 
         public readonly Features.Connection.Models.ConnectionManifestFeature ConnectionManifestFeature;
@@ -67,7 +69,6 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
 
             if (featureService.LoadFeature(config, ConnectionManifestFeature.FeatureId))
             {
-                
             }
 
             /*featureUIService.SaveUI(DesktopConfigId, ConnectionManifestFeature.FeatureId, (state, directory) =>

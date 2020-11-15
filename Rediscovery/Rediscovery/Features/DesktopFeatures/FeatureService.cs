@@ -6,18 +6,21 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.DesktopFeatures.FeatureService))]
+
 namespace Rediscovery.Features.DesktopFeatures
 {
     public class FeatureService : BaseService, IFeatureService
     {
         public event EventHandler<SharedBase.Feature.FeatureData> ReceivedData;
+
         public event EventHandler<List<FeatureProfil>> ReceivedProfiles;
+
         public event EventHandler<FeatureSetting> ReceivedSetting;
+
         public event EventHandler<Tuple<bool, string>> ReceivedUI;
 
         private IConsumer consumer => DependencyService.Get<IConsumer>();
@@ -88,7 +91,8 @@ namespace Rediscovery.Features.DesktopFeatures
                             _logger.LogInformation($"No UI Archive received for Feature Id:{featureId} (no valid ZipArchive from byte[])");
                             ReceivedUI?.Invoke(this, new Tuple<bool, string>(false, directory));
                         }
-                    } else
+                    }
+                    else
                     {
                         _logger.LogInformation($"No UI Archive received for Feature Id:{featureId} (byte[] was \"null\")");
                         ReceivedUI?.Invoke(this, new Tuple<bool, string>(false, directory));
@@ -124,7 +128,8 @@ namespace Rediscovery.Features.DesktopFeatures
                     return true;
                 }
                 return false;
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex);
                 return false;
@@ -153,7 +158,6 @@ namespace Rediscovery.Features.DesktopFeatures
 
         public void Send(string profileId, string data, bool isClientImplementation = false, int nativeResourceType = 0)
         {
-            
             _logger.LogTrace($"{DateTime.Now.ToShortTimeString()} Try to send from Feature. (profileId:{profileId} data:{data})");
             consumer.FeatureConsumerService.SendFeatureData(new SharedBase.Feature.FeatureData(deviceData.GetDeviceIdentifier(), featureId, profileId, data, isClientImplementation, nativeResourceType));
         }
@@ -199,6 +203,7 @@ namespace Rediscovery.Features.DesktopFeatures
                                     element.SetAttribute("src", item.fileName);
                                     document.Head.AppendChild(element);
                                     break;
+
                                 case HtmlUIService.DefaultFileType.LINK:
                                     tmpFileName = System.IO.Path.Combine(directory, item.fileName);
                                     System.IO.File.WriteAllText(tmpFileName, item.fileContent);
@@ -206,11 +211,13 @@ namespace Rediscovery.Features.DesktopFeatures
                                     element.SetAttribute("href", item.fileName);
                                     document.Head.AppendChild(element);
                                     break;
+
                                 case HtmlUIService.DefaultFileType.HTML:
                                     element = document.CreateElement("div");
                                     element.InnerHtml = item.fileContent;
                                     document.Body.AppendChild(element);
                                     break;
+
                                 default:
                                     break;
                             }
@@ -218,12 +225,14 @@ namespace Rediscovery.Features.DesktopFeatures
                     }
                     var result = document.DocumentElement.OuterHtml;
                     System.IO.File.WriteAllText(startFile, result);
-                } else
+                }
+                else
                 {
                     string defaultContent = htmlUIService.NoUIHtmlDefault();
                     System.IO.File.WriteAllText(System.IO.Path.Combine(directory, "index.html"), defaultContent);
                 }
-            } else
+            }
+            else
             {
                 throw new System.IO.DirectoryNotFoundException(directory);
             }

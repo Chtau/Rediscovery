@@ -1,9 +1,6 @@
-﻿using CertificateManager;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CertificateService
 {
@@ -31,7 +28,7 @@ namespace CertificateService
                 var certInstance = app.ApplicationServices.GetRequiredService<ICertificateManager>();
                 certInstance.Certificate(ConfigurationInstance.Configuration.DnsIp);
             }
-            
+
             return app;
         }
     }

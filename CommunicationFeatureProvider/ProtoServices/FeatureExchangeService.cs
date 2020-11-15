@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using Grpc.Core;
-using Featuredata;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
+﻿using Featuredata;
 using Google.Protobuf;
+using Grpc.Core;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
 using SharedBase.Feature;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CommunicationFeatureProvider.ProtoServices
 {
@@ -17,7 +14,7 @@ namespace CommunicationFeatureProvider.ProtoServices
     {
         private readonly ILogger<FeatureExchangeService> _logger;
         private readonly IFeatureManager _featureManager;
-        private static Dictionary<string, IServerStreamWriter<Featuredata.DeviceFeatureData>> responseStreams = new Dictionary<string, IServerStreamWriter<Featuredata.DeviceFeatureData>>();
+        private static readonly Dictionary<string, IServerStreamWriter<Featuredata.DeviceFeatureData>> _responseStreams = new Dictionary<string, IServerStreamWriter<Featuredata.DeviceFeatureData>>();
 
         public FeatureExchangeService(ILoggerFactory loggerFactory, IFeatureManager featureManager)
         {
@@ -33,20 +30,21 @@ namespace CommunicationFeatureProvider.ProtoServices
 
         private void OnSendFeatureData(string sid, FeatureData deviceFeatureData)
         {
-            if (responseStreams.ContainsKey(sid))
+            if (_responseStreams.ContainsKey(sid))
             {
                 Task.Run(async () =>
                 {
                     try
                     {
-                        await responseStreams[sid].WriteAsync(new Featuredata.DeviceFeatureData
+                        await _responseStreams[sid].WriteAsync(new Featuredata.DeviceFeatureData
                         {
                             Data = deviceFeatureData.Data,
                             DeviceId = deviceFeatureData.DeviceId,
                             FeatureId = deviceFeatureData.FeatureId.ToString(),
                             ProfileId = deviceFeatureData.ProfileId.EmptyIfNull()
                         });
-                    } catch (Exception ex)
+                    }
+                    catch (Exception ex)
                     {
                         _logger.LogError(ex, "SendFeatureData write to response Stream");
                     }
@@ -63,10 +61,7 @@ namespace CommunicationFeatureProvider.ProtoServices
                 var user = context.GetHttpContext().User;
                 sid = user.Claims.GetSid();
                 FeatureActiveDevices.AddDevice(sid);
-                if (responseStreams.ContainsKey(sid))
-                    responseStreams[sid] = responseStream;
-                else
-                    responseStreams.Add(sid, responseStream);
+                _responseStreams[sid] = responseStream;
 
                 var readTask = Task.Run(async () =>
                 {
@@ -94,13 +89,14 @@ namespace CommunicationFeatureProvider.ProtoServices
             catch (Exception ex)
             {
                 _logger.LogError(ex, "ExchangeStream");
-            } finally
+            }
+            finally
             {
                 if (!string.IsNullOrWhiteSpace(sid))
                 {
                     FeatureActiveDevices.RemoveDevice(sid);
-                    if (responseStreams.ContainsKey(sid))
-                        responseStreams.Remove(sid);
+                    if (_responseStreams.ContainsKey(sid))
+                        _responseStreams.Remove(sid);
                 }
             }
         }
@@ -127,7 +123,8 @@ namespace CommunicationFeatureProvider.ProtoServices
                     FeatureId = resultFeatureState.Entity.FeatureId.ToString(),
                     FeatureState_ = (FeatureState.Types.State)(int)resultFeatureState.Entity.CurrentState
                 });
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "Request for change Feature state");
                 return Task.FromResult(new FeatureState
@@ -158,7 +155,8 @@ namespace CommunicationFeatureProvider.ProtoServices
                 if (setting != null)
                 {
                     result.Setting = setting.GetProtoFeatureDetailSetting();
-                } else
+                }
+                else
                 {
                     result.Setting = new FeatureDetailSetting
                     {
@@ -166,7 +164,7 @@ namespace CommunicationFeatureProvider.ProtoServices
                         FeatureId = request.FeatureId
                     };
                 }
-                
+
                 if (profiles?.Count > 0)
                 {
                     foreach (var item in profiles)

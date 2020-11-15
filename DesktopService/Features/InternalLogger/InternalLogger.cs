@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DesktopService.Features.InternalLogger
 {
@@ -37,7 +35,7 @@ namespace DesktopService.Features.InternalLogger
             {
                 var color = Console.ForegroundColor;
                 Console.ForegroundColor = _config.Color;
-                Console.WriteLine($"{logLevel.ToString()} - {eventId.Id} - {_name}{Environment.NewLine}{formatter(state, exception)}");
+                Console.WriteLine($"{logLevel} - {eventId.Id} - {_name}{Environment.NewLine}{formatter(state, exception)}");
                 Console.ForegroundColor = color;
             }
         }

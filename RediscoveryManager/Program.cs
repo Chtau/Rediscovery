@@ -1,14 +1,12 @@
-﻿using CommunicationAuthenticationConsumer;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using RediscoveryManager.Service;
-using System;
 using System.IO;
 
 namespace RediscoveryManager
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var builder = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
@@ -16,7 +14,8 @@ namespace RediscoveryManager
 
             IConfigurationRoot configuration = builder.Build();
 
-            var connectSettings = configuration.GetSection(SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration.SectionName).Get<SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration>();
+            var jsonSetting = configuration.GetSection(SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration.SectionName).Value;
+            var connectSettings = Newtonsoft.Json.JsonConvert.DeserializeObject<SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration>(jsonSetting); //configuration.GetSection(SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration.SectionName).Get<SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration>();
             var argCon = TryParseConnectionArguments(args);
 
             SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration connection = new SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration();
@@ -31,11 +30,10 @@ namespace RediscoveryManager
 
         private static SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration TryParseConnectionArguments(string[] args)
         {
-            int port = 0;
             var deviceIdentifier = Arguments.TryParseArgumentValue(args, Arguments.SetDeviceIdentifier);
             var ip = Arguments.TryParseArgumentValue(args, Arguments.SetIP);
             var portString = Arguments.TryParseArgumentValue(args, Arguments.SetPort);
-            int.TryParse(portString, out port);
+            int.TryParse(portString, out int port);
             var autoConnect = Arguments.TryParseArgumentMatch(args, Arguments.Autoconnect);
             if (!string.IsNullOrWhiteSpace(ip) || port > 0 || !string.IsNullOrWhiteSpace(deviceIdentifier))
             {
@@ -46,7 +44,8 @@ namespace RediscoveryManager
                     Port = port,
                     IP = ip
                 };
-            } else
+            }
+            else
             {
                 return null;
             }

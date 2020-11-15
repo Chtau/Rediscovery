@@ -6,9 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net.Mime;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClientFeatureFileExchange
 {
@@ -22,7 +19,8 @@ namespace ClientFeatureFileExchange
             try
             {
                 var config = Configuration.GetConfigurations(ConfigurationPath());
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 pluginLogger.LogError(ex.ToString());
             }
@@ -163,7 +161,8 @@ namespace ClientFeatureFileExchange
             try
             {
                 System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(startProcess, file));
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 pluginLogger.LogError(ex, $"Could not start process for File:{file}");
             }
@@ -196,7 +195,7 @@ namespace ClientFeatureFileExchange
                             var filePaths = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(content);
                             if (filePaths?.Count > 0)
                             {
-                                var archiveName = $"{GetDeviceFeatureInfo().Id.ToString().Replace("-", "")}_{DateTime.Now.ToString("yyyyMMddHHmmss")}";
+                                var archiveName = $"{GetDeviceFeatureInfo().Id.ToString().Replace("-", "")}_{DateTime.Now:yyyyMMddHHmmss}";
                                 var sendDir = Path.Combine(PluginDirectory, archiveName);
                                 if (!Directory.Exists(sendDir))
                                     Directory.CreateDirectory(sendDir);
@@ -232,21 +231,25 @@ namespace ClientFeatureFileExchange
                                 }
                             }
                             break;
+
                         case "open":
                             if (!string.IsNullOrWhiteSpace(content))
                             {
                                 if (System.IO.File.Exists(content))
                                 {
                                     ProcessStart(config.StartProcessName, content);
-                                } else
+                                }
+                                else
                                 {
                                     pluginLogger.LogWarning($"Received \"open\" File command from UI but the file no longer exists (File:{content}).");
                                 }
-                            } else
+                            }
+                            else
                             {
-                                pluginLogger.LogWarning($"Received \"open\" File command from UI but content which should be file path is empty.");
+                                pluginLogger.LogWarning("Received \"open\" File command from UI but content which should be file path is empty.");
                             }
                             break;
+
                         case "delete":
                             if (!string.IsNullOrWhiteSpace(content))
                             {
@@ -261,9 +264,10 @@ namespace ClientFeatureFileExchange
                             }
                             else
                             {
-                                pluginLogger.LogWarning($"Received \"delete\" File command from UI but content which should be file path is empty.");
+                                pluginLogger.LogWarning("Received \"delete\" File command from UI but content which should be file path is empty.");
                             }
                             break;
+
                         default:
                             break;
                     }
