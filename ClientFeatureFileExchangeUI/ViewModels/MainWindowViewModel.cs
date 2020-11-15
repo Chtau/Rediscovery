@@ -1,13 +1,9 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Dialogs;
 using Avalonia.Threading;
-using DynamicData;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace ClientFeatureFileExchangeUI.ViewModels
 {
@@ -18,7 +14,7 @@ namespace ClientFeatureFileExchangeUI.ViewModels
 
         public ObservableCollection<SelectedFileViewModel> SendFiles { get; } = new ObservableCollection<SelectedFileViewModel>();
         public ObservableCollection<SelectedFileViewModel> ReceivedFiles { get; } = new ObservableCollection<SelectedFileViewModel>();
-        
+
         public MainWindowViewModel(Window window)
         {
             _window = window;
@@ -58,19 +54,20 @@ namespace ClientFeatureFileExchangeUI.ViewModels
                                 };
                                 model.OpenFile += Model_OpenFile;
                                 model.DeleteFile += Model_DeleteFile;
-                                Dispatcher.UIThread.InvokeAsync(() =>
-                                {
-                                    ReceivedFiles.Add(model);
-                                });
-                            } else
+                                Dispatcher.UIThread.InvokeAsync(() => ReceivedFiles.Add(model));
+                            }
+                            else
                             {
                                 System.Diagnostics.Debug.Print($"Received File command but file does not exist (File:{content}).");
                             }
                             break;
+
                         case "text":
                             break;
+
                         case "url":
                             break;
+
                         default:
                             System.Diagnostics.Debug.Print($"Unknown command received Command:{command}");
                             break;
@@ -165,7 +162,8 @@ namespace ClientFeatureFileExchangeUI.ViewModels
                     // TODO: plugin must confirm it sends the files before we remove it from the list
                     //SendFiles.Clear();
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 System.Diagnostics.Debug.Print(ex.ToString());
             }

@@ -51,7 +51,8 @@ namespace RediscoveryManager.GUI
 
         private static void RegisterDependencies()
         {
-            var connectSettings = Program.Configuration.GetSection(SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration.SectionName).Get<SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration>();
+            var jsonSetting = Program.Configuration.GetSection(SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration.SectionName).Value;
+            var connectSettings = Newtonsoft.Json.JsonConvert.DeserializeObject<SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration>(jsonSetting);// Program.Configuration.GetSection(SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration.SectionName).Get<SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration>();
             Locator.CurrentMutable.RegisterConstant(connectSettings, typeof(SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration));
             var manager = new Manager();
             Locator.CurrentMutable.RegisterConstant(manager, typeof(IManager));

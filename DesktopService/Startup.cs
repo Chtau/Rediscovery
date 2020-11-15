@@ -7,27 +7,20 @@ using CommunicationResourceProvider;
 using DALDesktopService;
 using DesktopService.Features.Authentication;
 using DesktopService.Features.DeviceFeature;
-using DesktopService.Features.InternalLogger;
 using DesktopService.Features.Logger;
 using DesktopService.Features.RemoteResources;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DesktopService
 {
     public class Startup
     {
-        IConfigurationRoot Configuration { get; }
+        private IConfigurationRoot Configuration { get; }
 
         public Startup()
         {
@@ -46,7 +39,7 @@ namespace DesktopService
             var remoteResourceSettingsSection = Configuration.GetSection(SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration.SectionName);
             services.Configure<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration>(remoteResourceSettingsSection);
             var appSettingsSection = Configuration.GetSection(SharedConfigurations.DesktopService.Models.AppConfiguration.SectionName);
-            services.Configure<SharedConfigurations.DesktopService.Models.AppConfiguration> (appSettingsSection);
+            services.Configure<SharedConfigurations.DesktopService.Models.AppConfiguration>(appSettingsSection);
             var rolesSection = Configuration.GetSection(SharedConfigurations.DesktopService.Models.RoleConfiguration.SectionName);
             services.Configure<SharedConfigurations.DesktopService.Models.RoleConfiguration>(rolesSection);
 
@@ -66,10 +59,7 @@ namespace DesktopService
                     dbPath = appSettings.DatabasePath;
             }
 
-            services.AddDAL((c) =>
-            {
-                c.ConnectionString = dbPath;
-            });
+            services.AddDAL((c) => c.ConnectionString = dbPath);
             services.AddCertificateService();
 
             services.AddAuthenticationProvider<AuthenticationManager>(identitySettings.Secret, roleSettings.DeviceRoleName, roleSettings.ResourceConsumerRoleName);
@@ -111,12 +101,11 @@ namespace DesktopService
                 builder.AllowAnyOrigin()
                     .AllowAnyHeader()
                     .AllowAnyMethod();
-                    //.AllowCredentials();
+                //.AllowCredentials();
             });
 
-
             app.UseRouting();
-            
+
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseResourceProvider();
@@ -124,10 +113,7 @@ namespace DesktopService
             app.UseLoggerProvider();
             app.UseFeatureProvider();
             app.UseAuthenticationProvider();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
 }
