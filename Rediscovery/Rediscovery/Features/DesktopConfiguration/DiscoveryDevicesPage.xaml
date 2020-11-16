@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:flex="clr-namespace:Flex.Controls;assembly=Flex"
              mc:Ignorable="d"
              x:Class="Rediscovery.Features.DesktopConfiguration.DiscoveryDevicesPage"
              Title="Discover devices in the Network">
@@ -54,19 +53,19 @@
                 </ListView>
             </StackLayout>
             <StackLayout Grid.Row="1" Margin="5">
-                <flex:FlexButton    
+                <!--Icon="focus_white.png"-->
+                <Button    
                     IsVisible="{Binding IsDiscoveryRunning, Converter={StaticResource reverseBoolConverter}}"
-                    Icon="focus_white.png"
                     Text="Start device discovery"
                     Padding="5"
-                    ClickedCommand="{Binding DiscoveryCommand}"
+                    Command="{Binding DiscoveryCommand}"
                     Style="{StaticResource LargeFlexButton}"/>
-                <flex:FlexButton                    
+                <!--Icon="stop_circle.png"-->
+                <Button                    
                     IsVisible="{Binding IsDiscoveryRunning}"
-                    Icon="stop_circle.png"
                     Text="Stop device discovery"
                     Padding="5"
-                    ClickedCommand="{Binding StopDiscoveryCommand}"
+                    Command="{Binding StopDiscoveryCommand}"
                     Style="{StaticResource LargeFlexButton}"/>
             </StackLayout>
         </Grid>

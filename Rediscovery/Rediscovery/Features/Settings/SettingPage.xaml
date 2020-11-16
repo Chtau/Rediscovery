@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:flex="clr-namespace:Flex.Controls;assembly=Flex"
              mc:Ignorable="d"
              Title="Application settings"
              x:Class="Rediscovery.Features.Settings.SettingPage">
@@ -38,21 +37,21 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <Entry IsEnabled="False" Grid.Column="0" Text="{Binding ApplicationDeviceIdentifier}" FontSize="Small" />
-                            <flex:FlexButton 
+                            <!--Icon="restart_line.png"-->
+                            <Button 
                                 Clicked="GenerateADI_Clicked"
                                 Grid.Column="1"
                             HorizontalOptions="End"
-                        Icon="restart_line.png"
                             Margin="5"
                             Style="{StaticResource RoundSmallFlexButton}"/>
                         </Grid>
                     </StackLayout>
                     <StackLayout Orientation="Horizontal">
-                        <flex:FlexButton 
+                        <!--Icon="settings_fill.png"-->
+                        <Button 
                             HorizontalOptions="Start"
-                        Icon="settings_fill.png"
                             Margin="5"
-                            ClickedCommand="{Binding NativeSettingsUICommand}"
+                            Command="{Binding NativeSettingsUICommand}"
                             Style="{StaticResource RoundSmallFlexButton}"/>
                         <Label Text="App Info Settings" FontSize="Medium" VerticalOptions="Center" />
                     </StackLayout>

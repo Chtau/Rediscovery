@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:flex="clr-namespace:Flex.Controls;assembly=Flex"
              mc:Ignorable="d"
              x:Class="Rediscovery.Features.DesktopConfiguration.DesktopConfigurationEditPage">
     <ContentPage.ToolbarItems>
@@ -58,19 +57,20 @@
                     </StackLayout>
                 </ScrollView>
                 <StackLayout Grid.Row="1">
-                    <flex:FlexButton 
-                        Icon="remote_control_fill.png"
+                    <!--Icon="remote_control_fill.png"-->
+                    <Button 
+                        
                     Text="Connect"
                     Margin="5"
                     IsVisible="{Binding Item.ConnectionState, Converter={StaticResource connectionStateReverseBoolConverter}}"
-                    ClickedCommand="{Binding Connect}"
+                    Command="{Binding Connect}"
                     Style="{StaticResource LargeFlexButton}"/>
-                    <flex:FlexButton 
-                        Icon="wifi_off.png"
+                    <!--Icon="wifi_off.png"-->
+                    <Button 
                     Text="Disconnect"
                     Margin="5"
                     IsVisible="{Binding Item.ConnectionState, Converter={StaticResource connectionStateBoolConverter}}"
-                    ClickedCommand="{Binding Disconnect}"
+                    Command="{Binding Disconnect}"
                     Style="{StaticResource LargeFlexButton}"/>
                 </StackLayout>
             </Grid>
