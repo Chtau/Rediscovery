@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:Rediscovery"
              xmlns:startpage="clr-namespace:Rediscovery.Features.Startpage"
              mc:Ignorable="d"
              Title="Rediscovery"
@@ -61,7 +62,9 @@
                                                 <Label FontSize="Medium" Text="{Binding FeatureDisplayName}"/>
                                             </StackLayout>
                                             <!--Icon="computer_line.png"-->
-                                            <Button Grid.Row="0" Grid.Column="1" x:Name="QuickFeatureButton" Margin="5" Padding="5" Style="{StaticResource LargeFlexButton}"
+                                            <Button Grid.Row="0" Grid.Column="1"  x:Name="QuickFeatureButton"
+                                                    Margin="5" Padding="5" Style="{StaticResource LargeFlexButton}"
+                                                    ImageSource="{local:ImageResource Rediscovery.Resources.Images.computer_line.png}"
                                                              Command="{Binding BindingContext.QuickFeatureCommand, Source={x:Reference startpage} }" CommandParameter="{Binding .}"/>
                                         </Grid>
                                     </Frame>
