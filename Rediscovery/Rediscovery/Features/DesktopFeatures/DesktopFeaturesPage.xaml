@@ -24,7 +24,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <Grid>
+                                <Grid Margin="10,10,0,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
@@ -34,12 +34,12 @@
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
-                                    <StackLayout Padding="10, 0, 0, 0" Grid.Column="0" Grid.RowSpan="2" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                                    <StackLayout Grid.Column="0" Grid.RowSpan="2" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
                                         <Image IsVisible="{Binding FeatureFeatureIntegrationPoint, Converter={StaticResource featureIntegrationConverter}, ConverterParameter=0}" Source="computer_line.png"></Image>
                                         <Image IsVisible="{Binding FeatureFeatureIntegrationPoint, Converter={StaticResource featureIntegrationConverter}, ConverterParameter=1}" Source="smartphone_line.png"></Image>
                                     </StackLayout>
-                                    <StackLayout Padding="0, 10, 10, 0" Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
-                                        <Label Text="{Binding FeatureDisplayName}" 
+                                    <StackLayout Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
+                                        <Label Text="{Binding FeatureDisplayName}"
                        LineBreakMode="NoWrap" 
                        Style="{DynamicResource ListItemTextStyle}" 
                        FontSize="16" />

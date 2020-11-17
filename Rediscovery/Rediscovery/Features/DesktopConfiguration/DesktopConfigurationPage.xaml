@@ -32,7 +32,7 @@
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
-                                    <StackLayout Padding="10, 10, 10, 0" Grid.Row="0" Orientation="Horizontal">
+                                    <StackLayout Margin="10, 0, 10, 0" Grid.Row="0" Orientation="Horizontal">
                                         <Label Text="{Binding DisplayName}" 
                        LineBreakMode="NoWrap" 
                        Style="{DynamicResource ListItemTextStyle}" 
