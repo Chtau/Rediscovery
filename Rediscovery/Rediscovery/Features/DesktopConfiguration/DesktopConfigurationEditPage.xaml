@@ -59,7 +59,6 @@
                 <StackLayout Grid.Row="1">
                     <!--Icon="remote_control_fill.png"-->
                     <Button 
-                        
                     Text="Connect"
                     Margin="5"
                     IsVisible="{Binding Item.ConnectionState, Converter={StaticResource connectionStateReverseBoolConverter}}"
