@@ -30,6 +30,7 @@
     <None Remove="Assets\exchange.js" />
     <None Remove="Assets\index.html" />
     <None Remove="Resources\Images\computer_line.png" />
+    <None Remove="Resources\Images\remote_control_fill.png" />
     <None Include="..\..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
@@ -40,6 +41,7 @@
     <EmbeddedResource Include="Assets\exchange.js" />
     <EmbeddedResource Include="Assets\index.html" />
     <EmbeddedResource Include="Resources\Images\computer_line.png" />
+    <EmbeddedResource Include="Resources\Images\remote_control_fill.png" />
   </ItemGroup>
 
   <ItemGroup>
