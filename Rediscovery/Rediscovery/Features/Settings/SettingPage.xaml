@@ -37,8 +37,8 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <Entry IsEnabled="False" Grid.Column="0" Text="{Binding ApplicationDeviceIdentifier}" FontSize="Small" />
-                            <!--Icon="restart_line.png"-->
                             <Button 
+                                Image="restart_line.png"
                                 Clicked="GenerateADI_Clicked"
                                 Grid.Column="1"
                             HorizontalOptions="End"
@@ -47,10 +47,10 @@
                         </Grid>
                     </StackLayout>
                     <StackLayout Orientation="Horizontal">
-                        <!--Icon="settings_fill.png"-->
                         <Button 
                             HorizontalOptions="Start"
                             Margin="5"
+                            Image="settings_fill.png"
                             Command="{Binding NativeSettingsUICommand}"
                             Style="{StaticResource RoundSmallFlexButton}"/>
                         <Label Text="App Info Settings" FontSize="Medium" VerticalOptions="Center" />

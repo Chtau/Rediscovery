@@ -57,18 +57,18 @@
                     </StackLayout>
                 </ScrollView>
                 <StackLayout Grid.Row="1">
-                    <!--Icon="remote_control_fill.png"-->
                     <Button 
                     Text="Connect"
                     Margin="5"
                     IsVisible="{Binding Item.ConnectionState, Converter={StaticResource connectionStateReverseBoolConverter}}"
                     Command="{Binding Connect}"
+                        Image="remote_control_fill.png"
                     Style="{StaticResource LargeFlexButton}"/>
-                    <!--Icon="wifi_off.png"-->
                     <Button 
                     Text="Disconnect"
                     Margin="5"
                     IsVisible="{Binding Item.ConnectionState, Converter={StaticResource connectionStateBoolConverter}}"
+                        Image="wifi_off.png"
                     Command="{Binding Disconnect}"
                     Style="{StaticResource LargeFlexButton}"/>
                 </StackLayout>

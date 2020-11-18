@@ -61,7 +61,6 @@
                                             <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
                                                 <Label FontSize="Medium" Text="{Binding FeatureDisplayName}"/>
                                             </StackLayout>
-                                            <!--Icon="computer_line.png"-->
                                             <Button Grid.Row="0" Grid.Column="1"  x:Name="QuickFeatureButton"
                                                     Margin="5" Padding="5" Style="{StaticResource LargeFlexButton}"
                                                     Image="computer_line.png"
@@ -88,8 +87,8 @@
                             <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
                                 <Label FontSize="Medium" Text="Add a configuration to a Desktop service"/>
                             </StackLayout>
-                            <!--Icon="computer_fill_primary.png"-->
                             <Button Grid.Row="0" Grid.Column="1" x:Name="AddConfiguration" 
+                                    Image="computer_fill_primary.png"
                     Margin="5" Padding="5" Style="{StaticResource LargeFlexButton}"/>
                         </Grid>
                     </Frame>
@@ -134,8 +133,6 @@
                                     <Label Text="Connection Name:"/>
                                     <Label FontAttributes="Bold" Text="{Binding DesktopConfiguration.DisplayName}"/>
                                 </StackLayout>
-                                <!--Icon="remote_control_fill.png"-->
-                                <!--ImageSource="{local:ImageResource Rediscovery.Resources.Images.remote_control_fill.png}"-->
                                 <Button Grid.RowSpan="2" Grid.Column="1" x:Name="QuickConnectButton" 
                                         Image="remote_control_fill.png"
                     Margin="5" Padding="5" Style="{StaticResource LargeFlexButton}"  Command="{Binding QuickConnectCommand}"/>
@@ -145,10 +142,10 @@
                 </StackLayout>
             </StackLayout>
             <StackLayout Grid.Row="3">
-                <!--Icon="share_forward_fill.png"-->
                 <Button 
                     x:Name="ClientFeatureQueue"  IsVisible="false" Clicked="ClientFeatureQueue_Clicked" Text="Queued data:"
                     Margin="5"
+                    Image="share_forward_fill.png"
                     Style="{StaticResource LargeFlexButton}"/>
             </StackLayout>
             <ContentView x:Name="actOverlay" IsVisible="{Binding Load.IsLoading}" 

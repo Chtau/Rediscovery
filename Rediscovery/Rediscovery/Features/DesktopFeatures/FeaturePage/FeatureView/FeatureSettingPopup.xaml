@@ -29,10 +29,10 @@
                         SelectedItem="{Binding SelectedProfile}"
                         ItemDisplayBinding="{Binding DisplayName}">
                     </Picker>
-                    <!--Icon="close_white.png"-->
                     <Button 
                         Text="Close"
                         Margin="5"
+                        Image="close_white.png"
                         Clicked="Close_Clicked"
                     Style="{StaticResource LargeFlexButton}"/>
                 </StackLayout>

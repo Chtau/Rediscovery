@@ -53,19 +53,19 @@
                 </ListView>
             </StackLayout>
             <StackLayout Grid.Row="1" Margin="5">
-                <!--Icon="focus_white.png"-->
                 <Button    
                     IsVisible="{Binding IsDiscoveryRunning, Converter={StaticResource reverseBoolConverter}}"
                     Text="Start device discovery"
                     Padding="5"
                     Command="{Binding DiscoveryCommand}"
+                    Image="focus_white.png"
                     Style="{StaticResource LargeFlexButton}"/>
-                <!--Icon="stop_circle.png"-->
                 <Button                    
                     IsVisible="{Binding IsDiscoveryRunning}"
                     Text="Stop device discovery"
                     Padding="5"
                     Command="{Binding StopDiscoveryCommand}"
+                    Image="stop_circle.png"
                     Style="{StaticResource LargeFlexButton}"/>
             </StackLayout>
         </Grid>
