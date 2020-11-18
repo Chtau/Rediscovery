@@ -10,6 +10,8 @@ namespace Rediscovery
 {
     public partial class App : Application
     {
+        // TODO: https://github.com/xamarin/XamarinCommunityToolkit
+
         public static SharedBase.Core.Version ClientVersion = new SharedBase.Core.Version() { Label = null, Major = 0, Minor = 0, Patch = 0 };
         private IConnectService connect => DependencyService.Get<IConnectService>() ?? new ConnectService();
         private Features.DesktopFeatures.IClientFeatureService clientFeatureService => DependencyService.Get<Features.DesktopFeatures.IClientFeatureService>() ?? new Features.DesktopFeatures.ClientFeatureService();
