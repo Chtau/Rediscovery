@@ -1,4 +1,5 @@
 ﻿using Rediscovery.Features.DesktopConfiguration;
+using SharedBase.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,5 +14,6 @@ namespace Rediscovery.Features.Connection
         void Disconnect(DesktopConfigurationModel desktopConfigurationModel, Action<bool> resultCallback);
         CommunicationHeartbeatConsumer.RoundTripResult GetHeartbeat(Guid desktopConfigurationId);
         event EventHandler<Guid> HeartbeatStateChanges;
+        void InvokeLogEntry(LoggerEntry loggerEntry);
     }
 }

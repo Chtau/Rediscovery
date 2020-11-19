@@ -283,5 +283,18 @@ namespace Rediscovery.Features.Connection
             OnUpdateDesktopConfiguration(desktopConfigurationModel, null, SharedBase.Connection.Enums.ConnectionState.None);
             resultCallback?.Invoke(true);
         }
+
+        public void InvokeLogEntry(LoggerEntry loggerEntry)
+        {
+            try
+            {
+                consumer?.LoggerConsumer?.LogEntry(loggerEntry);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError(ex.ToString());
+                //_logger.LogError(ex);
+            }
+        }
     }
 }
