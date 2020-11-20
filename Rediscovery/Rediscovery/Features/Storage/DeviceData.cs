@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Rediscovery.Services;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
-[assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Services.DeviceData))]
-namespace Rediscovery.Services
+[assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.Storage.DeviceData))]
+namespace Rediscovery.Features.Storage
 {
     public class DeviceData : IDeviceData
     {

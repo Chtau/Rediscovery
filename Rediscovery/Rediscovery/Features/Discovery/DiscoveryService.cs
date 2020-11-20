@@ -1,5 +1,7 @@
 ﻿using Rediscovery.Features.Settings;
 using Rediscovery.Features.Settings.Models;
+using Rediscovery.Features.Storage;
+using Rediscovery.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +12,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-[assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Services.DiscoveryService))]
-namespace Rediscovery.Services
+[assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.Discovery.DiscoveryService))]
+namespace Rediscovery.Features.Discovery
 {
     public class DiscoveryService : BaseService, IDiscoveryService
     {

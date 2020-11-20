@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Rediscovery.Services
+namespace Rediscovery.Features.Storage
 {
     public interface IDataStore<T>
     {

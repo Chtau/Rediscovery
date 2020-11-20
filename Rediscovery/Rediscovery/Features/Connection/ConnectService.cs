@@ -1,6 +1,7 @@
 ﻿using CommunicationBase;
 using Rediscovery.Features.Connection.Models;
 using Rediscovery.Features.DesktopConfiguration;
+using Rediscovery.Features.Storage;
 using Rediscovery.Services;
 using SharedBase.Logging;
 using System;

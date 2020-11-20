@@ -1,5 +1,6 @@
 ﻿using AngleSharp;
 using Rediscovery.Features.Connection;
+using Rediscovery.Features.Storage;
 using Rediscovery.Services;
 using SharedBase.Feature;
 using System;

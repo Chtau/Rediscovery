@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Services
+namespace Rediscovery.Features.Storage
 {
     public interface IJSONStore
     {

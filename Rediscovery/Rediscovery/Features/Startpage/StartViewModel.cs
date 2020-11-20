@@ -1,5 +1,6 @@
 ﻿using Rediscovery.Features.Connection;
 using Rediscovery.Features.DesktopConfiguration;
+using Rediscovery.Features.Storage;
 using Rediscovery.Models;
 using Rediscovery.Services;
 using Rediscovery.ViewModels;

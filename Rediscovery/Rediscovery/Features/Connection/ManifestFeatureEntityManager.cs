@@ -6,6 +6,7 @@ using Xamarin.Forms;
 using System.Threading.Tasks;
 using Rediscovery.Services;
 using System.Threading;
+using Rediscovery.Features.Storage;
 
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.Connection.ManifestFeatureEntityManager))]
 namespace Rediscovery.Features.Connection

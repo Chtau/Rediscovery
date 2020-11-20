@@ -10,6 +10,7 @@ using Xamarin.Forms;
 using System.Linq;
 using System.Security.Cryptography;
 using Xamarin.Essentials;
+using Rediscovery.Features.Storage;
 
 namespace Rediscovery.Features.Settings
 {

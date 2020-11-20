@@ -4,7 +4,7 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="Rediscovery.Features.DesktopConfiguration.DiscoveryDevicesPage"
+             x:Class="Rediscovery.Features.Discovery.DiscoveryDevicesPage"
              Title="Discover devices in the Network">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Back" Clicked="Back_Clicked" Icon="close_white.png"/>

@@ -9,6 +9,7 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using System.Linq;
 using Rediscovery.Features.Connection;
+using Rediscovery.Features.Storage;
 
 namespace Rediscovery.Features.DesktopConfiguration
 {

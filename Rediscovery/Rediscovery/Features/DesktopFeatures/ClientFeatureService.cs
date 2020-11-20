@@ -1,4 +1,5 @@
 ﻿using Rediscovery.Features.Connection;
+using Rediscovery.Features.Storage;
 using Rediscovery.Services;
 using System;
 using System.Collections.Generic;

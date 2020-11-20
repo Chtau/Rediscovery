@@ -1,4 +1,6 @@
-﻿using Rediscovery.Services;
+﻿using Rediscovery.Features.DesktopConfiguration;
+using Rediscovery.Features.Storage;
+using Rediscovery.Services;
 using SharedBase.Connection;
 using SharedBase.Discovery;
 using System;
@@ -10,7 +12,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Rediscovery.Features.DesktopConfiguration
+namespace Rediscovery.Features.Discovery
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DiscoveryDevicesPage : ContentPage

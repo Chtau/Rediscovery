@@ -71,7 +71,7 @@
     <EmbeddedResource Update="Features\DesktopConfiguration\DesktopConfigurationPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Features\DesktopConfiguration\DiscoveryDevicesPage.xaml">
+    <EmbeddedResource Update="Features\Discovery\DiscoveryDevicesPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Features\DesktopFeatures\ClientFeatureSelectionPage.xaml">

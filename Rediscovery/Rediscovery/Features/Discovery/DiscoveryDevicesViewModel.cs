@@ -1,4 +1,5 @@
-﻿using Rediscovery.Services;
+﻿using Rediscovery.Features.Discovery;
+using Rediscovery.Services;
 using Rediscovery.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -8,11 +9,11 @@ using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
 
-namespace Rediscovery.Features.DesktopConfiguration
+namespace Rediscovery.Features.Discovery
 {
     public class DiscoveryDevicesViewModel : BaseViewModel
     {
-        private Services.IDiscoveryService discoveryService => DependencyService.Get<Services.IDiscoveryService>() ?? new Services.DiscoveryService();
+        private IDiscoveryService discoveryService => DependencyService.Get<IDiscoveryService>() ?? new DiscoveryService();
         public ObservableCollection<SharedBase.Discovery.DiscoveryServiceInfo> FoundDevices { get; set; } = new ObservableCollection<SharedBase.Discovery.DiscoveryServiceInfo>();
 
         public ICommand DiscoveryCommand { get; set; }

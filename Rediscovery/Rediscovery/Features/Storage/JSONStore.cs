@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Rediscovery.Services;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-[assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Services.JSONStore))]
-namespace Rediscovery.Services
+[assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Features.Storage.JSONStore))]
+namespace Rediscovery.Features.Storage
 {
     public class JSONStore : BaseService, IJSONStore
     {
