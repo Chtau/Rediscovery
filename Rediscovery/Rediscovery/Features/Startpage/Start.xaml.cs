@@ -21,7 +21,7 @@ namespace Rediscovery.Features.Startpage
 
         MainPage RootPage { get => Application.Current.MainPage as MainPage; }
 
-        internal Services.ILoggerEvent _logger => DependencyService.Get<Services.ILoggerEvent>() ?? new Services.Logger();
+        internal SharedBase.Logging.ILogger _logger => DependencyService.Get<SharedBase.Logging.ILogger>() ?? new Services.Logger();
         private Features.DesktopFeatures.IClientFeatureService clientFeatureService => DependencyService.Get<Features.DesktopFeatures.IClientFeatureService>() ?? new Features.DesktopFeatures.ClientFeatureService();
         StartViewModel viewModel;
 

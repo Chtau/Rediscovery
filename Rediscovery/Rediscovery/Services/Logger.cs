@@ -8,12 +8,9 @@ using Xamarin.Forms;
 [assembly: Xamarin.Forms.Dependency(typeof(Rediscovery.Services.Logger))]
 namespace Rediscovery.Services
 {
-    public class Logger : ILoggerEvent
+    public class Logger : ILogger
     {
         private IConnectService connectService => DependencyService.Get<IConnectService>();
-
-        [Obsolete]
-        public event EventHandler<LoggerEntry> EntryAdded;
 
         public void LogCritical(string message, params object[] args)
         {

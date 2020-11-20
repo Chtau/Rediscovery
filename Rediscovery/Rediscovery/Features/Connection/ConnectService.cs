@@ -20,7 +20,6 @@ namespace Rediscovery.Features.Connection
         private IManifestFeatureEntityManager entityManager => DependencyService.Get<IManifestFeatureEntityManager>() ?? new ManifestFeatureEntityManager();
         private IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel> desktopStore => DependencyService.Get<IDataStoreGuid<DesktopConfiguration.DesktopConfigurationModel>>() ?? new DesktopConfiguration.DesktopConfigurationStore();
         private IDeviceData deviceData => DependencyService.Get<IDeviceData>() ?? new DeviceData();
-        private ILoggerEvent loggerEvent => DependencyService.Get<ILoggerEvent>() ?? new Services.Logger();
 
         private readonly Dictionary<Guid, ConnectConfigurationData> _desktopConfigurationData = new Dictionary<Guid, ConnectConfigurationData>();
         private readonly Dictionary<Guid, CommunicationHeartbeatConsumer.RoundTripResult> _lastHeartbeatStates = new Dictionary<Guid, CommunicationHeartbeatConsumer.RoundTripResult>();
@@ -29,12 +28,7 @@ namespace Rediscovery.Features.Connection
 
         public ConnectService()
         {
-            loggerEvent.EntryAdded += LoggerEvent_EntryAdded;
-        }
-
-        private void LoggerEvent_EntryAdded(object sender, LoggerEntry e)
-        {
-            consumer?.LoggerConsumer?.LogEntry(e);
+            
         }
 
         public CommunicationHeartbeatConsumer.RoundTripResult GetHeartbeat(Guid desktopConfigurationId)

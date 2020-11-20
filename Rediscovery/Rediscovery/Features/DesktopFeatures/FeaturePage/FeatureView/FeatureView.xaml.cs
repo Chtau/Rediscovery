@@ -18,7 +18,7 @@ namespace Rediscovery.Features.DesktopFeatures.FeaturePage.FeatureView
         private FeatureViewViewModel viewModel;
 
         private IFeatureService featureUIService => DependencyService.Get<IFeatureService>() ?? new FeatureService();
-        internal Services.ILoggerEvent _logger => DependencyService.Get<Services.ILoggerEvent>() ?? new Services.Logger();
+        internal SharedBase.Logging.ILogger _logger => DependencyService.Get<SharedBase.Logging.ILogger>() ?? new Services.Logger();
 
         public FeatureView(Guid desktopConfigId, Features.Connection.Models.ConnectionManifestFeature connectionManifestFeature)
         {

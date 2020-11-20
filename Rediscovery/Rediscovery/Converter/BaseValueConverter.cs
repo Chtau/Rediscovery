@@ -8,7 +8,7 @@ namespace Rediscovery.Converter
 {
     public abstract class BaseValueConverter : IValueConverter
     {
-        internal Services.ILoggerEvent _logger => DependencyService.Get<Services.ILoggerEvent>() ?? new Services.Logger();
+        internal SharedBase.Logging.ILogger _logger => DependencyService.Get<SharedBase.Logging.ILogger>() ?? new Services.Logger();
 
         public virtual object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

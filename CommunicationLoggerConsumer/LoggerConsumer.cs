@@ -145,7 +145,6 @@ namespace CommunicationLoggerConsumer
                     default:
                         break;
                 }
-                //_requestStream.WriteOptions = new WriteOptions(WriteFlags.BufferHint);
                 await _requestStream.WriteAsync(new Logger.LogEntry
                 {
                     Id = loggerEntry.Id,
@@ -164,52 +163,6 @@ namespace CommunicationLoggerConsumer
         public void LogEntry(LoggerEntry loggerEntry)
         {
             concurrentQueue.Enqueue(loggerEntry);
-            return;
-            if (_requestStream == null)
-                return;
-            Task.Run(async () =>
-            {
-                try
-                {
-                    var logLevel = Logger.LogEntry.Types.LoggerType.Information;
-                    switch (loggerEntry.LogLevel)
-                    {
-                        case LoggerEntry.LoggerType.Trace:
-                            logLevel = Logger.LogEntry.Types.LoggerType.Trace;
-                            break;
-                        case LoggerEntry.LoggerType.Debug:
-                            logLevel = Logger.LogEntry.Types.LoggerType.Debug;
-                            break;
-                        case LoggerEntry.LoggerType.Information:
-                            logLevel = Logger.LogEntry.Types.LoggerType.Information;
-                            break;
-                        case LoggerEntry.LoggerType.Warning:
-                            logLevel = Logger.LogEntry.Types.LoggerType.Warning;
-                            break;
-                        case LoggerEntry.LoggerType.Error:
-                            logLevel = Logger.LogEntry.Types.LoggerType.Error;
-                            break;
-                        case LoggerEntry.LoggerType.Critical:
-                            logLevel = Logger.LogEntry.Types.LoggerType.Critical;
-                            break;
-                        default:
-                            break;
-                    }
-                    _requestStream.WriteOptions = new WriteOptions(WriteFlags.BufferHint);
-                    await _requestStream.WriteAsync(new Logger.LogEntry
-                    {
-                        Id = loggerEntry.Id,
-                        LoggerType = logLevel,
-                        Message = loggerEntry.Message,
-                        Module = loggerEntry.Module,
-                        Time = loggerEntry.Time.DatetimeTicksLong(),
-                    });
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogException(ex);
-                }
-            });
         }
 
         public void LoggerCommand(string token, LogCommandConfig logCommandConfig)
