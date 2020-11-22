@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
-using AppControlPanel.ViewModels;
-using AppControlPanel.Views;
+using Rediscovery.Client.App.ControlPanel.ViewModels;
+using Rediscovery.Client.App.ControlPanel.Views;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -10,9 +10,9 @@ using Avalonia.ReactiveUI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AppControlPanel
+namespace Rediscovery.Client.App.ControlPanel
 {
-    class Program
+    static class Program
     {
         public static IServiceProvider ServiceProvider { get; private set; }
         public static IConfigurationRoot Configuration { get; private set; }

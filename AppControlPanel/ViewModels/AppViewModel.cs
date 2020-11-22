@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AppControlPanel.ViewModels
+namespace Rediscovery.Client.App.ControlPanel.ViewModels
 {
     public class AppViewModel : ViewModelBase
     {

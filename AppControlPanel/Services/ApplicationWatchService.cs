@@ -1,4 +1,4 @@
-﻿using AppControlPanel.ViewModels;
+﻿using Rediscovery.Client.App.ControlPanel.ViewModels;
 using SharedConfigurations.AppControlPanel.Models;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Linq;
 
-namespace AppControlPanel.Services
+namespace Rediscovery.Client.App.ControlPanel.Services
 {
     public class ApplicationWatchService : IApplicationWatchService
     {

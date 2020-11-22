@@ -1,10 +1,10 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using AppControlPanel.ViewModels;
-using AppControlPanel.Views;
+using Rediscovery.Client.App.ControlPanel.ViewModels;
+using Rediscovery.Client.App.ControlPanel.Views;
 
-namespace AppControlPanel
+namespace Rediscovery.Client.App.ControlPanel
 {
     public class App : Application
     {

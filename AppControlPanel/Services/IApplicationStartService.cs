@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AppControlPanel.Services
+namespace Rediscovery.Client.App.ControlPanel.Services
 {
     public interface IApplicationStartService
     {

@@ -1,9 +1,9 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using AppControlPanel.ViewModels;
+using Rediscovery.Client.App.ControlPanel.ViewModels;
 
-namespace AppControlPanel
+namespace Rediscovery.Client.App.ControlPanel
 {
     public class ViewLocator : IDataTemplate
     {

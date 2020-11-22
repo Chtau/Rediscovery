@@ -2,7 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace AppControlPanel.Views
+namespace Rediscovery.Client.App.ControlPanel.Views
 {
     public class MainWindow : Window
     {

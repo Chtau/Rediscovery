@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using ReactiveUI;
 
-namespace AppControlPanel.ViewModels
+namespace Rediscovery.Client.App.ControlPanel.ViewModels
 {
     public class ViewModelBase : ReactiveObject
     {

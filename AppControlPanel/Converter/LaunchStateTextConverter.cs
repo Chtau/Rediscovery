@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
-namespace AppControlPanel.Converter
+namespace Rediscovery.Client.App.ControlPanel.Converter
 {
     public class LaunchStateTextConverter : IValueConverter
     {

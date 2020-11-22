@@ -7,7 +7,7 @@ using ReactiveUI;
 using System.Reactive;
 using System.Threading.Tasks;
 
-namespace AppControlPanel.ViewModels
+namespace Rediscovery.Client.App.ControlPanel.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {

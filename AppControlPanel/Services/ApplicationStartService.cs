@@ -6,7 +6,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
-namespace AppControlPanel.Services
+namespace Rediscovery.Client.App.ControlPanel.Services
 {
     public class ApplicationStartService : IApplicationStartService
     {
