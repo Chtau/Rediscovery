@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Linq;
 
-namespace SharedConfigurations
+namespace Rediscovery.Shared.Configurations
 {
     public static class RemoteConfiguration
     {

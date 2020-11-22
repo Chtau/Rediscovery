@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedConfigurations.AppControlPanel.Models
+namespace Rediscovery.Shared.Configurations.ControlPanel.Models
 {
     public class AppModel
     {

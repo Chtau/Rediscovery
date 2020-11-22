@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
@@ -24,7 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RediscoveryManager.Service\Rediscovery.Client.App.Manager.csproj" />
-    <ProjectReference Include="..\SharedConfigurations\SharedConfigurations.csproj" />
+    <ProjectReference Include="..\SharedConfigurations\Rediscovery.Shared.Configurations.csproj" />
     <ProjectReference Include="..\SharedFeatureFunctions\SharedFeatureFunctions.csproj" />
   </ItemGroup>
   <ItemGroup>

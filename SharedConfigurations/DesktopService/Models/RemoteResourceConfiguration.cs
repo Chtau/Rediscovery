@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedConfigurations.DesktopService.Models
+namespace Rediscovery.Shared.Configurations.Service.Models
 {
     public class RemoteResourceConfiguration
     {

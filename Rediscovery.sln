@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.Service.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.App.Firewall.Console", "DesktopFirewall\Rediscovery.Client.App.Firewall.Console.csproj", "{45CF8CDC-3832-4F01-97B3-E64379BFD3EA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedConfigurations", "SharedConfigurations\SharedConfigurations.csproj", "{EF80B5C2-4413-48FA-B638-B2122E97F34B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Shared.Configurations", "SharedConfigurations\Rediscovery.Shared.Configurations.csproj", "{EF80B5C2-4413-48FA-B638-B2122E97F34B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Shared.Arguments", "SharedCommandArguments\Rediscovery.Shared.Arguments.csproj", "{A1A10784-1C3A-423B-96F3-E494D1047491}"
 EndProject

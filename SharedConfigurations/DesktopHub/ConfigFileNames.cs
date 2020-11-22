@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedConfigurations.DesktopHub
+namespace Rediscovery.Shared.Configurations.DesktopHub
 {
     public static class ConfigFileNames
     {

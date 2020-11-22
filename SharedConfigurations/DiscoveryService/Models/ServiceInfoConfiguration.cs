@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedConfigurations.DiscoveryService.Models
+namespace Rediscovery.Shared.Configurations.Discovery.Models
 {
     public class ServiceInfoConfiguration
     {

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
@@ -39,7 +39,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharedConfigurations\SharedConfigurations.csproj" />
+    <ProjectReference Include="..\SharedConfigurations\Rediscovery.Shared.Configurations.csproj" />
     <ProjectReference Include="..\SharedFeatureFunctions\SharedFeatureFunctions.csproj" />
   </ItemGroup>
   <ItemGroup>

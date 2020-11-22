@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedConfigurations.Hub.Models
+namespace Rediscovery.Shared.Configurations.Hub.Models
 {
     public class HubConfiguration
     {

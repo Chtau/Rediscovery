@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedConfigurations.RediscoveryManager
+namespace Rediscovery.Shared.Configurations.Manager
 {
     public static class ConfigFileNames
     {

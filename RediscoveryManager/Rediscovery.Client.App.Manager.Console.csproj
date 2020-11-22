@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RediscoveryManager.Service\Rediscovery.Client.App.Manager.csproj" />
-    <ProjectReference Include="..\SharedConfigurations\SharedConfigurations.csproj" />
+    <ProjectReference Include="..\SharedConfigurations\Rediscovery.Shared.Configurations.csproj" />
   </ItemGroup>
 
   <ItemGroup>

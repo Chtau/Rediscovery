@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedConfigurations.RediscoveryManager.Models
+namespace Rediscovery.Shared.Configurations.Manager.Models
 {
     public class ConnectionConfiguration
     {
