@@ -53,7 +53,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CertificateService\Service.Certificate.csproj" />
+    <ProjectReference Include="..\CertificateService\Rediscovery.Service.Certificate.csproj" />
     <ProjectReference Include="..\CommunicationAuthenticationProvider\CommunicationAuthenticationProvider.csproj" />
     <ProjectReference Include="..\CommunicationFeatureProvider\CommunicationFeatureProvider.csproj" />
     <ProjectReference Include="..\CommunicationHearthbeatProvider\CommunicationHeartbeatProvider.csproj" />

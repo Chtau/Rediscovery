@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>Rediscovery.Client.App.Shared</RootNamespace>
-    <AssemblyName>ClientAppShared</AssemblyName>
+    <AssemblyName>Rediscovery.Client.App.Shared</AssemblyName>
   </PropertyGroup>
 
 </Project>

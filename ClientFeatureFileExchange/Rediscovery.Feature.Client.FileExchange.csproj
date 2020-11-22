@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -8,6 +8,8 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/Chtau/Rediscovery</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Chtau/Rediscovery</RepositoryUrl>
+    <RootNamespace>Rediscovery.Feature.Client.FileExchange</RootNamespace>
+    <AssemblyName>Rediscovery.Feature.Client.FileExchange</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

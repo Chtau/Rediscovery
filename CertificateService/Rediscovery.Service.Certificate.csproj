@@ -9,7 +9,7 @@
     <PackageProjectUrl>https://github.com/Chtau/Rediscovery</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Chtau/Rediscovery</RepositoryUrl>
     <RootNamespace>Rediscovery.Service.Certificate</RootNamespace>
-    <AssemblyName>ServiceCertificate</AssemblyName>
+    <AssemblyName>Rediscovery.Service.Certificate</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

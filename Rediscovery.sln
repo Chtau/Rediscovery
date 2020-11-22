@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedCommandArguments", "S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PluginFeature", "PluginFeature\PluginFeature.csproj", "{D2FD1E6D-19D0-43DE-A3A5-376C7A83429A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.App.ControlPanel", "AppControlPanel\Client.App.ControlPanel.csproj", "{7F62F8C0-D13D-4A2B-8CB7-13C719C0CABF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.App.ControlPanel", "AppControlPanel\Rediscovery.Client.App.ControlPanel.csproj", "{7F62F8C0-D13D-4A2B-8CB7-13C719C0CABF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationResourceConsumer", "Communication\CommunicationResourceConsumer.csproj", "{34CEE8B3-475B-4704-9B8C-06F237B51193}"
 EndProject
@@ -41,7 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationBase", "Commun
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedBase", "SharedModels\SharedBase.csproj", "{FC34856C-FE50-49CE-812E-053F9F5193FF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Certificate", "CertificateService\Service.Certificate.csproj", "{5EB7142F-4969-4B1C-A8AD-F4C526701412}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Service.Certificate", "CertificateService\Rediscovery.Service.Certificate.csproj", "{5EB7142F-4969-4B1C-A8AD-F4C526701412}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationFeatureProvider", "CommunicationFeatureProvider\CommunicationFeatureProvider.csproj", "{31BA226D-53DD-4F43-A001-F79D8766C412}"
 EndProject
@@ -59,7 +59,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RediscoveryManager", "Redis
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RediscoveryManager.Service", "RediscoveryManager.Service\RediscoveryManager.Service.csproj", "{D07422C4-6403-429D-8381-5B3CA8472F6B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientFeatureFileExchange", "ClientFeatureFileExchange\ClientFeatureFileExchange.csproj", "{206CE889-7F47-4D9D-833B-1F0651340F39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Feature.Client.FileExchange", "ClientFeatureFileExchange\Rediscovery.Feature.Client.FileExchange.csproj", "{206CE889-7F47-4D9D-833B-1F0651340F39}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RediscoveryManager.GUI", "RediscoveryManager.GUI\RediscoveryManager.GUI.csproj", "{FD064DEB-6858-44A3-BE20-EB42F4633410}"
 EndProject
@@ -71,7 +71,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientFeatureFileExchangeUI
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppMobileAndroid", "AppMobileAndroid\AppMobileAndroid.csproj", "{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.App.Shared", "App.Client.Shared\Client.App.Shared.csproj", "{9E17C536-E7AB-4FFD-87C3-A2D40C93DFDF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rediscovery.Client.App.Shared", "App.Client.Shared\Rediscovery.Client.App.Shared.csproj", "{9E17C536-E7AB-4FFD-87C3-A2D40C93DFDF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
