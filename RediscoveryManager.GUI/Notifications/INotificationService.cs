@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RediscoveryManager.GUI.Notifications
+namespace Rediscovery.Client.App.Manager.GUI.Notifications
 {
     public interface INotificationService
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.Text;
 
-namespace RediscoveryManager.GUI.Shared
+namespace Rediscovery.Client.App.Manager.GUI.Shared
 {
     public interface ISharedEvents
     {

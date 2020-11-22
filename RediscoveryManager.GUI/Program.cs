@@ -7,12 +7,11 @@ using Avalonia.Logging.Serilog;
 using Avalonia.ReactiveUI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RediscoveryManager.GUI.ViewModels;
-using RediscoveryManager.GUI.Views;
-using RediscoveryManager.Service;
+using Rediscovery.Client.App.Manager.GUI.ViewModels;
+using Rediscovery.Client.App.Manager.GUI.Views;
 using Splat;
 
-namespace RediscoveryManager.GUI
+namespace Rediscovery.Client.App.Manager.GUI
 {
     public static class Program
     {

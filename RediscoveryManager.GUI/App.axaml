@@ -1,8 +1,8 @@
 ﻿<Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:RediscoveryManager.GUI"
-             xmlns:converter="clr-namespace:RediscoveryManager.GUI.Converter"
-             x:Class="RediscoveryManager.GUI.App">
+             xmlns:local="clr-namespace:Rediscovery.Client.App.Manager.GUI"
+             xmlns:converter="clr-namespace:Rediscovery.Client.App.Manager.GUI.Converter"
+             x:Class="Rediscovery.Client.App.Manager.GUI.App">
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>

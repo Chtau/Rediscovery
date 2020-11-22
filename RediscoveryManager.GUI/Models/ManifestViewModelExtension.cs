@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using ReactiveUI;
-using RediscoveryManager.GUI.ViewModels;
+using Rediscovery.Client.App.Manager.GUI.ViewModels;
 
-namespace RediscoveryManager.GUI.Models
+namespace Rediscovery.Client.App.Manager.GUI.Models
 {
     public class ManifestViewModelExtension : ViewModelBase
     {

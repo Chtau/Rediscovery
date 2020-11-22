@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="RediscoveryManager.GUI.Pages.PendingDevices">
+             x:Class="Rediscovery.Client.App.Manager.GUI.Pages.PendingDevices">
   <ScrollViewer Name="scroller" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
     <ItemsRepeater Name="repeater" Background="Transparent" Items="{Binding Items}">
       <ItemsRepeater.ItemTemplate>

@@ -4,7 +4,7 @@ using Avalonia.Controls.Notifications;
 using ReactiveUI;
 
 
-namespace RediscoveryManager.GUI.Notifications
+namespace Rediscovery.Client.App.Manager.GUI.Notifications
 {
     public class NotificationViewModel
     {

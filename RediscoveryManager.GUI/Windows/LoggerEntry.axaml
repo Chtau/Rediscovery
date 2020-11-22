@@ -3,7 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         Width="400" Height="300"
-        x:Class="RediscoveryManager.GUI.Windows.LoggerEntry"
+        x:Class="Rediscovery.Client.App.Manager.GUI.Windows.LoggerEntry"
         WindowStartupLocation="CenterOwner"
         Title="Log entry">
   <Grid>

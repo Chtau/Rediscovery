@@ -1,5 +1,4 @@
 ﻿using ReactiveUI;
-using RediscoveryManager.Service;
 using Splat;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RediscoveryManager.GUI.ViewModels
+namespace Rediscovery.Client.App.Manager.GUI.ViewModels
 {
     public class LoggerViewModel : ViewModelBase
     {

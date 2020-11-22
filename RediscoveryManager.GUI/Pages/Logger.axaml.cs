@@ -4,7 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 
-namespace RediscoveryManager.GUI.Pages
+namespace Rediscovery.Client.App.Manager.GUI.Pages
 {
     public class Logger : UserControl
     {

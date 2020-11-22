@@ -3,7 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Splat;
 
-namespace RediscoveryManager.GUI.Views
+namespace Rediscovery.Client.App.Manager.GUI.Views
 {
     public class MainWindow : Window
     {

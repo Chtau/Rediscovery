@@ -1,14 +1,13 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using ReactiveUI;
-using RediscoveryManager.Service;
 using Splat;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RediscoveryManager.GUI.ViewModels
+namespace Rediscovery.Client.App.Manager.GUI.ViewModels
 {
     public class StatusViewModel : ViewModelBase
     {

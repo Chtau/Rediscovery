@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RediscoveryManager.GUI.Shared
+namespace Rediscovery.Client.App.Manager.GUI.Shared
 {
     public class SharedEvents : ISharedEvents
     {

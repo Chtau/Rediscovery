@@ -2,7 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace RediscoveryManager.GUI.Pages
+namespace Rediscovery.Client.App.Manager.GUI.Pages
 {
     public class ActiveDevices : UserControl
     {

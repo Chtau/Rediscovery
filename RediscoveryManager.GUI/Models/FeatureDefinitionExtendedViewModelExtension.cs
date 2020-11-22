@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RediscoveryManager.GUI.Models
+namespace Rediscovery.Client.App.Manager.GUI.Models
 {
     public class FeatureDefinitionExtendedViewModelExtension : SharedBase.Device.FeatureDefinitionExtended
     {

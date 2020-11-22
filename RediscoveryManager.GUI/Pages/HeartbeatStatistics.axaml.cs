@@ -7,7 +7,7 @@ using SharedBase.Statistics;
 using System;
 using System.Collections.Generic;
 
-namespace RediscoveryManager.GUI.Pages
+namespace Rediscovery.Client.App.Manager.GUI.Pages
 {
     public class HeartbeatStatistics : UserControl
     {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
-namespace RediscoveryManager.GUI.Converter
+namespace Rediscovery.Client.App.Manager.GUI.Converter
 {
     public class ConnectionStateColorConverter : IValueConverter
     {

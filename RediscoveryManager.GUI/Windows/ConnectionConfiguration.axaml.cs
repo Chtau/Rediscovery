@@ -1,9 +1,9 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using RediscoveryManager.GUI.ViewModels;
+using Rediscovery.Client.App.Manager.GUI.ViewModels;
 
-namespace RediscoveryManager.GUI.Windows
+namespace Rediscovery.Client.App.Manager.GUI.Windows
 {
     public class ConnectionConfiguration : Window
     {

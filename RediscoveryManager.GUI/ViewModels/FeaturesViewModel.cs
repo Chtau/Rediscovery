@@ -1,6 +1,5 @@
 ﻿using ReactiveUI;
-using RediscoveryManager.GUI.Models;
-using RediscoveryManager.Service;
+using Rediscovery.Client.App.Manager.GUI.Models;
 using SharedFeatureFunctions;
 using Splat;
 using System;
@@ -8,7 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 
-namespace RediscoveryManager.GUI.ViewModels
+namespace Rediscovery.Client.App.Manager.GUI.ViewModels
 {
     public class FeaturesViewModel : ViewModelBase
     {

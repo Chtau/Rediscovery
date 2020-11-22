@@ -1,13 +1,13 @@
 ﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="clr-namespace:RediscoveryManager.GUI.ViewModels;assembly=RediscoveryManager.GUI"
-        xmlns:pages="clr-namespace:RediscoveryManager.GUI.Pages"
-        xmlns:notification="clr-namespace:RediscoveryManager.GUI.Notifications"
+        xmlns:vm="clr-namespace:Rediscovery.Client.App.Manager.GUI.ViewModels;assembly=Rediscovery.Client.App.Manager.GUI"
+        xmlns:pages="clr-namespace:Rediscovery.Client.App.Manager.GUI.Pages"
+        xmlns:notification="clr-namespace:Rediscovery.Client.App.Manager.GUI.Notifications"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" 
         Width="550" Height="400"
-        x:Class="RediscoveryManager.GUI.Views.MainWindow"
+        x:Class="Rediscovery.Client.App.Manager.GUI.Views.MainWindow"
         Icon="/Assets/rediscovery.ico"
         Title="Rediscovery Manager">
 

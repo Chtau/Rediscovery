@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="RediscoveryManager.GUI.Pages.Manifest">
+             x:Class="Rediscovery.Client.App.Manager.GUI.Pages.Manifest">
   <StackPanel>
     <Border Margin="5, 5, 5, 0" Background="{DynamicResource PrimaryLightBrush}" BorderThickness="2" BorderBrush="{DynamicResource PrimaryBrush}">
       <Grid Margin="5">

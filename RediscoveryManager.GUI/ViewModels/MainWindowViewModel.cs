@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace RediscoveryManager.GUI.ViewModels
+namespace Rediscovery.Client.App.Manager.GUI.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {

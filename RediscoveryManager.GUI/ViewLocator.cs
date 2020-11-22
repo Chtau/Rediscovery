@@ -1,9 +1,9 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using RediscoveryManager.GUI.ViewModels;
+using Rediscovery.Client.App.Manager.GUI.ViewModels;
 
-namespace RediscoveryManager.GUI
+namespace Rediscovery.Client.App.Manager.GUI
 {
     public class ViewLocator : IDataTemplate
     {

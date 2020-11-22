@@ -2,7 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace RediscoveryManager.GUI.Notifications
+namespace Rediscovery.Client.App.Manager.GUI.Notifications
 {
     public class NotificationView : UserControl
     {
