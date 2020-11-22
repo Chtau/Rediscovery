@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DALDesktopService
+namespace Rediscovery.Service.DAL
 {
     public interface IDBContext
     {

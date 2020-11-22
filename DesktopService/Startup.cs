@@ -3,7 +3,6 @@ using CommunicationFeatureProvider;
 using CommunicationHeartbeatProvider;
 using CommunicationLoggerProvider;
 using CommunicationResourceProvider;
-using DALDesktopService;
 using Rediscovery.Client.App.Service.Features.Authentication;
 using Rediscovery.Client.App.Service.Features.DeviceFeature;
 using Rediscovery.Client.App.Service.Features.Logger;
@@ -15,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using Rediscovery.Service.Certificate;
+using Rediscovery.Service.DAL;
 
 namespace Rediscovery.Client.App.Service
 {
@@ -74,7 +74,7 @@ namespace Rediscovery.Client.App.Service
             services.AddSingleton<IFeatureService, FeatureService>();
             services.AddSingleton<IRoleResolver, RoleResolver>();
             services.AddSingleton<Features.Configuration.IDistributeConfig, Features.Configuration.DistributeConfig>();
-            services.AddSingleton<PluginFeature.Interfaces.IPluginLogger, Features.PluginLogger.PluginLogger>();
+            services.AddSingleton<Feature.Plugin.Interfaces.IPluginLogger, Features.PluginLogger.PluginLogger>();
 
             services.AddSingleton<Features.Plugins.ILoadPlugins, Features.Plugins.LoadPlugins>();
         }

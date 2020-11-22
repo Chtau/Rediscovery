@@ -1,11 +1,11 @@
-﻿using DALDesktopService.Models;
+﻿using Rediscovery.Service.DAL.Models;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DALDesktopService.Repository
+namespace Rediscovery.Service.DAL.Repository
 {
     public class DevicePendingAuthenticationRepository : IDevicePendingAuthenticationRepository
     {

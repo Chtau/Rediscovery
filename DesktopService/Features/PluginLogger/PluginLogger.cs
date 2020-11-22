@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
-using PluginFeature.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Rediscovery.Feature.Plugin.Interfaces;
 
 namespace Rediscovery.Client.App.Service.Features.PluginLogger
 {

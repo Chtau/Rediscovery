@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DALDesktopService
+namespace Rediscovery.Service.DAL
 {
     public static class DALDesktopServiceExtensions
     {

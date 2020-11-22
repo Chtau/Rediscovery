@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DALDesktopService.Models
+namespace Rediscovery.Service.DAL.Models
 {
     public class DevicePendingAuthentication : DeviceMetadata
     {
