@@ -10,6 +10,8 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/Chtau/Rediscovery</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Chtau/Rediscovery</RepositoryUrl>
+    <RootNamespace>Rediscovery.Client.App.ControlPanel</RootNamespace>
+    <AssemblyName>RediscoveryControlPanel</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Models\" />

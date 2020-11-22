@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedCommandArguments", "S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PluginFeature", "PluginFeature\PluginFeature.csproj", "{D2FD1E6D-19D0-43DE-A3A5-376C7A83429A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppControlPanel", "AppControlPanel\AppControlPanel.csproj", "{7F62F8C0-D13D-4A2B-8CB7-13C719C0CABF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.App.ControlPanel", "AppControlPanel\Client.App.ControlPanel.csproj", "{7F62F8C0-D13D-4A2B-8CB7-13C719C0CABF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationResourceConsumer", "Communication\CommunicationResourceConsumer.csproj", "{34CEE8B3-475B-4704-9B8C-06F237B51193}"
 EndProject
@@ -71,7 +71,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientFeatureFileExchangeUI
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppMobileAndroid", "AppMobileAndroid\AppMobileAndroid.csproj", "{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Client.Shared", "App.Client.Shared\App.Client.Shared.csproj", "{9E17C536-E7AB-4FFD-87C3-A2D40C93DFDF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.App.Shared", "App.Client.Shared\Client.App.Shared.csproj", "{9E17C536-E7AB-4FFD-87C3-A2D40C93DFDF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace>Rediscovery.Client.App.Shared</RootNamespace>
+    <AssemblyName>ClientAppShared</AssemblyName>
+  </PropertyGroup>
+
+</Project>
