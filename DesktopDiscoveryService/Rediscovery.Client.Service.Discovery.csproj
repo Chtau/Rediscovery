@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -22,7 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SharedConfigurations\SharedConfigurations.csproj" />
     <ProjectReference Include="..\SharedFeatureFunctions\SharedFeatureFunctions.csproj" />
-    <ProjectReference Include="..\SharedModels\SharedBase.csproj" />
+    <ProjectReference Include="..\SharedModels\Rediscovery.Shared.Base.csproj" />
   </ItemGroup>
 
   <ItemGroup>

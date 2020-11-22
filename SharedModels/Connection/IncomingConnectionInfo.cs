@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedBase.Connection
+namespace Rediscovery.Shared.Base.Connection
 {
     public class IncomingConnectionInfo
     {

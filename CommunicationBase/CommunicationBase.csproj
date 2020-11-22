@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SharedModels\SharedBase.csproj" />
+    <ProjectReference Include="..\SharedModels\Rediscovery.Shared.Base.csproj" />
   </ItemGroup>
 
   <ItemGroup>

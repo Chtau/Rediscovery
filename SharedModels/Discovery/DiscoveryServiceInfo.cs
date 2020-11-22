@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedBase.Discovery
+namespace Rediscovery.Shared.Base.Discovery
 {
     public class DiscoveryServiceInfo
     {

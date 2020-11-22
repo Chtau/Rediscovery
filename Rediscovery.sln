@@ -39,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Service.DAL", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationBase", "CommunicationBase\CommunicationBase.csproj", "{54D3ED5B-3BCB-4872-850F-5F5B3B422FE3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedBase", "SharedModels\SharedBase.csproj", "{FC34856C-FE50-49CE-812E-053F9F5193FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Shared.Base", "SharedModels\Rediscovery.Shared.Base.csproj", "{FC34856C-FE50-49CE-812E-053F9F5193FF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Service.Certificate", "CertificateService\Rediscovery.Service.Certificate.csproj", "{5EB7142F-4969-4B1C-A8AD-F4C526701412}"
 EndProject

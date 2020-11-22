@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedBase.Statistics
+namespace Rediscovery.Shared.Base.Statistics
 {
     public class HeartbeatStatisticItem
     {

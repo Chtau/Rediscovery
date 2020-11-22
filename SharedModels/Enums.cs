@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedBase
+namespace Rediscovery.Shared.Base
 {
     public static class Enums
     {

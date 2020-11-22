@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedBase.Core
+namespace Rediscovery.Shared.Base.Core
 {
     public class Version
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedBase.Device
+namespace Rediscovery.Shared.Base.Device
 {
     public class FeatureDefinitionExtended : FeatureDefinition, IFeatureMetadataDefinition, 
         IFeatureProfileDefinition, IFeatureSettingDefinition, IFeatureIntegrationDefinition

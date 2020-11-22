@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedBase.Logging
+namespace Rediscovery.Shared.Base.Logging
 {
     public class LoggerEntry
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 
-namespace SharedBase.Logging
+namespace Rediscovery.Shared.Base.Logging
 {
     [Obsolete("Should use EventLoggerProvider for remote logging")]
     public sealed class DiagnosticsLoggerProvider : ILogger

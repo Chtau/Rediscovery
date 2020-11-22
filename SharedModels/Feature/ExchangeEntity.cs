@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedBase.Feature
+namespace Rediscovery.Shared.Base.Feature
 {
     public class ExchangeEntity<T>
     {

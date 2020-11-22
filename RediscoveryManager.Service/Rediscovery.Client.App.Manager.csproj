@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -14,7 +14,7 @@
     <ProjectReference Include="..\CommunicationHearthbeatConsumer\CommunicationHeartbeatConsumer.csproj" />
     <ProjectReference Include="..\CommunicationLoggerConsumer\CommunicationLoggerConsumer.csproj" />
     <ProjectReference Include="..\Communication\CommunicationResourceConsumer.csproj" />
-    <ProjectReference Include="..\SharedModels\SharedBase.csproj" />
+    <ProjectReference Include="..\SharedModels\Rediscovery.Shared.Base.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedBase.Authentication
+namespace Rediscovery.Shared.Base.Authentication
 {
     public enum LoginState
     {

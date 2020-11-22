@@ -2,30 +2,33 @@
 using System.Collections.Generic;
 using System.Text;
 
-public static class StringExtensions
+namespace Rediscovery.Shared.Base.Extensions
 {
-    public static Guid SafeGuid(this string str)
+    public static class StringExtensions
     {
-        if (!string.IsNullOrWhiteSpace(str))
+        public static Guid SafeGuid(this string str)
         {
-            if (Guid.TryParse(str, out Guid guid))
-                return guid;
-            try
+            if (!string.IsNullOrWhiteSpace(str))
             {
-                return new Guid(str);
+                if (Guid.TryParse(str, out Guid guid))
+                    return guid;
+                try
+                {
+                    return new Guid(str);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.Fail($"Could not parse string to Guid. Value:{str} Methode:{nameof(SafeGuid)} Exception:{ex.ToString()}");
+                }
             }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.Fail($"Could not parse string to Guid. Value:{str} Methode:{nameof(SafeGuid)} Exception:{ex.ToString()}");
-            }
+            return Guid.Empty;
         }
-        return Guid.Empty;
-    }
 
-    public static string EmptyIfNull(this string value)
-    {
-        if (value == null)
-            value = string.Empty;
-        return value;
+        public static string EmptyIfNull(this string value)
+        {
+            if (value == null)
+                value = string.Empty;
+            return value;
+        }
     }
 }
