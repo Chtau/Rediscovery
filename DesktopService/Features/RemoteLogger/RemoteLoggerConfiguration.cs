@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopService.Features.Logger
+namespace Rediscovery.Client.App.Service.Features.Logger
 {
     public class RemoteLoggerConfiguration
     {

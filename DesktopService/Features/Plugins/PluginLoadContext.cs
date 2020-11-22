@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Runtime.Loader;
 using System.Text;
 
-namespace DesktopService.Features.Plugins
+namespace Rediscovery.Client.App.Service.Features.Plugins
 {
     public class PluginLoadContext : AssemblyLoadContext
     {

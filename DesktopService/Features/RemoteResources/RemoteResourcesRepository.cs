@@ -1,7 +1,7 @@
 ﻿using CommunicationResourceProvider;
 using DALDesktopService.Models;
-using DesktopService.Features.DeviceFeature;
-using DesktopService.Map;
+using Rediscovery.Client.App.Service.Features.DeviceFeature;
+using Rediscovery.Client.App.Service.Map;
 using Microsoft.Extensions.Logging;
 using PluginFeature.Models;
 using SharedBase.Feature;
@@ -14,7 +14,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DesktopService.Features.RemoteResources
+namespace Rediscovery.Client.App.Service.Features.RemoteResources
 {
     public class RemoteResourcesRepository : IResourcesRepository
     {

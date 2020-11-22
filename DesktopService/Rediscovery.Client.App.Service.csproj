@@ -29,10 +29,10 @@
     <AssemblyVersion>0.0.0.1</AssemblyVersion>
     <FileVersion>0.0.0.1</FileVersion>
     <Version>0.0.0.1</Version>
-    <PackageId>RediscoveryDesktopService</PackageId>
+    <PackageId>Rediscovery.Client.App.Service</PackageId>
     <Authors>Christoph Taucher</Authors>
     <Company>Christoph Taucher</Company>
-    <Product>RediscoveryDesktopService</Product>
+    <Product>Rediscovery.Client.App.Service</Product>
     <Description>Rediscovery Service to provide features to a connected Device.</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/Chtau/Rediscovery</PackageProjectUrl>

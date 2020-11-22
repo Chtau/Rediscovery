@@ -1,4 +1,4 @@
-﻿using DesktopService.Features.Plugins;
+﻿using Rediscovery.Client.App.Service.Features.Plugins;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PluginFeature.Interfaces;
@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DesktopService.Features.DeviceFeature
+namespace Rediscovery.Client.App.Service.Features.DeviceFeature
 {
     public class FeatureService : IFeatureService
     {

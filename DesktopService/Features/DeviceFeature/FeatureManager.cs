@@ -9,7 +9,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 
-namespace DesktopService.Features.DeviceFeature
+namespace Rediscovery.Client.App.Service.Features.DeviceFeature
 {
     public class FeatureManager : IFeatureManager
     {

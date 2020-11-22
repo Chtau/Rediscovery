@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO.Compression;
 using System.Text;
 
-namespace DesktopService.Features.DeviceFeature
+namespace Rediscovery.Client.App.Service.Features.DeviceFeature
 {
     public interface IFeatureService
     {

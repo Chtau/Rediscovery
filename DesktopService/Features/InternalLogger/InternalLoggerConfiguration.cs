@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopService.Features.InternalLogger
+namespace Rediscovery.Client.App.Service.Features.InternalLogger
 {
     public class InternalLoggerConfiguration
     {

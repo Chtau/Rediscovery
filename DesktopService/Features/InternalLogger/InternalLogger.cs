@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 
-namespace DesktopService.Features.InternalLogger
+namespace Rediscovery.Client.App.Service.Features.InternalLogger
 {
     public class InternalLogger : ILogger
     {

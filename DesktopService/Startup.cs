@@ -1,22 +1,22 @@
-﻿using CertificateService;
-using CommunicationAuthenticationProvider;
+﻿using CommunicationAuthenticationProvider;
 using CommunicationFeatureProvider;
 using CommunicationHeartbeatProvider;
 using CommunicationLoggerProvider;
 using CommunicationResourceProvider;
 using DALDesktopService;
-using DesktopService.Features.Authentication;
-using DesktopService.Features.DeviceFeature;
-using DesktopService.Features.Logger;
-using DesktopService.Features.RemoteResources;
+using Rediscovery.Client.App.Service.Features.Authentication;
+using Rediscovery.Client.App.Service.Features.DeviceFeature;
+using Rediscovery.Client.App.Service.Features.Logger;
+using Rediscovery.Client.App.Service.Features.RemoteResources;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
+using Rediscovery.Service.Certificate;
 
-namespace DesktopService
+namespace Rediscovery.Client.App.Service
 {
     public class Startup
     {

@@ -10,7 +10,7 @@ using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-namespace DesktopService.Features.Plugins
+namespace Rediscovery.Client.App.Service.Features.Plugins
 {
     public class LoadPlugins : ILoadPlugins
     {

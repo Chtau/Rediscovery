@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-namespace DesktopService.Services
+namespace Rediscovery.Client.App.Service.Services
 {
     public class StaticResources : IStaticResources
     {

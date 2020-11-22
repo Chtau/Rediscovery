@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopService
+namespace Rediscovery.Client.App.Service
 {
     public abstract class BaseController : ControllerBase
     {

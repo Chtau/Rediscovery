@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopService.Map
+namespace Rediscovery.Client.App.Service.Map
 {
     public static class EntityExtensions
     {

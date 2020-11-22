@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopService.Features.Configuration
+namespace Rediscovery.Client.App.Service.Features.Configuration
 {
     public interface IDistributeConfig
     {

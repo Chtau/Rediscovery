@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopService.Features.Authentication
+namespace Rediscovery.Client.App.Service.Features.Authentication
 {
     public interface IRoleResolver
     {

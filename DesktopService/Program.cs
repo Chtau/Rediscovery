@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Rediscovery.Service.Certificate;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -16,9 +17,9 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-namespace DesktopService
+namespace Rediscovery.Client.App.Service
 {
-    internal class Program
+    internal static class Program
     {
         public static void Main(string[] args)
         {
@@ -169,7 +170,7 @@ namespace DesktopService
 
         private static X509Certificate2 GetX509Certificate2(string host, string password, string friendlyName)
         {
-            var pfx = CertificateService.ServerCertificate.CreatePfx(host, password, friendlyName);
+            var pfx = ServerCertificate.CreatePfx(host, password, friendlyName);
             return new X509Certificate2(pfx, password);
         }
 

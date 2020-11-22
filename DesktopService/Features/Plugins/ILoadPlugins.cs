@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace DesktopService.Features.Plugins
+namespace Rediscovery.Client.App.Service.Features.Plugins
 {
     public interface ILoadPlugins
     {

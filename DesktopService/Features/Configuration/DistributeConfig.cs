@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace DesktopService.Features.Configuration
+namespace Rediscovery.Client.App.Service.Features.Configuration
 {
     public class DistributeConfig : IDistributeConfig
     {

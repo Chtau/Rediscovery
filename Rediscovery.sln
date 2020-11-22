@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rediscovery.Android", "Redi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery", "Rediscovery\Rediscovery\Rediscovery.csproj", "{DE1F1607-91A9-4F5A-BF2C-384F4E8BFFA8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopService", "DesktopService\DesktopService.csproj", "{CDAB17EE-1789-475E-A57E-5EB2680EAA46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.App.Service", "DesktopService\Rediscovery.Client.App.Service.csproj", "{CDAB17EE-1789-475E-A57E-5EB2680EAA46}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IPCPipe", "IPCPipe\IPCPipe.csproj", "{2F0E6193-A5C9-4B6D-A0C2-B2D6C64159B9}"
 EndProject

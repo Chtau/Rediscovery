@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopService.Features.RemoteResources
+namespace Rediscovery.Client.App.Service.Features.RemoteResources
 {
     public class ResourceManager : IResourceManager
     {

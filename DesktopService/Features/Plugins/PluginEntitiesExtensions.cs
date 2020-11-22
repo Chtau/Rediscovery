@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopService.Features.Plugins
+namespace Rediscovery.Client.App.Service.Features.Plugins
 {
     public static class PluginEntitiesExtensions
     {
