@@ -1,12 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
-    <PackageId>RediscoveryDesktopDiscoveryService</PackageId>
+    <PackageId>Rediscovery.Desktop.Service.Discovery</PackageId>
     <Version>0.0.0.1</Version>
     <Authors>Christoph Taucher</Authors>
-    <Product>RediscoveryDesktopDiscoveryService</Product>
+    <Product>Rediscovery.Desktop.Service.Discovery</Product>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/Chtau/Rediscovery</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Chtau/Rediscovery</RepositoryUrl>

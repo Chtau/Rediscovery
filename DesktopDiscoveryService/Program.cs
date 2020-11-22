@@ -9,9 +9,9 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using SharedBase.Discovery;
 
-namespace DesktopDiscoveryService
+namespace Rediscovery.Desktop.Service.Discovery
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
