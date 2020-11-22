@@ -3,10 +3,10 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
-    <PackageId>Rediscovery.Desktop.Service.Discovery</PackageId>
+    <PackageId>Rediscovery.Client.Service.Discovery</PackageId>
     <Version>0.0.0.1</Version>
     <Authors>Christoph Taucher</Authors>
-    <Product>Rediscovery.Desktop.Service.Discovery</Product>
+    <Product>Rediscovery.Client.Service.Discovery</Product>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/Chtau/Rediscovery</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Chtau/Rediscovery</RepositoryUrl>

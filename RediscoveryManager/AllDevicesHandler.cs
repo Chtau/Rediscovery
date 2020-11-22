@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace RediscoveryManager
+namespace Rediscovery.Client.App.Manager.Console
 {
     public class AllDevicesHandler : BaseDisplayDevice
     {

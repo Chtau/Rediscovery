@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RediscoveryManager
+namespace Rediscovery.Client.App.Manager.Console
 {
     public class ConnectToServiceHandler : BaseDisplay
     {
@@ -64,28 +64,28 @@ namespace RediscoveryManager
                     _manager.TryConnect();
                 } else
                 {
-                    lastInput = Console.ReadLine();
+                    lastInput = System.Console.ReadLine();
                 }
             } while (ResetOrBack(lastInput));
         }
 
         private string SetProperty(string displayName)
         {
-            Console.Clear();
-            Console.WriteLine($"{Commands.Abort.PutifyStringArray()} = abort current action");
-            Console.WriteLine();
-            Console.WriteLine("Set property");
-            Console.WriteLine();
-            Console.Write($"{displayName}: ");
-            return Console.ReadLine();
+            System.Console.Clear();
+            System.Console.WriteLine($"{Commands.Abort.PutifyStringArray()} = abort current action");
+            System.Console.WriteLine();
+            System.Console.WriteLine("Set property");
+            System.Console.WriteLine();
+            System.Console.Write($"{displayName}: ");
+            return System.Console.ReadLine();
         }
 
         internal override void DisplayTitle()
         {
             isWriting = true;
-            Console.Clear();
-            Console.WriteLine("Connect to Service");
-            Console.WriteLine();
+            System.Console.Clear();
+            System.Console.WriteLine("Connect to Service");
+            System.Console.WriteLine();
             ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
             {
                 Color = ConsoleColor.Green,
@@ -104,7 +104,7 @@ namespace RediscoveryManager
                 Prefix = "Device Identifier: ",
                 Value = _manager.CurrentConnection.DeviceIdentifier
             });
-            Console.WriteLine();
+            System.Console.WriteLine();
             ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
             {
                 Prefix = "Can connect:",
@@ -116,16 +116,16 @@ namespace RediscoveryManager
                 Value = $"{_manager.ManagerConnectionState.ConnectionState}",
                 Color = SharedUI.ConnectionStateToColor(_manager.ManagerConnectionState.ConnectionState)
             });
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine($"{Commands.SetIP.PutifyStringArray()} = set the IP Address");
-            Console.WriteLine($"{Commands.SetPort.PutifyStringArray()} = set the Port");
-            Console.WriteLine($"{Commands.SetDeviceIdentifier.PutifyStringArray()} = set Device identifier");
-            Console.WriteLine($"{Commands.Connect.PutifyStringArray()} = Establish a connection");
-            Console.WriteLine();
-            Console.WriteLine($"{Commands.Back.PutifyStringArray()} = Back to the main menu");
-            Console.WriteLine();
-            Console.Write("Command:");
+            System.Console.WriteLine();
+            System.Console.WriteLine();
+            System.Console.WriteLine($"{Commands.SetIP.PutifyStringArray()} = set the IP Address");
+            System.Console.WriteLine($"{Commands.SetPort.PutifyStringArray()} = set the Port");
+            System.Console.WriteLine($"{Commands.SetDeviceIdentifier.PutifyStringArray()} = set Device identifier");
+            System.Console.WriteLine($"{Commands.Connect.PutifyStringArray()} = Establish a connection");
+            System.Console.WriteLine();
+            System.Console.WriteLine($"{Commands.Back.PutifyStringArray()} = Back to the main menu");
+            System.Console.WriteLine();
+            System.Console.Write("Command:");
             isWriting = false;
         }
     }

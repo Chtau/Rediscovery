@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace RediscoveryManager
+namespace Rediscovery.Client.App.Manager.Console
 {
     public class FeatureHandler : BaseDisplay
     {
@@ -53,26 +53,26 @@ namespace RediscoveryManager
         internal override void DisplayTitle()
         {
             isWriting = true;
-            Console.Clear();
+            System.Console.Clear();
             ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
             {
                 Color = ConsoleColor.Green,
                 Prefix = WriteTitle(),
                 Value = OnGetTitlePageIndex()
             });
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine($"{Commands.Previous.PutifyStringArray()} = Previous Feature");
-            Console.WriteLine($"{Commands.Next.PutifyStringArray()} = Next Feature");
+            System.Console.WriteLine();
+            System.Console.WriteLine();
+            System.Console.WriteLine($"{Commands.Previous.PutifyStringArray()} = Previous Feature");
+            System.Console.WriteLine($"{Commands.Next.PutifyStringArray()} = Next Feature");
             WriteMenu();
-            Console.WriteLine();
-            Console.WriteLine($"{Commands.Back.PutifyStringArray()} = Back to the main menu");
-            Console.WriteLine();
+            System.Console.WriteLine();
+            System.Console.WriteLine($"{Commands.Back.PutifyStringArray()} = Back to the main menu");
+            System.Console.WriteLine();
 
             if (Collection()?.Count > 0)
             {
                 var item = Collection()[currentNavigationIndex];
-                Console.WriteLine();
+                System.Console.WriteLine();
                 ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
                 {
                     Color = ConsoleColor.White,
@@ -114,11 +114,11 @@ namespace RediscoveryManager
                 });
 
 
-                Console.WriteLine();
-                Console.WriteLine();
+                System.Console.WriteLine();
+                System.Console.WriteLine();
             }
 
-            Console.Write("Command:");
+            System.Console.Write("Command:");
             isWriting = false;
         }
 
@@ -164,7 +164,7 @@ namespace RediscoveryManager
                     if (HandleSubMenu(lastInput))
                         lastInput = null;
                     else
-                        lastInput = Console.ReadKey().KeyChar.ToString();
+                        lastInput = System.Console.ReadKey().KeyChar.ToString();
                 }
             } while (ResetOrBack(lastInput));
         }

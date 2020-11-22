@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
-namespace RediscoveryManager
+namespace Rediscovery.Client.App.Manager.Console
 {
     public class UIHandler : BaseDisplay
     {
@@ -50,7 +50,7 @@ namespace RediscoveryManager
             {
                 SharedUI.CurrentDisplay = DisplayName;
                 DisplayDefaultTitle();
-                lastInput = Console.ReadLine();
+                lastInput = System.Console.ReadLine();
                 SwitchMenu(lastInput, connectionConfiguration);
             } while (SharedUI.ResetOrExit(lastInput));
         }
@@ -88,29 +88,29 @@ namespace RediscoveryManager
         private void DisplayDefaultTitle()
         {
             isWriting = true;
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Rediscovery Manager");
-            Console.ResetColor();
-            Console.WriteLine();
+            System.Console.Clear();
+            System.Console.ForegroundColor = ConsoleColor.Green;
+            System.Console.WriteLine("Rediscovery Manager");
+            System.Console.ResetColor();
+            System.Console.WriteLine();
             ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
             {
                 Prefix = "Connected:",
                 Value = $"{_manager.ManagerConnectionState.ConnectionState}",
                 Color = SharedUI.ConnectionStateToColor(_manager.ManagerConnectionState.ConnectionState)
             });
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine($"{Commands.Help.PutifyStringArray()} = shows help for the current context");
-            Console.WriteLine($"{Commands.Connect.PutifyStringArray()} = Connect to Service");
-            Console.WriteLine($"{Commands.AllDevices.PutifyStringArray()} = View all Devices");
-            Console.WriteLine($"{Commands.ActiveDevices.PutifyStringArray()} = View active Devices");
-            Console.WriteLine($"{Commands.PendingDevices.PutifyStringArray()} = Manage pending Device requests");
-            Console.WriteLine($"{Commands.Manifest.PutifyStringArray()} = Service manifest");
-            Console.WriteLine($"{Commands.Features.PutifyStringArray()} = Service features");
-            Console.WriteLine($"{Commands.Exit.PutifyStringArray()} = Application exit");
-            Console.WriteLine();
-            Console.Write("Command:");
+            System.Console.WriteLine();
+            System.Console.WriteLine();
+            System.Console.WriteLine($"{Commands.Help.PutifyStringArray()} = shows help for the current context");
+            System.Console.WriteLine($"{Commands.Connect.PutifyStringArray()} = Connect to Service");
+            System.Console.WriteLine($"{Commands.AllDevices.PutifyStringArray()} = View all Devices");
+            System.Console.WriteLine($"{Commands.ActiveDevices.PutifyStringArray()} = View active Devices");
+            System.Console.WriteLine($"{Commands.PendingDevices.PutifyStringArray()} = Manage pending Device requests");
+            System.Console.WriteLine($"{Commands.Manifest.PutifyStringArray()} = Service manifest");
+            System.Console.WriteLine($"{Commands.Features.PutifyStringArray()} = Service features");
+            System.Console.WriteLine($"{Commands.Exit.PutifyStringArray()} = Application exit");
+            System.Console.WriteLine();
+            System.Console.Write("Command:");
             isWriting = false;
         }
     }

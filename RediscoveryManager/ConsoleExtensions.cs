@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RediscoveryManager
+namespace Rediscovery.Client.App.Manager.Console
 {
     public static class ConsoleExtensions
     {
@@ -17,12 +17,12 @@ namespace RediscoveryManager
         {
             foreach (var item in writeParams)
             {
-                Console.Write(item.Prefix);
-                Console.ForegroundColor = item.Color;
-                Console.Write(item.Value);
-                Console.ResetColor();
+                System.Console.Write(item.Prefix);
+                System.Console.ForegroundColor = item.Color;
+                System.Console.Write(item.Value);
+                System.Console.ResetColor();
             }
-            Console.Write(Environment.NewLine);
+            System.Console.Write(Environment.NewLine);
         }
     }
 }

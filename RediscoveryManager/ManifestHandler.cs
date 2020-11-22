@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace RediscoveryManager
+namespace Rediscovery.Client.App.Manager.Console
 {
     public class ManifestHandler : BaseDisplay
     {
@@ -32,7 +32,7 @@ namespace RediscoveryManager
                 }
                 else
                 {
-                    lastInput = Console.ReadLine();
+                    lastInput = System.Console.ReadLine();
                 }
             } while (ResetOrBack(lastInput));
         }
@@ -40,9 +40,9 @@ namespace RediscoveryManager
         internal override void DisplayTitle()
         {
             isWriting = true;
-            Console.Clear();
-            Console.WriteLine("Service Manifest");
-            Console.WriteLine();
+            System.Console.Clear();
+            System.Console.WriteLine("Service Manifest");
+            System.Console.WriteLine();
             ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
             {
                 Color = ConsoleColor.Green,
@@ -61,11 +61,11 @@ namespace RediscoveryManager
                 Prefix = "Minimum App Version: ",
                 Value = _manager.Manifest?.AppMinimumVersion.ToString()
             });
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine($"{Commands.Back.PutifyStringArray()} = Back to the main menu");
-            Console.WriteLine();
-            Console.Write("Command:");
+            System.Console.WriteLine();
+            System.Console.WriteLine();
+            System.Console.WriteLine($"{Commands.Back.PutifyStringArray()} = Back to the main menu");
+            System.Console.WriteLine();
+            System.Console.Write("Command:");
             isWriting = false;
         }
     }

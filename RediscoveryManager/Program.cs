@@ -2,7 +2,7 @@
 using RediscoveryManager.Service;
 using System.IO;
 
-namespace RediscoveryManager
+namespace Rediscovery.Client.App.Manager.Console
 {
     internal static class Program
     {

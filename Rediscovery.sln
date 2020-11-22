@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedFeatureFunctions", "S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopFeatureMediaPlayer", "DesktopFeatureMediaPlayer\DesktopFeatureMediaPlayer.csproj", "{C734837E-B6D7-4CEB-81B5-03820CE2BA8F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Desktop.Service.Discovery", "DesktopDiscoveryService\Rediscovery.Desktop.Service.Discovery.csproj", "{D98763EF-8EFE-480D-B501-C49EAF34CA5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.Service.Discovery", "DesktopDiscoveryService\Rediscovery.Client.Service.Discovery.csproj", "{D98763EF-8EFE-480D-B501-C49EAF34CA5C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopFirewall", "DesktopFirewall\DesktopFirewall.csproj", "{45CF8CDC-3832-4F01-97B3-E64379BFD3EA}"
 EndProject
@@ -55,7 +55,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationHeartbeatProvi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationHeartbeatConsumer", "CommunicationHearthbeatConsumer\CommunicationHeartbeatConsumer.csproj", "{41C1F4F4-FAC3-4990-8C9B-C854F8871BE2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RediscoveryManager", "RediscoveryManager\RediscoveryManager.csproj", "{46BBBA2E-EFB1-4539-A992-5398AE6D5D95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.App.Manager.Console", "RediscoveryManager\Rediscovery.Client.App.Manager.Console.csproj", "{46BBBA2E-EFB1-4539-A992-5398AE6D5D95}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RediscoveryManager.Service", "RediscoveryManager.Service\RediscoveryManager.Service.csproj", "{D07422C4-6403-429D-8381-5B3CA8472F6B}"
 EndProject

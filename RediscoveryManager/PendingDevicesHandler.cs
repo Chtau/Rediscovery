@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace RediscoveryManager
+namespace Rediscovery.Client.App.Manager.Console
 {
     public class PendingDevicesHandler : BaseDisplayDevice
     {
@@ -27,8 +27,8 @@ namespace RediscoveryManager
 
         internal override void WriteMenu()
         {
-            Console.WriteLine($"{Commands.Accept.PutifyStringArray()} = Accept access request");
-            Console.WriteLine($"{Commands.Deny.PutifyStringArray()} = Deny access request");
+            System.Console.WriteLine($"{Commands.Accept.PutifyStringArray()} = Accept access request");
+            System.Console.WriteLine($"{Commands.Deny.PutifyStringArray()} = Deny access request");
         }
 
         internal override string WriteTitle()

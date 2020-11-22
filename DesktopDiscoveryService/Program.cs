@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using SharedBase.Discovery;
 
-namespace Rediscovery.Desktop.Service.Discovery
+namespace Rediscovery.Client.Service.Discovery
 {
     static class Program
     {

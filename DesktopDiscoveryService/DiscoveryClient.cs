@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rediscovery.Desktop.Service.Discovery
+namespace Rediscovery.Client.Service.Discovery
 {
     public class DiscoveryClient
     {
