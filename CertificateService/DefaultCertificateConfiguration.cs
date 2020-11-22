@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CertificateService
+namespace Rediscovery.Service.Certificate
 {
     internal static class ConfigurationInstance
     {

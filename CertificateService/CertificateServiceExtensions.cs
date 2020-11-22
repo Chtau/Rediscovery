@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace CertificateService
+namespace Rediscovery.Service.Certificate
 {
     public static class CertificateServiceExtensions
     {

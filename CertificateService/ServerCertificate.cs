@@ -6,7 +6,7 @@ using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-namespace CertificateService
+namespace Rediscovery.Service.Certificate
 {
     public static class ServerCertificate
     {

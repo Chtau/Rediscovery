@@ -41,7 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationBase", "Commun
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedBase", "SharedModels\SharedBase.csproj", "{FC34856C-FE50-49CE-812E-053F9F5193FF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CertificateService", "CertificateService\CertificateService.csproj", "{5EB7142F-4969-4B1C-A8AD-F4C526701412}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Certificate", "CertificateService\Service.Certificate.csproj", "{5EB7142F-4969-4B1C-A8AD-F4C526701412}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationFeatureProvider", "CommunicationFeatureProvider\CommunicationFeatureProvider.csproj", "{31BA226D-53DD-4F43-A001-F79D8766C412}"
 EndProject
