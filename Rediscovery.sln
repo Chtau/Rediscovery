@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopFeatureMediaPlayer",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.Service.Discovery", "DesktopDiscoveryService\Rediscovery.Client.Service.Discovery.csproj", "{D98763EF-8EFE-480D-B501-C49EAF34CA5C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopFirewall", "DesktopFirewall\DesktopFirewall.csproj", "{45CF8CDC-3832-4F01-97B3-E64379BFD3EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.App.Firewall.Console", "DesktopFirewall\Rediscovery.Client.App.Firewall.Console.csproj", "{45CF8CDC-3832-4F01-97B3-E64379BFD3EA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedConfigurations", "SharedConfigurations\SharedConfigurations.csproj", "{EF80B5C2-4413-48FA-B638-B2122E97F34B}"
 EndProject

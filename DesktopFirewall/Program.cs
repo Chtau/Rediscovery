@@ -3,9 +3,9 @@ using System;
 using System.Linq;
 using static SharedFeatureFunctions.FirewallRule;
 
-namespace DesktopFirewall
+namespace Rediscovery.Client.App.Firewall.Console
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
@@ -41,14 +41,14 @@ namespace DesktopFirewall
             }
             if (args.Any(x => x.StartsWith("?", StringComparison.OrdinalIgnoreCase) || x.StartsWith("help", StringComparison.OrdinalIgnoreCase)))
             {
-                Console.WriteLine("Help for Desktop Firewall");
-                Console.WriteLine("Arguments");
-                Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandAddFirewall}    \"Creates Windows Firewall Rule\"");
-                Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandRemoveFirewall}    \"Removes Windows Firewall Rule\"");
-                Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandRuleName}    \"Name of the Firewall rule\"");
-                Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandRulePort}    \"Port for the Firewall rule\"");
-                Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandRuleType}    \"Firewall rule type\" ({string.Join(',', Enum.GetNames(typeof(ProtocolType)))})");
-                Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandRuleExePath}    \"App execution path for the Firewall rule\"");
+                System.Console.WriteLine("Help for Desktop Firewall");
+                System.Console.WriteLine("Arguments");
+                System.Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandAddFirewall}    \"Creates Windows Firewall Rule\"");
+                System.Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandRemoveFirewall}    \"Removes Windows Firewall Rule\"");
+                System.Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandRuleName}    \"Name of the Firewall rule\"");
+                System.Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandRulePort}    \"Port for the Firewall rule\"");
+                System.Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandRuleType}    \"Firewall rule type\" ({string.Join(',', Enum.GetNames(typeof(ProtocolType)))})");
+                System.Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandRuleExePath}    \"App execution path for the Firewall rule\"");
             }
             else if (args.Any(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandAddFirewall, StringComparison.OrdinalIgnoreCase)))
             {
@@ -64,19 +64,19 @@ namespace DesktopFirewall
                     }
                     if (result == RuleState.True)
                     {
-                        Console.WriteLine("Firewall rule created");
+                        System.Console.WriteLine("Firewall rule created");
                     }
                     else
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Could not create Firewall rule (Restart with Administrator rights)");
-                        Console.WriteLine("Alternative you can create the Rule with the Command: " + FirewallRule.GetFWRuleCreate(rulePort, ruleName, protocolType));
-                        Console.ResetColor();
+                        System.Console.ForegroundColor = ConsoleColor.Red;
+                        System.Console.WriteLine("Could not create Firewall rule (Restart with Administrator rights)");
+                        System.Console.WriteLine("Alternative you can create the Rule with the Command: " + FirewallRule.GetFWRuleCreate(rulePort, ruleName, protocolType));
+                        System.Console.ResetColor();
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Firewall rule already exists");
+                    System.Console.WriteLine("Firewall rule already exists");
                 }
             }
             else if (args.Any(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandRemoveFirewall, StringComparison.OrdinalIgnoreCase)))
@@ -85,23 +85,23 @@ namespace DesktopFirewall
                 {
                     if (FirewallRule.RuleDelete(ruleName) == RuleState.True)
                     {
-                        Console.WriteLine("Firewall rule removed");
+                        System.Console.WriteLine("Firewall rule removed");
                     }
                     else
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Could not remove Firewall rule (Restart with Administrator rights)");
-                        Console.WriteLine("Alternative you can create the Rule with the Command: " + FirewallRule.GetFWRuleDelete(rulePort, ruleName, protocolType));
-                        Console.ResetColor();
+                        System.Console.ForegroundColor = ConsoleColor.Red;
+                        System.Console.WriteLine("Could not remove Firewall rule (Restart with Administrator rights)");
+                        System.Console.WriteLine("Alternative you can create the Rule with the Command: " + FirewallRule.GetFWRuleDelete(rulePort, ruleName, protocolType));
+                        System.Console.ResetColor();
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Firewall rule already removed");
+                    System.Console.WriteLine("Firewall rule already removed");
                 }
             } else
             {
-                Console.WriteLine("No valid command");
+                System.Console.WriteLine("No valid command");
             }
             //Console.ReadKey();
         }
