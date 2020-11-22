@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopFeatureConsole
+namespace Rediscovery.Feature.Desktop.Console
 {
     public class CommandQueue<I, O>
     {

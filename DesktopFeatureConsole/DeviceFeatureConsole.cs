@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using DesktopFeatureConsole.Models;
+using Rediscovery.Feature.Desktop.Console.Models;
 using PluginFeature;
 using PluginFeature.Interfaces;
 using PluginFeature.Models;
 
-namespace DesktopFeatureConsole
+namespace Rediscovery.Feature.Desktop.Console
 {
     public class DeviceFeatureConsole : BaseDeviceFeature
     {

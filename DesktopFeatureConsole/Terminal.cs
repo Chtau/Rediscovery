@@ -1,4 +1,4 @@
-﻿using DesktopFeatureConsole.Models;
+﻿using Rediscovery.Feature.Desktop.Console.Models;
 using PluginFeature.Interfaces;
 using PluginFeature.Models;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace DesktopFeatureConsole
+namespace Rediscovery.Feature.Desktop.Console
 {
     public class Terminal
     {

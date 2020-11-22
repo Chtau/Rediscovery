@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopFeatureConsole.Models
+namespace Rediscovery.Feature.Desktop.Console.Models
 {
     public class CommandModel
     {
