@@ -23,7 +23,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RediscoveryManager.Service\RediscoveryManager.Service.csproj" />
+    <ProjectReference Include="..\RediscoveryManager.Service\Rediscovery.Client.App.Manager.csproj" />
     <ProjectReference Include="..\SharedConfigurations\SharedConfigurations.csproj" />
     <ProjectReference Include="..\SharedFeatureFunctions\SharedFeatureFunctions.csproj" />
   </ItemGroup>

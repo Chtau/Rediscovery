@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using RediscoveryManager.Service;
 using System.IO;
 
 namespace Rediscovery.Client.App.Manager.Console

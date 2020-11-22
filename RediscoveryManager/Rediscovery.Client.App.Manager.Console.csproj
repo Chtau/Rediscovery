@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RediscoveryManager.Service\RediscoveryManager.Service.csproj" />
+    <ProjectReference Include="..\RediscoveryManager.Service\Rediscovery.Client.App.Manager.csproj" />
     <ProjectReference Include="..\SharedConfigurations\SharedConfigurations.csproj" />
   </ItemGroup>
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 
-namespace RediscoveryManager.Service
+namespace Rediscovery.Client.App.Manager
 {
     public interface IManager
     {

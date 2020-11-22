@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RediscoveryManager.Service.Models
+namespace Rediscovery.Client.App.Manager.Models
 {
     public class ManagerConnectionState
     {
