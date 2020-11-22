@@ -67,7 +67,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationLoggerProvider
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationLoggerConsumer", "CommunicationLoggerConsumer\CommunicationLoggerConsumer.csproj", "{BFE0D360-5DFA-4752-80AF-7CB13BF98E71}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientFeatureFileExchangeUI", "ClientFeatureFileExchangeUI\ClientFeatureFileExchangeUI.csproj", "{084FA40C-F1ED-4DB8-856C-29A763F19D17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Feature.Client.FileExchange.UI", "ClientFeatureFileExchangeUI\Rediscovery.Feature.Client.FileExchange.UI.csproj", "{084FA40C-F1ED-4DB8-856C-29A763F19D17}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppMobileAndroid", "AppMobileAndroid\AppMobileAndroid.csproj", "{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}"
 EndProject

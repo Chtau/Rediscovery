@@ -1,7 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>Rediscovery.Feature.Client.FileExchange.UI</RootNamespace>
+    <Authors>Christoph Taucher</Authors>
+    <Version>0.0.1</Version>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Models\" />

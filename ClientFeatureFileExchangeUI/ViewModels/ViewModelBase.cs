@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using ReactiveUI;
 
-namespace ClientFeatureFileExchangeUI.ViewModels
+namespace Rediscovery.Feature.Client.FileExchange.UI.ViewModels
 {
     public class ViewModelBase : ReactiveObject
     {

@@ -5,7 +5,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace ClientFeatureFileExchangeUI.ViewModels
+namespace Rediscovery.Feature.Client.FileExchange.UI.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {

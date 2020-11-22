@@ -1,10 +1,10 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using ClientFeatureFileExchangeUI.ViewModels;
+using Rediscovery.Feature.Client.FileExchange.UI.ViewModels;
 using System;
 
-namespace ClientFeatureFileExchangeUI.Views
+namespace Rediscovery.Feature.Client.FileExchange.UI.Views
 {
     public class MainWindow : Window
     {

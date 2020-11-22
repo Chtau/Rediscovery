@@ -1,10 +1,10 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using ClientFeatureFileExchangeUI.ViewModels;
-using ClientFeatureFileExchangeUI.Views;
+using Rediscovery.Feature.Client.FileExchange.UI.ViewModels;
+using Rediscovery.Feature.Client.FileExchange.UI.Views;
 
-namespace ClientFeatureFileExchangeUI
+namespace Rediscovery.Feature.Client.FileExchange.UI
 {
     public class App : Application
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ClientFeatureFileExchangeUI.ViewModels
+namespace Rediscovery.Feature.Client.FileExchange.UI.ViewModels
 {
     public class SelectedFileViewModel : ViewModelBase
     {

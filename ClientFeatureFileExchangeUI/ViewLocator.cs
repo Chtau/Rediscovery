@@ -1,9 +1,9 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using ClientFeatureFileExchangeUI.ViewModels;
+using Rediscovery.Feature.Client.FileExchange.UI.ViewModels;
 
-namespace ClientFeatureFileExchangeUI
+namespace Rediscovery.Feature.Client.FileExchange.UI
 {
     public class ViewLocator : IDataTemplate
     {
