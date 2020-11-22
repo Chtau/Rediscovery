@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopFeatureMediaPlayer.Models
+namespace Rediscovery.Feature.Desktop.MediaPlayer.Models
 {
     public class CommandConfiguration
     {

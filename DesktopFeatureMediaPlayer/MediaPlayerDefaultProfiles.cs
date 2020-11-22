@@ -1,10 +1,10 @@
-﻿using DesktopFeatureMediaPlayer.Models;
+﻿using Rediscovery.Feature.Desktop.MediaPlayer.Models;
 using SharedFeatureFunctions.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesktopFeatureMediaPlayer
+namespace Rediscovery.Feature.Desktop.MediaPlayer
 {
     public static class MediaPlayerDefaultProfiles
     {

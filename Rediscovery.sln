@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopFeatureTestApp", "De
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedFeatureFunctions", "SharedFeatureFunctions\SharedFeatureFunctions.csproj", "{1B545E83-6992-45F9-BCC2-2697398A8D84}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopFeatureMediaPlayer", "DesktopFeatureMediaPlayer\DesktopFeatureMediaPlayer.csproj", "{C734837E-B6D7-4CEB-81B5-03820CE2BA8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Feature.Desktop.MediaPlayer", "DesktopFeatureMediaPlayer\Rediscovery.Feature.Desktop.MediaPlayer.csproj", "{C734837E-B6D7-4CEB-81B5-03820CE2BA8F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.Service.Discovery", "DesktopDiscoveryService\Rediscovery.Client.Service.Discovery.csproj", "{D98763EF-8EFE-480D-B501-C49EAF34CA5C}"
 EndProject

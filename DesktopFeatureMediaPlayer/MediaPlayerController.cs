@@ -1,4 +1,4 @@
-﻿using DesktopFeatureMediaPlayer.Models;
+﻿using Rediscovery.Feature.Desktop.MediaPlayer.Models;
 using PluginFeature.Interfaces;
 using SharedFeatureFunctions.Models;
 using System;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DesktopFeatureMediaPlayer
+namespace Rediscovery.Feature.Desktop.MediaPlayer
 {
     public class MediaPlayerController : IDisposable
     {

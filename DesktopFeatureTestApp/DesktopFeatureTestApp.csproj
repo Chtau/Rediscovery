@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DesktopFeatureConsole\Rediscovery.Feature.Desktop.Console.csproj" />
-    <ProjectReference Include="..\DesktopFeatureMediaPlayer\DesktopFeatureMediaPlayer.csproj" />
+    <ProjectReference Include="..\DesktopFeatureMediaPlayer\Rediscovery.Feature.Desktop.MediaPlayer.csproj" />
     <ProjectReference Include="..\PluginFeature\PluginFeature.csproj" />
   </ItemGroup>
 

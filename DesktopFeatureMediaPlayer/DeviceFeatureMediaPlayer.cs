@@ -1,4 +1,4 @@
-﻿using DesktopFeatureMediaPlayer.Models;
+﻿using Rediscovery.Feature.Desktop.MediaPlayer.Models;
 using PluginFeature;
 using PluginFeature.Interfaces;
 using PluginFeature.Models;
@@ -8,7 +8,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 
-namespace DesktopFeatureMediaPlayer
+namespace Rediscovery.Feature.Desktop.MediaPlayer
 {
     public class DeviceFeatureMediaPlayer : BaseDeviceFeature
     {
