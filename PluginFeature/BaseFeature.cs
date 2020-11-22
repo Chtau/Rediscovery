@@ -1,11 +1,11 @@
-﻿using PluginFeature.Interfaces;
-using PluginFeature.Models;
+﻿using Rediscovery.Feature.Plugin.Interfaces;
+using Rediscovery.Feature.Plugin.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PluginFeature
+namespace Rediscovery.Feature.Plugin
 {
     public class BaseFeature<TEntity, TDefinition> : IBaseFeatureImplementation<TEntity, TDefinition>
     {

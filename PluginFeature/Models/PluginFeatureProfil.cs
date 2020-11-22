@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PluginFeature.Models
+namespace Rediscovery.Feature.Plugin.Models
 {
     public class PluginFeatureProfil
     {

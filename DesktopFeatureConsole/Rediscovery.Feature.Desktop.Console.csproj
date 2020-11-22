@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PluginFeature\PluginFeature.csproj">
+    <ProjectReference Include="..\PluginFeature\Rediscovery.Feature.Plugin.csproj">
       <Private>false</Private>
       <ExcludeAssets>runtime</ExcludeAssets>
     </ProjectReference>

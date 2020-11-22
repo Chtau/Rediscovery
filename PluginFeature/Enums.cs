@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PluginFeature
+namespace Rediscovery.Feature.Plugin
 {
     public static class Enums
     {

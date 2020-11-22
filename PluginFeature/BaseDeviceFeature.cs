@@ -1,5 +1,5 @@
-﻿using PluginFeature.Interfaces;
-using PluginFeature.Models;
+﻿using Rediscovery.Feature.Plugin.Interfaces;
+using Rediscovery.Feature.Plugin.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace PluginFeature
+namespace Rediscovery.Feature.Plugin
 {
     public abstract class BaseDeviceFeature : BaseFeature<PluginFeatureData, PluginFeatureDefinition>, IDeviceFeatureImplementation
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PluginFeature.Interfaces
+namespace Rediscovery.Feature.Plugin.Interfaces
 {
     public interface IPluginLogger
     {

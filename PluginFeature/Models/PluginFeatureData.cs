@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PluginFeature.Models
+namespace Rediscovery.Feature.Plugin.Models
 {
     /// <summary>
     /// Used for the communication between feature UI and feature implementation

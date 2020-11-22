@@ -1,10 +1,10 @@
-﻿using PluginFeature.Interfaces;
-using PluginFeature.Models;
+﻿using Rediscovery.Feature.Plugin.Interfaces;
+using Rediscovery.Feature.Plugin.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PluginFeature
+namespace Rediscovery.Feature.Plugin
 {
     public class BaseClientFeature : BaseFeature<PluginFeatureDataClient, PluginFeatureDefinitionClient>, IClientFeatureImplementation
     {
