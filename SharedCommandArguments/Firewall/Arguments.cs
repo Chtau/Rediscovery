@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedCommandArguments.Firewall
+namespace Rediscovery.Shared.Arguments.Firewall
 {
     public static class Arguments
     {

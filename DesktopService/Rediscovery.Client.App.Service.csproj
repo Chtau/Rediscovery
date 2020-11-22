@@ -62,7 +62,7 @@
     <ProjectReference Include="..\DALDesktopService\Rediscovery.Service.DAL.csproj" />
     <ProjectReference Include="..\IPCPipe\IPCPipe.csproj" />
     <ProjectReference Include="..\PluginFeature\Rediscovery.Feature.Plugin.csproj" />
-    <ProjectReference Include="..\SharedCommandArguments\SharedCommandArguments.csproj" />
+    <ProjectReference Include="..\SharedCommandArguments\Rediscovery.Shared.Arguments.csproj" />
     <ProjectReference Include="..\SharedConfigurations\SharedConfigurations.csproj" />
     <ProjectReference Include="..\SharedFeatureFunctions\SharedFeatureFunctions.csproj" />
   </ItemGroup>

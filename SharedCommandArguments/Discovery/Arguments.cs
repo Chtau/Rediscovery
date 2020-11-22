@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedCommandArguments.Discovery
+namespace Rediscovery.Shared.Arguments.Discovery
 {
     public static class Arguments
     {

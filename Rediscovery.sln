@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.App.Fire
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedConfigurations", "SharedConfigurations\SharedConfigurations.csproj", "{EF80B5C2-4413-48FA-B638-B2122E97F34B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedCommandArguments", "SharedCommandArguments\SharedCommandArguments.csproj", "{A1A10784-1C3A-423B-96F3-E494D1047491}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Shared.Arguments", "SharedCommandArguments\Rediscovery.Shared.Arguments.csproj", "{A1A10784-1C3A-423B-96F3-E494D1047491}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Feature.Plugin", "PluginFeature\Rediscovery.Feature.Plugin.csproj", "{D2FD1E6D-19D0-43DE-A3A5-376C7A83429A}"
 EndProject
