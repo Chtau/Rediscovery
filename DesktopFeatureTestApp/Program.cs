@@ -1,23 +1,22 @@
-﻿using DesktopFeatureConsole;
-using DesktopFeatureMediaPlayer;
-using PluginFeature.Interfaces;
+﻿using PluginFeature.Interfaces;
 using PluginFeature.Models;
+using Rediscovery.Feature.Desktop.Console;
 using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace DesktopFeatureTestApp
+namespace Rediscovery.Feature.Desktop.TestApp
 {
-    class ProgramConsole
+    static class ProgramConsole
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Test");
+            System.Console.WriteLine("Test");
 
             //ConsoleFeature();
             //MediaPlayerFeature();
-            Console.ReadLine();
+            System.Console.ReadLine();
         }
 
         static void ConsoleFeature()
@@ -25,7 +24,7 @@ namespace DesktopFeatureTestApp
             IDeviceFeatureImplementation feature = new DeviceFeatureConsole();
             feature.SendData += (object sender, PluginExchangeEntity<PluginFeatureData> e) =>
             {
-                Console.WriteLine(e.Entity.Data);
+                System.Console.WriteLine(e.Entity.Data);
             };
             feature.Init(null, null);
             //feature.ReceiveData(new DeviceFeatureData { Data = "echo Hallo" });

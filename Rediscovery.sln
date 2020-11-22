@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IPCPipe", "IPCPipe\IPCPipe.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Feature.Desktop.Console", "DesktopFeatureConsole\Rediscovery.Feature.Desktop.Console.csproj", "{C78CC576-A6BB-4CE4-BCE1-1825485A357B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopFeatureTestApp", "DesktopFeatureTestApp\DesktopFeatureTestApp.csproj", "{D32AC972-3771-45EB-BB68-2B51979DB6F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Feature.Desktop.TestApp", "DesktopFeatureTestApp\Rediscovery.Feature.Desktop.TestApp.csproj", "{D32AC972-3771-45EB-BB68-2B51979DB6F7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedFeatureFunctions", "SharedFeatureFunctions\SharedFeatureFunctions.csproj", "{1B545E83-6992-45F9-BCC2-2697398A8D84}"
 EndProject
