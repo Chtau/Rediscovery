@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using WindowsFirewallHelper;
 
-namespace SharedFeatureFunctions
+namespace Rediscovery.Feature.Shared.Functions
 {
     public static class FirewallRule
     {

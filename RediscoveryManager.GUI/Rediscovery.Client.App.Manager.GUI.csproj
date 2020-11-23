@@ -25,7 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\RediscoveryManager.Service\Rediscovery.Client.App.Manager.csproj" />
     <ProjectReference Include="..\SharedConfigurations\Rediscovery.Shared.Configurations.csproj" />
-    <ProjectReference Include="..\SharedFeatureFunctions\SharedFeatureFunctions.csproj" />
+    <ProjectReference Include="..\SharedFeatureFunctions\Rediscovery.Feature.Shared.Functions.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json">

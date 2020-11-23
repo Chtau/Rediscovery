@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedFeatureFunctions
+namespace Rediscovery.Feature.Shared.Functions
 {
     public static class Process
     {

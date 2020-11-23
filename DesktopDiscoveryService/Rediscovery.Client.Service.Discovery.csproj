@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SharedConfigurations\Rediscovery.Shared.Configurations.csproj" />
-    <ProjectReference Include="..\SharedFeatureFunctions\SharedFeatureFunctions.csproj" />
+    <ProjectReference Include="..\SharedFeatureFunctions\Rediscovery.Feature.Shared.Functions.csproj" />
     <ProjectReference Include="..\SharedModels\Rediscovery.Shared.Base.csproj" />
   </ItemGroup>
 

@@ -1,11 +1,11 @@
-﻿using SharedFeatureFunctions.Models;
+﻿using Rediscovery.Feature.Shared.Functions.Models;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
-using static SharedFeatureFunctions.Native.Windows.Native;
+using static Rediscovery.Feature.Shared.Functions.Native.Windows.Native;
 
-namespace SharedFeatureFunctions
+namespace Rediscovery.Feature.Shared.Functions
 {
     public static class WindowSendInput
     {

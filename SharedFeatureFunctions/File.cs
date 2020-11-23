@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
-namespace SharedFeatureFunctions
+namespace Rediscovery.Feature.Shared.Functions
 {
     public static class File
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace SharedFeatureFunctions.Native.Windows
+namespace Rediscovery.Feature.Shared.Functions.Native.Windows
 {
     public static class Native
     {

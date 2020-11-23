@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharedFeatureFunctions.Models
+namespace Rediscovery.Feature.Shared.Functions.Models
 {
     public enum KeyCode : ushort
     {
@@ -84,43 +84,43 @@ namespace SharedFeatureFunctions.Models
 
         #region Numpad numbers
         /// <summary>
-        /// 
+        /// NUMPAD 0
         /// </summary>
         NUMPAD0 = 0x60,
         /// <summary>
-        /// 
+        /// NUMPAD 1
         /// </summary>
         NUMPAD1 = 0x61,
         /// <summary>
-        /// 
+        /// NUMPAD 2
         /// </summary>
         NUMPAD2 = 0x62,
         /// <summary>
-        /// 
+        /// NUMPAD 3
         /// </summary>
         NUMPAD3 = 0x63,
         /// <summary>
-        /// 
+        /// NUMPAD 4
         /// </summary>
         NUMPAD4 = 100,
         /// <summary>
-        /// 
+        /// NUMPAD 5
         /// </summary>
         NUMPAD5 = 0x65,
         /// <summary>
-        /// 
+        /// NUMPAD 6
         /// </summary>
         NUMPAD6 = 0x66,
         /// <summary>
-        /// 
+        /// NUMPAD 7
         /// </summary>
         NUMPAD7 = 0x67,
         /// <summary>
-        /// 
+        /// NUMPAD 8
         /// </summary>
         NUMPAD8 = 0x68,
         /// <summary>
-        /// 
+        /// NUMPAD 9
         /// </summary>
         NUMPAD9 = 0x69,
 
@@ -136,91 +136,91 @@ namespace SharedFeatureFunctions.Models
         /// </summary>
         F10 = 0x79,
         /// <summary>
-        /// 
+        /// F11
         /// </summary>
         F11 = 0x7a,
         /// <summary>
-        /// 
+        /// F12
         /// </summary>
         F12 = 0x7b,
         /// <summary>
-        /// 
+        /// F13
         /// </summary>
         F13 = 0x7c,
         /// <summary>
-        /// 
+        /// F14
         /// </summary>
         F14 = 0x7d,
         /// <summary>
-        /// 
+        /// F15
         /// </summary>
         F15 = 0x7e,
         /// <summary>
-        /// 
+        /// F16
         /// </summary>
         F16 = 0x7f,
         /// <summary>
-        /// 
+        /// F17
         /// </summary>
         F17 = 0x80,
         /// <summary>
-        /// 
+        /// F18
         /// </summary>
         F18 = 0x81,
         /// <summary>
-        /// 
+        /// F19
         /// </summary>
         F19 = 130,
         /// <summary>
-        /// 
+        /// F2
         /// </summary>
         F2 = 0x71,
         /// <summary>
-        /// 
+        /// F20
         /// </summary>
         F20 = 0x83,
         /// <summary>
-        /// 
+        /// F21
         /// </summary>
         F21 = 0x84,
         /// <summary>
-        /// 
+        /// F22
         /// </summary>
         F22 = 0x85,
         /// <summary>
-        /// 
+        /// F23
         /// </summary>
         F23 = 0x86,
         /// <summary>
-        /// 
+        /// F24
         /// </summary>
         F24 = 0x87,
         /// <summary>
-        /// 
+        /// F3
         /// </summary>
         F3 = 0x72,
         /// <summary>
-        /// 
+        /// F4
         /// </summary>
         F4 = 0x73,
         /// <summary>
-        /// 
+        /// F5
         /// </summary>
         F5 = 0x74,
         /// <summary>
-        /// 
+        /// F6
         /// </summary>
         F6 = 0x75,
         /// <summary>
-        /// 
+        /// F7
         /// </summary>
         F7 = 0x76,
         /// <summary>
-        /// 
+        /// F8
         /// </summary>
         F8 = 0x77,
         /// <summary>
-        /// 
+        /// F9
         /// </summary>
         F9 = 120,
 
@@ -228,59 +228,59 @@ namespace SharedFeatureFunctions.Models
 
         #region Other
         /// <summary>
-        /// 
+        /// OEM 1
         /// </summary>
         OEM_1 = 0xba,
         /// <summary>
-        /// 
+        /// OEM 102
         /// </summary>
         OEM_102 = 0xe2,
         /// <summary>
-        /// 
+        /// OEM 2
         /// </summary>
         OEM_2 = 0xbf,
         /// <summary>
-        /// 
+        /// OEM 3
         /// </summary>
         OEM_3 = 0xc0,
         /// <summary>
-        /// 
+        /// OEM 4
         /// </summary>
         OEM_4 = 0xdb,
         /// <summary>
-        /// 
+        /// OEM 5
         /// </summary>
         OEM_5 = 220,
         /// <summary>
-        /// 
+        /// OEM 6
         /// </summary>
         OEM_6 = 0xdd,
         /// <summary>
-        /// 
+        /// OEM 7
         /// </summary>
         OEM_7 = 0xde,
         /// <summary>
-        /// 
+        /// OEM 8
         /// </summary>
         OEM_8 = 0xdf,
         /// <summary>
-        /// 
+        /// OEM CLEAR
         /// </summary>
         OEM_CLEAR = 0xfe,
         /// <summary>
-        /// 
+        /// OEM COMMA
         /// </summary>
         OEM_COMMA = 0xbc,
         /// <summary>
-        /// 
+        /// OEM MINUS
         /// </summary>
         OEM_MINUS = 0xbd,
         /// <summary>
-        /// 
+        /// OEM PERIOD
         /// </summary>
         OEM_PERIOD = 190,
         /// <summary>
-        /// 
+        /// OEM PLUS
         /// </summary>
         OEM_PLUS = 0xbb,
 
@@ -289,147 +289,147 @@ namespace SharedFeatureFunctions.Models
         #region KEYS
 
         /// <summary>
-        /// 
+        /// 0
         /// </summary>
         KEY_0 = 0x30,
         /// <summary>
-        /// 
+        /// 1
         /// </summary>
         KEY_1 = 0x31,
         /// <summary>
-        /// 
+        /// 2
         /// </summary>
         KEY_2 = 50,
         /// <summary>
-        /// 
+        /// 3
         /// </summary>
         KEY_3 = 0x33,
         /// <summary>
-        /// 
+        /// 4
         /// </summary>
         KEY_4 = 0x34,
         /// <summary>
-        /// 
+        /// 5
         /// </summary>
         KEY_5 = 0x35,
         /// <summary>
-        /// 
+        /// 6
         /// </summary>
         KEY_6 = 0x36,
         /// <summary>
-        /// 
+        /// 7
         /// </summary>
         KEY_7 = 0x37,
         /// <summary>
-        /// 
+        /// 8
         /// </summary>
         KEY_8 = 0x38,
         /// <summary>
-        /// 
+        /// 9
         /// </summary>
         KEY_9 = 0x39,
         /// <summary>
-        /// 
+        /// A
         /// </summary>
         KEY_A = 0x41,
         /// <summary>
-        /// 
+        /// B
         /// </summary>
         KEY_B = 0x42,
         /// <summary>
-        /// 
+        /// C
         /// </summary>
         KEY_C = 0x43,
         /// <summary>
-        /// 
+        /// D
         /// </summary>
         KEY_D = 0x44,
         /// <summary>
-        /// 
+        /// E
         /// </summary>
         KEY_E = 0x45,
         /// <summary>
-        /// 
+        /// F
         /// </summary>
         KEY_F = 70,
         /// <summary>
-        /// 
+        /// G
         /// </summary>
         KEY_G = 0x47,
         /// <summary>
-        /// 
+        /// H
         /// </summary>
         KEY_H = 0x48,
         /// <summary>
-        /// 
+        /// I
         /// </summary>
         KEY_I = 0x49,
         /// <summary>
-        /// 
+        /// J
         /// </summary>
         KEY_J = 0x4a,
         /// <summary>
-        /// 
+        /// K
         /// </summary>
         KEY_K = 0x4b,
         /// <summary>
-        /// 
+        /// L
         /// </summary>
         KEY_L = 0x4c,
         /// <summary>
-        /// 
+        /// M
         /// </summary>
         KEY_M = 0x4d,
         /// <summary>
-        /// 
+        /// N
         /// </summary>
         KEY_N = 0x4e,
         /// <summary>
-        /// 
+        /// O
         /// </summary>
         KEY_O = 0x4f,
         /// <summary>
-        /// 
+        /// P
         /// </summary>
         KEY_P = 80,
         /// <summary>
-        /// 
+        /// Q
         /// </summary>
         KEY_Q = 0x51,
         /// <summary>
-        /// 
+        /// R
         /// </summary>
         KEY_R = 0x52,
         /// <summary>
-        /// 
+        /// S
         /// </summary>
         KEY_S = 0x53,
         /// <summary>
-        /// 
+        /// T
         /// </summary>
         KEY_T = 0x54,
         /// <summary>
-        /// 
+        /// U
         /// </summary>
         KEY_U = 0x55,
         /// <summary>
-        /// 
+        /// V
         /// </summary>
         KEY_V = 0x56,
         /// <summary>
-        /// 
+        /// W
         /// </summary>
         KEY_W = 0x57,
         /// <summary>
-        /// 
+        /// X
         /// </summary>
         KEY_X = 0x58,
         /// <summary>
-        /// 
+        /// Y
         /// </summary>
         KEY_Y = 0x59,
         /// <summary>
-        /// 
+        /// Z
         /// </summary>
         KEY_Z = 90,
 

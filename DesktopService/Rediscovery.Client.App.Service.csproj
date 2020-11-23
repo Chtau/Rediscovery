@@ -64,7 +64,7 @@
     <ProjectReference Include="..\PluginFeature\Rediscovery.Feature.Plugin.csproj" />
     <ProjectReference Include="..\SharedCommandArguments\Rediscovery.Shared.Arguments.csproj" />
     <ProjectReference Include="..\SharedConfigurations\Rediscovery.Shared.Configurations.csproj" />
-    <ProjectReference Include="..\SharedFeatureFunctions\SharedFeatureFunctions.csproj" />
+    <ProjectReference Include="..\SharedFeatureFunctions\Rediscovery.Feature.Shared.Functions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

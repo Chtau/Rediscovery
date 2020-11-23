@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace SharedFeatureFunctions
+namespace Rediscovery.Feature.Shared.Functions
 {
     public static class NetworkAddress
     {
