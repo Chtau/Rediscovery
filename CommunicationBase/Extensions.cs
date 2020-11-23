@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommunicationBase
+namespace Rediscovery.Communication.Base
 {
     internal static class Extensions
     {

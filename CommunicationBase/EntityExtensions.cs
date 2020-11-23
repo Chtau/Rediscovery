@@ -1,129 +1,133 @@
-﻿using SharedBase.Feature;
+﻿using Rediscovery.Shared.Base.Extensions;
+using Rediscovery.Shared.Base.Feature;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-public static class EntityExtensions
+namespace Rediscovery.Communication.Base
 {
-    public static FeatureDefinitionExtended GetProtoFeatureDefinition(this SharedBase.Device.FeatureDefinitionExtended featureDefinitionExtended)
+    public static class EntityExtensions
     {
-        return new FeatureDefinitionExtended
+        public static FeatureDefinitionExtended GetProtoFeatureDefinition(this Shared.Base.Device.FeatureDefinitionExtended featureDefinitionExtended)
         {
-            Author = featureDefinitionExtended.Author.EmptyIfNull(),
-            ControlIntegrationPoint = (FeatureDefinitionExtended.Types.IntegrationPoint)(int)featureDefinitionExtended.ControlIntegrationPoint,
-            DisplayName = featureDefinitionExtended.DisplayName.EmptyIfNull(),
-            Documentation = featureDefinitionExtended.Documentation.EmptyIfNull(),
-            FeatureIntegrationPoint = (FeatureDefinitionExtended.Types.IntegrationPoint)(int)featureDefinitionExtended.FeatureIntegrationPoint,
-            Id = featureDefinitionExtended.Id.ToString(),
-            MinimalControlIntegrationPoint = featureDefinitionExtended.MinimalControlIntegrationPoint.ToString(),
-            MinimalFeatureIntegrationPoint = featureDefinitionExtended.MinimalFeatureIntegrationPoint.ToString(),
-            PluginDirectory = featureDefinitionExtended.PluginDirectory.EmptyIfNull(),
-            HasProfilConfiguration = featureDefinitionExtended.HasProfilConfiguration,
-            HasSettingConfiguration = featureDefinitionExtended.HasSettingConfiguration,
-            Version = featureDefinitionExtended.Version.ToString(),
-            Website = featureDefinitionExtended.Website.EmptyIfNull(),
-            IsClientImplementation = featureDefinitionExtended.IsClientImplementation,
-            ClientDescription = featureDefinitionExtended.ClientDescription.EmptyIfNull(),
-            NativeResources = featureDefinitionExtended.NativeResources
-        };
-    }
+            return new FeatureDefinitionExtended
+            {
+                Author = featureDefinitionExtended.Author.EmptyIfNull(),
+                ControlIntegrationPoint = (FeatureDefinitionExtended.Types.IntegrationPoint)(int)featureDefinitionExtended.ControlIntegrationPoint,
+                DisplayName = featureDefinitionExtended.DisplayName.EmptyIfNull(),
+                Documentation = featureDefinitionExtended.Documentation.EmptyIfNull(),
+                FeatureIntegrationPoint = (FeatureDefinitionExtended.Types.IntegrationPoint)(int)featureDefinitionExtended.FeatureIntegrationPoint,
+                Id = featureDefinitionExtended.Id.ToString(),
+                MinimalControlIntegrationPoint = featureDefinitionExtended.MinimalControlIntegrationPoint.ToString(),
+                MinimalFeatureIntegrationPoint = featureDefinitionExtended.MinimalFeatureIntegrationPoint.ToString(),
+                PluginDirectory = featureDefinitionExtended.PluginDirectory.EmptyIfNull(),
+                HasProfilConfiguration = featureDefinitionExtended.HasProfilConfiguration,
+                HasSettingConfiguration = featureDefinitionExtended.HasSettingConfiguration,
+                Version = featureDefinitionExtended.Version.ToString(),
+                Website = featureDefinitionExtended.Website.EmptyIfNull(),
+                IsClientImplementation = featureDefinitionExtended.IsClientImplementation,
+                ClientDescription = featureDefinitionExtended.ClientDescription.EmptyIfNull(),
+                NativeResources = featureDefinitionExtended.NativeResources
+            };
+        }
 
-    public static FeatureSetting GetDeviceFeatureSetting(this FeatureDetailSetting featureDetailSetting)
-    {
-        return new FeatureSetting
+        public static FeatureSetting GetDeviceFeatureSetting(this FeatureDetailSetting featureDetailSetting)
         {
-            Data = featureDetailSetting.Data,
-            FeatureId = featureDetailSetting.FeatureId.SafeGuid()
-        };
-    }
+            return new FeatureSetting
+            {
+                Data = featureDetailSetting.Data,
+                FeatureId = featureDetailSetting.FeatureId.SafeGuid()
+            };
+        }
 
-    public static FeatureDetailSetting GetProtoFeatureDetailSetting(this FeatureSetting deviceFeatureSetting)
-    {
-        return new FeatureDetailSetting
+        public static FeatureDetailSetting GetProtoFeatureDetailSetting(this FeatureSetting deviceFeatureSetting)
         {
-            Data = deviceFeatureSetting.Data,
-            FeatureId = deviceFeatureSetting.FeatureId.ToString()
-        };
-    }
+            return new FeatureDetailSetting
+            {
+                Data = deviceFeatureSetting.Data,
+                FeatureId = deviceFeatureSetting.FeatureId.ToString()
+            };
+        }
 
-    public static FeatureProfil GetDeviceFeatureProfil(this FeatureDetailProfile featureDetailProfile)
-    {
-        return new FeatureProfil
+        public static FeatureProfil GetDeviceFeatureProfil(this FeatureDetailProfile featureDetailProfile)
         {
-            DisplayName = featureDetailProfile.DisplayName,
-            FeatureId = featureDetailProfile.FeatureId.SafeGuid(),
-            Id = featureDetailProfile.Id,
-            ProfileData = featureDetailProfile.ProfileData
-        };
-    }
+            return new FeatureProfil
+            {
+                DisplayName = featureDetailProfile.DisplayName,
+                FeatureId = featureDetailProfile.FeatureId.SafeGuid(),
+                Id = featureDetailProfile.Id,
+                ProfileData = featureDetailProfile.ProfileData
+            };
+        }
 
-    public static FeatureDetailProfile GetProtoFeatureDetailProfile(this FeatureProfil deviceFeatureProfil)
-    {
-        return new FeatureDetailProfile
+        public static FeatureDetailProfile GetProtoFeatureDetailProfile(this FeatureProfil deviceFeatureProfil)
         {
-            FeatureId = deviceFeatureProfil.FeatureId.ToString(),
-            DisplayName = deviceFeatureProfil.DisplayName,
-            Id = deviceFeatureProfil.Id,
-            ProfileData = deviceFeatureProfil.ProfileData
-        };
-    }
+            return new FeatureDetailProfile
+            {
+                FeatureId = deviceFeatureProfil.FeatureId.ToString(),
+                DisplayName = deviceFeatureProfil.DisplayName,
+                Id = deviceFeatureProfil.Id,
+                ProfileData = deviceFeatureProfil.ProfileData
+            };
+        }
 
-    public static SharedBase.Device.FeatureDefinitionExtended GetFeatureDefinition(this FeatureDefinitionExtended featureDefinitionExtended)
-    {
-        return new SharedBase.Device.FeatureDefinitionExtended
+        public static Shared.Base.Device.FeatureDefinitionExtended GetFeatureDefinition(this FeatureDefinitionExtended featureDefinitionExtended)
         {
-            Author = featureDefinitionExtended.Author,
-            ControlIntegrationPoint = (SharedBase.Device.IntegrationPoint)(int)featureDefinitionExtended.ControlIntegrationPoint,
-            DisplayName = featureDefinitionExtended.DisplayName,
-            Documentation = featureDefinitionExtended.Documentation,
-            FeatureIntegrationPoint = (SharedBase.Device.IntegrationPoint)(int)featureDefinitionExtended.FeatureIntegrationPoint,
-            Id = featureDefinitionExtended.Id.SafeGuid(),
-            MinimalControlIntegrationPoint = SharedBase.Core.Version.ConvertTo(featureDefinitionExtended.MinimalControlIntegrationPoint),
-            MinimalFeatureIntegrationPoint = SharedBase.Core.Version.ConvertTo(featureDefinitionExtended.MinimalFeatureIntegrationPoint),
-            PluginDirectory = featureDefinitionExtended.PluginDirectory,
-            HasProfilConfiguration = featureDefinitionExtended.HasProfilConfiguration,
-            HasSettingConfiguration = featureDefinitionExtended.HasSettingConfiguration,
-            Version = SharedBase.Core.Version.ConvertTo(featureDefinitionExtended.Version),
-            Website = featureDefinitionExtended.Website,
-            NativeResources = featureDefinitionExtended.NativeResources,
-            IsClientImplementation = featureDefinitionExtended.IsClientImplementation,
-            ClientDescription = featureDefinitionExtended.ClientDescription,
-        };
-    }
+            return new Shared.Base.Device.FeatureDefinitionExtended
+            {
+                Author = featureDefinitionExtended.Author,
+                ControlIntegrationPoint = (Shared.Base.Device.IntegrationPoint)(int)featureDefinitionExtended.ControlIntegrationPoint,
+                DisplayName = featureDefinitionExtended.DisplayName,
+                Documentation = featureDefinitionExtended.Documentation,
+                FeatureIntegrationPoint = (Shared.Base.Device.IntegrationPoint)(int)featureDefinitionExtended.FeatureIntegrationPoint,
+                Id = featureDefinitionExtended.Id.SafeGuid(),
+                MinimalControlIntegrationPoint = Shared.Base.Core.Version.ConvertTo(featureDefinitionExtended.MinimalControlIntegrationPoint),
+                MinimalFeatureIntegrationPoint = Shared.Base.Core.Version.ConvertTo(featureDefinitionExtended.MinimalFeatureIntegrationPoint),
+                PluginDirectory = featureDefinitionExtended.PluginDirectory,
+                HasProfilConfiguration = featureDefinitionExtended.HasProfilConfiguration,
+                HasSettingConfiguration = featureDefinitionExtended.HasSettingConfiguration,
+                Version = Shared.Base.Core.Version.ConvertTo(featureDefinitionExtended.Version),
+                Website = featureDefinitionExtended.Website,
+                NativeResources = featureDefinitionExtended.NativeResources,
+                IsClientImplementation = featureDefinitionExtended.IsClientImplementation,
+                ClientDescription = featureDefinitionExtended.ClientDescription,
+            };
+        }
 
-    public static SharedBase.Device.DeviceInfo GetDeviceInfo(this DeviceInfo deviceInfo)
-    {
-        return new SharedBase.Device.DeviceInfo
+        public static Shared.Base.Device.DeviceInfo GetDeviceInfo(this DeviceInfo deviceInfo)
         {
-            AllowAccess = deviceInfo.AllowAccess,
-            DeviceType = deviceInfo.DeviceType,
-            Id = deviceInfo.Id.SafeGuid(),
-            Identifier = deviceInfo.Identifier,
-            Idiom = deviceInfo.Idiom,
-            Manufacturer = deviceInfo.Manufacturer,
-            Model = deviceInfo.Model,
-            Name = deviceInfo.Name,
-            OSVersion = deviceInfo.OSVersion,
-            Platform = deviceInfo.Platform,
-            RequestTime = deviceInfo.RequestTime.TicksLongDatetime(),
-        };
-    }
+            return new Shared.Base.Device.DeviceInfo
+            {
+                AllowAccess = deviceInfo.AllowAccess,
+                DeviceType = deviceInfo.DeviceType,
+                Id = deviceInfo.Id.SafeGuid(),
+                Identifier = deviceInfo.Identifier,
+                Idiom = deviceInfo.Idiom,
+                Manufacturer = deviceInfo.Manufacturer,
+                Model = deviceInfo.Model,
+                Name = deviceInfo.Name,
+                OSVersion = deviceInfo.OSVersion,
+                Platform = deviceInfo.Platform,
+                RequestTime = deviceInfo.RequestTime.TicksLongDatetime(),
+            };
+        }
 
-    public static DeviceInfo GetProtoDeviceInfo(this SharedBase.Device.DeviceInfo deviceInfo)
-    {
-        return new DeviceInfo
+        public static DeviceInfo GetProtoDeviceInfo(this Shared.Base.Device.DeviceInfo deviceInfo)
         {
-            AllowAccess = deviceInfo.AllowAccess,
-            DeviceType = deviceInfo.DeviceType.EmptyIfNull(),
-            Id = deviceInfo.Id.ToString(),
-            Identifier = deviceInfo.Identifier.EmptyIfNull(),
-            Idiom = deviceInfo.Idiom.EmptyIfNull(),
-            Manufacturer = deviceInfo.Manufacturer.EmptyIfNull(),
-            Model = deviceInfo.Model.EmptyIfNull(),
-            Name = deviceInfo.Name.EmptyIfNull(),
-            OSVersion = deviceInfo.OSVersion.EmptyIfNull(),
-            Platform = deviceInfo.Platform.EmptyIfNull(),
-            RequestTime = deviceInfo.RequestTime.DatetimeTicksLong()
-        };
+            return new DeviceInfo
+            {
+                AllowAccess = deviceInfo.AllowAccess,
+                DeviceType = deviceInfo.DeviceType.EmptyIfNull(),
+                Id = deviceInfo.Id.ToString(),
+                Identifier = deviceInfo.Identifier.EmptyIfNull(),
+                Idiom = deviceInfo.Idiom.EmptyIfNull(),
+                Manufacturer = deviceInfo.Manufacturer.EmptyIfNull(),
+                Model = deviceInfo.Model.EmptyIfNull(),
+                Name = deviceInfo.Name.EmptyIfNull(),
+                OSVersion = deviceInfo.OSVersion.EmptyIfNull(),
+                Platform = deviceInfo.Platform.EmptyIfNull(),
+                RequestTime = deviceInfo.RequestTime.DatetimeTicksLong()
+            };
+        }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommunicationBase.Models
+namespace Rediscovery.Communication.Base.Models
 {
     public class FeatureState
     {

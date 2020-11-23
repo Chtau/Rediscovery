@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationResourceProvid
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Service.DAL", "DALDesktopService\Rediscovery.Service.DAL.csproj", "{4B70C4A8-6C52-423D-B368-0BD76B432AF8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationBase", "CommunicationBase\CommunicationBase.csproj", "{54D3ED5B-3BCB-4872-850F-5F5B3B422FE3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Communication.Base", "CommunicationBase\Rediscovery.Communication.Base.csproj", "{54D3ED5B-3BCB-4872-850F-5F5B3B422FE3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Shared.Base", "SharedModels\Rediscovery.Shared.Base.csproj", "{FC34856C-FE50-49CE-812E-053F9F5193FF}"
 EndProject

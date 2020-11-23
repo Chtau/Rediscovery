@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommunicationBase\CommunicationBase.csproj" />
+    <ProjectReference Include="..\CommunicationBase\Rediscovery.Communication.Base.csproj" />
   </ItemGroup>
   
   <ItemGroup>

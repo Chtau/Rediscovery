@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommunicationBase
+namespace Rediscovery.Communication.Base
 {
     public static class ChannelHelper
     {

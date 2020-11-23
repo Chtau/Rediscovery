@@ -4,11 +4,14 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
-public static class ClaimsExtensions
+namespace Rediscovery.Communication.Base
 {
-    public static string GetSid(this IEnumerable<Claim> claims)
+    public static class ClaimsExtensions
     {
-        return claims.Where(c => c.Type == ClaimTypes.Sid)
-               .Select(c => c.Value).FirstOrDefault();
+        public static string GetSid(this IEnumerable<Claim> claims)
+        {
+            return claims.Where(c => c.Type == ClaimTypes.Sid)
+                   .Select(c => c.Value).FirstOrDefault();
+        }
     }
 }
