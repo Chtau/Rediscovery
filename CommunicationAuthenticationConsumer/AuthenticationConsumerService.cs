@@ -1,19 +1,20 @@
-﻿using CommunicationBase;
+﻿using Rediscovery.Communication.Base;
 using Grpc.Core;
-using SharedBase.Connection;
-using SharedBase.Logging;
+using Rediscovery.Shared.Base.Connection;
+using Rediscovery.Shared.Base.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Rediscovery.Shared.Base.Extensions;
 
 namespace CommunicationAuthenticationConsumer
 {
     public class AuthenticationConsumerService : IAuthenticationConsumerService
     {
         public event EventHandler<WelcomeDeviceReply> ReceivedWelcomeReply;
-        public event EventHandler<SharedBase.Connection.Manifest> ReceivedManifestReply;
+        public event EventHandler<Rediscovery.Shared.Base.Connection.Manifest> ReceivedManifestReply;
 
         private Authentication.AuthentionExchange.AuthentionExchangeClient authenticationClient;
         private Manifest.ManifestExchange.ManifestExchangeClient manifestClient;
@@ -96,7 +97,7 @@ namespace CommunicationAuthenticationConsumer
             });
         }
 
-        public void RequestManifest(string token, Action<SharedBase.Connection.Manifest> callback = null)
+        public void RequestManifest(string token, Action<Rediscovery.Shared.Base.Connection.Manifest> callback = null)
         {
             Task.Run(async () =>
             {
@@ -107,11 +108,11 @@ namespace CommunicationAuthenticationConsumer
                     var meta = new Metadata();
                     meta.AddAuthorizationHeader(token);
                     var reply = await manifestClient.DeviceAsync(new Google.Protobuf.WellKnownTypes.Empty(), headers: meta, cancellationToken: ctsRequestManifest.Token);
-                    var replyMsg = new SharedBase.Connection.Manifest
+                    var replyMsg = new Rediscovery.Shared.Base.Connection.Manifest
                     {
-                        AppMinimumVersion = SharedBase.Core.Version.ConvertTo(reply.AppMinimumVersion),
+                        AppMinimumVersion = Rediscovery.Shared.Base.Core.Version.ConvertTo(reply.AppMinimumVersion),
                         ClientName = reply.ClientName,
-                        ClientVersion = SharedBase.Core.Version.ConvertTo(reply.ClientVersion),
+                        ClientVersion = Rediscovery.Shared.Base.Core.Version.ConvertTo(reply.ClientVersion),
                         SupportedFeatures = OnGetFeatures(reply.SupportedFeatures),
                     };
                     callback?.Invoke(replyMsg);
@@ -124,27 +125,27 @@ namespace CommunicationAuthenticationConsumer
             });
         }
 
-        private List<SharedBase.Device.FeatureDefinitionExtended> OnGetFeatures(IEnumerable<FeatureDefinitionExtended> featureDefinitionExtendeds)
+        private List<Rediscovery.Shared.Base.Device.FeatureDefinitionExtended> OnGetFeatures(IEnumerable<FeatureDefinitionExtended> featureDefinitionExtendeds)
         {
-            var list = new List<SharedBase.Device.FeatureDefinitionExtended>();
+            var list = new List<Rediscovery.Shared.Base.Device.FeatureDefinitionExtended>();
             if (featureDefinitionExtendeds != null)
             {
                 foreach (var item in featureDefinitionExtendeds)
                 {
-                    list.Add(new SharedBase.Device.FeatureDefinitionExtended
+                    list.Add(new Rediscovery.Shared.Base.Device.FeatureDefinitionExtended
                     {
                         Author = item.Author,
-                        ControlIntegrationPoint = (SharedBase.Device.IntegrationPoint)(int)item.ControlIntegrationPoint,
+                        ControlIntegrationPoint = (Rediscovery.Shared.Base.Device.IntegrationPoint)(int)item.ControlIntegrationPoint,
                         DisplayName = item.DisplayName,
                         Documentation = item.Documentation,
-                        FeatureIntegrationPoint = (SharedBase.Device.IntegrationPoint)(int)item.FeatureIntegrationPoint,
+                        FeatureIntegrationPoint = (Rediscovery.Shared.Base.Device.IntegrationPoint)(int)item.FeatureIntegrationPoint,
                         Id = item.Id.SafeGuid(),
-                        MinimalControlIntegrationPoint = SharedBase.Core.Version.ConvertTo(item.MinimalControlIntegrationPoint),
-                        MinimalFeatureIntegrationPoint = SharedBase.Core.Version.ConvertTo(item.MinimalFeatureIntegrationPoint),
+                        MinimalControlIntegrationPoint = Rediscovery.Shared.Base.Core.Version.ConvertTo(item.MinimalControlIntegrationPoint),
+                        MinimalFeatureIntegrationPoint = Rediscovery.Shared.Base.Core.Version.ConvertTo(item.MinimalFeatureIntegrationPoint),
                         PluginDirectory = item.PluginDirectory,
                         HasProfilConfiguration = item.HasProfilConfiguration,
                         HasSettingConfiguration = item.HasSettingConfiguration,
-                        Version = SharedBase.Core.Version.ConvertTo(item.Version),
+                        Version = Rediscovery.Shared.Base.Core.Version.ConvertTo(item.Version),
                         Website = item.Website,
                         IsClientImplementation = item.IsClientImplementation,
                         NativeResources = item.NativeResources,

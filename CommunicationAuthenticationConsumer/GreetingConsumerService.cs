@@ -1,6 +1,7 @@
 ﻿using Grpc.Core;
-using SharedBase.Connection;
-using SharedBase.Logging;
+using Rediscovery.Shared.Base.Connection;
+using Rediscovery.Shared.Base.Extensions;
+using Rediscovery.Shared.Base.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -57,7 +58,7 @@ namespace CommunicationAuthenticationConsumer
                         Platform = greetingDevice.Platform.EmptyIfNull()
                     };
                     var reply = await client.GreetingAsync(msg, cancellationToken: cts.Token, deadline: DateTime.UtcNow.AddSeconds(secondsTimeout));
-                    var canConnect = SharedBase.Connection.Enums.AllowConnect.None;
+                    var canConnect = Rediscovery.Shared.Base.Connection.Enums.AllowConnect.None;
                     switch (reply.CanConnect)
                     {
                         case Handshake.GreetingReply.Types.State.None:
