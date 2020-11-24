@@ -63,9 +63,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Feature.Client.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.App.Manager.GUI", "RediscoveryManager.GUI\Rediscovery.Client.App.Manager.GUI.csproj", "{FD064DEB-6858-44A3-BE20-EB42F4633410}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationLoggerProvider", "CommunicationLoggerProvider\CommunicationLoggerProvider.csproj", "{537F9A3F-A269-42BC-8808-6F53135C5614}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Communication.Logger.Provider", "CommunicationLoggerProvider\Rediscovery.Communication.Logger.Provider.csproj", "{537F9A3F-A269-42BC-8808-6F53135C5614}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationLoggerConsumer", "CommunicationLoggerConsumer\CommunicationLoggerConsumer.csproj", "{BFE0D360-5DFA-4752-80AF-7CB13BF98E71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Communication.Logger.Consumer", "CommunicationLoggerConsumer\Rediscovery.Communication.Logger.Consumer.csproj", "{BFE0D360-5DFA-4752-80AF-7CB13BF98E71}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Feature.Client.FileExchange.UI", "ClientFeatureFileExchangeUI\Rediscovery.Feature.Client.FileExchange.UI.csproj", "{084FA40C-F1ED-4DB8-856C-29A763F19D17}"
 EndProject

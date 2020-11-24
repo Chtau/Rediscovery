@@ -1,17 +1,17 @@
-﻿using SharedBase.Logging;
+﻿using Rediscovery.Shared.Base.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace CommunicationLoggerProvider
+namespace Rediscovery.Communication.Logger.Provider
 {
     public class LoggerHandler : ILoggerHandler
     {
         private readonly IDirectLogger _directLogger;
 
         private List<LoggerEntry> logEntries = new List<LoggerEntry>();
-        private SharedBase.Logging.LoggerEntry.LoggerType logLevel = LoggerEntry.LoggerType.Trace;
+        private Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType logLevel = LoggerEntry.LoggerType.Trace;
         public bool Pause { get; set; }
         public int MaxEntires { get; set; } = 100;
         private DateTime lastEntiresChangedEvent = DateTime.UtcNow.AddMinutes(-1);
@@ -76,7 +76,7 @@ namespace CommunicationLoggerProvider
             }
         }
 
-        private bool OnAllowedLogLevel(SharedBase.Logging.LoggerEntry.LoggerType loggerType)
+        private bool OnAllowedLogLevel(Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType loggerType)
         {
             return (int)loggerType >= (int)logLevel;
         }
@@ -98,7 +98,7 @@ namespace CommunicationLoggerProvider
                 {
                     if (int.TryParse(logCommandConfig.Data, out int level))
                     {
-                        var newLogLevel = (SharedBase.Logging.LoggerEntry.LoggerType)level;
+                        var newLogLevel = (Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType)level;
                         logLevel = newLogLevel;
                         ClearEntries();
                         return new LogCommandConfigResult

@@ -1,11 +1,11 @@
-﻿using CommunicationLoggerProvider.ProtoService;
+﻿using Rediscovery.Communication.Logger.Provider.ProtoService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommunicationLoggerProvider
+namespace Rediscovery.Communication.Logger.Provider
 {
     public static class CommunicationLoggerProviderExtensions
     {

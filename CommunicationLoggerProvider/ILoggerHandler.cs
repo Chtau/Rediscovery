@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommunicationLoggerProvider
+namespace Rediscovery.Communication.Logger.Provider
 {
     public interface ILoggerHandler
     {
@@ -10,9 +10,9 @@ namespace CommunicationLoggerProvider
         int MaxEntires { get; set; }
         event EventHandler EntriesChanged;
 
-        void NewEntry(SharedBase.Logging.LoggerEntry loggerEntry);
-        List<SharedBase.Logging.LoggerEntry> Get();
+        void NewEntry(Rediscovery.Shared.Base.Logging.LoggerEntry loggerEntry);
+        List<Rediscovery.Shared.Base.Logging.LoggerEntry> Get();
         void ClearEntries();
-        SharedBase.Logging.LogCommandConfigResult ExecuteCommand(SharedBase.Logging.LogCommandConfig logCommandConfig);
+        Rediscovery.Shared.Base.Logging.LogCommandConfigResult ExecuteCommand(Rediscovery.Shared.Base.Logging.LogCommandConfig logCommandConfig);
     }
 }

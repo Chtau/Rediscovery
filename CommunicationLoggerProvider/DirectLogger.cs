@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommunicationLoggerProvider
+namespace Rediscovery.Communication.Logger.Provider
 {
     public class DirectLogger : IDirectLogger
     {

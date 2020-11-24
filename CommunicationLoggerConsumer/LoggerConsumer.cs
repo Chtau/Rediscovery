@@ -1,27 +1,28 @@
-﻿using CommunicationBase;
+﻿using Rediscovery.Communication.Base;
 using Grpc.Core;
-using SharedBase.Logging;
+using Rediscovery.Shared.Base.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Rediscovery.Shared.Base.Extensions;
 
-namespace CommunicationLoggerConsumer
+namespace Rediscovery.Communication.Logger.Consumer
 {
     public class LoggerConsumer : ILoggerConsumer
     {
         private readonly IDirectLogger _logger;
 
-        private Logger.LoggerExchange.LoggerExchangeClient exchangeClient;
-        private IClientStreamWriter<Logger.LogEntry> _requestStream;
+        private ProtoLogger.LoggerExchange.LoggerExchangeClient exchangeClient;
+        private IClientStreamWriter<ProtoLogger.LogEntry> _requestStream;
         private ConcurrentQueue<LoggerEntry> concurrentQueue = new ConcurrentQueue<LoggerEntry>();
 
         private Channel channel = null;
         private CancellationTokenSource ctsLogger = null;
 
-        public event EventHandler<SharedBase.Logging.LogCommandConfigResult> LoggerCommandExecuted;
+        public event EventHandler<Rediscovery.Shared.Base.Logging.LogCommandConfigResult> LoggerCommandExecuted;
 
         public bool IsConnect
         {
@@ -46,7 +47,7 @@ namespace CommunicationLoggerConsumer
             try
             {
                 channel = ChannelHelper.CreateChannel(connectionConfiguration);
-                exchangeClient = new Logger.LoggerExchange.LoggerExchangeClient(channel);
+                exchangeClient = new ProtoLogger.LoggerExchange.LoggerExchangeClient(channel);
                 return exchangeClient != null;
             }
             catch (Exception ex)
@@ -121,31 +122,31 @@ namespace CommunicationLoggerConsumer
         {
             try
             {
-                var logLevel = Logger.LogEntry.Types.LoggerType.Information;
+                var logLevel = ProtoLogger.LogEntry.Types.LoggerType.Information;
                 switch (loggerEntry.LogLevel)
                 {
                     case LoggerEntry.LoggerType.Trace:
-                        logLevel = Logger.LogEntry.Types.LoggerType.Trace;
+                        logLevel = ProtoLogger.LogEntry.Types.LoggerType.Trace;
                         break;
                     case LoggerEntry.LoggerType.Debug:
-                        logLevel = Logger.LogEntry.Types.LoggerType.Debug;
+                        logLevel = ProtoLogger.LogEntry.Types.LoggerType.Debug;
                         break;
                     case LoggerEntry.LoggerType.Information:
-                        logLevel = Logger.LogEntry.Types.LoggerType.Information;
+                        logLevel = ProtoLogger.LogEntry.Types.LoggerType.Information;
                         break;
                     case LoggerEntry.LoggerType.Warning:
-                        logLevel = Logger.LogEntry.Types.LoggerType.Warning;
+                        logLevel = ProtoLogger.LogEntry.Types.LoggerType.Warning;
                         break;
                     case LoggerEntry.LoggerType.Error:
-                        logLevel = Logger.LogEntry.Types.LoggerType.Error;
+                        logLevel = ProtoLogger.LogEntry.Types.LoggerType.Error;
                         break;
                     case LoggerEntry.LoggerType.Critical:
-                        logLevel = Logger.LogEntry.Types.LoggerType.Critical;
+                        logLevel = ProtoLogger.LogEntry.Types.LoggerType.Critical;
                         break;
                     default:
                         break;
                 }
-                await _requestStream.WriteAsync(new Logger.LogEntry
+                await _requestStream.WriteAsync(new ProtoLogger.LogEntry
                 {
                     Id = loggerEntry.Id,
                     LoggerType = logLevel,
@@ -175,22 +176,22 @@ namespace CommunicationLoggerConsumer
                     var meta = new Metadata();
                     meta.AddAuthorizationHeader(token);
 
-                    Logger.LogCommandConfig.Types.Command commandType = Logger.LogCommandConfig.Types.Command.State;
+                    ProtoLogger.LogCommandConfig.Types.Command commandType = ProtoLogger.LogCommandConfig.Types.Command.State;
                     switch (logCommandConfig.CommandType)
                     {
                         case LogCommandConfig.Command.Clear:
-                            commandType = Logger.LogCommandConfig.Types.Command.Clear;
+                            commandType = ProtoLogger.LogCommandConfig.Types.Command.Clear;
                             break;
                         case LogCommandConfig.Command.ChangeLogLevel:
-                            commandType = Logger.LogCommandConfig.Types.Command.ChangeLogLevel;
+                            commandType = ProtoLogger.LogCommandConfig.Types.Command.ChangeLogLevel;
                             break;
                         case LogCommandConfig.Command.State:
-                            commandType = Logger.LogCommandConfig.Types.Command.State;
+                            commandType = ProtoLogger.LogCommandConfig.Types.Command.State;
                             break;
                         default:
                             break;
                     }
-                    Logger.LogCommandConfig logCommand = new Logger.LogCommandConfig
+                    ProtoLogger.LogCommandConfig logCommand = new ProtoLogger.LogCommandConfig
                     {
                         Id = logCommandConfig.Id.ToString(),
                         Data = logCommandConfig.Data.EmptyIfNull(),

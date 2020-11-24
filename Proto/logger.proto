@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package logger;
+package protoLogger;
 
 service LoggerExchange {
   rpc Add (stream LogEntry) returns (stream LogState);
