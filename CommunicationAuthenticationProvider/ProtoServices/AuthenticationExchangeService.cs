@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using Grpc.Core;
-using Authentication;
 using System.Threading.Tasks;
 using Rediscovery.Communication.Authentication.Provider.Services;
 using Microsoft.Extensions.Logging;
@@ -11,7 +10,7 @@ using Rediscovery.Shared.Base.Extensions;
 
 namespace Rediscovery.Communication.Authentication.Provider.ProtoServices
 {
-    public class AuthenticationExchangeService : AuthentionExchange.AuthentionExchangeBase
+    public class AuthenticationExchangeService : ProtoAuthentication.AuthentionExchange.AuthentionExchangeBase
     {
         private readonly ILogger<AuthenticationExchangeService> _logger;
         private readonly IAuthenticationManager _authenticationManager;
@@ -26,14 +25,14 @@ namespace Rediscovery.Communication.Authentication.Provider.ProtoServices
             _tokenService = tokenService;
         }
 
-        public override async Task<WelcomeDeviceReply> Welcome(WelcomeDeviceMessage request, ServerCallContext context)
+        public override async Task<ProtoAuthentication.WelcomeDeviceReply> Welcome(ProtoAuthentication.WelcomeDeviceMessage request, ServerCallContext context)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Welcome message received");
             Console.ResetColor();
-            var welcomeDeviceReply = new WelcomeDeviceReply
+            var welcomeDeviceReply = new ProtoAuthentication.WelcomeDeviceReply
             {
-                ConnectionState = WelcomeDeviceReply.Types.State.Offline,
+                ConnectionState = ProtoAuthentication.WelcomeDeviceReply.Types.State.Offline,
                 Token = ""
             };
             try
@@ -44,9 +43,9 @@ namespace Rediscovery.Communication.Authentication.Provider.ProtoServices
                     DeviceIdentifier = request.DeviceIdentifier,
                 }, (result) =>
                 {
-                    welcomeDeviceReply = new WelcomeDeviceReply
+                    welcomeDeviceReply = new ProtoAuthentication.WelcomeDeviceReply
                     {
-                        ConnectionState = (WelcomeDeviceReply.Types.State)(int)result.State,
+                        ConnectionState = (ProtoAuthentication.WelcomeDeviceReply.Types.State)(int)result.State,
                         Token = result.Token.EmptyIfNull()
                     };
                 });

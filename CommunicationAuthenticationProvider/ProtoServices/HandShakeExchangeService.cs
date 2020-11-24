@@ -1,5 +1,4 @@
 ﻿using Grpc.Core;
-using Handshake;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Rediscovery.Communication.Authentication.Provider.ProtoServices
 {
-    public class HandShakeExchangeService : Handshake.HandShakeExchange.HandShakeExchangeBase
+    public class HandShakeExchangeService : ProtoHandshake.HandShakeExchange.HandShakeExchangeBase
     {
         private readonly ILogger<HandShakeExchangeService> _logger;
         private readonly IAuthenticationManager _authenticationManager;
@@ -19,13 +18,13 @@ namespace Rediscovery.Communication.Authentication.Provider.ProtoServices
             _authenticationManager = authenticationManager;
         }
 
-        public override async Task<GreetingReply> Greeting(GreetingMessage request, ServerCallContext context)
+        public override async Task<ProtoHandshake.GreetingReply> Greeting(ProtoHandshake.GreetingMessage request, ServerCallContext context)
         {
-            var reply = new GreetingReply
+            var reply = new ProtoHandshake.GreetingReply
             {
                 SSLPort = -1,
                 PEM = "",
-                CanConnect = GreetingReply.Types.State.None,
+                CanConnect = ProtoHandshake.GreetingReply.Types.State.None,
                 SslActive = false,
             };
             try
@@ -53,19 +52,19 @@ namespace Rediscovery.Communication.Authentication.Provider.ProtoServices
                 switch (allowed)
                 {
                     case Rediscovery.Shared.Base.Connection.Enums.AllowConnect.None:
-                        reply.CanConnect = GreetingReply.Types.State.None;
+                        reply.CanConnect = ProtoHandshake.GreetingReply.Types.State.None;
                         break;
                     case Rediscovery.Shared.Base.Connection.Enums.AllowConnect.OK:
-                        reply.CanConnect = GreetingReply.Types.State.Ok;
+                        reply.CanConnect = ProtoHandshake.GreetingReply.Types.State.Ok;
                         break;
                     case Rediscovery.Shared.Base.Connection.Enums.AllowConnect.Error:
-                        reply.CanConnect = GreetingReply.Types.State.Error;
+                        reply.CanConnect = ProtoHandshake.GreetingReply.Types.State.Error;
                         break;
                     case Rediscovery.Shared.Base.Connection.Enums.AllowConnect.Denied:
-                        reply.CanConnect = GreetingReply.Types.State.Denied;
+                        reply.CanConnect = ProtoHandshake.GreetingReply.Types.State.Denied;
                         break;
                     case Rediscovery.Shared.Base.Connection.Enums.AllowConnect.UnkownDevice:
-                        reply.CanConnect = GreetingReply.Types.State.WaitForApprovel;
+                        reply.CanConnect = ProtoHandshake.GreetingReply.Types.State.WaitForApprovel;
                         break;
                     default:
                         break;

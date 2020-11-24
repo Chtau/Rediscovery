@@ -16,8 +16,8 @@ namespace CommunicationAuthenticationConsumer
         public event EventHandler<WelcomeDeviceReply> ReceivedWelcomeReply;
         public event EventHandler<Rediscovery.Shared.Base.Connection.Manifest> ReceivedManifestReply;
 
-        private Authentication.AuthentionExchange.AuthentionExchangeClient authenticationClient;
-        private Manifest.ManifestExchange.ManifestExchangeClient manifestClient;
+        private ProtoAuthentication.AuthentionExchange.AuthentionExchangeClient authenticationClient;
+        private ProtoManifest.ManifestExchange.ManifestExchangeClient manifestClient;
         private readonly ILogger _logger;
 
         private Channel channel = null;
@@ -34,8 +34,8 @@ namespace CommunicationAuthenticationConsumer
             try
             {
                 channel = ChannelHelper.CreateChannel(connectionConfiguration);
-                authenticationClient = new Authentication.AuthentionExchange.AuthentionExchangeClient(channel);
-                manifestClient = new Manifest.ManifestExchange.ManifestExchangeClient(channel);
+                authenticationClient = new ProtoAuthentication.AuthentionExchange.AuthentionExchangeClient(channel);
+                manifestClient = new ProtoManifest.ManifestExchange.ManifestExchangeClient(channel);
                 return authenticationClient != null;
             } catch (Exception ex)
             {
@@ -72,7 +72,7 @@ namespace CommunicationAuthenticationConsumer
                 try
                 {
                     ctsWelcome = new CancellationTokenSource();
-                    var msg = new Authentication.WelcomeDeviceMessage
+                    var msg = new ProtoAuthentication.WelcomeDeviceMessage
                     {
                         DeviceIdentifier = message.DeviceIdentifier,
                     };

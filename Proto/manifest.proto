@@ -3,7 +3,7 @@ syntax = "proto3";
 import "google/protobuf/empty.proto";
 import "shared.proto";
 
-package manifest;
+package protoManifest;
 
 service ManifestExchange {
   rpc Device (google.protobuf.Empty) returns (ManifestReply);

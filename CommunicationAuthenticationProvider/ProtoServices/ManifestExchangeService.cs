@@ -5,14 +5,13 @@ using System.Threading.Tasks;
 using Rediscovery.Communication.Authentication.Provider.Services;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using Manifest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using Rediscovery.Shared.Base.Extensions;
 
 namespace Rediscovery.Communication.Authentication.Provider.ProtoServices
 {
-    public class ManifestExchangeService : ManifestExchange.ManifestExchangeBase
+    public class ManifestExchangeService : ProtoManifest.ManifestExchange.ManifestExchangeBase
     {
         private readonly ILogger<ManifestExchangeService> _logger;
         private readonly IAuthenticationManager _authenticationManager;
@@ -55,9 +54,9 @@ namespace Rediscovery.Communication.Authentication.Provider.ProtoServices
         }
 
         [Authorize(Policy = "DeviceAndConsumer")]
-        public override Task<ManifestReply> Device(Empty request, ServerCallContext context)
+        public override Task<ProtoManifest.ManifestReply> Device(Empty request, ServerCallContext context)
         {
-            var manifest = new ManifestReply
+            var manifest = new ProtoManifest.ManifestReply
             {
                 AppMinimumVersion = "",
                 ClientName = "",
@@ -67,7 +66,7 @@ namespace Rediscovery.Communication.Authentication.Provider.ProtoServices
             {
                 _logger.LogTrace("Received Manifest request");
                 var e = _authenticationManager.GetManifest();
-                manifest = new ManifestReply
+                manifest = new ProtoManifest.ManifestReply
                 {
                     AppMinimumVersion = e.AppMinimumVersion.ToString().EmptyIfNull(),
                     ClientName = e.ClientName.EmptyIfNull(),

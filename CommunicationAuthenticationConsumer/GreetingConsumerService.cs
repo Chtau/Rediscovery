@@ -45,8 +45,8 @@ namespace CommunicationAuthenticationConsumer
                 {
                     _logger.LogTrace("Consumer request Greeting");
                     channel = new Channel(host, port, ChannelCredentials.Insecure);
-                    var client = new Handshake.HandShakeExchange.HandShakeExchangeClient(channel);
-                    var msg = new Handshake.GreetingMessage
+                    var client = new ProtoHandshake.HandShakeExchange.HandShakeExchangeClient(channel);
+                    var msg = new ProtoHandshake.GreetingMessage
                     {
                         DeviceIdentifier = greetingDevice.DeviceIdentifier.EmptyIfNull(),
                         DeviceName = greetingDevice.DeviceName.EmptyIfNull(),
@@ -61,19 +61,19 @@ namespace CommunicationAuthenticationConsumer
                     var canConnect = Rediscovery.Shared.Base.Connection.Enums.AllowConnect.None;
                     switch (reply.CanConnect)
                     {
-                        case Handshake.GreetingReply.Types.State.None:
+                        case ProtoHandshake.GreetingReply.Types.State.None:
                             canConnect = Enums.AllowConnect.None;
                             break;
-                        case Handshake.GreetingReply.Types.State.Ok:
+                        case ProtoHandshake.GreetingReply.Types.State.Ok:
                             canConnect = Enums.AllowConnect.OK;
                             break;
-                        case Handshake.GreetingReply.Types.State.Error:
+                        case ProtoHandshake.GreetingReply.Types.State.Error:
                             canConnect = Enums.AllowConnect.Error;
                             break;
-                        case Handshake.GreetingReply.Types.State.Denied:
+                        case ProtoHandshake.GreetingReply.Types.State.Denied:
                             canConnect = Enums.AllowConnect.Denied;
                             break;
-                        case Handshake.GreetingReply.Types.State.WaitForApprovel:
+                        case ProtoHandshake.GreetingReply.Types.State.WaitForApprovel:
                             canConnect = Enums.AllowConnect.UnkownDevice;
                             break;
                         default:

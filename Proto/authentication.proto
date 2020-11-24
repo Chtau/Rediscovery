@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package authentication;
+package protoAuthentication;
 
 service AuthentionExchange {
   rpc Welcome (WelcomeDeviceMessage) returns (WelcomeDeviceReply);
