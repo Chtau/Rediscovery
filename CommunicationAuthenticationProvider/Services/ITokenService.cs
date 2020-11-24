@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
 
-namespace CommunicationAuthenticationProvider.Services
+namespace Rediscovery.Communication.Authentication.Provider.Services
 {
     public interface ITokenService
     {

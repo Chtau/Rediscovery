@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using CommunicationAuthenticationProvider.Services;
+using Rediscovery.Communication.Authentication.Provider.Services;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Manifest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
+using Rediscovery.Shared.Base.Extensions;
 
-namespace CommunicationAuthenticationProvider.ProtoServices
+namespace Rediscovery.Communication.Authentication.Provider.ProtoServices
 {
     public class ManifestExchangeService : ManifestExchange.ManifestExchangeBase
     {
@@ -22,7 +23,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
             _authenticationManager = authenticationManager;
         }
 
-        private IEnumerable<FeatureDefinitionExtended> OnGetFeatures(List<SharedBase.Device.FeatureDefinitionExtended> featureDefinitionExtendeds)
+        private IEnumerable<FeatureDefinitionExtended> OnGetFeatures(List<Rediscovery.Shared.Base.Device.FeatureDefinitionExtended> featureDefinitionExtendeds)
         {
             var list = new List<FeatureDefinitionExtended>();
             if (featureDefinitionExtendeds != null)

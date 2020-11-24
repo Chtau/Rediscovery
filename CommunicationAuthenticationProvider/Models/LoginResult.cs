@@ -1,9 +1,9 @@
-﻿using SharedBase.Authentication;
+﻿using Rediscovery.Shared.Base.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommunicationAuthenticationProvider.Models
+namespace Rediscovery.Communication.Authentication.Provider.Models
 {
     public class LoginResult
     {

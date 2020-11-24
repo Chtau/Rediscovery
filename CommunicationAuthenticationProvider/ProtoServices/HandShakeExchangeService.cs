@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CommunicationAuthenticationProvider.ProtoServices
+namespace Rediscovery.Communication.Authentication.Provider.ProtoServices
 {
     public class HandShakeExchangeService : Handshake.HandShakeExchange.HandShakeExchangeBase
     {
@@ -31,7 +31,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
             try
             {
                 _logger.LogTrace("Received Greeting request");
-                var allowed = await OnReceivedGreeting(new SharedBase.Connection.GreetingDeviceMessage
+                var allowed = await OnReceivedGreeting(new Rediscovery.Shared.Base.Connection.GreetingDeviceMessage
                 {
                     DeviceIdentifier = request.DeviceIdentifier,
                     DeviceName = request.DeviceName,
@@ -42,7 +42,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                     OSVersion = request.OSVersion,
                     Platform = request.Platform
                 });
-                if (allowed == SharedBase.Connection.Enums.AllowConnect.OK)
+                if (allowed == Rediscovery.Shared.Base.Connection.Enums.AllowConnect.OK)
                 {
                     if (_authenticationManager.GetSSLActive())
                     {
@@ -52,19 +52,19 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                 }
                 switch (allowed)
                 {
-                    case SharedBase.Connection.Enums.AllowConnect.None:
+                    case Rediscovery.Shared.Base.Connection.Enums.AllowConnect.None:
                         reply.CanConnect = GreetingReply.Types.State.None;
                         break;
-                    case SharedBase.Connection.Enums.AllowConnect.OK:
+                    case Rediscovery.Shared.Base.Connection.Enums.AllowConnect.OK:
                         reply.CanConnect = GreetingReply.Types.State.Ok;
                         break;
-                    case SharedBase.Connection.Enums.AllowConnect.Error:
+                    case Rediscovery.Shared.Base.Connection.Enums.AllowConnect.Error:
                         reply.CanConnect = GreetingReply.Types.State.Error;
                         break;
-                    case SharedBase.Connection.Enums.AllowConnect.Denied:
+                    case Rediscovery.Shared.Base.Connection.Enums.AllowConnect.Denied:
                         reply.CanConnect = GreetingReply.Types.State.Denied;
                         break;
-                    case SharedBase.Connection.Enums.AllowConnect.UnkownDevice:
+                    case Rediscovery.Shared.Base.Connection.Enums.AllowConnect.UnkownDevice:
                         reply.CanConnect = GreetingReply.Types.State.WaitForApprovel;
                         break;
                     default:
@@ -79,7 +79,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
             }
         }
 
-        private async Task<SharedBase.Connection.Enums.AllowConnect> OnReceivedGreeting(SharedBase.Connection.GreetingDeviceMessage e)
+        private async Task<Rediscovery.Shared.Base.Connection.Enums.AllowConnect> OnReceivedGreeting(Rediscovery.Shared.Base.Connection.GreetingDeviceMessage e)
         {
             _logger.LogTrace("Provider received Greeting message from consumer");
             return await Task.Run(async () =>
@@ -87,15 +87,15 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                 try
                 {
                     var canConnect = await _authenticationManager.AllowedToLogin(e.DeviceIdentifier, e);
-                    if (canConnect == SharedBase.Connection.Enums.AllowConnect.OK)
+                    if (canConnect == Rediscovery.Shared.Base.Connection.Enums.AllowConnect.OK)
                     {
                         return canConnect;
-                    } else if (canConnect == SharedBase.Connection.Enums.AllowConnect.UnkownDevice)
+                    } else if (canConnect == Rediscovery.Shared.Base.Connection.Enums.AllowConnect.UnkownDevice)
                     {
                         if (await _authenticationManager.AddPendingApprovel(e))
                             return canConnect;
                         else
-                            return SharedBase.Connection.Enums.AllowConnect.Error;
+                            return Rediscovery.Shared.Base.Connection.Enums.AllowConnect.Error;
                     } else
                     {
                         return canConnect;
@@ -104,7 +104,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                 catch (Exception ex)
                 {
                     _logger.LogError(ex.ToString());
-                    return SharedBase.Connection.Enums.AllowConnect.Error;
+                    return Rediscovery.Shared.Base.Connection.Enums.AllowConnect.Error;
                 }
             });
         }

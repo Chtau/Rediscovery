@@ -4,11 +4,12 @@ using System.Text;
 using Grpc.Core;
 using Authentication;
 using System.Threading.Tasks;
-using CommunicationAuthenticationProvider.Services;
+using Rediscovery.Communication.Authentication.Provider.Services;
 using Microsoft.Extensions.Logging;
-using SharedBase.Authentication;
+using Rediscovery.Shared.Base.Authentication;
+using Rediscovery.Shared.Base.Extensions;
 
-namespace CommunicationAuthenticationProvider.ProtoServices
+namespace Rediscovery.Communication.Authentication.Provider.ProtoServices
 {
     public class AuthenticationExchangeService : AuthentionExchange.AuthentionExchangeBase
     {
@@ -38,7 +39,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
             try
             {
                 _logger.LogTrace("Provider Welcome received");
-                await OnReceivedWelcomeDeviceMessage(new SharedBase.Connection.WelcomeDeviceMessage
+                await OnReceivedWelcomeDeviceMessage(new Rediscovery.Shared.Base.Connection.WelcomeDeviceMessage
                 {
                     DeviceIdentifier = request.DeviceIdentifier,
                 }, (result) =>
@@ -59,7 +60,7 @@ namespace CommunicationAuthenticationProvider.ProtoServices
             }
         }
         
-        private async Task OnReceivedWelcomeDeviceMessage(SharedBase.Connection.WelcomeDeviceMessage e, Action<SharedBase.Connection.WelcomeDeviceReply> callback)
+        private async Task OnReceivedWelcomeDeviceMessage(Rediscovery.Shared.Base.Connection.WelcomeDeviceMessage e, Action<Rediscovery.Shared.Base.Connection.WelcomeDeviceReply> callback)
         {
             _logger.LogTrace("Provider received Welcome message from consumer");
             await Task.Run(async () =>
@@ -69,33 +70,33 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                     var result = await _authenticationManager.RequestLogin(e);
                     if (result.State == LoginState.Denied)
                     {
-                        callback.Invoke(new SharedBase.Connection.WelcomeDeviceReply
+                        callback.Invoke(new Rediscovery.Shared.Base.Connection.WelcomeDeviceReply
                         {
-                            State = SharedBase.Connection.Enums.ConnectionState.Denied,
+                            State = Rediscovery.Shared.Base.Connection.Enums.ConnectionState.Denied,
                             Token = null
                         });
                     }
                     else if (result.State == LoginState.Failed)
                     {
-                        callback.Invoke(new SharedBase.Connection.WelcomeDeviceReply
+                        callback.Invoke(new Rediscovery.Shared.Base.Connection.WelcomeDeviceReply
                         {
-                            State = SharedBase.Connection.Enums.ConnectionState.Error,
+                            State = Rediscovery.Shared.Base.Connection.Enums.ConnectionState.Error,
                             Token = null
                         });
                     }
                     else if (result.State == LoginState.RequiredAuthorizeKey)
                     {
-                        callback.Invoke(new SharedBase.Connection.WelcomeDeviceReply
+                        callback.Invoke(new Rediscovery.Shared.Base.Connection.WelcomeDeviceReply
                         {
-                            State = SharedBase.Connection.Enums.ConnectionState.WaitForApprovel,
+                            State = Rediscovery.Shared.Base.Connection.Enums.ConnectionState.WaitForApprovel,
                             Token = null
                         });
                     }
                     else if (result.State == LoginState.OK)
                     {
-                        callback.Invoke(new SharedBase.Connection.WelcomeDeviceReply
+                        callback.Invoke(new Rediscovery.Shared.Base.Connection.WelcomeDeviceReply
                         {
-                            State = SharedBase.Connection.Enums.ConnectionState.OK,
+                            State = Rediscovery.Shared.Base.Connection.Enums.ConnectionState.OK,
                             Token = _tokenService.CreateNewToken(result.DeviceIdentifier, result.Id.ToString(), result.Role)
                         });
                     }
@@ -103,9 +104,9 @@ namespace CommunicationAuthenticationProvider.ProtoServices
                 catch (Exception ex)
                 {
                     _logger.LogError(ex.ToString());
-                    callback.Invoke(new SharedBase.Connection.WelcomeDeviceReply
+                    callback.Invoke(new Rediscovery.Shared.Base.Connection.WelcomeDeviceReply
                     {
-                        State = SharedBase.Connection.Enums.ConnectionState.Error,
+                        State = Rediscovery.Shared.Base.Connection.Enums.ConnectionState.Error,
                         Token = null
                     });
                 }
