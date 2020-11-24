@@ -1,23 +1,23 @@
-﻿using CommunicationHeartbeatProvider;
+﻿using Rediscovery.Communication.Heartbeat.Provider;
 using Grpc.Core;
-using Heartbeat;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Rediscovery.Communication.Base;
 
-namespace CommunicationHearthbeatProvider.ProtoServices
+namespace Rediscovery.Communication.Heartbeat.Provider.ProtoServices
 {
-    public class HeartbeatExchangeService : Heartbeat.HeartbeatExchange.HeartbeatExchangeBase
+    public class HeartbeatExchangeService : ProtoHeartbeat.HeartbeatExchange.HeartbeatExchangeBase
     {
         private readonly ILogger<HeartbeatExchangeService> _logger;
-        private readonly CommunicationHeartbeatProvider.IConfiguration _configuration;
+        private readonly Rediscovery.Communication.Heartbeat.Provider.IConfiguration _configuration;
         private readonly IHeartbeatStatistic _heartbeatStatistic;
         private readonly IHeartbeatActive _heartbeatActive;
 
-        public HeartbeatExchangeService(ILoggerFactory loggerFactory, CommunicationHeartbeatProvider.IConfiguration configuration, IHeartbeatStatistic heartbeatStatistic, IHeartbeatActive heartbeatActive)
+        public HeartbeatExchangeService(ILoggerFactory loggerFactory, Rediscovery.Communication.Heartbeat.Provider.IConfiguration configuration, IHeartbeatStatistic heartbeatStatistic, IHeartbeatActive heartbeatActive)
         {
             _logger = loggerFactory.CreateLogger<HeartbeatExchangeService>();
             _configuration = configuration;
@@ -26,7 +26,7 @@ namespace CommunicationHearthbeatProvider.ProtoServices
         }
 
         [Authorize(Policy = "DeviceAndConsumer")]
-        public override async Task Beat(IAsyncStreamReader<PingPongMessage> requestStream, IServerStreamWriter<PingPongMessage> responseStream, ServerCallContext context)
+        public override async Task Beat(IAsyncStreamReader<ProtoHeartbeat.PingPongMessage> requestStream, IServerStreamWriter<ProtoHeartbeat.PingPongMessage> responseStream, ServerCallContext context)
         {
             var user = context.GetHttpContext().User;
             string sid = user.Claims.GetSid();
@@ -36,18 +36,18 @@ namespace CommunicationHearthbeatProvider.ProtoServices
                 {
                     await foreach (var message in requestStream.ReadAllAsync(cancellationToken: context.CancellationToken))
                     {
-                        if (message.Command == PingPongMessage.Types.Command.Beat)
+                        if (message.Command == ProtoHeartbeat.PingPongMessage.Types.Command.Beat)
                         {
                             try
                             {
                                 await responseStream.WriteAsync(message);
-                                _heartbeatStatistic.NewBeat(new CommunicationHeartbeatProvider.HeartbeatResult(sid, true, new TimeSpan((long)message.LastRoundTripTicks), new DateTime((long)message.Ticks)));
+                                _heartbeatStatistic.NewBeat(new Rediscovery.Communication.Heartbeat.Provider.HeartbeatResult(sid, true, new TimeSpan((long)message.LastRoundTripTicks), new DateTime((long)message.Ticks)));
                             }
                             catch (Exception ex)
                             {
                                 _logger.LogError(ex, "[Heartbeat.Beat] Pong response");
                             }
-                            _heartbeatActive.TryAdd(new SharedBase.Device.HeartbeatActiveDeviceDetail
+                            _heartbeatActive.TryAdd(new Rediscovery.Shared.Base.Device.HeartbeatActiveDeviceDetail
                             {
                                 Sid = sid
                             });

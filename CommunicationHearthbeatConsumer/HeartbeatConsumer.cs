@@ -1,22 +1,21 @@
-﻿using CommunicationBase;
+﻿using Rediscovery.Communication.Base;
 using Grpc.Core;
-using Heartbeat;
-using SharedBase.Logging;
+using Rediscovery.Shared.Base.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CommunicationHeartbeatConsumer
+namespace Rediscovery.Communication.Heartbeat.Consumer
 {
     public class HeartbeatConsumer : IHeartbeatConsumer
     {
         public event EventHandler<RoundTripResult> ReceivedBeatRoundtrip;
 
         private readonly ILogger _logger;
-        private HeartbeatExchange.HeartbeatExchangeClient exchangeClient;
-        private IClientStreamWriter<PingPongMessage> _requestStream;
+        private ProtoHeartbeat.HeartbeatExchange.HeartbeatExchangeClient exchangeClient;
+        private IClientStreamWriter<ProtoHeartbeat.PingPongMessage> _requestStream;
 
         private Channel channel = null;
         private CancellationTokenSource ctsBeat = null;
@@ -33,7 +32,7 @@ namespace CommunicationHeartbeatConsumer
             try
             {
                 channel = ChannelHelper.CreateChannel(connectionConfiguration);
-                exchangeClient = new HeartbeatExchange.HeartbeatExchangeClient(channel);
+                exchangeClient = new ProtoHeartbeat.HeartbeatExchange.HeartbeatExchangeClient(channel);
                 return exchangeClient != null;
             }
             catch (Exception ex)
@@ -73,9 +72,9 @@ namespace CommunicationHeartbeatConsumer
                     using (var call = exchangeClient.Beat(headers: meta, cancellationToken: ctsBeat.Token))
                     {
                         _requestStream = call.RequestStream;
-                        await _requestStream.WriteAsync(new PingPongMessage
+                        await _requestStream.WriteAsync(new ProtoHeartbeat.PingPongMessage
                         {
-                            Command = PingPongMessage.Types.Command.Beat,
+                            Command = ProtoHeartbeat.PingPongMessage.Types.Command.Beat,
                             LastRoundTripTicks = 0,
                             Ticks = (ulong)DateTime.UtcNow.Ticks
                         });

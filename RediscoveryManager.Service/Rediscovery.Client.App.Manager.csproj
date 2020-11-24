@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CommunicationAuthenticationConsumer\Rediscovery.Communication.Authentication.Consumer.csproj" />
-    <ProjectReference Include="..\CommunicationHearthbeatConsumer\CommunicationHeartbeatConsumer.csproj" />
+    <ProjectReference Include="..\CommunicationHearthbeatConsumer\Rediscovery.Communication.Heartbeat.Consumer.csproj" />
     <ProjectReference Include="..\CommunicationLoggerConsumer\Rediscovery.Communication.Logger.Consumer.csproj" />
     <ProjectReference Include="..\Communication\CommunicationResourceConsumer.csproj" />
     <ProjectReference Include="..\SharedModels\Rediscovery.Shared.Base.csproj" />

@@ -1,16 +1,16 @@
 ﻿using Microsoft.Extensions.Logging;
-using SharedBase.Device;
+using Rediscovery.Shared.Base.Device;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CommunicationHeartbeatProvider
+namespace Rediscovery.Communication.Heartbeat.Provider
 {
     public class HeartbeatActive : IHeartbeatActive
     {
         private readonly ILogger<HeartbeatActive> _logger;
-        private readonly Dictionary<string, SharedBase.Device.HeartbeatActiveDeviceDetail> _activeDeviceDetails = new Dictionary<string, SharedBase.Device.HeartbeatActiveDeviceDetail>();
+        private readonly Dictionary<string, Rediscovery.Shared.Base.Device.HeartbeatActiveDeviceDetail> _activeDeviceDetails = new Dictionary<string, Rediscovery.Shared.Base.Device.HeartbeatActiveDeviceDetail>();
         private DateTime lastChangedEvent = DateTime.UtcNow.AddMinutes(-1);
         private DateTime lastRemoveChangedEvent = DateTime.UtcNow.AddMinutes(-1);
 

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommunicationHeartbeatProvider
+namespace Rediscovery.Communication.Heartbeat.Provider
 {
     public class HeartbeatStatistic : IHeartbeatStatistic
     {

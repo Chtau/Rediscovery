@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package heartbeat;
+package protoHeartbeat;
 
 service HeartbeatExchange {
   rpc Beat (stream PingPongMessage) returns (stream PingPongMessage);

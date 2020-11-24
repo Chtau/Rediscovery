@@ -1,9 +1,9 @@
-﻿using SharedBase.Device;
+﻿using Rediscovery.Shared.Base.Device;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommunicationHeartbeatProvider
+namespace Rediscovery.Communication.Heartbeat.Provider
 {
     public interface IHeartbeatActive
     {

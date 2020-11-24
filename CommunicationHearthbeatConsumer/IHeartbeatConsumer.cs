@@ -1,10 +1,10 @@
-﻿using CommunicationBase;
+﻿using Rediscovery.Communication.Base;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
-namespace CommunicationHeartbeatConsumer
+namespace Rediscovery.Communication.Heartbeat.Consumer
 {
     public interface IHeartbeatConsumer
     {
