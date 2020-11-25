@@ -1,9 +1,9 @@
-﻿using SharedBase.Feature;
+﻿using Rediscovery.Shared.Base.Feature;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommunicationResourceConsumer.Models
+namespace Rediscovery.Communication.Consumer.Resource.Models
 {
     public class FeatureDetail
     {

@@ -1,4 +1,4 @@
-﻿using CommunicationResourceProvider.ProtoServices;
+﻿using Rediscovery.Communication.Provider.Resource.ProtoServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommunicationResourceProvider
+namespace Rediscovery.Communication.Provider.Resource
 {
     public static class CommunicationResourceProviderExtensions
     {

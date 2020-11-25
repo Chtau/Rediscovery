@@ -3,7 +3,7 @@ syntax = "proto3";
 import "google/protobuf/empty.proto";
 import "shared.proto";
 
-package resources;
+package protoResources;
 
 service ResourceExchange {
   rpc ActiveDevices (google.protobuf.Empty) returns (stream DeviceInfoList);

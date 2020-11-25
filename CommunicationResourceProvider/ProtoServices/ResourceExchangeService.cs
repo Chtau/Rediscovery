@@ -9,22 +9,23 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Resources;
+using Rediscovery.Communication.Base;
+using Rediscovery.Shared.Base.Extensions;
 
-namespace CommunicationResourceProvider.ProtoServices
+namespace Rediscovery.Communication.Provider.Resource.ProtoServices
 {
-    public class ResourceExchangeService : ResourceExchange.ResourceExchangeBase
+    public class ResourceExchangeService : ProtoResources.ResourceExchange.ResourceExchangeBase
     {
         private readonly ILogger<ResourceExchangeService> _logger;
         private readonly IResourcesRepository _resourcesRepository;
         private readonly IResourceManager _resourceManager;
 
-        private static Dictionary<string, IServerStreamWriter<DeviceInfoList>> responseStreamsActiveDevices = new Dictionary<string, IServerStreamWriter<DeviceInfoList>>();
-        private static Dictionary<string, IServerStreamWriter<DeviceInfoList>> responseStreamsDevices = new Dictionary<string, IServerStreamWriter<DeviceInfoList>>();
-        private static Dictionary<string, IServerStreamWriter<FeatureList>> responseStreamsFeatures = new Dictionary<string, IServerStreamWriter<FeatureList>>();
-        private static Dictionary<string, IServerStreamWriter<DeviceInfoList>> responseStreamsPendingDevices = new Dictionary<string, IServerStreamWriter<DeviceInfoList>>();
-        private static Dictionary<string, IServerStreamWriter<HeartbeatStatisticList>> responseStreamsHeartbeatStatistic = new Dictionary<string, IServerStreamWriter<HeartbeatStatisticList>>();
-        private static Dictionary<string, IServerStreamWriter<LogEntiresList>> responseStreamsLoggerEntires = new Dictionary<string, IServerStreamWriter<LogEntiresList>>();
+        private static Dictionary<string, IServerStreamWriter<ProtoResources.DeviceInfoList>> responseStreamsActiveDevices = new Dictionary<string, IServerStreamWriter<ProtoResources.DeviceInfoList>>();
+        private static Dictionary<string, IServerStreamWriter<ProtoResources.DeviceInfoList>> responseStreamsDevices = new Dictionary<string, IServerStreamWriter<ProtoResources.DeviceInfoList>>();
+        private static Dictionary<string, IServerStreamWriter<ProtoResources.FeatureList>> responseStreamsFeatures = new Dictionary<string, IServerStreamWriter<ProtoResources.FeatureList>>();
+        private static Dictionary<string, IServerStreamWriter<ProtoResources.DeviceInfoList>> responseStreamsPendingDevices = new Dictionary<string, IServerStreamWriter<ProtoResources.DeviceInfoList>>();
+        private static Dictionary<string, IServerStreamWriter<ProtoResources.HeartbeatStatisticList>> responseStreamsHeartbeatStatistic = new Dictionary<string, IServerStreamWriter<ProtoResources.HeartbeatStatisticList>>();
+        private static Dictionary<string, IServerStreamWriter<ProtoResources.LogEntiresList>> responseStreamsLoggerEntires = new Dictionary<string, IServerStreamWriter<ProtoResources.LogEntiresList>>();
 
         public ResourceExchangeService(ILoggerFactory loggerFactory, IResourcesRepository resourcesRepository, IResourceManager resourceManager)
         {
@@ -70,7 +71,7 @@ namespace CommunicationResourceProvider.ProtoServices
         }
 
         [Authorize(Policy = "ResourceConsumer")]
-        public override async Task ActiveDevices(Empty request, IServerStreamWriter<DeviceInfoList> responseStream, ServerCallContext context)
+        public override async Task ActiveDevices(Empty request, IServerStreamWriter<ProtoResources.DeviceInfoList> responseStream, ServerCallContext context)
         {
             string sid = null;
             try
@@ -121,7 +122,7 @@ namespace CommunicationResourceProvider.ProtoServices
                         var devices = (from x in devicesInfo
                                        join y in ids on x.Identifier equals y
                                        select x)?.ToList();
-                        var reply = new DeviceInfoList();
+                        var reply = new ProtoResources.DeviceInfoList();
                         if (devices?.Count > 0)
                         {
                             foreach (var item in devices)
@@ -141,7 +142,7 @@ namespace CommunicationResourceProvider.ProtoServices
 
 
         [Authorize(Policy = "ResourceConsumer")]
-        public override async Task Devices(Empty request, IServerStreamWriter<DeviceInfoList> responseStream, ServerCallContext context)
+        public override async Task Devices(Empty request, IServerStreamWriter<ProtoResources.DeviceInfoList> responseStream, ServerCallContext context)
         {
             string sid = null;
             try
@@ -188,7 +189,7 @@ namespace CommunicationResourceProvider.ProtoServices
                     try
                     {
                         var devices = _resourcesRepository.GetResourceDeviceInfo();
-                        var reply = new DeviceInfoList();
+                        var reply = new ProtoResources.DeviceInfoList();
                         if (devices?.Count > 0)
                         {
                             foreach (var item in devices)
@@ -208,7 +209,7 @@ namespace CommunicationResourceProvider.ProtoServices
 
 
         [Authorize(Policy = "ResourceConsumer")]
-        public override Task<DeviceChangeRequest> DeleteDevice(DeviceChangeRequest request, ServerCallContext context)
+        public override Task<ProtoResources.DeviceChangeRequest> DeleteDevice(ProtoResources.DeviceChangeRequest request, ServerCallContext context)
         {
             try
             {
@@ -217,25 +218,25 @@ namespace CommunicationResourceProvider.ProtoServices
                 if (result)
                     _resourceManager.DeleteDevice(deviceId);
                 OnSendAllDevices();
-                return Task.FromResult(new DeviceChangeRequest
+                return Task.FromResult(new ProtoResources.DeviceChangeRequest
                 {
                     Id = request.Id,
-                    Result = result ? DeviceChangeRequest.Types.ActionResult.Ok : DeviceChangeRequest.Types.ActionResult.Error
+                    Result = result ? ProtoResources.DeviceChangeRequest.Types.ActionResult.Ok : ProtoResources.DeviceChangeRequest.Types.ActionResult.Error
                 });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "DeleteDevice");
-                return Task.FromResult(new DeviceChangeRequest
+                return Task.FromResult(new ProtoResources.DeviceChangeRequest
                 {
                     Id = request.Id,
-                    Result = DeviceChangeRequest.Types.ActionResult.Error
+                    Result = ProtoResources.DeviceChangeRequest.Types.ActionResult.Error
                 });
             }
         }
 
         [Authorize(Policy = "ResourceConsumer")]
-        public override async Task Features(Empty request, IServerStreamWriter<FeatureList> responseStream, ServerCallContext context)
+        public override async Task Features(Empty request, IServerStreamWriter<ProtoResources.FeatureList> responseStream, ServerCallContext context)
         {
             string sid = null;
             try
@@ -282,7 +283,7 @@ namespace CommunicationResourceProvider.ProtoServices
                     try
                     {
                         var features = _resourcesRepository.GetResourceDeviceFeature();
-                        var reply = new FeatureList();
+                        var reply = new ProtoResources.FeatureList();
                         if (features?.Count > 0)
                         {
                             foreach (var item in features)
@@ -302,7 +303,7 @@ namespace CommunicationResourceProvider.ProtoServices
 
 
         [Authorize(Policy = "ResourceConsumer")]
-        public override Task<FeatureDetails> FeatureDetail(FeatureDetailRequest request, ServerCallContext context)
+        public override Task<ProtoResources.FeatureDetails> FeatureDetail(ProtoResources.FeatureDetailRequest request, ServerCallContext context)
         {
             try
             {
@@ -310,7 +311,7 @@ namespace CommunicationResourceProvider.ProtoServices
                 var settings = _resourcesRepository.GetResourceDeviceFeatureSettings(featureId);
                 var profiles = _resourcesRepository.GetResourceDeviceFeatureProfiles(featureId);
 
-                var reply = new FeatureDetails
+                var reply = new ProtoResources.FeatureDetails
                 {
                     FeatureId = request.FeatureId,
                     Setting = settings.GetProtoFeatureDetailSetting()
@@ -328,7 +329,7 @@ namespace CommunicationResourceProvider.ProtoServices
             catch (Exception ex)
             {
                 _logger.LogError(ex, "FeatureDetail");
-                return Task.FromResult(new FeatureDetails
+                return Task.FromResult(new ProtoResources.FeatureDetails
                 {
                     FeatureId = request.FeatureId
                 });
@@ -336,7 +337,7 @@ namespace CommunicationResourceProvider.ProtoServices
         }
 
         [Authorize(Policy = "ResourceConsumer")]
-        public override async Task PendingDevices(Empty request, IServerStreamWriter<DeviceInfoList> responseStream, ServerCallContext context)
+        public override async Task PendingDevices(Empty request, IServerStreamWriter<ProtoResources.DeviceInfoList> responseStream, ServerCallContext context)
         {
             string sid = null;
             try
@@ -383,7 +384,7 @@ namespace CommunicationResourceProvider.ProtoServices
                     try
                     {
                         var features = _resourcesRepository.GetResourcePendingAuthenticationDevices();
-                        var reply = new DeviceInfoList();
+                        var reply = new ProtoResources.DeviceInfoList();
                         if (features?.Count > 0)
                         {
                             foreach (var item in features)
@@ -403,7 +404,7 @@ namespace CommunicationResourceProvider.ProtoServices
 
 
         [Authorize(Policy = "ResourceConsumer")]
-        public override Task<DeviceChangeRequest> ResolvePendingDevice(DevicePendingRequest request, ServerCallContext context)
+        public override Task<ProtoResources.DeviceChangeRequest> ResolvePendingDevice(ProtoResources.DevicePendingRequest request, ServerCallContext context)
         {
             try
             {
@@ -412,19 +413,19 @@ namespace CommunicationResourceProvider.ProtoServices
                 OnSendAllDevices();
                 if (result)
                     _resourceManager.ResolvePendingDevice(featureId, request.Accept);
-                return Task.FromResult(new DeviceChangeRequest
+                return Task.FromResult(new ProtoResources.DeviceChangeRequest
                 {
                     Id = request.Id,
-                    Result = result ? DeviceChangeRequest.Types.ActionResult.Ok : DeviceChangeRequest.Types.ActionResult.Error
+                    Result = result ? ProtoResources.DeviceChangeRequest.Types.ActionResult.Ok : ProtoResources.DeviceChangeRequest.Types.ActionResult.Error
                 });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "ResolvePendingDevice");
-                return Task.FromResult(new DeviceChangeRequest
+                return Task.FromResult(new ProtoResources.DeviceChangeRequest
                 {
                     Id = request.Id,
-                    Result = DeviceChangeRequest.Types.ActionResult.Error
+                    Result = ProtoResources.DeviceChangeRequest.Types.ActionResult.Error
                 });
             }
         }
@@ -466,7 +467,7 @@ namespace CommunicationResourceProvider.ProtoServices
         }
 
         [Authorize(Policy = "ResourceConsumer")]
-        public override async Task HeartbeatStatistic(Empty request, IServerStreamWriter<HeartbeatStatisticList> responseStream, ServerCallContext context)
+        public override async Task HeartbeatStatistic(Empty request, IServerStreamWriter<ProtoResources.HeartbeatStatisticList> responseStream, ServerCallContext context)
         {
             string sid = null;
             try
@@ -513,12 +514,12 @@ namespace CommunicationResourceProvider.ProtoServices
                     try
                     {
                         var heartbeatStatistics = _resourcesRepository.GetHeartbeatStatistic();
-                        var reply = new HeartbeatStatisticList();
+                        var reply = new ProtoResources.HeartbeatStatisticList();
                         if (heartbeatStatistics?.Count > 0)
                         {
                             foreach (var item in heartbeatStatistics)
                             {
-                                reply.Beats.Add(new HeartbeatStatisticItem
+                                reply.Beats.Add(new ProtoResources.HeartbeatStatisticItem
                                 {
                                     DeviceId = item.DeviceId,
                                     OK = item.OK,
@@ -539,7 +540,7 @@ namespace CommunicationResourceProvider.ProtoServices
         }
 
         [Authorize(Policy = "ResourceConsumer")]
-        public override async Task LoggerEntires(Empty request, IServerStreamWriter<LogEntiresList> responseStream, ServerCallContext context)
+        public override async Task LoggerEntires(Empty request, IServerStreamWriter<ProtoResources.LogEntiresList> responseStream, ServerCallContext context)
         {
             string sid = null;
             try
@@ -586,37 +587,37 @@ namespace CommunicationResourceProvider.ProtoServices
                     try
                     {
                         var loggerEntries = _resourcesRepository.GetLoggerEntires();
-                        var reply = new LogEntiresList();
+                        var reply = new ProtoResources.LogEntiresList();
                         if (loggerEntries?.Count > 0)
                         {
                             foreach (var item in loggerEntries)
                             {
-                                LogEntry.Types.LoggerType loggerType = LogEntry.Types.LoggerType.Information;
+                                ProtoResources.LogEntry.Types.LoggerType loggerType = ProtoResources.LogEntry.Types.LoggerType.Information;
                                 switch (item.LogLevel)
                                 {
-                                    case SharedBase.Logging.LoggerEntry.LoggerType.Trace:
-                                        loggerType = LogEntry.Types.LoggerType.Trace;
+                                    case Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType.Trace:
+                                        loggerType = ProtoResources.LogEntry.Types.LoggerType.Trace;
                                         break;
-                                    case SharedBase.Logging.LoggerEntry.LoggerType.Debug:
-                                        loggerType = LogEntry.Types.LoggerType.Debug;
+                                    case Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType.Debug:
+                                        loggerType = ProtoResources.LogEntry.Types.LoggerType.Debug;
                                         break;
-                                    case SharedBase.Logging.LoggerEntry.LoggerType.Information:
-                                        loggerType = LogEntry.Types.LoggerType.Information;
+                                    case Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType.Information:
+                                        loggerType = ProtoResources.LogEntry.Types.LoggerType.Information;
                                         break;
-                                    case SharedBase.Logging.LoggerEntry.LoggerType.Warning:
-                                        loggerType = LogEntry.Types.LoggerType.Warning;
+                                    case Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType.Warning:
+                                        loggerType = ProtoResources.LogEntry.Types.LoggerType.Warning;
                                         break;
-                                    case SharedBase.Logging.LoggerEntry.LoggerType.Error:
-                                        loggerType = LogEntry.Types.LoggerType.Error;
+                                    case Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType.Error:
+                                        loggerType = ProtoResources.LogEntry.Types.LoggerType.Error;
                                         break;
-                                    case SharedBase.Logging.LoggerEntry.LoggerType.Critical:
-                                        loggerType = LogEntry.Types.LoggerType.Critical;
+                                    case Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType.Critical:
+                                        loggerType = ProtoResources.LogEntry.Types.LoggerType.Critical;
                                         break;
                                     default:
                                         break;
                                 }
 
-                                reply.Entires.Add(new LogEntry
+                                reply.Entires.Add(new ProtoResources.LogEntry
                                 {
                                     Id = item.Id,
                                     LoggerType = loggerType,

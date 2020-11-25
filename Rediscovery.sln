@@ -31,9 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Feature.Plugin"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.App.ControlPanel", "AppControlPanel\Rediscovery.Client.App.ControlPanel.csproj", "{7F62F8C0-D13D-4A2B-8CB7-13C719C0CABF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationResourceConsumer", "Communication\CommunicationResourceConsumer.csproj", "{34CEE8B3-475B-4704-9B8C-06F237B51193}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Communication.Consumer.Resource", "Communication\Rediscovery.Communication.Consumer.Resource.csproj", "{34CEE8B3-475B-4704-9B8C-06F237B51193}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationResourceProvider", "CommunicationResourceProvider\CommunicationResourceProvider.csproj", "{350C9B9D-3ABE-4D54-BFC2-7EE22538B5C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Communication.Provider.Resource", "CommunicationResourceProvider\Rediscovery.Communication.Provider.Resource.csproj", "{350C9B9D-3ABE-4D54-BFC2-7EE22538B5C8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Service.DAL", "DALDesktopService\Rediscovery.Service.DAL.csproj", "{4B70C4A8-6C52-423D-B368-0BD76B432AF8}"
 EndProject

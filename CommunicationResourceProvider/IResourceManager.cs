@@ -1,9 +1,9 @@
-﻿using SharedBase.Feature;
+﻿using Rediscovery.Shared.Base.Feature;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommunicationResourceProvider
+namespace Rediscovery.Communication.Provider.Resource
 {
     public interface IResourceManager
     {
@@ -15,7 +15,7 @@ namespace CommunicationResourceProvider
         event EventHandler SendHeartbeatChanged;
         event EventHandler SendLoggerEntriesChanged;
         void DeleteDevice(Guid deviceId);
-        void UpdateDevice(SharedBase.Device.DeviceInfo deviceInfo);
+        void UpdateDevice(Rediscovery.Shared.Base.Device.DeviceInfo deviceInfo);
         void ResolvePendingDevice(Guid deviceId, bool accept);
         void FeatureDetailProfileDelete(Guid featureId, string profileId);
         void FeatureDetailProfileSave(Guid featureId, FeatureProfil deviceFeatureProfil);

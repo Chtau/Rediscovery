@@ -1,23 +1,24 @@
-﻿using CommunicationBase;
-using Grpc.Core;
-using SharedBase.Feature;
-using SharedBase.Logging;
-using SharedBase.Statistics;
+﻿using Grpc.Core;
+using Rediscovery.Communication.Base;
+using Rediscovery.Shared.Base.Extensions;
+using Rediscovery.Shared.Base.Feature;
+using Rediscovery.Shared.Base.Logging;
+using Rediscovery.Shared.Base.Statistics;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CommunicationResourceConsumer
+namespace Rediscovery.Communication.Consumer.Resource
 {
     public class ResourceConsumerService : IResourceConsumerService
     {
-        public event EventHandler<List<SharedBase.Device.DeviceInfo>> ReceiveActiveDevices;
-        public event EventHandler<List<SharedBase.Device.DeviceInfo>> ReceivePendingDevices;
-        public event EventHandler<List<SharedBase.Device.DeviceInfo>> ReceiveDevices;
-        public event EventHandler<List<SharedBase.Device.FeatureDefinitionExtended>> ReceiveFeatures;
-        public event EventHandler<SharedBase.Device.DeviceInfo> ReceiveUpdateDevices;
+        public event EventHandler<List<Shared.Base.Device.DeviceInfo>> ReceiveActiveDevices;
+        public event EventHandler<List<Shared.Base.Device.DeviceInfo>> ReceivePendingDevices;
+        public event EventHandler<List<Shared.Base.Device.DeviceInfo>> ReceiveDevices;
+        public event EventHandler<List<Shared.Base.Device.FeatureDefinitionExtended>> ReceiveFeatures;
+        public event EventHandler<Shared.Base.Device.DeviceInfo> ReceiveUpdateDevices;
         public event EventHandler<(Guid deviceId, bool result)> ReceiveDeleteDevicesResult;
         public event EventHandler<(Guid deviceId, bool accept)> ReceiveResolvePendingDevicesResult;
         public event EventHandler<(Guid featureId, string profileId, bool result)> ReceiveFeatureDetailProfileDeleteResult;
@@ -29,7 +30,7 @@ namespace CommunicationResourceConsumer
 
         private readonly ILogger _logger;
 
-        private Resources.ResourceExchange.ResourceExchangeClient resourceExchangeClient;
+        private ProtoResources.ResourceExchange.ResourceExchangeClient resourceExchangeClient;
 
         public ResourceConsumerService(ILogger logger)
         {
@@ -41,7 +42,7 @@ namespace CommunicationResourceConsumer
             try
             {
                 Channel channel = ChannelHelper.CreateChannel(connectionConfiguration);
-                resourceExchangeClient = new Resources.ResourceExchange.ResourceExchangeClient(channel);
+                resourceExchangeClient = new ProtoResources.ResourceExchange.ResourceExchangeClient(channel);
                 return resourceExchangeClient != null;
             } catch (Exception ex)
             {
@@ -66,7 +67,7 @@ namespace CommunicationResourceConsumer
                         {
                             await foreach (var message in call.ResponseStream.ReadAllAsync())
                             {
-                                var result = new List<SharedBase.Device.DeviceInfo>();
+                                var result = new List<Shared.Base.Device.DeviceInfo>();
                                 foreach (var item in message.Devices)
                                 {
                                     result.Add(item.GetDeviceInfo());
@@ -107,7 +108,7 @@ namespace CommunicationResourceConsumer
                         {
                             await foreach (var message in call.ResponseStream.ReadAllAsync())
                             {
-                                var result = new List<SharedBase.Device.DeviceInfo>();
+                                var result = new List<Shared.Base.Device.DeviceInfo>();
                                 foreach (var item in message.Devices)
                                 {
                                     result.Add(item.GetDeviceInfo());
@@ -148,7 +149,7 @@ namespace CommunicationResourceConsumer
                         {
                             await foreach (var message in call.ResponseStream.ReadAllAsync())
                             {
-                                var result = new List<SharedBase.Device.DeviceInfo>();
+                                var result = new List<Shared.Base.Device.DeviceInfo>();
                                 foreach (var item in message.Devices)
                                 {
                                     result.Add(item.GetDeviceInfo());
@@ -189,7 +190,7 @@ namespace CommunicationResourceConsumer
                         {
                             await foreach (var message in call.ResponseStream.ReadAllAsync())
                             {
-                                var result = new List<SharedBase.Device.FeatureDefinitionExtended>();
+                                var result = new List<Shared.Base.Device.FeatureDefinitionExtended>();
                                 foreach (var item in message.Features)
                                 {
                                     result.Add(item.GetFeatureDefinition());
@@ -214,7 +215,7 @@ namespace CommunicationResourceConsumer
             });
         }
 
-        public void UpdateDevice(string token, SharedBase.Device.DeviceInfo deviceInfo)
+        public void UpdateDevice(string token, Shared.Base.Device.DeviceInfo deviceInfo)
         {
             Task.Run(async () =>
             {
@@ -248,13 +249,13 @@ namespace CommunicationResourceConsumer
                     var meta = new Metadata();
                     meta.AddAuthorizationHeader(token);
                     _logger.LogTrace("Consumer send delete Device request");
-                    var msg = new Resources.DeviceChangeRequest
+                    var msg = new ProtoResources.DeviceChangeRequest
                     {
                         Id = deviceId.ToString(),
-                        Result = Resources.DeviceChangeRequest.Types.ActionResult.None
+                        Result = ProtoResources.DeviceChangeRequest.Types.ActionResult.None
                     };
                     var reply = await resourceExchangeClient.DeleteDeviceAsync(msg, cancellationToken: cts.Token, headers: meta);
-                    (Guid deviceId, bool result) result = (reply.Id.SafeGuid(), reply.Result == Resources.DeviceChangeRequest.Types.ActionResult.Ok ? true : false);
+                    (Guid deviceId, bool result) result = (reply.Id.SafeGuid(), reply.Result == ProtoResources.DeviceChangeRequest.Types.ActionResult.Ok ? true : false);
                     ReceiveDeleteDevicesResult?.Invoke(this, result);
                 }
                 catch (Exception ex)
@@ -278,13 +279,13 @@ namespace CommunicationResourceConsumer
                     var meta = new Metadata();
                     meta.AddAuthorizationHeader(token);
                     _logger.LogTrace("Consumer send resolve pending Device request");
-                    var msg = new Resources.DevicePendingRequest
+                    var msg = new ProtoResources.DevicePendingRequest
                     {
                         Id = deviceId.ToString(),
                         Accept = accept
                     };
                     var reply = await resourceExchangeClient.ResolvePendingDeviceAsync(msg, cancellationToken: cts.Token, headers: meta);
-                    (Guid deviceId, bool accept) result = (reply.Id.SafeGuid(), reply.Result == Resources.DeviceChangeRequest.Types.ActionResult.Ok ? true : false);
+                    (Guid deviceId, bool accept) result = (reply.Id.SafeGuid(), reply.Result == ProtoResources.DeviceChangeRequest.Types.ActionResult.Ok ? true : false);
                     ReceiveResolvePendingDevicesResult?.Invoke(this, result);
                 }
                 catch (Exception ex)
@@ -308,7 +309,7 @@ namespace CommunicationResourceConsumer
                     var meta = new Metadata();
                     meta.AddAuthorizationHeader(token);
                     _logger.LogTrace("Consumer send feature detail request");
-                    var msg = new Resources.FeatureDetailRequest
+                    var msg = new ProtoResources.FeatureDetailRequest
                     {
                         FeatureId = setting.FeatureId.ToString()
                     };
@@ -355,7 +356,7 @@ namespace CommunicationResourceConsumer
                         {
                             await foreach (var message in call.ResponseStream.ReadAllAsync())
                             {
-                                var result = new List<SharedBase.Statistics.HeartbeatStatisticItem>();
+                                var result = new List<Shared.Base.Statistics.HeartbeatStatisticItem>();
                                 foreach (var item in message.Beats)
                                 {
                                     result.Add(new HeartbeatStatisticItem
@@ -403,28 +404,28 @@ namespace CommunicationResourceConsumer
                         {
                             await foreach (var message in call.ResponseStream.ReadAllAsync())
                             {
-                                var result = new List<SharedBase.Logging.LoggerEntry>();
+                                var result = new List<Shared.Base.Logging.LoggerEntry>();
                                 foreach (var item in message.Entires)
                                 {
                                     LoggerEntry.LoggerType loggerType = LoggerEntry.LoggerType.Information;
                                     switch (item.LoggerType)
                                     {
-                                        case Resources.LogEntry.Types.LoggerType.Trace:
+                                        case ProtoResources.LogEntry.Types.LoggerType.Trace:
                                             loggerType = LoggerEntry.LoggerType.Trace;
                                             break;
-                                        case Resources.LogEntry.Types.LoggerType.Debug:
+                                        case ProtoResources.LogEntry.Types.LoggerType.Debug:
                                             loggerType = LoggerEntry.LoggerType.Debug;
                                             break;
-                                        case Resources.LogEntry.Types.LoggerType.Information:
+                                        case ProtoResources.LogEntry.Types.LoggerType.Information:
                                             loggerType = LoggerEntry.LoggerType.Information;
                                             break;
-                                        case Resources.LogEntry.Types.LoggerType.Warning:
+                                        case ProtoResources.LogEntry.Types.LoggerType.Warning:
                                             loggerType = LoggerEntry.LoggerType.Warning;
                                             break;
-                                        case Resources.LogEntry.Types.LoggerType.Error:
+                                        case ProtoResources.LogEntry.Types.LoggerType.Error:
                                             loggerType = LoggerEntry.LoggerType.Error;
                                             break;
-                                        case Resources.LogEntry.Types.LoggerType.Critical:
+                                        case ProtoResources.LogEntry.Types.LoggerType.Critical:
                                             loggerType = LoggerEntry.LoggerType.Critical;
                                             break;
                                         default:

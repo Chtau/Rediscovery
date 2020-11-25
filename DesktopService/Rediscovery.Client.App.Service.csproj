@@ -58,7 +58,7 @@
     <ProjectReference Include="..\CommunicationFeatureProvider\CommunicationFeatureProvider.csproj" />
     <ProjectReference Include="..\CommunicationHearthbeatProvider\Rediscovery.Communication.Heartbeat.Provider.csproj" />
     <ProjectReference Include="..\CommunicationLoggerProvider\Rediscovery.Communication.Logger.Provider.csproj" />
-    <ProjectReference Include="..\CommunicationResourceProvider\CommunicationResourceProvider.csproj" />
+    <ProjectReference Include="..\CommunicationResourceProvider\Rediscovery.Communication.Provider.Resource.csproj" />
     <ProjectReference Include="..\DALDesktopService\Rediscovery.Service.DAL.csproj" />
     <ProjectReference Include="..\IPCPipe\IPCPipe.csproj" />
     <ProjectReference Include="..\PluginFeature\Rediscovery.Feature.Plugin.csproj" />
