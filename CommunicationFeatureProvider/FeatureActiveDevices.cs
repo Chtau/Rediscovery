@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommunicationFeatureProvider
+namespace Rediscovery.Communication.Provider.Feature
 {
     public static class FeatureActiveDevices
     {

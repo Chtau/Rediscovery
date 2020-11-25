@@ -43,11 +43,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Shared.Base", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Service.Certificate", "CertificateService\Rediscovery.Service.Certificate.csproj", "{5EB7142F-4969-4B1C-A8AD-F4C526701412}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationFeatureProvider", "CommunicationFeatureProvider\CommunicationFeatureProvider.csproj", "{31BA226D-53DD-4F43-A001-F79D8766C412}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Communication.Provider.Feature", "CommunicationFeatureProvider\Rediscovery.Communication.Provider.Feature.csproj", "{31BA226D-53DD-4F43-A001-F79D8766C412}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Communication.Authentication.Provider", "CommunicationAuthenticationProvider\Rediscovery.Communication.Authentication.Provider.csproj", "{3DB0247C-1166-4141-9AB3-4BABE212B335}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationFeatureConsumer", "CommunicationFeatureConsumer\CommunicationFeatureConsumer.csproj", "{1FB3B6F6-F47F-49CE-ADF2-113764CD8157}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Communication.Consumer.Feature", "CommunicationFeatureConsumer\Rediscovery.Communication.Consumer.Feature.csproj", "{1FB3B6F6-F47F-49CE-ADF2-113764CD8157}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Communication.Authentication.Consumer", "CommunicationAuthenticationConsumer\Rediscovery.Communication.Authentication.Consumer.csproj", "{AA6DF67B-764A-4A57-A41F-2884CB4F30E5}"
 EndProject

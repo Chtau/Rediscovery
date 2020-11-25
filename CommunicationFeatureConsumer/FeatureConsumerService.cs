@@ -1,20 +1,21 @@
-﻿using CommunicationBase;
-using CommunicationBase.Models;
-using Featuredata;
+﻿using Rediscovery.Communication.Base;
+using Rediscovery.Communication.Base.Models;
+using ProtoFeaturedata;
 using Grpc.Core;
-using SharedBase.Feature;
-using SharedBase.Logging;
+using Rediscovery.Shared.Base.Feature;
+using Rediscovery.Shared.Base.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Rediscovery.Shared.Base.Extensions;
 
-namespace CommunicationFeatureConsumer
+namespace Rediscovery.Communication.Consumer.Feature
 {
     public class FeatureConsumerService : IFeatureConsumerService
     {
-        public event EventHandler<CommunicationBase.Models.FeatureState> ReceiveFeatureStateChangeReply;
+        public event EventHandler<Communication.Base.Models.FeatureState> ReceiveFeatureStateChangeReply;
         public event EventHandler<FeatureData> ReceiveFeatureData;
         public event EventHandler<Models.FeatureClientData> ReceiveClientData;
 
@@ -63,26 +64,26 @@ namespace CommunicationFeatureConsumer
             }
         }
 
-        public void ChangeFeatureState(string token, CommunicationBase.Models.FeatureState featureState)
+        public void ChangeFeatureState(string token, Communication.Base.Models.FeatureState featureState)
         {
             Task.Run(async () =>
             {
                 ctsChangeFeatureState = new CancellationTokenSource();
                 try
                 {
-                    var msg = new Featuredata.FeatureState
+                    var msg = new ProtoFeaturedata.FeatureState
                     {
                         FeatureId = featureState.FeatureId.ToString(),
-                        FeatureState_ = (Featuredata.FeatureState.Types.State)(int)featureState.CurrentState
+                        FeatureState_ = (ProtoFeaturedata.FeatureState.Types.State)(int)featureState.CurrentState
                     };
                     var meta = new Metadata();
                     meta.AddAuthorizationHeader(token);
                     _logger.LogTrace("Consumer send change feature state request");
                     var reply = await exchangeClient.ChangeFeatureStateAsync(msg, cancellationToken: ctsChangeFeatureState.Token, headers: meta);
                     _logger.LogTrace("Consumer reply for feature state change");
-                    var replyMsg = new CommunicationBase.Models.FeatureState
+                    var replyMsg = new Communication.Base.Models.FeatureState
                     {
-                        CurrentState = (CommunicationBase.Models.FeatureState.State)(int)reply.FeatureState_,
+                        CurrentState = (Communication.Base.Models.FeatureState.State)(int)reply.FeatureState_,
                         FeatureId = reply.FeatureId.SafeGuid()
                     };
                     ReceiveFeatureStateChangeReply?.Invoke(this, replyMsg);
@@ -171,7 +172,7 @@ namespace CommunicationFeatureConsumer
                 ctsFeatureClient = new CancellationTokenSource();
                 try
                 {
-                    var msg = new Featuredata.FeatureRequest
+                    var msg = new ProtoFeaturedata.FeatureRequest
                     {
                         FeatureId = featureId.ToString()
                     };

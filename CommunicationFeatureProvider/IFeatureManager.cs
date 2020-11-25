@@ -1,10 +1,10 @@
-﻿using CommunicationBase.Models;
-using SharedBase.Feature;
+﻿using Rediscovery.Communication.Base.Models;
+using Rediscovery.Shared.Base.Feature;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommunicationFeatureProvider
+namespace Rediscovery.Communication.Provider.Feature
 {
     public interface IFeatureManager
     {

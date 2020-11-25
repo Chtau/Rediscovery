@@ -1,20 +1,21 @@
-﻿using Featuredata;
-using Google.Protobuf;
+﻿using Google.Protobuf;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
-using SharedBase.Feature;
+using Rediscovery.Shared.Base.Feature;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Rediscovery.Shared.Base.Extensions;
+using Rediscovery.Communication.Base;
 
-namespace CommunicationFeatureProvider.ProtoServices
+namespace Rediscovery.Communication.Provider.Feature.ProtoServices
 {
-    public class FeatureExchangeService : FeatureExchange.FeatureExchangeBase
+    public class FeatureExchangeService : ProtoFeaturedata.FeatureExchange.FeatureExchangeBase
     {
         private readonly ILogger<FeatureExchangeService> _logger;
         private readonly IFeatureManager _featureManager;
-        private static readonly Dictionary<string, IServerStreamWriter<Featuredata.DeviceFeatureData>> _responseStreams = new Dictionary<string, IServerStreamWriter<Featuredata.DeviceFeatureData>>();
+        private static readonly Dictionary<string, IServerStreamWriter<ProtoFeaturedata.DeviceFeatureData>> _responseStreams = new Dictionary<string, IServerStreamWriter<ProtoFeaturedata.DeviceFeatureData>>();
 
         public FeatureExchangeService(ILoggerFactory loggerFactory, IFeatureManager featureManager)
         {
@@ -36,7 +37,7 @@ namespace CommunicationFeatureProvider.ProtoServices
                 {
                     try
                     {
-                        await _responseStreams[sid].WriteAsync(new Featuredata.DeviceFeatureData
+                        await _responseStreams[sid].WriteAsync(new ProtoFeaturedata.DeviceFeatureData
                         {
                             Data = deviceFeatureData.Data,
                             DeviceId = deviceFeatureData.DeviceId,
@@ -53,7 +54,7 @@ namespace CommunicationFeatureProvider.ProtoServices
         }
 
         [Authorize(Policy = "Device")]
-        public override async Task ExchangeStream(IAsyncStreamReader<DeviceFeatureData> requestStream, IServerStreamWriter<DeviceFeatureData> responseStream, ServerCallContext context)
+        public override async Task ExchangeStream(IAsyncStreamReader<ProtoFeaturedata.DeviceFeatureData> requestStream, IServerStreamWriter<ProtoFeaturedata.DeviceFeatureData> responseStream, ServerCallContext context)
         {
             string sid = null;
             try
@@ -102,43 +103,43 @@ namespace CommunicationFeatureProvider.ProtoServices
         }
 
         [Authorize(Policy = "Device")]
-        public override Task<FeatureState> ChangeFeatureState(FeatureState request, ServerCallContext context)
+        public override Task<ProtoFeaturedata.FeatureState> ChangeFeatureState(ProtoFeaturedata.FeatureState request, ServerCallContext context)
         {
             try
             {
                 var user = context.GetHttpContext().User;
                 var sid = user.Claims.GetSid();
 
-                var resultFeatureState = _featureManager.FeatureStateChange(new ExchangeEntity<CommunicationBase.Models.FeatureState>
+                var resultFeatureState = _featureManager.FeatureStateChange(new ExchangeEntity<Communication.Base.Models.FeatureState>
                 {
                     Sid = sid,
-                    Entity = new CommunicationBase.Models.FeatureState
+                    Entity = new Communication.Base.Models.FeatureState
                     {
-                        CurrentState = (CommunicationBase.Models.FeatureState.State)(int)request.FeatureState_,
+                        CurrentState = (Communication.Base.Models.FeatureState.State)(int)request.FeatureState_,
                         FeatureId = request.FeatureId.SafeGuid()
                     }
                 });
-                return Task.FromResult(new FeatureState
+                return Task.FromResult(new ProtoFeaturedata.FeatureState
                 {
                     FeatureId = resultFeatureState.Entity.FeatureId.ToString(),
-                    FeatureState_ = (FeatureState.Types.State)(int)resultFeatureState.Entity.CurrentState
+                    FeatureState_ = (ProtoFeaturedata.FeatureState.Types.State)(int)resultFeatureState.Entity.CurrentState
                 });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Request for change Feature state");
-                return Task.FromResult(new FeatureState
+                return Task.FromResult(new ProtoFeaturedata.FeatureState
                 {
                     FeatureId = request.FeatureId,
-                    FeatureState_ = FeatureState.Types.State.Error
+                    FeatureState_ = ProtoFeaturedata.FeatureState.Types.State.Error
                 });
             }
         }
 
         [Authorize(Policy = "Device")]
-        public override Task<FeatureClientData> FeatureClient(FeatureRequest request, ServerCallContext context)
+        public override Task<ProtoFeaturedata.FeatureClientData> FeatureClient(ProtoFeaturedata.FeatureRequest request, ServerCallContext context)
         {
-            var result = new FeatureClientData
+            var result = new ProtoFeaturedata.FeatureClientData
             {
                 FeatureId = request.FeatureId
             };

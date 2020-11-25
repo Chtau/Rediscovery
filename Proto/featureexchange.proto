@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "shared.proto";
 
-package featuredata;
+package protoFeaturedata;
 
 service FeatureExchange {
   rpc ExchangeStream (stream DeviceFeatureData) returns (stream DeviceFeatureData);

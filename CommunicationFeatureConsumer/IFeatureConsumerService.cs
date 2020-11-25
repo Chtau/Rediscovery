@@ -1,12 +1,12 @@
-﻿using CommunicationBase;
-using CommunicationBase.Models;
-using SharedBase.Feature;
+﻿using Rediscovery.Communication.Base;
+using Rediscovery.Communication.Base.Models;
+using Rediscovery.Shared.Base.Feature;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
-namespace CommunicationFeatureConsumer
+namespace Rediscovery.Communication.Consumer.Feature
 {
     public interface IFeatureConsumerService
     {

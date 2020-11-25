@@ -1,15 +1,14 @@
-﻿using CommunicationFeatureProvider.ProtoServices;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CommunicationFeatureProvider
+namespace Rediscovery.Communication.Provider.Feature
 {
     public static class CommunicationFeatureProviderExtensions
     {
         public static IApplicationBuilder UseFeatureProvider(this IApplicationBuilder app)
         {
             var featureManager = app.ApplicationServices.GetRequiredService<IFeatureManager>();
-            app.UseEndpoints(endpoints => endpoints.MapGrpcService<FeatureExchangeService>());
+            app.UseEndpoints(endpoints => endpoints.MapGrpcService<ProtoServices.FeatureExchangeService>());
             return app;
         }
 
