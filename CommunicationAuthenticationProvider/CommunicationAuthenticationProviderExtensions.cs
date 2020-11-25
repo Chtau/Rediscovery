@@ -1,4 +1,4 @@
-﻿using Rediscovery.Communication.Authentication.Provider.ProtoServices;
+﻿using Rediscovery.Communication.Provider.Authentication.ProtoServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rediscovery.Communication.Authentication.Provider
+namespace Rediscovery.Communication.Provider.Authentication
 {
     public static class CommunicationAuthenticationProviderExtensions
     {

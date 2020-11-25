@@ -54,7 +54,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CertificateService\Rediscovery.Service.Certificate.csproj" />
-    <ProjectReference Include="..\CommunicationAuthenticationProvider\Rediscovery.Communication.Authentication.Provider.csproj" />
+    <ProjectReference Include="..\CommunicationAuthenticationProvider\Rediscovery.Communication.Provider.Authentication.csproj" />
     <ProjectReference Include="..\CommunicationFeatureProvider\Rediscovery.Communication.Provider.Feature.csproj" />
     <ProjectReference Include="..\CommunicationHearthbeatProvider\Rediscovery.Communication.Heartbeat.Provider.csproj" />
     <ProjectReference Include="..\CommunicationLoggerProvider\Rediscovery.Communication.Logger.Provider.csproj" />

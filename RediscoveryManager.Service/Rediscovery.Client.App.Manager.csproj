@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommunicationAuthenticationConsumer\Rediscovery.Communication.Authentication.Consumer.csproj" />
+    <ProjectReference Include="..\CommunicationAuthenticationConsumer\Rediscovery.Communication.Consumer.Authentication.csproj" />
     <ProjectReference Include="..\CommunicationHearthbeatConsumer\Rediscovery.Communication.Heartbeat.Consumer.csproj" />
     <ProjectReference Include="..\CommunicationLoggerConsumer\Rediscovery.Communication.Logger.Consumer.csproj" />
     <ProjectReference Include="..\Communication\Rediscovery.Communication.Consumer.Resource.csproj" />

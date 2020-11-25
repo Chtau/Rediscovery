@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Rediscovery.Shared.Base.Extensions;
 
-namespace CommunicationAuthenticationConsumer
+namespace Rediscovery.Communication.Consumer.Authentication
 {
     public class AuthenticationConsumerService : IAuthenticationConsumerService
     {

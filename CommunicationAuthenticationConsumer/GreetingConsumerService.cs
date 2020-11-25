@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CommunicationAuthenticationConsumer
+namespace Rediscovery.Communication.Consumer.Authentication
 {
     public class GreetingConsumerService : IGreetingConsumerService
     {

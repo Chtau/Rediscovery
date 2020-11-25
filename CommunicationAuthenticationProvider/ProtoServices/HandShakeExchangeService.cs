@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rediscovery.Communication.Authentication.Provider.ProtoServices
+namespace Rediscovery.Communication.Provider.Authentication.ProtoServices
 {
     public class HandShakeExchangeService : ProtoHandshake.HandShakeExchange.HandShakeExchangeBase
     {

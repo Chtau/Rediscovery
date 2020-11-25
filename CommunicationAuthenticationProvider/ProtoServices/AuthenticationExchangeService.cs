@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using Grpc.Core;
 using System.Threading.Tasks;
-using Rediscovery.Communication.Authentication.Provider.Services;
+using Rediscovery.Communication.Provider.Authentication.Services;
 using Microsoft.Extensions.Logging;
 using Rediscovery.Shared.Base.Authentication;
 using Rediscovery.Shared.Base.Extensions;
 
-namespace Rediscovery.Communication.Authentication.Provider.ProtoServices
+namespace Rediscovery.Communication.Provider.Authentication.ProtoServices
 {
     public class AuthenticationExchangeService : ProtoAuthentication.AuthentionExchange.AuthentionExchangeBase
     {

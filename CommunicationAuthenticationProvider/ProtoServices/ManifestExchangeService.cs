@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Rediscovery.Communication.Authentication.Provider.Services;
+using Rediscovery.Communication.Provider.Authentication.Services;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using Rediscovery.Shared.Base.Extensions;
 
-namespace Rediscovery.Communication.Authentication.Provider.ProtoServices
+namespace Rediscovery.Communication.Provider.Authentication.ProtoServices
 {
     public class ManifestExchangeService : ProtoManifest.ManifestExchange.ManifestExchangeBase
     {

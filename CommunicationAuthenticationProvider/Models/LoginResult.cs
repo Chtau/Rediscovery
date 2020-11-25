@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Communication.Authentication.Provider.Models
+namespace Rediscovery.Communication.Provider.Authentication.Models
 {
     public class LoginResult
     {

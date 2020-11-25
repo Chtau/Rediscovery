@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommunicationAuthenticationConsumer
+namespace Rediscovery.Communication.Consumer.Authentication
 {
     public interface IGreetingConsumerService
     {

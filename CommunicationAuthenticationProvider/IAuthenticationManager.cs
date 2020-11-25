@@ -1,13 +1,8 @@
-﻿using Rediscovery.Communication.Authentication.Provider.Models;
-using Rediscovery.Shared.Base.Authentication;
+﻿using Rediscovery.Communication.Provider.Authentication.Models;
 using Rediscovery.Shared.Base.Connection;
-using System;
-using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Rediscovery.Communication.Authentication.Provider
+namespace Rediscovery.Communication.Provider.Authentication
 {
     public interface IAuthenticationManager
     {

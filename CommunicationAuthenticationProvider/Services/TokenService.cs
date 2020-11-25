@@ -7,7 +7,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
-namespace Rediscovery.Communication.Authentication.Provider.Services
+namespace Rediscovery.Communication.Provider.Authentication.Services
 {
     public class TokenService : ITokenService
     {
