@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace Rediscovery.Communication.Logger.Provider
+namespace Rediscovery.Communication.Provider.Logger
 {
     public class LoggerHandler : ILoggerHandler
     {

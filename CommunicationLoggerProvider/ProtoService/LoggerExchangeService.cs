@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Rediscovery.Shared.Base.Extensions;
 using Rediscovery.Communication.Base;
 
-namespace Rediscovery.Communication.Logger.Provider.ProtoService
+namespace Rediscovery.Communication.Provider.Logger.ProtoService
 {
     public class LoggerExchangeService : ProtoLogger.LoggerExchange.LoggerExchangeBase
     {

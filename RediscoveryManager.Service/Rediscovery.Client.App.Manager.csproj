@@ -12,7 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CommunicationAuthenticationConsumer\Rediscovery.Communication.Consumer.Authentication.csproj" />
     <ProjectReference Include="..\CommunicationHearthbeatConsumer\Rediscovery.Communication.Consumer.Heartbeat.csproj" />
-    <ProjectReference Include="..\CommunicationLoggerConsumer\Rediscovery.Communication.Logger.Consumer.csproj" />
+    <ProjectReference Include="..\CommunicationLoggerConsumer\Rediscovery.Communication.Consumer.Logger.csproj" />
     <ProjectReference Include="..\Communication\Rediscovery.Communication.Consumer.Resource.csproj" />
     <ProjectReference Include="..\SharedModels\Rediscovery.Shared.Base.csproj" />
   </ItemGroup>

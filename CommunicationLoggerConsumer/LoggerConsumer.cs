@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Rediscovery.Shared.Base.Extensions;
 
-namespace Rediscovery.Communication.Logger.Consumer
+namespace Rediscovery.Communication.Consumer.Logger
 {
     public class LoggerConsumer : ILoggerConsumer
     {
