@@ -1,4 +1,4 @@
-﻿using Rediscovery.Communication.Heartbeat.Provider;
+﻿using Rediscovery.Communication.Provider.Heartbeat;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
@@ -8,16 +8,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Rediscovery.Communication.Base;
 
-namespace Rediscovery.Communication.Heartbeat.Provider.ProtoServices
+namespace Rediscovery.Communication.Provider.Heartbeat.ProtoServices
 {
     public class HeartbeatExchangeService : ProtoHeartbeat.HeartbeatExchange.HeartbeatExchangeBase
     {
         private readonly ILogger<HeartbeatExchangeService> _logger;
-        private readonly Rediscovery.Communication.Heartbeat.Provider.IConfiguration _configuration;
+        private readonly Rediscovery.Communication.Provider.Heartbeat.IConfiguration _configuration;
         private readonly IHeartbeatStatistic _heartbeatStatistic;
         private readonly IHeartbeatActive _heartbeatActive;
 
-        public HeartbeatExchangeService(ILoggerFactory loggerFactory, Rediscovery.Communication.Heartbeat.Provider.IConfiguration configuration, IHeartbeatStatistic heartbeatStatistic, IHeartbeatActive heartbeatActive)
+        public HeartbeatExchangeService(ILoggerFactory loggerFactory, Rediscovery.Communication.Provider.Heartbeat.IConfiguration configuration, IHeartbeatStatistic heartbeatStatistic, IHeartbeatActive heartbeatActive)
         {
             _logger = loggerFactory.CreateLogger<HeartbeatExchangeService>();
             _configuration = configuration;
@@ -41,7 +41,7 @@ namespace Rediscovery.Communication.Heartbeat.Provider.ProtoServices
                             try
                             {
                                 await responseStream.WriteAsync(message);
-                                _heartbeatStatistic.NewBeat(new Rediscovery.Communication.Heartbeat.Provider.HeartbeatResult(sid, true, new TimeSpan((long)message.LastRoundTripTicks), new DateTime((long)message.Ticks)));
+                                _heartbeatStatistic.NewBeat(new Rediscovery.Communication.Provider.Heartbeat.HeartbeatResult(sid, true, new TimeSpan((long)message.LastRoundTripTicks), new DateTime((long)message.Ticks)));
                             }
                             catch (Exception ex)
                             {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
-namespace Rediscovery.Communication.Heartbeat.Consumer
+namespace Rediscovery.Communication.Consumer.Heartbeat
 {
     public interface IHeartbeatConsumer
     {

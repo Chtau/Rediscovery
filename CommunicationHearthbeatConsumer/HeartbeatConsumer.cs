@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Rediscovery.Communication.Heartbeat.Consumer
+namespace Rediscovery.Communication.Consumer.Heartbeat
 {
     public class HeartbeatConsumer : IHeartbeatConsumer
     {

@@ -56,7 +56,7 @@
     <ProjectReference Include="..\CertificateService\Rediscovery.Service.Certificate.csproj" />
     <ProjectReference Include="..\CommunicationAuthenticationProvider\Rediscovery.Communication.Provider.Authentication.csproj" />
     <ProjectReference Include="..\CommunicationFeatureProvider\Rediscovery.Communication.Provider.Feature.csproj" />
-    <ProjectReference Include="..\CommunicationHearthbeatProvider\Rediscovery.Communication.Heartbeat.Provider.csproj" />
+    <ProjectReference Include="..\CommunicationHearthbeatProvider\Rediscovery.Communication.Provider.Heartbeat.csproj" />
     <ProjectReference Include="..\CommunicationLoggerProvider\Rediscovery.Communication.Logger.Provider.csproj" />
     <ProjectReference Include="..\CommunicationResourceProvider\Rediscovery.Communication.Provider.Resource.csproj" />
     <ProjectReference Include="..\DALDesktopService\Rediscovery.Service.DAL.csproj" />

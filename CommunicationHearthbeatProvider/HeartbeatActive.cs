@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Rediscovery.Communication.Heartbeat.Provider
+namespace Rediscovery.Communication.Provider.Heartbeat
 {
     public class HeartbeatActive : IHeartbeatActive
     {

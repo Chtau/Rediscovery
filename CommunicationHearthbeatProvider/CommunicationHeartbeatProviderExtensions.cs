@@ -1,11 +1,11 @@
-﻿using Rediscovery.Communication.Heartbeat.Provider.ProtoServices;
+﻿using Rediscovery.Communication.Provider.Heartbeat.ProtoServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Communication.Heartbeat.Provider
+namespace Rediscovery.Communication.Provider.Heartbeat
 {
     public static class CommunicationHeartbeatProviderExtensions
     {

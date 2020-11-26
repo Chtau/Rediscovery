@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Communication.Heartbeat.Consumer
+namespace Rediscovery.Communication.Consumer.Heartbeat
 {
     public class RoundTripResult
     {

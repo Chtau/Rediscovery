@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Communication.Heartbeat.Provider
+namespace Rediscovery.Communication.Provider.Heartbeat
 {
     public interface IHeartbeatStatistic
     {
