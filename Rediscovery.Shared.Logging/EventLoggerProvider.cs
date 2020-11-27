@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Rediscovery.Shared.Logging.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Shared.Base.Logging
+namespace Rediscovery.Shared.Logging
 {
     public class EventLoggerProvider : ILogger
     {
@@ -25,7 +26,7 @@ namespace Rediscovery.Shared.Base.Logging
 
         public event EventHandler<LoggerEntry> LogNewEntry;
 
-        private void OnLogEntry(string message, LoggerEntry.LoggerType loggerType, string module = null)
+        private void OnLogEntry(string message, LoggerType loggerType, string module = null)
         {
             LogNewEntry?.Invoke(this, new LoggerEntry
             {
@@ -41,47 +42,47 @@ namespace Rediscovery.Shared.Base.Logging
         {
             if (args?.Length > 0)
                 message = string.Format(message, args);
-           OnLogEntry(message, LoggerEntry.LoggerType.Critical, nameof(LogCritical));
+            OnLogEntry(message, LoggerType.Critical, nameof(LogCritical));
         }
 
         public void LogDebug(string message, params object[] args)
         {
             if (args?.Length > 0)
                 message = string.Format(message, args);
-            OnLogEntry(message, LoggerEntry.LoggerType.Debug, nameof(LogDebug));
+            OnLogEntry(message, LoggerType.Debug, nameof(LogDebug));
         }
 
         public void LogError(Exception exception)
         {
-            OnLogEntry(exception.ToString(), LoggerEntry.LoggerType.Error, nameof(LogError));
+            OnLogEntry(exception.ToString(), LoggerType.Error, nameof(LogError));
         }
 
         public void LogError(Exception exception, string message, params object[] args)
         {
             if (args?.Length > 0)
                 message = string.Format(message, args);
-            OnLogEntry(exception.ToString() + Environment.NewLine + message, LoggerEntry.LoggerType.Error, nameof(LogError));
+            OnLogEntry(exception.ToString() + Environment.NewLine + message, LoggerType.Error, nameof(LogError));
         }
 
         public void LogInformation(string message, params object[] args)
         {
             if (args?.Length > 0)
                 message = string.Format(message, args);
-            OnLogEntry(message, LoggerEntry.LoggerType.Information, nameof(LogInformation));
+            OnLogEntry(message, LoggerType.Information, nameof(LogInformation));
         }
 
         public void LogTrace(string message, params object[] args)
         {
             if (args?.Length > 0)
                 message = string.Format(message, args);
-            OnLogEntry(message, LoggerEntry.LoggerType.Trace, nameof(LogTrace));
+            OnLogEntry(message, LoggerType.Trace, nameof(LogTrace));
         }
 
         public void LogWarning(string message, params object[] args)
         {
             if (args?.Length > 0)
                 message = string.Format(message, args);
-            OnLogEntry(message, LoggerEntry.LoggerType.Warning, nameof(LogWarning));
+            OnLogEntry(message, LoggerType.Warning, nameof(LogWarning));
         }
     }
 }

@@ -2,20 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Shared.Base.Logging
+namespace Rediscovery.Shared.Logging.Models
 {
     public class LoggerEntry
     {
-        public enum LoggerType
-        {
-            Trace = 0,
-            Debug = 1,
-            Information = 2,
-            Warning = 3,
-            Error = 4,
-            Critical = 5
-        };
-
         private LoggerType logLevel;
         public LoggerType LogLevel
         {

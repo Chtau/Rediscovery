@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Shared.Base.Logging
+namespace Rediscovery.Shared.Logging
 {
     public interface ILogger
     {

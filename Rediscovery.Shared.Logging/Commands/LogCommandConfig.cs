@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Shared.Base.Logging
+namespace Rediscovery.Shared.Logging.Commands
 {
     public class LogCommandConfig
     {
@@ -12,13 +12,7 @@ namespace Rediscovery.Shared.Base.Logging
         }
 
         public Guid Id { get; set; }
-        public enum Command
-        {
-            State = 0,
-            Clear = 1,
-            ChangeLogLevel = 2
-        }
-
+        
         public Command CommandType { get; set; }
         public string Data { get; set; }
     }

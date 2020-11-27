@@ -73,6 +73,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppMobileAndroid", "AppMobi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.App.Shared", "App.Client.Shared\Rediscovery.Client.App.Shared.csproj", "{9E17C536-E7AB-4FFD-87C3-A2D40C93DFDF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rediscovery.Shared.Logging", "Rediscovery.Shared.Logging\Rediscovery.Shared.Logging.csproj", "{01AF85BB-FC4F-41F3-993A-07A81F73907A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -515,6 +517,18 @@ Global
 		{9E17C536-E7AB-4FFD-87C3-A2D40C93DFDF}.Release|x64.Build.0 = Release|Any CPU
 		{9E17C536-E7AB-4FFD-87C3-A2D40C93DFDF}.Release|x86.ActiveCfg = Release|Any CPU
 		{9E17C536-E7AB-4FFD-87C3-A2D40C93DFDF}.Release|x86.Build.0 = Release|Any CPU
+		{01AF85BB-FC4F-41F3-993A-07A81F73907A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01AF85BB-FC4F-41F3-993A-07A81F73907A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01AF85BB-FC4F-41F3-993A-07A81F73907A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{01AF85BB-FC4F-41F3-993A-07A81F73907A}.Debug|x64.Build.0 = Debug|Any CPU
+		{01AF85BB-FC4F-41F3-993A-07A81F73907A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{01AF85BB-FC4F-41F3-993A-07A81F73907A}.Debug|x86.Build.0 = Debug|Any CPU
+		{01AF85BB-FC4F-41F3-993A-07A81F73907A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01AF85BB-FC4F-41F3-993A-07A81F73907A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01AF85BB-FC4F-41F3-993A-07A81F73907A}.Release|x64.ActiveCfg = Release|Any CPU
+		{01AF85BB-FC4F-41F3-993A-07A81F73907A}.Release|x64.Build.0 = Release|Any CPU
+		{01AF85BB-FC4F-41F3-993A-07A81F73907A}.Release|x86.ActiveCfg = Release|Any CPU
+		{01AF85BB-FC4F-41F3-993A-07A81F73907A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
