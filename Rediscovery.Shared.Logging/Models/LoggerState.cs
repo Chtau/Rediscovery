@@ -6,6 +6,6 @@ namespace Rediscovery.Shared.Logging.Models
 {
     public class LoggerState
     {
-        public LoggerEntry.LoggerType Level { get; set; }
+        public LoggerType Level { get; set; }
     }
 }

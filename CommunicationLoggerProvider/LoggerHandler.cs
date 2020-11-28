@@ -1,4 +1,6 @@
-﻿using Rediscovery.Shared.Base.Logging;
+﻿using Rediscovery.Shared.Logging;
+using Rediscovery.Shared.Logging.Commands;
+using Rediscovery.Shared.Logging.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,7 +13,7 @@ namespace Rediscovery.Communication.Provider.Logger
         private readonly IDirectLogger _directLogger;
 
         private List<LoggerEntry> logEntries = new List<LoggerEntry>();
-        private Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType logLevel = LoggerEntry.LoggerType.Trace;
+        private LoggerType logLevel = LoggerType.Trace;
         public bool Pause { get; set; }
         public int MaxEntires { get; set; } = 100;
         private DateTime lastEntiresChangedEvent = DateTime.UtcNow.AddMinutes(-1);
@@ -76,7 +78,7 @@ namespace Rediscovery.Communication.Provider.Logger
             }
         }
 
-        private bool OnAllowedLogLevel(Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType loggerType)
+        private bool OnAllowedLogLevel(LoggerType loggerType)
         {
             return (int)loggerType >= (int)logLevel;
         }
@@ -85,7 +87,7 @@ namespace Rediscovery.Communication.Provider.Logger
         {
             try
             {
-                if (logCommandConfig.CommandType == LogCommandConfig.Command.Clear)
+                if (logCommandConfig.CommandType == Command.Clear)
                 {
                     ClearEntries();
                     return new LogCommandConfigResult
@@ -94,11 +96,11 @@ namespace Rediscovery.Communication.Provider.Logger
                         Id = logCommandConfig.Id,
                         Result = true
                     };
-                } else if (logCommandConfig.CommandType == LogCommandConfig.Command.ChangeLogLevel)
+                } else if (logCommandConfig.CommandType == Command.ChangeLogLevel)
                 {
                     if (int.TryParse(logCommandConfig.Data, out int level))
                     {
-                        var newLogLevel = (Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType)level;
+                        var newLogLevel = (LoggerType)level;
                         logLevel = newLogLevel;
                         ClearEntries();
                         return new LogCommandConfigResult
@@ -108,7 +110,7 @@ namespace Rediscovery.Communication.Provider.Logger
                             Result = true
                         };
                     }
-                } else if (logCommandConfig.CommandType == LogCommandConfig.Command.State)
+                } else if (logCommandConfig.CommandType == Command.State)
                 {
                     var state = new LoggerState
                     {

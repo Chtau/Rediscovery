@@ -9,6 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Rediscovery.Shared.Base.Extensions;
 using Rediscovery.Communication.Base;
+using Rediscovery.Shared.Logging;
+using Rediscovery.Shared.Logging.Models;
+using Rediscovery.Shared.Logging.Commands;
 
 namespace Rediscovery.Communication.Provider.Logger.ProtoService
 {
@@ -42,32 +45,32 @@ namespace Rediscovery.Communication.Provider.Logger.ProtoService
                             var user = context.GetHttpContext().User;
                             string sid = user.Claims.GetSid();
 
-                            Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType loggerType = Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType.Debug;
+                            LoggerType loggerType = LoggerType.Debug;
                             switch (message.LoggerType)
                             {
                                 case ProtoLogger.LogEntry.Types.LoggerType.Trace:
-                                    loggerType = Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType.Trace;
+                                    loggerType = LoggerType.Trace;
                                     break;
                                 case ProtoLogger.LogEntry.Types.LoggerType.Debug:
-                                    loggerType = Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType.Debug;
+                                    loggerType = LoggerType.Debug;
                                     break;
                                 case ProtoLogger.LogEntry.Types.LoggerType.Information:
-                                    loggerType = Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType.Information;
+                                    loggerType = LoggerType.Information;
                                     break;
                                 case ProtoLogger.LogEntry.Types.LoggerType.Warning:
-                                    loggerType = Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType.Warning;
+                                    loggerType = LoggerType.Warning;
                                     break;
                                 case ProtoLogger.LogEntry.Types.LoggerType.Error:
-                                    loggerType = Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType.Error;
+                                    loggerType = LoggerType.Error;
                                     break;
                                 case ProtoLogger.LogEntry.Types.LoggerType.Critical:
-                                    loggerType = Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType.Critical;
+                                    loggerType = LoggerType.Critical;
                                     break;
                                 default:
                                     break;
                             }
 
-                            _loggerHandler.NewEntry(new Rediscovery.Shared.Base.Logging.LoggerEntry
+                            _loggerHandler.NewEntry(new LoggerEntry
                             {
                                 Id = message.Id,
                                 Message = message.Message,
@@ -99,24 +102,24 @@ namespace Rediscovery.Communication.Provider.Logger.ProtoService
         {
             try
             {
-                Rediscovery.Shared.Base.Logging.LogCommandConfig.Command cmdType = Rediscovery.Shared.Base.Logging.LogCommandConfig.Command.State;
+                Command cmdType = Command.State;
                 switch (request.LogCommand)
                 {
                     case ProtoLogger.LogCommandConfig.Types.Command.Clear:
-                        cmdType = Rediscovery.Shared.Base.Logging.LogCommandConfig.Command.Clear;
+                        cmdType = Command.Clear;
                         break;
                     case ProtoLogger.LogCommandConfig.Types.Command.ChangeLogLevel:
-                        cmdType = Rediscovery.Shared.Base.Logging.LogCommandConfig.Command.ChangeLogLevel;
+                        cmdType = Command.ChangeLogLevel;
                         break;
                     case ProtoLogger.LogCommandConfig.Types.Command.State:
-                        cmdType = Rediscovery.Shared.Base.Logging.LogCommandConfig.Command.State;
+                        cmdType = Command.State;
                         break;
                     default:
                         break;
                 }
                 var cmdId = new Guid(request.Id);
 
-                var logCommand = new Rediscovery.Shared.Base.Logging.LogCommandConfig
+                var logCommand = new LogCommandConfig
                 {
                     Id = cmdId,
                     Data = request.Data,
