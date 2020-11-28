@@ -76,7 +76,7 @@ namespace Rediscovery.Client.App.ControlPanel.ViewModels
 
         private void SetAppsCollection()
         {
-            var appsSettings = Program.Configuration.GetSection(SharedConfigurations.AppControlPanel.Models.AppModel.SectionName).Get<SharedConfigurations.AppControlPanel.Models.AppModel[]>();
+            var appsSettings = Program.Configuration.GetSection(Shared.Configurations.ControlPanel.Models.AppModel.SectionName).Get<Shared.Configurations.ControlPanel.Models.AppModel[]>();
             if (appsSettings != null)
             {
                 Apps.Clear();
@@ -94,8 +94,8 @@ namespace Rediscovery.Client.App.ControlPanel.ViewModels
         {
             try
             {
-                string path = System.IO.Path.Combine(SharedFeatureFunctions.File.GetApplicationFolder(), SharedConfigurations.AppControlPanel.ConfigFileNames.AppSettings);
-                SharedFeatureFunctions.File.OpenWithDefaultProgram(path);
+                string path = System.IO.Path.Combine(Feature.Shared.Functions.File.GetApplicationFolder(), Shared.Configurations.ControlPanel.ConfigFileNames.AppSettings);
+                Feature.Shared.Functions.File.OpenWithDefaultProgram(path);
             }
             catch (Exception ex)
             {

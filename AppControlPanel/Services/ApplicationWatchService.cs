@@ -1,5 +1,4 @@
 ﻿using Rediscovery.Client.App.ControlPanel.ViewModels;
-using SharedConfigurations.AppControlPanel.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

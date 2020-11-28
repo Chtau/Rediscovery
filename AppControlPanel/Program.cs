@@ -35,7 +35,7 @@ namespace Rediscovery.Client.App.ControlPanel
         {
             var builder = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile(SharedConfigurations.AppControlPanel.ConfigFileNames.AppSettings, optional: true, reloadOnChange: true);
+        .AddJsonFile(Shared.Configurations.ControlPanel.ConfigFileNames.AppSettings, optional: true, reloadOnChange: true);
 
             Configuration = builder.Build();
 

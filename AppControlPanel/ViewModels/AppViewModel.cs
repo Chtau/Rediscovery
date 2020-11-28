@@ -1,4 +1,5 @@
 ﻿using ReactiveUI;
+using Rediscovery.Shared.Configurations.ControlPanel.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace Rediscovery.Client.App.ControlPanel.ViewModels
             NotRunning = 6,
         }
 
-        public SharedConfigurations.AppControlPanel.Models.AppModel AppModel { get; set; }
+        public AppModel AppModel { get; set; }
 
         private LaunchState appLaunchState = LaunchState.None;
         public LaunchState AppLaunchState
@@ -58,7 +59,7 @@ namespace Rediscovery.Client.App.ControlPanel.ViewModels
 
         }
 
-        public AppViewModel(SharedConfigurations.AppControlPanel.Models.AppModel appModel) : this()
+        public AppViewModel(AppModel appModel) : this()
         {
             AppModel = appModel;
         }

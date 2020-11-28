@@ -1,4 +1,4 @@
-﻿using SharedConfigurations.AppControlPanel.Models;
+﻿using Rediscovery.Shared.Configurations.ControlPanel.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,7 +18,7 @@ namespace Rediscovery.Client.App.ControlPanel.Services
                 {
                     if (System.IO.Directory.Exists(appViewModel.CommandLineWorkingDirectory))
                     {
-                        if (SharedFeatureFunctions.Process.CommandLine(appViewModel.CommandLineCommand, appViewModel.CommandLineWorkingDirectory ?? appViewModel.WorkingDirectory, null, appViewModel.RunAs, appViewModel.HideShell.HasValue ? appViewModel.HideShell.Value : false, processIdCallback))
+                        if (Rediscovery.Feature.Shared.Functions.Process.CommandLine(appViewModel.CommandLineCommand, appViewModel.CommandLineWorkingDirectory ?? appViewModel.WorkingDirectory, null, appViewModel.RunAs, appViewModel.HideShell.HasValue ? appViewModel.HideShell.Value : false, processIdCallback))
                             return ViewModels.AppViewModel.LaunchState.Starting;
                         else
                             return ViewModels.AppViewModel.LaunchState.ErrorStarting;
@@ -41,7 +41,7 @@ namespace Rediscovery.Client.App.ControlPanel.Services
                     else
                     {
                         // search in parent and all child folders from the parent
-                        var parentDirInfo = System.IO.Directory.GetParent(SharedFeatureFunctions.File.GetApplicationFolder());
+                        var parentDirInfo = System.IO.Directory.GetParent(Rediscovery.Feature.Shared.Functions.File.GetApplicationFolder());
                         var foundPaths = System.IO.Directory.GetFiles(parentDirInfo.FullName, appViewModel.ExecuteableName, System.IO.SearchOption.AllDirectories);
                         if (foundPaths?.Length > 0)
                             path = foundPaths[0];
@@ -49,7 +49,7 @@ namespace Rediscovery.Client.App.ControlPanel.Services
 
                     if (!string.IsNullOrWhiteSpace(path))
                     {
-                        if (SharedFeatureFunctions.Process.Run(path, appViewModel.ExecuteArguments, null, appViewModel.RunAs, appViewModel.HideShell.HasValue ? appViewModel.HideShell.Value : false, appViewModel.WorkingDirectory, processIdCallback))
+                        if (Rediscovery.Feature.Shared.Functions.Process.Run(path, appViewModel.ExecuteArguments, null, appViewModel.RunAs, appViewModel.HideShell.HasValue ? appViewModel.HideShell.Value : false, appViewModel.WorkingDirectory, processIdCallback))
                             return ViewModels.AppViewModel.LaunchState.Starting;
                         else
                             return ViewModels.AppViewModel.LaunchState.ErrorStarting;
