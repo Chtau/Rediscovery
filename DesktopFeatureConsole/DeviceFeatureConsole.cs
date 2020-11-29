@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using Rediscovery.Feature.Desktop.Console.Models;
-using PluginFeature;
-using PluginFeature.Interfaces;
-using PluginFeature.Models;
+using Rediscovery.Feature.Plugin;
+using Rediscovery.Feature.Plugin.Interfaces;
+using Rediscovery.Feature.Plugin.Models;
 
 namespace Rediscovery.Feature.Desktop.Console
 {

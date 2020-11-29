@@ -1,6 +1,6 @@
 ﻿using Rediscovery.Feature.Desktop.MediaPlayer.Models;
-using PluginFeature.Interfaces;
-using SharedFeatureFunctions.Models;
+using Rediscovery.Feature.Plugin.Interfaces;
+using Rediscovery.Feature.Shared.Functions.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -171,7 +171,7 @@ namespace Rediscovery.Feature.Desktop.MediaPlayer
             var prc = OnGetProcess();
             if (prc != null)
             {
-                SharedFeatureFunctions.RemoteProcessControl.SendKeys(prc.MainWindowHandle, keyCodes, altKeyPressed, controlKeyPressed, shiftKeyPressed);
+                Rediscovery.Feature.Shared.Functions.RemoteProcessControl.SendKeys(prc.MainWindowHandle, keyCodes, altKeyPressed, controlKeyPressed, shiftKeyPressed);
 
                 return true;
             }

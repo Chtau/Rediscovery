@@ -1,4 +1,4 @@
-﻿using SharedFeatureFunctions.Models;
+﻿using Rediscovery.Feature.Shared.Functions.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;

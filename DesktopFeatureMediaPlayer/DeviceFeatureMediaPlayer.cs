@@ -1,7 +1,7 @@
 ﻿using Rediscovery.Feature.Desktop.MediaPlayer.Models;
-using PluginFeature;
-using PluginFeature.Interfaces;
-using PluginFeature.Models;
+using Rediscovery.Feature.Plugin;
+using Rediscovery.Feature.Plugin.Interfaces;
+using Rediscovery.Feature.Plugin.Models;
 using System;
 using System.Collections.Generic;
 using System.IO.Compression;

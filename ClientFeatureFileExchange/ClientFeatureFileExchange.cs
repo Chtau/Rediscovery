@@ -1,6 +1,6 @@
-﻿using PluginFeature;
-using PluginFeature.Interfaces;
-using PluginFeature.Models;
+﻿using Rediscovery.Feature.Plugin;
+using Rediscovery.Feature.Plugin.Interfaces;
+using Rediscovery.Feature.Plugin.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -59,7 +59,7 @@ namespace ClientFeatureFileExchange
                     var config = Configuration.GetConfigurations(ConfigurationPath());
                     if (!string.IsNullOrWhiteSpace(data.Entity.Data?.ToString()))
                     {
-                        var openWithIntent = Newtonsoft.Json.JsonConvert.DeserializeObject<PluginFeature.Models.ClientResources.OpenWithIntent>(data.Entity.Data);
+                        var openWithIntent = Newtonsoft.Json.JsonConvert.DeserializeObject<Rediscovery.Feature.Plugin.Models.ClientResources.OpenWithIntent>(data.Entity.Data);
                         if (openWithIntent.Content?.Length > 0)
                         {
                             string file = SaveFileBytes(config.WorkingFolder, openWithIntent.Title, openWithIntent.Content, config.FallbackFileExtensionContent);
