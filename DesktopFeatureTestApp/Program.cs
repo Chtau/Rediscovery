@@ -1,5 +1,5 @@
-﻿using PluginFeature.Interfaces;
-using PluginFeature.Models;
+﻿using Rediscovery.Feature.Plugin.Interfaces;
+using Rediscovery.Feature.Plugin.Models;
 using Rediscovery.Feature.Desktop.Console;
 using System;
 using System.Net;

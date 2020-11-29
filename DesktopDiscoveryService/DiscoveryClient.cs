@@ -1,4 +1,4 @@
-﻿using SharedBase.Discovery;
+﻿using Rediscovery.Shared.Base.Discovery;
 using System;
 using System.Collections.Generic;
 using System.Net;

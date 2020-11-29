@@ -4,10 +4,10 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
-using SharedFeatureFunctions;
+using Rediscovery.Feature.Shared.Functions;
 using Microsoft.Extensions.Configuration;
 using System.IO;
-using SharedBase.Discovery;
+using Rediscovery.Shared.Base.Discovery;
 
 namespace Rediscovery.Client.Service.Discovery
 {
@@ -17,12 +17,12 @@ namespace Rediscovery.Client.Service.Discovery
         {
             var builder = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile(SharedConfigurations.DiscoveryService.ConfigFileNames.AppSettings, optional: true, reloadOnChange: true);
+        .AddJsonFile(Rediscovery.Shared.Configurations.Discovery.ConfigFileNames.AppSettings, optional: true, reloadOnChange: true);
 
             IConfigurationRoot configuration = builder.Build();
 
-            var serviceInfoSettings = configuration.GetSection(SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration.SectionName).Get<SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration>();
-            var discoverySettings = configuration.GetSection(SharedConfigurations.DiscoveryService.Models.DiscoveryConfiguration.SectionName).Get<SharedConfigurations.DiscoveryService.Models.DiscoveryConfiguration>();
+            var serviceInfoSettings = configuration.GetSection(Rediscovery.Shared.Configurations.Discovery.Models.ServiceInfoConfiguration.SectionName).Get<Rediscovery.Shared.Configurations.Discovery.Models.ServiceInfoConfiguration>();
+            var discoverySettings = configuration.GetSection(Rediscovery.Shared.Configurations.Discovery.Models.DiscoveryConfiguration.SectionName).Get<Rediscovery.Shared.Configurations.Discovery.Models.DiscoveryConfiguration>();
 
             if (FirewallRule.RuleExists(discoverySettings.FirewallRuleName, discoverySettings.Port) != FirewallRule.RuleState.True)
             {
