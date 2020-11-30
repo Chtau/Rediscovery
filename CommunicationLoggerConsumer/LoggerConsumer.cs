@@ -1,6 +1,6 @@
 ﻿using Rediscovery.Communication.Base;
 using Grpc.Core;
-using Rediscovery.Shared.Base.Logging;
+using Rediscovery.Shared.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Rediscovery.Shared.Base.Extensions;
+using Rediscovery.Shared.Logging.Models;
+using Rediscovery.Shared.Logging.Commands;
 
 namespace Rediscovery.Communication.Consumer.Logger
 {
@@ -22,7 +24,7 @@ namespace Rediscovery.Communication.Consumer.Logger
         private Channel channel = null;
         private CancellationTokenSource ctsLogger = null;
 
-        public event EventHandler<Rediscovery.Shared.Base.Logging.LogCommandConfigResult> LoggerCommandExecuted;
+        public event EventHandler<Rediscovery.Shared.Logging.Commands.LogCommandConfigResult> LoggerCommandExecuted;
 
         public bool IsConnect
         {
@@ -125,22 +127,22 @@ namespace Rediscovery.Communication.Consumer.Logger
                 var logLevel = ProtoLogger.LogEntry.Types.LoggerType.Information;
                 switch (loggerEntry.LogLevel)
                 {
-                    case LoggerEntry.LoggerType.Trace:
+                    case LoggerType.Trace:
                         logLevel = ProtoLogger.LogEntry.Types.LoggerType.Trace;
                         break;
-                    case LoggerEntry.LoggerType.Debug:
+                    case LoggerType.Debug:
                         logLevel = ProtoLogger.LogEntry.Types.LoggerType.Debug;
                         break;
-                    case LoggerEntry.LoggerType.Information:
+                    case LoggerType.Information:
                         logLevel = ProtoLogger.LogEntry.Types.LoggerType.Information;
                         break;
-                    case LoggerEntry.LoggerType.Warning:
+                    case LoggerType.Warning:
                         logLevel = ProtoLogger.LogEntry.Types.LoggerType.Warning;
                         break;
-                    case LoggerEntry.LoggerType.Error:
+                    case LoggerType.Error:
                         logLevel = ProtoLogger.LogEntry.Types.LoggerType.Error;
                         break;
-                    case LoggerEntry.LoggerType.Critical:
+                    case LoggerType.Critical:
                         logLevel = ProtoLogger.LogEntry.Types.LoggerType.Critical;
                         break;
                     default:
@@ -179,13 +181,13 @@ namespace Rediscovery.Communication.Consumer.Logger
                     ProtoLogger.LogCommandConfig.Types.Command commandType = ProtoLogger.LogCommandConfig.Types.Command.State;
                     switch (logCommandConfig.CommandType)
                     {
-                        case LogCommandConfig.Command.Clear:
+                        case Command.Clear:
                             commandType = ProtoLogger.LogCommandConfig.Types.Command.Clear;
                             break;
-                        case LogCommandConfig.Command.ChangeLogLevel:
+                        case Command.ChangeLogLevel:
                             commandType = ProtoLogger.LogCommandConfig.Types.Command.ChangeLogLevel;
                             break;
-                        case LogCommandConfig.Command.State:
+                        case Command.State:
                             commandType = ProtoLogger.LogCommandConfig.Types.Command.State;
                             break;
                         default:

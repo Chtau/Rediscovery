@@ -595,22 +595,22 @@ namespace Rediscovery.Communication.Provider.Resource.ProtoServices
                                 ProtoResources.LogEntry.Types.LoggerType loggerType = ProtoResources.LogEntry.Types.LoggerType.Information;
                                 switch (item.LogLevel)
                                 {
-                                    case Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType.Trace:
+                                    case Shared.Logging.LoggerType.Trace:
                                         loggerType = ProtoResources.LogEntry.Types.LoggerType.Trace;
                                         break;
-                                    case Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType.Debug:
+                                    case Shared.Logging.LoggerType.Debug:
                                         loggerType = ProtoResources.LogEntry.Types.LoggerType.Debug;
                                         break;
-                                    case Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType.Information:
+                                    case Shared.Logging.LoggerType.Information:
                                         loggerType = ProtoResources.LogEntry.Types.LoggerType.Information;
                                         break;
-                                    case Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType.Warning:
+                                    case Shared.Logging.LoggerType.Warning:
                                         loggerType = ProtoResources.LogEntry.Types.LoggerType.Warning;
                                         break;
-                                    case Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType.Error:
+                                    case Shared.Logging.LoggerType.Error:
                                         loggerType = ProtoResources.LogEntry.Types.LoggerType.Error;
                                         break;
-                                    case Rediscovery.Shared.Base.Logging.LoggerEntry.LoggerType.Critical:
+                                    case Shared.Logging.LoggerType.Critical:
                                         loggerType = ProtoResources.LogEntry.Types.LoggerType.Critical;
                                         break;
                                     default:

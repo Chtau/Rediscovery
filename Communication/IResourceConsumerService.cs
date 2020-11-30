@@ -18,7 +18,7 @@ namespace Rediscovery.Communication.Consumer.Resource
         event EventHandler<(Guid deviceId, bool accept)> ReceiveResolvePendingDevicesResult;
         event EventHandler<Models.FeatureDetail> ReceiveFeatureDetails;
         event EventHandler<List<Shared.Base.Statistics.HeartbeatStatisticItem>> ReceiveHeartbeatStatistic;
-        event EventHandler<List<Shared.Base.Logging.LoggerEntry>> ReceiveLoggerEntires;
+        event EventHandler<List<Shared.Logging.Models.LoggerEntry>> ReceiveLoggerEntires;
 
         bool Connect(ConsumerConnectionConfiguration connectionConfiguration);
         void ListenActiveDevices(string token, CancellationTokenSource cts = null);

@@ -1,6 +1,6 @@
 ﻿using Rediscovery.Communication.Base;
 using Grpc.Core;
-using Rediscovery.Shared.Base.Logging;
+using Rediscovery.Shared.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -2,13 +2,14 @@
 using Rediscovery.Communication.Base;
 using Rediscovery.Shared.Base.Extensions;
 using Rediscovery.Shared.Base.Feature;
-using Rediscovery.Shared.Base.Logging;
+using Rediscovery.Shared.Logging;
 using Rediscovery.Shared.Base.Statistics;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Rediscovery.Shared.Logging.Models;
 
 namespace Rediscovery.Communication.Consumer.Resource
 {
@@ -404,29 +405,29 @@ namespace Rediscovery.Communication.Consumer.Resource
                         {
                             await foreach (var message in call.ResponseStream.ReadAllAsync())
                             {
-                                var result = new List<Shared.Base.Logging.LoggerEntry>();
+                                var result = new List<Shared.Logging.Models.LoggerEntry>();
                                 foreach (var item in message.Entires)
                                 {
-                                    LoggerEntry.LoggerType loggerType = LoggerEntry.LoggerType.Information;
+                                    LoggerType loggerType = LoggerType.Information;
                                     switch (item.LoggerType)
                                     {
                                         case ProtoResources.LogEntry.Types.LoggerType.Trace:
-                                            loggerType = LoggerEntry.LoggerType.Trace;
+                                            loggerType = LoggerType.Trace;
                                             break;
                                         case ProtoResources.LogEntry.Types.LoggerType.Debug:
-                                            loggerType = LoggerEntry.LoggerType.Debug;
+                                            loggerType = LoggerType.Debug;
                                             break;
                                         case ProtoResources.LogEntry.Types.LoggerType.Information:
-                                            loggerType = LoggerEntry.LoggerType.Information;
+                                            loggerType = LoggerType.Information;
                                             break;
                                         case ProtoResources.LogEntry.Types.LoggerType.Warning:
-                                            loggerType = LoggerEntry.LoggerType.Warning;
+                                            loggerType = LoggerType.Warning;
                                             break;
                                         case ProtoResources.LogEntry.Types.LoggerType.Error:
-                                            loggerType = LoggerEntry.LoggerType.Error;
+                                            loggerType = LoggerType.Error;
                                             break;
                                         case ProtoResources.LogEntry.Types.LoggerType.Critical:
-                                            loggerType = LoggerEntry.LoggerType.Critical;
+                                            loggerType = LoggerType.Critical;
                                             break;
                                         default:
                                             break;

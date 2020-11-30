@@ -1,7 +1,7 @@
-﻿using SharedFeatureFunctions;
+﻿using Rediscovery.Feature.Shared.Functions;
 using System;
 using System.Linq;
-using static SharedFeatureFunctions.FirewallRule;
+using static Rediscovery.Feature.Shared.Functions.FirewallRule;
 
 namespace Rediscovery.Client.App.Firewall.Console
 {
@@ -13,28 +13,28 @@ namespace Rediscovery.Client.App.Firewall.Console
             string ruleName = null;
             string exePath = null;
             ProtocolType protocolType = ProtocolType.Any;
-            if (args.Any(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandRulePort, StringComparison.OrdinalIgnoreCase)))
+            if (args.Any(x => x.StartsWith(Rediscovery.Shared.Arguments.Firewall.Arguments.CommandRulePort, StringComparison.OrdinalIgnoreCase)))
             {
-                var valueArg = args.First(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandRulePort, StringComparison.OrdinalIgnoreCase));
+                var valueArg = args.First(x => x.StartsWith(Rediscovery.Shared.Arguments.Firewall.Arguments.CommandRulePort, StringComparison.OrdinalIgnoreCase));
                 var vals = valueArg.Split(':');
                 if (short.TryParse(vals[1].Trim(), out short port))
                     rulePort = port;
             }
-            if (args.Any(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandRuleName, StringComparison.OrdinalIgnoreCase)))
+            if (args.Any(x => x.StartsWith(Rediscovery.Shared.Arguments.Firewall.Arguments.CommandRuleName, StringComparison.OrdinalIgnoreCase)))
             {
-                var valueArg = args.First(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandRuleName, StringComparison.OrdinalIgnoreCase));
+                var valueArg = args.First(x => x.StartsWith(Rediscovery.Shared.Arguments.Firewall.Arguments.CommandRuleName, StringComparison.OrdinalIgnoreCase));
                 var vals = valueArg.Split(':');
                 ruleName = vals[1].Trim();
             }
-            if (args.Any(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandRuleExePath, StringComparison.OrdinalIgnoreCase)))
+            if (args.Any(x => x.StartsWith(Rediscovery.Shared.Arguments.Firewall.Arguments.CommandRuleExePath, StringComparison.OrdinalIgnoreCase)))
             {
-                var valueArg = args.First(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandRuleExePath, StringComparison.OrdinalIgnoreCase));
+                var valueArg = args.First(x => x.StartsWith(Rediscovery.Shared.Arguments.Firewall.Arguments.CommandRuleExePath, StringComparison.OrdinalIgnoreCase));
                 var vals = valueArg.Split(':');
                 exePath = vals[1].Trim();
             }
-            if (args.Any(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandRuleType, StringComparison.OrdinalIgnoreCase)))
+            if (args.Any(x => x.StartsWith(Rediscovery.Shared.Arguments.Firewall.Arguments.CommandRuleType, StringComparison.OrdinalIgnoreCase)))
             {
-                var valueArg = args.First(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandRuleType, StringComparison.OrdinalIgnoreCase));
+                var valueArg = args.First(x => x.StartsWith(Rediscovery.Shared.Arguments.Firewall.Arguments.CommandRuleType, StringComparison.OrdinalIgnoreCase));
                 var vals = valueArg.Split(':');
                 if (Enum.TryParse<ProtocolType>(vals[1].Trim(), true, out ProtocolType type))
                     protocolType = type;
@@ -43,14 +43,14 @@ namespace Rediscovery.Client.App.Firewall.Console
             {
                 System.Console.WriteLine("Help for Desktop Firewall");
                 System.Console.WriteLine("Arguments");
-                System.Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandAddFirewall}    \"Creates Windows Firewall Rule\"");
-                System.Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandRemoveFirewall}    \"Removes Windows Firewall Rule\"");
-                System.Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandRuleName}    \"Name of the Firewall rule\"");
-                System.Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandRulePort}    \"Port for the Firewall rule\"");
-                System.Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandRuleType}    \"Firewall rule type\" ({string.Join(',', Enum.GetNames(typeof(ProtocolType)))})");
-                System.Console.WriteLine($"    {SharedCommandArguments.Firewall.Arguments.CommandRuleExePath}    \"App execution path for the Firewall rule\"");
+                System.Console.WriteLine($"    {Rediscovery.Shared.Arguments.Firewall.Arguments.CommandAddFirewall}    \"Creates Windows Firewall Rule\"");
+                System.Console.WriteLine($"    {Rediscovery.Shared.Arguments.Firewall.Arguments.CommandRemoveFirewall}    \"Removes Windows Firewall Rule\"");
+                System.Console.WriteLine($"    {Rediscovery.Shared.Arguments.Firewall.Arguments.CommandRuleName}    \"Name of the Firewall rule\"");
+                System.Console.WriteLine($"    {Rediscovery.Shared.Arguments.Firewall.Arguments.CommandRulePort}    \"Port for the Firewall rule\"");
+                System.Console.WriteLine($"    {Rediscovery.Shared.Arguments.Firewall.Arguments.CommandRuleType}    \"Firewall rule type\" ({string.Join(',', Enum.GetNames(typeof(ProtocolType)))})");
+                System.Console.WriteLine($"    {Rediscovery.Shared.Arguments.Firewall.Arguments.CommandRuleExePath}    \"App execution path for the Firewall rule\"");
             }
-            else if (args.Any(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandAddFirewall, StringComparison.OrdinalIgnoreCase)))
+            else if (args.Any(x => x.StartsWith(Rediscovery.Shared.Arguments.Firewall.Arguments.CommandAddFirewall, StringComparison.OrdinalIgnoreCase)))
             {
                 if (FirewallRule.RuleExists(ruleName, rulePort) != RuleState.True)
                 {
@@ -79,7 +79,7 @@ namespace Rediscovery.Client.App.Firewall.Console
                     System.Console.WriteLine("Firewall rule already exists");
                 }
             }
-            else if (args.Any(x => x.StartsWith(SharedCommandArguments.Firewall.Arguments.CommandRemoveFirewall, StringComparison.OrdinalIgnoreCase)))
+            else if (args.Any(x => x.StartsWith(Rediscovery.Shared.Arguments.Firewall.Arguments.CommandRemoveFirewall, StringComparison.OrdinalIgnoreCase)))
             {
                 if (FirewallRule.RuleExists(ruleName, rulePort) == RuleState.True)
                 {

@@ -18,7 +18,7 @@ namespace Rediscovery.Communication.Provider.Resource
         FeatureSetting GetResourceDeviceFeatureSettings(Guid featureId);
         List<Rediscovery.Shared.Base.Statistics.HeartbeatStatisticItem> GetHeartbeatStatistic();
         event EventHandler HeartbeatStatisticsChanged;
-        List<Rediscovery.Shared.Base.Logging.LoggerEntry> GetLoggerEntires();
+        List<Rediscovery.Shared.Logging.Models.LoggerEntry> GetLoggerEntires();
         event EventHandler LoggerEntiresChanged;
         event EventHandler HeartbeatActiveIDsChanged;
     }
