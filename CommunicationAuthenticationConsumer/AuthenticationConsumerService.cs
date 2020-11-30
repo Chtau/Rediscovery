@@ -1,7 +1,6 @@
 ﻿using Rediscovery.Communication.Base;
 using Grpc.Core;
 using Rediscovery.Shared.Base.Connection;
-using Rediscovery.Shared.Base.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,13 +17,13 @@ namespace Rediscovery.Communication.Consumer.Authentication
 
         private ProtoAuthentication.AuthentionExchange.AuthentionExchangeClient authenticationClient;
         private ProtoManifest.ManifestExchange.ManifestExchangeClient manifestClient;
-        private readonly ILogger _logger;
+        private readonly Shared.Logging.ILogger _logger;
 
         private Channel channel = null;
         private CancellationTokenSource ctsRequestManifest = null;
         private CancellationTokenSource ctsWelcome = null;
 
-        public AuthenticationConsumerService(ILogger logger)
+        public AuthenticationConsumerService(Shared.Logging.ILogger logger)
         {
             _logger = logger;
         }

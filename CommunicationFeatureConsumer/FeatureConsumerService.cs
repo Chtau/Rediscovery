@@ -3,7 +3,6 @@ using Rediscovery.Communication.Base.Models;
 using ProtoFeaturedata;
 using Grpc.Core;
 using Rediscovery.Shared.Base.Feature;
-using Rediscovery.Shared.Base.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,14 +20,14 @@ namespace Rediscovery.Communication.Consumer.Feature
 
         private FeatureExchange.FeatureExchangeClient exchangeClient;
         private IClientStreamWriter<DeviceFeatureData> _responseStream;
-        private readonly ILogger _logger;
+        private readonly Shared.Logging.ILogger _logger;
 
         private Channel channel = null;
         private CancellationTokenSource ctsChangeFeatureState = null;
         private CancellationTokenSource ctsStartFeatureData = null;
         private CancellationTokenSource ctsFeatureClient = null;
 
-        public FeatureConsumerService(ILogger logger)
+        public FeatureConsumerService(Shared.Logging.ILogger logger)
         {
             _logger = logger;
         }

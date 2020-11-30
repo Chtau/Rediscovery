@@ -1,6 +1,5 @@
 ﻿using Rediscovery.Communication.Base;
 using Grpc.Core;
-using Rediscovery.Shared.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,7 +12,7 @@ namespace Rediscovery.Communication.Consumer.Heartbeat
     {
         public event EventHandler<RoundTripResult> ReceivedBeatRoundtrip;
 
-        private readonly ILogger _logger;
+        private readonly Shared.Logging.ILogger _logger;
         private ProtoHeartbeat.HeartbeatExchange.HeartbeatExchangeClient exchangeClient;
         private IClientStreamWriter<ProtoHeartbeat.PingPongMessage> _requestStream;
 
@@ -22,7 +21,7 @@ namespace Rediscovery.Communication.Consumer.Heartbeat
 
         public int PingResponseWaitingMilliseconds { get; set; } = 1000;
 
-        public HeartbeatConsumer(ILogger logger)
+        public HeartbeatConsumer(Shared.Logging.ILogger logger)
         {
             _logger = logger;
         }

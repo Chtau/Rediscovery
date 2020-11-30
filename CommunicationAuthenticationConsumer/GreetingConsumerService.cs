@@ -1,7 +1,6 @@
 ﻿using Grpc.Core;
 using Rediscovery.Shared.Base.Connection;
 using Rediscovery.Shared.Base.Extensions;
-using Rediscovery.Shared.Base.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,12 +11,12 @@ namespace Rediscovery.Communication.Consumer.Authentication
 {
     public class GreetingConsumerService : IGreetingConsumerService
     {
-        private readonly ILogger _logger;
+        private readonly Shared.Logging.ILogger _logger;
 
         private Channel channel = null;
         private CancellationTokenSource cts = null;
 
-        public GreetingConsumerService(ILogger logger)
+        public GreetingConsumerService(Shared.Logging.ILogger logger)
         {
             _logger = logger;
         }
