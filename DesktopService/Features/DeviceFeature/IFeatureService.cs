@@ -1,6 +1,6 @@
-﻿using PluginFeature.Interfaces;
-using PluginFeature.Models;
-using SharedBase.Feature;
+﻿using Rediscovery.Feature.Plugin.Interfaces;
+using Rediscovery.Feature.Plugin.Models;
+using Rediscovery.Shared.Base.Feature;
 using System;
 using System.Collections.Generic;
 using System.IO.Compression;
@@ -16,7 +16,7 @@ namespace Rediscovery.Client.App.Service.Features.DeviceFeature
         void Load();
         IDeviceFeatureImplementation GetFeatureDevice(Guid featureId);
         IClientFeatureImplementation GetFeatureClient(Guid featureId);
-        List<SharedBase.Device.FeatureDefinitionExtended> GetFeaturesManifest();
+        List<Shared.Base.Device.FeatureDefinitionExtended> GetFeaturesManifest();
         /// <summary>
         /// get the ZIP archive path from 'ui.zip'
         /// </summary>

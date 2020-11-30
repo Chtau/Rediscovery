@@ -1,8 +1,8 @@
-﻿using CommunicationAuthenticationProvider;
-using CommunicationAuthenticationProvider.Models;
+﻿using Rediscovery.Communication.Provider.Authentication;
+using Rediscovery.Communication.Provider.Authentication.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using SharedBase.Connection;
+using Rediscovery.Shared.Base.Connection;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,19 +13,19 @@ namespace Rediscovery.Client.App.Service.Features.Authentication
     public class AuthenticationManager : IAuthenticationManager
     {
         private readonly ILogger<AuthenticationManager> _logger;
-        private readonly DALDesktopService.Repository.IDevicePendingAuthenticationRepository _devicePendingAuthenticationRepository;
-        private readonly DALDesktopService.Repository.IDeviceRepository _deviceRepository;
+        private readonly Rediscovery.Service.DAL.Repository.IDevicePendingAuthenticationRepository _devicePendingAuthenticationRepository;
+        private readonly Rediscovery.Service.DAL.Repository.IDeviceRepository _deviceRepository;
         private readonly Features.DeviceFeature.IFeatureService _featureService;
         private readonly IRoleResolver _roleResolver;
-        private readonly SharedConfigurations.DesktopService.Models.IdentityConfiguration _identitySetting;
+        private readonly Shared.Configurations.Service.Models.IdentityConfiguration _identitySetting;
         private readonly Services.IStaticResources _staticResources;
 
         public AuthenticationManager(ILoggerFactory loggerFactory,
-            DALDesktopService.Repository.IDevicePendingAuthenticationRepository devicePendingAuthenticationRepository,
-            DALDesktopService.Repository.IDeviceRepository deviceRepository,
+            Rediscovery.Service.DAL.Repository.IDevicePendingAuthenticationRepository devicePendingAuthenticationRepository,
+            Rediscovery.Service.DAL.Repository.IDeviceRepository deviceRepository,
             Features.DeviceFeature.IFeatureService featureService,
             IRoleResolver roleResolver,
-            IOptions<SharedConfigurations.DesktopService.Models.IdentityConfiguration> settingOptions,
+            IOptions<Shared.Configurations.Service.Models.IdentityConfiguration> settingOptions,
             Services.IStaticResources staticResources)
         {
             _logger = loggerFactory.CreateLogger<AuthenticationManager>();
@@ -45,7 +45,7 @@ namespace Rediscovery.Client.App.Service.Features.Authentication
                 if (pendingDevice == null)
                 {
                     // if we can't find the device in pending authentication then we add it
-                    pendingDevice = await _devicePendingAuthenticationRepository.SaveDevicePendingAuthentication(new DALDesktopService.Models.DevicePendingAuthentication
+                    pendingDevice = await _devicePendingAuthenticationRepository.SaveDevicePendingAuthentication(new Rediscovery.Service.DAL.Models.DevicePendingAuthentication
                     {
                         DeviceIdentifier = greetingDeviceMessage.DeviceIdentifier,
                         DeviceName = greetingDeviceMessage.DeviceName,
@@ -77,7 +77,7 @@ namespace Rediscovery.Client.App.Service.Features.Authentication
                 {
                     if (u == null)
                     {
-                        u = await _deviceRepository.SaveDevice(new DALDesktopService.Models.Device
+                        u = await _deviceRepository.SaveDevice(new Rediscovery.Service.DAL.Models.Device
                         {
                             DeviceIdentifier = greetingDeviceMessage.DeviceIdentifier,
                             DeviceName = greetingDeviceMessage.DeviceName,
@@ -126,9 +126,9 @@ namespace Rediscovery.Client.App.Service.Features.Authentication
             return _staticResources.PEM;
         }
 
-        public SharedBase.Connection.Manifest GetManifest()
+        public Shared.Base.Connection.Manifest GetManifest()
         {
-            return new SharedBase.Connection.Manifest
+            return new Shared.Base.Connection.Manifest
             {
                 AppMinimumVersion = _staticResources.ServiceManifest.AppMinimumVersion,
                 ClientName = _staticResources.ServiceManifest.ClientName,
@@ -154,7 +154,7 @@ namespace Rediscovery.Client.App.Service.Features.Authentication
                 Id = null,
                 DeviceIdentifier = null,
                 Role = null,
-                State = SharedBase.Authentication.LoginState.Failed
+                State = Shared.Base.Authentication.LoginState.Failed
             };
             try
             {
@@ -169,7 +169,7 @@ namespace Rediscovery.Client.App.Service.Features.Authentication
                         Id = u.Id.ToString(),
                         DeviceIdentifier = u.DeviceIdentifier,
                         Role = u.Role,
-                        State = u.AllowAccess ? SharedBase.Authentication.LoginState.OK : SharedBase.Authentication.LoginState.Denied
+                        State = u.AllowAccess ? Shared.Base.Authentication.LoginState.OK : Shared.Base.Authentication.LoginState.Denied
                     };
                 }
                 else
@@ -180,22 +180,22 @@ namespace Rediscovery.Client.App.Service.Features.Authentication
                         Id = null,
                         DeviceIdentifier = welcomeDeviceMessage.DeviceIdentifier,
                         Role = null,
-                        State = SharedBase.Authentication.LoginState.RequiredAuthorizeKey
+                        State = Shared.Base.Authentication.LoginState.RequiredAuthorizeKey
                     };
                 }
 
-                if (_identitySetting.AnonymousLogin && retVal.State != SharedBase.Authentication.LoginState.OK)
+                if (_identitySetting.AnonymousLogin && retVal.State != Shared.Base.Authentication.LoginState.OK)
                 {
                     // TODO: do we need to save this temp devices for the id somewhere ?
                     retVal.Id = Guid.NewGuid().ToString();
-                    retVal.State = SharedBase.Authentication.LoginState.OK;
+                    retVal.State = Shared.Base.Authentication.LoginState.OK;
                     retVal.Role = _roleResolver.GetRole(welcomeDeviceMessage.DeviceIdentifier);
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.ToString());
-                retVal.State = SharedBase.Authentication.LoginState.Failed;
+                retVal.State = Shared.Base.Authentication.LoginState.Failed;
             }
             return retVal;
         }
