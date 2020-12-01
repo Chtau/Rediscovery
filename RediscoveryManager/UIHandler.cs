@@ -36,7 +36,7 @@ namespace Rediscovery.Client.App.Manager.Console
             };
         }
 
-        public void Start(SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration connectionConfiguration)
+        public void Start(Shared.Configurations.Manager.Models.ConnectionConfiguration connectionConfiguration)
         {
             if (!string.IsNullOrWhiteSpace(connectionConfiguration.IP) || connectionConfiguration.Port > 0 || !string.IsNullOrWhiteSpace(connectionConfiguration.DeviceIdentifier))
             {
@@ -54,7 +54,7 @@ namespace Rediscovery.Client.App.Manager.Console
             } while (SharedUI.ResetOrExit(lastInput));
         }
 
-        private void SwitchMenu(string input, SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration connectionConfiguration)
+        private void SwitchMenu(string input, Shared.Configurations.Manager.Models.ConnectionConfiguration connectionConfiguration)
         {
             if (Commands.MatchInput(input, Commands.Help))
             {

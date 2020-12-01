@@ -9,15 +9,15 @@ namespace Rediscovery.Client.App.Manager.Console
         {
             var builder = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile(SharedConfigurations.RediscoveryManager.ConfigFileNames.AppSettings, optional: true, reloadOnChange: true);
+        .AddJsonFile(Shared.Configurations.Manager.ConfigFileNames.AppSettings, optional: true, reloadOnChange: true);
 
             IConfigurationRoot configuration = builder.Build();
 
-            var jsonSetting = configuration.GetSection(SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration.SectionName).Value;
-            var connectSettings = Newtonsoft.Json.JsonConvert.DeserializeObject<SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration>(jsonSetting); //configuration.GetSection(SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration.SectionName).Get<SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration>();
+            var jsonSetting = configuration.GetSection(Shared.Configurations.Manager.Models.ConnectionConfiguration.SectionName).Value;
+            var connectSettings = Newtonsoft.Json.JsonConvert.DeserializeObject<Shared.Configurations.Manager.Models.ConnectionConfiguration>(jsonSetting); //configuration.GetSection(SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration.SectionName).Get<SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration>();
             var argCon = TryParseConnectionArguments(args);
 
-            SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration connection = new SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration();
+            Shared.Configurations.Manager.Models.ConnectionConfiguration connection = new Shared.Configurations.Manager.Models.ConnectionConfiguration();
             if (argCon != null)
                 connection = argCon;
             if (connectSettings != null)
@@ -27,7 +27,7 @@ namespace Rediscovery.Client.App.Manager.Console
             uiHandler.Start(connection);
         }
 
-        private static SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration TryParseConnectionArguments(string[] args)
+        private static Shared.Configurations.Manager.Models.ConnectionConfiguration TryParseConnectionArguments(string[] args)
         {
             var deviceIdentifier = Arguments.TryParseArgumentValue(args, Arguments.SetDeviceIdentifier);
             var ip = Arguments.TryParseArgumentValue(args, Arguments.SetIP);
@@ -36,7 +36,7 @@ namespace Rediscovery.Client.App.Manager.Console
             var autoConnect = Arguments.TryParseArgumentMatch(args, Arguments.Autoconnect);
             if (!string.IsNullOrWhiteSpace(ip) || port > 0 || !string.IsNullOrWhiteSpace(deviceIdentifier))
             {
-                return new SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration
+                return new Shared.Configurations.Manager.Models.ConnectionConfiguration
                 {
                     AutoConnect = autoConnect,
                     DeviceIdentifier = deviceIdentifier,

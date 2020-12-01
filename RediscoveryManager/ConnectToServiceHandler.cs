@@ -1,4 +1,4 @@
-﻿using CommunicationAuthenticationConsumer;
+﻿using Rediscovery.Communication.Consumer.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Text;

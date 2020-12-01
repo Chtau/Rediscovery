@@ -20,42 +20,42 @@ namespace Rediscovery.Client.App.Manager.Console
             }
         }
 
-        public static ConsoleColor AllowConnectToColor(SharedBase.Connection.Enums.AllowConnect allowConnect)
+        public static ConsoleColor AllowConnectToColor(Shared.Base.Connection.Enums.AllowConnect allowConnect)
         {
             switch (allowConnect)
             {
-                case SharedBase.Connection.Enums.AllowConnect.None:
+                case Shared.Base.Connection.Enums.AllowConnect.None:
                     return ConsoleColor.White;
-                case SharedBase.Connection.Enums.AllowConnect.OK:
+                case Shared.Base.Connection.Enums.AllowConnect.OK:
                     return ConsoleColor.Green;
-                case SharedBase.Connection.Enums.AllowConnect.Error:
+                case Shared.Base.Connection.Enums.AllowConnect.Error:
                     return ConsoleColor.Red;
-                case SharedBase.Connection.Enums.AllowConnect.Denied:
+                case Shared.Base.Connection.Enums.AllowConnect.Denied:
                     return ConsoleColor.Red;
-                case SharedBase.Connection.Enums.AllowConnect.UnkownDevice:
+                case Shared.Base.Connection.Enums.AllowConnect.UnkownDevice:
                     return ConsoleColor.White;
                 default:
                     return ConsoleColor.White;
             }
         }
 
-        public static ConsoleColor ConnectionStateToColor(SharedBase.Connection.Enums.ConnectionState connectionState)
+        public static ConsoleColor ConnectionStateToColor(Shared.Base.Connection.Enums.ConnectionState connectionState)
         {
             switch (connectionState)
             {
-                case SharedBase.Connection.Enums.ConnectionState.None:
+                case Shared.Base.Connection.Enums.ConnectionState.None:
                     return ConsoleColor.White;
-                case SharedBase.Connection.Enums.ConnectionState.OK:
+                case Shared.Base.Connection.Enums.ConnectionState.OK:
                     return ConsoleColor.Green;
-                case SharedBase.Connection.Enums.ConnectionState.Error:
+                case Shared.Base.Connection.Enums.ConnectionState.Error:
                     return ConsoleColor.Red;
-                case SharedBase.Connection.Enums.ConnectionState.Warning:
+                case Shared.Base.Connection.Enums.ConnectionState.Warning:
                     return ConsoleColor.DarkYellow;
-                case SharedBase.Connection.Enums.ConnectionState.Offline:
+                case Shared.Base.Connection.Enums.ConnectionState.Offline:
                     return ConsoleColor.White;
-                case SharedBase.Connection.Enums.ConnectionState.Denied:
+                case Shared.Base.Connection.Enums.ConnectionState.Denied:
                     return ConsoleColor.Red;
-                case SharedBase.Connection.Enums.ConnectionState.WaitForApprovel:
+                case Shared.Base.Connection.Enums.ConnectionState.WaitForApprovel:
                     return ConsoleColor.White;
                 default:
                     return ConsoleColor.White;

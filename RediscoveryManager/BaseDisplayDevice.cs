@@ -24,9 +24,9 @@ namespace Rediscovery.Client.App.Manager.Console
             return "";
         }
 
-        internal virtual IList<SharedBase.Device.DeviceInfo> DeviceCollection()
+        internal virtual IList<Shared.Base.Device.DeviceInfo> DeviceCollection()
         {
-            return new List<SharedBase.Device.DeviceInfo>();
+            return new List<Shared.Base.Device.DeviceInfo>();
         }
 
         internal virtual bool HandleSubMenu(string lastInput)

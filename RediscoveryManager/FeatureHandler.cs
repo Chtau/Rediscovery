@@ -39,7 +39,7 @@ namespace Rediscovery.Client.App.Manager.Console
             return "pluginfeatures";
         }
 
-        private IList<SharedBase.Device.FeatureDefinitionExtended> Collection()
+        private IList<Shared.Base.Device.FeatureDefinitionExtended> Collection()
         {
             return _manager.Features;
         }
@@ -103,13 +103,13 @@ namespace Rediscovery.Client.App.Manager.Console
                 {
                     Color = ConsoleColor.White,
                     Prefix = "Control integration: ",
-                    Value = Enum.GetName(typeof(SharedBase.Device.IntegrationPoint), item.ControlIntegrationPoint)
+                    Value = Enum.GetName(typeof(Shared.Base.Device.IntegrationPoint), item.ControlIntegrationPoint)
                 });
                 ConsoleExtensions.Write(new ConsoleExtensions.WriteParams
                 {
                     Color = ConsoleColor.White,
                     Prefix = "Feature integration: ",
-                    Value = Enum.GetName(typeof(SharedBase.Device.IntegrationPoint), item.FeatureIntegrationPoint)
+                    Value = Enum.GetName(typeof(Shared.Base.Device.IntegrationPoint), item.FeatureIntegrationPoint)
                 });
 
 

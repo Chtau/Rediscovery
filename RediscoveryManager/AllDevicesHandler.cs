@@ -29,7 +29,7 @@ namespace Rediscovery.Client.App.Manager.Console
             return "Devices: ";
         }
 
-        internal override IList<SharedBase.Device.DeviceInfo> DeviceCollection()
+        internal override IList<Shared.Base.Device.DeviceInfo> DeviceCollection()
         {
             return _manager.Devices;
         }
