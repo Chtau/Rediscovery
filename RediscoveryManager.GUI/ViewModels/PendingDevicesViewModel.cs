@@ -11,7 +11,7 @@ namespace Rediscovery.Client.App.Manager.GUI.ViewModels
     public class PendingDevicesViewModel : ViewModelBase
     {
         private readonly IManager _manager;
-        private readonly SharedBase.Logging.ILogger _logger;
+        private readonly Rediscovery.Shared.Logging.ILogger _logger;
         private readonly Shared.ISharedEvents _sharedEvents;
         private Notifications.INotificationService _notification;
 
@@ -38,7 +38,7 @@ namespace Rediscovery.Client.App.Manager.GUI.ViewModels
         public PendingDevicesViewModel()
         {
             _manager = Locator.Current.GetService<IManager>();
-            _logger = Locator.Current.GetService<SharedBase.Logging.ILogger>();
+            _logger = Locator.Current.GetService<Rediscovery.Shared.Logging.ILogger>();
             _sharedEvents = Locator.Current.GetService<Shared.ISharedEvents>();
 
             _manager.DeviceCollectionChanged += (obj, args) =>

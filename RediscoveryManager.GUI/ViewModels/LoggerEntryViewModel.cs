@@ -6,7 +6,7 @@ namespace Rediscovery.Client.App.Manager.GUI.ViewModels
 {
     public class LoggerEntryViewModel : ViewModelBase
     {
-        public SharedBase.Logging.LoggerEntry.LoggerType LogLevel { get; set; }
+        public Rediscovery.Shared.Logging.LoggerType LogLevel { get; set; }
 
         public string Id { get; set; }
 

@@ -4,12 +4,12 @@ using System.Text;
 
 namespace Rediscovery.Client.App.Manager.GUI.Models
 {
-    public class FeatureDefinitionExtendedViewModelExtension : SharedBase.Device.FeatureDefinitionExtended
+    public class FeatureDefinitionExtendedViewModelExtension : Rediscovery.Shared.Base.Device.FeatureDefinitionExtended
     {
         private Action<FeatureDefinitionExtendedViewModelExtension> onOpenFolderCallback;
         private Action<FeatureDefinitionExtendedViewModelExtension> onOpenDesktopExecutableCallback;
 
-        public FeatureDefinitionExtendedViewModelExtension(SharedBase.Device.FeatureDefinitionExtended feature, Action<FeatureDefinitionExtendedViewModelExtension> onOpenFolderCallback,
+        public FeatureDefinitionExtendedViewModelExtension(Rediscovery.Shared.Base.Device.FeatureDefinitionExtended feature, Action<FeatureDefinitionExtendedViewModelExtension> onOpenFolderCallback,
             Action<FeatureDefinitionExtendedViewModelExtension> onOpenDesktopExecutableCallback)
         {
             this.onOpenDesktopExecutableCallback = onOpenDesktopExecutableCallback;

@@ -4,11 +4,11 @@ using System.Text;
 
 namespace Rediscovery.Client.App.Manager.GUI.Models
 {
-    public class DeviceInfoViewModelExtension : SharedBase.Device.DeviceInfo
+    public class DeviceInfoViewModelExtension : Rediscovery.Shared.Base.Device.DeviceInfo
     {
         public Action<DeviceInfoViewModelExtension> DeleteCallback { get; set; }
 
-        public DeviceInfoViewModelExtension(SharedBase.Device.DeviceInfo oldBase, Action<DeviceInfoViewModelExtension> deleteCallback)
+        public DeviceInfoViewModelExtension(Rediscovery.Shared.Base.Device.DeviceInfo oldBase, Action<DeviceInfoViewModelExtension> deleteCallback)
         {
             base.AllowAccess = oldBase.AllowAccess;
             base.DeviceType = oldBase.DeviceType;

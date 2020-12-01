@@ -3,7 +3,7 @@ using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
-using SharedBase.Statistics;
+using Rediscovery.Shared.Base.Statistics;
 using System;
 using System.Collections.Generic;
 

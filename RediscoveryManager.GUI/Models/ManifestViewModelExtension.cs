@@ -18,8 +18,8 @@ namespace Rediscovery.Client.App.Manager.GUI.Models
             }
         }
 
-        private SharedBase.Core.Version version;
-        public SharedBase.Core.Version Version
+        private Rediscovery.Shared.Base.Core.Version version;
+        public Rediscovery.Shared.Base.Core.Version Version
         {
             get { return version; }
             set
@@ -28,8 +28,8 @@ namespace Rediscovery.Client.App.Manager.GUI.Models
             }
         }
 
-        private SharedBase.Core.Version minimumVersion;
-        public SharedBase.Core.Version MinimumVersion
+        private Rediscovery.Shared.Base.Core.Version minimumVersion;
+        public Rediscovery.Shared.Base.Core.Version MinimumVersion
         {
             get { return minimumVersion; }
             set
@@ -38,7 +38,7 @@ namespace Rediscovery.Client.App.Manager.GUI.Models
             }
         }
 
-        public ManifestViewModelExtension(SharedBase.Connection.Manifest manifest)
+        public ManifestViewModelExtension(Rediscovery.Shared.Base.Connection.Manifest manifest)
         {
             if (manifest != null)
             {

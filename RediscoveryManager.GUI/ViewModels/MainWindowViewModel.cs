@@ -8,12 +8,12 @@ namespace Rediscovery.Client.App.Manager.GUI.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private readonly SharedBase.Logging.ILogger _logger;
+        private readonly Rediscovery.Shared.Logging.ILogger _logger;
         private readonly Shared.ISharedEvents _sharedEvents;
 
         public MainWindowViewModel()
         {
-            _logger = Locator.Current.GetService<SharedBase.Logging.ILogger>();
+            _logger = Locator.Current.GetService<Rediscovery.Shared.Logging.ILogger>();
             _sharedEvents = Locator.Current.GetService<Shared.ISharedEvents>();
             _sharedEvents.LoadingState += _sharedEvents_LoadingState;
             IsLoading = _sharedEvents.HasLoadingState();

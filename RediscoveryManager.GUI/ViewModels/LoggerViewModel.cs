@@ -12,7 +12,7 @@ namespace Rediscovery.Client.App.Manager.GUI.ViewModels
     public class LoggerViewModel : ViewModelBase
     {
         private readonly IManager _manager;
-        private readonly SharedBase.Logging.ILogger _logger;
+        private readonly Rediscovery.Shared.Logging.ILogger _logger;
 
         public class LogLevelComboBox
         {
@@ -42,8 +42,8 @@ namespace Rediscovery.Client.App.Manager.GUI.ViewModels
             }
         }
 
-        private ObservableCollection<SharedBase.Logging.LoggerEntry> items = new ObservableCollection<SharedBase.Logging.LoggerEntry>();
-        public ObservableCollection<SharedBase.Logging.LoggerEntry> Items
+        private ObservableCollection<Rediscovery.Shared.Logging.Models.LoggerEntry> items = new ObservableCollection<Rediscovery.Shared.Logging.Models.LoggerEntry>();
+        public ObservableCollection<Rediscovery.Shared.Logging.Models.LoggerEntry> Items
         {
             get { return items; }
             set
@@ -70,7 +70,7 @@ namespace Rediscovery.Client.App.Manager.GUI.ViewModels
         public LoggerViewModel()
         {
             _manager = Locator.Current.GetService<IManager>();
-            _logger = Locator.Current.GetService<SharedBase.Logging.ILogger>();
+            _logger = Locator.Current.GetService<Rediscovery.Shared.Logging.ILogger>();
 
             var ll = new List<LogLevelComboBox>();
             ll.Add(new LogLevelComboBox { Level = 0, Name = "Trace" });
@@ -86,7 +86,7 @@ namespace Rediscovery.Client.App.Manager.GUI.ViewModels
                 System.Diagnostics.Debug.Print($"Logger command executed Id:{args.Id} Result:{args.Result}");
                 if (args.Id == stateCommandId)
                 {
-                    var loggerState = Newtonsoft.Json.JsonConvert.DeserializeObject<SharedBase.Logging.LoggerState>(args.Data);
+                    var loggerState = Newtonsoft.Json.JsonConvert.DeserializeObject<Rediscovery.Shared.Logging.Models.LoggerState>(args.Data);
                     if (loggerState != null)
                     {
                         var llItem = LogLevels.FirstOrDefault(x => x.Level == (int)loggerState.Level);
@@ -105,9 +105,9 @@ namespace Rediscovery.Client.App.Manager.GUI.ViewModels
             };
             _manager.AfterConnecting += (obj, args) =>
             {
-                _manager.RemoteLogExecuteCommand(new SharedBase.Logging.LogCommandConfig
+                _manager.RemoteLogExecuteCommand(new Rediscovery.Shared.Logging.Commands.LogCommandConfig
                 {
-                    CommandType = SharedBase.Logging.LogCommandConfig.Command.State,
+                    CommandType = Rediscovery.Shared.Logging.Command.State,
                     Id = stateCommandId
                 });
             };
@@ -119,12 +119,12 @@ namespace Rediscovery.Client.App.Manager.GUI.ViewModels
         {
             if (!updatePause)
             {
-                var newCollection = new List<SharedBase.Logging.LoggerEntry>();
+                var newCollection = new List<Rediscovery.Shared.Logging.Models.LoggerEntry>();
                 foreach (var item in _manager.LoggerEntires)
                 {
                     newCollection.Add(item);
                 }
-                Items = new ObservableCollection<SharedBase.Logging.LoggerEntry>(newCollection);
+                Items = new ObservableCollection<Rediscovery.Shared.Logging.Models.LoggerEntry>(newCollection);
                 ItemsChanged?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -134,13 +134,13 @@ namespace Rediscovery.Client.App.Manager.GUI.ViewModels
             try
             {
                 UpdatePause = true;
-                _manager.RemoteLogExecuteCommand(new SharedBase.Logging.LogCommandConfig
+                _manager.RemoteLogExecuteCommand(new Rediscovery.Shared.Logging.Commands.LogCommandConfig
                 {
                     Id = Guid.NewGuid(),
-                    CommandType = SharedBase.Logging.LogCommandConfig.Command.ChangeLogLevel,
+                    CommandType = Rediscovery.Shared.Logging.Command.ChangeLogLevel,
                     Data = CurrentLevel.Level.ToString()
                 });
-                Items = new ObservableCollection<SharedBase.Logging.LoggerEntry>();
+                Items = new ObservableCollection<Rediscovery.Shared.Logging.Models.LoggerEntry>();
                 ItemsChanged?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception ex)
@@ -169,12 +169,12 @@ namespace Rediscovery.Client.App.Manager.GUI.ViewModels
             try
             {
                 UpdatePause = true;
-                _manager.RemoteLogExecuteCommand(new SharedBase.Logging.LogCommandConfig
+                _manager.RemoteLogExecuteCommand(new Rediscovery.Shared.Logging.Commands.LogCommandConfig
                 {
                     Id = Guid.NewGuid(),
-                    CommandType = SharedBase.Logging.LogCommandConfig.Command.Clear
+                    CommandType = Rediscovery.Shared.Logging.Command.Clear
                 });
-                Items = new ObservableCollection<SharedBase.Logging.LoggerEntry>();
+                Items = new ObservableCollection<Rediscovery.Shared.Logging.Models.LoggerEntry>();
                 ItemsChanged?.Invoke(this, EventArgs.Empty);
                 // TODO: send a message to clear the log on the service
             }
@@ -187,7 +187,7 @@ namespace Rediscovery.Client.App.Manager.GUI.ViewModels
             }
         }
 
-        public void ShowDetail(SharedBase.Logging.LoggerEntry loggerEntry)
+        public void ShowDetail(Rediscovery.Shared.Logging.Models.LoggerEntry loggerEntry)
         {
             try
             {

@@ -12,7 +12,7 @@ namespace Rediscovery.Client.App.Manager.GUI.ViewModels
     public class StatusViewModel : ViewModelBase
     {
         private readonly IManager _manager;
-        private readonly SharedBase.Logging.ILogger _logger;
+        private readonly Rediscovery.Shared.Logging.ILogger _logger;
         private readonly Shared.ISharedEvents _sharedEvents;
         private Notifications.INotificationService _notification;
 
@@ -26,10 +26,10 @@ namespace Rediscovery.Client.App.Manager.GUI.ViewModels
             }
         }
 
-        public SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration ConnectionConfiguration { get; set; }
+        public Rediscovery.Shared.Configurations.Manager.GUI.Models.ConnectionConfiguration ConnectionConfiguration { get; set; }
 
-        private SharedBase.Connection.Enums.AllowConnect allowConnect;
-        public SharedBase.Connection.Enums.AllowConnect AllowConnect
+        private Rediscovery.Shared.Base.Connection.Enums.AllowConnect allowConnect;
+        public Rediscovery.Shared.Base.Connection.Enums.AllowConnect AllowConnect
         {
             get { return allowConnect; }
             set
@@ -38,8 +38,8 @@ namespace Rediscovery.Client.App.Manager.GUI.ViewModels
             }
         }
 
-        private SharedBase.Connection.Enums.ConnectionState state;
-        public SharedBase.Connection.Enums.ConnectionState State
+        private Rediscovery.Shared.Base.Connection.Enums.ConnectionState state;
+        public Rediscovery.Shared.Base.Connection.Enums.ConnectionState State
         {
             get { return state; }
             set
@@ -47,16 +47,16 @@ namespace Rediscovery.Client.App.Manager.GUI.ViewModels
                 this.RaiseAndSetIfChanged(ref state, value);
                 switch (state)
                 {
-                    case SharedBase.Connection.Enums.ConnectionState.None:
-                    case SharedBase.Connection.Enums.ConnectionState.Error:
-                    case SharedBase.Connection.Enums.ConnectionState.Warning:
-                    case SharedBase.Connection.Enums.ConnectionState.Offline:
-                    case SharedBase.Connection.Enums.ConnectionState.Denied:
-                    case SharedBase.Connection.Enums.ConnectionState.WaitForApprovel:
+                    case Rediscovery.Shared.Base.Connection.Enums.ConnectionState.None:
+                    case Rediscovery.Shared.Base.Connection.Enums.ConnectionState.Error:
+                    case Rediscovery.Shared.Base.Connection.Enums.ConnectionState.Warning:
+                    case Rediscovery.Shared.Base.Connection.Enums.ConnectionState.Offline:
+                    case Rediscovery.Shared.Base.Connection.Enums.ConnectionState.Denied:
+                    case Rediscovery.Shared.Base.Connection.Enums.ConnectionState.WaitForApprovel:
                         CanDisconnect = false;
                         CanConnect = true;
                         break;
-                    case SharedBase.Connection.Enums.ConnectionState.OK:
+                    case Rediscovery.Shared.Base.Connection.Enums.ConnectionState.OK:
                         CanDisconnect = true;
                         CanConnect = false;
                         break;
@@ -87,9 +87,9 @@ namespace Rediscovery.Client.App.Manager.GUI.ViewModels
         public StatusViewModel()
         {
             _manager = Locator.Current.GetService<IManager>();
-            _logger = Locator.Current.GetService<SharedBase.Logging.ILogger>();
+            _logger = Locator.Current.GetService<Rediscovery.Shared.Logging.ILogger>();
             _sharedEvents = Locator.Current.GetService<Shared.ISharedEvents>();
-            ConnectionConfiguration = Locator.Current.GetService<SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration>();
+            ConnectionConfiguration = Locator.Current.GetService<Rediscovery.Shared.Configurations.Manager.GUI.Models.ConnectionConfiguration>();
 
             _manager.RoundTripReceived += (obj, args) =>
             {
