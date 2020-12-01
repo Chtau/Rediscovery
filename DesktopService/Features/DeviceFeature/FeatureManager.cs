@@ -1,8 +1,8 @@
-﻿using CommunicationBase.Models;
-using CommunicationFeatureProvider;
+﻿using Rediscovery.Communication.Base.Models;
+using Rediscovery.Communication.Provider.Feature;
 using Microsoft.Extensions.Logging;
-using PluginFeature.Models;
-using SharedBase.Feature;
+using Rediscovery.Feature.Plugin.Models;
+using Rediscovery.Shared.Base.Feature;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -1,4 +1,4 @@
-﻿using CommunicationLoggerProvider;
+﻿using Rediscovery.Communication.Provider.Logger;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

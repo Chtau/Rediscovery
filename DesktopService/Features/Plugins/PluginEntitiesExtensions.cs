@@ -1,5 +1,5 @@
 ﻿using Microsoft.Net.Http.Headers;
-using SharedBase.Feature;
+using Rediscovery.Shared.Base.Feature;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,9 +8,9 @@ namespace Rediscovery.Client.App.Service.Features.Plugins
 {
     public static class PluginEntitiesExtensions
     {
-        public static SharedBase.Device.FeatureDefinitionExtended GetFeatureDefinitionExtended(this PluginFeature.Models.PluginFeatureDefinition entity)
+        public static Shared.Base.Device.FeatureDefinitionExtended GetFeatureDefinitionExtended(this Rediscovery.Feature.Plugin.Models.PluginFeatureDefinition entity)
         {
-            return new SharedBase.Device.FeatureDefinitionExtended
+            return new Shared.Base.Device.FeatureDefinitionExtended
             {
                 Author = entity.Author,
                 ControlIntegrationPoint = entity.ControlIntegrationPoint.GetIntegrationPoint(),
@@ -31,9 +31,9 @@ namespace Rediscovery.Client.App.Service.Features.Plugins
             };
         }
 
-        public static SharedBase.Device.FeatureDefinitionExtended GetFeatureDefinitionExtended(this PluginFeature.Models.PluginFeatureDefinitionClient entity)
+        public static Shared.Base.Device.FeatureDefinitionExtended GetFeatureDefinitionExtended(this Rediscovery.Feature.Plugin.Models.PluginFeatureDefinitionClient entity)
         {
-            return new SharedBase.Device.FeatureDefinitionExtended
+            return new Shared.Base.Device.FeatureDefinitionExtended
             {
                 Author = entity.Author,
                 ControlIntegrationPoint = entity.ControlIntegrationPoint.GetIntegrationPoint(),
@@ -54,22 +54,22 @@ namespace Rediscovery.Client.App.Service.Features.Plugins
             };
         }
 
-        public static SharedBase.Device.IntegrationPoint GetIntegrationPoint(this PluginFeature.Enums.PluginIntegration pluginIntegration)
+        public static Shared.Base.Device.IntegrationPoint GetIntegrationPoint(this Rediscovery.Feature.Plugin.Enums.PluginIntegration pluginIntegration)
         {
             switch (pluginIntegration)
             {
-                case PluginFeature.Enums.PluginIntegration.Desktop:
-                    return SharedBase.Device.IntegrationPoint.Desktop;
-                case PluginFeature.Enums.PluginIntegration.Mobile:
-                    return SharedBase.Device.IntegrationPoint.Mobile;
+                case Rediscovery.Feature.Plugin.Enums.PluginIntegration.Desktop:
+                    return Shared.Base.Device.IntegrationPoint.Desktop;
+                case Rediscovery.Feature.Plugin.Enums.PluginIntegration.Mobile:
+                    return Shared.Base.Device.IntegrationPoint.Mobile;
                 default:
-                    return SharedBase.Device.IntegrationPoint.Desktop;
+                    return Shared.Base.Device.IntegrationPoint.Desktop;
             }
         }
 
-        public static SharedBase.Core.Version GetVersion(this PluginFeature.Models.PluginVersion pluginVersion)
+        public static Shared.Base.Core.Version GetVersion(this Rediscovery.Feature.Plugin.Models.PluginVersion pluginVersion)
         {
-            return new SharedBase.Core.Version
+            return new Shared.Base.Core.Version
             {
                 Label = pluginVersion.Label,
                 Major = pluginVersion.Major,
@@ -78,7 +78,7 @@ namespace Rediscovery.Client.App.Service.Features.Plugins
             };
         }
 
-        public static List<FeatureProfil> GetFeatureProfils(this List<PluginFeature.Models.PluginFeatureProfil> profils)
+        public static List<FeatureProfil> GetFeatureProfils(this List<Rediscovery.Feature.Plugin.Models.PluginFeatureProfil> profils)
         {
             if (profils?.Count > 0)
             {
@@ -92,7 +92,7 @@ namespace Rediscovery.Client.App.Service.Features.Plugins
             return null;
         }
 
-        public static FeatureProfil GetFeatureProfil(this PluginFeature.Models.PluginFeatureProfil profil)
+        public static FeatureProfil GetFeatureProfil(this Rediscovery.Feature.Plugin.Models.PluginFeatureProfil profil)
         {
             return new FeatureProfil
             {
@@ -103,9 +103,9 @@ namespace Rediscovery.Client.App.Service.Features.Plugins
             };
         }
 
-        public static PluginFeature.Models.PluginFeatureProfil GetPluginFeatureProfil(this FeatureProfil profil)
+        public static Rediscovery.Feature.Plugin.Models.PluginFeatureProfil GetPluginFeatureProfil(this FeatureProfil profil)
         {
-            return new PluginFeature.Models.PluginFeatureProfil
+            return new Rediscovery.Feature.Plugin.Models.PluginFeatureProfil
             {
                 DisplayName = profil.DisplayName,
                 FeatureId = profil.FeatureId,
@@ -114,7 +114,7 @@ namespace Rediscovery.Client.App.Service.Features.Plugins
             };
         }
 
-        public static FeatureSetting GetFeatureSetting(this PluginFeature.Models.PluginFeatureSetting setting)
+        public static FeatureSetting GetFeatureSetting(this Rediscovery.Feature.Plugin.Models.PluginFeatureSetting setting)
         {
             return new FeatureSetting
             {
@@ -123,34 +123,34 @@ namespace Rediscovery.Client.App.Service.Features.Plugins
             };
         }
 
-        public static PluginFeature.Models.PluginFeatureSetting GetPluginFeatureSetting(this FeatureSetting setting)
+        public static Rediscovery.Feature.Plugin.Models.PluginFeatureSetting GetPluginFeatureSetting(this FeatureSetting setting)
         {
-            return new PluginFeature.Models.PluginFeatureSetting
+            return new Rediscovery.Feature.Plugin.Models.PluginFeatureSetting
             {
                 Data = setting.Data,
                 FeatureId = setting.FeatureId
             };
         }
 
-        public static PluginFeature.Models.PluginExchangeEntity<PluginFeature.Models.PluginFeatureData> GetPluginExchangeEntity(this ExchangeEntity<FeatureData> exchangeEntity)
+        public static Rediscovery.Feature.Plugin.Models.PluginExchangeEntity<Rediscovery.Feature.Plugin.Models.PluginFeatureData> GetPluginExchangeEntity(this ExchangeEntity<FeatureData> exchangeEntity)
         {
-            return new PluginFeature.Models.PluginExchangeEntity<PluginFeature.Models.PluginFeatureData>
+            return new Rediscovery.Feature.Plugin.Models.PluginExchangeEntity<Rediscovery.Feature.Plugin.Models.PluginFeatureData>
             {
                 Entity = exchangeEntity.Entity?.GetPluginFeatureData(),
                 Sid = exchangeEntity.Sid
             };
         }
 
-        public static PluginFeature.Models.PluginExchangeEntity<PluginFeature.Models.PluginFeatureDataClient> GetPluginExchangeEntityClient(this ExchangeEntity<FeatureData> exchangeEntity)
+        public static Rediscovery.Feature.Plugin.Models.PluginExchangeEntity<Rediscovery.Feature.Plugin.Models.PluginFeatureDataClient> GetPluginExchangeEntityClient(this ExchangeEntity<FeatureData> exchangeEntity)
         {
-            return new PluginFeature.Models.PluginExchangeEntity<PluginFeature.Models.PluginFeatureDataClient>
+            return new Rediscovery.Feature.Plugin.Models.PluginExchangeEntity<Rediscovery.Feature.Plugin.Models.PluginFeatureDataClient>
             {
                 Entity = exchangeEntity.Entity?.GetPluginFeatureDataClient(),
                 Sid = exchangeEntity.Sid
             };
         }
 
-        public static ExchangeEntity<FeatureData> GetExchangeEntity(this PluginFeature.Models.PluginExchangeEntity<PluginFeature.Models.PluginFeatureData> exchangeEntity)
+        public static ExchangeEntity<FeatureData> GetExchangeEntity(this Rediscovery.Feature.Plugin.Models.PluginExchangeEntity<Rediscovery.Feature.Plugin.Models.PluginFeatureData> exchangeEntity)
         {
             return new ExchangeEntity<FeatureData>
             {
@@ -159,7 +159,7 @@ namespace Rediscovery.Client.App.Service.Features.Plugins
             };
         }
 
-        public static ExchangeEntity<FeatureData> GetExchangeEntity(this PluginFeature.Models.PluginExchangeEntity<PluginFeature.Models.PluginFeatureDataClient> exchangeEntity)
+        public static ExchangeEntity<FeatureData> GetExchangeEntity(this Rediscovery.Feature.Plugin.Models.PluginExchangeEntity<Rediscovery.Feature.Plugin.Models.PluginFeatureDataClient> exchangeEntity)
         {
             return new ExchangeEntity<FeatureData>
             {
@@ -168,22 +168,22 @@ namespace Rediscovery.Client.App.Service.Features.Plugins
             };
         }
 
-        public static PluginFeature.Models.PluginFeatureData GetPluginFeatureData(this FeatureData featureData)
+        public static Rediscovery.Feature.Plugin.Models.PluginFeatureData GetPluginFeatureData(this FeatureData featureData)
         {
-            return new PluginFeature.Models.PluginFeatureData(featureData.DeviceId, featureData.FeatureId, featureData.ProfileId, featureData.Data);
+            return new Rediscovery.Feature.Plugin.Models.PluginFeatureData(featureData.DeviceId, featureData.FeatureId, featureData.ProfileId, featureData.Data);
         }
 
-        public static PluginFeature.Models.PluginFeatureDataClient GetPluginFeatureDataClient(this FeatureData featureData)
+        public static Rediscovery.Feature.Plugin.Models.PluginFeatureDataClient GetPluginFeatureDataClient(this FeatureData featureData)
         {
-            return new PluginFeature.Models.PluginFeatureDataClient(featureData.DeviceId, featureData.FeatureId, featureData.ProfileId, featureData.Data, (PluginFeature.Enums.ClientNativeResources)featureData.NativeResourceType);
+            return new Rediscovery.Feature.Plugin.Models.PluginFeatureDataClient(featureData.DeviceId, featureData.FeatureId, featureData.ProfileId, featureData.Data, (Rediscovery.Feature.Plugin.Enums.ClientNativeResources)featureData.NativeResourceType);
         }
 
-        public static FeatureData GetFeatureData(this PluginFeature.Models.PluginFeatureData featureData)
+        public static FeatureData GetFeatureData(this Rediscovery.Feature.Plugin.Models.PluginFeatureData featureData)
         {
             return new FeatureData(featureData.DeviceId, featureData.FeatureId, featureData.ProfileId, featureData.Data);
         }
 
-        public static FeatureData GetFeatureData(this PluginFeature.Models.PluginFeatureDataClient featureDataClient)
+        public static FeatureData GetFeatureData(this Rediscovery.Feature.Plugin.Models.PluginFeatureDataClient featureDataClient)
         {
             return new FeatureData(featureDataClient.DeviceId, featureDataClient.FeatureId, featureDataClient.ProfileId, featureDataClient.Data, true, (int)featureDataClient.NativeResourceType);
         }

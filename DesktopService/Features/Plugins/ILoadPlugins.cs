@@ -1,4 +1,4 @@
-﻿using PluginFeature.Interfaces;
+﻿using Rediscovery.Feature.Plugin.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Reflection;

@@ -10,14 +10,14 @@ namespace Rediscovery.Client.App.Service.Features.Configuration
 {
     public class DistributeConfig : IDistributeConfig
     {
-        private readonly SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration _remoteResourceSettings;
+        private readonly Shared.Configurations.Service.Models.RemoteResourceConfiguration _remoteResourceSettings;
         private readonly ILogger<DistributeConfig> _logger;
-        private readonly SharedConfigurations.DesktopService.Models.AppConfiguration _appSettings;
+        private readonly Shared.Configurations.Service.Models.AppConfiguration _appSettings;
         private readonly Services.IStaticResources _staticResources;
 
         public DistributeConfig(ILoggerFactory loggerFactory, 
-            IOptions<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration> remoteResourceSettings,
-            IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration> appOptions,
+            IOptions<Shared.Configurations.Service.Models.RemoteResourceConfiguration> remoteResourceSettings,
+            IOptions<Shared.Configurations.Service.Models.AppConfiguration> appOptions,
             Services.IStaticResources staticResources)
         {
             _logger = loggerFactory.CreateLogger<DistributeConfig>();
@@ -49,14 +49,14 @@ namespace Rediscovery.Client.App.Service.Features.Configuration
 
                 if (!string.IsNullOrWhiteSpace(managerPath) && System.IO.Directory.Exists(managerPath))
                 {
-                    var config = new SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration
+                    var config = new Shared.Configurations.Manager.Models.ConnectionConfiguration
                     {
                         IP = _staticResources.HostIpAddress,
                         Port = _staticResources.HostPort,
                         DeviceIdentifier = _remoteResourceSettings.RediscoveryManagerDeviceIdentifier,
                         AutoConnect = _remoteResourceSettings.RediscoveryManagerAutoConnect
                     };
-                    OnUpdateRemoteConfiguration(Path.Combine(managerPath, SharedConfigurations.RediscoveryManager.ConfigFileNames.AppSettings), SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration.SectionName, config);
+                    OnUpdateRemoteConfiguration(Path.Combine(managerPath, Shared.Configurations.Manager.ConfigFileNames.AppSettings), Shared.Configurations.Manager.Models.ConnectionConfiguration.SectionName, config);
                 }
             } catch (Exception ex)
             {
@@ -80,14 +80,14 @@ namespace Rediscovery.Client.App.Service.Features.Configuration
 
                 if (!string.IsNullOrWhiteSpace(managerPath) && System.IO.Directory.Exists(managerPath))
                 {
-                    var config = new SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration
+                    var config = new Shared.Configurations.Manager.GUI.Models.ConnectionConfiguration
                     {
                         IP = _staticResources.HostIpAddress,
                         Port = _staticResources.HostPort,
                         DeviceIdentifier = _remoteResourceSettings.RediscoveryManagerDeviceIdentifier,
                         AutoConnect = _remoteResourceSettings.RediscoveryManagerAutoConnect
                     };
-                    OnUpdateRemoteConfiguration(Path.Combine(managerPath, SharedConfigurations.RediscoveryManager.GUI.ConfigFileNames.AppSettings), SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration.SectionName, config);
+                    OnUpdateRemoteConfiguration(Path.Combine(managerPath, Shared.Configurations.Manager.GUI.ConfigFileNames.AppSettings), Shared.Configurations.Manager.GUI.Models.ConnectionConfiguration.SectionName, config);
                 }
             }
             catch (Exception ex)
@@ -113,17 +113,17 @@ namespace Rediscovery.Client.App.Service.Features.Configuration
                 if (!string.IsNullOrWhiteSpace(discoveryPath) && System.IO.Directory.Exists(discoveryPath))
                 {
                     // Update settings for discovery service
-                    var serviceInfo = new SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration
+                    var serviceInfo = new Shared.Configurations.Discovery.Models.ServiceInfoConfiguration
                     {
                         IP = _staticResources.HostIpAddress,
                         Port = _staticResources.HostPort,
                         MetaInfo = null,
                         Name = _appSettings.DesktopName
                     };
-                    OnUpdateRemoteConfiguration(Path.Combine(discoveryPath, SharedConfigurations.DiscoveryService.ConfigFileNames.AppSettings), SharedConfigurations.DiscoveryService.Models.ServiceInfoConfiguration.SectionName, serviceInfo);
+                    OnUpdateRemoteConfiguration(Path.Combine(discoveryPath, Shared.Configurations.Discovery.ConfigFileNames.AppSettings), Shared.Configurations.Discovery.Models.ServiceInfoConfiguration.SectionName, serviceInfo);
 
                     // Add firewall rule for discovery service
-                    var fwDiscovery = OnReadRemoteConfiguration<SharedConfigurations.DiscoveryService.Models.DiscoveryConfiguration>(Path.Combine(discoveryPath, SharedConfigurations.DiscoveryService.ConfigFileNames.AppSettings), SharedConfigurations.DiscoveryService.Models.DiscoveryConfiguration.SectionName);
+                    var fwDiscovery = OnReadRemoteConfiguration<Shared.Configurations.Discovery.Models.DiscoveryConfiguration>(Path.Combine(discoveryPath, Shared.Configurations.Discovery.ConfigFileNames.AppSettings), Shared.Configurations.Discovery.Models.DiscoveryConfiguration.SectionName);
                     if (fwDiscovery != null)
                     {
 
@@ -139,7 +139,7 @@ namespace Rediscovery.Client.App.Service.Features.Configuration
         {
             try
             {
-                SharedConfigurations.RemoteConfiguration.UpdateRemoteConfiguration(filePath, key, value);
+                Shared.Configurations.RemoteConfiguration.UpdateRemoteConfiguration(filePath, key, value);
             } catch (Exception ex)
             {
                 _logger.LogError(ex.ToString());
@@ -150,7 +150,7 @@ namespace Rediscovery.Client.App.Service.Features.Configuration
         {
             try
             {
-                return SharedConfigurations.RemoteConfiguration.ReadRemoteConfiguration<T>(filePath, key);
+                return Shared.Configurations.RemoteConfiguration.ReadRemoteConfiguration<T>(filePath, key);
             }
             catch (Exception ex)
             {

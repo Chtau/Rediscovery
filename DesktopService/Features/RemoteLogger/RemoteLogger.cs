@@ -1,4 +1,4 @@
-﻿using CommunicationLoggerProvider;
+﻿using Rediscovery.Communication.Provider.Logger;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -36,7 +36,7 @@ namespace Rediscovery.Client.App.Service.Features.Logger
 
             if (_config.EventId == 0 || _config.EventId == eventId.Id)
             {
-                _config?.GetLoggerHandlerInstance()?.NewEntry(new SharedBase.Logging.LoggerEntry
+                _config?.GetLoggerHandlerInstance()?.NewEntry(new Shared.Logging.Models.LoggerEntry
                 {
                     Id = eventId.Id.ToString(),
                     LogLevel = GetLoggerType(logLevel),
@@ -48,25 +48,25 @@ namespace Rediscovery.Client.App.Service.Features.Logger
             }
         }
 
-        private SharedBase.Logging.LoggerEntry.LoggerType GetLoggerType(LogLevel logLevel)
+        private Shared.Logging.LoggerType GetLoggerType(LogLevel logLevel)
         {
             switch (logLevel)
             {
                 case LogLevel.Trace:
-                    return SharedBase.Logging.LoggerEntry.LoggerType.Trace;
+                    return Shared.Logging.LoggerType.Trace;
                 case LogLevel.Debug:
-                    return SharedBase.Logging.LoggerEntry.LoggerType.Debug;
+                    return Shared.Logging.LoggerType.Debug;
                 case LogLevel.Information:
                 case LogLevel.None:
-                    return SharedBase.Logging.LoggerEntry.LoggerType.Information;
+                    return Shared.Logging.LoggerType.Information;
                 case LogLevel.Warning:
-                    return SharedBase.Logging.LoggerEntry.LoggerType.Warning;
+                    return Shared.Logging.LoggerType.Warning;
                 case LogLevel.Error:
-                    return SharedBase.Logging.LoggerEntry.LoggerType.Error;
+                    return Shared.Logging.LoggerType.Error;
                 case LogLevel.Critical:
-                    return SharedBase.Logging.LoggerEntry.LoggerType.Critical;
+                    return Shared.Logging.LoggerType.Critical;
             }
-            return SharedBase.Logging.LoggerEntry.LoggerType.Information;
+            return Shared.Logging.LoggerType.Information;
         }
     }
 }
