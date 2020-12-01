@@ -14,11 +14,11 @@ namespace Rediscovery.Client.App.Manager.Models
         public string Pem { get; set; } = null;
         public bool UseSSL { get; set; } = false;
 
-        public CommunicationBase.ConsumerConnectionConfiguration ConnectionConfiguration
+        public Communication.Base.ConsumerConnectionConfiguration ConnectionConfiguration
         {
             get
             {
-                return new CommunicationBase.ConsumerConnectionConfiguration
+                return new Communication.Base.ConsumerConnectionConfiguration
                 {
                     CertificatePEM = Pem,
                     IPAddress = IP,

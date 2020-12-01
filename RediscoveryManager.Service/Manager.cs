@@ -1,8 +1,8 @@
-﻿using CommunicationAuthenticationConsumer;
-using CommunicationHeartbeatConsumer;
-using CommunicationLoggerConsumer;
-using CommunicationResourceConsumer;
-using SharedBase.Logging;
+﻿using Rediscovery.Communication.Consumer.Authentication;
+using Rediscovery.Communication.Consumer.Heartbeat;
+using Rediscovery.Communication.Consumer.Logger;
+using Rediscovery.Communication.Consumer.Resource;
+using Rediscovery.Shared.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,16 +15,16 @@ namespace Rediscovery.Client.App.Manager
     {
         public Models.ManagerConnectionState ManagerConnectionState { get; private set; } = new Models.ManagerConnectionState();
         public Models.CurrentConnection CurrentConnection { get; set; } = new Models.CurrentConnection();
-        public ObservableCollection<SharedBase.Device.DeviceInfo> ActiveDevices { get; set; } = new ObservableCollection<SharedBase.Device.DeviceInfo>();
-        public ObservableCollection<SharedBase.Device.DeviceInfo> PendingDevices { get; set; } = new ObservableCollection<SharedBase.Device.DeviceInfo>();
-        public ObservableCollection<SharedBase.Device.DeviceInfo> Devices { get; set; } = new ObservableCollection<SharedBase.Device.DeviceInfo>();
-        public ObservableCollection<SharedBase.Device.FeatureDefinitionExtended> Features { get; set; } = new ObservableCollection<SharedBase.Device.FeatureDefinitionExtended>();
-        public ObservableCollection<SharedBase.Statistics.HeartbeatStatisticItem> HeartbeatStatistics { get; set; } = new ObservableCollection<SharedBase.Statistics.HeartbeatStatisticItem>();
-        public SharedBase.Connection.Manifest Manifest { get; private set; }
-        public ObservableCollection<LoggerEntry> LoggerEntires { get; set; } = new ObservableCollection<LoggerEntry>();
+        public ObservableCollection<Shared.Base.Device.DeviceInfo> ActiveDevices { get; set; } = new ObservableCollection<Shared.Base.Device.DeviceInfo>();
+        public ObservableCollection<Shared.Base.Device.DeviceInfo> PendingDevices { get; set; } = new ObservableCollection<Shared.Base.Device.DeviceInfo>();
+        public ObservableCollection<Shared.Base.Device.DeviceInfo> Devices { get; set; } = new ObservableCollection<Shared.Base.Device.DeviceInfo>();
+        public ObservableCollection<Shared.Base.Device.FeatureDefinitionExtended> Features { get; set; } = new ObservableCollection<Shared.Base.Device.FeatureDefinitionExtended>();
+        public ObservableCollection<Shared.Base.Statistics.HeartbeatStatisticItem> HeartbeatStatistics { get; set; } = new ObservableCollection<Shared.Base.Statistics.HeartbeatStatisticItem>();
+        public Shared.Base.Connection.Manifest Manifest { get; private set; }
+        public ObservableCollection<Shared.Logging.Models.LoggerEntry> LoggerEntires { get; set; } = new ObservableCollection<Shared.Logging.Models.LoggerEntry>();
 
-        public event EventHandler<SharedBase.Connection.Enums.ConnectionState> AfterConnecting;
-        public event EventHandler<SharedBase.Connection.Enums.AllowConnect> GreetingsReply;
+        public event EventHandler<Shared.Base.Connection.Enums.ConnectionState> AfterConnecting;
+        public event EventHandler<Shared.Base.Connection.Enums.AllowConnect> GreetingsReply;
         public event EventHandler<RoundTripResult> RoundTripReceived;
         public event EventHandler DeviceCollectionChanged;
         public event EventHandler FeaturesCollectionChanged;
@@ -33,7 +33,7 @@ namespace Rediscovery.Client.App.Manager
         public event EventHandler ManifestChanged;
         public event EventHandler HeartbeatStatisticsChanged;
         public event EventHandler LoggerEntiresChanged;
-        public event EventHandler<SharedBase.Logging.LogCommandConfigResult> LoggerCommandExecuted;
+        public event EventHandler<Shared.Logging.Commands.LogCommandConfigResult> LoggerCommandExecuted;
 
         private readonly IAuthenticationConsumerService _authenticationConsumer;
         private readonly IGreetingConsumerService _greetingConsumer;
@@ -45,11 +45,11 @@ namespace Rediscovery.Client.App.Manager
 
         public Manager()
         {
-            SharedBase.Logging.EventLoggerProvider.Instance.LogNewEntry += Instance_LogNewEntry;
-            _authenticationConsumer = new AuthenticationConsumerService(SharedBase.Logging.EventLoggerProvider.Instance);
-            _greetingConsumer = new GreetingConsumerService(SharedBase.Logging.EventLoggerProvider.Instance);
-            _resourceConsumer = new ResourceConsumerService(SharedBase.Logging.EventLoggerProvider.Instance);
-            _heartbeatConsumer = new HeartbeatConsumer(SharedBase.Logging.EventLoggerProvider.Instance);
+            Shared.Logging.EventLoggerProvider.Instance.LogNewEntry += Instance_LogNewEntry;
+            _authenticationConsumer = new AuthenticationConsumerService(Shared.Logging.EventLoggerProvider.Instance);
+            _greetingConsumer = new GreetingConsumerService(Shared.Logging.EventLoggerProvider.Instance);
+            _resourceConsumer = new ResourceConsumerService(Shared.Logging.EventLoggerProvider.Instance);
+            _heartbeatConsumer = new HeartbeatConsumer(Shared.Logging.EventLoggerProvider.Instance);
             _loggerConsumer = new LoggerConsumer();
             _authenticationConsumer.ReceivedManifestReply += (obj, args) =>
             {
@@ -59,7 +59,7 @@ namespace Rediscovery.Client.App.Manager
             _authenticationConsumer.ReceivedWelcomeReply += (obj, args) =>
             {
                 ManagerConnectionState.ConnectionState = args.State;
-                if (ManagerConnectionState.ConnectionState == SharedBase.Connection.Enums.ConnectionState.OK)
+                if (ManagerConnectionState.ConnectionState == Shared.Base.Connection.Enums.ConnectionState.OK)
                 {
                     CurrentConnection.Token = args.Token;
                     _authenticationConsumer.RequestManifest(CurrentConnection.Token);
@@ -149,7 +149,7 @@ namespace Rediscovery.Client.App.Manager
             _loggerConsumer.LoggerCommandExecuted += (obj, args) => LoggerCommandExecuted?.Invoke(this, args);
         }
 
-        private void Instance_LogNewEntry(object sender, LoggerEntry e)
+        private void Instance_LogNewEntry(object sender, Shared.Logging.Models.LoggerEntry e)
         {
             RemoteLogEntry(e);
         }
@@ -159,7 +159,7 @@ namespace Rediscovery.Client.App.Manager
             Disconnect();
             tokenSource = new System.Threading.CancellationTokenSource();
 
-            var result = _greetingConsumer.GreetHost(CurrentConnection.IP, CurrentConnection.Port, new SharedBase.Connection.GreetingDeviceMessage
+            var result = _greetingConsumer.GreetHost(CurrentConnection.IP, CurrentConnection.Port, new Shared.Base.Connection.GreetingDeviceMessage
             {
                 DeviceIdentifier = CurrentConnection.DeviceIdentifier,
                 DeviceName = "",
@@ -171,19 +171,19 @@ namespace Rediscovery.Client.App.Manager
                 Platform = ""
             });
             ManagerConnectionState.CanConnect = result.CanConnect;
-            if (ManagerConnectionState.CanConnect == SharedBase.Connection.Enums.AllowConnect.OK)
+            if (ManagerConnectionState.CanConnect == Shared.Base.Connection.Enums.AllowConnect.OK)
             {
                 CurrentConnection.Pem = result.PEM;
                 CurrentConnection.PortSSL = result.SSLPort;
                 CurrentConnection.UseSSL = result.UseSSL;
                 _authenticationConsumer.Connect(CurrentConnection.ConnectionConfiguration);
-                _authenticationConsumer.SendWelcome(new SharedBase.Connection.WelcomeDeviceMessage
+                _authenticationConsumer.SendWelcome(new Shared.Base.Connection.WelcomeDeviceMessage
                 {
                     DeviceIdentifier = CurrentConnection.DeviceIdentifier,
                 });
             }
             GreetingsReply?.Invoke(this, ManagerConnectionState.CanConnect);
-            return ManagerConnectionState.CanConnect == SharedBase.Connection.Enums.AllowConnect.OK;
+            return ManagerConnectionState.CanConnect == Shared.Base.Connection.Enums.AllowConnect.OK;
         }
 
         public void TryResolvePendingDevice(Guid deviceId, bool resolve)
@@ -200,8 +200,8 @@ namespace Rediscovery.Client.App.Manager
         {
             ManagerConnectionState = new Models.ManagerConnectionState
             {
-                CanConnect = SharedBase.Connection.Enums.AllowConnect.None,
-                ConnectionState = SharedBase.Connection.Enums.ConnectionState.None
+                CanConnect = Shared.Base.Connection.Enums.AllowConnect.None,
+                ConnectionState = Shared.Base.Connection.Enums.ConnectionState.None
             };
             Manifest = null;
             Devices.Clear();
@@ -240,13 +240,13 @@ namespace Rediscovery.Client.App.Manager
             };
         }
 
-        public void RemoteLogEntry(SharedBase.Logging.LoggerEntry loggerEntry)
+        public void RemoteLogEntry(Shared.Logging.Models.LoggerEntry loggerEntry)
         {
             if (_loggerConsumer?.IsConnect == true)
                 _loggerConsumer.LogEntry(loggerEntry);
         }
 
-        public bool RemoteLogExecuteCommand(LogCommandConfig logCommandConfig)
+        public bool RemoteLogExecuteCommand(Shared.Logging.Commands.LogCommandConfig logCommandConfig)
         {
             if (_loggerConsumer?.IsConnect == true)
             {

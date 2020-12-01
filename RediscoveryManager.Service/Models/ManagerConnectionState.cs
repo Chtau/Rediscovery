@@ -6,7 +6,7 @@ namespace Rediscovery.Client.App.Manager.Models
 {
     public class ManagerConnectionState
     {
-        public SharedBase.Connection.Enums.AllowConnect CanConnect { get; set; } = SharedBase.Connection.Enums.AllowConnect.None;
-        public SharedBase.Connection.Enums.ConnectionState ConnectionState { get; set; } = SharedBase.Connection.Enums.ConnectionState.None;
+        public Shared.Base.Connection.Enums.AllowConnect CanConnect { get; set; } = Shared.Base.Connection.Enums.AllowConnect.None;
+        public Shared.Base.Connection.Enums.ConnectionState ConnectionState { get; set; } = Shared.Base.Connection.Enums.ConnectionState.None;
     }
 }
