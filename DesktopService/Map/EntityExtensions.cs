@@ -6,9 +6,9 @@ namespace Rediscovery.Client.App.Service.Map
 {
     public static class EntityExtensions
     {
-        public static SharedBase.Device.DeviceInfo ToDeviceInfo(this DALDesktopService.Models.Device device)
+        public static Shared.Base.Device.DeviceInfo ToDeviceInfo(this Rediscovery.Service.DAL.Models.Device device)
         {
-            return new SharedBase.Device.DeviceInfo
+            return new Shared.Base.Device.DeviceInfo
             {
                 Id = device.Id,
                 AllowAccess = device.AllowAccess,
@@ -24,9 +24,9 @@ namespace Rediscovery.Client.App.Service.Map
             };
         }
 
-        public static DALDesktopService.Models.Device ToDevice(this SharedBase.Device.DeviceInfo deviceInfo)
+        public static Rediscovery.Service.DAL.Models.Device ToDevice(this Shared.Base.Device.DeviceInfo deviceInfo)
         {
-            return new DALDesktopService.Models.Device
+            return new Rediscovery.Service.DAL.Models.Device
             {
                 Id = deviceInfo.Id,
                 AllowAccess = deviceInfo.AllowAccess,
@@ -41,9 +41,9 @@ namespace Rediscovery.Client.App.Service.Map
             };
         }
 
-        public static SharedBase.Device.DeviceInfo ToDeviceInfo(this DALDesktopService.Models.DevicePendingAuthentication device)
+        public static Shared.Base.Device.DeviceInfo ToDeviceInfo(this Rediscovery.Service.DAL.Models.DevicePendingAuthentication device)
         {
-            return new SharedBase.Device.DeviceInfo
+            return new Shared.Base.Device.DeviceInfo
             {
                 Id = device.Id,
                 AllowAccess = false,

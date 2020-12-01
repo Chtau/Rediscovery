@@ -13,7 +13,7 @@ namespace Rediscovery.Client.App.Service.Services
         string ExePath { get; set; }
         X509Certificate2 X509Certificate2 { get; set; }
         string PEM { get; set; }
-        SharedBase.Connection.Manifest ServiceManifest { get; set; }
+        Shared.Base.Connection.Manifest ServiceManifest { get; set; }
         bool SSLActive { get; set; }
         string DiscoveryServiceFolderName { get; set; }
         string ManagerFolderName { get; set; }

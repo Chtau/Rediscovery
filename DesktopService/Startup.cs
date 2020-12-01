@@ -1,8 +1,8 @@
-﻿using CommunicationAuthenticationProvider;
-using CommunicationFeatureProvider;
-using CommunicationHeartbeatProvider;
-using CommunicationLoggerProvider;
-using CommunicationResourceProvider;
+﻿using Rediscovery.Communication.Provider.Authentication;
+using Rediscovery.Communication.Provider.Feature;
+using Rediscovery.Communication.Provider.Heartbeat;
+using Rediscovery.Communication.Provider.Logger;
+using Rediscovery.Communication.Provider.Resource;
 using Rediscovery.Client.App.Service.Features.Authentication;
 using Rediscovery.Client.App.Service.Features.DeviceFeature;
 using Rediscovery.Client.App.Service.Features.Logger;
@@ -25,7 +25,7 @@ namespace Rediscovery.Client.App.Service
         public Startup()
         {
             var builder = new ConfigurationBuilder()
-                .AddJsonFile(SharedConfigurations.DesktopService.ConfigFileNames.AppSettings, optional: false, reloadOnChange: true);
+                .AddJsonFile(Shared.Configurations.Service.ConfigFileNames.AppSettings, optional: false, reloadOnChange: true);
 
             Configuration = builder.Build();
         }
@@ -34,24 +34,24 @@ namespace Rediscovery.Client.App.Service
         {
             services.AddControllers();
 
-            var identitySettingsSection = Configuration.GetSection(SharedConfigurations.DesktopService.Models.IdentityConfiguration.SectionName);
-            services.Configure<SharedConfigurations.DesktopService.Models.IdentityConfiguration>(identitySettingsSection);
-            var remoteResourceSettingsSection = Configuration.GetSection(SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration.SectionName);
-            services.Configure<SharedConfigurations.DesktopService.Models.RemoteResourceConfiguration>(remoteResourceSettingsSection);
-            var appSettingsSection = Configuration.GetSection(SharedConfigurations.DesktopService.Models.AppConfiguration.SectionName);
-            services.Configure<SharedConfigurations.DesktopService.Models.AppConfiguration>(appSettingsSection);
-            var rolesSection = Configuration.GetSection(SharedConfigurations.DesktopService.Models.RoleConfiguration.SectionName);
-            services.Configure<SharedConfigurations.DesktopService.Models.RoleConfiguration>(rolesSection);
+            var identitySettingsSection = Configuration.GetSection(Shared.Configurations.Service.Models.IdentityConfiguration.SectionName);
+            services.Configure<Shared.Configurations.Service.Models.IdentityConfiguration>(identitySettingsSection);
+            var remoteResourceSettingsSection = Configuration.GetSection(Shared.Configurations.Service.Models.RemoteResourceConfiguration.SectionName);
+            services.Configure<Shared.Configurations.Service.Models.RemoteResourceConfiguration>(remoteResourceSettingsSection);
+            var appSettingsSection = Configuration.GetSection(Shared.Configurations.Service.Models.AppConfiguration.SectionName);
+            services.Configure<Shared.Configurations.Service.Models.AppConfiguration>(appSettingsSection);
+            var rolesSection = Configuration.GetSection(Shared.Configurations.Service.Models.RoleConfiguration.SectionName);
+            services.Configure<Shared.Configurations.Service.Models.RoleConfiguration>(rolesSection);
 
-            var appSettings = appSettingsSection.Get<SharedConfigurations.DesktopService.Models.AppConfiguration>();
-            var identitySettings = identitySettingsSection.Get<SharedConfigurations.DesktopService.Models.IdentityConfiguration>();
-            var roleSettings = rolesSection.Get<SharedConfigurations.DesktopService.Models.RoleConfiguration>();
+            var appSettings = appSettingsSection.Get<Shared.Configurations.Service.Models.AppConfiguration>();
+            var identitySettings = identitySettingsSection.Get<Shared.Configurations.Service.Models.IdentityConfiguration>();
+            var roleSettings = rolesSection.Get<Shared.Configurations.Service.Models.RoleConfiguration>();
 
             services.AddHostedService<Worker>();
 
             services.AddLogging();
 
-            string dbPath = System.IO.Path.Combine(SharedFeatureFunctions.File.GetUserFolder(appSettings.AppDataFolder), "rediscovery.db");
+            string dbPath = System.IO.Path.Combine(Feature.Shared.Functions.File.GetUserFolder(appSettings.AppDataFolder), "rediscovery.db");
             if (!string.IsNullOrWhiteSpace(appSettings.DatabasePath))
             {
                 var dir = System.IO.Path.GetDirectoryName(appSettings.DatabasePath);
@@ -65,8 +65,8 @@ namespace Rediscovery.Client.App.Service
             services.AddAuthenticationProvider<AuthenticationManager>(identitySettings.Secret, roleSettings.DeviceRoleName, roleSettings.ResourceConsumerRoleName);
             services.AddFeatureProvider<FeatureManager>();
             services.AddResourceProvider<RemoteResourcesRepository, ResourceManager>();
-            services.AddHeartbeatProvider<CommunicationHeartbeatProvider.Configuration>();
-            services.AddLoggerProvider<CommunicationLoggerProvider.DirectLogger>();
+            services.AddHeartbeatProvider<Rediscovery.Communication.Provider.Heartbeat.Configuration>();
+            services.AddLoggerProvider<Rediscovery.Communication.Provider.Logger.DirectLogger>();
 
             services.AddSingleton<Services.IStaticResources, Services.StaticResources>();
 
@@ -83,7 +83,7 @@ namespace Rediscovery.Client.App.Service
         {
             app.UseCertificateServiceDefaults();
 
-            var appSettings = app.ApplicationServices.GetRequiredService<IOptions<SharedConfigurations.DesktopService.Models.AppConfiguration>>();
+            var appSettings = app.ApplicationServices.GetRequiredService<IOptions<Shared.Configurations.Service.Models.AppConfiguration>>();
             var remoteLogLevel = LogLevel.None;
             if (Enum.TryParse(typeof(LogLevel), appSettings?.Value?.RemoteLogger, out object obj))
             {

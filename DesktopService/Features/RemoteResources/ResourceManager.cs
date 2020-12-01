@@ -1,7 +1,7 @@
-﻿using CommunicationResourceProvider;
+﻿using Rediscovery.Communication.Provider.Resource;
 using Microsoft.Extensions.Logging;
-using PluginFeature.Models;
-using SharedBase.Feature;
+using Rediscovery.Feature.Plugin.Models;
+using Rediscovery.Shared.Base.Feature;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -50,7 +50,7 @@ namespace Rediscovery.Client.App.Service.Features.RemoteResources
             
         }
 
-        public void UpdateDevice(SharedBase.Device.DeviceInfo deviceInfo)
+        public void UpdateDevice(Shared.Base.Device.DeviceInfo deviceInfo)
         {
             
         }

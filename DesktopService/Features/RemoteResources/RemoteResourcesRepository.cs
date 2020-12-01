@@ -1,12 +1,12 @@
-﻿using CommunicationResourceProvider;
-using DALDesktopService.Models;
+﻿using Rediscovery.Communication.Provider.Resource;
+using Rediscovery.Service.DAL.Models;
 using Rediscovery.Client.App.Service.Features.DeviceFeature;
 using Rediscovery.Client.App.Service.Map;
 using Microsoft.Extensions.Logging;
-using PluginFeature.Models;
-using SharedBase.Feature;
-using SharedBase.Logging;
-using SharedBase.Statistics;
+using Rediscovery.Feature.Plugin.Models;
+using Rediscovery.Shared.Base.Feature;
+using Rediscovery.Shared.Logging;
+using Rediscovery.Shared.Base.Statistics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,12 +18,12 @@ namespace Rediscovery.Client.App.Service.Features.RemoteResources
 {
     public class RemoteResourcesRepository : IResourcesRepository
     {
-        private readonly DALDesktopService.Repository.IDeviceRepository _deviceRepository;
-        private readonly DALDesktopService.Repository.IDevicePendingAuthenticationRepository _devicePendingAuthenticationRepository;
+        private readonly Rediscovery.Service.DAL.Repository.IDeviceRepository _deviceRepository;
+        private readonly Rediscovery.Service.DAL.Repository.IDevicePendingAuthenticationRepository _devicePendingAuthenticationRepository;
         private readonly DeviceFeature.IFeatureService _featureService;
-        private readonly CommunicationHeartbeatProvider.IHeartbeatStatistic _heartbeatStatistic;
-        private readonly CommunicationHeartbeatProvider.IHeartbeatActive _heartbeatActive;
-        private readonly CommunicationLoggerProvider.ILoggerHandler _loggerHandler;
+        private readonly Rediscovery.Communication.Provider.Heartbeat.IHeartbeatStatistic _heartbeatStatistic;
+        private readonly Rediscovery.Communication.Provider.Heartbeat.IHeartbeatActive _heartbeatActive;
+        private readonly Rediscovery.Communication.Provider.Logger.ILoggerHandler _loggerHandler;
         private readonly ILogger<RemoteResourcesRepository> _logger;
 
         public event EventHandler HeartbeatStatisticsChanged;
@@ -32,11 +32,11 @@ namespace Rediscovery.Client.App.Service.Features.RemoteResources
 
         public RemoteResourcesRepository(
             DeviceFeature.IFeatureService featureService,
-            DALDesktopService.Repository.IDeviceRepository deviceRepository,
-            DALDesktopService.Repository.IDevicePendingAuthenticationRepository devicePendingAuthenticationRepository,
-            CommunicationHeartbeatProvider.IHeartbeatStatistic heartbeatStatistic,
-            CommunicationHeartbeatProvider.IHeartbeatActive heartbeatActive,
-            CommunicationLoggerProvider.ILoggerHandler loggerHandler,
+            Rediscovery.Service.DAL.Repository.IDeviceRepository deviceRepository,
+            Rediscovery.Service.DAL.Repository.IDevicePendingAuthenticationRepository devicePendingAuthenticationRepository,
+            Rediscovery.Communication.Provider.Heartbeat.IHeartbeatStatistic heartbeatStatistic,
+            Rediscovery.Communication.Provider.Heartbeat.IHeartbeatActive heartbeatActive,
+            Rediscovery.Communication.Provider.Logger.ILoggerHandler loggerHandler,
             ILoggerFactory loggerFactory)
         {
             _featureService = featureService;
@@ -71,12 +71,12 @@ namespace Rediscovery.Client.App.Service.Features.RemoteResources
             LoggerEntiresChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private void _heartbeatStatistic_UpdatedHeartbeatStatics(object sender, Dictionary<string, List<CommunicationHeartbeatProvider.HeartbeatResult>> e)
+        private void _heartbeatStatistic_UpdatedHeartbeatStatics(object sender, Dictionary<string, List<Rediscovery.Communication.Provider.Heartbeat.HeartbeatResult>> e)
         {
             HeartbeatStatisticsChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        public List<SharedBase.Device.FeatureDefinitionExtended> GetResourceDeviceFeature()
+        public List<Shared.Base.Device.FeatureDefinitionExtended> GetResourceDeviceFeature()
         {
             var features = _featureService.GetFeaturesManifest();
             return (from x in features
@@ -84,7 +84,7 @@ namespace Rediscovery.Client.App.Service.Features.RemoteResources
                     ).ToList();
         }
 
-        public List<SharedBase.Device.DeviceInfo> GetResourceDeviceInfo()
+        public List<Shared.Base.Device.DeviceInfo> GetResourceDeviceInfo()
         {
             var users = _deviceRepository.GetAll().GetAwaiter().GetResult();
             return (from x in users
@@ -93,9 +93,9 @@ namespace Rediscovery.Client.App.Service.Features.RemoteResources
         }
 
         [Obsolete("Active devices are now from the heartbeat")]
-        public List<SharedBase.Device.DeviceInfo> GetResourceActiveDeviceInfo()
+        public List<Shared.Base.Device.DeviceInfo> GetResourceActiveDeviceInfo()
         {
-            var allUsers = from x in CommunicationFeatureProvider.FeatureActiveDevices.Devices select new Guid(x);
+            var allUsers = from x in Rediscovery.Communication.Provider.Feature.FeatureActiveDevices.Devices select new Guid(x);
             var users = _deviceRepository.GetAll().GetAwaiter().GetResult();
             return (from x in users
                     join y in allUsers on x.Id equals y
@@ -116,7 +116,7 @@ namespace Rediscovery.Client.App.Service.Features.RemoteResources
             }
         }
 
-        public SharedBase.Device.DeviceInfo UpdateDeviceInfo(SharedBase.Device.DeviceInfo deviceInfo)
+        public Shared.Base.Device.DeviceInfo UpdateDeviceInfo(Shared.Base.Device.DeviceInfo deviceInfo)
         {
             try
             {
@@ -130,7 +130,7 @@ namespace Rediscovery.Client.App.Service.Features.RemoteResources
             }
         }
 
-        public List<SharedBase.Device.DeviceInfo> GetResourcePendingAuthenticationDevices()
+        public List<Shared.Base.Device.DeviceInfo> GetResourcePendingAuthenticationDevices()
         {
             var devices = _devicePendingAuthenticationRepository.GetAll().GetAwaiter().GetResult();
             return (from x in devices
@@ -163,26 +163,26 @@ namespace Rediscovery.Client.App.Service.Features.RemoteResources
             return false;
         }
 
-        public List<FeatureProfil> GetResourceDeviceFeatureProfiles(Guid featureId)
+        public List<Shared.Base.Feature.FeatureProfil> GetResourceDeviceFeatureProfiles(Guid featureId)
         {
             return _featureService.GetFeatureProfiles(featureId);
         }
 
-        public FeatureSetting GetResourceDeviceFeatureSettings(Guid featureId)
+        public Shared.Base.Feature.FeatureSetting GetResourceDeviceFeatureSettings(Guid featureId)
         {
             return _featureService.GetFeatureSettings(featureId);
         }
 
-        public List<SharedBase.Statistics.HeartbeatStatisticItem> GetHeartbeatStatistic()
+        public List<Shared.Base.Statistics.HeartbeatStatisticItem> GetHeartbeatStatistic()
         {
-            var retVal = new List<SharedBase.Statistics.HeartbeatStatisticItem>();
+            var retVal = new List<Shared.Base.Statistics.HeartbeatStatisticItem>();
             try
             {
                 var items = _heartbeatStatistic.Get();
                 foreach (var item in items)
                 {
                     var y = from x in item.Value
-                            select new HeartbeatStatisticItem
+                            select new Shared.Base.Statistics.HeartbeatStatisticItem
                             {
                                 DeviceId = x.DeviceId,
                                 OK = x.OK,
@@ -200,9 +200,9 @@ namespace Rediscovery.Client.App.Service.Features.RemoteResources
             return retVal;
         }
 
-        public List<LoggerEntry> GetLoggerEntires()
+        public List<Shared.Logging.Models.LoggerEntry> GetLoggerEntires()
         {
-            var retVal = new List<LoggerEntry>();
+            var retVal = new List<Shared.Logging.Models.LoggerEntry>();
             try
             {
                 return _loggerHandler.Get();
