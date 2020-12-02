@@ -29,7 +29,7 @@ namespace Rediscovery.Client.App.Manager.GUI.Pages
                         if (curIndex != lastClickIndex)
                         {
                             lastClickIndex = curIndex;
-                            var entry = args.Row.DataContext as SharedBase.Logging.LoggerEntry;
+                            var entry = args.Row.DataContext as Rediscovery.Shared.Logging.Models.LoggerEntry;
                             if (entry != null)
                             {
                                 model.ShowDetail(entry);

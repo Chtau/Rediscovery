@@ -11,17 +11,17 @@ namespace Rediscovery.Client.App.Manager.GUI.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            switch ((SharedBase.Connection.Enums.AllowConnect)value)
+            switch ((Rediscovery.Shared.Base.Connection.Enums.AllowConnect)value)
             {
-                case SharedBase.Connection.Enums.AllowConnect.None:
+                case Rediscovery.Shared.Base.Connection.Enums.AllowConnect.None:
                     return Brushes.Black;
-                case SharedBase.Connection.Enums.AllowConnect.OK:
+                case Rediscovery.Shared.Base.Connection.Enums.AllowConnect.OK:
                     return Brushes.Green;
-                case SharedBase.Connection.Enums.AllowConnect.Error:
+                case Rediscovery.Shared.Base.Connection.Enums.AllowConnect.Error:
                     return Brushes.Red;
-                case SharedBase.Connection.Enums.AllowConnect.Denied:
+                case Rediscovery.Shared.Base.Connection.Enums.AllowConnect.Denied:
                     return Brushes.Red;
-                case SharedBase.Connection.Enums.AllowConnect.UnkownDevice:
+                case Rediscovery.Shared.Base.Connection.Enums.AllowConnect.UnkownDevice:
                     return Brushes.Red;
                 default:
                     return Brushes.Black;

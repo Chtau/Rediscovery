@@ -36,7 +36,7 @@ namespace Rediscovery.Client.App.Manager.GUI
         {
             var builder = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile(SharedConfigurations.RediscoveryManager.GUI.ConfigFileNames.AppSettings, optional: true, reloadOnChange: true);
+        .AddJsonFile(Rediscovery.Shared.Configurations.Manager.GUI.ConfigFileNames.AppSettings, optional: true, reloadOnChange: true);
 
             Configuration = builder.Build();
             RegisterDependencies();
@@ -50,12 +50,13 @@ namespace Rediscovery.Client.App.Manager.GUI
 
         private static void RegisterDependencies()
         {
-            var jsonSetting = Program.Configuration.GetSection(SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration.SectionName).Value;
-            var connectSettings = Newtonsoft.Json.JsonConvert.DeserializeObject<SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration>(jsonSetting);// Program.Configuration.GetSection(SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration.SectionName).Get<SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration>();
-            Locator.CurrentMutable.RegisterConstant(connectSettings, typeof(SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration));
+            var jsonSetting = Program.Configuration.GetSection(Rediscovery.Shared.Configurations.Manager.GUI.Models.ConnectionConfiguration.SectionName).Value;
+            var connectSettings = Newtonsoft.Json.JsonConvert.DeserializeObject<Rediscovery.Shared.Configurations.Manager.GUI.Models.ConnectionConfiguration>(jsonSetting);// Program.Configuration.GetSection(SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration.SectionName).Get<SharedConfigurations.RediscoveryManager.GUI.Models.ConnectionConfiguration>();
+            Locator.CurrentMutable.RegisterConstant(connectSettings, typeof(Rediscovery.Shared.Configurations.Manager.GUI.Models.ConnectionConfiguration));
             var manager = new Manager();
             Locator.CurrentMutable.RegisterConstant(manager, typeof(IManager));
-            Locator.CurrentMutable.RegisterConstant(SharedBase.Logging.DiagnosticsLoggerProvider.Instance, typeof(SharedBase.Logging.ILogger));
+            // TODO: DiagnosticsLoggerProvider
+            //Locator.CurrentMutable.RegisterConstant(SharedBase.Logging.DiagnosticsLoggerProvider.Instance, typeof(Rediscovery.Shared.Logging.ILogger));
             Locator.CurrentMutable.RegisterConstant(new Shared.SharedEvents(), typeof(Shared.ISharedEvents));
         }
 

@@ -11,21 +11,21 @@ namespace Rediscovery.Client.App.Manager.GUI.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            switch ((SharedBase.Connection.Enums.ConnectionState)value)
+            switch ((Rediscovery.Shared.Base.Connection.Enums.ConnectionState)value)
             {
-                case SharedBase.Connection.Enums.ConnectionState.None:
+                case Rediscovery.Shared.Base.Connection.Enums.ConnectionState.None:
                     return Brushes.Black;
-                case SharedBase.Connection.Enums.ConnectionState.OK:
+                case Rediscovery.Shared.Base.Connection.Enums.ConnectionState.OK:
                     return Brushes.Green;
-                case SharedBase.Connection.Enums.ConnectionState.Error:
+                case Rediscovery.Shared.Base.Connection.Enums.ConnectionState.Error:
                     return Brushes.Red;
-                case SharedBase.Connection.Enums.ConnectionState.Warning:
+                case Rediscovery.Shared.Base.Connection.Enums.ConnectionState.Warning:
                     return Brushes.Yellow;
-                case SharedBase.Connection.Enums.ConnectionState.Offline:
+                case Rediscovery.Shared.Base.Connection.Enums.ConnectionState.Offline:
                     return Brushes.White;
-                case SharedBase.Connection.Enums.ConnectionState.Denied:
+                case Rediscovery.Shared.Base.Connection.Enums.ConnectionState.Denied:
                     return Brushes.Red;
-                case SharedBase.Connection.Enums.ConnectionState.WaitForApprovel:
+                case Rediscovery.Shared.Base.Connection.Enums.ConnectionState.WaitForApprovel:
                     return Brushes.Black;
                 default:
                     return Brushes.Black;
