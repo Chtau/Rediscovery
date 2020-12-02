@@ -55,8 +55,7 @@ namespace Rediscovery.Client.App.Manager.GUI
             Locator.CurrentMutable.RegisterConstant(connectSettings, typeof(Rediscovery.Shared.Configurations.Manager.GUI.Models.ConnectionConfiguration));
             var manager = new Manager();
             Locator.CurrentMutable.RegisterConstant(manager, typeof(IManager));
-            // TODO: DiagnosticsLoggerProvider
-            //Locator.CurrentMutable.RegisterConstant(SharedBase.Logging.DiagnosticsLoggerProvider.Instance, typeof(Rediscovery.Shared.Logging.ILogger));
+            Locator.CurrentMutable.RegisterConstant(Rediscovery.Shared.Logging.EventLoggerProvider.Instance, typeof(Rediscovery.Shared.Logging.ILogger));
             Locator.CurrentMutable.RegisterConstant(new Shared.SharedEvents(), typeof(Shared.ISharedEvents));
         }
 
