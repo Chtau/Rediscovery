@@ -39,10 +39,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharedConfigurations\Rediscovery.Shared.Configurations.csproj" />
-    <ProjectReference Include="..\SharedFeatureFunctions\Rediscovery.Feature.Shared.Functions.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -50,5 +46,9 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharedConfigurations\Rediscovery.Shared.Configurations.csproj" />
+    <ProjectReference Include="..\SharedFeatureFunctions\Rediscovery.Feature.Shared.Functions.csproj" />
   </ItemGroup>
 </Project>
