@@ -13,8 +13,8 @@ namespace Rediscovery.Client.App.Manager.Console
 
             IConfigurationRoot configuration = builder.Build();
 
-            var jsonSetting = configuration.GetSection(Shared.Configurations.Manager.Models.ConnectionConfiguration.SectionName).Value;
-            var connectSettings = Newtonsoft.Json.JsonConvert.DeserializeObject<Shared.Configurations.Manager.Models.ConnectionConfiguration>(jsonSetting); //configuration.GetSection(SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration.SectionName).Get<SharedConfigurations.RediscoveryManager.Models.ConnectionConfiguration>();
+            var configSection = configuration.GetSection(Shared.Configurations.Manager.Models.ConnectionConfiguration.SectionName);
+            var connectSettings = configSection.Get<Shared.Configurations.Manager.Models.ConnectionConfiguration>();
             var argCon = TryParseConnectionArguments(args);
 
             Shared.Configurations.Manager.Models.ConnectionConfiguration connection = new Shared.Configurations.Manager.Models.ConnectionConfiguration();
