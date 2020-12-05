@@ -75,6 +75,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.App.Shar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Shared.Logging", "Rediscovery.Shared.Logging\Rediscovery.Shared.Logging.csproj", "{01AF85BB-FC4F-41F3-993A-07A81F73907A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rediscovery.Client.App.Android", "Rediscovery.Client.App.Android\Rediscovery.Client.App.Android.csproj", "{F231BE37-DB9A-40D1-A5EC-5E44319EAD90}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -529,6 +531,24 @@ Global
 		{01AF85BB-FC4F-41F3-993A-07A81F73907A}.Release|x64.Build.0 = Release|Any CPU
 		{01AF85BB-FC4F-41F3-993A-07A81F73907A}.Release|x86.ActiveCfg = Release|Any CPU
 		{01AF85BB-FC4F-41F3-993A-07A81F73907A}.Release|x86.Build.0 = Release|Any CPU
+		{F231BE37-DB9A-40D1-A5EC-5E44319EAD90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F231BE37-DB9A-40D1-A5EC-5E44319EAD90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F231BE37-DB9A-40D1-A5EC-5E44319EAD90}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F231BE37-DB9A-40D1-A5EC-5E44319EAD90}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F231BE37-DB9A-40D1-A5EC-5E44319EAD90}.Debug|x64.Build.0 = Debug|Any CPU
+		{F231BE37-DB9A-40D1-A5EC-5E44319EAD90}.Debug|x64.Deploy.0 = Debug|Any CPU
+		{F231BE37-DB9A-40D1-A5EC-5E44319EAD90}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F231BE37-DB9A-40D1-A5EC-5E44319EAD90}.Debug|x86.Build.0 = Debug|Any CPU
+		{F231BE37-DB9A-40D1-A5EC-5E44319EAD90}.Debug|x86.Deploy.0 = Debug|Any CPU
+		{F231BE37-DB9A-40D1-A5EC-5E44319EAD90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F231BE37-DB9A-40D1-A5EC-5E44319EAD90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F231BE37-DB9A-40D1-A5EC-5E44319EAD90}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{F231BE37-DB9A-40D1-A5EC-5E44319EAD90}.Release|x64.ActiveCfg = Release|Any CPU
+		{F231BE37-DB9A-40D1-A5EC-5E44319EAD90}.Release|x64.Build.0 = Release|Any CPU
+		{F231BE37-DB9A-40D1-A5EC-5E44319EAD90}.Release|x64.Deploy.0 = Release|Any CPU
+		{F231BE37-DB9A-40D1-A5EC-5E44319EAD90}.Release|x86.ActiveCfg = Release|Any CPU
+		{F231BE37-DB9A-40D1-A5EC-5E44319EAD90}.Release|x86.Build.0 = Release|Any CPU
+		{F231BE37-DB9A-40D1-A5EC-5E44319EAD90}.Release|x86.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
