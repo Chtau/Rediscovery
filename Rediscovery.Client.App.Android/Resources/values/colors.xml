@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#00796B</color>
+  <color name="colorAccent">#79000e</color>
     <color name="colorPrimaryDark">#003742</color>
     <color name="colorPrimaryLight">#7DBAB4</color>
-    <color name="colorAccent">#FF7200</color>
-    <color name="splash_background">#FFFFFF</color>
+  <color name="colorPrimaryShadeBlackDarkest">#0d1917</color>
+  <color name="colorPrimaryShadeBlack">#122a26</color>
+  <color name="colorPrimaryShadeWhiteLightes">#dae8e5</color>
+  <color name="colorPrimaryShadeWhite">#b5d1cb</color>
+    <color name="colorTriadicOne">#6b0079</color>
+  <color name="colorTriadicTwo">#796b00</color>
+  <color name="colorAnalogousOne">#004b79</color>
+  <color name="colorAnalogousTwo">#00792f</color>
+  
+  <!--<color name="colorAccent">#FF7200</color>-->
+  <color name="splash_background">#FFFFFF</color>
 </resources>
