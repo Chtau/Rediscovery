@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Rediscovery.Client.App.Android
 {
-    [Activity(Label = "@string/app_name", Icon = "@drawable/icon", Theme = "@style/AppThemeRediscovery.Splash", MainLauncher = true, NoHistory = true)]
+    [Activity(Label = "@string/app_name", Icon = "@mipmap/ic_launcher", Theme = "@style/AppThemeRediscovery.Splash", MainLauncher = true, NoHistory = true)]
     [IntentFilter(new[] { Intent.ActionSend }, Categories = new[] { Intent.CategoryDefault }, DataMimeType = @"*/*")]
     public class SplashActivity : Activity
     {

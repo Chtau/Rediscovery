@@ -14,5 +14,5 @@
   <color name="colorAnalogousTwo">#00792f</color>
   
   <!--<color name="colorAccent">#FF7200</color>-->
-  <color name="splash_background">#FFFFFF</color>
+  <color name="launcher_background">#FFFFFF</color>
 </resources>
