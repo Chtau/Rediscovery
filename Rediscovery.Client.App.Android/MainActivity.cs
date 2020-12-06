@@ -84,7 +84,9 @@ namespace Rediscovery.Client.App.Android
             }
             else if (id == Resource.Id.nav_gallery)
             {
-
+                
+                var intent = new AContent.Intent(this, typeof(DeviceConnectActivity));
+                StartActivity(intent);
             }
             else if (id == Resource.Id.nav_slideshow)
             {
