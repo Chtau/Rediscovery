@@ -78,15 +78,18 @@ namespace Rediscovery.Client.App.Android
         {
             int id = item.ItemId;
 
-            if (id == Resource.Id.nav_camera)
+            if (id == Resource.Id.nav_add_device)
+            {
+                var intent = new AContent.Intent(this, typeof(DeviceConfigurationActivity));
+                StartActivity(intent);
+            }
+            else if (id == Resource.Id.nav_camera)
             {
                 // Handle the camera action
             }
             else if (id == Resource.Id.nav_gallery)
             {
                 
-                var intent = new AContent.Intent(this, typeof(DeviceConnectActivity));
-                StartActivity(intent);
             }
             else if (id == Resource.Id.nav_slideshow)
             {
