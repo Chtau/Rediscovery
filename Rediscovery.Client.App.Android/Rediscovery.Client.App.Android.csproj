@@ -188,7 +188,7 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\a\ic_menu_deviceconfiguration.xml">
+    <AndroidResource Include="Resources\drawable\ic_menu_deviceconfiguration.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
     </AndroidResource>
   </ItemGroup>

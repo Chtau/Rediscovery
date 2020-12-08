@@ -24,6 +24,10 @@
 
     <item android:title="Communicate">
         <menu>
+          <item
+                android:id="@+id/nav_device_add"
+                android:icon="@drawable/ic_menu_device_add"
+                android:title="Device Add" />
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
