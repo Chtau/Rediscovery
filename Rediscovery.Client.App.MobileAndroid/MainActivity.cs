@@ -95,7 +95,7 @@ namespace Rediscovery.Client.App.MobileAndroid
             }
             else if (id == Resource.Id.nav_manage)
             {
-
+                SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.Home.DiscoveryFragment.Create()).Commit();
             }
             else if (id == Resource.Id.nav_share)
             {

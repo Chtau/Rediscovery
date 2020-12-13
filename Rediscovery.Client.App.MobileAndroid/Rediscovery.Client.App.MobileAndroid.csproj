@@ -64,6 +64,7 @@
     <Compile Include="Features\Devices\DeviceEditActivity.cs" />
     <Compile Include="Features\Devices\DeviceListActivity.cs" />
     <Compile Include="Features\Home\DevicesDashboardFragment.cs" />
+    <Compile Include="Features\Home\DiscoveryFragment.cs" />
     <Compile Include="Features\Home\FeaturesDashboardFragment.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="MainActivity.cs" />
@@ -202,6 +203,13 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\fragment_dashboard_devices.xml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\fragment_discovery.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
