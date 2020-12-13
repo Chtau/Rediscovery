@@ -61,6 +61,11 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Features\Devices\DeviceEditActivity.cs" />
+    <Compile Include="Features\Devices\DeviceListActivity.cs" />
+    <Compile Include="Features\Home\DevicesDashboardFragment.cs" />
+    <Compile Include="Features\Home\FeaturesDashboardFragment.cs" />
+    <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -187,6 +192,16 @@
   <ItemGroup>
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher_foreground.png">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\fragment_dashboard_features.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\fragment_dashboard_devices.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

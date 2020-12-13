@@ -35,6 +35,9 @@ namespace Rediscovery.Client.App.MobileAndroid
 
             NavigationView navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
             navigationView.SetNavigationItemSelectedListener(this);
+
+            if (savedInstanceState == null)
+                SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.Home.FeaturesDashboardFragment.Create()).Commit();
         }
 
         public override void OnBackPressed()
@@ -84,11 +87,11 @@ namespace Rediscovery.Client.App.MobileAndroid
             }
             else if (id == Resource.Id.nav_gallery)
             {
-
+                SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.Home.FeaturesDashboardFragment.Create()).Commit();
             }
             else if (id == Resource.Id.nav_slideshow)
             {
-
+                SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.Home.DevicesDashboardFragment.Create()).Commit();
             }
             else if (id == Resource.Id.nav_manage)
             {
