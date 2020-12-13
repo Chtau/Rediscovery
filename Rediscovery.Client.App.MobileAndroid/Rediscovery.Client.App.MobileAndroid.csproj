@@ -98,12 +98,10 @@
     <AndroidResource Include="Resources\values\strings.xml" />
     <AndroidResource Include="Resources\values\styles.xml" />
     <AndroidResource Include="Resources\drawable\side_nav_bar.xml" />
-    <AndroidResource Include="Resources\drawable-v21\ic_menu_camera.xml" />
-    <AndroidResource Include="Resources\drawable-v21\ic_menu_gallery.xml" />
-    <AndroidResource Include="Resources\drawable-v21\ic_menu_manage.xml" />
-    <AndroidResource Include="Resources\drawable-v21\ic_menu_send.xml" />
-    <AndroidResource Include="Resources\drawable-v21\ic_menu_share.xml" />
-    <AndroidResource Include="Resources\drawable-v21\ic_menu_slideshow.xml" />
+    <AndroidResource Include="Resources\drawable-v21\ic_menu_features.xml" />
+    <AndroidResource Include="Resources\drawable-v21\ic_menu_discovery.xml" />
+    <AndroidResource Include="Resources\drawable-v21\ic_menu_settings.xml" />
+    <AndroidResource Include="Resources\drawable-v21\ic_menu_devices.xml" />
     <AndroidResource Include="Resources\menu\activity_main_drawer.xml" />
     <AndroidResource Include="Resources\menu\menu_main.xml" />
     <AndroidResource Include="Resources\mipmap-anydpi-v26\ic_launcher.xml" />

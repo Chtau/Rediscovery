@@ -81,27 +81,23 @@ namespace Rediscovery.Client.App.MobileAndroid
         {
             int id = item.ItemId;
 
-            if (id == Resource.Id.nav_camera)
-            {
-                // Handle the camera action
-            }
-            else if (id == Resource.Id.nav_gallery)
+            if (id == Resource.Id.nav_features)
             {
                 SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.Home.FeaturesDashboardFragment.Create()).Commit();
             }
-            else if (id == Resource.Id.nav_slideshow)
+            else if (id == Resource.Id.nav_devices)
             {
                 SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.Home.DevicesDashboardFragment.Create()).Commit();
             }
-            else if (id == Resource.Id.nav_manage)
+            else if (id == Resource.Id.nav_discovery)
             {
                 SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.Home.DiscoveryFragment.Create()).Commit();
             }
-            else if (id == Resource.Id.nav_share)
+            else if (id == Resource.Id.nav_device_add)
             {
 
             }
-            else if (id == Resource.Id.nav_send)
+            else if (id == Resource.Id.nav_settings)
             {
 
             }
