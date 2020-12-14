@@ -7,7 +7,7 @@
   * Provider
 * Device discovery
 * Logging
-* Manage Instances via Dependency resolver
+* ~~Manage Instances via Dependency resolver~~
 * Storage to a local Database
   * [LiteDB](https://www.litedb.org/)
 

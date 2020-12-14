@@ -1,0 +1,12 @@
+﻿using Rediscovery.Client.App.Core.Storage;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Rediscovery.Client.App.Core
+{
+    public class CoreManagerSetting
+    {
+        public StorageSetting CurrentStorageSetting { get; set; }
+    }
+}
