@@ -15,3 +15,4 @@
 ## TODO
 
 * Everything
+* Check for Discovery [Sharedrop](https://github.com/cowbell/sharedrop)
