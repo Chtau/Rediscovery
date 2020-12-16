@@ -12,7 +12,8 @@ namespace Rediscovery.Client.App.Core
         {
             Dependency.Resolver.Register<ILogger, Log.Logger>();
             var logger = Dependency.Resolver.Get<ILogger>();
-            Dependency.Resolver.Register<Storage.IDBStorage>(new Storage.DBStorage(logger, new SettingValueStorage(coreManagerSettings.CurrentStorageSetting)));
+            Dependency.Resolver.Register<IDBStorage>(new DBStorage(logger, new SettingValueStorage(coreManagerSettings.CurrentStorageSetting)));
+            Dependency.Resolver.Register<IJSONStorage>(new JSONStorage(logger, new SettingValueStorage(coreManagerSettings.CurrentStorageSetting)));
         }
     }
 }
