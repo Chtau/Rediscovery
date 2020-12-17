@@ -6,10 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Rediscovery.Shared.Logging\Rediscovery.Shared.Logging.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Features\" />
+    <ProjectReference Include="..\SharedModels\Rediscovery.Shared.Base.csproj" />
   </ItemGroup>
 
   <ItemGroup>
