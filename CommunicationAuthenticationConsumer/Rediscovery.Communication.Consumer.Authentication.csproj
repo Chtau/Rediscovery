@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CommunicationBase\Rediscovery.Communication.Base.csproj" />
+    <ProjectReference Include="..\SharedModels\Rediscovery.Shared.Base.csproj" />
   </ItemGroup>
 
   <ItemGroup>

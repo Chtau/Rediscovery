@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CommunicationAuthenticationConsumer\Rediscovery.Communication.Consumer.Authentication.csproj" />
     <ProjectReference Include="..\Rediscovery.Shared.Logging\Rediscovery.Shared.Logging.csproj" />
     <ProjectReference Include="..\SharedModels\Rediscovery.Shared.Base.csproj" />
   </ItemGroup>

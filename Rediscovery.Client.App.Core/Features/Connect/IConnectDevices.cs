@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rediscovery.Client.App.Core.Features.Connect.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,7 +11,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
         event EventHandler<object> ConnectionCreated;
         event EventHandler<object> ConnectionLost;
         void Autoconnect();
-        void Connect();
-        void Disconnect();
+        void Connect(ConnectionConfiguration connectionConfiguration);
+        void Disconnect(Guid connectionConfigurationId);
     }
 }
