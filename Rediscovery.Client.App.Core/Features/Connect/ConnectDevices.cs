@@ -94,14 +94,14 @@ namespace Rediscovery.Client.App.Core.Features.Connect
                                     UseSSL = reply.UseSSL,
                                     Port = item.Port,
                                 });*/
-                                consumer.AuthenticationConsumerService.RequestManifest(deviceReply.Token, manifest => entityManager.AddManifestData(manifest, item.Id, item.DisplayName));
-                                OnConnectLogger(connectionConfiguration, deviceReply.Token);
-                                OnConnectHeartbeat(connectionConfiguration, deviceReply.Token, item.Id);
-                                resultCallback?.Invoke(item, deviceReply.Token, deviceReply.State);
+                                _authenticationConsumerService.RequestManifest(deviceReply.Token, manifest => OnManifestReceived(connectionConfiguration, manifest, deviceReply));
+                                //OnConnectLogger(connectionConfiguration, deviceReply.Token);
+                                //OnConnectHeartbeat(connectionConfiguration, deviceReply.Token, item.Id);
+                                //resultCallback?.Invoke(item, deviceReply.Token, deviceReply.State);
                             }
                             else
                             {
-                                nextIndex++;
+                                /*nextIndex++;
                                 if (desktopConfigurations.Count > nextIndex)
                                 {
                                     OnTryConnect(desktopConfigurations, resultCallback, nextIndex);
@@ -111,23 +111,35 @@ namespace Rediscovery.Client.App.Core.Features.Connect
                                     if (item.ConnectionState == SharedBase.Connection.Enums.ConnectionState.None)
                                         item.ConnectionState = deviceReply.State;
                                     resultCallback?.Invoke(item, null, item.ConnectionState);
-                                }
+                                }*/
                             }
                         });
                     }
                     else
                     {
-                        resultCallback?.Invoke(null, null, SharedBase.Connection.Enums.ConnectionState.Error);
+                        //resultCallback?.Invoke(null, null, SharedBase.Connection.Enums.ConnectionState.Error);
                     }
                 }
                 else
                 {
-                    if (reply.Offline)
+                    /*if (reply.Offline)
                         resultCallback?.Invoke(null, null, SharedBase.Connection.Enums.ConnectionState.Offline);
                     else
-                        resultCallback?.Invoke(null, null, SharedBase.Connection.Enums.ConnectionState.Error);
+                        resultCallback?.Invoke(null, null, SharedBase.Connection.Enums.ConnectionState.Error);*/
                 }
             } catch (Exception ex)
+            {
+                _logger.LogError(ex);
+            }
+        }
+
+        private void OnManifestReceived(ConnectionConfiguration connectionConfiguration, Rediscovery.Shared.Base.Connection.Manifest manifest, Shared.Base.Connection.WelcomeDeviceReply welcomeDeviceReply)
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex);
             }
