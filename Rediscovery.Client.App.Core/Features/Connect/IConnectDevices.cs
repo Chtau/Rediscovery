@@ -7,9 +7,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
 {
     public interface IConnectDevices
     {
-        event EventHandler<object> ConnectionHeartbeat;
-        event EventHandler<object> ConnectionCreated;
-        event EventHandler<object> ConnectionLost;
+        event EventHandler<DeviceConnectionState> ConnectionStateChanged;
         void Autoconnect();
         void Connect(ConnectionConfiguration connectionConfiguration);
         void Disconnect(Guid connectionConfigurationId);

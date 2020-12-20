@@ -26,6 +26,7 @@ message GreetingReply {
     Error = 2;
     Denied = 3;
     WaitForApprovel = 4;
+    Offline = 5;
   }
   State CanConnect = 3;
   bool sslActive = 4;

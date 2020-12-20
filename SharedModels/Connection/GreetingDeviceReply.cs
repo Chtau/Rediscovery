@@ -10,6 +10,5 @@ namespace Rediscovery.Shared.Base.Connection
         public int SSLPort { get; set; }
         public string PEM { get; set; }
         public Enums.AllowConnect CanConnect { get; set; }
-        public bool Offline { get; set; }
     }
 }

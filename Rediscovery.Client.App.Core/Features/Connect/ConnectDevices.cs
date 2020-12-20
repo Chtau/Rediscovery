@@ -24,9 +24,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
             _monitorSettings = settingValue;
         }
 
-        public event EventHandler<object> ConnectionHeartbeat;
-        public event EventHandler<object> ConnectionCreated;
-        public event EventHandler<object> ConnectionLost;
+        public event EventHandler<DeviceConnectionState> ConnectionStateChanged;
 
         public void Autoconnect()
         {
@@ -66,12 +64,26 @@ namespace Rediscovery.Client.App.Core.Features.Connect
 
         private void OnConnect(ConnectionConfiguration connectionConfiguration)
         {
+            DeviceConnectionState deviceConnectionState = new DeviceConnectionState
+            {
+                Change = DeviceConnectionState.StateChange.GreetHostReply,
+                Configuration = connectionConfiguration
+            };
             try
             {
+                ConnectionStateChanged?.Invoke(this, deviceConnectionState);
+
                 var reply = _greetingConsumerService.GreetHost(connectionConfiguration.Address, connectionConfiguration.Port, 
                     _monitorSettings.CurrentValue.GreetingDeviceMessage, _monitorSettings.CurrentValue.TimeoutSeconds);
+
+                deviceConnectionState.Change = DeviceConnectionState.StateChange.GreetHostReply;
+                deviceConnectionState.Allowed = reply.CanConnect;
+                ConnectionStateChanged?.Invoke(this, deviceConnectionState);
+
                 if (reply.CanConnect == Shared.Base.Connection.Enums.AllowConnect.OK)
                 {
+                    deviceConnectionState.Change = DeviceConnectionState.StateChange.Connect;
+                    ConnectionStateChanged?.Invoke(this, deviceConnectionState);
                     Communication.Base.ConsumerConnectionConfiguration consumerConfig = new Communication.Base.ConsumerConnectionConfiguration
                     {
                         UseSSL = reply.UseSSL,
@@ -82,50 +94,31 @@ namespace Rediscovery.Client.App.Core.Features.Connect
                     };
                     if (_authenticationConsumerService.Connect(consumerConfig))
                     {
+                        deviceConnectionState.Change = DeviceConnectionState.StateChange.ConnectReply;
+                        deviceConnectionState.CurrentStateConnectReply = DeviceConnectionState.StateConnectReply.Ok;
+                        ConnectionStateChanged?.Invoke(this, deviceConnectionState);
+
+                        deviceConnectionState.Change = DeviceConnectionState.StateChange.Welcome;
+                        ConnectionStateChanged?.Invoke(this, deviceConnectionState);
                         _authenticationConsumerService.SendWelcome(_monitorSettings.CurrentValue.WelcomeDeviceMessage, deviceReply =>
                         {
+                            deviceConnectionState.Change = DeviceConnectionState.StateChange.WelcomeReply;
+                            deviceConnectionState.CurrentState = deviceReply.State;
+                            deviceConnectionState.Token = deviceReply.Token;
+                            ConnectionStateChanged?.Invoke(this, deviceConnectionState);
+
                             if (deviceReply.State == Shared.Base.Connection.Enums.ConnectionState.OK)
                             {
-                                /*OnSetData(item.Id, new ConnectConfigurationData
-                                {
-                                    Token = deviceReply.Token,
-                                    PEM = reply.PEM,
-                                    SSLPort = reply.SSLPort,
-                                    UseSSL = reply.UseSSL,
-                                    Port = item.Port,
-                                });*/
                                 _authenticationConsumerService.RequestManifest(deviceReply.Token, manifest => OnManifestReceived(connectionConfiguration, manifest, deviceReply));
-                                //OnConnectLogger(connectionConfiguration, deviceReply.Token);
-                                //OnConnectHeartbeat(connectionConfiguration, deviceReply.Token, item.Id);
-                                //resultCallback?.Invoke(item, deviceReply.Token, deviceReply.State);
-                            }
-                            else
-                            {
-                                /*nextIndex++;
-                                if (desktopConfigurations.Count > nextIndex)
-                                {
-                                    OnTryConnect(desktopConfigurations, resultCallback, nextIndex);
-                                }
-                                else
-                                {
-                                    if (item.ConnectionState == SharedBase.Connection.Enums.ConnectionState.None)
-                                        item.ConnectionState = deviceReply.State;
-                                    resultCallback?.Invoke(item, null, item.ConnectionState);
-                                }*/
                             }
                         });
                     }
                     else
                     {
-                        //resultCallback?.Invoke(null, null, SharedBase.Connection.Enums.ConnectionState.Error);
+                        deviceConnectionState.Change = DeviceConnectionState.StateChange.ConnectReply;
+                        deviceConnectionState.CurrentStateConnectReply = DeviceConnectionState.StateConnectReply.Failed;
+                        ConnectionStateChanged?.Invoke(this, deviceConnectionState);
                     }
-                }
-                else
-                {
-                    /*if (reply.Offline)
-                        resultCallback?.Invoke(null, null, SharedBase.Connection.Enums.ConnectionState.Offline);
-                    else
-                        resultCallback?.Invoke(null, null, SharedBase.Connection.Enums.ConnectionState.Error);*/
                 }
             } catch (Exception ex)
             {
@@ -137,7 +130,14 @@ namespace Rediscovery.Client.App.Core.Features.Connect
         {
             try
             {
-
+                ConnectionStateChanged?.Invoke(this, new DeviceConnectionState
+                {
+                    Change = DeviceConnectionState.StateChange.ManifestReceived,
+                    Configuration = connectionConfiguration,
+                    CurrentState = welcomeDeviceReply.State,
+                    DeviceManifest = manifest,
+                    Token = welcomeDeviceReply.Token
+                });
             }
             catch (Exception ex)
             {

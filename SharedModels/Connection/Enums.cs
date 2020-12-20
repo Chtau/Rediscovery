@@ -24,6 +24,7 @@ namespace Rediscovery.Shared.Base.Connection
             Error = 2,
             Denied = 3,
             UnkownDevice = 4,
+            Offline = 5
         }
     }
 }

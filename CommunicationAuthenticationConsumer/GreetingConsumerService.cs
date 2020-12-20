@@ -75,6 +75,9 @@ namespace Rediscovery.Communication.Consumer.Authentication
                         case ProtoHandshake.GreetingReply.Types.State.WaitForApprovel:
                             canConnect = Enums.AllowConnect.UnkownDevice;
                             break;
+                        case ProtoHandshake.GreetingReply.Types.State.Offline:
+                            canConnect = Enums.AllowConnect.Offline;
+                            break;
                         default:
                             break;
                     }
@@ -83,7 +86,6 @@ namespace Rediscovery.Communication.Consumer.Authentication
                         SSLPort = reply.SSLPort,
                         PEM = reply.PEM,
                         CanConnect = canConnect,
-                        Offline = false,
                         UseSSL = reply.SslActive
                     };
                 }
@@ -95,7 +97,6 @@ namespace Rediscovery.Communication.Consumer.Authentication
                         SSLPort = -1,
                         PEM = "",
                         CanConnect = Enums.AllowConnect.Error,
-                        Offline = false,
                         UseSSL = false
                     };
                 }
@@ -107,8 +108,7 @@ namespace Rediscovery.Communication.Consumer.Authentication
                 {
                     SSLPort = -1,
                     PEM = "",
-                    CanConnect = Enums.AllowConnect.Error,
-                    Offline = true,
+                    CanConnect = Enums.AllowConnect.Offline,
                     UseSSL = false
                 };
             });
