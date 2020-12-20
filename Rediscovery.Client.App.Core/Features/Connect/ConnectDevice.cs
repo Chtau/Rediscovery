@@ -1,6 +1,9 @@
 ﻿using Rediscovery.Client.App.Core.Dependency;
 using Rediscovery.Client.App.Core.Features.Connect.Models;
 using Rediscovery.Communication.Consumer.Authentication;
+using Rediscovery.Communication.Consumer.Feature;
+using Rediscovery.Communication.Consumer.Heartbeat;
+using Rediscovery.Communication.Consumer.Logger;
 using Rediscovery.Shared.Logging;
 using System;
 using System.Collections.Generic;
@@ -8,29 +11,37 @@ using System.Text;
 
 namespace Rediscovery.Client.App.Core.Features.Connect
 {
-    public class ConnectDevices : IConnectDevices
+    public class ConnectDevice : IConnectDevice
     {
         private readonly ILogger _logger;
         private readonly ISettingValue<ConnectSetting> _monitorSettings;
         private readonly IGreetingConsumerService _greetingConsumerService;
         private readonly IAuthenticationConsumerService _authenticationConsumerService;
+        private readonly IFeatureConsumerService _featureConsumerService;
+        private readonly IHeartbeatConsumer _heartbeatConsumer;
+        private readonly ILoggerConsumer _loggerConsumer;
 
-        public ConnectDevices(ILogger logger, ISettingValue<ConnectSetting> settingValue,
-            IGreetingConsumerService greetingConsumerService, IAuthenticationConsumerService authenticationConsumerService)
+        public ConnectionConfiguration ConnectionConfiguration { get; private set; }
+
+        public ConnectDevice(ILogger logger, ISettingValue<ConnectSetting> settingValue)
         {
             _logger = logger;
-            _greetingConsumerService = greetingConsumerService;
-            _authenticationConsumerService = authenticationConsumerService;
             _monitorSettings = settingValue;
+            _greetingConsumerService = Resolver.Scope<IGreetingConsumerService>();
+            _authenticationConsumerService = Resolver.Scope<IAuthenticationConsumerService>();
+            _heartbeatConsumer = Resolver.Scope<IHeartbeatConsumer>();
+            _loggerConsumer = Resolver.Scope<ILoggerConsumer>();
+            _featureConsumerService = Resolver.Scope<IFeatureConsumerService>();
         }
 
         public event EventHandler<DeviceConnectionState> ConnectionStateChanged;
 
-        public void Autoconnect()
+        public void Connect(ConnectionConfiguration configuration)
         {
+            ConnectionConfiguration = configuration;
             try
             {
-
+                OnConnect(ConnectionConfiguration);
             }
             catch (Exception ex)
             {
@@ -38,28 +49,40 @@ namespace Rediscovery.Client.App.Core.Features.Connect
             }
         }
 
-        public void Connect(ConnectionConfiguration connectionConfiguration)
+        public bool Disconnect()
         {
             try
             {
-                OnConnect(connectionConfiguration);
+                return OnDisconnect();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex);
             }
+            return false;
         }
 
-        public void Disconnect(Guid connectionConfigurationId)
+        private bool OnDisconnect()
         {
+            var retVal = true;
             try
             {
-
+                if (!_greetingConsumerService.Disconnect())
+                    retVal = false;
+                if (!_authenticationConsumerService.Disconnect())
+                    retVal = false;
+                if (!_heartbeatConsumer.Disconnect())
+                    retVal = false;
+                if (!_featureConsumerService.Disconnect())
+                    retVal = false;
+                if (!_loggerConsumer.Disconnect())
+                    retVal = false;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex);
             }
+            return retVal;
         }
 
         private void OnConnect(ConnectionConfiguration connectionConfiguration)

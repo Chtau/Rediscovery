@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Rediscovery.Shared.Base.Extensions;
 
 namespace Rediscovery.Client.App.Core.Dependency
 {
@@ -28,6 +29,12 @@ namespace Rediscovery.Client.App.Core.Dependency
         public static void Register<T>(T instance) where T : class
         {
             items.Add(instance);
+        }
+
+        public static T Scope<T>()
+        {
+            var instance = Get<T>();
+            return instance.Clone();
         }
     }
 }

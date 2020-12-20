@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Rediscovery.Client.App.Core.Features.Connect
 {
-    public interface IConnectDevices
+    public interface IConnectDevice
     {
         event EventHandler<DeviceConnectionState> ConnectionStateChanged;
-        void Autoconnect();
+        ConnectionConfiguration ConnectionConfiguration { get; }
         void Connect(ConnectionConfiguration connectionConfiguration);
-        void Disconnect(Guid connectionConfigurationId);
+        bool Disconnect();
     }
 }
