@@ -109,7 +109,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
 
                             if (deviceReply.State == Shared.Base.Connection.Enums.ConnectionState.OK)
                             {
-                                _authenticationConsumerService.RequestManifest(deviceReply.Token, manifest => OnManifestReceived(connectionConfiguration, manifest, deviceReply));
+                                _authenticationConsumerService.RequestManifest(deviceReply.Token, manifest => OnManifestReceived(deviceConnectionState, connectionConfiguration, manifest, deviceReply));
                             }
                         });
                     }
@@ -126,18 +126,13 @@ namespace Rediscovery.Client.App.Core.Features.Connect
             }
         }
 
-        private void OnManifestReceived(ConnectionConfiguration connectionConfiguration, Rediscovery.Shared.Base.Connection.Manifest manifest, Shared.Base.Connection.WelcomeDeviceReply welcomeDeviceReply)
+        private void OnManifestReceived(DeviceConnectionState deviceConnectionState, ConnectionConfiguration connectionConfiguration, Rediscovery.Shared.Base.Connection.Manifest manifest, Shared.Base.Connection.WelcomeDeviceReply welcomeDeviceReply)
         {
             try
             {
-                ConnectionStateChanged?.Invoke(this, new DeviceConnectionState
-                {
-                    Change = DeviceConnectionState.StateChange.ManifestReceived,
-                    Configuration = connectionConfiguration,
-                    CurrentState = welcomeDeviceReply.State,
-                    DeviceManifest = manifest,
-                    Token = welcomeDeviceReply.Token
-                });
+                deviceConnectionState.Change = DeviceConnectionState.StateChange.ManifestReceived;
+                deviceConnectionState.DeviceManifest = manifest;
+                ConnectionStateChanged?.Invoke(this, deviceConnectionState);
             }
             catch (Exception ex)
             {
