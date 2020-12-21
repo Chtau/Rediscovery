@@ -36,9 +36,36 @@ namespace Rediscovery.Client.App.Core.Features.Connect
 
         public event EventHandler<DeviceConnectionState> ConnectionStateChanged;
 
-        public void Connect(ConnectionConfiguration configuration)
+        public void SetConfiguration(ConnectionConfiguration connectionConfiguration)
         {
-            ConnectionConfiguration = configuration;
+            try
+            {
+                ConnectionConfiguration = connectionConfiguration;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+            }
+        }
+
+        public bool Probe()
+        {
+            try
+            {
+                var reply = _greetingConsumerService.GreetHost(ConnectionConfiguration.Address, ConnectionConfiguration.Port,
+                    _monitorSettings.CurrentValue.GreetingDeviceMessage, _monitorSettings.CurrentValue.TimeoutSeconds);
+                if (reply.CanConnect == Shared.Base.Connection.Enums.AllowConnect.OK)
+                    return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+            }
+            return false;
+        }
+
+        public void Connect()
+        {
             try
             {
                 OnConnect(ConnectionConfiguration);
