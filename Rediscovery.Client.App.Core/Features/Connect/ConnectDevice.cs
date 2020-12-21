@@ -50,16 +50,28 @@ namespace Rediscovery.Client.App.Core.Features.Connect
 
         public bool Probe()
         {
+            DeviceConnectionState deviceConnectionState = new DeviceConnectionState
+            {
+                Change = DeviceConnectionState.StateChange.Probe,
+                Configuration = ConnectionConfiguration
+            };
             try
             {
+                ConnectionStateChanged?.Invoke(this, deviceConnectionState);
                 var reply = _greetingConsumerService.GreetHost(ConnectionConfiguration.Address, ConnectionConfiguration.Port,
                     _monitorSettings.CurrentValue.GreetingDeviceMessage, _monitorSettings.CurrentValue.TimeoutSeconds);
+                deviceConnectionState.Change = DeviceConnectionState.StateChange.ProbeReply;
+                deviceConnectionState.Allowed = reply.CanConnect;
+                ConnectionStateChanged?.Invoke(this, deviceConnectionState);
                 if (reply.CanConnect == Shared.Base.Connection.Enums.AllowConnect.OK)
                     return true;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex);
+                deviceConnectionState.Change = DeviceConnectionState.StateChange.ProbeReply;
+                deviceConnectionState.Allowed = Shared.Base.Connection.Enums.AllowConnect.Error;
+                ConnectionStateChanged?.Invoke(this, deviceConnectionState);
             }
             return false;
         }
@@ -173,6 +185,8 @@ namespace Rediscovery.Client.App.Core.Features.Connect
             } catch (Exception ex)
             {
                 _logger.LogError(ex);
+                deviceConnectionState.Allowed = Shared.Base.Connection.Enums.AllowConnect.Error;
+                ConnectionStateChanged?.Invoke(this, deviceConnectionState);
             }
         }
 

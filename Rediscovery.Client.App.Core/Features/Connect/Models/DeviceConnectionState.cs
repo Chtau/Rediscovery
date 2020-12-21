@@ -11,6 +11,8 @@ namespace Rediscovery.Client.App.Core.Features.Connect.Models
         public enum StateChange
         {
             None,
+            Probe,
+            ProbeReply,
             GreetHost,
             GreetHostReply,
             Connect,
