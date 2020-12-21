@@ -1,4 +1,8 @@
 ﻿using Rediscovery.Client.App.Core.Features.Connect.Models;
+using Rediscovery.Communication.Consumer.Authentication;
+using Rediscovery.Communication.Consumer.Feature;
+using Rediscovery.Communication.Consumer.Heartbeat;
+using Rediscovery.Communication.Consumer.Logger;
 using System;
 using System.Collections.Generic;
 using System.Text;

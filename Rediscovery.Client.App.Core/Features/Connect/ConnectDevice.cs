@@ -15,6 +15,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
     {
         private readonly ILogger _logger;
         private readonly ISettingValue<ConnectSetting> _monitorSettings;
+
         private readonly IGreetingConsumerService _greetingConsumerService;
         private readonly IAuthenticationConsumerService _authenticationConsumerService;
         private readonly IFeatureConsumerService _featureConsumerService;
@@ -197,6 +198,8 @@ namespace Rediscovery.Client.App.Core.Features.Connect
                 deviceConnectionState.Change = DeviceConnectionState.StateChange.ManifestReceived;
                 deviceConnectionState.DeviceManifest = manifest;
                 ConnectionStateChanged?.Invoke(this, deviceConnectionState);
+
+                // TODO: hook to all other services (consumer)
             }
             catch (Exception ex)
             {
