@@ -12,5 +12,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
         void Connect(Guid connectionId);
         bool Disconnect(Guid connectionId);
         void Autoconnect();
+        void AddOrUpdateConnectionConfiguration(params ConnectionConfiguration[] connectionConfigurations);
+        void RemoveConnectionConfiguration(params Guid[] connectionConfigurationIds);
     }
 }
