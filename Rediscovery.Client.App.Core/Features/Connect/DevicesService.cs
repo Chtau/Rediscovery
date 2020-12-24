@@ -15,6 +15,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
         private List<IConnectDevice> connectDevices = new List<IConnectDevice>();
 
         public event EventHandler<DeviceConnectionState> ConnectionStateChanged;
+        public event EventHandler<HeartbeatResult> HeartbeatReceived;
 
         public DevicesService(ILogger logger, ISettingValue<ConnectSetting> settingValue)
         {
@@ -91,6 +92,9 @@ namespace Rediscovery.Client.App.Core.Features.Connect
                             {
                                 var newConnectDevice = new ConnectDevice(_logger, _monitorSettings);
                                 newConnectDevice.SetConfiguration(configuration);
+                                // hook events
+                                newConnectDevice.ConnectionStateChanged += (obj, args) => ConnectionStateChanged?.Invoke(obj, args);
+                                newConnectDevice.HeartbeatReceived += (obj, args) => HeartbeatReceived?.Invoke(obj, args);
                                 connectDevices.Add(newConnectDevice);
                             }
                         } catch (Exception ex)

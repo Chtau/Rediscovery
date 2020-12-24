@@ -36,12 +36,13 @@ namespace Rediscovery.Client.App.Core.Features.Connect
             _greetingConsumerService = Resolver.Scope<IGreetingConsumerService>();
             _authenticationConsumerService = Resolver.Scope<IAuthenticationConsumerService>();
             _heartbeatConsumer = Resolver.Scope<IHeartbeatConsumer>();
+            _heartbeatConsumer.ReceivedBeatRoundtrip += _heartbeatConsumer_ReceivedBeatRoundtrip;
             _loggerConsumer = Resolver.Scope<ILoggerConsumer>();
             _featureConsumerService = Resolver.Scope<IFeatureConsumerService>();
         }
 
         public event EventHandler<DeviceConnectionState> ConnectionStateChanged;
-        public event EventHandler<RoundTripResult> ReceivedBeatRoundtrip;
+        public event EventHandler<HeartbeatResult> HeartbeatReceived;
 
         public void SetConfiguration(ConnectionConfiguration connectionConfiguration)
         {
@@ -115,6 +116,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
             {
                 try
                 {
+                    authenticationToken = null;
                     cancelationTokenSource?.Cancel();
                 } catch (Exception ex)
                 {
@@ -231,15 +233,13 @@ namespace Rediscovery.Client.App.Core.Features.Connect
 
                 try
                 {
-                    _heartbeatConsumer.ReceivedBeatRoundtrip += _heartbeatConsumer_ReceivedBeatRoundtrip;
                     if (_heartbeatConsumer.Connect(consumerConfig))
                         _heartbeatConsumer.StartBeat(OnGetDeviceIdentifier(), authenticationToken, cancelationTokenSource);
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex);
-                }
-                
+                }             
             }
             catch (Exception ex)
             {
@@ -251,7 +251,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
         {
             try
             {
-                // TODO: public event with round trip data and configuration reference
+                HeartbeatReceived?.Invoke(this, new HeartbeatResult(ConnectionConfiguration, e.OK, e.PingPongTime, e.PingStartDatetimeUTC));
             }
             catch (Exception ex)
             {
@@ -270,7 +270,8 @@ namespace Rediscovery.Client.App.Core.Features.Connect
             {
                 if (disposing)
                 {
-                    // TODO: dispose managed state (managed objects)
+                    if (_heartbeatConsumer != null)
+                        _heartbeatConsumer.ReceivedBeatRoundtrip -= _heartbeatConsumer_ReceivedBeatRoundtrip;
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override finalizer

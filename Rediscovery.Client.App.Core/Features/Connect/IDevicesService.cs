@@ -8,6 +8,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
     public interface IDevicesService
     {
         event EventHandler<DeviceConnectionState> ConnectionStateChanged;
+        event EventHandler<HeartbeatResult> HeartbeatReceived;
         bool Probe(Guid connectionId);
         void Connect(Guid connectionId);
         bool Disconnect(Guid connectionId);

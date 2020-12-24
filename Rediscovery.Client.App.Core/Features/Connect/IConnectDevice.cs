@@ -12,6 +12,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
     public interface IConnectDevice : IDisposable
     {
         event EventHandler<DeviceConnectionState> ConnectionStateChanged;
+        event EventHandler<HeartbeatResult> HeartbeatReceived;
         ConnectionConfiguration ConnectionConfiguration { get; }
         void SetConfiguration(ConnectionConfiguration connectionConfiguration);
         /// <summary>
