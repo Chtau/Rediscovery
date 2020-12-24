@@ -5,11 +5,16 @@
 * Handling for Features
   * Consumer
   * Provider
-* Device discovery
+* ~~Device discovery~~
+  * ~~Client~~
+  * Service
+* Heartbeat
+  * ~~Consumer~~
+  * Provider
 * Logging
 * ~~Manage Instances via Dependency resolver~~
-* Storage to a local Database
-  * [LiteDB](https://www.litedb.org/)
+* ~~Storage to a local Database~~
+  * ~~[LiteDB](https://www.litedb.org/)~~
 
 
 ## TODO
