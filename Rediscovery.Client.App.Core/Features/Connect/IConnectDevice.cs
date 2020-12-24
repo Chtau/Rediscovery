@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Rediscovery.Client.App.Core.Features.Connect
 {
-    public interface IConnectDevice
+    public interface IConnectDevice : IDisposable
     {
         event EventHandler<DeviceConnectionState> ConnectionStateChanged;
         ConnectionConfiguration ConnectionConfiguration { get; }

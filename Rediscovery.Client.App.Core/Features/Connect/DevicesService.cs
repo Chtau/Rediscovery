@@ -26,7 +26,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
         {
             try
             {
-
+                // TODO: add auto connect logic
             }
             catch (Exception ex)
             {
@@ -38,7 +38,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
         {
             try
             {
-
+                OnTryGetConnectDevice(connectionId)?.Connect();
             }
             catch (Exception ex)
             {
@@ -50,7 +50,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
         {
             try
             {
-
+                return OnTryGetConnectDevice(connectionId)?.Disconnect() ?? false;
             }
             catch (Exception ex)
             {
@@ -63,7 +63,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
         {
             try
             {
-
+                return OnTryGetConnectDevice(connectionId)?.Probe() ?? false;
             }
             catch (Exception ex)
             {
@@ -79,7 +79,8 @@ namespace Rediscovery.Client.App.Core.Features.Connect
                 var conDevice = connectDevices.FirstOrDefault(x => x.ConnectionConfiguration?.Id == id);
                 if (conDevice != null)
                     return conDevice;
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex);
             }
@@ -90,7 +91,29 @@ namespace Rediscovery.Client.App.Core.Features.Connect
         {
             try
             {
-
+                if (connectionConfigurations?.Count() > 0)
+                {
+                    foreach (var configuration in connectionConfigurations)
+                    {
+                        try
+                        {
+                            var index = connectDevices.FindIndex(x => x.ConnectionConfiguration?.Id == configuration.Id);
+                            if (index != -1)
+                            {
+                                connectDevices[index].SetConfiguration(configuration);
+                            }
+                            else
+                            {
+                                var newConnectDevice = new ConnectDevice(_logger, _monitorSettings);
+                                newConnectDevice.SetConfiguration(configuration);
+                                connectDevices.Add(newConnectDevice);
+                            }
+                        } catch (Exception ex)
+                        {
+                            _logger.LogError(ex, $"Failed to set device configuration. (Id:{configuration.Id} Address:{configuration.Address} Port:{configuration.Port})");
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -102,11 +125,31 @@ namespace Rediscovery.Client.App.Core.Features.Connect
         {
             try
             {
-
+                if (connectionConfigurationIds?.Count() > 0)
+                {
+                    foreach (var id in connectionConfigurationIds)
+                    {
+                        try
+                        {
+                            var index = connectDevices.FindIndex(x => x.ConnectionConfiguration?.Id == id);
+                            if (index != -1)
+                            {
+                                connectDevices[index].Disconnect();
+                                connectDevices[index].Dispose();
+                                connectDevices.RemoveAt(index);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, $"Failed to remove device configuration. (Id:{id})");
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex);
             }
         }
+    }
 }
