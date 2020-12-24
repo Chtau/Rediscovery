@@ -1,12 +1,12 @@
 ﻿using Rediscovery.Client.App.Core.Dependency;
-using Rediscovery.Client.App.Core.Storage.Models;
+using Rediscovery.Client.App.Core.Features.Storage.Models;
 using Rediscovery.Shared.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace Rediscovery.Client.App.Core.Storage
+namespace Rediscovery.Client.App.Core.Features.Storage
 {
     public interface IDBStorage : IDisposable
     {

@@ -1,5 +1,5 @@
 ﻿using Rediscovery.Client.App.Core.Features.Discovery;
-using Rediscovery.Client.App.Core.Storage;
+using Rediscovery.Client.App.Core.Features.Storage;
 using System;
 using System.Collections.Generic;
 using System.Text;

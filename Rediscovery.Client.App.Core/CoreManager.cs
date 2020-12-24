@@ -1,7 +1,7 @@
 ﻿using Rediscovery.Client.App.Core.Dependency;
 using Rediscovery.Client.App.Core.Features.Discovery;
 using Rediscovery.Client.App.Core.Resources;
-using Rediscovery.Client.App.Core.Storage;
+using Rediscovery.Client.App.Core.Features.Storage;
 using Rediscovery.Shared.Logging;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ namespace Rediscovery.Client.App.Core
     {
         public static void Init(CoreManagerSetting coreManagerSettings)
         {
-            Dependency.Resolver.Register<ILogger, Log.Logger>();
+            Dependency.Resolver.Register<ILogger, Features.Log.Logger>();
             var logger = Dependency.Resolver.Get<ILogger>();
             Dependency.Resolver.Register<IDBStorage>(new DBStorage(logger, new SettingValue<StorageSetting>(coreManagerSettings.CurrentStorageSetting)));
             Dependency.Resolver.Register<IJSONStorage>(new JSONStorage(logger, new SettingValue<StorageSetting>(coreManagerSettings.CurrentStorageSetting)));

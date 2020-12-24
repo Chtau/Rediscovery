@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Client.App.Core.Storage
+namespace Rediscovery.Client.App.Core.Features.Storage
 {
     public class StorageSetting
     {
