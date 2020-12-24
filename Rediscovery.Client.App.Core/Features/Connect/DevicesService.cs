@@ -72,21 +72,6 @@ namespace Rediscovery.Client.App.Core.Features.Connect
             return false;
         }
 
-        private IConnectDevice OnTryGetConnectDevice(Guid id)
-        {
-            try
-            {
-                var conDevice = connectDevices.FirstOrDefault(x => x.ConnectionConfiguration?.Id == id);
-                if (conDevice != null)
-                    return conDevice;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex);
-            }
-            return null;
-        }
-
         public void AddOrUpdateConnectionConfiguration(params ConnectionConfiguration[] connectionConfigurations)
         {
             try
@@ -150,6 +135,21 @@ namespace Rediscovery.Client.App.Core.Features.Connect
             {
                 _logger.LogError(ex);
             }
+        }
+
+        private IConnectDevice OnTryGetConnectDevice(Guid id)
+        {
+            try
+            {
+                var conDevice = connectDevices.FirstOrDefault(x => x.ConnectionConfiguration?.Id == id);
+                if (conDevice != null)
+                    return conDevice;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+            }
+            return null;
         }
     }
 }

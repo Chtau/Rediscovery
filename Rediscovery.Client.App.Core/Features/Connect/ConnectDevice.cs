@@ -8,6 +8,7 @@ using Rediscovery.Shared.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace Rediscovery.Client.App.Core.Features.Connect
 {
@@ -22,6 +23,9 @@ namespace Rediscovery.Client.App.Core.Features.Connect
         private readonly IHeartbeatConsumer _heartbeatConsumer;
         private readonly ILoggerConsumer _loggerConsumer;
         private bool disposedValue;
+        private Communication.Base.ConsumerConnectionConfiguration consumerConfig;
+        private string authenticationToken;
+        private CancellationTokenSource cancelationTokenSource;
 
         public ConnectionConfiguration ConnectionConfiguration { get; private set; }
 
@@ -37,6 +41,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
         }
 
         public event EventHandler<DeviceConnectionState> ConnectionStateChanged;
+        public event EventHandler<RoundTripResult> ReceivedBeatRoundtrip;
 
         public void SetConfiguration(ConnectionConfiguration connectionConfiguration)
         {
@@ -108,6 +113,13 @@ namespace Rediscovery.Client.App.Core.Features.Connect
             var retVal = true;
             try
             {
+                try
+                {
+                    cancelationTokenSource?.Cancel();
+                } catch (Exception ex)
+                {
+                    _logger.LogError(ex);
+                }
                 if (!_greetingConsumerService.Disconnect())
                     retVal = false;
                 if (!_authenticationConsumerService.Disconnect())
@@ -128,6 +140,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
 
         private void OnConnect(ConnectionConfiguration connectionConfiguration)
         {
+            authenticationToken = null;
             DeviceConnectionState deviceConnectionState = new DeviceConnectionState
             {
                 Change = DeviceConnectionState.StateChange.GreetHostReply,
@@ -148,7 +161,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
                 {
                     deviceConnectionState.Change = DeviceConnectionState.StateChange.Connect;
                     ConnectionStateChanged?.Invoke(this, deviceConnectionState);
-                    Communication.Base.ConsumerConnectionConfiguration consumerConfig = new Communication.Base.ConsumerConnectionConfiguration
+                    consumerConfig = new Communication.Base.ConsumerConnectionConfiguration
                     {
                         UseSSL = reply.UseSSL,
                         CertificatePEM = reply.PEM,
@@ -166,14 +179,15 @@ namespace Rediscovery.Client.App.Core.Features.Connect
                         ConnectionStateChanged?.Invoke(this, deviceConnectionState);
                         _authenticationConsumerService.SendWelcome(_monitorSettings.CurrentValue.WelcomeDeviceMessage, deviceReply =>
                         {
+                            authenticationToken = deviceReply.Token;
                             deviceConnectionState.Change = DeviceConnectionState.StateChange.WelcomeReply;
                             deviceConnectionState.CurrentState = deviceReply.State;
-                            deviceConnectionState.Token = deviceReply.Token;
+                            deviceConnectionState.Token = authenticationToken;
                             ConnectionStateChanged?.Invoke(this, deviceConnectionState);
 
                             if (deviceReply.State == Shared.Base.Connection.Enums.ConnectionState.OK)
                             {
-                                _authenticationConsumerService.RequestManifest(deviceReply.Token, manifest => OnManifestReceived(deviceConnectionState, connectionConfiguration, manifest, deviceReply));
+                                _authenticationConsumerService.RequestManifest(authenticationToken, manifest => OnManifestReceived(deviceConnectionState, connectionConfiguration, manifest, deviceReply));
                             }
                         });
                     }
@@ -200,12 +214,54 @@ namespace Rediscovery.Client.App.Core.Features.Connect
                 deviceConnectionState.DeviceManifest = manifest;
                 ConnectionStateChanged?.Invoke(this, deviceConnectionState);
 
-                // TODO: hook to all other services (consumer)
+                OnInitServicesAfterConnect();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex);
             }
+        }
+
+        private void OnInitServicesAfterConnect()
+        {
+            try
+            {
+                // TODO: hook to all other services (consumer)
+                cancelationTokenSource = new CancellationTokenSource();
+
+                try
+                {
+                    _heartbeatConsumer.ReceivedBeatRoundtrip += _heartbeatConsumer_ReceivedBeatRoundtrip;
+                    if (_heartbeatConsumer.Connect(consumerConfig))
+                        _heartbeatConsumer.StartBeat(OnGetDeviceIdentifier(), authenticationToken, cancelationTokenSource);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex);
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+            }
+        }
+
+        private void _heartbeatConsumer_ReceivedBeatRoundtrip(object sender, RoundTripResult e)
+        {
+            try
+            {
+                // TODO: public event with round trip data and configuration reference
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+            }
+        }
+
+        private string OnGetDeviceIdentifier()
+        {
+            return ConnectionConfiguration?.Id.ToString();
         }
 
         protected virtual void Dispose(bool disposing)
