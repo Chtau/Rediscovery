@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Client.App.Core.Features.Connect.Models
+namespace Rediscovery.Client.App.Core.Features.Device.Models
 {
     public class DeviceConnectionState
     {

@@ -1,9 +1,9 @@
-﻿using Rediscovery.Client.App.Core.Features.Connect.Models;
+﻿using Rediscovery.Client.App.Core.Features.Device.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Client.App.Core.Features.Connect
+namespace Rediscovery.Client.App.Core.Features.Device
 {
     public interface IDevicesService
     {

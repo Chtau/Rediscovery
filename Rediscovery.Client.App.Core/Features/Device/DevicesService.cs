@@ -1,12 +1,12 @@
 ﻿using Rediscovery.Client.App.Core.Dependency;
-using Rediscovery.Client.App.Core.Features.Connect.Models;
+using Rediscovery.Client.App.Core.Features.Device.Models;
 using Rediscovery.Shared.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Rediscovery.Client.App.Core.Features.Connect
+namespace Rediscovery.Client.App.Core.Features.Device
 {
     public class DevicesService : IDevicesService
     {

@@ -1,4 +1,4 @@
-﻿using Rediscovery.Client.App.Core.Features.Connect.Models;
+﻿using Rediscovery.Client.App.Core.Features.Device.Models;
 using Rediscovery.Communication.Consumer.Authentication;
 using Rediscovery.Communication.Consumer.Feature;
 using Rediscovery.Communication.Consumer.Heartbeat;
@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Client.App.Core.Features.Connect
+namespace Rediscovery.Client.App.Core.Features.Device
 {
     public interface IConnectDevice : IDisposable
     {
