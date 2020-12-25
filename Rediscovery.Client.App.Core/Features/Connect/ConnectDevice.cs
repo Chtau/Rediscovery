@@ -65,12 +65,14 @@ namespace Rediscovery.Client.App.Core.Features.Connect
             };
             try
             {
+                _logger.LogTrace($"[Probe] Start probe host. Config:{ConnectionConfiguration} \r\nDeviceMessage:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(_monitorSettings.CurrentValue.GreetingDeviceMessage)}\r\n");
                 ConnectionStateChanged?.Invoke(this, deviceConnectionState);
                 var reply = _greetingConsumerService.GreetHost(ConnectionConfiguration.Address, ConnectionConfiguration.Port,
                     _monitorSettings.CurrentValue.GreetingDeviceMessage, _monitorSettings.CurrentValue.TimeoutSeconds);
                 deviceConnectionState.Change = DeviceConnectionState.StateChange.ProbeReply;
                 deviceConnectionState.Allowed = reply.CanConnect;
                 ConnectionStateChanged?.Invoke(this, deviceConnectionState);
+                _logger.LogTrace($"[Probe] Probe host reply. Config:{ConnectionConfiguration} \r\nReply:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(reply)}\r\n");
                 if (reply.CanConnect == Shared.Base.Connection.Enums.AllowConnect.OK)
                     return true;
             }
@@ -150,6 +152,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
             };
             try
             {
+                _logger.LogTrace($"[Greeting] Start greet host. Config:{ConnectionConfiguration} \r\nDeviceMessage:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(_monitorSettings.CurrentValue.GreetingDeviceMessage)}\r\n");
                 ConnectionStateChanged?.Invoke(this, deviceConnectionState);
 
                 var reply = _greetingConsumerService.GreetHost(connectionConfiguration.Address, connectionConfiguration.Port, 
@@ -157,6 +160,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
 
                 deviceConnectionState.Change = DeviceConnectionState.StateChange.GreetHostReply;
                 deviceConnectionState.Allowed = reply.CanConnect;
+                _logger.LogTrace($"[Greeting] Greet host reply received. Config:{ConnectionConfiguration} \r\nReply:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(reply)}\r\n");
                 ConnectionStateChanged?.Invoke(this, deviceConnectionState);
 
                 if (reply.CanConnect == Shared.Base.Connection.Enums.AllowConnect.OK)
@@ -171,13 +175,16 @@ namespace Rediscovery.Client.App.Core.Features.Connect
                         Port = connectionConfiguration.Port,
                         SSLPort = reply.SSLPort
                     };
+                    _logger.LogTrace($"[Authentication] Connect to remote Address. Config:{ConnectionConfiguration} \r\nConsumerConfig:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(consumerConfig)}\r\n");
                     if (_authenticationConsumerService.Connect(consumerConfig))
                     {
                         deviceConnectionState.Change = DeviceConnectionState.StateChange.ConnectReply;
                         deviceConnectionState.CurrentStateConnectReply = DeviceConnectionState.StateConnectReply.Ok;
+                        _logger.LogTrace($"[Authentication] Reply received. Config:{ConnectionConfiguration} \r\nReply:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(deviceConnectionState)}\r\n");
                         ConnectionStateChanged?.Invoke(this, deviceConnectionState);
 
                         deviceConnectionState.Change = DeviceConnectionState.StateChange.Welcome;
+                        _logger.LogTrace($"[Welcome] Send welcome request message. Config:{ConnectionConfiguration} \r\nWelcomeMessage:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(_monitorSettings.CurrentValue.WelcomeDeviceMessage)}\r\n");
                         ConnectionStateChanged?.Invoke(this, deviceConnectionState);
                         _authenticationConsumerService.SendWelcome(_monitorSettings.CurrentValue.WelcomeDeviceMessage, deviceReply =>
                         {
@@ -185,6 +192,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
                             deviceConnectionState.Change = DeviceConnectionState.StateChange.WelcomeReply;
                             deviceConnectionState.CurrentState = deviceReply.State;
                             deviceConnectionState.Token = authenticationToken;
+                            _logger.LogTrace($"[Welcome] Reply received. Config:{ConnectionConfiguration} \r\nReply:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(deviceReply)}\r\n");
                             ConnectionStateChanged?.Invoke(this, deviceConnectionState);
 
                             if (deviceReply.State == Shared.Base.Connection.Enums.ConnectionState.OK)
@@ -197,6 +205,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
                     {
                         deviceConnectionState.Change = DeviceConnectionState.StateChange.ConnectReply;
                         deviceConnectionState.CurrentStateConnectReply = DeviceConnectionState.StateConnectReply.Failed;
+                        _logger.LogTrace($"[Authentication] Reply failed. Config:{ConnectionConfiguration} \r\nReply:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(deviceConnectionState)}\r\n");
                         ConnectionStateChanged?.Invoke(this, deviceConnectionState);
                     }
                 }
@@ -214,6 +223,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
             {
                 deviceConnectionState.Change = DeviceConnectionState.StateChange.ManifestReceived;
                 deviceConnectionState.DeviceManifest = manifest;
+                _logger.LogTrace($"[Manifest] Received data. Config:{connectionConfiguration} \r\nManifest:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(manifest)}\r\n");
                 ConnectionStateChanged?.Invoke(this, deviceConnectionState);
 
                 OnInitServicesAfterConnect();
@@ -239,7 +249,7 @@ namespace Rediscovery.Client.App.Core.Features.Connect
                 catch (Exception ex)
                 {
                     _logger.LogError(ex);
-                }             
+                }     
             }
             catch (Exception ex)
             {
@@ -252,6 +262,10 @@ namespace Rediscovery.Client.App.Core.Features.Connect
             try
             {
                 HeartbeatReceived?.Invoke(this, new HeartbeatResult(ConnectionConfiguration, e.OK, e.PingPongTime, e.PingStartDatetimeUTC));
+                if (e.OK)
+                    _logger.LogTrace($"[Heartbeat] round trip received. ({e.PingPongTime?.TotalMilliseconds} ms Config:{ConnectionConfiguration})");
+                else
+                    _logger.LogTrace($"[Heartbeat] round trip not OK received. Config:{ConnectionConfiguration}");
             }
             catch (Exception ex)
             {

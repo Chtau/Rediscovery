@@ -9,5 +9,10 @@ namespace Rediscovery.Client.App.Core.Features.Connect.Models
         public Guid Id { get; set; }
         public string Address { get; set; }
         public int Port { get; set; }
+
+        public override string ToString()
+        {
+            return $"Id:\"{Id}\" Address:\"{Address}\" Port:\"{Port}\"";
+        }
     }
 }
