@@ -1,4 +1,5 @@
-﻿using Rediscovery.Client.App.Core.Features.Discovery;
+﻿using Rediscovery.Client.App.Core.Features.Device.Models;
+using Rediscovery.Client.App.Core.Features.Discovery;
 using Rediscovery.Client.App.Core.Features.Storage;
 using System;
 using System.Collections.Generic;
@@ -10,5 +11,6 @@ namespace Rediscovery.Client.App.Core
     {
         public StorageSetting CurrentStorageSetting { get; set; }
         public DiscoverSetting CurrentDiscoverSetting { get; set; }
+        public ConnectSetting CurrentConnectSetting { get; set; }
     }
 }

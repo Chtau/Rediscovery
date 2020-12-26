@@ -1,4 +1,5 @@
-﻿using Rediscovery.Client.App.Core.Features.Discovery;
+﻿using Rediscovery.Client.App.Core.Features.Device;
+using Rediscovery.Client.App.Core.Features.Discovery;
 using Rediscovery.Client.App.Core.Features.Storage;
 using Rediscovery.Client.App.Core.Resources;
 using Rediscovery.Shared.Logging;
@@ -30,6 +31,7 @@ namespace Rediscovery.Client.App.Core
             Assert.NotNull(Dependency.Resolver.Get<IJSONStorage>());
             Assert.NotNull(Dependency.Resolver.Get<IAssemblyResourceProvider>());
             Assert.NotNull(Dependency.Resolver.Get<IDiscoverDevices>());
+            Assert.NotNull(Dependency.Resolver.Get<IDevicesManager>());
         }
     }
 }

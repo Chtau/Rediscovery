@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Rediscovery.Client.App.Core.Features.Device
 {
-    public class DevicesService : IDevicesService
+    public class DevicesManager : IDevicesManager
     {
         private readonly ILogger _logger;
         private readonly ISettingValue<ConnectSetting> _monitorSettings;
@@ -17,7 +17,7 @@ namespace Rediscovery.Client.App.Core.Features.Device
         public event EventHandler<DeviceConnectionState> ConnectionStateChanged;
         public event EventHandler<HeartbeatResult> HeartbeatReceived;
 
-        public DevicesService(ILogger logger, ISettingValue<ConnectSetting> settingValue)
+        public DevicesManager(ILogger logger, ISettingValue<ConnectSetting> settingValue)
         {
             _logger = logger;
             _monitorSettings = settingValue;

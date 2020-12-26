@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Rediscovery.Client.App.Core.Features.Device
 {
-    public interface IDevicesService
+    public interface IDevicesManager
     {
         event EventHandler<DeviceConnectionState> ConnectionStateChanged;
         event EventHandler<HeartbeatResult> HeartbeatReceived;
