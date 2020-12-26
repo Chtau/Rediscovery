@@ -1,4 +1,5 @@
 ﻿using Rediscovery.Client.App.Core.Features.Device.Models;
+using Rediscovery.Client.App.Core.Features.Heartbeat.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;

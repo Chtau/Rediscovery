@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Rediscovery.Client.App.Core.Features.Device.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Client.App.Core.Features.Device.Models
+namespace Rediscovery.Client.App.Core.Features.Heartbeat.Models
 {
     public class HeartbeatResult
     {

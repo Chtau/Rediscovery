@@ -1,5 +1,6 @@
 ﻿using Rediscovery.Client.App.Core.Dependency;
 using Rediscovery.Client.App.Core.Features.Device.Models;
+using Rediscovery.Client.App.Core.Features.Heartbeat.Models;
 using Rediscovery.Communication.Consumer.Authentication;
 using Rediscovery.Communication.Consumer.Feature;
 using Rediscovery.Communication.Consumer.Heartbeat;
