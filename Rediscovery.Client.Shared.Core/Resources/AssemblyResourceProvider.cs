@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace Rediscovery.Client.App.Core.Resources
+namespace Rediscovery.Client.Shared.Core.Resources
 {
     public class AssemblyResourceProvider : IAssemblyResourceProvider
     {

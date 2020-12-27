@@ -33,7 +33,7 @@ namespace Rediscovery.Client.App.Core.Features.Device.Models
         public ConnectionConfiguration Configuration { get; set; }
         public StateConnectReply CurrentStateConnectReply { get; set; }
         public Enums.AllowConnect Allowed { get; set; }
-        public Shared.Base.Connection.Enums.ConnectionState CurrentState { get; set; }
+        public Rediscovery.Shared.Base.Connection.Enums.ConnectionState CurrentState { get; set; }
         public string Token { get; set; }
         public Manifest DeviceManifest { get; set; }
 }

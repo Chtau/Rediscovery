@@ -1,6 +1,6 @@
-﻿using Rediscovery.Client.App.Core.Dependency;
-using Rediscovery.Client.App.Core.Features.Device.Models;
+﻿using Rediscovery.Client.App.Core.Features.Device.Models;
 using Rediscovery.Client.App.Core.Features.Heartbeat.Models;
+using Rediscovery.Client.Shared.Core.Dependency;
 using Rediscovery.Shared.Logging;
 using System;
 using System.Collections.Generic;

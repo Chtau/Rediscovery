@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Rediscovery.Shared.Base.Extensions;
 
-namespace Rediscovery.Client.App.Core.Dependency
+namespace Rediscovery.Client.Shared.Core.Dependency
 {
     public static class Resolver
     {

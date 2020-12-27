@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Client.App.Core.Dependency
+namespace Rediscovery.Client.Shared.Core.Dependency
 {
     public interface ISettingValue<out TSetting>
     {

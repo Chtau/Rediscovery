@@ -1,10 +1,11 @@
-﻿using Rediscovery.Client.App.Core.Dependency;
-using Rediscovery.Client.App.Core.Features.Device.Models;
+﻿using Rediscovery.Client.App.Core.Features.Device.Models;
 using Rediscovery.Client.App.Core.Features.Heartbeat.Models;
+using Rediscovery.Client.Shared.Core.Dependency;
 using Rediscovery.Communication.Consumer.Authentication;
 using Rediscovery.Communication.Consumer.Feature;
 using Rediscovery.Communication.Consumer.Heartbeat;
 using Rediscovery.Communication.Consumer.Logger;
+using Rediscovery.Shared.Base.Connection;
 using Rediscovery.Shared.Logging;
 using System;
 using System.Collections.Generic;
@@ -74,14 +75,14 @@ namespace Rediscovery.Client.App.Core.Features.Device
                 deviceConnectionState.Allowed = reply.CanConnect;
                 ConnectionStateChanged?.Invoke(this, deviceConnectionState);
                 _logger.LogTrace($"[Probe] Probe host reply. Config:{ConnectionConfiguration} \r\nReply:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(reply)}\r\n");
-                if (reply.CanConnect == Shared.Base.Connection.Enums.AllowConnect.OK)
+                if (reply.CanConnect == Rediscovery.Shared.Base.Connection.Enums.AllowConnect.OK)
                     return true;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex);
                 deviceConnectionState.Change = DeviceConnectionState.StateChange.ProbeReply;
-                deviceConnectionState.Allowed = Shared.Base.Connection.Enums.AllowConnect.Error;
+                deviceConnectionState.Allowed = Rediscovery.Shared.Base.Connection.Enums.AllowConnect.Error;
                 ConnectionStateChanged?.Invoke(this, deviceConnectionState);
             }
             return false;
@@ -164,7 +165,7 @@ namespace Rediscovery.Client.App.Core.Features.Device
                 _logger.LogTrace($"[Greeting] Greet host reply received. Config:{ConnectionConfiguration} \r\nReply:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(reply)}\r\n");
                 ConnectionStateChanged?.Invoke(this, deviceConnectionState);
 
-                if (reply.CanConnect == Shared.Base.Connection.Enums.AllowConnect.OK)
+                if (reply.CanConnect == Rediscovery.Shared.Base.Connection.Enums.AllowConnect.OK)
                 {
                     deviceConnectionState.Change = DeviceConnectionState.StateChange.Connect;
                     ConnectionStateChanged?.Invoke(this, deviceConnectionState);
@@ -196,7 +197,7 @@ namespace Rediscovery.Client.App.Core.Features.Device
                             _logger.LogTrace($"[Welcome] Reply received. Config:{ConnectionConfiguration} \r\nReply:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(deviceReply)}\r\n");
                             ConnectionStateChanged?.Invoke(this, deviceConnectionState);
 
-                            if (deviceReply.State == Shared.Base.Connection.Enums.ConnectionState.OK)
+                            if (deviceReply.State == Rediscovery.Shared.Base.Connection.Enums.ConnectionState.OK)
                             {
                                 _authenticationConsumerService.RequestManifest(authenticationToken, manifest => OnManifestReceived(deviceConnectionState, connectionConfiguration, manifest, deviceReply));
                             }
@@ -213,12 +214,12 @@ namespace Rediscovery.Client.App.Core.Features.Device
             } catch (Exception ex)
             {
                 _logger.LogError(ex);
-                deviceConnectionState.Allowed = Shared.Base.Connection.Enums.AllowConnect.Error;
+                deviceConnectionState.Allowed = Rediscovery.Shared.Base.Connection.Enums.AllowConnect.Error;
                 ConnectionStateChanged?.Invoke(this, deviceConnectionState);
             }
         }
 
-        private void OnManifestReceived(DeviceConnectionState deviceConnectionState, ConnectionConfiguration connectionConfiguration, Rediscovery.Shared.Base.Connection.Manifest manifest, Shared.Base.Connection.WelcomeDeviceReply welcomeDeviceReply)
+        private void OnManifestReceived(DeviceConnectionState deviceConnectionState, ConnectionConfiguration connectionConfiguration, Rediscovery.Shared.Base.Connection.Manifest manifest, WelcomeDeviceReply welcomeDeviceReply)
         {
             try
             {

@@ -1,16 +1,12 @@
-﻿using Rediscovery.Client.App.Core.Features.Device.Models;
-using Rediscovery.Client.App.Core.Features.Discovery;
-using Rediscovery.Client.App.Core.Features.Storage;
+﻿using Rediscovery.Client.Shared.Core.Features.Storage;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Client.App.Core
+namespace Rediscovery.Client.Shared.Core
 {
     public class CoreManagerSetting
     {
         public StorageSetting CurrentStorageSetting { get; set; }
-        public DiscoverSetting CurrentDiscoverSetting { get; set; }
-        public ConnectSetting CurrentConnectSetting { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Rediscovery.Client.App.Core.Dependency;
+﻿using Rediscovery.Client.Shared.Core.Dependency;
 using Rediscovery.Shared.Base.Discovery;
 using Rediscovery.Shared.Logging;
 using System;

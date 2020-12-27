@@ -1,11 +1,11 @@
-﻿using Rediscovery.Client.App.Core.Dependency;
+﻿using Rediscovery.Client.Shared.Core.Dependency;
 using Rediscovery.Shared.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
-namespace Rediscovery.Client.App.Core.Features.Storage
+namespace Rediscovery.Client.Shared.Core.Features.Storage
 {
     public class JSONStorage : IJSONStorage
     {
