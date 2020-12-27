@@ -12,7 +12,8 @@ namespace Rediscovery.Client.Shared.Core
     {
         public static void Init(CoreManagerSetting coreManagerSettings)
         {
-            Dependency.Resolver.Register<ILogger, Features.Logging.CrossDeviceLogger>();
+            Dependency.Resolver.Register<Features.Logging.ILoggingData, Features.Logging.LoggingData>();
+            Dependency.Resolver.Register<ILogger, Features.Logging.EventLogger>();
             var logger = Dependency.Resolver.Get<ILogger>();
             Dependency.Resolver.Register<IDBStorage>(new DBStorage(logger, new SettingValue<StorageSetting>(coreManagerSettings.CurrentStorageSetting)));
             Dependency.Resolver.Register<IJSONStorage>(new JSONStorage(logger, new SettingValue<StorageSetting>(coreManagerSettings.CurrentStorageSetting)));

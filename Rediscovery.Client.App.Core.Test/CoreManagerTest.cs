@@ -1,6 +1,7 @@
 ﻿using Rediscovery.Client.App.Core.Features.Device;
 using Rediscovery.Client.App.Core.Features.Discovery;
 using Rediscovery.Client.Shared.Core.Dependency;
+using Rediscovery.Client.Shared.Core.Features.Logging;
 using Rediscovery.Client.Shared.Core.Features.Storage;
 using Rediscovery.Client.Shared.Core.Resources;
 using Rediscovery.Shared.Logging;
@@ -27,6 +28,7 @@ namespace Rediscovery.Client.App.Core
                     DatabaseFile = null
                 }
             });
+            Assert.NotNull(Resolver.Get<ILoggingData>());
             Assert.NotNull(Resolver.Get<ILogger>());
             Assert.NotNull(Resolver.Get<IDBStorage>());
             Assert.NotNull(Resolver.Get<IJSONStorage>());
