@@ -206,12 +206,6 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Rediscovery.Client.App.Core\Rediscovery.Client.App.Core.csproj">
-      <Project>{fbdae67e-05da-481d-a61d-6549a04cc508}</Project>
-      <Name>Rediscovery.Client.App.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidResource Include="Resources\layout\fragment_discovery.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
