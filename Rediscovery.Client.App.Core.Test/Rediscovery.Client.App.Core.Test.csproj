@@ -21,4 +21,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Rediscovery.Client.App.Core\Rediscovery.Client.App.Core.csproj" />
+  </ItemGroup>
+
 </Project>

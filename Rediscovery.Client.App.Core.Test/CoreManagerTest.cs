@@ -1,4 +1,10 @@
-﻿using System;
+﻿using Rediscovery.Client.App.Core.Features.Device;
+using Rediscovery.Client.App.Core.Features.Discovery;
+using Rediscovery.Client.Shared.Core.Dependency;
+using Rediscovery.Client.Shared.Core.Features.Storage;
+using Rediscovery.Client.Shared.Core.Resources;
+using Rediscovery.Shared.Logging;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
@@ -10,23 +16,23 @@ namespace Rediscovery.Client.App.Core
         [Fact]
         public void Init()
         {
-            CoreManager.Init(new CoreManagerSetting
+            CoreClientManager.Init(new CoreClientManagerSetting
             {
                 CurrentDiscoverSetting = new Features.Discovery.DiscoverSetting
                 {
                     Port = 14545
                 },
-                CurrentStorageSetting = new Features.Storage.StorageSetting
+                CurrentStorageSetting = new StorageSetting
                 {
                     DatabaseFile = null
                 }
             });
-            Assert.NotNull(Dependency.Resolver.Get<ILogger>());
-            Assert.NotNull(Dependency.Resolver.Get<IDBStorage>());
-            Assert.NotNull(Dependency.Resolver.Get<IJSONStorage>());
-            Assert.NotNull(Dependency.Resolver.Get<IAssemblyResourceProvider>());
-            Assert.NotNull(Dependency.Resolver.Get<IDiscoverDevices>());
-            Assert.NotNull(Dependency.Resolver.Get<IDevicesManager>());
+            Assert.NotNull(Resolver.Get<ILogger>());
+            Assert.NotNull(Resolver.Get<IDBStorage>());
+            Assert.NotNull(Resolver.Get<IJSONStorage>());
+            Assert.NotNull(Resolver.Get<IAssemblyResourceProvider>());
+            Assert.NotNull(Resolver.Get<IDiscoverDevices>());
+            Assert.NotNull(Resolver.Get<IDevicesManager>());
         }
     }
 }

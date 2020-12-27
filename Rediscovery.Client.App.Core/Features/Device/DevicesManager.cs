@@ -1,6 +1,6 @@
 ﻿using Rediscovery.Client.App.Core.Features.Device.Models;
-using Rediscovery.Client.App.Core.Features.Heartbeat.Models;
 using Rediscovery.Client.Shared.Core.Dependency;
+using Rediscovery.Client.Shared.Core.Features.Heartbeat.Models;
 using Rediscovery.Shared.Logging;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace Rediscovery.Client.App.Core.Features.Device
         private List<IConnectDevice> connectDevices = new List<IConnectDevice>();
 
         public event EventHandler<DeviceConnectionState> ConnectionStateChanged;
-        public event EventHandler<HeartbeatResult> HeartbeatReceived;
+        public event EventHandler<HeartbeatResult<ConnectionConfiguration>> HeartbeatReceived;
 
         public DevicesManager(ILogger logger, ISettingValue<ConnectSetting> settingValue)
         {

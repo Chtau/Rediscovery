@@ -1,6 +1,6 @@
 ﻿using Rediscovery.Client.App.Core.Features.Device.Models;
-using Rediscovery.Client.App.Core.Features.Heartbeat.Models;
 using Rediscovery.Client.Shared.Core.Dependency;
+using Rediscovery.Client.Shared.Core.Features.Heartbeat.Models;
 using Rediscovery.Communication.Consumer.Authentication;
 using Rediscovery.Communication.Consumer.Feature;
 using Rediscovery.Communication.Consumer.Heartbeat;
@@ -44,7 +44,7 @@ namespace Rediscovery.Client.App.Core.Features.Device
         }
 
         public event EventHandler<DeviceConnectionState> ConnectionStateChanged;
-        public event EventHandler<HeartbeatResult> HeartbeatReceived;
+        public event EventHandler<HeartbeatResult<ConnectionConfiguration>> HeartbeatReceived;
 
         public void SetConfiguration(ConnectionConfiguration connectionConfiguration)
         {
@@ -263,7 +263,7 @@ namespace Rediscovery.Client.App.Core.Features.Device
         {
             try
             {
-                HeartbeatReceived?.Invoke(this, new HeartbeatResult(ConnectionConfiguration, e.OK, e.PingPongTime, e.PingStartDatetimeUTC));
+                HeartbeatReceived?.Invoke(this, new HeartbeatResult<ConnectionConfiguration>(ConnectionConfiguration, e.OK, e.PingPongTime, e.PingStartDatetimeUTC));
                 if (e.OK)
                     _logger.LogTrace($"[Heartbeat] round trip received. ({e.PingPongTime?.TotalMilliseconds} ms Config:{ConnectionConfiguration})");
                 else

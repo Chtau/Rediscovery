@@ -1,5 +1,5 @@
 ﻿using Rediscovery.Client.App.Core.Features.Device.Models;
-using Rediscovery.Client.App.Core.Features.Heartbeat.Models;
+using Rediscovery.Client.Shared.Core.Features.Heartbeat.Models;
 using Rediscovery.Communication.Consumer.Authentication;
 using Rediscovery.Communication.Consumer.Feature;
 using Rediscovery.Communication.Consumer.Heartbeat;
@@ -13,7 +13,7 @@ namespace Rediscovery.Client.App.Core.Features.Device
     public interface IConnectDevice : IDisposable
     {
         event EventHandler<DeviceConnectionState> ConnectionStateChanged;
-        event EventHandler<HeartbeatResult> HeartbeatReceived;
+        event EventHandler<HeartbeatResult<ConnectionConfiguration>> HeartbeatReceived;
         ConnectionConfiguration ConnectionConfiguration { get; }
         void SetConfiguration(ConnectionConfiguration connectionConfiguration);
         /// <summary>
