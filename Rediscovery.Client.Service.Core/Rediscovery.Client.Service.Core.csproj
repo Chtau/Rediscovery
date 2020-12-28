@@ -5,7 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CommunicationAuthenticationProvider\Rediscovery.Communication.Provider.Authentication.csproj" />
     <ProjectReference Include="..\Rediscovery.Client.Shared.Core\Rediscovery.Client.Shared.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Authentication\" />
   </ItemGroup>
 
 </Project>
