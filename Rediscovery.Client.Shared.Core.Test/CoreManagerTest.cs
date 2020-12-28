@@ -1,6 +1,4 @@
-﻿using Rediscovery.Client.App.Core.Features.Device;
-using Rediscovery.Client.App.Core.Features.Discovery;
-using Rediscovery.Client.Shared.Core.Dependency;
+﻿using Rediscovery.Client.Shared.Core.Dependency;
 using Rediscovery.Client.Shared.Core.Features.Logging;
 using Rediscovery.Client.Shared.Core.Features.Storage;
 using Rediscovery.Client.Shared.Core.Resources;
@@ -10,19 +8,15 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace Rediscovery.Client.App.Core
+namespace Rediscovery.Client.Shared.Core.Test
 {
     public class CoreManagerTest
     {
         [Fact]
         public void Init()
         {
-            CoreClientManager.Init(new CoreClientManagerSetting
+            CoreManager.Init(new CoreManagerSetting
             {
-                CurrentDiscoverSetting = new Features.Discovery.DiscoverSetting
-                {
-                    Port = 14545
-                },
                 CurrentStorageSetting = new StorageSetting
                 {
                     DatabaseFile = null
@@ -33,8 +27,6 @@ namespace Rediscovery.Client.App.Core
             Assert.NotNull(Resolver.Get<IDBStorage>());
             Assert.NotNull(Resolver.Get<IJSONStorage>());
             Assert.NotNull(Resolver.Get<IAssemblyResourceProvider>());
-            Assert.NotNull(Resolver.Get<IDiscoverDevices>());
-            Assert.NotNull(Resolver.Get<IDevicesManager>());
         }
     }
 }

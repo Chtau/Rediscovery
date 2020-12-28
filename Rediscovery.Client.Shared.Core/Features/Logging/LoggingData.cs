@@ -10,8 +10,8 @@ namespace Rediscovery.Client.Shared.Core.Features.Logging
 {
     public class LoggingData : ILoggingData
     {
-        private ConcurrentQueue<LoggerEntry> entries = new ConcurrentQueue<LoggerEntry>();
-        private TimeSpan? timeSpanEntriesAddedEvent;
+        private static ConcurrentQueue<LoggerEntry> entries = new ConcurrentQueue<LoggerEntry>();
+        private static TimeSpan? timeSpanEntriesAddedEvent;
 
         public event EventHandler AddedNewEntries;
 

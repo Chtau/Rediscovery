@@ -75,13 +75,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Shared.Logging"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rediscovery.Client.App.MobileAndroid", "Rediscovery.Client.App.MobileAndroid\Rediscovery.Client.App.MobileAndroid.csproj", "{066FC953-05AF-4D28-AC5C-0CD3A39D942A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rediscovery.Client.App.Core.Test", "Rediscovery.Client.App.Core.Test\Rediscovery.Client.App.Core.Test.csproj", "{89912031-30AF-44FD-835F-CC77C39DA695}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.App.Core.Test", "Rediscovery.Client.App.Core.Test\Rediscovery.Client.App.Core.Test.csproj", "{89912031-30AF-44FD-835F-CC77C39DA695}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rediscovery.Client.Service.Core", "Rediscovery.Client.Service.Core\Rediscovery.Client.Service.Core.csproj", "{91E2B62D-86C5-4518-B4C9-E7DCBD71EC70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.Service.Core", "Rediscovery.Client.Service.Core\Rediscovery.Client.Service.Core.csproj", "{91E2B62D-86C5-4518-B4C9-E7DCBD71EC70}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.Shared.Core", "Rediscovery.Client.Shared.Core\Rediscovery.Client.Shared.Core.csproj", "{01916248-DC9E-4A5A-8D8B-59132B166848}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rediscovery.Client.App.Core", "Rediscovery.Client.App.Core\Rediscovery.Client.App.Core.csproj", "{B236CD42-5D2C-46E0-8FA2-AD188A16923B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.App.Core", "Rediscovery.Client.App.Core\Rediscovery.Client.App.Core.csproj", "{B236CD42-5D2C-46E0-8FA2-AD188A16923B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rediscovery.Client.Shared.Core.Test", "Rediscovery.Client.Shared.Core.Test\Rediscovery.Client.Shared.Core.Test.csproj", "{BB56F501-818A-449E-959A-CD7CDF5E0EC6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -585,6 +587,18 @@ Global
 		{B236CD42-5D2C-46E0-8FA2-AD188A16923B}.Release|x64.Build.0 = Release|Any CPU
 		{B236CD42-5D2C-46E0-8FA2-AD188A16923B}.Release|x86.ActiveCfg = Release|Any CPU
 		{B236CD42-5D2C-46E0-8FA2-AD188A16923B}.Release|x86.Build.0 = Release|Any CPU
+		{BB56F501-818A-449E-959A-CD7CDF5E0EC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB56F501-818A-449E-959A-CD7CDF5E0EC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB56F501-818A-449E-959A-CD7CDF5E0EC6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BB56F501-818A-449E-959A-CD7CDF5E0EC6}.Debug|x64.Build.0 = Debug|Any CPU
+		{BB56F501-818A-449E-959A-CD7CDF5E0EC6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BB56F501-818A-449E-959A-CD7CDF5E0EC6}.Debug|x86.Build.0 = Debug|Any CPU
+		{BB56F501-818A-449E-959A-CD7CDF5E0EC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB56F501-818A-449E-959A-CD7CDF5E0EC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB56F501-818A-449E-959A-CD7CDF5E0EC6}.Release|x64.ActiveCfg = Release|Any CPU
+		{BB56F501-818A-449E-959A-CD7CDF5E0EC6}.Release|x64.Build.0 = Release|Any CPU
+		{BB56F501-818A-449E-959A-CD7CDF5E0EC6}.Release|x86.ActiveCfg = Release|Any CPU
+		{BB56F501-818A-449E-959A-CD7CDF5E0EC6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
