@@ -34,29 +34,29 @@ namespace Rediscovery.Client.App.Service
             HostIpAddress = Feature.Shared.Functions.NetworkAddress.GetIpAddr();
             ExePath = Process.GetCurrentProcess().MainModule.FileName;
 
-            if (args.Any(x => x.StartsWith(Shared.Arguments.Service.Arguments.CommandPort, StringComparison.OrdinalIgnoreCase)))
+            if (args.Any(x => x.StartsWith(Rediscovery.Shared.Arguments.Service.Arguments.CommandPort, StringComparison.OrdinalIgnoreCase)))
             {
-                var valueArg = args.First(x => x.StartsWith(Shared.Arguments.Service.Arguments.CommandPort, StringComparison.OrdinalIgnoreCase));
+                var valueArg = args.First(x => x.StartsWith(Rediscovery.Shared.Arguments.Service.Arguments.CommandPort, StringComparison.OrdinalIgnoreCase));
                 var vals = valueArg.Split(':');
                 if (ushort.TryParse(vals[1].Trim(), out ushort port))
                     HostPort = port;
             }
-            if (args.Any(x => x.StartsWith(Shared.Arguments.Service.Arguments.CommandPortHttps, StringComparison.OrdinalIgnoreCase)))
+            if (args.Any(x => x.StartsWith(Rediscovery.Shared.Arguments.Service.Arguments.CommandPortHttps, StringComparison.OrdinalIgnoreCase)))
             {
-                var valueArg = args.First(x => x.StartsWith(Shared.Arguments.Service.Arguments.CommandPortHttps, StringComparison.OrdinalIgnoreCase));
+                var valueArg = args.First(x => x.StartsWith(Rediscovery.Shared.Arguments.Service.Arguments.CommandPortHttps, StringComparison.OrdinalIgnoreCase));
                 var vals = valueArg.Split(':');
                 if (ushort.TryParse(vals[1].Trim(), out ushort port))
                     HostPortHttps = port;
             }
-            if (args.Any(x => x.StartsWith(Shared.Arguments.Service.Arguments.CommandIP, StringComparison.OrdinalIgnoreCase)))
+            if (args.Any(x => x.StartsWith(Rediscovery.Shared.Arguments.Service.Arguments.CommandIP, StringComparison.OrdinalIgnoreCase)))
             {
-                var valueArg = args.First(x => x.StartsWith(Shared.Arguments.Service.Arguments.CommandIP, StringComparison.OrdinalIgnoreCase));
+                var valueArg = args.First(x => x.StartsWith(Rediscovery.Shared.Arguments.Service.Arguments.CommandIP, StringComparison.OrdinalIgnoreCase));
                 var vals = valueArg.Split(':');
                 HostIpAddress = vals[1].Trim();
             }
-            if (args.Any(x => x.StartsWith(Shared.Arguments.Service.Arguments.DesktopName, StringComparison.OrdinalIgnoreCase)))
+            if (args.Any(x => x.StartsWith(Rediscovery.Shared.Arguments.Service.Arguments.DesktopName, StringComparison.OrdinalIgnoreCase)))
             {
-                var valueArg = args.First(x => x.StartsWith(Shared.Arguments.Service.Arguments.DesktopName, StringComparison.OrdinalIgnoreCase));
+                var valueArg = args.First(x => x.StartsWith(Rediscovery.Shared.Arguments.Service.Arguments.DesktopName, StringComparison.OrdinalIgnoreCase));
                 var vals = valueArg.Split(':');
                 DesktopName = vals[1].Trim();
             }
@@ -80,7 +80,7 @@ namespace Rediscovery.Client.App.Service
                 
             }
             // set static resources before we run to provide the HostBuilder with the updated resources
-            var appConfig = (IOptions<Shared.Configurations.Service.Models.AppConfiguration>)host.Services.GetService(typeof(IOptions<Shared.Configurations.Service.Models.AppConfiguration>));
+            var appConfig = (IOptions<Rediscovery.Shared.Configurations.Service.Models.AppConfiguration>)host.Services.GetService(typeof(IOptions<Rediscovery.Shared.Configurations.Service.Models.AppConfiguration>));
             var resources = (Services.IStaticResources)host.Services.GetService(typeof(Services.IStaticResources));
 
             resources.ExePath = ExePath;
@@ -116,22 +116,22 @@ namespace Rediscovery.Client.App.Service
 
             Version version = Assembly.GetEntryAssembly().GetName().Version;
 
-            Shared.Base.Core.Version appMinimumVersion = new Shared.Base.Core.Version() { Major = 0, Minor = 0, Patch = 0, Label = null };
+            Rediscovery.Shared.Base.Core.Version appMinimumVersion = new Rediscovery.Shared.Base.Core.Version() { Major = 0, Minor = 0, Patch = 0, Label = null };
             if (!string.IsNullOrWhiteSpace(appConfig?.Value?.AppMinimumVersion))
             {
-                appMinimumVersion = Shared.Base.Core.Version.ConvertTo(appConfig.Value?.AppMinimumVersion);
+                appMinimumVersion = Rediscovery.Shared.Base.Core.Version.ConvertTo(appConfig.Value?.AppMinimumVersion);
             }
-            Shared.Base.Core.Version clientVersion = new Shared.Base.Core.Version() { Major = 0, Minor = 0, Patch = 0, Label = null };
+            Rediscovery.Shared.Base.Core.Version clientVersion = new Rediscovery.Shared.Base.Core.Version() { Major = 0, Minor = 0, Patch = 0, Label = null };
             if (!string.IsNullOrWhiteSpace(appConfig?.Value?.AppMinimumVersion))
             {
-                clientVersion = Shared.Base.Core.Version.ConvertTo(appConfig.Value?.ServiceVersion);
+                clientVersion = Rediscovery.Shared.Base.Core.Version.ConvertTo(appConfig.Value?.ServiceVersion);
             }
 
-            resources.ServiceManifest = new Shared.Base.Connection.Manifest
+            resources.ServiceManifest = new Rediscovery.Shared.Base.Connection.Manifest
             {
                 AppMinimumVersion = appMinimumVersion,
                 ClientVersion = clientVersion,
-                SupportedFeatures = new System.Collections.Generic.List<Shared.Base.Device.FeatureDefinitionExtended>(),
+                SupportedFeatures = new System.Collections.Generic.List<Rediscovery.Shared.Base.Device.FeatureDefinitionExtended>(),
                 ClientName = DesktopName
             };
 

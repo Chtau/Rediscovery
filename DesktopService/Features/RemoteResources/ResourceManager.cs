@@ -50,7 +50,7 @@ namespace Rediscovery.Client.App.Service.Features.RemoteResources
             
         }
 
-        public void UpdateDevice(Shared.Base.Device.DeviceInfo deviceInfo)
+        public void UpdateDevice(Rediscovery.Shared.Base.Device.DeviceInfo deviceInfo)
         {
             
         }

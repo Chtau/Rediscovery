@@ -14,7 +14,7 @@ namespace Rediscovery.Client.App.Service.Features.DeviceFeature
     {
         private readonly List<IDeviceFeatureImplementation> _deviceFeatureImplementations = new List<IDeviceFeatureImplementation>();
         private readonly List<IClientFeatureImplementation> _clientFeatureImplementations = new List<IClientFeatureImplementation>();
-        private readonly Shared.Configurations.Service.Models.AppConfiguration _appSettings;
+        private readonly Rediscovery.Shared.Configurations.Service.Models.AppConfiguration _appSettings;
         private readonly Features.Plugins.ILoadPlugins _loadPlugins;
         private readonly ILogger<FeatureService> _logger;
         private readonly Dictionary<Guid, IPCPipe.IPipeExchange> _pipeExchanges = new Dictionary<Guid, IPCPipe.IPipeExchange>();
@@ -26,7 +26,7 @@ namespace Rediscovery.Client.App.Service.Features.DeviceFeature
         public event EventHandler<ExchangeEntity<FeatureData>> RespondToClient;
 
         public FeatureService(ILoggerFactory loggerFactory,
-            IOptions<Shared.Configurations.Service.Models.AppConfiguration> appOptions,
+            IOptions<Rediscovery.Shared.Configurations.Service.Models.AppConfiguration> appOptions,
             Features.Plugins.ILoadPlugins loadPlugins)
         {
             _logger = loggerFactory.CreateLogger<FeatureService>();
@@ -83,9 +83,9 @@ namespace Rediscovery.Client.App.Service.Features.DeviceFeature
             return _deviceFeatureImplementations.Find(x => x.GetDeviceFeatureInfo().Id == featureId)?.GetSettingsObject()?.GetFeatureSetting();
         }
 
-        public List<Shared.Base.Device.FeatureDefinitionExtended> GetFeaturesManifest()
+        public List<Rediscovery.Shared.Base.Device.FeatureDefinitionExtended> GetFeaturesManifest()
         {
-            var manifest = new List<Shared.Base.Device.FeatureDefinitionExtended>();
+            var manifest = new List<Rediscovery.Shared.Base.Device.FeatureDefinitionExtended>();
             foreach (var item in _deviceFeatureImplementations)
             {
                 try

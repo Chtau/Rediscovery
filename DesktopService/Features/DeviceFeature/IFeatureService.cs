@@ -16,7 +16,7 @@ namespace Rediscovery.Client.App.Service.Features.DeviceFeature
         void Load();
         IDeviceFeatureImplementation GetFeatureDevice(Guid featureId);
         IClientFeatureImplementation GetFeatureClient(Guid featureId);
-        List<Shared.Base.Device.FeatureDefinitionExtended> GetFeaturesManifest();
+        List<Rediscovery.Shared.Base.Device.FeatureDefinitionExtended> GetFeaturesManifest();
         /// <summary>
         /// get the ZIP archive path from 'ui.zip'
         /// </summary>

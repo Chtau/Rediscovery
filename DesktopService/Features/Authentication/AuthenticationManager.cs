@@ -17,7 +17,7 @@ namespace Rediscovery.Client.App.Service.Features.Authentication
         private readonly Rediscovery.Service.DAL.Repository.IDeviceRepository _deviceRepository;
         private readonly Features.DeviceFeature.IFeatureService _featureService;
         private readonly IRoleResolver _roleResolver;
-        private readonly Shared.Configurations.Service.Models.IdentityConfiguration _identitySetting;
+        private readonly Rediscovery.Shared.Configurations.Service.Models.IdentityConfiguration _identitySetting;
         private readonly Services.IStaticResources _staticResources;
 
         public AuthenticationManager(ILoggerFactory loggerFactory,
@@ -25,7 +25,7 @@ namespace Rediscovery.Client.App.Service.Features.Authentication
             Rediscovery.Service.DAL.Repository.IDeviceRepository deviceRepository,
             Features.DeviceFeature.IFeatureService featureService,
             IRoleResolver roleResolver,
-            IOptions<Shared.Configurations.Service.Models.IdentityConfiguration> settingOptions,
+            IOptions<Rediscovery.Shared.Configurations.Service.Models.IdentityConfiguration> settingOptions,
             Services.IStaticResources staticResources)
         {
             _logger = loggerFactory.CreateLogger<AuthenticationManager>();
@@ -126,9 +126,9 @@ namespace Rediscovery.Client.App.Service.Features.Authentication
             return _staticResources.PEM;
         }
 
-        public Shared.Base.Connection.Manifest GetManifest()
+        public Rediscovery.Shared.Base.Connection.Manifest GetManifest()
         {
-            return new Shared.Base.Connection.Manifest
+            return new Rediscovery.Shared.Base.Connection.Manifest
             {
                 AppMinimumVersion = _staticResources.ServiceManifest.AppMinimumVersion,
                 ClientName = _staticResources.ServiceManifest.ClientName,
@@ -154,7 +154,7 @@ namespace Rediscovery.Client.App.Service.Features.Authentication
                 Id = null,
                 DeviceIdentifier = null,
                 Role = null,
-                State = Shared.Base.Authentication.LoginState.Failed
+                State = Rediscovery.Shared.Base.Authentication.LoginState.Failed
             };
             try
             {
@@ -169,7 +169,7 @@ namespace Rediscovery.Client.App.Service.Features.Authentication
                         Id = u.Id.ToString(),
                         DeviceIdentifier = u.DeviceIdentifier,
                         Role = u.Role,
-                        State = u.AllowAccess ? Shared.Base.Authentication.LoginState.OK : Shared.Base.Authentication.LoginState.Denied
+                        State = u.AllowAccess ? Rediscovery.Shared.Base.Authentication.LoginState.OK : Rediscovery.Shared.Base.Authentication.LoginState.Denied
                     };
                 }
                 else
@@ -180,22 +180,22 @@ namespace Rediscovery.Client.App.Service.Features.Authentication
                         Id = null,
                         DeviceIdentifier = welcomeDeviceMessage.DeviceIdentifier,
                         Role = null,
-                        State = Shared.Base.Authentication.LoginState.RequiredAuthorizeKey
+                        State = Rediscovery.Shared.Base.Authentication.LoginState.RequiredAuthorizeKey
                     };
                 }
 
-                if (_identitySetting.AnonymousLogin && retVal.State != Shared.Base.Authentication.LoginState.OK)
+                if (_identitySetting.AnonymousLogin && retVal.State != Rediscovery.Shared.Base.Authentication.LoginState.OK)
                 {
                     // TODO: do we need to save this temp devices for the id somewhere ?
                     retVal.Id = Guid.NewGuid().ToString();
-                    retVal.State = Shared.Base.Authentication.LoginState.OK;
+                    retVal.State = Rediscovery.Shared.Base.Authentication.LoginState.OK;
                     retVal.Role = _roleResolver.GetRole(welcomeDeviceMessage.DeviceIdentifier);
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.ToString());
-                retVal.State = Shared.Base.Authentication.LoginState.Failed;
+                retVal.State = Rediscovery.Shared.Base.Authentication.LoginState.Failed;
             }
             return retVal;
         }

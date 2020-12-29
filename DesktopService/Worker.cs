@@ -15,13 +15,13 @@ namespace Rediscovery.Client.App.Service
     public class Worker : IHostedService, IDisposable
     {
         private readonly Features.Configuration.IDistributeConfig _distributeConfig;
-        private readonly Shared.Configurations.Service.Models.AppConfiguration _appSettings;
+        private readonly Rediscovery.Shared.Configurations.Service.Models.AppConfiguration _appSettings;
         private readonly ILogger<Worker> _logger;
         private readonly Features.DeviceFeature.IFeatureService _featureService;
 
         public Worker(
             Features.Configuration.IDistributeConfig distributeConfig,
-            IOptions<Shared.Configurations.Service.Models.AppConfiguration> appOptions,
+            IOptions<Rediscovery.Shared.Configurations.Service.Models.AppConfiguration> appOptions,
             Features.DeviceFeature.IFeatureService featureService,
             ILoggerFactory loggerFactory)
         {

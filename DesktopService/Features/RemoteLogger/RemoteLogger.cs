@@ -36,7 +36,7 @@ namespace Rediscovery.Client.App.Service.Features.Logger
 
             if (_config.EventId == 0 || _config.EventId == eventId.Id)
             {
-                _config?.GetLoggerHandlerInstance()?.NewEntry(new Shared.Logging.Models.LoggerEntry
+                _config?.GetLoggerHandlerInstance()?.NewEntry(new Rediscovery.Shared.Logging.Models.LoggerEntry
                 {
                     Id = eventId.Id.ToString(),
                     LogLevel = GetLoggerType(logLevel),
@@ -48,25 +48,25 @@ namespace Rediscovery.Client.App.Service.Features.Logger
             }
         }
 
-        private Shared.Logging.LoggerType GetLoggerType(LogLevel logLevel)
+        private Rediscovery.Shared.Logging.LoggerType GetLoggerType(LogLevel logLevel)
         {
             switch (logLevel)
             {
                 case LogLevel.Trace:
-                    return Shared.Logging.LoggerType.Trace;
+                    return Rediscovery.Shared.Logging.LoggerType.Trace;
                 case LogLevel.Debug:
-                    return Shared.Logging.LoggerType.Debug;
+                    return Rediscovery.Shared.Logging.LoggerType.Debug;
                 case LogLevel.Information:
                 case LogLevel.None:
-                    return Shared.Logging.LoggerType.Information;
+                    return Rediscovery.Shared.Logging.LoggerType.Information;
                 case LogLevel.Warning:
-                    return Shared.Logging.LoggerType.Warning;
+                    return Rediscovery.Shared.Logging.LoggerType.Warning;
                 case LogLevel.Error:
-                    return Shared.Logging.LoggerType.Error;
+                    return Rediscovery.Shared.Logging.LoggerType.Error;
                 case LogLevel.Critical:
-                    return Shared.Logging.LoggerType.Critical;
+                    return Rediscovery.Shared.Logging.LoggerType.Critical;
             }
-            return Shared.Logging.LoggerType.Information;
+            return Rediscovery.Shared.Logging.LoggerType.Information;
         }
     }
 }

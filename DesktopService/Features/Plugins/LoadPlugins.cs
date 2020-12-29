@@ -24,7 +24,7 @@ namespace Rediscovery.Client.App.Service.Features.Plugins
 
         private readonly IPluginLogger _pluginLogger;
         private readonly ILogger<LoadPlugins> _logger;
-        private readonly Shared.Configurations.Service.Models.AppConfiguration _appSettings;
+        private readonly Rediscovery.Shared.Configurations.Service.Models.AppConfiguration _appSettings;
         private readonly Services.IStaticResources _staticResources;
 
         private List<string> filePaths = new List<string>();
@@ -33,7 +33,7 @@ namespace Rediscovery.Client.App.Service.Features.Plugins
         private List<PluginAssembly> pluginAssemblies = new List<PluginAssembly>();
 
         public LoadPlugins(ILoggerFactory loggerFactory, IPluginLogger pluginLogger,
-            IOptions<Shared.Configurations.Service.Models.AppConfiguration> appOptions,
+            IOptions<Rediscovery.Shared.Configurations.Service.Models.AppConfiguration> appOptions,
             Services.IStaticResources staticResources)
         {
             _logger = loggerFactory.CreateLogger<LoadPlugins>();

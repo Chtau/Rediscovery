@@ -8,9 +8,9 @@ namespace Rediscovery.Client.App.Service.Features.Plugins
 {
     public static class PluginEntitiesExtensions
     {
-        public static Shared.Base.Device.FeatureDefinitionExtended GetFeatureDefinitionExtended(this Rediscovery.Feature.Plugin.Models.PluginFeatureDefinition entity)
+        public static Rediscovery.Shared.Base.Device.FeatureDefinitionExtended GetFeatureDefinitionExtended(this Rediscovery.Feature.Plugin.Models.PluginFeatureDefinition entity)
         {
-            return new Shared.Base.Device.FeatureDefinitionExtended
+            return new Rediscovery.Shared.Base.Device.FeatureDefinitionExtended
             {
                 Author = entity.Author,
                 ControlIntegrationPoint = entity.ControlIntegrationPoint.GetIntegrationPoint(),
@@ -31,9 +31,9 @@ namespace Rediscovery.Client.App.Service.Features.Plugins
             };
         }
 
-        public static Shared.Base.Device.FeatureDefinitionExtended GetFeatureDefinitionExtended(this Rediscovery.Feature.Plugin.Models.PluginFeatureDefinitionClient entity)
+        public static Rediscovery.Shared.Base.Device.FeatureDefinitionExtended GetFeatureDefinitionExtended(this Rediscovery.Feature.Plugin.Models.PluginFeatureDefinitionClient entity)
         {
-            return new Shared.Base.Device.FeatureDefinitionExtended
+            return new Rediscovery.Shared.Base.Device.FeatureDefinitionExtended
             {
                 Author = entity.Author,
                 ControlIntegrationPoint = entity.ControlIntegrationPoint.GetIntegrationPoint(),
@@ -54,22 +54,22 @@ namespace Rediscovery.Client.App.Service.Features.Plugins
             };
         }
 
-        public static Shared.Base.Device.IntegrationPoint GetIntegrationPoint(this Rediscovery.Feature.Plugin.Enums.PluginIntegration pluginIntegration)
+        public static Rediscovery.Shared.Base.Device.IntegrationPoint GetIntegrationPoint(this Rediscovery.Feature.Plugin.Enums.PluginIntegration pluginIntegration)
         {
             switch (pluginIntegration)
             {
                 case Rediscovery.Feature.Plugin.Enums.PluginIntegration.Desktop:
-                    return Shared.Base.Device.IntegrationPoint.Desktop;
+                    return Rediscovery.Shared.Base.Device.IntegrationPoint.Desktop;
                 case Rediscovery.Feature.Plugin.Enums.PluginIntegration.Mobile:
-                    return Shared.Base.Device.IntegrationPoint.Mobile;
+                    return Rediscovery.Shared.Base.Device.IntegrationPoint.Mobile;
                 default:
-                    return Shared.Base.Device.IntegrationPoint.Desktop;
+                    return Rediscovery.Shared.Base.Device.IntegrationPoint.Desktop;
             }
         }
 
-        public static Shared.Base.Core.Version GetVersion(this Rediscovery.Feature.Plugin.Models.PluginVersion pluginVersion)
+        public static Rediscovery.Shared.Base.Core.Version GetVersion(this Rediscovery.Feature.Plugin.Models.PluginVersion pluginVersion)
         {
-            return new Shared.Base.Core.Version
+            return new Rediscovery.Shared.Base.Core.Version
             {
                 Label = pluginVersion.Label,
                 Major = pluginVersion.Major,

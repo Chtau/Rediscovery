@@ -10,10 +10,10 @@ namespace Rediscovery.Client.App.Service.Features.Authentication
     public class RoleResolver : IRoleResolver
     {
         private readonly ILogger<RoleResolver> _logger;
-        private readonly Shared.Configurations.Service.Models.RoleConfiguration _roleConfiguration;
+        private readonly Rediscovery.Shared.Configurations.Service.Models.RoleConfiguration _roleConfiguration;
 
         public RoleResolver(ILoggerFactory loggerFactory,
-            IOptions<Shared.Configurations.Service.Models.RoleConfiguration> roleOptions)
+            IOptions<Rediscovery.Shared.Configurations.Service.Models.RoleConfiguration> roleOptions)
         {
             _logger = loggerFactory.CreateLogger<RoleResolver>();
             _roleConfiguration = roleOptions.Value;

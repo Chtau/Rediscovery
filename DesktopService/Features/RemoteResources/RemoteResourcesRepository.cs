@@ -76,7 +76,7 @@ namespace Rediscovery.Client.App.Service.Features.RemoteResources
             HeartbeatStatisticsChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        public List<Shared.Base.Device.FeatureDefinitionExtended> GetResourceDeviceFeature()
+        public List<Rediscovery.Shared.Base.Device.FeatureDefinitionExtended> GetResourceDeviceFeature()
         {
             var features = _featureService.GetFeaturesManifest();
             return (from x in features
@@ -84,7 +84,7 @@ namespace Rediscovery.Client.App.Service.Features.RemoteResources
                     ).ToList();
         }
 
-        public List<Shared.Base.Device.DeviceInfo> GetResourceDeviceInfo()
+        public List<Rediscovery.Shared.Base.Device.DeviceInfo> GetResourceDeviceInfo()
         {
             var users = _deviceRepository.GetAll().GetAwaiter().GetResult();
             return (from x in users
@@ -93,7 +93,7 @@ namespace Rediscovery.Client.App.Service.Features.RemoteResources
         }
 
         [Obsolete("Active devices are now from the heartbeat")]
-        public List<Shared.Base.Device.DeviceInfo> GetResourceActiveDeviceInfo()
+        public List<Rediscovery.Shared.Base.Device.DeviceInfo> GetResourceActiveDeviceInfo()
         {
             var allUsers = from x in Rediscovery.Communication.Provider.Feature.FeatureActiveDevices.Devices select new Guid(x);
             var users = _deviceRepository.GetAll().GetAwaiter().GetResult();
@@ -116,7 +116,7 @@ namespace Rediscovery.Client.App.Service.Features.RemoteResources
             }
         }
 
-        public Shared.Base.Device.DeviceInfo UpdateDeviceInfo(Shared.Base.Device.DeviceInfo deviceInfo)
+        public Rediscovery.Shared.Base.Device.DeviceInfo UpdateDeviceInfo(Rediscovery.Shared.Base.Device.DeviceInfo deviceInfo)
         {
             try
             {
@@ -130,7 +130,7 @@ namespace Rediscovery.Client.App.Service.Features.RemoteResources
             }
         }
 
-        public List<Shared.Base.Device.DeviceInfo> GetResourcePendingAuthenticationDevices()
+        public List<Rediscovery.Shared.Base.Device.DeviceInfo> GetResourcePendingAuthenticationDevices()
         {
             var devices = _devicePendingAuthenticationRepository.GetAll().GetAwaiter().GetResult();
             return (from x in devices
@@ -163,26 +163,26 @@ namespace Rediscovery.Client.App.Service.Features.RemoteResources
             return false;
         }
 
-        public List<Shared.Base.Feature.FeatureProfil> GetResourceDeviceFeatureProfiles(Guid featureId)
+        public List<Rediscovery.Shared.Base.Feature.FeatureProfil> GetResourceDeviceFeatureProfiles(Guid featureId)
         {
             return _featureService.GetFeatureProfiles(featureId);
         }
 
-        public Shared.Base.Feature.FeatureSetting GetResourceDeviceFeatureSettings(Guid featureId)
+        public Rediscovery.Shared.Base.Feature.FeatureSetting GetResourceDeviceFeatureSettings(Guid featureId)
         {
             return _featureService.GetFeatureSettings(featureId);
         }
 
-        public List<Shared.Base.Statistics.HeartbeatStatisticItem> GetHeartbeatStatistic()
+        public List<Rediscovery.Shared.Base.Statistics.HeartbeatStatisticItem> GetHeartbeatStatistic()
         {
-            var retVal = new List<Shared.Base.Statistics.HeartbeatStatisticItem>();
+            var retVal = new List<Rediscovery.Shared.Base.Statistics.HeartbeatStatisticItem>();
             try
             {
                 var items = _heartbeatStatistic.Get();
                 foreach (var item in items)
                 {
                     var y = from x in item.Value
-                            select new Shared.Base.Statistics.HeartbeatStatisticItem
+                            select new Rediscovery.Shared.Base.Statistics.HeartbeatStatisticItem
                             {
                                 DeviceId = x.DeviceId,
                                 OK = x.OK,
@@ -200,9 +200,9 @@ namespace Rediscovery.Client.App.Service.Features.RemoteResources
             return retVal;
         }
 
-        public List<Shared.Logging.Models.LoggerEntry> GetLoggerEntires()
+        public List<Rediscovery.Shared.Logging.Models.LoggerEntry> GetLoggerEntires()
         {
-            var retVal = new List<Shared.Logging.Models.LoggerEntry>();
+            var retVal = new List<Rediscovery.Shared.Logging.Models.LoggerEntry>();
             try
             {
                 return _loggerHandler.Get();

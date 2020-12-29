@@ -25,7 +25,7 @@ namespace Rediscovery.Client.App.Service
         public Startup()
         {
             var builder = new ConfigurationBuilder()
-                .AddJsonFile(Shared.Configurations.Service.ConfigFileNames.AppSettings, optional: false, reloadOnChange: true);
+                .AddJsonFile(Rediscovery.Shared.Configurations.Service.ConfigFileNames.AppSettings, optional: false, reloadOnChange: true);
 
             Configuration = builder.Build();
         }
@@ -34,18 +34,18 @@ namespace Rediscovery.Client.App.Service
         {
             services.AddControllers();
 
-            var identitySettingsSection = Configuration.GetSection(Shared.Configurations.Service.Models.IdentityConfiguration.SectionName);
-            services.Configure<Shared.Configurations.Service.Models.IdentityConfiguration>(identitySettingsSection);
-            var remoteResourceSettingsSection = Configuration.GetSection(Shared.Configurations.Service.Models.RemoteResourceConfiguration.SectionName);
-            services.Configure<Shared.Configurations.Service.Models.RemoteResourceConfiguration>(remoteResourceSettingsSection);
-            var appSettingsSection = Configuration.GetSection(Shared.Configurations.Service.Models.AppConfiguration.SectionName);
-            services.Configure<Shared.Configurations.Service.Models.AppConfiguration>(appSettingsSection);
-            var rolesSection = Configuration.GetSection(Shared.Configurations.Service.Models.RoleConfiguration.SectionName);
-            services.Configure<Shared.Configurations.Service.Models.RoleConfiguration>(rolesSection);
+            var identitySettingsSection = Configuration.GetSection(Rediscovery.Shared.Configurations.Service.Models.IdentityConfiguration.SectionName);
+            services.Configure<Rediscovery.Shared.Configurations.Service.Models.IdentityConfiguration>(identitySettingsSection);
+            var remoteResourceSettingsSection = Configuration.GetSection(Rediscovery.Shared.Configurations.Service.Models.RemoteResourceConfiguration.SectionName);
+            services.Configure<Rediscovery.Shared.Configurations.Service.Models.RemoteResourceConfiguration>(remoteResourceSettingsSection);
+            var appSettingsSection = Configuration.GetSection(Rediscovery.Shared.Configurations.Service.Models.AppConfiguration.SectionName);
+            services.Configure<Rediscovery.Shared.Configurations.Service.Models.AppConfiguration>(appSettingsSection);
+            var rolesSection = Configuration.GetSection(Rediscovery.Shared.Configurations.Service.Models.RoleConfiguration.SectionName);
+            services.Configure<Rediscovery.Shared.Configurations.Service.Models.RoleConfiguration>(rolesSection);
 
-            var appSettings = appSettingsSection.Get<Shared.Configurations.Service.Models.AppConfiguration>();
-            var identitySettings = identitySettingsSection.Get<Shared.Configurations.Service.Models.IdentityConfiguration>();
-            var roleSettings = rolesSection.Get<Shared.Configurations.Service.Models.RoleConfiguration>();
+            var appSettings = appSettingsSection.Get<Rediscovery.Shared.Configurations.Service.Models.AppConfiguration>();
+            var identitySettings = identitySettingsSection.Get<Rediscovery.Shared.Configurations.Service.Models.IdentityConfiguration>();
+            var roleSettings = rolesSection.Get<Rediscovery.Shared.Configurations.Service.Models.RoleConfiguration>();
 
             services.AddHostedService<Worker>();
 
@@ -83,7 +83,7 @@ namespace Rediscovery.Client.App.Service
         {
             app.UseCertificateServiceDefaults();
 
-            var appSettings = app.ApplicationServices.GetRequiredService<IOptions<Shared.Configurations.Service.Models.AppConfiguration>>();
+            var appSettings = app.ApplicationServices.GetRequiredService<IOptions<Rediscovery.Shared.Configurations.Service.Models.AppConfiguration>>();
             var remoteLogLevel = LogLevel.None;
             if (Enum.TryParse(typeof(LogLevel), appSettings?.Value?.RemoteLogger, out object obj))
             {
