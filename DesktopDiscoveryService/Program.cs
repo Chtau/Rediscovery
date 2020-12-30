@@ -35,12 +35,16 @@ namespace Rediscovery.Client.Service.Discovery
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Blue;
                     Console.WriteLine("Firewall rule created");
+                    Console.ResetColor();
                 }
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Firewall rule: OK");
+                Console.ResetColor();
             }
 
             var serviceInfo = new DiscoveryServiceInfo
@@ -51,6 +55,11 @@ namespace Rediscovery.Client.Service.Discovery
                 DesktopName = !string.IsNullOrWhiteSpace(serviceInfoSettings.Name) ? serviceInfoSettings.Name : Environment.MachineName,
                 DesktopOS = System.Runtime.InteropServices.RuntimeInformation.OSDescription
             };
+
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine($"Provided Service Info: \r\n{Newtonsoft.Json.JsonConvert.SerializeObject(serviceInfo, Newtonsoft.Json.Formatting.Indented)}\r\n");
+            Console.WriteLine($"Discovery Setting: \r\n{Newtonsoft.Json.JsonConvert.SerializeObject(discoverySettings, Newtonsoft.Json.Formatting.Indented)}\r\n");
+            Console.ResetColor();
 
             Console.WriteLine("Waiting for Clients");
             var dis = new DiscoveryClient();

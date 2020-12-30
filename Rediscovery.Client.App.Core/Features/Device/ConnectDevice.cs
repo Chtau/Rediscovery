@@ -67,14 +67,14 @@ namespace Rediscovery.Client.App.Core.Features.Device
             };
             try
             {
-                _logger.LogTrace($"[Probe] Start probe host. Config:{ConnectionConfiguration} \r\nDeviceMessage:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(_monitorSettings.CurrentValue.GreetingDeviceMessage)}\r\n");
+                _logger.LogTrace($"[Probe] Start probe host. Config:{ConnectionConfiguration} \r\nDeviceMessage:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(_monitorSettings.CurrentValue.GreetingDeviceMessage, Newtonsoft.Json.Formatting.Indented)}\r\n");
                 ConnectionStateChanged?.Invoke(this, deviceConnectionState);
                 var reply = _greetingConsumerService.GreetHost(ConnectionConfiguration.Address, ConnectionConfiguration.Port,
                     _monitorSettings.CurrentValue.GreetingDeviceMessage, _monitorSettings.CurrentValue.TimeoutSeconds);
                 deviceConnectionState.Change = DeviceConnectionState.StateChange.ProbeReply;
                 deviceConnectionState.Allowed = reply.CanConnect;
                 ConnectionStateChanged?.Invoke(this, deviceConnectionState);
-                _logger.LogTrace($"[Probe] Probe host reply. Config:{ConnectionConfiguration} \r\nReply:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(reply)}\r\n");
+                _logger.LogTrace($"[Probe] Probe host reply. Config:{ConnectionConfiguration} \r\nReply:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(reply, Newtonsoft.Json.Formatting.Indented)}\r\n");
                 if (reply.CanConnect == Rediscovery.Shared.Base.Connection.Enums.AllowConnect.OK)
                     return true;
             }
@@ -154,7 +154,7 @@ namespace Rediscovery.Client.App.Core.Features.Device
             };
             try
             {
-                _logger.LogTrace($"[Greeting] Start greet host. Config:{ConnectionConfiguration} \r\nDeviceMessage:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(_monitorSettings.CurrentValue.GreetingDeviceMessage)}\r\n");
+                _logger.LogTrace($"[Greeting] Start greet host. Config:{ConnectionConfiguration} \r\nDeviceMessage:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(_monitorSettings.CurrentValue.GreetingDeviceMessage, Newtonsoft.Json.Formatting.Indented)}\r\n");
                 ConnectionStateChanged?.Invoke(this, deviceConnectionState);
 
                 var reply = _greetingConsumerService.GreetHost(connectionConfiguration.Address, connectionConfiguration.Port, 
@@ -162,7 +162,7 @@ namespace Rediscovery.Client.App.Core.Features.Device
 
                 deviceConnectionState.Change = DeviceConnectionState.StateChange.GreetHostReply;
                 deviceConnectionState.Allowed = reply.CanConnect;
-                _logger.LogTrace($"[Greeting] Greet host reply received. Config:{ConnectionConfiguration} \r\nReply:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(reply)}\r\n");
+                _logger.LogTrace($"[Greeting] Greet host reply received. Config:{ConnectionConfiguration} \r\nReply:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(reply, Newtonsoft.Json.Formatting.Indented)}\r\n");
                 ConnectionStateChanged?.Invoke(this, deviceConnectionState);
 
                 if (reply.CanConnect == Rediscovery.Shared.Base.Connection.Enums.AllowConnect.OK)
@@ -177,16 +177,16 @@ namespace Rediscovery.Client.App.Core.Features.Device
                         Port = connectionConfiguration.Port,
                         SSLPort = reply.SSLPort
                     };
-                    _logger.LogTrace($"[Authentication] Connect to remote Address. Config:{ConnectionConfiguration} \r\nConsumerConfig:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(consumerConfig)}\r\n");
+                    _logger.LogTrace($"[Authentication] Connect to remote Address. Config:{ConnectionConfiguration} \r\nConsumerConfig:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(consumerConfig, Newtonsoft.Json.Formatting.Indented)}\r\n");
                     if (_authenticationConsumerService.Connect(consumerConfig))
                     {
                         deviceConnectionState.Change = DeviceConnectionState.StateChange.ConnectReply;
                         deviceConnectionState.CurrentStateConnectReply = DeviceConnectionState.StateConnectReply.Ok;
-                        _logger.LogTrace($"[Authentication] Reply received. Config:{ConnectionConfiguration} \r\nReply:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(deviceConnectionState)}\r\n");
+                        _logger.LogTrace($"[Authentication] Reply received. Config:{ConnectionConfiguration} \r\nReply:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(deviceConnectionState, Newtonsoft.Json.Formatting.Indented)}\r\n");
                         ConnectionStateChanged?.Invoke(this, deviceConnectionState);
 
                         deviceConnectionState.Change = DeviceConnectionState.StateChange.Welcome;
-                        _logger.LogTrace($"[Welcome] Send welcome request message. Config:{ConnectionConfiguration} \r\nWelcomeMessage:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(_monitorSettings.CurrentValue.WelcomeDeviceMessage)}\r\n");
+                        _logger.LogTrace($"[Welcome] Send welcome request message. Config:{ConnectionConfiguration} \r\nWelcomeMessage:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(_monitorSettings.CurrentValue.WelcomeDeviceMessage, Newtonsoft.Json.Formatting.Indented)}\r\n");
                         ConnectionStateChanged?.Invoke(this, deviceConnectionState);
                         _authenticationConsumerService.SendWelcome(_monitorSettings.CurrentValue.WelcomeDeviceMessage, deviceReply =>
                         {
@@ -194,7 +194,7 @@ namespace Rediscovery.Client.App.Core.Features.Device
                             deviceConnectionState.Change = DeviceConnectionState.StateChange.WelcomeReply;
                             deviceConnectionState.CurrentState = deviceReply.State;
                             deviceConnectionState.Token = authenticationToken;
-                            _logger.LogTrace($"[Welcome] Reply received. Config:{ConnectionConfiguration} \r\nReply:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(deviceReply)}\r\n");
+                            _logger.LogTrace($"[Welcome] Reply received. Config:{ConnectionConfiguration} \r\nReply:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(deviceReply, Newtonsoft.Json.Formatting.Indented)}\r\n");
                             ConnectionStateChanged?.Invoke(this, deviceConnectionState);
 
                             if (deviceReply.State == Rediscovery.Shared.Base.Connection.Enums.ConnectionState.OK)
@@ -207,7 +207,7 @@ namespace Rediscovery.Client.App.Core.Features.Device
                     {
                         deviceConnectionState.Change = DeviceConnectionState.StateChange.ConnectReply;
                         deviceConnectionState.CurrentStateConnectReply = DeviceConnectionState.StateConnectReply.Failed;
-                        _logger.LogTrace($"[Authentication] Reply failed. Config:{ConnectionConfiguration} \r\nReply:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(deviceConnectionState)}\r\n");
+                        _logger.LogTrace($"[Authentication] Reply failed. Config:{ConnectionConfiguration} \r\nReply:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(deviceConnectionState, Newtonsoft.Json.Formatting.Indented)}\r\n");
                         ConnectionStateChanged?.Invoke(this, deviceConnectionState);
                     }
                 }
@@ -225,7 +225,7 @@ namespace Rediscovery.Client.App.Core.Features.Device
             {
                 deviceConnectionState.Change = DeviceConnectionState.StateChange.ManifestReceived;
                 deviceConnectionState.DeviceManifest = manifest;
-                _logger.LogTrace($"[Manifest] Received data. Config:{connectionConfiguration} \r\nManifest:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(manifest)}\r\n");
+                _logger.LogTrace($"[Manifest] Received data. Config:{connectionConfiguration} \r\nManifest:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(manifest, Newtonsoft.Json.Formatting.Indented)}\r\n");
                 ConnectionStateChanged?.Invoke(this, deviceConnectionState);
 
                 OnInitServicesAfterConnect();

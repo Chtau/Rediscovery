@@ -17,17 +17,7 @@ namespace Rediscovery.Client.App.Core
         [Fact]
         public void Init()
         {
-            CoreClientManager.Init(new CoreClientManagerSetting
-            {
-                CurrentDiscoverSetting = new Features.Discovery.DiscoverSetting
-                {
-                    Port = 14545
-                },
-                CurrentStorageSetting = new StorageSetting
-                {
-                    DatabaseFile = null
-                }
-            });
+            Shared.Init();
             Assert.NotNull(Resolver.Get<ILoggingData>());
             Assert.NotNull(Resolver.Get<ILogger>());
             Assert.NotNull(Resolver.Get<IDBStorage>());
