@@ -35,12 +35,16 @@ namespace Rediscovery.Client.App.Core.Features.Device
         {
             _logger = logger;
             _monitorSettings = settingValue;
-            _greetingConsumerService = Resolver.Scope<IGreetingConsumerService>();
-            _authenticationConsumerService = Resolver.Scope<IAuthenticationConsumerService>();
-            _heartbeatConsumer = Resolver.Scope<IHeartbeatConsumer>();
+            /*Resolver.Register<IGreetingConsumerService>(new GreetingConsumerService(logger));
+            Resolver.Register<IAuthenticationConsumerService>(new AuthenticationConsumerService(logger));
+            Resolver.Register<IFeatureConsumerService>(new FeatureConsumerService(logger));
+            Resolver.Register<IHeartbeatConsumer>(new HeartbeatConsumer(logger));*/
+            _greetingConsumerService = new GreetingConsumerService(logger);
+            _authenticationConsumerService = new AuthenticationConsumerService(logger);
+            _heartbeatConsumer = new HeartbeatConsumer(logger);
             _heartbeatConsumer.ReceivedBeatRoundtrip += _heartbeatConsumer_ReceivedBeatRoundtrip;
-            _loggerConsumer = Resolver.Scope<ILoggerConsumer>();
-            _featureConsumerService = Resolver.Scope<IFeatureConsumerService>();
+            _loggerConsumer = new LoggerConsumer();
+            _featureConsumerService = new FeatureConsumerService(logger);
         }
 
         public event EventHandler<DeviceConnectionState> ConnectionStateChanged;

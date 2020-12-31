@@ -134,7 +134,6 @@ namespace Rediscovery.Client.App.Service
                 SupportedFeatures = new System.Collections.Generic.List<Rediscovery.Shared.Base.Device.FeatureDefinitionExtended>(),
                 ClientName = DesktopName
             };
-
             host.Run();
         }
 

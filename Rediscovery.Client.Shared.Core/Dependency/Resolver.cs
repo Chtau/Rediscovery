@@ -33,6 +33,9 @@ namespace Rediscovery.Client.Shared.Core.Dependency
 
         public static T Scope<T>()
         {
+#warning clone does not work correct
+            // clone does not work correct
+            // injected instances are null after clone
             var instance = Get<T>();
             return instance.Clone();
         }

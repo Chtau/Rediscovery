@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
@@ -11,6 +12,7 @@ namespace Rediscovery.Client.App.Service.Services
         ushort HostPort { get; set; }
         ushort HostPortHttps { get; set; }
         string ExePath { get; set; }
+        [IgnoreDataMember]
         X509Certificate2 X509Certificate2 { get; set; }
         string PEM { get; set; }
         Rediscovery.Shared.Base.Connection.Manifest ServiceManifest { get; set; }

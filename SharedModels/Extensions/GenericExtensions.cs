@@ -19,8 +19,9 @@ namespace Rediscovery.Shared.Base.Extensions
             {
                 return default(T);
             }
+            var sourceType = source.GetType();
             var deserializeSettings = new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace };
-            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(source), deserializeSettings);
+            return (T)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(source), sourceType, deserializeSettings);
         }
     }
 }

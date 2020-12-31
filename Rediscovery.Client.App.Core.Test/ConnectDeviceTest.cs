@@ -1,4 +1,5 @@
-﻿using Rediscovery.Client.App.Core.Features.Discovery;
+﻿using Rediscovery.Client.App.Core.Features.Device;
+using Rediscovery.Client.App.Core.Features.Discovery;
 using Rediscovery.Client.Service.Discovery;
 using Rediscovery.Client.Shared.Core.Dependency;
 using System;
@@ -51,6 +52,21 @@ namespace Rediscovery.Client.App.Core
             
             Assert.True(resultInfo.DesktopName == "Test", $"Client received {nameof(Rediscovery.Shared.Base.Discovery.DiscoveryServiceInfo)} object");
             Assert.True(!string.IsNullOrWhiteSpace(serviceResult), $"Service received public Client address");
+        }
+
+        [Fact]
+        public void Probe()
+        {
+            var configId = Guid.NewGuid();
+            Shared.Init();
+            var dm = Resolver.Get<IDevicesManager>();
+            dm.AddOrUpdateConnectionConfiguration(new Features.Device.Models.ConnectionConfiguration
+            {
+                Id = configId,
+                Address = "192.168.1.101",
+                Port = 44341
+            });
+            Assert.True(dm.Probe(configId), "Could not reach Service with Probe");
         }
     }
 }

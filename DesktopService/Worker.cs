@@ -18,16 +18,19 @@ namespace Rediscovery.Client.App.Service
         private readonly Rediscovery.Shared.Configurations.Service.Models.AppConfiguration _appSettings;
         private readonly ILogger<Worker> _logger;
         private readonly Features.DeviceFeature.IFeatureService _featureService;
+        private readonly Services.IStaticResources _staticResources;
 
         public Worker(
             Features.Configuration.IDistributeConfig distributeConfig,
             IOptions<Rediscovery.Shared.Configurations.Service.Models.AppConfiguration> appOptions,
             Features.DeviceFeature.IFeatureService featureService,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            Services.IStaticResources staticResources)
         {
             _distributeConfig = distributeConfig;
             _appSettings = appOptions.Value;
             _featureService = featureService;
+            _staticResources = staticResources;
             _logger = loggerFactory.CreateLogger<Worker>();
         }
 
@@ -57,6 +60,9 @@ namespace Rediscovery.Client.App.Service
             }
 
             _distributeConfig.Share();
+
+            _logger.LogInformation($"Service Worker started");
+            _logger.LogInformation($"Loaded with Resources:\r\n{Newtonsoft.Json.JsonConvert.SerializeObject(_staticResources, Newtonsoft.Json.Formatting.Indented)}\r\n");
 
             // the Task.Run leads to a thread starvation
             /*Task.Run(() =>
