@@ -55,8 +55,18 @@ namespace Rediscovery.Client.App.Core
         }
 
         [Fact]
-        public void Probe()
+        public async void Probe()
         {
+            int port = 24567;
+            // first start service
+            var serviceTask = Task.Run(() =>
+            {
+                string portArg = Rediscovery.Shared.Arguments.Service.Arguments.CommandPort + port;
+                Rediscovery.Client.App.Service.Program.Main(new string[] { portArg });
+            });
+            // delay for service startup
+            await Task.Delay(TimeSpan.FromSeconds(5));
+            
             var configId = Guid.NewGuid();
             Shared.Init();
             var dm = Resolver.Get<IDevicesManager>();
@@ -64,7 +74,7 @@ namespace Rediscovery.Client.App.Core
             {
                 Id = configId,
                 Address = "192.168.1.101",
-                Port = 44341
+                Port = port
             });
             Assert.True(dm.Probe(configId), "Could not reach Service with Probe");
         }

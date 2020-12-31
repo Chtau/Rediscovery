@@ -19,7 +19,7 @@ using System.Text;
 
 namespace Rediscovery.Client.App.Service
 {
-    internal static class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
