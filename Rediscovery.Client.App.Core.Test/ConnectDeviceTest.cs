@@ -12,7 +12,7 @@ namespace Rediscovery.Client.App.Core
     public class ConnectDeviceTest
     {
         [Fact]
-        public async void Discover()
+        public void Discover()
         {
             Rediscovery.Shared.Base.Discovery.DiscoveryServiceInfo resultInfo = null;
             string serviceResult = null;
@@ -38,10 +38,17 @@ namespace Rediscovery.Client.App.Core
                     resultInfo = result;
                 }
             });
-            do
+            Task.WaitAny(Task.Run(async () =>
             {
-                await Task.Delay(TimeSpan.FromMilliseconds(50)).ConfigureAwait(false);
-            } while (resultInfo == null || string.IsNullOrWhiteSpace(serviceResult));
+                do
+                {
+                    await Task.Delay(TimeSpan.FromMilliseconds(50)).ConfigureAwait(false);
+                } while (resultInfo == null || string.IsNullOrWhiteSpace(serviceResult));
+            }), Task.Run(async () =>
+            {
+                await Task.Delay(TimeSpan.FromSeconds(30));
+            }));
+            
             Assert.True(resultInfo.DesktopName == "Test", $"Client received {nameof(Rediscovery.Shared.Base.Discovery.DiscoveryServiceInfo)} object");
             Assert.True(!string.IsNullOrWhiteSpace(serviceResult), $"Service received public Client address");
         }
