@@ -35,10 +35,6 @@ namespace Rediscovery.Client.App.Core.Features.Device
         {
             _logger = logger;
             _monitorSettings = settingValue;
-            /*Resolver.Register<IGreetingConsumerService>(new GreetingConsumerService(logger));
-            Resolver.Register<IAuthenticationConsumerService>(new AuthenticationConsumerService(logger));
-            Resolver.Register<IFeatureConsumerService>(new FeatureConsumerService(logger));
-            Resolver.Register<IHeartbeatConsumer>(new HeartbeatConsumer(logger));*/
             _greetingConsumerService = new GreetingConsumerService(logger);
             _authenticationConsumerService = new AuthenticationConsumerService(logger);
             _heartbeatConsumer = new HeartbeatConsumer(logger);

@@ -3,6 +3,7 @@ using Rediscovery.Client.App.Core.Features.Device.Models;
 using Rediscovery.Client.App.Core.Features.Discovery;
 using Rediscovery.Client.Service.Discovery;
 using Rediscovery.Client.Shared.Core.Dependency;
+using Rediscovery.Client.Shared.Core.Features.Heartbeat.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -130,6 +131,29 @@ namespace Rediscovery.Client.App.Core
             await Connect();
             var dm = Resolver.Get<IDevicesManager>();
             Assert.True(dm.Disconnect(connectionConfigurationId), "Failed to disconnect from Service");
+        }
+
+        [Fact]
+        public async Task Heartbeat()
+        {
+            await Connect();
+            var dm = Resolver.Get<IDevicesManager>();
+            HeartbeatResult<ConnectionConfiguration> heartbeatResult = null;
+            dm.HeartbeatReceived += (obj, args) =>
+            {
+                heartbeatResult = args;
+            };
+            Task.WaitAny(Task.Run(async () =>
+            {
+                do
+                {
+                    await Task.Delay(TimeSpan.FromMilliseconds(50)).ConfigureAwait(false);
+                } while (heartbeatResult == null);
+            }), Task.Run(async () =>
+            {
+                await Task.Delay(TimeSpan.FromSeconds(30));
+            }));
+            Assert.True(heartbeatResult != null, "No Heartbeat from the Service received");
         }
     }
 }
