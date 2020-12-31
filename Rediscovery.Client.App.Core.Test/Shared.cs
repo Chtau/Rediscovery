@@ -7,13 +7,13 @@ namespace Rediscovery.Client.App.Core
 {
     public static class Shared
     {
-        public static void Init()
+        public static void Init(int discoveryPort = 14545)
         {
             CoreClientManager.Init(new CoreClientManagerSetting
             {
                 CurrentDiscoverSetting = new Features.Discovery.DiscoverSetting
                 {
-                    Port = 14545
+                    Port = discoveryPort
                 },
                 CurrentStorageSetting = new StorageSetting
                 {
