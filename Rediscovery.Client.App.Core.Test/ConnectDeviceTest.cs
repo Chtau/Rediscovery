@@ -1,4 +1,5 @@
 ﻿using Rediscovery.Client.App.Core.Features.Device;
+using Rediscovery.Client.App.Core.Features.Device.Models;
 using Rediscovery.Client.App.Core.Features.Discovery;
 using Rediscovery.Client.Service.Discovery;
 using Rediscovery.Client.Shared.Core.Dependency;
@@ -77,6 +78,49 @@ namespace Rediscovery.Client.App.Core
                 Port = port
             });
             Assert.True(dm.Probe(configId), "Could not reach Service with Probe");
+        }
+
+        [Fact]
+        public async void Connect()
+        {
+            int port = 24568;
+            // first start service
+            var serviceTask = Task.Run(() =>
+            {
+                string portArg = Rediscovery.Shared.Arguments.Service.Arguments.CommandPort + port;
+                Rediscovery.Client.App.Service.Program.Main(new string[] { portArg });
+            });
+            // delay for service startup
+            await Task.Delay(TimeSpan.FromSeconds(5));
+
+            var configId = Guid.NewGuid();
+            Shared.Init();
+            var dm = Resolver.Get<IDevicesManager>();
+            dm.AddOrUpdateConnectionConfiguration(new Features.Device.Models.ConnectionConfiguration
+            {
+                Id = configId,
+                Address = "192.168.1.101",
+                Port = port
+            });
+
+            DeviceConnectionState connectionState = null;
+
+            dm.ConnectionStateChanged += (obj, args) =>
+            {
+                connectionState = args;
+            };
+            dm.Connect(configId);
+            Task.WaitAny(Task.Run(async () =>
+            {
+                do
+                {
+                    await Task.Delay(TimeSpan.FromMilliseconds(50)).ConfigureAwait(false);
+                } while (string.IsNullOrWhiteSpace(connectionState?.Token));
+            }), Task.Run(async () =>
+            {
+                await Task.Delay(TimeSpan.FromSeconds(30));
+            }));
+            Assert.True(!string.IsNullOrWhiteSpace(connectionState?.Token), "No Token received after try to connect to Service");
         }
     }
 }
