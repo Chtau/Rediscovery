@@ -80,8 +80,10 @@ namespace Rediscovery.Client.App.Core
             Assert.True(dm.Probe(configId), "Could not reach Service with Probe");
         }
 
+        private static Guid connectionConfigurationId = Guid.NewGuid();
+
         [Fact]
-        public async void Connect()
+        public async Task Connect()
         {
             int port = 24568;
             // first start service
@@ -93,12 +95,11 @@ namespace Rediscovery.Client.App.Core
             // delay for service startup
             await Task.Delay(TimeSpan.FromSeconds(5));
 
-            var configId = Guid.NewGuid();
             Shared.Init();
             var dm = Resolver.Get<IDevicesManager>();
             dm.AddOrUpdateConnectionConfiguration(new Features.Device.Models.ConnectionConfiguration
             {
-                Id = configId,
+                Id = connectionConfigurationId,
                 Address = "192.168.1.101",
                 Port = port
             });
@@ -109,7 +110,7 @@ namespace Rediscovery.Client.App.Core
             {
                 connectionState = args;
             };
-            dm.Connect(configId);
+            dm.Connect(connectionConfigurationId);
             Task.WaitAny(Task.Run(async () =>
             {
                 do
@@ -121,6 +122,14 @@ namespace Rediscovery.Client.App.Core
                 await Task.Delay(TimeSpan.FromSeconds(30));
             }));
             Assert.True(!string.IsNullOrWhiteSpace(connectionState?.Token), "No Token received after try to connect to Service");
+        }
+
+        [Fact]
+        public async Task Disconnect()
+        {
+            await Connect();
+            var dm = Resolver.Get<IDevicesManager>();
+            Assert.True(dm.Disconnect(connectionConfigurationId), "Failed to disconnect from Service");
         }
     }
 }
