@@ -79,12 +79,11 @@ namespace Rediscovery.Client.App.Core
                 Port = port
             });
             Assert.True(dm.Probe(configId), "Could not reach Service with Probe");
+            await Rediscovery.Client.App.Service.Program.HostInstance.StopAsync();
         }
 
         private static Guid connectionConfigurationId = Guid.NewGuid();
-
-        [Fact]
-        public async Task Connect()
+        private async Task OnConnect()
         {
             int port = 24568;
             // first start service
@@ -104,9 +103,14 @@ namespace Rediscovery.Client.App.Core
                 Address = "192.168.1.101",
                 Port = port
             });
+        }
 
+        [Fact]
+        public async Task Connect()
+        {
+            await OnConnect();
             DeviceConnectionState connectionState = null;
-
+            var dm = Resolver.Get<IDevicesManager>();
             dm.ConnectionStateChanged += (obj, args) =>
             {
                 connectionState = args;
@@ -123,20 +127,22 @@ namespace Rediscovery.Client.App.Core
                 await Task.Delay(TimeSpan.FromSeconds(30));
             }));
             Assert.True(!string.IsNullOrWhiteSpace(connectionState?.Token), "No Token received after try to connect to Service");
+            await Rediscovery.Client.App.Service.Program.HostInstance.StopAsync();
         }
 
         [Fact]
         public async Task Disconnect()
         {
-            await Connect();
+            await OnConnect();
             var dm = Resolver.Get<IDevicesManager>();
             Assert.True(dm.Disconnect(connectionConfigurationId), "Failed to disconnect from Service");
+            await Rediscovery.Client.App.Service.Program.HostInstance.StopAsync();
         }
 
         [Fact]
         public async Task Heartbeat()
         {
-            await Connect();
+            await OnConnect();
             var dm = Resolver.Get<IDevicesManager>();
             HeartbeatResult<ConnectionConfiguration> heartbeatResult = null;
             dm.HeartbeatReceived += (obj, args) =>
@@ -154,6 +160,7 @@ namespace Rediscovery.Client.App.Core
                 await Task.Delay(TimeSpan.FromSeconds(30));
             }));
             Assert.True(heartbeatResult != null, "No Heartbeat from the Service received");
+            await Rediscovery.Client.App.Service.Program.HostInstance.StopAsync();
         }
     }
 }

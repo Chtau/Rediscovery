@@ -21,6 +21,8 @@ namespace Rediscovery.Client.App.Service
 {
     public static class Program
     {
+        public static IHost HostInstance { get; private set; }
+
         public static void Main(string[] args)
         {
             string DesktopName = "Desktop";
@@ -73,15 +75,15 @@ namespace Rediscovery.Client.App.Service
             var builder = CreateHostBuilder(
                 args.Where(arg => arg != "--console").ToArray());
 
-            var host = builder.Build();
+            HostInstance = builder.Build();
 
             if (isService)
             {
                 
             }
             // set static resources before we run to provide the HostBuilder with the updated resources
-            var appConfig = (IOptions<Rediscovery.Shared.Configurations.Service.Models.AppConfiguration>)host.Services.GetService(typeof(IOptions<Rediscovery.Shared.Configurations.Service.Models.AppConfiguration>));
-            var resources = (Services.IStaticResources)host.Services.GetService(typeof(Services.IStaticResources));
+            var appConfig = (IOptions<Rediscovery.Shared.Configurations.Service.Models.AppConfiguration>)HostInstance.Services.GetService(typeof(IOptions<Rediscovery.Shared.Configurations.Service.Models.AppConfiguration>));
+            var resources = (Services.IStaticResources)HostInstance.Services.GetService(typeof(Services.IStaticResources));
 
             resources.ExePath = ExePath;
             resources.DiscoveryServiceFolderName = "DiscoveryService";
@@ -134,7 +136,7 @@ namespace Rediscovery.Client.App.Service
                 SupportedFeatures = new System.Collections.Generic.List<Rediscovery.Shared.Base.Device.FeatureDefinitionExtended>(),
                 ClientName = DesktopName
             };
-            host.Run();
+            HostInstance.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
