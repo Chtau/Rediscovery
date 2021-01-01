@@ -62,11 +62,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Features\DeviceFeatures\DeviceFeaturesAdapter.cs" />
+    <Compile Include="Features\DeviceFeatures\ViewModels\FeatureViewHolder.cs" />
+    <Compile Include="Features\DeviceFeatures\ViewModels\FeatureViewModel.cs" />
     <Compile Include="Features\Devices\DeviceEditActivity.cs" />
     <Compile Include="Features\Devices\DeviceListActivity.cs" />
     <Compile Include="Features\Home\DevicesDashboardFragment.cs" />
     <Compile Include="Features\Home\DiscoveryFragment.cs" />
     <Compile Include="Features\DeviceFeatures\FeaturesDashboardFragment.cs" />
+    <Compile Include="Helpers\Creator.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
@@ -219,6 +222,9 @@
       <Project>{b236cd42-5d2c-46e0-8fa2-ad188a16923b}</Project>
       <Name>Rediscovery.Client.App.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\item_devicefeature.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
