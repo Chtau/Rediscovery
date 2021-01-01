@@ -10,10 +10,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Rediscovery.Client.App.MobileAndroid.Features.Home
+namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 {
     public class FeaturesDashboardFragment : AndroidX.Fragment.App.Fragment
     {
+        private DeviceFeaturesAdapter deviceFeaturesAdapter;
+
         public static FeaturesDashboardFragment Create()
         {
             var args = new Bundle();
@@ -33,6 +35,28 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Home
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             return inflater.Inflate(Resource.Layout.fragment_dashboard_features, container, false);
+        }
+
+        public override void OnViewCreated(View view, Bundle savedInstanceState)
+        {
+            OnSetUpFeatures(view.FindViewById<GridView>(Resource.Id.devicefeatures));
+            base.OnViewCreated(view, savedInstanceState);
+        }
+
+        public override void OnResume()
+        {
+            deviceFeaturesAdapter.NotifyDataSetChanged();
+            base.OnResume();
+        }
+
+        private void OnSetUpFeatures(GridView featuresGridView)
+        {
+            featuresGridView.ItemClick += (obj, args) =>
+            {
+                // TODO: open feature
+            };
+            deviceFeaturesAdapter = new DeviceFeaturesAdapter(Activity);
+            featuresGridView.Adapter = deviceFeaturesAdapter;
         }
     }
 }

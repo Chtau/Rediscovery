@@ -12,7 +12,9 @@
   <color name="colorTriadicTwo">#796b00</color>
   <color name="colorAnalogousOne">#004b79</color>
   <color name="colorAnalogousTwo">#00792f</color>
+  <color name="colorBlankBackground">#424242</color>
 
   <!--<color name="colorAccent">#FF7200</color>-->
   <color name="launcher_background">#FFFFFF</color>
+  <color name="touch_effect">#9ccc</color>
 </resources>

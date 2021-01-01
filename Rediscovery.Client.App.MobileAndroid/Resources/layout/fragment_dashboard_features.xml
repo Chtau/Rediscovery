@@ -4,10 +4,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <GridView
+    android:id="@+id/devicefeatures"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBlankBackground"
+    android:clipToPadding="false"
+    android:drawSelectorOnTop="true"
+    android:horizontalSpacing="@dimen/spacing_micro"
+    android:listSelector="@drawable/ripple"
+    android:numColumns="auto_fit"
+    android:padding="@dimen/spacing_micro"
+    android:scrollbarStyle="outsideOverlay"
+    android:stretchMode="columnWidth"
+    android:verticalSpacing="@dimen/spacing_micro"
+    tools:ignore="Overdraw" />
+
+    <!--<TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="TODO: Feature Dashboard" />
+        android:text="TODO: Feature Dashboard" />-->
 
 </FrameLayout>
