@@ -1,7 +1,7 @@
 <resources>
 
   <!--@android:style/Theme.Material.Light.NoActionBar-->
-    <style name="Rediscovery" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Rediscovery" parent="Theme.AppCompat.Light">
       <item name="android:colorPrimary">@color/theme_rediscovery_primary</item>
       <item name="android:colorPrimaryDark">@color/theme_rediscovery_primary_dark</item>
       <item name="android:colorAccent">@color/theme_rediscovery_accent</item>
@@ -110,7 +110,13 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
     -->
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+  <style name="Rediscovery.NoActionBar">
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+    <item name="android:statusBarColor">@android:color/transparent</item>
+  </style>
+
+  <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
