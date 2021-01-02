@@ -14,7 +14,7 @@ using Google.Android.Material.Snackbar;
 
 namespace Rediscovery.Client.App.MobileAndroid
 {
-    [Activity(Label = "@string/app_name", Icon = "@mipmap/ic_launcher", Theme = "@style/AppTheme.NoActionBar", MainLauncher = false)]
+    [Activity(Label = "@string/app_name", Icon = "@mipmap/ic_launcher", MainLauncher = false)]//Theme = "@style/Rediscovery", 
     public class MainActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener
     {
         protected override void OnCreate(Bundle savedInstanceState)
