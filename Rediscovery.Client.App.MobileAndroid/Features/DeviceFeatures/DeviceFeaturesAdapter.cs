@@ -1,5 +1,6 @@
 ﻿using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
@@ -82,13 +83,37 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 
             var holder = (FeatureViewHolder)view.Tag;
             var featureView = (FeatureViewModel)GetItem(position);
-            //SetCategoryIcon(category, holder.Icon);
             //view.SetBackgroundColor(GetColor(theme.WindowBackgroundColor));
             holder.Title.Text = featureView.Name;
             //holder.Title.SetTextColor(GetColor((theme.TextPrimaryColor)));
             //holder.Title.SetBackgroundColor(GetColor(theme.PrimaryColor));
-
+            var theme = Helpers.Theme.Rediscovery;
+            OnSetIcon(featureView, holder.Icon);
+            view.SetBackgroundColor(GetColor(theme.WindowBackgroundColor));
+            holder.Title.SetTextColor(GetColor((theme.TextPrimaryColor)));
+            holder.Title.SetBackgroundColor(GetColor(theme.PrimaryColor));
             return view;
+        }
+
+        private void OnSetIcon(FeatureViewModel featureViewModel, ImageView icon)
+        {
+            var featureImageResource = Resource.Drawable.icon_devicefeature_default; //_context.GetIdentifier(IconCategory + category.Id, Drawable, packageName);
+            icon.SetImageResource(featureImageResource);
+            /*var solved = category.Solved;
+            if (solved)
+            {
+                var solvedIcon = LoadSolvedIcon(category, categoryImageResource);
+                icon.SetImageDrawable(solvedIcon);
+            }
+            else
+            {
+                icon.SetImageResource(categoryImageResource);
+            }*/
+        }
+
+        private Color GetColor(int colorRes)
+        {
+            return new Color(_context.GetColor(colorRes));
         }
 
         public override bool HasStableIds => true;
