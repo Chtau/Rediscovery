@@ -122,7 +122,11 @@ namespace Rediscovery.Client.App.MobileAndroid
                 {
                     foreach (var item in items.OrderBy(x => x.OrderBy))
                     {
-                        navigationView.Menu.Add(item.IsFavorite ? 1 : 2, 0, item.OrderBy, item.Name).SetIcon(Resource.Drawable.ic_menu_devices);
+                        var menuItem = navigationView.Menu.Add(item.IsFavorite ? 1 : 2, 0, item.OrderBy, item.Name);
+                        if (item.IsFavorite)
+                            menuItem.SetIcon(Resource.Drawable.ic_favorite);
+                        else
+                            menuItem.SetIcon(Resource.Drawable.ic_device_desktop);
                     }
                 }
 
