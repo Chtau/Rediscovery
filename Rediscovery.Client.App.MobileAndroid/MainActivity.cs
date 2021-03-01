@@ -32,12 +32,25 @@ namespace Rediscovery.Client.App.MobileAndroid
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, Resource.String.navigation_drawer_open, Resource.String.navigation_drawer_close);
             drawer.AddDrawerListener(toggle);
             toggle.SyncState();
-
             NavigationView navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
+            OnCreateDrawerMenuItems(navigationView);
             navigationView.SetNavigationItemSelectedListener(this);
 
             if (savedInstanceState == null)
                 SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.DeviceFeatures.FeaturesDashboardFragment.Create()).Commit();
+        }
+
+        private void OnCreateDrawerMenuItems(NavigationView navigationView)
+        {
+            try
+            {
+                navigationView.Menu.Add(1, 0, 50, "Device 1").SetIcon(Resource.Drawable.ic_menu_devices);
+                navigationView.Menu.Add(1, 1, 51, "Device 2").SetIcon(Resource.Drawable.ic_menu_devices);
+                navigationView.Menu.Add(1, 2, 52, "Device 3").SetIcon(Resource.Drawable.ic_menu_devices);
+            } catch (Exception ex)
+            {
+                Android.Util.Log.Error("", ex.ToString());
+            }
         }
 
         public override void OnBackPressed()
@@ -81,7 +94,7 @@ namespace Rediscovery.Client.App.MobileAndroid
         {
             int id = item.ItemId;
 
-            if (id == Resource.Id.nav_features)
+            /*if (id == Resource.Id.nav_features)
             {
                 SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.DeviceFeatures.FeaturesDashboardFragment.Create()).Commit();
             }
@@ -93,7 +106,7 @@ namespace Rediscovery.Client.App.MobileAndroid
             {
                 SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.Home.DiscoveryFragment.Create()).Commit();
             }
-            else if (id == Resource.Id.nav_device_add)
+            else */if (id == Resource.Id.nav_device_add)
             {
 
             }
