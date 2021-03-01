@@ -72,6 +72,8 @@
     <Compile Include="Features\Home\DevicesDashboardFragment.cs" />
     <Compile Include="Features\Home\DiscoveryFragment.cs" />
     <Compile Include="Features\DeviceFeatures\FeaturesDashboardFragment.cs" />
+    <Compile Include="Features\Models\Device.cs" />
+    <Compile Include="Features\Models\Feature.cs" />
     <Compile Include="Helpers\Creator.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Helpers\Theme.cs" />

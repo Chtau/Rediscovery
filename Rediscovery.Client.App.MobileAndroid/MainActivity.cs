@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Android;
 using Android.App;
 using Android.OS;
@@ -44,6 +45,52 @@ namespace Rediscovery.Client.App.MobileAndroid
         {
             try
             {
+                // TODO: test
+                if (Core.Database.Instance.Get<Features.Models.Device>(x => x.Name == "D1").Count() == 0)
+                {
+                    Core.Database.Instance.Insert<Features.Models.Device>(new Features.Models.Device
+                    {
+                        DeviceId = Guid.NewGuid(),
+                        Name = "D1",
+                        Features = new System.Collections.Generic.List<Features.Models.Feature>()
+                        {
+                            new Features.Models.Feature
+                            {
+                                FeatureId = Guid.NewGuid(),
+                                Name = "F1"
+                            },
+                            new Features.Models.Feature
+                            {
+                                FeatureId = Guid.NewGuid(),
+                                Name = "F2"
+                            }
+                        }
+                    });
+                }
+                if (Core.Database.Instance.Get<Features.Models.Device>(x => x.Name == "D2").Count() == 0)
+                {
+                    Core.Database.Instance.Insert<Features.Models.Device>(new Features.Models.Device
+                    {
+                        DeviceId = Guid.NewGuid(),
+                        Name = "D2",
+                        Features = new System.Collections.Generic.List<Features.Models.Feature>()
+                        {
+                            new Features.Models.Feature
+                            {
+                                FeatureId = Guid.NewGuid(),
+                                Name = "F1"
+                            },
+                            new Features.Models.Feature
+                            {
+                                FeatureId = Guid.NewGuid(),
+                                Name = "F2"
+                            }
+                        }
+                    });
+                }
+                var items = Core.Database.Instance.GetAll<Features.Models.Device>();
+
+
                 navigationView.Menu.Add(1, 0, 50, "Device 1").SetIcon(Resource.Drawable.ic_menu_devices);
                 navigationView.Menu.Add(1, 1, 51, "Device 2").SetIcon(Resource.Drawable.ic_menu_devices);
                 navigationView.Menu.Add(1, 2, 52, "Device 3").SetIcon(Resource.Drawable.ic_menu_devices);
