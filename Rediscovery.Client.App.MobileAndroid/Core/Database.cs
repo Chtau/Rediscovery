@@ -40,6 +40,23 @@ namespace Rediscovery.Client.App.MobileAndroid.Core
             return _database;
         }
 
+        public bool Reset()
+        {
+            try
+            {
+                foreach (var colName in OnGetDatabase().GetCollectionNames())
+                {
+                    OnGetDatabase().DropCollection(colName);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.Error(ex);
+            }
+            return false;
+        }
+
         public bool Insert<T>(T instance)
         {
             try

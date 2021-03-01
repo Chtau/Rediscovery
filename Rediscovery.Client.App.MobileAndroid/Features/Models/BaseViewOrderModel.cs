@@ -11,10 +11,10 @@ using System.Text;
 
 namespace Rediscovery.Client.App.MobileAndroid.Features.Models
 {
-    public class Device : BaseViewOrderModel
+    public class BaseViewOrderModel
     {
-        public Guid DeviceId { get; set; }
-        public string Name { get; set; }
-        public List<Feature> Features { get; set; }
+        public int ViewId { get; set; }
+        public int OrderBy { get; set; }
+        public bool IsFavorite { get; set; }
     }
 }

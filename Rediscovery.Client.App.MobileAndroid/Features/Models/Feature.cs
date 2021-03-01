@@ -11,7 +11,7 @@ using System.Text;
 
 namespace Rediscovery.Client.App.MobileAndroid.Features.Models
 {
-    public class Feature
+    public class Feature : BaseViewOrderModel
     {
         public Guid FeatureId { get; set; }
         public string Name { get; set; }
