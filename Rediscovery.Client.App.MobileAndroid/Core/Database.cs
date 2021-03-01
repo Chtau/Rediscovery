@@ -68,6 +68,20 @@ namespace Rediscovery.Client.App.MobileAndroid.Core
             return false;
         }
 
+        public bool Delete<T>(Expression<Func<T, bool>> predicate)
+        {
+            try
+            {
+                var result = OnGetDatabase().GetCollection<T>().DeleteMany(predicate);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.Error(ex);
+            }
+            return false;
+        }
+
         public IEnumerable<T> Get<T>(Expression<Func<T, bool>> predicate)
         {
             try
