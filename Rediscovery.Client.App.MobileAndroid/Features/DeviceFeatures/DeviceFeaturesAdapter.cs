@@ -44,7 +44,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                 {
                     foreach (var feature in device.Features.OrderBy(x => x.OrderBy))
                     {
-                        _models.Add(new ViewModels.FeatureViewModel(feature.FeatureId.ToString(), feature.Name));
+                        _models.Add(new ViewModels.FeatureViewModel(feature));
                     }
                 }
             } catch (Exception ex)
@@ -60,7 +60,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 
         public override long GetItemId(int position)
         {
-            return _models[position].Id.GetHashCode();
+            return _models[position].Feature.FeatureId.GetHashCode();
         }
 
         public override View GetView(int position, View convertView, ViewGroup parent)
@@ -94,7 +94,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             var holder = (FeatureViewHolder)view.Tag;
             var featureView = (FeatureViewModel)GetItem(position);
             //view.SetBackgroundColor(GetColor(theme.WindowBackgroundColor));
-            holder.Title.Text = featureView.Name;
+            holder.Title.Text = featureView.Feature.Name;
             //holder.Title.SetTextColor(GetColor((theme.TextPrimaryColor)));
             //holder.Title.SetBackgroundColor(GetColor(theme.PrimaryColor));
             var theme = Helpers.Theme.Rediscovery;

@@ -16,8 +16,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures.ViewModel
 {
     public class FeatureViewModel : Java.Lang.Object, IParcelable
     {
-        public string Id { get; private set; }
-        public string Name { get; private set; }
+        public Models.Feature Feature { get; private set; }
         public bool HasProfilConfiguration { get; private set; }
         public bool HasSettingConfiguration { get; private set; }
 
@@ -29,18 +28,30 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures.ViewModel
             return creator;
         }
 
-        public FeatureViewModel(string id, string name, bool hasProfilConfiguration = false, bool hasSettingConfiguration = false)
+        public FeatureViewModel(Models.Feature feature)
         {
-            Id = id;
-            Name = name;
-            HasProfilConfiguration = hasProfilConfiguration;
-            HasSettingConfiguration = hasSettingConfiguration;
+            Feature = feature ?? new Models.Feature();
+            // TODO: we should load setting and profile form a special entity (e.g. FeatureMetadata) and not from the feature model
+            HasProfilConfiguration = false;
+            HasSettingConfiguration = false;
         }
 
         public FeatureViewModel(Parcel inObj)
         {
-            Id = inObj.ReadString();
-            Name = inObj.ReadString();
+            var featureIdString = inObj.ReadString();
+            var isFavoriteInt = inObj.ReadInt();
+            var name = inObj.ReadString();
+            var orderBy = inObj.ReadInt();
+            var viewId = inObj.ReadInt();
+            Feature = new Models.Feature
+            {
+                FeatureId = new Guid(featureIdString),
+                IsFavorite = isFavoriteInt == 1,
+                Name = name,
+                OrderBy = orderBy,
+                ViewId = viewId
+            };
+
             HasProfilConfiguration = inObj.ReadInt() == 1;
             HasSettingConfiguration = inObj.ReadInt() == 1;
         }
@@ -52,8 +63,11 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures.ViewModel
 
         public void WriteToParcel(Parcel dest, [GeneratedEnum] ParcelableWriteFlags flags)
         {
-            dest.WriteString(Id);
-            dest.WriteString(Name);
+            dest.WriteString(Feature.FeatureId.ToString());
+            dest.WriteInt(Feature.IsFavorite ? 1 : 0);
+            dest.WriteString(Feature.Name);
+            dest.WriteInt(Feature.OrderBy);
+            dest.WriteInt(Feature.ViewId);
             dest.WriteInt(HasProfilConfiguration ? 1 : 0);
             dest.WriteInt(HasSettingConfiguration ? 1 : 0);
         }
