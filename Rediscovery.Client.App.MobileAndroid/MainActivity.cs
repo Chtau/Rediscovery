@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Android;
 using Android.App;
@@ -18,6 +19,8 @@ namespace Rediscovery.Client.App.MobileAndroid
     [Activity(Label = "@string/app_name", Icon = "@mipmap/ic_launcher", MainLauncher = false)]//Theme = "@style/Rediscovery", 
     public class MainActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener
     {
+        private readonly Dictionary<int, Guid> _navigationDeviceIds = new Dictionary<int, Guid>();
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -38,7 +41,13 @@ namespace Rediscovery.Client.App.MobileAndroid
             navigationView.SetNavigationItemSelectedListener(this);
 
             if (savedInstanceState == null)
-                SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.DeviceFeatures.FeaturesDashboardFragment.Create()).Commit();
+            {
+                // TODO: show dashboard or last used
+                //SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.DeviceFeatures.FeaturesDashboardFragment.Create()).Commit();
+            } else
+            {
+                // TODO: resotre state
+            }
         }
 
         private void OnCreateDrawerMenuItems(NavigationView navigationView)
@@ -50,9 +59,11 @@ namespace Rediscovery.Client.App.MobileAndroid
                 var items = Core.Database.Instance.GetAll<Features.Models.Device>();
                 if (items?.Count() > 0)
                 {
+                    _navigationDeviceIds.Clear();
                     foreach (var item in items.OrderBy(x => x.OrderBy))
                     {
-                        var menuItem = navigationView.Menu.Add(item.IsFavorite ? 1 : 2, 0, item.OrderBy, item.Name);
+                        _navigationDeviceIds.Add(item.ViewId, item.DeviceId);
+                        var menuItem = navigationView.Menu.Add(item.IsFavorite ? 1 : 2, item.ViewId, item.OrderBy, item.Name);
                         if (item.IsFavorite)
                             menuItem.SetIcon(Resource.Drawable.ic_favorite);
                         else
@@ -125,6 +136,11 @@ namespace Rediscovery.Client.App.MobileAndroid
             else if (id == Resource.Id.nav_settings)
             {
 
+            } else if (_navigationDeviceIds.ContainsKey(id))
+            {
+                var featureDashboradFragment = Features.DeviceFeatures.FeaturesDashboardFragment.Create(_navigationDeviceIds[id]);
+                featureDashboradFragment.DeviceId = _navigationDeviceIds[id];
+                SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, featureDashboradFragment).Commit();
             }
 
             DrawerLayout drawer = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);

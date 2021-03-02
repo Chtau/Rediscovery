@@ -17,13 +17,14 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
     {
         private readonly Context _context;
         private readonly LayoutInflater layoutInflater;
+        private readonly Guid _deviceId;
+        private readonly List<ViewModels.FeatureViewModel> _models = new List<ViewModels.FeatureViewModel>();
 
-        private List<ViewModels.FeatureViewModel> models = new List<ViewModels.FeatureViewModel>();
-
-        public DeviceFeaturesAdapter(Context context)
+        public DeviceFeaturesAdapter(Context context, Guid deviceId)
         {
             _context = context;
             layoutInflater = LayoutInflater.From(context.ApplicationContext);
+            _deviceId = deviceId;
             OnUpdateDatasource();
         }
 
@@ -35,22 +36,31 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 
         private void OnUpdateDatasource()
         {
-            models = new List<ViewModels.FeatureViewModel>();
-            models.Add(new ViewModels.FeatureViewModel("1", "Test1"));
-            models.Add(new ViewModels.FeatureViewModel("2", "Test2"));
-            models.Add(new ViewModels.FeatureViewModel("3", "Test3"));
-            models.Add(new ViewModels.FeatureViewModel("4", "Test4"));
-            models.Add(new ViewModels.FeatureViewModel("5", "Test5"));
+            try
+            {
+                _models.Clear();
+                var device = Core.Database.Instance.Get<Features.Models.Device>(x => x.DeviceId == _deviceId).FirstOrDefault();
+                if (device?.Features?.Count > 0)
+                {
+                    foreach (var feature in device.Features.OrderBy(x => x.OrderBy))
+                    {
+                        _models.Add(new ViewModels.FeatureViewModel(feature.FeatureId.ToString(), feature.Name));
+                    }
+                }
+            } catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
         }
 
         public override Java.Lang.Object GetItem(int position)
         {
-            return models[position];
+            return _models[position];
         }
 
         public override long GetItemId(int position)
         {
-            return models[position].Id.GetHashCode();
+            return _models[position].Id.GetHashCode();
         }
 
         public override View GetView(int position, View convertView, ViewGroup parent)
@@ -117,7 +127,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
         }
 
         public override bool HasStableIds => true;
-        public override int Count => models.Count;
+        public override int Count => _models.Count;
         public override bool AreAllItemsEnabled()
         {
             return false;

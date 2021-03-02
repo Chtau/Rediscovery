@@ -16,7 +16,9 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
     {
         private DeviceFeaturesAdapter deviceFeaturesAdapter;
 
-        public static FeaturesDashboardFragment Create()
+        public Guid DeviceId { get; set; }
+
+        public static FeaturesDashboardFragment Create(Guid deviceId)
         {
             var args = new Bundle();
             //args.PutBoolean(ArgEdit, edit);
@@ -55,7 +57,8 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             {
                 // TODO: open feature
             };
-            deviceFeaturesAdapter = new DeviceFeaturesAdapter(Activity);
+            Core.Logger.Instance.Debug($"Device ID:{DeviceId}");
+            deviceFeaturesAdapter = new DeviceFeaturesAdapter(Activity, DeviceId);
             featuresGridView.Adapter = deviceFeaturesAdapter;
         }
     }
