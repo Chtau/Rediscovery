@@ -65,6 +65,7 @@
     <Compile Include="Core\CoreIO.cs" />
     <Compile Include="Core\Logger.cs" />
     <Compile Include="Features\DeviceFeatures\DeviceFeaturesAdapter.cs" />
+    <Compile Include="Features\DeviceFeatures\FeatureActivity.cs" />
     <Compile Include="Features\DeviceFeatures\ViewModels\FeatureViewHolder.cs" />
     <Compile Include="Features\DeviceFeatures\ViewModels\FeatureViewModel.cs" />
     <Compile Include="Features\Devices\DeviceEditActivity.cs" />

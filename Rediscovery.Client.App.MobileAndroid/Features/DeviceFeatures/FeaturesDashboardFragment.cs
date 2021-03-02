@@ -53,13 +53,28 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 
         private void OnSetUpFeatures(GridView featuresGridView)
         {
-            featuresGridView.ItemClick += (obj, args) =>
+            try
             {
-                // TODO: open feature
-            };
-            Core.Logger.Instance.Debug($"Device ID:{DeviceId}");
-            deviceFeaturesAdapter = new DeviceFeaturesAdapter(Activity, DeviceId);
-            featuresGridView.Adapter = deviceFeaturesAdapter;
+                featuresGridView.ItemClick += (obj, args) =>
+                {
+                    try
+                    {
+                        var intent = new Intent(Application.Context, typeof(FeatureActivity));
+                        intent.PutExtra(FeatureActivity.Key_DeviceId, DeviceId.ToString());
+                        StartActivity(intent);
+                    }
+                    catch (Exception ex)
+                    {
+                        Core.Logger.Instance.Error(ex);
+                    }
+                };
+                deviceFeaturesAdapter = new DeviceFeaturesAdapter(Activity, DeviceId);
+                featuresGridView.Adapter = deviceFeaturesAdapter;
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
         }
     }
 }
