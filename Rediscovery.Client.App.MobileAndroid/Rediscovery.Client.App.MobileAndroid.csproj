@@ -72,6 +72,7 @@
     <Compile Include="Features\Home\DevicesDashboardFragment.cs" />
     <Compile Include="Features\Home\DiscoveryFragment.cs" />
     <Compile Include="Features\DeviceFeatures\FeaturesDashboardFragment.cs" />
+    <Compile Include="Features\Manager\DeviceManager.cs" />
     <Compile Include="Features\Models\BaseViewOrderModel.cs" />
     <Compile Include="Features\Models\Device.cs" />
     <Compile Include="Features\Models\Feature.cs" />
