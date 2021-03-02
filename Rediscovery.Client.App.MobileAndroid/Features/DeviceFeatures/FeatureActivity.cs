@@ -3,7 +3,8 @@ using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
-using Android.Widget;
+using AndroidX.AppCompat.App;
+using AndroidX.AppCompat.Widget;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,8 @@ using System.Text;
 
 namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 {
-    [Activity(Label = "FeatureActivity")]
-    public class FeatureActivity : Activity
+    [Activity(Label = "FeatureActivity", MainLauncher = false)]
+    public class FeatureActivity : AppCompatActivity
     {
         public const string Key_DeviceId = "deviceid";
 
@@ -25,6 +26,10 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             // Create your application here
             try
             {
+                SetContentView(Resource.Layout.feature_detail);
+                /*Toolbar toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+                SetSupportActionBar(toolbar);*/
+
                 var deviceIdString = Intent.Extras.GetString(Key_DeviceId);
                 if (!string.IsNullOrWhiteSpace(deviceIdString))
                 {
