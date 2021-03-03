@@ -1,23 +1,73 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation=    "vertical"
+    android:layout_width=    "match_parent"
+    android:layout_height=    "match_parent"    >
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+  <LinearLayout
+      android:orientation=    "horizontal"
+      android:layout_width=    "match_parent"
+      android:layout_height=    "match_parent"
+      android:layout_weight=    "1"    >
+      <TextView
+          android:text=    "red"
+          android:gravity=    "center_horizontal"
+          android:background=    "#aa0000"
+          android:layout_width=    "wrap_content"
+          android:layout_height=    "match_parent"
+          android:layout_weight=    "1"    />
+      <TextView
+          android:text=    "green"
+          android:gravity=    "center_horizontal"
+          android:background=    "#00aa00"
+          android:layout_width=    "wrap_content"
+          android:layout_height=    "match_parent"
+          android:layout_weight=    "1"    />
+      <TextView
+          android:text=    "blue"
+          android:gravity=    "center_horizontal"
+          android:background=    "#0000aa"
+          android:layout_width=    "wrap_content"
+          android:layout_height=    "match_parent"
+          android:layout_weight=    "1"    />
+      <TextView
+          android:text=    "yellow"
+          android:gravity=    "center_horizontal"
+          android:background=    "#aaaa00"
+          android:layout_width=    "wrap_content"
+          android:layout_height=    "match_parent"
+          android:layout_weight=    "1"    />
+  </LinearLayout>
+        
+  <LinearLayout
+    android:orientation=    "vertical"
+    android:layout_width=    "match_parent"
+    android:layout_height=    "match_parent"
+    android:layout_weight=    "1"    >
+    <TextView
+        android:text=    "row one"
+        android:textSize=    "15pt"
+        android:layout_width=    "match_parent"
+        android:layout_height=    "wrap_content"
+        android:layout_weight=    "1"    />
+    <TextView
+        android:text=    "row two"
+        android:textSize=    "15pt"
+        android:layout_width=    "match_parent"
+        android:layout_height=    "wrap_content"
+        android:layout_weight=    "1"    />
+    <TextView
+        android:text=    "row three"
+        android:textSize=    "15pt"
+        android:layout_width=    "match_parent"
+        android:layout_height=    "wrap_content"
+        android:layout_weight=    "1"    />
+    <TextView
+        android:text=    "row four"
+        android:textSize=    "15pt"
+        android:layout_width=    "match_parent"
+        android:layout_height=    "wrap_content"
+       android:layout_weight=    "1"    />
+  </LinearLayout>
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/theme_rediscovery_primary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <include layout="@layout/content_main" />
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>
