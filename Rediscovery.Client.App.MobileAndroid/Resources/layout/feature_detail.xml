@@ -6,9 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <android.webkit.WebView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/webViewFeatureDetail" />
+
     <!--<include layout="@layout/content_main" />-->
 
-    <LinearLayout
+    <!--<LinearLayout
         android:orientation=    "vertical"
         android:layout_width=    "match_parent"
         android:layout_height=    "match_parent">
@@ -79,12 +84,12 @@
                 android:layout_weight=    "1"    />
         </LinearLayout>
 
-    </LinearLayout>
+    </LinearLayout>-->
 
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab3"
+        android:id="@+id/fabSystem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
@@ -93,10 +98,10 @@
         android:scaleType="center"
         app:fabSize="mini"
         app:fabCustomSize="45dp"
-        app:srcCompat="@drawable/ic_favorite" />
+        app:srcCompat="@drawable/ic_system_security" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab2"
+        android:id="@+id/fabSetting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
@@ -105,10 +110,10 @@
         android:scaleType="center"
         app:fabSize="mini"
         app:fabCustomSize="45dp"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@drawable/ic_setting" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab1"
+        android:id="@+id/fabClose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
@@ -117,14 +122,14 @@
         android:scaleType="center"
         app:fabSize="mini"
         app:fabCustomSize="45dp"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@drawable/ic_close" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/fabMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@drawable/ic_menu" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
