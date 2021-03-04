@@ -1,5 +1,6 @@
 ﻿using Android.App;
 using Android.Content;
+using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
@@ -21,6 +22,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 
         public Guid DeviceId { get; private set; } = Guid.Empty;
         private bool isFabMenuOpen = false;
+        private FloatingActionButton fabMenu;
         private FloatingActionButton fabClose;
         private FloatingActionButton fabSetting;
         private FloatingActionButton fabSystem;
@@ -43,7 +45,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             {
                 SetContentView(Resource.Layout.feature_detail);
                 
-                var fabMenu = FindViewById<FloatingActionButton>(Resource.Id.fabMenu);
+                fabMenu = FindViewById<FloatingActionButton>(Resource.Id.fabMenu);
                 fabMenu.Click += (_obj, _args) => OnToogleFabMenu();
                 fabClose = FindViewById<FloatingActionButton>(Resource.Id.fabClose);
                 fabClose.Click += (_obj, _args) => OnCloseAction();
@@ -73,14 +75,19 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
         {
             try
             {
+                var draw = fabMenu.Drawable;
                 if (isFabMenuOpen)
                 {
+                    if (draw is TransitionDrawable transition)
+                        transition.ReverseTransition(500);
                     isFabMenuOpen = !isFabMenuOpen;
                     fabClose.Animate().TranslationY(0);
                     fabSetting.Animate().TranslationY(0);
                     fabSystem.Animate().TranslationY(0);
                 } else
                 {
+                    if (draw is TransitionDrawable transition)
+                        transition.StartTransition(500);
                     isFabMenuOpen = !isFabMenuOpen;
 
                     fabClose.Animate().TranslationY(Resources.GetDimension(Resource.Dimension.standard_55));
