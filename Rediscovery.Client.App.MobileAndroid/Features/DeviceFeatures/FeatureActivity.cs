@@ -3,6 +3,7 @@ using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
+using Android.Webkit;
 using AndroidX.AppCompat.App;
 using AndroidX.AppCompat.Widget;
 using Google.Android.Material.FloatingActionButton;
@@ -23,6 +24,15 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
         private FloatingActionButton fabClose;
         private FloatingActionButton fabSetting;
         private FloatingActionButton fabSystem;
+        private WebView webView;
+
+        const string html = @"
+<html>
+  <body>
+    <p>Demo calling C# from JavaScript</p>
+<button type=""button"" onClick=""CSharp.ShowToast()"">Call C#</button>
+  </body>
+</html>";
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -42,6 +52,11 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                 fabSystem = FindViewById<FloatingActionButton>(Resource.Id.fabSystem);
                 fabSystem.Click += (_obj, _args) => OnSystemAction();
 
+                webView = FindViewById<WebView>(Resource.Id.webViewFeatureDetail);
+                webView.Settings.JavaScriptEnabled = true;
+                webView.SetWebViewClient(new AdvWebViewClient());
+                webView.AddJavascriptInterface(new FeatureJSInterface(this), "CSharp");
+                webView.LoadData(html, "text/html", null);
 
                 var deviceIdString = Intent.Extras.GetString(Key_DeviceId);
                 if (!string.IsNullOrWhiteSpace(deviceIdString))
@@ -83,7 +98,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
         {
             try
             {
-
+                OnBackPressed();
             }
             catch (Exception ex)
             {
