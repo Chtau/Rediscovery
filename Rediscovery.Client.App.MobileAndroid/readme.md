@@ -1,7 +1,8 @@
 ﻿
 ### Resources
 
-Info: we need to keep the folder "drawable-v21" and use it for the drawer items.
+* Info: we need to keep the folder "drawable-v21" and use it for the drawer items.
+* Vector Animations https://shapeshifter.design/
 
 # TODO
 

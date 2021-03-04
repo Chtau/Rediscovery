@@ -76,18 +76,22 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             try
             {
                 var draw = fabMenu.Drawable;
+                if (draw is AnimatedVectorDrawable animated)
+                {
+                    animated.Start();
+                    if (isFabMenuOpen)
+                        fabMenu.SetImageDrawable(Resources.GetDrawable(Resource.Drawable.menu_transition, null));
+                    else
+                        fabMenu.SetImageDrawable(Resources.GetDrawable(Resource.Drawable.menu_transition_back, null));
+                }
                 if (isFabMenuOpen)
                 {
-                    if (draw is TransitionDrawable transition)
-                        transition.ReverseTransition(500);
                     isFabMenuOpen = !isFabMenuOpen;
                     fabClose.Animate().TranslationY(0);
                     fabSetting.Animate().TranslationY(0);
                     fabSystem.Animate().TranslationY(0);
                 } else
                 {
-                    if (draw is TransitionDrawable transition)
-                        transition.StartTransition(500);
                     isFabMenuOpen = !isFabMenuOpen;
 
                     fabClose.Animate().TranslationY(Resources.GetDimension(Resource.Dimension.standard_55));
