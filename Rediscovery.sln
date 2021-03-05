@@ -81,6 +81,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.App.Core
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.Shared.Core.Test", "Rediscovery.Client.Shared.Core.Test\Rediscovery.Client.Shared.Core.Test.csproj", "{BB56F501-818A-449E-959A-CD7CDF5E0EC6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rediscovery.Android", "Rediscovery\Rediscovery.Android\Rediscovery.Android.csproj", "{F9C86884-BB0E-424A-AD62-85B29F533BA1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -565,6 +567,24 @@ Global
 		{BB56F501-818A-449E-959A-CD7CDF5E0EC6}.Release|x64.Build.0 = Release|Any CPU
 		{BB56F501-818A-449E-959A-CD7CDF5E0EC6}.Release|x86.ActiveCfg = Release|Any CPU
 		{BB56F501-818A-449E-959A-CD7CDF5E0EC6}.Release|x86.Build.0 = Release|Any CPU
+		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Debug|x64.ActiveCfg = Debug|x64
+		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Debug|x64.Build.0 = Debug|x64
+		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Debug|x64.Deploy.0 = Debug|x64
+		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Debug|x86.ActiveCfg = Debug|x86
+		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Debug|x86.Build.0 = Debug|x86
+		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Debug|x86.Deploy.0 = Debug|x86
+		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Release|x64.ActiveCfg = Release|x64
+		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Release|x64.Build.0 = Release|x64
+		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Release|x64.Deploy.0 = Release|x64
+		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Release|x86.ActiveCfg = Release|x86
+		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Release|x86.Build.0 = Release|x86
+		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

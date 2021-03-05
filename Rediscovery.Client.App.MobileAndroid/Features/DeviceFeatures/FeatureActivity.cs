@@ -10,6 +10,7 @@ using AndroidX.AppCompat.Widget;
 using Google.Android.Material.FloatingActionButton;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -56,7 +57,10 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 
                 webView = FindViewById<WebView>(Resource.Id.webViewFeatureDetail);
                 webView.Settings.JavaScriptEnabled = true;
-                webView.SetWebViewClient(new AdvWebViewClient());
+                webView.SetWebViewClient(new AdvWebViewClient(OnGetDefaultJS(), (error) =>
+                {
+                    Core.Logger.Instance.Error(new Exception(error));
+                }));
                 webView.AddJavascriptInterface(new FeatureJSInterface(this), "CSharp");
                 webView.LoadData(html, "text/html", null);
 
@@ -69,6 +73,23 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             {
                 Core.Logger.Instance.Error(ex);
             }
+        }
+
+        private string OnGetDefaultJS()
+        {
+            string defaultJS = null;
+            try
+            {
+                using (StreamReader sr = new StreamReader(Assets.Open("Content/feature.js")))
+                {
+                    defaultJS = sr?.ReadToEnd();
+                }
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+            return defaultJS;
         }
 
         private void OnToogleFabMenu()
