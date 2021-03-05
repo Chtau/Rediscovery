@@ -67,8 +67,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Communication.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Feature.Client.FileExchange.UI", "ClientFeatureFileExchangeUI\Rediscovery.Feature.Client.FileExchange.UI.csproj", "{084FA40C-F1ED-4DB8-856C-29A763F19D17}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppMobileAndroid", "AppMobileAndroid\AppMobileAndroid.csproj", "{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.App.Shared", "App.Client.Shared\Rediscovery.Client.App.Shared.csproj", "{9E17C536-E7AB-4FFD-87C3-A2D40C93DFDF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Shared.Logging", "Rediscovery.Shared.Logging\Rediscovery.Shared.Logging.csproj", "{01AF85BB-FC4F-41F3-993A-07A81F73907A}"
@@ -477,24 +475,6 @@ Global
 		{084FA40C-F1ED-4DB8-856C-29A763F19D17}.Release|x64.Build.0 = Release|Any CPU
 		{084FA40C-F1ED-4DB8-856C-29A763F19D17}.Release|x86.ActiveCfg = Release|Any CPU
 		{084FA40C-F1ED-4DB8-856C-29A763F19D17}.Release|x86.Build.0 = Release|Any CPU
-		{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}.Debug|x64.Build.0 = Debug|Any CPU
-		{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}.Debug|x64.Deploy.0 = Debug|Any CPU
-		{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}.Debug|x86.Build.0 = Debug|Any CPU
-		{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}.Debug|x86.Deploy.0 = Debug|Any CPU
-		{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}.Release|x64.ActiveCfg = Release|Any CPU
-		{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}.Release|x64.Build.0 = Release|Any CPU
-		{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}.Release|x64.Deploy.0 = Release|Any CPU
-		{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}.Release|x86.ActiveCfg = Release|Any CPU
-		{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}.Release|x86.Build.0 = Release|Any CPU
-		{9FA3DDB2-605B-481C-B4C1-352DAD1A800B}.Release|x86.Deploy.0 = Release|Any CPU
 		{9E17C536-E7AB-4FFD-87C3-A2D40C93DFDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9E17C536-E7AB-4FFD-87C3-A2D40C93DFDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E17C536-E7AB-4FFD-87C3-A2D40C93DFDF}.Debug|x64.ActiveCfg = Debug|Any CPU
