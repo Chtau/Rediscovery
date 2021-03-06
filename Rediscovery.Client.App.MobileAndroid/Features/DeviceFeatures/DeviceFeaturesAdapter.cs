@@ -17,14 +17,14 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
     {
         private readonly Context _context;
         private readonly LayoutInflater layoutInflater;
-        private readonly Guid _deviceId;
+        private readonly Features.Models.Device _device;
         private readonly List<ViewModels.FeatureViewModel> _models = new List<ViewModels.FeatureViewModel>();
 
-        public DeviceFeaturesAdapter(Context context, Guid deviceId)
+        public DeviceFeaturesAdapter(Context context, Features.Models.Device device)
         {
             _context = context;
             layoutInflater = LayoutInflater.From(context.ApplicationContext);
-            _deviceId = deviceId;
+            _device = device;
             OnUpdateDatasource();
         }
 
@@ -39,10 +39,9 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             try
             {
                 _models.Clear();
-                var device = Core.Database.Instance.Get<Features.Models.Device>(x => x.DeviceId == _deviceId).FirstOrDefault();
-                if (device?.Features?.Count > 0)
+                if (_device?.Features?.Count > 0)
                 {
-                    foreach (var feature in device.Features.OrderBy(x => x.OrderBy))
+                    foreach (var feature in _device.Features.OrderBy(x => x.OrderBy))
                     {
                         _models.Add(new ViewModels.FeatureViewModel(feature));
                     }

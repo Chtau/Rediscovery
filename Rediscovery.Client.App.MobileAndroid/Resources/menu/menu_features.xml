@@ -1,0 +1,29 @@
+﻿<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+  <item
+      android:id="@+id/action_features_device_detail"
+      android:orderInCategory="100"
+      android:title="@string/action_features_device_detail"
+      app:showAsAction="never" />
+  <item
+      android:id="@+id/action_features_device_connect"
+      android:orderInCategory="100"
+      android:title="@string/action_features_device_connect"
+      app:showAsAction="never" />
+  <item
+      android:id="@+id/action_features_device_disconnect"
+      android:orderInCategory="100"
+      android:title="@string/action_features_device_disconnect"
+      app:showAsAction="never" />
+  <item
+      android:id="@+id/action_features_device_add_favorite"
+      android:orderInCategory="100"
+      android:title="@string/action_features_device_add_favorite"
+      app:showAsAction="never" />
+  <item
+      android:id="@+id/action_features_device_remove_favorite"
+      android:orderInCategory="100"
+      android:title="@string/action_features_device_remove_favorite"
+      app:showAsAction="never" />
+</menu>

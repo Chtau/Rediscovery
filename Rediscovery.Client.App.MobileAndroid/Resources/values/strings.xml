@@ -6,4 +6,9 @@
     <string name="feature">Feature</string>
     <string name="nav_bar_about"><u>About</u></string>
     <string name="nav_bar_version">Version: 0.0.0</string>
+    <string name="action_features_device_detail">Device detail</string>
+    <string name="action_features_device_connect">Connect</string>
+    <string name="action_features_device_disconnect">Disconnect</string>
+    <string name="action_features_device_add_favorite">Add favorite</string>
+    <string name="action_features_device_remove_favorite">Remove favorite</string>
 </resources>

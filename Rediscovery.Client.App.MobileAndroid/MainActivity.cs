@@ -19,14 +19,27 @@ namespace Rediscovery.Client.App.MobileAndroid
     [Activity(Label = "@string/app_name", Icon = "@mipmap/ic_launcher", MainLauncher = false)]//Theme = "@style/Rediscovery", 
     public class MainActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener
     {
-        private readonly Dictionary<int, Guid> _navigationDeviceIds = new Dictionary<int, Guid>();
+        struct NavigationItem
+        {
+            public Guid Id { get; }
+            public string Title { get; }
+
+            public NavigationItem(Guid id, string title)
+            {
+                Id = id;
+                Title = title;
+            }
+        }
+
+        private readonly Dictionary<int, NavigationItem> _navigationDeviceIds = new Dictionary<int, NavigationItem>();
+        private Toolbar toolbar;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
-            Toolbar toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+            toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
 
             /*FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
@@ -62,7 +75,7 @@ namespace Rediscovery.Client.App.MobileAndroid
                     _navigationDeviceIds.Clear();
                     foreach (var item in items.OrderBy(x => x.OrderBy))
                     {
-                        _navigationDeviceIds.Add(item.ViewId, item.DeviceId);
+                        _navigationDeviceIds.Add(item.ViewId, new NavigationItem(item.DeviceId, item.Name));
                         var menuItem = navigationView.Menu.Add(item.IsFavorite ? 1 : 2, item.ViewId, item.OrderBy, item.Name);
                         if (item.IsFavorite)
                             menuItem.SetIcon(Resource.Drawable.ic_favorite);
@@ -138,9 +151,13 @@ namespace Rediscovery.Client.App.MobileAndroid
 
             } else if (_navigationDeviceIds.ContainsKey(id))
             {
-                var featureDashboradFragment = Features.DeviceFeatures.FeaturesDashboardFragment.Create(_navigationDeviceIds[id]);
-                featureDashboradFragment.DeviceId = _navigationDeviceIds[id];
+                var navigationItem = _navigationDeviceIds[id];
+                var featureDashboradFragment = Features.DeviceFeatures.FeaturesDashboardFragment.Create(navigationItem.Id);
                 SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, featureDashboradFragment).Commit();
+                toolbar.Title = navigationItem.Title;
+            } else
+            {
+                toolbar.Title = Resources.GetString(Resource.String.app_name);
             }
 
             DrawerLayout drawer = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
