@@ -82,8 +82,8 @@ namespace Rediscovery.Client.App.MobileAndroid
             try
             {
                 Features.Manager.DeviceManager.Instance.Init();
-                
-                var items = Core.Database.Instance.GetAll<Features.Models.Device>();
+
+                var items = Features.Manager.DeviceManager.Instance.GetAll();
                 if (items?.Count() > 0)
                 {
                     _navigationDeviceIds.Clear();

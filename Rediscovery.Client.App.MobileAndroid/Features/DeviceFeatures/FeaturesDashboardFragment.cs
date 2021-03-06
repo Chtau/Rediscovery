@@ -34,7 +34,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
         {
             try
             {
-                Device = Core.Database.Instance.Get<Features.Models.Device>(x => x.DeviceId == deviceId).FirstOrDefault();
+                Device = Manager.DeviceManager.Instance.Get(deviceId);
                 if (Device == null)
                 {
                     // new entry

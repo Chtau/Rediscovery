@@ -49,6 +49,32 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Manager
             }
         }
 
+        public Models.Device Get(Guid id)
+        {
+            try
+            {
+                return Core.Database.Instance.Get<Features.Models.Device>(x => x.DeviceId == id)?.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+            return null;
+        }
+
+        public IEnumerable<Models.Device> GetAll()
+        {
+            try
+            {
+                return Core.Database.Instance.GetAll<Features.Models.Device>();
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+            return new List<Models.Device>();
+        }
+
         public void Save(Features.Models.Device device, bool updateOrderBy = true)
         {
             try
