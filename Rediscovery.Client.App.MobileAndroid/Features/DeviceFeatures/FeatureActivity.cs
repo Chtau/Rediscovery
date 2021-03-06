@@ -61,7 +61,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                 {
                     Core.Logger.Instance.Error(new Exception(error));
                 }));
-                webView.AddJavascriptInterface(new FeatureJSInterface(this), "CSharp");
+                webView.AddJavascriptInterface(new FeatureJSInterface(this), "Feature");
                 webView.LoadData(html, "text/html", null);
 
                 var deviceIdString = Intent.Extras.GetString(Key_DeviceId);
