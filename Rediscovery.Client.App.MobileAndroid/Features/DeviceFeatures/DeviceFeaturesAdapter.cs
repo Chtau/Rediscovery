@@ -96,7 +96,9 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             holder.Title.Text = featureView.Feature.Name;
             //holder.Title.SetTextColor(GetColor((theme.TextPrimaryColor)));
             //holder.Title.SetBackgroundColor(GetColor(theme.PrimaryColor));
-            var theme = Helpers.Theme.Rediscovery;
+            if (featureView.Feature.DisplayTheme == 0)
+                featureView.Feature.DisplayTheme = 3;
+            var theme = Helpers.Theme.FromOrdinal(featureView.Feature.DisplayTheme, Helpers.Theme.Themes.Purple);
             OnSetIcon(featureView, holder.Icon);
             view.SetBackgroundColor(GetColor(theme.WindowBackgroundColor));
             holder.Title.SetTextColor(GetColor((theme.TextPrimaryColor)));

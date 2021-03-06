@@ -15,5 +15,6 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Models
     {
         public Guid FeatureId { get; set; }
         public string Name { get; set; }
+        public int DisplayTheme { get; set; } = 1;
     }
 }

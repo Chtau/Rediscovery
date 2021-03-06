@@ -88,8 +88,32 @@ namespace Rediscovery.Client.App.MobileAndroid.Helpers
 		public static Theme FromString(string value)
 		{
 			Themes result;
-			Enum.TryParse<Themes>(value.ToTitleCase(), out result);
+			if (Enum.TryParse<Themes>(value.ToTitleCase(), out result))
+            {
+				switch (result)
+				{
+					case Themes.Rediscovery:
+						return Rediscovery;
+					case Themes.Blue:
+						return Blue;
+					case Themes.Green:
+						return Green;
+					case Themes.Purple:
+						return Purple;
+					case Themes.Red:
+						return Red;
+					case Themes.Yellow:
+						return Yellow;
+				}
+			}
+			return null;
+		}
 
+		public static Theme FromOrdinal(int value, Themes defaultTheme = Themes.Rediscovery)
+		{
+			Themes result = defaultTheme;
+			if (Enum.IsDefined(typeof(Themes), value))
+				result = (Themes)value;
 			switch (result)
 			{
 				case Themes.Rediscovery:
