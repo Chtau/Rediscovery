@@ -63,6 +63,20 @@ namespace Rediscovery.Client.App.MobileAndroid
             }
         }
 
+        private void OnUpdateDrawerMenu()
+        {
+            try
+            {
+                NavigationView navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
+                navigationView.Menu.Clear();
+                OnCreateDrawerMenuItems(navigationView);
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
         private void OnCreateDrawerMenuItems(NavigationView navigationView)
         {
             try
@@ -85,7 +99,7 @@ namespace Rediscovery.Client.App.MobileAndroid
                 }
             } catch (Exception ex)
             {
-                Android.Util.Log.Error("", ex.ToString());
+                Core.Logger.Instance.Error(ex);
             }
         }
 
@@ -153,6 +167,10 @@ namespace Rediscovery.Client.App.MobileAndroid
             {
                 var navigationItem = _navigationDeviceIds[id];
                 var featureDashboradFragment = Features.DeviceFeatures.FeaturesDashboardFragment.Create(navigationItem.Id);
+                featureDashboradFragment.DeviceFavoriteChanged += (_obj, _args) =>
+                {
+                    OnUpdateDrawerMenu();
+                };
                 SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, featureDashboradFragment).Commit();
                 toolbar.Title = navigationItem.Title;
             } else

@@ -15,6 +15,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Models
     {
         public Guid DeviceId { get; set; }
         public string Name { get; set; }
+        public bool IsConnected { get; set; }
         public List<Feature> Features { get; set; }
     }
 }

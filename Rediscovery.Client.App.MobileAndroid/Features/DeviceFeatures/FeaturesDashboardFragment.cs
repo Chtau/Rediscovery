@@ -15,6 +15,9 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
     public class FeaturesDashboardFragment : AndroidX.Fragment.App.Fragment
     {
         private DeviceFeaturesAdapter deviceFeaturesAdapter;
+        private IMenu deviceMenu;
+
+        public event EventHandler DeviceFavoriteChanged;
 
         public Features.Models.Device Device { get; }
 
@@ -62,31 +65,87 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
         {
+            deviceMenu = menu;
             base.OnCreateOptionsMenu(menu, inflater);
-            menu.Clear();
-            inflater.Inflate(Resource.Menu.menu_features, menu);
-            // TODO: toggle menu items for add/remove favorite and connect/disconnect
+            try
+            {
+                menu.Clear();
+                inflater.Inflate(Resource.Menu.menu_features, menu);
+                OnUpdateMenuState(menu);
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        /// <summary>
+        /// toggle menu items for add/remove favorite and connect/disconnect
+        /// </summary>
+        /// <param name="menu"></param>
+        private void OnUpdateMenuState(IMenu menu)
+        {
+            try
+            {
+                if (Device.IsFavorite)
+                {
+                    OnMenuToggle(menu, false, Resource.Id.action_features_device_add_favorite, Resource.Id.action_features_device_remove_favorite);
+                }
+                else
+                {
+                    OnMenuToggle(menu, true, Resource.Id.action_features_device_add_favorite, Resource.Id.action_features_device_remove_favorite);
+                }
+                if (Device.IsConnected)
+                {
+                    OnMenuToggle(menu, false, Resource.Id.action_features_device_connect, Resource.Id.action_features_device_disconnect);
+                }
+                else
+                {
+                    OnMenuToggle(menu, true, Resource.Id.action_features_device_connect, Resource.Id.action_features_device_disconnect);
+                }
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        private void OnMenuToggle(IMenu menu, bool activeFirst, int first, int second)
+        {
+            var menuItemOn = menu.FindItem(first);
+            if (menuItemOn != null)
+                menuItemOn.SetVisible(activeFirst);
+            var menuItemOff = menu.FindItem(second);
+            if (menuItemOff != null)
+                menuItemOff.SetVisible(!activeFirst);
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            int id = item.ItemId;
-            switch (id)
+            try
             {
-                case Resource.Id.action_features_device_add_favorite:
-                    return true;
-                case Resource.Id.action_features_device_remove_favorite:
-                    return true;
-                case Resource.Id.action_features_device_connect:
-                    return true;
-                case Resource.Id.action_features_device_disconnect:
-                    return true;
-                case Resource.Id.action_features_device_detail:
-                    return true;
-                default:
-                    break;
+                int id = item.ItemId;
+                switch (id)
+                {
+                    case Resource.Id.action_features_device_add_favorite:
+                        OnChangeFavorite(true);
+                        return true;
+                    case Resource.Id.action_features_device_remove_favorite:
+                        OnChangeFavorite(false);
+                        return true;
+                    case Resource.Id.action_features_device_connect:
+                        return true;
+                    case Resource.Id.action_features_device_disconnect:
+                        return true;
+                    case Resource.Id.action_features_device_detail:
+                        return true;
+                    default:
+                        break;
+                }
+            } catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
             }
-
             return base.OnOptionsItemSelected(item);
         }
 
@@ -116,6 +175,21 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                 
                 deviceFeaturesAdapter = new DeviceFeaturesAdapter(Activity, Device);
                 featuresGridView.Adapter = deviceFeaturesAdapter;
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        private void OnChangeFavorite(bool isFavorite)
+        {
+            try
+            {
+                Device.IsFavorite = isFavorite;
+                Manager.DeviceManager.Instance.Save(Device);
+                OnUpdateMenuState(deviceMenu);
+                DeviceFavoriteChanged?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception ex)
             {
