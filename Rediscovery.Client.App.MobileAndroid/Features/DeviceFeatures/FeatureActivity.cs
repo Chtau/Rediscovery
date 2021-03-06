@@ -33,7 +33,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 <html>
   <body>
     <p>Demo calling C# from JavaScript</p>
-<button type=""button"" onClick=""CSharp.ShowToast()"">Call C#</button>
+<button type=""button"" onClick=""Feature.ShowToast()"">Call C#</button>
   </body>
 </html>";
 
