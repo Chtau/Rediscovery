@@ -161,11 +161,12 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                 if (status == Xamarin.Essentials.PermissionStatus.Granted)
                 {
                     var screen = OnTakeScreenshot(webView);
-                    var pubDocs = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDocuments).AbsolutePath;
+                    var pubDocs = Core.CoreIO.Instance.DefaultDirectory; //Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDocuments).AbsolutePath;
                     var file = System.IO.Path.Combine(pubDocs, $"{DateTime.Now:yyyyMMddHHmmss}.png");
                     var stream = new FileStream(file, FileMode.Create);
                     screen.Compress(Bitmap.CompressFormat.Png, 85, stream);
                     stream.Close();
+                    Core.CoreIO.Instance.AddPublicFile(file);
                 }
             }
             catch (Exception ex)
