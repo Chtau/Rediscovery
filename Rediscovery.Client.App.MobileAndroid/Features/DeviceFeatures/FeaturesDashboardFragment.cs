@@ -9,11 +9,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 {
     public class FeaturesDashboardFragment : AndroidX.Fragment.App.Fragment
     {
+        private GridView featureGridView;
         private DeviceFeaturesAdapter deviceFeaturesAdapter;
         private IMenu deviceMenu;
 
@@ -59,7 +61,8 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
-            OnSetUpFeatures(view.FindViewById<GridView>(Resource.Id.devicefeatures));
+            featureGridView = view.FindViewById<GridView>(Resource.Id.devicefeatures);
+            OnSetUpFeatures(featureGridView);
             base.OnViewCreated(view, savedInstanceState);
         }
 
@@ -102,6 +105,45 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                 else
                 {
                     OnMenuToggle(menu, true, Resource.Id.action_features_device_connect, Resource.Id.action_features_device_disconnect);
+                }
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        public void UpdateFeatureGrid()
+        {
+            try
+            {
+                if (deviceFeaturesAdapter != null)
+                {
+                    /*deviceFeaturesAdapter = new DeviceFeaturesAdapter(Activity, Device);
+                    featureGridView.Adapter = deviceFeaturesAdapter;*/
+                    /*deviceFeaturesAdapter.NotifyDataSetChanged();
+                    featureGridView.InvalidateViews();
+                    Task.Run(async () =>
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(5));
+                        deviceFeaturesAdapter.NotifyDataSetChanged();
+                        featureGridView.InvalidateViews();
+                        this.View.RefreshDrawableState();
+                        this.View.Invalidate();
+                    });*/
+                    Task.Run(async () =>
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(1));
+                        Xamarin.Essentials.MainThread.BeginInvokeOnMainThread(() =>
+                        {
+                            deviceFeaturesAdapter = new DeviceFeaturesAdapter(Activity, Device);
+                            featureGridView.Adapter = deviceFeaturesAdapter;
+                            /*deviceFeaturesAdapter.NotifyDataSetChanged();
+                            featureGridView.InvalidateViews();
+                            this.View.RefreshDrawableState();
+                            this.View.Invalidate();*/
+                        });
+                    });
                 }
             }
             catch (Exception ex)
@@ -155,11 +197,11 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             base.OnResume();
         }
 
-        private void OnSetUpFeatures(GridView featuresGridView)
+        private void OnSetUpFeatures(GridView gridView)
         {
             try
             {
-                featuresGridView.ItemClick += (obj, args) =>
+                gridView.ItemClick += (obj, args) =>
                 {
                     try
                     {
@@ -168,7 +210,8 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                             var intent = new Intent(Application.Context, typeof(FeatureActivity));
                             intent.PutExtra(FeatureActivity.Key_DeviceId, Device.DeviceId.ToString());
                             intent.PutExtra(FeatureActivity.Key_FeatureId, featureViewModel.Feature.FeatureId.ToString());
-                            StartActivity(intent);
+                            //StartActivity(intent);
+                            MainActivity.Instance.StartActivityForResult(intent, MainActivity.Intent_Feature_Id);
                         }
                     }
                     catch (Exception ex)
@@ -178,7 +221,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                 };
                 
                 deviceFeaturesAdapter = new DeviceFeaturesAdapter(Activity, Device);
-                featuresGridView.Adapter = deviceFeaturesAdapter;
+                gridView.Adapter = deviceFeaturesAdapter;
             }
             catch (Exception ex)
             {

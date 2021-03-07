@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Android;
 using Android.App;
+using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
@@ -19,6 +20,10 @@ namespace Rediscovery.Client.App.MobileAndroid
     [Activity(Label = "@string/app_name", Icon = "@mipmap/ic_launcher", MainLauncher = false)]//Theme = "@style/Rediscovery", 
     public class MainActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener
     {
+        public static MainActivity Instance;
+
+        public const int Intent_Feature_Id = 123;
+
         struct NavigationItem
         {
             public Guid Id { get; }
@@ -33,33 +38,58 @@ namespace Rediscovery.Client.App.MobileAndroid
 
         private readonly Dictionary<int, NavigationItem> _navigationDeviceIds = new Dictionary<int, NavigationItem>();
         private Toolbar toolbar;
+        private Features.DeviceFeatures.FeaturesDashboardFragment currentFeaturesDashboardFragment;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            Instance = this;
             base.OnCreate(savedInstanceState);
-            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-            SetContentView(Resource.Layout.activity_main);
-            toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
-            SetSupportActionBar(toolbar);
-
-            /*FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
-            fab.Click += FabOnClick;*/
-
-            DrawerLayout drawer = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, Resource.String.navigation_drawer_open, Resource.String.navigation_drawer_close);
-            drawer.AddDrawerListener(toggle);
-            toggle.SyncState();
-            NavigationView navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
-            OnCreateDrawerMenuItems(navigationView);
-            navigationView.SetNavigationItemSelectedListener(this);
-
-            if (savedInstanceState == null)
+            try
             {
-                // TODO: show dashboard or last used
-                //SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.DeviceFeatures.FeaturesDashboardFragment.Create()).Commit();
-            } else
+                Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+                SetContentView(Resource.Layout.activity_main);
+                toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+                SetSupportActionBar(toolbar);
+
+                /*FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
+                fab.Click += FabOnClick;*/
+
+                DrawerLayout drawer = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
+                ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, Resource.String.navigation_drawer_open, Resource.String.navigation_drawer_close);
+                drawer.AddDrawerListener(toggle);
+                toggle.SyncState();
+                NavigationView navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
+                OnCreateDrawerMenuItems(navigationView);
+                navigationView.SetNavigationItemSelectedListener(this);
+
+                if (savedInstanceState == null)
+                {
+                    // TODO: show dashboard or last used
+                    //SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.DeviceFeatures.FeaturesDashboardFragment.Create()).Commit();
+                }
+                else
+                {
+                    // TODO: restore state
+                }
+            }
+            catch (Exception ex)
             {
-                // TODO: resotre state
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
+        {
+            base.OnActivityResult(requestCode, resultCode, data);
+            try
+            {
+                if (requestCode == Intent_Feature_Id)
+                {
+                    currentFeaturesDashboardFragment.UpdateFeatureGrid();
+                }
+            } catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
             }
         }
 
@@ -142,44 +172,51 @@ namespace Rediscovery.Client.App.MobileAndroid
 
         public bool OnNavigationItemSelected(IMenuItem item)
         {
-            int id = item.ItemId;
-
-            /*if (id == Resource.Id.nav_features)
+            try
             {
-                SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.DeviceFeatures.FeaturesDashboardFragment.Create()).Commit();
-            }
-            else if (id == Resource.Id.nav_devices)
-            {
-                SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.Home.DevicesDashboardFragment.Create()).Commit();
-            }
-            else if (id == Resource.Id.nav_discovery)
-            {
-                SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.Home.DiscoveryFragment.Create()).Commit();
-            }
-            else */if (id == Resource.Id.nav_device_add)
-            {
-
-            }
-            else if (id == Resource.Id.nav_settings)
-            {
-
-            } else if (_navigationDeviceIds.ContainsKey(id))
-            {
-                var navigationItem = _navigationDeviceIds[id];
-                var featureDashboradFragment = Features.DeviceFeatures.FeaturesDashboardFragment.Create(navigationItem.Id);
-                featureDashboradFragment.DeviceFavoriteChanged += (_obj, _args) =>
+                int id = item.ItemId;
+                currentFeaturesDashboardFragment = null;
+                /*if (id == Resource.Id.nav_features)
                 {
-                    OnUpdateDrawerMenu();
-                };
-                SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, featureDashboradFragment).Commit();
-                toolbar.Title = navigationItem.Title;
-            } else
-            {
-                toolbar.Title = Resources.GetString(Resource.String.app_name);
-            }
+                    SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.DeviceFeatures.FeaturesDashboardFragment.Create()).Commit();
+                }
+                else if (id == Resource.Id.nav_devices)
+                {
+                    SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.Home.DevicesDashboardFragment.Create()).Commit();
+                }
+                else if (id == Resource.Id.nav_discovery)
+                {
+                    SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.Home.DiscoveryFragment.Create()).Commit();
+                }
+                else */if (id == Resource.Id.nav_device_add)
+                {
 
-            DrawerLayout drawer = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
-            drawer.CloseDrawer(GravityCompat.Start);
+                }
+                else if (id == Resource.Id.nav_settings)
+                {
+
+                } else if (_navigationDeviceIds.ContainsKey(id))
+                {
+                    var navigationItem = _navigationDeviceIds[id];
+                    currentFeaturesDashboardFragment = Features.DeviceFeatures.FeaturesDashboardFragment.Create(navigationItem.Id);
+                    currentFeaturesDashboardFragment.DeviceFavoriteChanged += (_obj, _args) =>
+                    {
+                        OnUpdateDrawerMenu();
+                    };
+                    SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, currentFeaturesDashboardFragment).Commit();
+                    toolbar.Title = navigationItem.Title;
+                } else
+                {
+                    toolbar.Title = Resources.GetString(Resource.String.app_name);
+                }
+
+                DrawerLayout drawer = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
+                drawer.CloseDrawer(GravityCompat.Start);
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
             return true;
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)

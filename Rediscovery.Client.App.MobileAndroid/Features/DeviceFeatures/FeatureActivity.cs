@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 {
@@ -82,6 +83,18 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             {
                 Core.Logger.Instance.Error(ex);
             }
+        }
+
+        public override void OnBackPressed()
+        {
+            //OnCreateScreenThumbnail();
+            base.OnBackPressed();
+        }
+
+        protected override void OnDestroy()
+        {
+            OnCreateScreenThumbnail();
+            base.OnDestroy();
         }
 
         private string OnGetDefaultJS()
@@ -159,32 +172,43 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             }
         }
 
-        private async void OnSystemAction()
+        private void OnSystemAction()
         {
             try
             {
-                await Xamarin.Essentials.Permissions.RequestAsync<Xamarin.Essentials.Permissions.StorageWrite>();
-                var status = await Xamarin.Essentials.Permissions.CheckStatusAsync<Xamarin.Essentials.Permissions.StorageWrite>();
-                if (status == Xamarin.Essentials.PermissionStatus.Granted)
-                {
-                    var screen = OnTakeScreenshot(webView);
-                    int ivWidth = screen.Width;
-                    int ivHeight = screen.Height;
-                    int newWidth = ivWidth;
-                    var newHeight = (int)Math.Floor((double)screen.Height * ((double)640 / (double)screen.Width));
-
-                    var thumbnail = Bitmap.CreateScaledBitmap(screen, 640, newHeight, true);
-                    var file = System.IO.Path.Combine(Core.CoreIO.Instance.DeviceFeatureThumbnailDirectory(DeviceId), $"{FeatureId.ToSafeString()}.png");
-                    var stream = new FileStream(file, FileMode.Create);
-                    thumbnail.Compress(Bitmap.CompressFormat.Png, 85, stream);
-                    stream.Close();
-                    //Core.CoreIO.Instance.AddPublicFile(file);
-                }
+                
             }
             catch (Exception ex)
             {
                 Core.Logger.Instance.Error(ex);
             }
+        }
+
+        private void OnCreateScreenThumbnail()
+        {
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await Xamarin.Essentials.Permissions.RequestAsync<Xamarin.Essentials.Permissions.StorageWrite>();
+                    var status = await Xamarin.Essentials.Permissions.CheckStatusAsync<Xamarin.Essentials.Permissions.StorageWrite>();
+                    if (status == Xamarin.Essentials.PermissionStatus.Granted)
+                    {
+                        var screen = OnTakeScreenshot(webView);
+                        var thumbnail = Android.Media.ThumbnailUtils.ExtractThumbnail(screen, 350, 350);
+                        var file = System.IO.Path.Combine(Core.CoreIO.Instance.DeviceFeatureThumbnailDirectory(DeviceId), $"{FeatureId.ToSafeString()}.png");
+                        var stream = new FileStream(file, FileMode.Create);
+                        thumbnail.Compress(Bitmap.CompressFormat.Png, 75, stream);
+                        stream.Close();
+                        
+                        //Core.CoreIO.Instance.AddPublicFile(file);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Core.Logger.Instance.Error(ex);
+                }
+            });
         }
 
         private Bitmap OnTakeScreenshot(View view)
