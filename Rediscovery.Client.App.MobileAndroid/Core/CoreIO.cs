@@ -31,8 +31,35 @@ namespace Rediscovery.Client.App.MobileAndroid.Core
         }
 
         private const string AppFolderName = "Rediscovery";
+        private const string DeviceFeatureThumbnail = "featurethumbnails";
 
         public string DefaultDirectory => System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+
+        public string DeviceDirectory(Guid deviceId)
+        {
+            var idFolder = deviceId.ToSafeString();
+            var path = Path.Combine(DefaultDirectory, idFolder);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            return path;
+        }
+
+        public string DeviceFeatureThumbnailDirectory(Guid deviceId)
+        {
+            var path = Path.Combine(DeviceDirectory(deviceId), DeviceFeatureThumbnail);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            return path;
+        }
+
+        public string DeviceFeatureDirectory(Guid deviceId, Guid featureId)
+        {
+            var idFolder = featureId.ToSafeString();
+            var path = Path.Combine(DeviceDirectory(deviceId), idFolder);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            return path;
+        }
 
         public Android.Net.Uri AddPublicFile(string path, string title = null, string description = null)
         {

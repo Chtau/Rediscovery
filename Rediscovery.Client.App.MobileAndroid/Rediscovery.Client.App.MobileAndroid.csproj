@@ -82,6 +82,7 @@
     <Compile Include="Features\Models\Device.cs" />
     <Compile Include="Features\Models\Feature.cs" />
     <Compile Include="Helpers\Creator.cs" />
+    <Compile Include="Helpers\GuidExtensions.cs" />
     <Compile Include="Helpers\Permission.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Helpers\Theme.cs" />

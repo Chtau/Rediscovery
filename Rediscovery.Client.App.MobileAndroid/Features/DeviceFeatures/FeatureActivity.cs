@@ -22,8 +22,10 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
     public class FeatureActivity : AppCompatActivity
     {
         public const string Key_DeviceId = "deviceid";
+        public const string Key_FeatureId = "featureid";
 
         public Guid DeviceId { get; private set; } = Guid.Empty;
+        public Guid FeatureId { get; private set; } = Guid.Empty;
         private bool isFabMenuOpen = false;
         private FloatingActionButton fabMenu;
         private FloatingActionButton fabClose;
@@ -70,6 +72,11 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                 if (!string.IsNullOrWhiteSpace(deviceIdString))
                 {
                     DeviceId = new Guid(deviceIdString);
+                }
+                var featureIdString = Intent.Extras.GetString(Key_FeatureId);
+                if (!string.IsNullOrWhiteSpace(featureIdString))
+                {
+                    FeatureId = new Guid(featureIdString);
                 }
             } catch (Exception ex)
             {
@@ -161,12 +168,12 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                 if (status == Xamarin.Essentials.PermissionStatus.Granted)
                 {
                     var screen = OnTakeScreenshot(webView);
-                    var pubDocs = Core.CoreIO.Instance.DefaultDirectory; //Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDocuments).AbsolutePath;
-                    var file = System.IO.Path.Combine(pubDocs, $"{DateTime.Now:yyyyMMddHHmmss}.png");
+                    var thumbnail = Bitmap.CreateScaledBitmap(screen, 120, 120, false);
+                    var file = System.IO.Path.Combine(Core.CoreIO.Instance.DeviceFeatureThumbnailDirectory(DeviceId), $"{FeatureId.ToSafeString()}.png");
                     var stream = new FileStream(file, FileMode.Create);
-                    screen.Compress(Bitmap.CompressFormat.Png, 85, stream);
+                    thumbnail.Compress(Bitmap.CompressFormat.Png, 50, stream);
                     stream.Close();
-                    Core.CoreIO.Instance.AddPublicFile(file);
+                    //Core.CoreIO.Instance.AddPublicFile(file);
                 }
             }
             catch (Exception ex)

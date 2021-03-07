@@ -163,9 +163,13 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                 {
                     try
                     {
-                        var intent = new Intent(Application.Context, typeof(FeatureActivity));
-                        intent.PutExtra(FeatureActivity.Key_DeviceId, Device.DeviceId.ToString());
-                        StartActivity(intent);
+                        if (deviceFeaturesAdapter.GetItem(args.Position) is ViewModels.FeatureViewModel featureViewModel)
+                        {
+                            var intent = new Intent(Application.Context, typeof(FeatureActivity));
+                            intent.PutExtra(FeatureActivity.Key_DeviceId, Device.DeviceId.ToString());
+                            intent.PutExtra(FeatureActivity.Key_FeatureId, featureViewModel.Feature.FeatureId.ToString());
+                            StartActivity(intent);
+                        }
                     }
                     catch (Exception ex)
                     {
