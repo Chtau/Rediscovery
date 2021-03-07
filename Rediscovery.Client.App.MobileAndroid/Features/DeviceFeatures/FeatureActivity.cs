@@ -1,5 +1,6 @@
 ﻿using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Runtime;
@@ -8,6 +9,7 @@ using Android.Webkit;
 using AndroidX.AppCompat.App;
 using AndroidX.AppCompat.Widget;
 using Google.Android.Material.FloatingActionButton;
+using Java.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -150,16 +152,34 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             }
         }
 
-        private void OnSystemAction()
+        private async void OnSystemAction()
         {
             try
             {
-
+                await Xamarin.Essentials.Permissions.RequestAsync<Xamarin.Essentials.Permissions.StorageWrite>();
+                var status = await Xamarin.Essentials.Permissions.CheckStatusAsync<Xamarin.Essentials.Permissions.StorageWrite>();
+                if (status == Xamarin.Essentials.PermissionStatus.Granted)
+                {
+                    var screen = OnTakeScreenshot(webView);
+                    var pubDocs = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDocuments).AbsolutePath;
+                    var file = System.IO.Path.Combine(pubDocs, $"{DateTime.Now:yyyyMMddHHmmss}.png");
+                    var stream = new FileStream(file, FileMode.Create);
+                    screen.Compress(Bitmap.CompressFormat.Png, 85, stream);
+                    stream.Close();
+                }
             }
             catch (Exception ex)
             {
                 Core.Logger.Instance.Error(ex);
             }
+        }
+
+        private Bitmap OnTakeScreenshot(View view)
+        {
+            Bitmap bitmap = Bitmap.CreateBitmap(view.Width, view.Height, Bitmap.Config.Argb8888);
+            Canvas canvas = new Canvas(bitmap);
+            view.Draw(canvas);
+            return bitmap;
         }
     }
 }

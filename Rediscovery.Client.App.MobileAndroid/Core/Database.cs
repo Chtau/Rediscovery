@@ -27,7 +27,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Core
         {
             return new LiteDB.ConnectionString
             {
-                Filename = System.IO.Path.Combine(CoreIO.DefaultDirectory, dbName),
+                Filename = System.IO.Path.Combine(CoreIO.Instance.DefaultDirectory, dbName),
                 Password = dbPassword
             };
         }
