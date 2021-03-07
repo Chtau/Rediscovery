@@ -15,13 +15,15 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 {
     public class FeaturesDashboardFragment : AndroidX.Fragment.App.Fragment
     {
+        private const string Key_Feature_DeviceId = "featuredeviceid";
+
         private GridView featureGridView;
         private DeviceFeaturesAdapter deviceFeaturesAdapter;
         private IMenu deviceMenu;
 
         public event EventHandler DeviceFavoriteChanged;
 
-        public Features.Models.Device Device { get; }
+        public Features.Models.Device Device { get; private set; }
 
         public static FeaturesDashboardFragment Create(Guid deviceId)
         {
@@ -32,26 +34,33 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             return fragment;
         }
 
-        public FeaturesDashboardFragment(Guid deviceId)
+        public FeaturesDashboardFragment()
         {
-            try
-            {
-                Device = Manager.DeviceManager.Instance.Get(deviceId);
-                if (Device == null)
-                {
-                    // new entry
-                    Device = new Models.Device();
-                }
-            } catch (Exception ex)
-            {
-                Core.Logger.Instance.Error(ex);
-            }
+
+        }
+
+        public FeaturesDashboardFragment(Guid deviceId) : this()
+        {
+            OnLoad(deviceId);
         }
 
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             HasOptionsMenu = true;
+            try
+            {
+                var deviceIdString = savedInstanceState.GetString(Key_Feature_DeviceId);
+                if (!string.IsNullOrWhiteSpace(deviceIdString))
+                {
+                    var deviceId = new Guid(deviceIdString);
+                    OnLoad(deviceId);
+                }
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -75,6 +84,29 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                 menu.Clear();
                 inflater.Inflate(Resource.Menu.menu_features, menu);
                 OnUpdateMenuState(menu);
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        public override void OnSaveInstanceState(Bundle outState)
+        {
+            outState.PutString(Key_Feature_DeviceId, Device?.DeviceId.ToString());
+            base.OnSaveInstanceState(outState);
+        }
+
+        private void OnLoad(Guid deviceId)
+        {
+            try
+            {
+                Device = Manager.DeviceManager.Instance.Get(deviceId);
+                if (Device == null)
+                {
+                    // new entry
+                    Device = new Models.Device();
+                }
             }
             catch (Exception ex)
             {

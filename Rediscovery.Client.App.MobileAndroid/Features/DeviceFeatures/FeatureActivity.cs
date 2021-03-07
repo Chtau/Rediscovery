@@ -35,10 +35,25 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
         private WebView webView;
 
         const string html = @"
-<html>
-  <body style='margin:100px'>
-    <p>Demo calling C# from JavaScript</p>
+<html style='height:100%'>
+<head>
+<style>
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  margin-top: auto;
+  margin-bottom: auto;
+  border: 3px solid green; 
+}
+</style>
+</head>
+  <body style='height:100%;margin-top: 150px;'>
+<div class='center'>
+<p>Demo calling C# from JavaScript</p>
 <button type=""button"" onClick=""Feature.ShowToast()"">Call C#</button>
+</div>
   </body>
 </html>";
 
