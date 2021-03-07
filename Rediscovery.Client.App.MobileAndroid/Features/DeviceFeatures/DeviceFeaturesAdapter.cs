@@ -100,6 +100,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                 featureView.Feature.DisplayTheme = 3;
             var theme = Helpers.Theme.FromOrdinal(featureView.Feature.DisplayTheme, Helpers.Theme.Themes.Purple);
             OnSetIcon(featureView, holder.Icon);
+            
             view.SetBackgroundColor(GetColor(theme.WindowBackgroundColor));
             holder.Title.SetTextColor(GetColor((theme.TextPrimaryColor)));
             holder.Title.SetBackgroundColor(GetColor(theme.PrimaryColor));
@@ -108,8 +109,15 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 
         private void OnSetIcon(FeatureViewModel featureViewModel, ImageView icon)
         {
-            var featureImageResource = Resource.Drawable.icon_devicefeature_default; //_context.GetIdentifier(IconCategory + category.Id, Drawable, packageName);
-            icon.SetImageResource(featureImageResource);
+            var thumb = System.IO.Path.Combine(Core.CoreIO.Instance.DeviceFeatureThumbnailDirectory(_device.DeviceId), $"{featureViewModel.Feature.FeatureId.ToSafeString()}.png");
+            if (System.IO.File.Exists(thumb))
+            {
+                icon.SetImageURI(Android.Net.Uri.FromFile(new Java.IO.File(thumb)));
+            } else
+            {
+                var featureImageResource = Resource.Drawable.icon_devicefeature_default; //_context.GetIdentifier(IconCategory + category.Id, Drawable, packageName);
+                icon.SetImageResource(featureImageResource);
+            }
             /*var solved = category.Solved;
             if (solved)
             {

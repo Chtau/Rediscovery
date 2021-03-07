@@ -35,7 +35,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 
         const string html = @"
 <html>
-  <body>
+  <body style='margin:100px'>
     <p>Demo calling C# from JavaScript</p>
 <button type=""button"" onClick=""Feature.ShowToast()"">Call C#</button>
   </body>
@@ -168,10 +168,15 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                 if (status == Xamarin.Essentials.PermissionStatus.Granted)
                 {
                     var screen = OnTakeScreenshot(webView);
-                    var thumbnail = Bitmap.CreateScaledBitmap(screen, 120, 120, false);
+                    int ivWidth = screen.Width;
+                    int ivHeight = screen.Height;
+                    int newWidth = ivWidth;
+                    var newHeight = (int)Math.Floor((double)screen.Height * ((double)640 / (double)screen.Width));
+
+                    var thumbnail = Bitmap.CreateScaledBitmap(screen, 640, newHeight, true);
                     var file = System.IO.Path.Combine(Core.CoreIO.Instance.DeviceFeatureThumbnailDirectory(DeviceId), $"{FeatureId.ToSafeString()}.png");
                     var stream = new FileStream(file, FileMode.Create);
-                    thumbnail.Compress(Bitmap.CompressFormat.Png, 50, stream);
+                    thumbnail.Compress(Bitmap.CompressFormat.Png, 85, stream);
                     stream.Close();
                     //Core.CoreIO.Instance.AddPublicFile(file);
                 }
