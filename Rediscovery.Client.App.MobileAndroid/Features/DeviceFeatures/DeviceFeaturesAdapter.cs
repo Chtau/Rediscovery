@@ -19,12 +19,14 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
         private readonly LayoutInflater layoutInflater;
         private readonly Features.Models.Device _device;
         private readonly List<ViewModels.FeatureViewModel> _models = new List<ViewModels.FeatureViewModel>();
+        private readonly Action<ViewModels.FeatureViewModel> _buttonActionCallback;
 
-        public DeviceFeaturesAdapter(Context context, Features.Models.Device device)
+        public DeviceFeaturesAdapter(Context context, Features.Models.Device device, Action<ViewModels.FeatureViewModel> buttonActionCallback)
         {
             _context = context;
             layoutInflater = LayoutInflater.From(context.ApplicationContext);
             _device = device;
+            _buttonActionCallback = buttonActionCallback;
             OnUpdateDatasource();
         }
 
@@ -97,13 +99,17 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             //holder.Title.SetTextColor(GetColor((theme.TextPrimaryColor)));
             //holder.Title.SetBackgroundColor(GetColor(theme.PrimaryColor));
             if (featureView.Feature.DisplayTheme == 0)
-                featureView.Feature.DisplayTheme = 3;
-            var theme = Helpers.Theme.FromOrdinal(featureView.Feature.DisplayTheme, Helpers.Theme.Themes.Purple);
+                featureView.Feature.DisplayTheme = 1;
+            var theme = Helpers.Theme.FromOrdinal(featureView.Feature.DisplayTheme, Helpers.Theme.Themes.Blue);
             OnSetIcon(featureView, holder.Icon);
-            
-            view.SetBackgroundColor(GetColor(theme.WindowBackgroundColor));
+
+            view.SetBackgroundColor(GetColor(theme.PrimaryColor));//.WindowBackgroundColor));
             holder.Title.SetTextColor(GetColor((theme.TextPrimaryColor)));
             holder.Title.SetBackgroundColor(GetColor(theme.PrimaryColor));
+            holder.Button.Click += (_obj, _args) =>
+            {
+                _buttonActionCallback?.Invoke(featureView);
+            };
             return view;
         }
 

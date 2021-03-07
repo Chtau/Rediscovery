@@ -13,10 +13,23 @@
         android:scaleType="centerCrop"
         android:contentDescription="@string/feature" />
     <!--android:adjustViewBounds="true"-->
-    <TextView
-        android:id="@+id/feature_title"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/spacing_double" />
-
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/feature_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="3"
+            android:padding="@dimen/spacing_double" />
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/feature_button"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="@drawable/ic_more" />
+    </LinearLayout>
 </LinearLayout>

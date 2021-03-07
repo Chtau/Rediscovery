@@ -168,7 +168,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                         await Task.Delay(TimeSpan.FromSeconds(1));
                         Xamarin.Essentials.MainThread.BeginInvokeOnMainThread(() =>
                         {
-                            deviceFeaturesAdapter = new DeviceFeaturesAdapter(Activity, Device);
+                            deviceFeaturesAdapter = new DeviceFeaturesAdapter(Activity, Device, (featureViewModel) => OnFeatureviewModelButtonAction(featureViewModel));
                             featureGridView.Adapter = deviceFeaturesAdapter;
                             /*deviceFeaturesAdapter.NotifyDataSetChanged();
                             featureGridView.InvalidateViews();
@@ -252,7 +252,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                     }
                 };
                 
-                deviceFeaturesAdapter = new DeviceFeaturesAdapter(Activity, Device);
+                deviceFeaturesAdapter = new DeviceFeaturesAdapter(Activity, Device, (featureViewModel) => OnFeatureviewModelButtonAction(featureViewModel));
                 gridView.Adapter = deviceFeaturesAdapter;
             }
             catch (Exception ex)
@@ -269,6 +269,18 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                 Manager.DeviceManager.Instance.Save(Device);
                 OnUpdateMenuState(deviceMenu);
                 DeviceFavoriteChanged?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        private void OnFeatureviewModelButtonAction(ViewModels.FeatureViewModel featureViewModel)
+        {
+            try
+            {
+                Core.Logger.Instance.Debug($"Feature Action tab ID:{featureViewModel.Feature.FeatureId}");
             }
             catch (Exception ex)
             {
