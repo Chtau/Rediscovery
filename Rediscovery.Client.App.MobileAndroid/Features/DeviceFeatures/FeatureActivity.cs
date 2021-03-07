@@ -209,7 +209,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                     var status = await Xamarin.Essentials.Permissions.CheckStatusAsync<Xamarin.Essentials.Permissions.StorageWrite>();
                     if (status == Xamarin.Essentials.PermissionStatus.Granted)
                     {
-                        var screen = OnTakeScreenshot(webView);
+                        var screen = webView.TakeScreenshot();
                         var thumbnail = Android.Media.ThumbnailUtils.ExtractThumbnail(screen, 350, 350);
                         var file = System.IO.Path.Combine(Core.CoreIO.Instance.DeviceFeatureThumbnailDirectory(DeviceId), $"{FeatureId.ToSafeString()}.png");
                         var stream = new FileStream(file, FileMode.Create);
@@ -224,14 +224,6 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                     Core.Logger.Instance.Error(ex);
                 }
             });
-        }
-
-        private Bitmap OnTakeScreenshot(View view)
-        {
-            Bitmap bitmap = Bitmap.CreateBitmap(view.Width, view.Height, Bitmap.Config.Argb8888);
-            Canvas canvas = new Canvas(bitmap);
-            view.Draw(canvas);
-            return bitmap;
         }
     }
 }
