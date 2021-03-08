@@ -132,6 +132,14 @@ namespace Rediscovery.Client.App.MobileAndroid.Helpers
 			return null;
 		}
 
+		public static Themes FromOrdinalEnum(int value, Themes defaultTheme = Themes.Rediscovery)
+		{
+			Themes result = defaultTheme;
+			if (Enum.IsDefined(typeof(Themes), value))
+				return (Themes)value;
+			return defaultTheme;
+		}
+
 		public int Ordinal()
 		{
 			return (int)ToEnum();

@@ -16,6 +16,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures.ViewModel
 {
     public class FeatureViewModel : Java.Lang.Object, IParcelable
     {
+        public Guid DeviceId { get; private set; }
         public Models.Feature Feature { get; private set; }
         public bool HasProfilConfiguration { get; private set; }
         public bool HasSettingConfiguration { get; private set; }
@@ -28,8 +29,9 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures.ViewModel
             return creator;
         }
 
-        public FeatureViewModel(Models.Feature feature)
+        public FeatureViewModel(Guid deviceId, Models.Feature feature)
         {
+            DeviceId = deviceId;
             Feature = feature ?? new Models.Feature();
             // TODO: we should load setting and profile form a special entity (e.g. FeatureMetadata) and not from the feature model
             HasProfilConfiguration = false;

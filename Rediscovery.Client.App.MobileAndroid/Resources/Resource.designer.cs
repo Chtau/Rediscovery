@@ -5893,10 +5893,10 @@ namespace Rediscovery.Client.App.MobileAndroid
 			public const int browser_actions_menu_view = 2131230817;
 			
 			// aapt resource value: 0x7F080062
-			public const int buttonCancel = 2131230818;
+			public const int buttonFeatureEditCancel = 2131230818;
 			
 			// aapt resource value: 0x7F080063
-			public const int buttonOk = 2131230819;
+			public const int buttonFeatureEditOk = 2131230819;
 			
 			// aapt resource value: 0x7F080064
 			public const int buttonPanel = 2131230820;
@@ -5926,7 +5926,7 @@ namespace Rediscovery.Client.App.MobileAndroid
 			public const int checkbox = 2131230828;
 			
 			// aapt resource value: 0x7F08006D
-			public const int checkboxFavorite = 2131230829;
+			public const int checkboxFeatureFavorite = 2131230829;
 			
 			// aapt resource value: 0x7F08006E
 			public const int @checked = 2131230830;

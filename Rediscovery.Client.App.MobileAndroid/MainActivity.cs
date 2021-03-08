@@ -205,7 +205,7 @@ namespace Rediscovery.Client.App.MobileAndroid
                     };
                     currentFeaturesDashboardFragment.FeatureSheetRequested += (_obj, args) =>
                     {
-                        new Features.DeviceFeatures.DeviceBottomSheetFragment().Show(SupportFragmentManager, args.Feature.FeatureId.ToSafeString());
+                        new Features.DeviceFeatures.DeviceBottomSheetFragment(args).Show(SupportFragmentManager, args.Feature.FeatureId.ToSafeString());
                     };
                     SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, currentFeaturesDashboardFragment).Commit();
                     toolbar.Title = navigationItem.Title;

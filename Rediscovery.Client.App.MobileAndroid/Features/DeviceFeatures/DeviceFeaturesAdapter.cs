@@ -51,7 +51,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                 {
                     foreach (var feature in _device.Features.OrderBy(x => x.OrderBy))
                     {
-                        _models.Add(new ViewModels.FeatureViewModel(feature));
+                        _models.Add(new ViewModels.FeatureViewModel(_device.DeviceId, feature));
                     }
                 }
             } catch (Exception ex)

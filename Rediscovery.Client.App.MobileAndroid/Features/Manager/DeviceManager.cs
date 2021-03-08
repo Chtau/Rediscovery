@@ -109,6 +109,18 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Manager
             }
         }
 
+        public void Save(Guid deviceId, Models.Feature feature)
+        {
+            try
+            {
+                // TODO: implement feature save
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
         private void OnUpdateOrderBy()
         {
             try
