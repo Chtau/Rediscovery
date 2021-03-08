@@ -203,6 +203,10 @@ namespace Rediscovery.Client.App.MobileAndroid
                     {
                         OnUpdateDrawerMenu();
                     };
+                    currentFeaturesDashboardFragment.FeatureSheetRequested += (_obj, args) =>
+                    {
+                        new Features.DeviceFeatures.DeviceBottomSheetFragment().Show(SupportFragmentManager, args.Feature.FeatureId.ToSafeString());
+                    };
                     SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, currentFeaturesDashboardFragment).Commit();
                     toolbar.Title = navigationItem.Title;
                 } else

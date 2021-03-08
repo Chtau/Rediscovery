@@ -22,6 +22,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
         private IMenu deviceMenu;
 
         public event EventHandler DeviceFavoriteChanged;
+        public event EventHandler<ViewModels.FeatureViewModel> FeatureSheetRequested;
 
         public Features.Models.Device Device { get; private set; }
 
@@ -257,11 +258,22 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             }
         }
 
+        private Guid lastFeatureViewButtonActionId = Guid.Empty;
         private void OnFeatureViewModelButtonAction(ViewModels.FeatureViewModel featureViewModel)
         {
             try
             {
-                Core.Logger.Instance.Debug($"Feature Action tab ID:{featureViewModel.Feature.FeatureId}");
+                if (lastFeatureViewButtonActionId != featureViewModel.Feature.FeatureId)
+                {
+                    lastFeatureViewButtonActionId = featureViewModel.Feature.FeatureId;
+                    Core.Logger.Instance.Debug($"Feature Action tab ID:{featureViewModel.Feature.FeatureId}");
+                    FeatureSheetRequested?.Invoke(this, featureViewModel);
+                    Task.Run(async () => 
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(2));
+                        lastFeatureViewButtonActionId = Guid.Empty;
+                    });
+                }
             }
             catch (Exception ex)
             {
