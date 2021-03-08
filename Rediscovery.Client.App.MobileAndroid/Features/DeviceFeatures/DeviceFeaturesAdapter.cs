@@ -20,13 +20,19 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
         private readonly Features.Models.Device _device;
         private readonly List<ViewModels.FeatureViewModel> _models = new List<ViewModels.FeatureViewModel>();
         private readonly Action<ViewModels.FeatureViewModel> _buttonActionCallback;
+        private readonly Action<ViewModels.FeatureViewModel> _layoutCallback;
 
-        public DeviceFeaturesAdapter(Context context, Features.Models.Device device, Action<ViewModels.FeatureViewModel> buttonActionCallback)
+        public event EventHandler<ViewModels.FeatureViewModel> ButtonActionClick;
+        public event EventHandler<ViewModels.FeatureViewModel> LayoutClick;
+
+        public DeviceFeaturesAdapter(Context context, Features.Models.Device device, Action<ViewModels.FeatureViewModel> buttonActionCallback,
+            Action<ViewModels.FeatureViewModel> layoutCallback)
         {
             _context = context;
             layoutInflater = LayoutInflater.From(context.ApplicationContext);
             _device = device;
             _buttonActionCallback = buttonActionCallback;
+            _layoutCallback = layoutCallback;
             OnUpdateDatasource();
         }
 
@@ -109,6 +115,12 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             holder.Button.Click += (_obj, _args) =>
             {
                 _buttonActionCallback?.Invoke(featureView);
+                ButtonActionClick?.Invoke(this, featureView);
+            };
+            holder.LinearLayout.Click += (_obj, _args) =>
+            {
+                _layoutCallback?.Invoke(featureView);
+                LayoutClick?.Invoke(this, featureView);
             };
             return view;
         }

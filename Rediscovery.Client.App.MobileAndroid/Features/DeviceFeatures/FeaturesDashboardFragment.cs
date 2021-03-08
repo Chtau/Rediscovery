@@ -151,29 +151,17 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             {
                 if (deviceFeaturesAdapter != null)
                 {
-                    /*deviceFeaturesAdapter = new DeviceFeaturesAdapter(Activity, Device);
-                    featureGridView.Adapter = deviceFeaturesAdapter;*/
-                    /*deviceFeaturesAdapter.NotifyDataSetChanged();
-                    featureGridView.InvalidateViews();
-                    Task.Run(async () =>
-                    {
-                        await Task.Delay(TimeSpan.FromSeconds(5));
-                        deviceFeaturesAdapter.NotifyDataSetChanged();
-                        featureGridView.InvalidateViews();
-                        this.View.RefreshDrawableState();
-                        this.View.Invalidate();
-                    });*/
                     Task.Run(async () =>
                     {
                         await Task.Delay(TimeSpan.FromSeconds(1));
                         Xamarin.Essentials.MainThread.BeginInvokeOnMainThread(() =>
                         {
-                            deviceFeaturesAdapter = new DeviceFeaturesAdapter(Activity, Device, (featureViewModel) => OnFeatureviewModelButtonAction(featureViewModel));
+                            deviceFeaturesAdapter.LayoutClick -= DeviceFeaturesAdapter_LayoutClick;
+                            deviceFeaturesAdapter.ButtonActionClick -= DeviceFeaturesAdapter_ButtonActionClick;
+                            deviceFeaturesAdapter = new DeviceFeaturesAdapter(Activity, Device, null, null);
+                            deviceFeaturesAdapter.LayoutClick += DeviceFeaturesAdapter_LayoutClick;
+                            deviceFeaturesAdapter.ButtonActionClick += DeviceFeaturesAdapter_ButtonActionClick;
                             featureGridView.Adapter = deviceFeaturesAdapter;
-                            /*deviceFeaturesAdapter.NotifyDataSetChanged();
-                            featureGridView.InvalidateViews();
-                            this.View.RefreshDrawableState();
-                            this.View.Invalidate();*/
                         });
                     });
                 }
@@ -233,32 +221,25 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
         {
             try
             {
-                gridView.ItemClick += (obj, args) =>
-                {
-                    try
-                    {
-                        if (deviceFeaturesAdapter.GetItem(args.Position) is ViewModels.FeatureViewModel featureViewModel)
-                        {
-                            var intent = new Intent(Application.Context, typeof(FeatureActivity));
-                            intent.PutExtra(FeatureActivity.Key_DeviceId, Device.DeviceId.ToString());
-                            intent.PutExtra(FeatureActivity.Key_FeatureId, featureViewModel.Feature.FeatureId.ToString());
-                            //StartActivity(intent);
-                            MainActivity.Instance.StartActivityForResult(intent, MainActivity.Intent_Feature_Id);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Core.Logger.Instance.Error(ex);
-                    }
-                };
-                
-                deviceFeaturesAdapter = new DeviceFeaturesAdapter(Activity, Device, (featureViewModel) => OnFeatureviewModelButtonAction(featureViewModel));
+                deviceFeaturesAdapter = new DeviceFeaturesAdapter(Activity, Device, null, null);
+                deviceFeaturesAdapter.LayoutClick += DeviceFeaturesAdapter_LayoutClick;
+                deviceFeaturesAdapter.ButtonActionClick += DeviceFeaturesAdapter_ButtonActionClick;
                 gridView.Adapter = deviceFeaturesAdapter;
             }
             catch (Exception ex)
             {
                 Core.Logger.Instance.Error(ex);
             }
+        }
+
+        private void DeviceFeaturesAdapter_ButtonActionClick(object sender, ViewModels.FeatureViewModel e)
+        {
+            OnFeatureViewModelButtonAction(e);
+        }
+
+        private void DeviceFeaturesAdapter_LayoutClick(object sender, ViewModels.FeatureViewModel e)
+        {
+            OnFeatureViewModelLayout(e);
         }
 
         private void OnChangeFavorite(bool isFavorite)
@@ -276,11 +257,28 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             }
         }
 
-        private void OnFeatureviewModelButtonAction(ViewModels.FeatureViewModel featureViewModel)
+        private void OnFeatureViewModelButtonAction(ViewModels.FeatureViewModel featureViewModel)
         {
             try
             {
                 Core.Logger.Instance.Debug($"Feature Action tab ID:{featureViewModel.Feature.FeatureId}");
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        private void OnFeatureViewModelLayout(ViewModels.FeatureViewModel featureViewModel)
+        {
+            try
+            {
+                Core.Logger.Instance.Debug($"Feature Action tab ID:{featureViewModel.Feature.FeatureId}");
+
+                var intent = new Intent(Application.Context, typeof(FeatureActivity));
+                intent.PutExtra(FeatureActivity.Key_DeviceId, Device.DeviceId.ToString());
+                intent.PutExtra(FeatureActivity.Key_FeatureId, featureViewModel.Feature.FeatureId.ToString());
+                MainActivity.Instance.StartActivityForResult(intent, MainActivity.Intent_Feature_Id);
             }
             catch (Exception ex)
             {

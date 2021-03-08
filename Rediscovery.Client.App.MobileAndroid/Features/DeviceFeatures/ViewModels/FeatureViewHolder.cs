@@ -17,12 +17,14 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures.ViewModel
 
 		public ImageView Icon { get; set; }
 		public Button Button { get; set; }
+		public LinearLayout LinearLayout { get; set; }
 
 		public FeatureViewHolder(LinearLayout container)
 		{
 			Icon = container.FindViewById<ImageView>(Resource.Id.feature_icon);
 			Title = container.FindViewById<TextView>(Resource.Id.feature_title);
 			Button = container.FindViewById<Button>(Resource.Id.feature_button);
+			LinearLayout = container.FindViewById<LinearLayout>(Resource.Id.feature_layout);
 		}
 	}
 }
