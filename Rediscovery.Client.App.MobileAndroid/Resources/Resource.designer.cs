@@ -5601,22 +5601,25 @@ namespace Rediscovery.Client.App.MobileAndroid
 			public const int selector_true = 2131165354;
 			
 			// aapt resource value: 0x7F0700AB
-			public const int side_nav_bar = 2131165355;
+			public const int shadow = 2131165355;
 			
 			// aapt resource value: 0x7F0700AC
-			public const int splash_logo = 2131165356;
+			public const int side_nav_bar = 2131165356;
 			
 			// aapt resource value: 0x7F0700AD
-			public const int splash_screen = 2131165357;
+			public const int splash_logo = 2131165357;
 			
 			// aapt resource value: 0x7F0700AE
-			public const int test_custom_background = 2131165358;
+			public const int splash_screen = 2131165358;
 			
 			// aapt resource value: 0x7F0700AF
-			public const int tooltip_frame_dark = 2131165359;
+			public const int test_custom_background = 2131165359;
 			
 			// aapt resource value: 0x7F0700B0
-			public const int tooltip_frame_light = 2131165360;
+			public const int tooltip_frame_dark = 2131165360;
+			
+			// aapt resource value: 0x7F0700B1
+			public const int tooltip_frame_light = 2131165361;
 			
 			static Drawable()
 			{
