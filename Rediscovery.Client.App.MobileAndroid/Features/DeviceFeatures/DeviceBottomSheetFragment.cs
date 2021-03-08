@@ -21,14 +21,14 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
-            var listView = view.FindViewById<ListView>(Resource.Id.listViewOptions);
+            /*var listView = view.FindViewById<ListView>(Resource.Id.listViewOptions);
             listView.Adapter = new ArrayAdapter<string>(Activity, Android.Resource.Layout.SimpleListItem1, new List<string>
             {
                 "Share with Friends",
                 "Bookmark",
                 "Add to Favourites",
                 "More Information"
-            });
+            });*/
             //featureGridView = view.FindViewById<GridView>(Resource.Id.devicefeatures);
             //OnSetUpFeatures(featureGridView);
             base.OnViewCreated(view, savedInstanceState);

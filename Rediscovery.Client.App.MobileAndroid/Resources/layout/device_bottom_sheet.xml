@@ -1,11 +1,83 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?> 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
- 
-    <ListView
-        android:id="@+id/listViewOptions"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
- 
+        android:layout_height="match_parent"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+        <RadioGroup
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp">
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Redisocvery"
+            android:id="@+id/rbtnThemeRedisocvery" />
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Blue"
+            android:id="@+id/rbtnThemeBlue" />
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Green"
+            android:id="@+id/rbtnThemeGreen" />
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Purple"
+            android:id="@+id/rbtnThemePurple" />
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Red"
+            android:id="@+id/rbtnThemeRed" />
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Yellow"
+            android:id="@+id/rbtnThemeYellow" />
+        </RadioGroup>
+        <LinearLayout
+            android:layout_marginRight="25dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <CheckBox android:id="@+id/checkboxFavorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Favorite"/>
+        </LinearLayout>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+        <Button
+            android:id="@+id/buttonCancel"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:text="@android:string/cancel"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center_horizontal"/>
+        <Button
+            android:id="@+id/buttonOk"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:text="@android:string/ok"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_horizontal"/>
+    </LinearLayout>
+
 </LinearLayout>
