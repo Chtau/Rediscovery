@@ -26,21 +26,16 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 
         public Features.Models.Device Device { get; private set; }
 
-        public static FeaturesDashboardFragment Create(Guid deviceId)
+        /*public static FeaturesDashboardFragment Create(Guid deviceId)
         {
             var args = new Bundle();
             //args.PutBoolean(ArgEdit, edit);
             var fragment = new FeaturesDashboardFragment(deviceId);
             fragment.Arguments = args;
             return fragment;
-        }
+        }*/
 
-        public FeaturesDashboardFragment()
-        {
-
-        }
-
-        public FeaturesDashboardFragment(Guid deviceId) : this()
+        public void Load(Guid deviceId)
         {
             OnLoad(deviceId);
         }

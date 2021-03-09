@@ -26,9 +26,9 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 
         private ViewModels.FeatureViewModel featureViewModel;
 
-        public event EventHandler<ViewModels.FeatureViewModel> ChangeViewModel;
+        public event EventHandler<ViewModels.FeatureViewModel> AfterClose;
 
-        public DeviceBottomSheetFragment(ViewModels.FeatureViewModel featureViewModel)
+        public void Load(ViewModels.FeatureViewModel featureViewModel)
         {
             this.featureViewModel = featureViewModel;
         }
@@ -54,7 +54,6 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                 btnOk.Click += (_obj, _args) => OnClose(true);
                 var btnCancel = view.FindViewById<Button>(Resource.Id.buttonFeatureEditCancel);
                 btnCancel.Click += (_obj, _args) => OnClose(false);
-
                 OnLoad();
             } catch (Exception ex)
             {
@@ -71,7 +70,8 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                 {
                     OnSetSelectedTheme(Helpers.Theme.FromOrdinalEnum(featureViewModel.Feature.DisplayTheme));
                     isFavorite.Checked = featureViewModel.Feature.IsFavorite;
-                } else
+                }
+                else
                 {
                     // default
                     OnSetSelectedTheme(Helpers.Theme.Themes.Blue);
@@ -92,8 +92,12 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                     featureViewModel.Feature.DisplayTheme = (int)OnGetSelectedTheme();
                     featureViewModel.Feature.IsFavorite = isFavorite.Checked;
                     Manager.DeviceManager.Instance.Save(featureViewModel.DeviceId, featureViewModel.Feature);
-                    ChangeViewModel?.Invoke(this, featureViewModel);
+                    AfterClose?.Invoke(this, featureViewModel);
+                } else
+                {
+                    AfterClose?.Invoke(this, null);
                 }
+                Dismiss();
             }
             catch (Exception ex)
             {

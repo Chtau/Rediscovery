@@ -38,7 +38,8 @@ namespace Rediscovery.Client.App.MobileAndroid
 
         private readonly Dictionary<int, NavigationItem> _navigationDeviceIds = new Dictionary<int, NavigationItem>();
         private Toolbar toolbar;
-        private Features.DeviceFeatures.FeaturesDashboardFragment currentFeaturesDashboardFragment;
+        private Features.DeviceFeatures.FeaturesDashboardFragment featuresDashboardFragment = null;
+        private Features.DeviceFeatures.DeviceBottomSheetFragment deviceBottomSheetFragment = null;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -85,9 +86,58 @@ namespace Rediscovery.Client.App.MobileAndroid
             {
                 if (requestCode == Intent_Feature_Id)
                 {
-                    currentFeaturesDashboardFragment.UpdateFeatureGrid();
+                    if (featuresDashboardFragment != null)
+                        featuresDashboardFragment.UpdateFeatureGrid();
                 }
             } catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        private void OnDeviceFavoriteChanged(object sender, EventArgs args)
+        {
+            try
+            {
+                OnUpdateDrawerMenu();
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        private void OnShowDeviceBottomSheet(object sender, Features.DeviceFeatures.ViewModels.FeatureViewModel featureViewModel)
+        {
+            try
+            {
+                if (deviceBottomSheetFragment != null)
+                {
+                    deviceBottomSheetFragment.AfterClose -= OnAfterCloseDeviceBottomSheet;
+                    deviceBottomSheetFragment = null;
+                }
+                deviceBottomSheetFragment = new Features.DeviceFeatures.DeviceBottomSheetFragment();
+                deviceBottomSheetFragment.Load(featureViewModel);
+                deviceBottomSheetFragment.Show(SupportFragmentManager, featureViewModel.Feature.FeatureId.ToSafeString());
+                deviceBottomSheetFragment.AfterClose += OnAfterCloseDeviceBottomSheet;
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        private void OnAfterCloseDeviceBottomSheet(object sender, Features.DeviceFeatures.ViewModels.FeatureViewModel featureViewModel)
+        {
+            try
+            {
+                if (featureViewModel != null)
+                {
+                    // TOOD: we should check that the feature dashboard is active and is for the updated device id
+                    featuresDashboardFragment.UpdateFeatureGrid();
+                }
+            }
+            catch (Exception ex)
             {
                 Core.Logger.Instance.Error(ex);
             }
@@ -175,20 +225,7 @@ namespace Rediscovery.Client.App.MobileAndroid
             try
             {
                 int id = item.ItemId;
-                currentFeaturesDashboardFragment = null;
-                /*if (id == Resource.Id.nav_features)
-                {
-                    SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.DeviceFeatures.FeaturesDashboardFragment.Create()).Commit();
-                }
-                else if (id == Resource.Id.nav_devices)
-                {
-                    SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.Home.DevicesDashboardFragment.Create()).Commit();
-                }
-                else if (id == Resource.Id.nav_discovery)
-                {
-                    SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, Features.Home.DiscoveryFragment.Create()).Commit();
-                }
-                else */if (id == Resource.Id.nav_device_add)
+                if (id == Resource.Id.nav_device_add)
                 {
 
                 }
@@ -197,17 +234,19 @@ namespace Rediscovery.Client.App.MobileAndroid
 
                 } else if (_navigationDeviceIds.ContainsKey(id))
                 {
+                    if (featuresDashboardFragment != null)
+                    {
+                        featuresDashboardFragment.DeviceFavoriteChanged -= OnDeviceFavoriteChanged;
+                        featuresDashboardFragment.FeatureSheetRequested -= OnShowDeviceBottomSheet;
+                        featuresDashboardFragment = null;
+                    }
                     var navigationItem = _navigationDeviceIds[id];
-                    currentFeaturesDashboardFragment = Features.DeviceFeatures.FeaturesDashboardFragment.Create(navigationItem.Id);
-                    currentFeaturesDashboardFragment.DeviceFavoriteChanged += (_obj, _args) =>
-                    {
-                        OnUpdateDrawerMenu();
-                    };
-                    currentFeaturesDashboardFragment.FeatureSheetRequested += (_obj, args) =>
-                    {
-                        new Features.DeviceFeatures.DeviceBottomSheetFragment(args).Show(SupportFragmentManager, args.Feature.FeatureId.ToSafeString());
-                    };
-                    SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, currentFeaturesDashboardFragment).Commit();
+                    featuresDashboardFragment = new Features.DeviceFeatures.FeaturesDashboardFragment();
+                    featuresDashboardFragment.Load(navigationItem.Id);
+                    featuresDashboardFragment.DeviceFavoriteChanged += OnDeviceFavoriteChanged;
+                    featuresDashboardFragment.FeatureSheetRequested += OnShowDeviceBottomSheet;
+
+                    SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, featuresDashboardFragment).Commit();
                     toolbar.Title = navigationItem.Title;
                 } else
                 {
@@ -223,6 +262,7 @@ namespace Rediscovery.Client.App.MobileAndroid
             }
             return true;
         }
+
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
