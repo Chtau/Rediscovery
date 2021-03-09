@@ -84,7 +84,8 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Manager
                     var instance = Core.Database.Instance.Get<Features.Models.Device>(x => x.DeviceId == device.DeviceId)?.FirstOrDefault();
                     if (instance != null)
                     {
-                        instance.Features = device.Features;
+                        instance.FeaturesRemote = device.FeaturesRemote;
+                        instance.FeaturesLocal = device.FeaturesLocal;
                         instance.IsFavorite = device.IsFavorite;
                         instance.Name = device.Name;
                         instance.OrderBy = device.OrderBy;
@@ -118,14 +119,14 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Manager
                     var device = Get(deviceId);
                     if (feature.FeatureId != Guid.Empty)
                     {
-                        var index = device.Features.FindIndex(x => x.FeatureId == feature.FeatureId);
+                        var index = device.FeaturesRemote.FindIndex(x => x.FeatureId == feature.FeatureId);
                         if (index != -1)
-                            device.Features[index] = feature;
+                            device.FeaturesRemote[index] = feature;
                         else
-                            device.Features.Add(feature);
+                            device.FeaturesRemote.Add(feature);
                     } else
                     {
-                        device.Features.Add(feature);
+                        device.FeaturesRemote.Add(feature);
                     }
                     if (updateOrderBy)
                         OnFeatureUpdateOrderBy(device);
@@ -175,7 +176,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Manager
             {
                 // update to bring favorites to the start and all other features should be sorted by name
                 int sortOrder = 1;
-                var favorites = device.Features.Where(x => x.IsFavorite).OrderBy(x => x.Name);
+                var favorites = device.FeaturesRemote.Where(x => x.IsFavorite).OrderBy(x => x.Name);
                 if (favorites?.Count() > 0)
                 {
                     foreach (var feat in favorites)
@@ -183,7 +184,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Manager
                         feat.OrderBy = sortOrder++;
                     }
                 }
-                var devices = device.Features.Where(x => !x.IsFavorite).OrderBy(x => x.Name);
+                var devices = device.FeaturesRemote.Where(x => !x.IsFavorite).OrderBy(x => x.Name);
                 if (devices?.Count() > 0)
                 {
                     foreach (var feat in devices)
@@ -209,10 +210,10 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Manager
             };
             if (features?.Length > 0)
             {
-                device.Features = new System.Collections.Generic.List<Features.Models.Feature>();
+                device.FeaturesRemote = new System.Collections.Generic.List<Features.Models.Feature>();
                 foreach (var item in features)
                 {
-                    device.Features.Add(new Features.Models.Feature
+                    device.FeaturesRemote.Add(new Features.Models.Feature
                     {
                         FeatureId = item,
                         Name = item.ToString()

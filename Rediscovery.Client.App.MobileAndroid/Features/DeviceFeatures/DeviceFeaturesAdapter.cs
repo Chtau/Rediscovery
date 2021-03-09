@@ -47,9 +47,9 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             try
             {
                 _models.Clear();
-                if (_device?.Features?.Count > 0)
+                if (_device?.FeaturesRemote?.Count > 0)
                 {
-                    foreach (var feature in _device.Features.OrderBy(x => x.OrderBy))
+                    foreach (var feature in _device.FeaturesRemote.OrderBy(x => x.OrderBy))
                     {
                         _models.Add(new ViewModels.FeatureViewModel(_device.DeviceId, feature));
                     }

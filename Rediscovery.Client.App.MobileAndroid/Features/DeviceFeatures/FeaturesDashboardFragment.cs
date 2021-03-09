@@ -46,11 +46,14 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             HasOptionsMenu = true;
             try
             {
-                var deviceIdString = savedInstanceState.GetString(Key_Feature_DeviceId);
-                if (!string.IsNullOrWhiteSpace(deviceIdString))
+                if (savedInstanceState != null)
                 {
-                    var deviceId = new Guid(deviceIdString);
-                    OnLoad(deviceId);
+                    var deviceIdString = savedInstanceState.GetString(Key_Feature_DeviceId);
+                    if (!string.IsNullOrWhiteSpace(deviceIdString))
+                    {
+                        var deviceId = new Guid(deviceIdString);
+                        OnLoad(deviceId);
+                    }
                 }
             }
             catch (Exception ex)
@@ -196,6 +199,9 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                     case Resource.Id.action_features_device_disconnect:
                         return true;
                     case Resource.Id.action_features_device_detail:
+                        return true;
+                    case Resource.Id.action_features_device_switch_in_out_feature:
+                        // TODO: switch between features available on the connected device and feature provided to the device
                         return true;
                     default:
                         break;
