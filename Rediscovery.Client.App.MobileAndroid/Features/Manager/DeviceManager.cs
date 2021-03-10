@@ -110,28 +110,64 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Manager
             }
         }
 
-        public void Save(Guid deviceId, Models.Feature feature, bool updateOrderBy = true)
+        public void SaveRemote(Guid deviceId, Models.Feature feature, bool updateOrderBy = true)
         {
             try
             {
                 if (deviceId != Guid.Empty && feature != null)
                 {
                     var device = Get(deviceId);
-                    if (feature.FeatureId != Guid.Empty)
-                    {
-                        var index = device.FeaturesRemote.FindIndex(x => x.FeatureId == feature.FeatureId);
-                        if (index != -1)
-                            device.FeaturesRemote[index] = feature;
-                        else
-                            device.FeaturesRemote.Add(feature);
-                    } else
-                    {
-                        device.FeaturesRemote.Add(feature);
-                    }
-                    if (updateOrderBy)
-                        OnFeatureUpdateOrderBy(device);
+                    var features = device.FeaturesRemote;
+                    OnChangeFeatuer(ref features, feature, updateOrderBy);
+                    device.FeaturesRemote = features;
                     Save(device, false);
                 }
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        public void SaveLocal(Guid deviceId, Models.Feature feature, bool updateOrderBy = true)
+        {
+            try
+            {
+                if (deviceId != Guid.Empty && feature != null)
+                {
+                    var device = Get(deviceId);
+                    var features = device.FeaturesLocal;
+                    OnChangeFeatuer(ref features, feature, updateOrderBy);
+                    device.FeaturesLocal = features;
+                    Save(device, false);
+                }
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        private void OnChangeFeatuer(ref List<Models.Feature> features, Models.Feature feature, bool updateOrderBy = true)
+        {
+            try
+            {
+                if (features == null)
+                    features = new List<Models.Feature>();
+                if (feature.FeatureId != Guid.Empty)
+                {
+                    var index = features.FindIndex(x => x.FeatureId == feature.FeatureId);
+                    if (index != -1)
+                        features[index] = feature;
+                    else
+                        features.Add(feature);
+                }
+                else
+                {
+                    features.Add(feature);
+                }
+                if (updateOrderBy)
+                    OnFeatureUpdateOrderBy(ref features);
             }
             catch (Exception ex)
             {
@@ -170,13 +206,13 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Manager
             }
         }
 
-        private void OnFeatureUpdateOrderBy(Models.Device device)
+        private void OnFeatureUpdateOrderBy(ref List<Models.Feature> features)
         {
             try
             {
                 // update to bring favorites to the start and all other features should be sorted by name
                 int sortOrder = 1;
-                var favorites = device.FeaturesRemote.Where(x => x.IsFavorite).OrderBy(x => x.Name);
+                var favorites = features.Where(x => x.IsFavorite).OrderBy(x => x.Name);
                 if (favorites?.Count() > 0)
                 {
                     foreach (var feat in favorites)
@@ -184,7 +220,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Manager
                         feat.OrderBy = sortOrder++;
                     }
                 }
-                var devices = device.FeaturesRemote.Where(x => !x.IsFavorite).OrderBy(x => x.Name);
+                var devices = features.Where(x => !x.IsFavorite).OrderBy(x => x.Name);
                 if (devices?.Count() > 0)
                 {
                     foreach (var feat in devices)

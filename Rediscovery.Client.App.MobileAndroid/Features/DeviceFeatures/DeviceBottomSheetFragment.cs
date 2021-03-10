@@ -91,7 +91,10 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                 {
                     featureViewModel.Feature.DisplayTheme = (int)OnGetSelectedTheme();
                     featureViewModel.Feature.IsFavorite = isFavorite.Checked;
-                    Manager.DeviceManager.Instance.Save(featureViewModel.DeviceId, featureViewModel.Feature);
+                    if (featureViewModel.Feature.IsLocal)
+                        Manager.DeviceManager.Instance.SaveLocal(featureViewModel.DeviceId, featureViewModel.Feature);
+                    else
+                        Manager.DeviceManager.Instance.SaveRemote(featureViewModel.DeviceId, featureViewModel.Feature);
                     AfterClose?.Invoke(this, featureViewModel);
                 } else
                 {
