@@ -231,8 +231,11 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
         {
             try
             {
+                Guid? forceFirst = null;
+                if (Device.IsFavorite != isFavorite)
+                    forceFirst = Device.DeviceId;
                 Device.IsFavorite = isFavorite;
-                Manager.DeviceManager.Instance.Save(Device);
+                Manager.DeviceManager.Instance.Save(Device, true, forceFirst);
                 OnUpdateMenuState(deviceMenu);
                 DeviceFavoriteChanged?.Invoke(this, EventArgs.Empty);
             }

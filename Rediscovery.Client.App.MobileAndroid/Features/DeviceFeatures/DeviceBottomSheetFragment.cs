@@ -89,12 +89,15 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             {
                 if (save)
                 {
+                    Guid? forceFirst = null;
+                    if (featureViewModel.Feature.IsFavorite != isFavorite.Checked)
+                        forceFirst = featureViewModel.Feature.FeatureId;
                     featureViewModel.Feature.DisplayTheme = (int)OnGetSelectedTheme();
                     featureViewModel.Feature.IsFavorite = isFavorite.Checked;
                     if (featureViewModel.Feature.IsLocal)
-                        Manager.DeviceManager.Instance.SaveLocal(featureViewModel.DeviceId, featureViewModel.Feature);
+                        Manager.DeviceManager.Instance.SaveLocal(featureViewModel.DeviceId, featureViewModel.Feature, true, forceFirst);
                     else
-                        Manager.DeviceManager.Instance.SaveRemote(featureViewModel.DeviceId, featureViewModel.Feature);
+                        Manager.DeviceManager.Instance.SaveRemote(featureViewModel.DeviceId, featureViewModel.Feature, true, forceFirst);
                     AfterClose?.Invoke(this, featureViewModel);
                 } else
                 {
