@@ -13,4 +13,12 @@
     <string name="action_features_device_remove_favorite">Remove favorite</string>
     <string name="action_features_device_switch_show_remote_features">Show remote features</string>
     <string name="action_features_device_switch_show_local_features">Show local features</string>
+    <string name="theme_rediscovery">Rediscovery</string>
+    <string name="theme_blue">Blue</string>
+    <string name="theme_green">Green</string>
+    <string name="theme_purple">Purple</string>
+    <string name="theme_red">Red</string>
+    <string name="theme_yellow">Yellow</string>
+    <string name="theme_rediscovery">Rediscovery</string>
+    <string name="favorite">Favorite</string>
 </resources>

@@ -17,32 +17,32 @@
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Redisocvery"
+            android:text="@string/theme_rediscovery"
             android:id="@+id/rbtnThemeRedisocvery" />
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Blue"
+            android:text="@string/theme_blue"
             android:id="@+id/rbtnThemeBlue" />
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Green"
+            android:text="@string/theme_green"
             android:id="@+id/rbtnThemeGreen" />
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Purple"
+            android:text="@string/theme_purple"
             android:id="@+id/rbtnThemePurple" />
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Red"
+            android:text="@string/theme_red"
             android:id="@+id/rbtnThemeRed" />
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Yellow"
+            android:text="@string/theme_yellow"
             android:id="@+id/rbtnThemeYellow" />
         </RadioGroup>
         <LinearLayout
@@ -53,7 +53,7 @@
             <CheckBox android:id="@+id/checkboxFeatureFavorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Favorite"/>
+                android:text="@string/favorite"/>
         </LinearLayout>
     </LinearLayout>
     

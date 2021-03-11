@@ -7921,6 +7921,9 @@ namespace Rediscovery.Client.App.MobileAndroid
 			// aapt resource value: 0x7F0F0074
 			public const int status_bar_notification_info_overflow = 2131689588;
 			
+			// aapt resource value: 0x7F0F0075
+			public const int theme_rediscovery = 2131689589;
+			
 			static String()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
