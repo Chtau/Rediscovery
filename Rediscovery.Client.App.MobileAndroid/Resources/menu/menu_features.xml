@@ -17,9 +17,14 @@
       android:title="@string/action_features_device_disconnect"
       app:showAsAction="never" />
   <item
-      android:id="@+id/action_features_device_switch_in_out_feature"
+      android:id="@+id/action_features_device_switch_show_remote_features"
       android:orderInCategory="100"
-      android:title="@string/action_features_device_switch_in_out_feature"
+      android:title="@string/action_features_device_switch_show_remote_features"
+      app:showAsAction="never" />
+  <item
+      android:id="@+id/action_features_device_switch_show_local_features"
+      android:orderInCategory="100"
+      android:title="@string/action_features_device_switch_show_local_features"
       app:showAsAction="never" />
   <item
       android:id="@+id/action_features_device_add_favorite"

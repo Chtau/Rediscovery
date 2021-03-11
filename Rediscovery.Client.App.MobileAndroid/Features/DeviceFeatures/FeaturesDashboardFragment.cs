@@ -27,15 +27,6 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 
         public Features.Models.Device Device { get; private set; }
 
-        /*public static FeaturesDashboardFragment Create(Guid deviceId)
-        {
-            var args = new Bundle();
-            //args.PutBoolean(ArgEdit, edit);
-            var fragment = new FeaturesDashboardFragment(deviceId);
-            fragment.Arguments = args;
-            return fragment;
-        }*/
-
         public void Load(Guid deviceId)
         {
             OnLoad(deviceId);
@@ -122,22 +113,9 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
         {
             try
             {
-                if (Device.IsFavorite)
-                {
-                    OnMenuToggle(menu, false, Resource.Id.action_features_device_add_favorite, Resource.Id.action_features_device_remove_favorite);
-                }
-                else
-                {
-                    OnMenuToggle(menu, true, Resource.Id.action_features_device_add_favorite, Resource.Id.action_features_device_remove_favorite);
-                }
-                if (Device.IsConnected)
-                {
-                    OnMenuToggle(menu, false, Resource.Id.action_features_device_connect, Resource.Id.action_features_device_disconnect);
-                }
-                else
-                {
-                    OnMenuToggle(menu, true, Resource.Id.action_features_device_connect, Resource.Id.action_features_device_disconnect);
-                }
+                OnMenuToggle(menu, !Device.IsFavorite, Resource.Id.action_features_device_add_favorite, Resource.Id.action_features_device_remove_favorite);
+                OnMenuToggle(menu, !Device.IsConnected, Resource.Id.action_features_device_connect, Resource.Id.action_features_device_disconnect);
+                OnMenuToggle(menu, showLocalFeatures, Resource.Id.action_features_device_switch_show_remote_features, Resource.Id.action_features_device_switch_show_local_features);
             }
             catch (Exception ex)
             {
@@ -196,10 +174,12 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                         return true;
                     case Resource.Id.action_features_device_detail:
                         return true;
-                    case Resource.Id.action_features_device_switch_in_out_feature:
-                        // switch between features available on the connected device and feature provided to the device
-                        showLocalFeatures = !showLocalFeatures;
+                    case Resource.Id.action_features_device_switch_show_local_features:
+                    case Resource.Id.action_features_device_switch_show_remote_features:
+                        // switch between features available on the connected device and feature provided to the device => show remote
+                        showLocalFeatures = id == Resource.Id.action_features_device_switch_show_local_features;
                         OnSetNewFeatures(showLocalFeatures);
+                        OnUpdateMenuState(deviceMenu);
                         return true;
                     default:
                         break;
