@@ -20,6 +20,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
         private GridView featureGridView;
         private DeviceFeaturesAdapter deviceFeaturesAdapter;
         private IMenu deviceMenu;
+        private bool showLocalFeatures;
 
         public event EventHandler DeviceFavoriteChanged;
         public event EventHandler<ViewModels.FeatureViewModel> FeatureSheetRequested;
@@ -70,7 +71,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
             featureGridView = view.FindViewById<GridView>(Resource.Id.devicefeatures);
-            OnSetUpFeatures(featureGridView);
+            OnSetNewFeatures(showLocalFeatures);
             base.OnViewCreated(view, savedInstanceState);
         }
 
@@ -155,12 +156,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                         await Task.Delay(TimeSpan.FromSeconds(1));
                         Xamarin.Essentials.MainThread.BeginInvokeOnMainThread(() =>
                         {
-                            deviceFeaturesAdapter.LayoutClick -= DeviceFeaturesAdapter_LayoutClick;
-                            deviceFeaturesAdapter.ButtonActionClick -= DeviceFeaturesAdapter_ButtonActionClick;
-                            deviceFeaturesAdapter = new DeviceFeaturesAdapter(Activity, Device, null, null);
-                            deviceFeaturesAdapter.LayoutClick += DeviceFeaturesAdapter_LayoutClick;
-                            deviceFeaturesAdapter.ButtonActionClick += DeviceFeaturesAdapter_ButtonActionClick;
-                            featureGridView.Adapter = deviceFeaturesAdapter;
+                            OnSetNewFeatures(showLocalFeatures);
                         });
                     });
                 }
@@ -201,7 +197,9 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                     case Resource.Id.action_features_device_detail:
                         return true;
                     case Resource.Id.action_features_device_switch_in_out_feature:
-                        // TODO: switch between features available on the connected device and feature provided to the device
+                        // switch between features available on the connected device and feature provided to the device
+                        showLocalFeatures = !showLocalFeatures;
+                        OnSetNewFeatures(showLocalFeatures);
                         return true;
                     default:
                         break;
@@ -219,14 +217,19 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             base.OnResume();
         }
 
-        private void OnSetUpFeatures(GridView gridView)
+        private void OnSetNewFeatures(bool localFeatures = false)
         {
             try
             {
-                deviceFeaturesAdapter = new DeviceFeaturesAdapter(Activity, Device, null, null);
+                if (deviceFeaturesAdapter != null)
+                {
+                    deviceFeaturesAdapter.LayoutClick -= DeviceFeaturesAdapter_LayoutClick;
+                    deviceFeaturesAdapter.ButtonActionClick -= DeviceFeaturesAdapter_ButtonActionClick;
+                }
+                deviceFeaturesAdapter = new DeviceFeaturesAdapter(Activity, Device, localFeatures);
                 deviceFeaturesAdapter.LayoutClick += DeviceFeaturesAdapter_LayoutClick;
                 deviceFeaturesAdapter.ButtonActionClick += DeviceFeaturesAdapter_ButtonActionClick;
-                gridView.Adapter = deviceFeaturesAdapter;
+                featureGridView.Adapter = deviceFeaturesAdapter;
             }
             catch (Exception ex)
             {

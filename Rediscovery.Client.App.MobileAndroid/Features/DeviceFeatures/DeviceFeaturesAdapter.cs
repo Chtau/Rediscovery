@@ -19,20 +19,17 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
         private readonly LayoutInflater layoutInflater;
         private readonly Features.Models.Device _device;
         private readonly List<ViewModels.FeatureViewModel> _models = new List<ViewModels.FeatureViewModel>();
-        private readonly Action<ViewModels.FeatureViewModel> _buttonActionCallback;
-        private readonly Action<ViewModels.FeatureViewModel> _layoutCallback;
+        private bool localFeatures;
 
         public event EventHandler<ViewModels.FeatureViewModel> ButtonActionClick;
         public event EventHandler<ViewModels.FeatureViewModel> LayoutClick;
 
-        public DeviceFeaturesAdapter(Context context, Features.Models.Device device, Action<ViewModels.FeatureViewModel> buttonActionCallback,
-            Action<ViewModels.FeatureViewModel> layoutCallback)
+        public DeviceFeaturesAdapter(Context context, Features.Models.Device device, bool localFeatures)
         {
+            this.localFeatures = localFeatures;
             _context = context;
             layoutInflater = LayoutInflater.From(context.ApplicationContext);
             _device = device;
-            _buttonActionCallback = buttonActionCallback;
-            _layoutCallback = layoutCallback;
             OnUpdateDatasource();
         }
 
@@ -47,11 +44,23 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             try
             {
                 _models.Clear();
-                if (_device?.FeaturesRemote?.Count > 0)
+                if (localFeatures)
                 {
-                    foreach (var feature in _device.FeaturesRemote.OrderBy(x => x.OrderBy))
+                    if (_device?.FeaturesLocal?.Count > 0)
                     {
-                        _models.Add(new ViewModels.FeatureViewModel(_device.DeviceId, feature));
+                        foreach (var feature in _device.FeaturesLocal.OrderBy(x => x.OrderBy))
+                        {
+                            _models.Add(new ViewModels.FeatureViewModel(_device.DeviceId, feature));
+                        }
+                    }
+                } else
+                {
+                    if (_device?.FeaturesRemote?.Count > 0)
+                    {
+                        foreach (var feature in _device.FeaturesRemote.OrderBy(x => x.OrderBy))
+                        {
+                            _models.Add(new ViewModels.FeatureViewModel(_device.DeviceId, feature));
+                        }
                     }
                 }
             } catch (Exception ex)
@@ -114,12 +123,10 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             holder.Title.SetBackgroundColor(GetColor(theme.PrimaryColor));
             holder.Button.Click += (_obj, _args) =>
             {
-                _buttonActionCallback?.Invoke(featureView);
                 ButtonActionClick?.Invoke(this, featureView);
             };
             holder.LinearLayout.Click += (_obj, _args) =>
             {
-                _layoutCallback?.Invoke(featureView);
                 LayoutClick?.Invoke(this, featureView);
             };
             return view;
