@@ -61,6 +61,8 @@ namespace Rediscovery.Client.App.MobileAndroid.Core
             return path;
         }
 
+        private const string RelativePath = "relative_path";
+
         public Android.Net.Uri AddPublicFile(string path, string title = null, string description = null)
         {
             try
@@ -78,7 +80,6 @@ namespace Rediscovery.Client.App.MobileAndroid.Core
                 var mime = GetMimeType(path);
                 if (mime.ToLower().StartsWith("image"))
                 {
-                    newUri = resolver.Insert(MediaStore.Images.Media.ExternalContentUri, values);
                     values.Put(MediaStore.Images.ImageColumns.Title, name);
                     values.Put(MediaStore.Images.ImageColumns.DisplayName, name);
                     values.Put(Android.Provider.MediaStore.Images.ImageColumns.Size, fileInfo.Length);
@@ -89,9 +90,14 @@ namespace Rediscovery.Client.App.MobileAndroid.Core
                     // Add the date meta data to ensure the image is added at the front of the gallery
                     values.Put(MediaStore.Images.ImageColumns.DateAdded, Java.Lang.JavaSystem.CurrentTimeMillis());
                     values.Put(MediaStore.Images.ImageColumns.DateTaken, Java.Lang.JavaSystem.CurrentTimeMillis());
+
+                    // TODO: check for releative path and sub directories
+                    values.Put(RelativePath, Android.OS.Environment.DirectoryPictures + $"/{DateTime.Now:yyyyMMdd}");
+                    //values.Put(MediaStore.MediaColumnsConsts, Android.OS.Environment.DirectoryPictures + $"/{DateTime.Now:yyyyMMdd}");
+
+                    newUri = resolver.Insert(MediaStore.Images.Media.ExternalContentUri, values);
                 } else if (mime.ToLower().StartsWith("video"))
                 {
-                    newUri = resolver.Insert(MediaStore.Video.Media.ExternalContentUri, values);
                     values.Put(MediaStore.Video.VideoColumns.Title, name);
                     values.Put(MediaStore.Video.VideoColumns.DisplayName, name);
                     values.Put(Android.Provider.MediaStore.MediaColumns.Size, fileInfo.Length);
@@ -102,9 +108,10 @@ namespace Rediscovery.Client.App.MobileAndroid.Core
                     // Add the date meta data to ensure the image is added at the front of the gallery
                     values.Put(MediaStore.Video.VideoColumns.DateAdded, Java.Lang.JavaSystem.CurrentTimeMillis());
                     values.Put(MediaStore.Video.VideoColumns.DateTaken, Java.Lang.JavaSystem.CurrentTimeMillis());
+
+                    newUri = resolver.Insert(MediaStore.Video.Media.ExternalContentUri, values);
                 } else
                 {
-                    newUri = resolver.Insert(MediaStore.Files.GetContentUri("external"), values);
                     values.Put(MediaStore.Video.VideoColumns.Title, name);
                     values.Put(MediaStore.Video.VideoColumns.DisplayName, name);
                     values.Put(Android.Provider.MediaStore.MediaColumns.Size, fileInfo.Length);
@@ -115,6 +122,8 @@ namespace Rediscovery.Client.App.MobileAndroid.Core
                     // Add the date meta data to ensure the image is added at the front of the gallery
                     values.Put(MediaStore.Video.VideoColumns.DateAdded, Java.Lang.JavaSystem.CurrentTimeMillis());
                     values.Put(MediaStore.Video.VideoColumns.DateTaken, Java.Lang.JavaSystem.CurrentTimeMillis());
+
+                    newUri = resolver.Insert(MediaStore.Files.GetContentUri("external"), values);
                 }
                 
                 // uri for content copy
@@ -151,7 +160,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Core
             return MimeTypeMap.Singleton.GetMimeTypeFromExtension(fileExtension.Replace(".", "").ToLower());
         }
 
-        /*private bool CopyToDownloadsAndroidQ(string localPath)
+        /*private bool CopyToDownloadsAndroidQ(string localPath, CopyTo copyTo)
         {
             try
             {
@@ -160,8 +169,10 @@ namespace Rediscovery.Client.App.MobileAndroid.Core
                 var contentValues = new ContentValues();
                 contentValues.Put(MediaStore.MediaColumns.DisplayName, name);
                 contentValues.Put(MediaStore.MediaColumns.MimeType, ext);
-                //contentValues.Put(MediaStore.MediaColumns.RelativePath, Android.OS.Environment.DirectoryDownloads);
-                contentValues.Put(MediaStore.DownloadColumns.RelativePath, Android.OS.Environment.DirectoryDownloads);
+                if (copyTo == CopyTo.Images)
+                    contentValues.Put(MediaStore.MediaColumns.RelativePath, Android.OS.Environment.DirectoryPictures + $"/{DateTime.Now:yyyyMMdd}");
+                else
+                    contentValues.Put(MediaStore.DownloadColumns.RelativePath, Android.OS.Environment.DirectoryDownloads);
 
                 var resolver = Android.App.Application.Context.ContentResolver;
 
@@ -169,7 +180,11 @@ namespace Rediscovery.Client.App.MobileAndroid.Core
                 Android.Net.Uri uri = null;
                 try
                 {
-                    var contentUri = MediaStore.Files.GetContentUri("external");
+                    Android.Net.Uri contentUri;
+                    if (copyTo == CopyTo.Images)
+                        contentUri = MediaStore.Images.Media.ExternalContentUri;
+                    else
+                        contentUri = MediaStore.Files.GetContentUri("external");
 
                     try
                     {
@@ -177,6 +192,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Core
                         contentUri,
                         new[] { MediaStore.MediaColumns.Id, MediaStore.MediaColumns.DisplayName, MediaStore.MediaColumns.MimeType, MediaStore.DownloadColumns.RelativePath },
                         $"{MediaStore.MediaColumns.DisplayName} = ? AND {MediaStore.MediaColumns.MimeType} = ? AND {MediaStore.DownloadColumns.RelativePath} = ?",
+                        //new[] { localPath, ext, Android.OS.Environment.DirectoryPictures },
                         new[] { localPath, ext, Android.OS.Environment.DirectoryDownloads },
                         null
                         );
