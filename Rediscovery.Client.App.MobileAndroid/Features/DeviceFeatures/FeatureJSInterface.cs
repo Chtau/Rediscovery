@@ -19,17 +19,19 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
         private Action<string> actionCallback;
         private Action domReadyCallback;
         private Action<string> loggerCallback;
+        private Action<bool> loadCallback;
 
         public FeatureJSInterface(Context context)
         {
             this.context = context;
         }
 
-        public void RegisterListener(Action<string> actionCallback, Action domReadyCallback, Action<string> loggerCallback)
+        public void RegisterListener(Action<string> actionCallback, Action domReadyCallback, Action<string> loggerCallback, Action<bool> loadCallback)
         {
             this.actionCallback = actionCallback;
             this.domReadyCallback = domReadyCallback;
             this.loggerCallback = loggerCallback;
+            this.loadCallback = loadCallback;
         }
 
         [Export]
@@ -74,6 +76,20 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
             try
             {
                 loggerCallback?.Invoke(data);
+            }
+            catch (Exception ex)
+            {
+                loggerCallback?.Invoke(ex.ToString());
+            }
+        }
+
+        [Export]
+        [JavascriptInterface]
+        public void InvokeLoadingState(bool load)
+        {
+            try
+            {
+                loadCallback?.Invoke(load);
             }
             catch (Exception ex)
             {

@@ -77,13 +77,11 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 
                 webView = FindViewById<WebView>(Resource.Id.webViewFeatureDetail);
                 webView.Settings.JavaScriptEnabled = true;
-                webView.SetWebViewClient(new AdvWebViewClient(OnGetDefaultJS(), (error) =>
-                {
-                    Core.Logger.Instance.Error(new Exception(error));
-                }));
-                webView.AddJavascriptInterface(new FeatureJSInterface(this), "Feature");
+                webView.SetWebViewClient(new AdvWebViewClient(OnGetDefaultJS(), LoggerCallback));
+                var jsInterface = new FeatureJSInterface(this);
+                jsInterface.RegisterListener(ActionCallback, DOMReadyCallback, LoggerCallback, LoadCallback);
+                webView.AddJavascriptInterface(jsInterface, "Feature");
                 webView.LoadData(html, "text/html", null);
-
                 var deviceIdString = Intent.Extras.GetString(Key_DeviceId);
                 if (!string.IsNullOrWhiteSpace(deviceIdString))
                 {
@@ -95,6 +93,54 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                     FeatureId = new Guid(featureIdString);
                 }
             } catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        private void ActionCallback(string data)
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        private void DOMReadyCallback()
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        private void LoggerCallback(string data)
+        {
+            try
+            {
+                Core.Logger.Instance.Error(new FeatureException(data, true));
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        private void LoadCallback(bool load)
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
             {
                 Core.Logger.Instance.Error(ex);
             }
