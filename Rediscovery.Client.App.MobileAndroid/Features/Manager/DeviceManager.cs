@@ -132,7 +132,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Manager
                 {
                     var device = Get(deviceId);
                     var features = device.FeaturesRemote;
-                    OnChangeFeatuer(ref features, feature, updateOrderBy, forceFirst);
+                    OnChangeFeature(ref features, feature, updateOrderBy, forceFirst);
                     device.FeaturesRemote = features;
                     Save(device, false);
                 }
@@ -152,7 +152,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Manager
                 {
                     var device = Get(deviceId);
                     var features = device.FeaturesLocal;
-                    OnChangeFeatuer(ref features, feature, updateOrderBy, forceFirst);
+                    OnChangeFeature(ref features, feature, updateOrderBy, forceFirst);
                     device.FeaturesLocal = features;
                     Save(device, false);
                 }
@@ -164,7 +164,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Manager
             // TODO: if we have changes we should trigger a change event
         }
 
-        private void OnChangeFeatuer(ref List<Models.Feature> features, Models.Feature feature, bool updateOrderBy = true, Guid? forceFirst = null)
+        private void OnChangeFeature(ref List<Models.Feature> features, Models.Feature feature, bool updateOrderBy = true, Guid? forceFirst = null)
         {
             try
             {
