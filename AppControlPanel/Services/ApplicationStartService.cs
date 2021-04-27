@@ -32,9 +32,19 @@ namespace Rediscovery.Client.App.ControlPanel.Services
                 if (!string.IsNullOrWhiteSpace(appViewModel.ExecuteableName))
                 {
                     string path = null;
-                    if (!string.IsNullOrWhiteSpace(appViewModel.SearchDirectory) && System.IO.Directory.Exists(appViewModel.SearchDirectory))
+                    
+                    if (!string.IsNullOrWhiteSpace(appViewModel.SearchDirectory))
                     {
-                        var foundPaths = System.IO.Directory.GetFiles(appViewModel.SearchDirectory, appViewModel.ExecuteableName, System.IO.SearchOption.AllDirectories);
+                        string travelPath = appViewModel.SearchDirectory;
+                        if (!System.IO.Directory.Exists(travelPath))
+                        {
+                            travelPath = Path.GetFullPath(appViewModel.SearchDirectory);
+                            if (!System.IO.Directory.Exists(travelPath))
+                            {
+                                return ViewModels.AppViewModel.LaunchState.NotFound;
+                            }
+                        }
+                        var foundPaths = System.IO.Directory.GetFiles(travelPath, appViewModel.ExecuteableName, System.IO.SearchOption.AllDirectories);
                         if (foundPaths?.Length > 0)
                             path = foundPaths[0];
                     }
