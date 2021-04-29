@@ -75,7 +75,7 @@ namespace Rediscovery.Client.App.Core
             dm.AddOrUpdateConnectionConfiguration(new Features.Device.Models.ConnectionConfiguration
             {
                 Id = configId,
-                Address = "192.168.1.101",
+                Address = Feature.Shared.Functions.NetworkAddress.GetIpAddr(),
                 Port = port
             });
             Assert.True(dm.Probe(configId), "Could not reach Service with Probe");
@@ -100,7 +100,7 @@ namespace Rediscovery.Client.App.Core
             dm.AddOrUpdateConnectionConfiguration(new Features.Device.Models.ConnectionConfiguration
             {
                 Id = connectionConfigurationId,
-                Address = "192.168.1.101",
+                Address = Feature.Shared.Functions.NetworkAddress.GetIpAddr(),
                 Port = port
             });
         }
