@@ -20,4 +20,6 @@
     <string name="theme_red">Red</string>
     <string name="theme_yellow">Yellow</string>
     <string name="favorite">Favorite</string>
+    <string name="dashboard_devices">Devices</string>
+    <string name="dashboard_new_device">New Device</string>
 </resources>

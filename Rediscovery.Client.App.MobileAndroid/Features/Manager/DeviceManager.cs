@@ -32,7 +32,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Manager
             try
             {
                 // TODO: remove test data
-                /*Core.Database.Instance.Reset();*/
+                /*Core.Database.Instance.Reset();
 
                 Save(OnCreateMockDevice(new Guid("7AE08E8C-2C74-462C-950F-9EF82022A7B3"), "Device1", 1, 
                     OnCreateMockFeatures(false, new Guid("E4E7802E-07D1-4D99-A93C-04C4085F6B5E"), new Guid("C24FACAE-9368-4035-B5B3-5DB28C4A75B1"), new Guid("F24CA915-4297-4A22-AFBD-F4C4992E7FFF"), new Guid("279DD3C2-5E90-4A44-9569-15B719CC0867"), new Guid("6D15B5C4-4DB3-4B14-AD38-5EF0076F670A")),
@@ -54,7 +54,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Manager
                     ), false);
                 
                 OnDeviceUpdateOrderBy();
-                
+                */
             }
             catch (Exception ex)
             {
