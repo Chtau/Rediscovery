@@ -247,29 +247,38 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 
         private void OnCreateScreenThumbnail()
         {
-            Task.Run(async () =>
+            try
             {
-                try
+                Xamarin.Essentials.MainThread.BeginInvokeOnMainThread(async () =>
                 {
                     await Xamarin.Essentials.Permissions.RequestAsync<Xamarin.Essentials.Permissions.StorageWrite>();
                     var status = await Xamarin.Essentials.Permissions.CheckStatusAsync<Xamarin.Essentials.Permissions.StorageWrite>();
                     if (status == Xamarin.Essentials.PermissionStatus.Granted)
                     {
-                        var screen = webView.TakeScreenshot();
-                        var thumbnail = Android.Media.ThumbnailUtils.ExtractThumbnail(screen, 350, 350);
-                        var file = System.IO.Path.Combine(Core.CoreIO.Instance.DeviceFeatureThumbnailDirectory(DeviceId), $"{FeatureId.ToSafeString()}.png");
-                        var stream = new FileStream(file, FileMode.Create);
-                        thumbnail.Compress(Bitmap.CompressFormat.Png, 75, stream);
-                        stream.Close();
-                        
-                        //Core.CoreIO.Instance.AddPublicFile(file);
+                        await Task.Run(() =>
+                        {
+                            try
+                            {
+                                var screen = webView.TakeScreenshot();
+                                var thumbnail = Android.Media.ThumbnailUtils.ExtractThumbnail(screen, 350, 350);
+                                var file = System.IO.Path.Combine(Core.CoreIO.Instance.DeviceFeatureThumbnailDirectory(DeviceId), $"{FeatureId.ToSafeString()}.png");
+                                var stream = new FileStream(file, FileMode.Create);
+                                thumbnail.Compress(Bitmap.CompressFormat.Png, 75, stream);
+                                stream.Close();
+                                // TODO: update feature UI from the device if it is still open
+                            }
+                            catch (Exception ex)
+                            {
+                                Core.Logger.Instance.Error(ex);
+                            }
+                        });
                     }
-                }
-                catch (Exception ex)
-                {
-                    Core.Logger.Instance.Error(ex);
-                }
-            });
+                });
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
         }
     }
 }
