@@ -245,7 +245,7 @@ namespace Rediscovery.Client.App.MobileAndroid
                 }
                 else if (id == Menu_Dashboard_Id)
                 {
-                    // TODO: show user dashboard (this dashboard should also be the default view on open)
+                    // TODO: show user dashboard (this dashboard should also be the default fragment on open)
                 }
                 else if (_navigationDeviceIds.ContainsKey(id))
                 {
