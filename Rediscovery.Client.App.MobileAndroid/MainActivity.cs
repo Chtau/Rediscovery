@@ -78,6 +78,7 @@ namespace Rediscovery.Client.App.MobileAndroid
                 {
                     // TODO: restore state
                 }
+                OnSetDefaultFragment();
             }
             catch (Exception ex)
             {
@@ -243,10 +244,11 @@ namespace Rediscovery.Client.App.MobileAndroid
                 {
 
                 }
-                else if (id == Menu_Dashboard_Id)
+                /*else if (id == Menu_Dashboard_Id)
                 {
-                    // TODO: show user dashboard (this dashboard should also be the default fragment on open)
-                }
+                    
+                    SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, new Features.Home.DashboardFragment()).Commit();
+                }*/
                 else if (_navigationDeviceIds.ContainsKey(id))
                 {
                     if (featuresDashboardFragment != null)
@@ -266,7 +268,7 @@ namespace Rediscovery.Client.App.MobileAndroid
                 }
                 else
                 {
-                    toolbar.Title = Resources.GetString(Resource.String.app_name);
+                    OnSetDefaultFragment();
                 }
 
                 DrawerLayout drawer = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
@@ -277,6 +279,20 @@ namespace Rediscovery.Client.App.MobileAndroid
                 Core.Logger.Instance.Error(ex);
             }
             return true;
+        }
+
+        private void OnSetDefaultFragment()
+        {
+            try
+            {
+                // TODO: show user dashboard (this dashboard should also be the default fragment on open)
+                toolbar.Title = Resources.GetString(Resource.String.app_name);
+                SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, new Features.Home.DashboardFragment()).Commit();
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)

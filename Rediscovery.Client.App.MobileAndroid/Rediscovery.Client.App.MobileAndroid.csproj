@@ -76,6 +76,7 @@
     <Compile Include="Features\DeviceFeatures\ViewModels\FeatureViewModel.cs" />
     <Compile Include="Features\Devices\DeviceEditActivity.cs" />
     <Compile Include="Features\Devices\DeviceListActivity.cs" />
+    <Compile Include="Features\Home\DashboardFragment.cs" />
     <Compile Include="Features\Home\DevicesDashboardFragment.cs" />
     <Compile Include="Features\Home\DiscoveryFragment.cs" />
     <Compile Include="Features\DeviceFeatures\FeaturesDashboardFragment.cs" />
@@ -306,6 +307,12 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-v21\ic_dashboard.xml">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\fragment_dashboard.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
     </AndroidResource>
