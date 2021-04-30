@@ -29,10 +29,15 @@ namespace Rediscovery.Client.App.MobileAndroid
             public Guid Id { get; }
             public string Title { get; }
 
-            public NavigationItem(Guid id, string title)
+            public NavigationItem(string title)
+            {
+                Id = Guid.Empty;
+                Title = title;
+            }
+
+            public NavigationItem(Guid id, string title) : this(title)
             {
                 Id = id;
-                Title = title;
             }
         }
 
@@ -40,6 +45,7 @@ namespace Rediscovery.Client.App.MobileAndroid
         private Toolbar toolbar;
         private Features.DeviceFeatures.FeaturesDashboardFragment featuresDashboardFragment = null;
         private Features.DeviceFeatures.DeviceBottomSheetFragment deviceBottomSheetFragment = null;
+        private const int Menu_Dashboard_Id = 1001;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -161,12 +167,16 @@ namespace Rediscovery.Client.App.MobileAndroid
         {
             try
             {
+                _navigationDeviceIds.Clear();
+                // default navigation items (home)
+                var menuItemDashboard = navigationView.Menu.Add(0, Menu_Dashboard_Id, 0, "Dashboard");
+                menuItemDashboard.SetIcon(Resource.Drawable.ic_dashboard);
+
                 Features.Manager.DeviceManager.Instance.Init();
 
                 var items = Features.Manager.DeviceManager.Instance.GetAll();
                 if (items?.Count() > 0)
                 {
-                    _navigationDeviceIds.Clear();
                     foreach (var item in items.OrderBy(x => x.OrderBy))
                     {
                         _navigationDeviceIds.Add(item.ViewId, new NavigationItem(item.DeviceId, item.Name));
@@ -232,7 +242,12 @@ namespace Rediscovery.Client.App.MobileAndroid
                 else if (id == Resource.Id.nav_settings)
                 {
 
-                } else if (_navigationDeviceIds.ContainsKey(id))
+                }
+                else if (id == Menu_Dashboard_Id)
+                {
+                    // TODO: show user dashboard (this dashboard should also be the default view on open)
+                }
+                else if (_navigationDeviceIds.ContainsKey(id))
                 {
                     if (featuresDashboardFragment != null)
                     {
@@ -248,7 +263,8 @@ namespace Rediscovery.Client.App.MobileAndroid
 
                     SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, featuresDashboardFragment).Commit();
                     toolbar.Title = navigationItem.Title;
-                } else
+                }
+                else
                 {
                     toolbar.Title = Resources.GetString(Resource.String.app_name);
                 }
