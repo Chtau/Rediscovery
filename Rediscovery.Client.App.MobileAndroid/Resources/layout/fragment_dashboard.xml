@@ -27,22 +27,22 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"
             android:text="@string/dashboard_devices" />
-            <Button
-                android:id="@+id/buttonDevicesDiscoveryToggle"
-                android:layout_width="56dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/selector_button_play"
-                android:layout_marginLeft="10dp"
-                />
         <Button
-            android:id="@+id/buttonDeviceNew"
-            android:layout_width="160dp"
+            android:id="@+id/buttonDevicesDiscoveryToggle"
+            android:layout_width="52dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="@string/dashboard_new_device"
-            android:textColor="#ffffff"
+            android:background="@drawable/selector_button_play"
+            android:layout_marginLeft="10dp"
+            />
+        <Button
+            android:id="@+id/buttonDeviceAdd"
+            android:layout_width="52dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/selector_button_add"
             android:layout_marginLeft="10dp"
             />
     </LinearLayout>

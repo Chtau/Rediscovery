@@ -3,10 +3,10 @@
     android:color="?android:attr/colorAccent">
   <item>
     <selector>
-      <item android:state_pressed="true" android:drawable="@drawable/ic_play_outline">
+      <item android:state_pressed="true" android:drawable="@drawable/ic_pause_outline">
         <color android:color="?android:attr/windowBackground" />
       </item>
-      <item android:drawable="@drawable/ic_play">
+      <item android:drawable="@drawable/ic_pause">
         <color android:color="?android:attr/colorPrimary" />
       </item>
     </selector>
