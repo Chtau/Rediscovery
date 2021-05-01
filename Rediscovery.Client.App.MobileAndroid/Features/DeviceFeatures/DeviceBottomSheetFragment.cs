@@ -14,7 +14,7 @@ using System.Text;
 
 namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 {
-    public class DeviceBottomSheetFragment : BottomSheetDialogFragment
+    public class DeviceBottomSheetFragment : Core.Controls.BaseBottomSheet<ViewModels.FeatureViewModel>
     {
         private MaterialRadioButton rbtnThemeRedisocvery;
         private MaterialRadioButton rbtnThemeBlue;
@@ -24,19 +24,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
         private MaterialRadioButton rbtnThemeYellow;
         private CheckBox isFavorite;
 
-        private ViewModels.FeatureViewModel featureViewModel;
-
-        public event EventHandler<ViewModels.FeatureViewModel> AfterClose;
-
-        public void Load(ViewModels.FeatureViewModel featureViewModel)
-        {
-            this.featureViewModel = featureViewModel;
-        }
-
-        public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-        {
-            return inflater.Inflate(Resource.Layout.device_bottom_sheet, container, false);
-        }
+        internal override int Layout => Resource.Layout.device_bottom_sheet;
 
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
@@ -66,10 +54,10 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
         {
             try
             {
-                if (featureViewModel != null)
+                if (ViewModel != null)
                 {
-                    OnSetSelectedTheme(Helpers.Theme.FromOrdinalEnum(featureViewModel.Feature.DisplayTheme));
-                    isFavorite.Checked = featureViewModel.Feature.IsFavorite;
+                    OnSetSelectedTheme(Helpers.Theme.FromOrdinalEnum(ViewModel.Feature.DisplayTheme));
+                    isFavorite.Checked = ViewModel.Feature.IsFavorite;
                 }
                 else
                 {
@@ -90,18 +78,18 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                 if (save)
                 {
                     Guid? forceFirst = null;
-                    if (featureViewModel.Feature.IsFavorite != isFavorite.Checked)
-                        forceFirst = featureViewModel.Feature.FeatureId;
-                    featureViewModel.Feature.DisplayTheme = (int)OnGetSelectedTheme();
-                    featureViewModel.Feature.IsFavorite = isFavorite.Checked;
-                    if (featureViewModel.Feature.IsLocal)
-                        Manager.DeviceManager.Instance.SaveLocal(featureViewModel.DeviceId, featureViewModel.Feature, true, forceFirst);
+                    if (ViewModel.Feature.IsFavorite != isFavorite.Checked)
+                        forceFirst = ViewModel.Feature.FeatureId;
+                    ViewModel.Feature.DisplayTheme = (int)OnGetSelectedTheme();
+                    ViewModel.Feature.IsFavorite = isFavorite.Checked;
+                    if (ViewModel.Feature.IsLocal)
+                        Manager.DeviceManager.Instance.SaveLocal(ViewModel.DeviceId, ViewModel.Feature, true, forceFirst);
                     else
-                        Manager.DeviceManager.Instance.SaveRemote(featureViewModel.DeviceId, featureViewModel.Feature, true, forceFirst);
-                    AfterClose?.Invoke(this, featureViewModel);
+                        Manager.DeviceManager.Instance.SaveRemote(ViewModel.DeviceId, ViewModel.Feature, true, forceFirst);
+                    OnInvokeAfterClose(ViewModel);
                 } else
                 {
-                    AfterClose?.Invoke(this, null);
+                    OnInvokeAfterClose(null);
                 }
                 Dismiss();
             }

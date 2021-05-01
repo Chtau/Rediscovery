@@ -7500,49 +7500,52 @@ namespace Rediscovery.Client.App.MobileAndroid
 			public const int select_dialog_singlechoice_material = 2131427435;
 			
 			// aapt resource value: 0x7F0B006C
-			public const int support_simple_spinner_dropdown_item = 2131427436;
+			public const int sheet_device_add = 2131427436;
 			
 			// aapt resource value: 0x7F0B006D
-			public const int test_action_chip = 2131427437;
+			public const int support_simple_spinner_dropdown_item = 2131427437;
 			
 			// aapt resource value: 0x7F0B006E
-			public const int test_chip_zero_corner_radius = 2131427438;
+			public const int test_action_chip = 2131427438;
 			
 			// aapt resource value: 0x7F0B006F
-			public const int test_design_checkbox = 2131427439;
+			public const int test_chip_zero_corner_radius = 2131427439;
 			
 			// aapt resource value: 0x7F0B0070
-			public const int test_design_radiobutton = 2131427440;
+			public const int test_design_checkbox = 2131427440;
 			
 			// aapt resource value: 0x7F0B0071
-			public const int test_reflow_chipgroup = 2131427441;
+			public const int test_design_radiobutton = 2131427441;
 			
 			// aapt resource value: 0x7F0B0072
-			public const int test_toolbar = 2131427442;
+			public const int test_reflow_chipgroup = 2131427442;
 			
 			// aapt resource value: 0x7F0B0073
-			public const int test_toolbar_custom_background = 2131427443;
+			public const int test_toolbar = 2131427443;
 			
 			// aapt resource value: 0x7F0B0074
-			public const int test_toolbar_elevation = 2131427444;
+			public const int test_toolbar_custom_background = 2131427444;
 			
 			// aapt resource value: 0x7F0B0075
-			public const int test_toolbar_surface = 2131427445;
-			
-			// aapt resource value: 0x7F0B007A
-			public const int text_view_without_line_height = 2131427450;
+			public const int test_toolbar_elevation = 2131427445;
 			
 			// aapt resource value: 0x7F0B0076
-			public const int text_view_with_line_height_from_appearance = 2131427446;
+			public const int test_toolbar_surface = 2131427446;
+			
+			// aapt resource value: 0x7F0B007B
+			public const int text_view_without_line_height = 2131427451;
 			
 			// aapt resource value: 0x7F0B0077
-			public const int text_view_with_line_height_from_layout = 2131427447;
+			public const int text_view_with_line_height_from_appearance = 2131427447;
 			
 			// aapt resource value: 0x7F0B0078
-			public const int text_view_with_line_height_from_style = 2131427448;
+			public const int text_view_with_line_height_from_layout = 2131427448;
 			
 			// aapt resource value: 0x7F0B0079
-			public const int text_view_with_theme_line_height = 2131427449;
+			public const int text_view_with_line_height_from_style = 2131427449;
+			
+			// aapt resource value: 0x7F0B007A
+			public const int text_view_with_theme_line_height = 2131427450;
 			
 			static Layout()
 			{

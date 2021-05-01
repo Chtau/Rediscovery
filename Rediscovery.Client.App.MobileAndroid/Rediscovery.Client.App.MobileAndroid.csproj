@@ -63,6 +63,7 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Controls\BaseBottomSheet.cs" />
     <Compile Include="Core\Database.cs" />
     <Compile Include="Core\CoreIO.cs" />
     <Compile Include="Core\Logger.cs" />
@@ -74,9 +75,8 @@
     <Compile Include="Features\DeviceFeatures\FeatureJSInterface.cs" />
     <Compile Include="Features\DeviceFeatures\ViewModels\FeatureViewHolder.cs" />
     <Compile Include="Features\DeviceFeatures\ViewModels\FeatureViewModel.cs" />
-    <Compile Include="Features\Devices\DeviceEditActivity.cs" />
-    <Compile Include="Features\Devices\DeviceListActivity.cs" />
     <Compile Include="Features\Home\DashboardFragment.cs" />
+    <Compile Include="Features\Devices\DeviceAddSheetFragment.cs" />
     <Compile Include="Features\Home\DevicesDashboardFragment.cs" />
     <Compile Include="Features\Home\DiscoveryFragment.cs" />
     <Compile Include="Features\DeviceFeatures\FeaturesDashboardFragment.cs" />
@@ -86,7 +86,6 @@
     <Compile Include="Features\Models\Feature.cs" />
     <Compile Include="Helpers\Creator.cs" />
     <Compile Include="Helpers\GuidExtensions.cs" />
-    <Compile Include="Helpers\Permission.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Helpers\Theme.cs" />
     <Compile Include="Helpers\ViewExtensions.cs" />
@@ -370,6 +369,16 @@
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
     </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\sheet_device_add.xml">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Features\Devices\ViewModels\" />
+    <Folder Include="Features\Home\ViewModels\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

@@ -45,6 +45,7 @@ namespace Rediscovery.Client.App.MobileAndroid
         private Toolbar toolbar;
         private Features.DeviceFeatures.FeaturesDashboardFragment featuresDashboardFragment = null;
         private Features.DeviceFeatures.DeviceBottomSheetFragment deviceBottomSheetFragment = null;
+        private Features.Devices.DeviceAddSheetFragment deviceAddSheetFragment = null;
         private const int Menu_Dashboard_Id = 1001;
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -142,6 +143,41 @@ namespace Rediscovery.Client.App.MobileAndroid
                 {
                     // TOOD: we should check that the feature dashboard is active and is for the updated device id
                     featuresDashboardFragment.UpdateFeatureGrid();
+                }
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        private void OnShowDeviceAddBottomSheet(object sender, Features.DeviceFeatures.ViewModels.FeatureViewModel featureViewModel)
+        {
+            try
+            {
+                if (deviceAddSheetFragment != null)
+                {
+                    deviceAddSheetFragment.AfterClose -= OnAfterCloseDeviceAddBottomSheet;
+                    deviceAddSheetFragment = null;
+                }
+                deviceAddSheetFragment = new Features.Devices.DeviceAddSheetFragment();
+                //deviceAddSheetFragment.Load(featureViewModel);
+                //deviceAddSheetFragment.Show(SupportFragmentManager, featureViewModel.Feature.FeatureId.ToSafeString());
+                deviceAddSheetFragment.AfterClose += OnAfterCloseDeviceAddBottomSheet;
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        private void OnAfterCloseDeviceAddBottomSheet(object sender, object featureViewModel)
+        {
+            try
+            {
+                if (featureViewModel != null)
+                {
+                    // TODO: update dashboard fragment / device managment
                 }
             }
             catch (Exception ex)
