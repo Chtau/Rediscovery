@@ -44,9 +44,8 @@ namespace Rediscovery.Client.App.MobileAndroid
         private readonly Dictionary<int, NavigationItem> _navigationDeviceIds = new Dictionary<int, NavigationItem>();
         private Toolbar toolbar;
         private Features.DeviceFeatures.FeaturesDashboardFragment featuresDashboardFragment = null;
-        private Features.DeviceFeatures.DeviceBottomSheetFragment deviceBottomSheetFragment = null;
-        private Features.Devices.DeviceAddSheetFragment deviceAddSheetFragment = null;
         private const int Menu_Dashboard_Id = 1001;
+        private Core.Controls.BottomSheetManager bottomSheetManager;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -58,6 +57,7 @@ namespace Rediscovery.Client.App.MobileAndroid
                 SetContentView(Resource.Layout.activity_main);
                 toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
                 SetSupportActionBar(toolbar);
+                bottomSheetManager = new Core.Controls.BottomSheetManager(SupportFragmentManager);
 
                 /*FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
                 fab.Click += FabOnClick;*/
@@ -119,66 +119,20 @@ namespace Rediscovery.Client.App.MobileAndroid
         {
             try
             {
-                if (deviceBottomSheetFragment != null)
-                {
-                    deviceBottomSheetFragment.AfterClose -= OnAfterCloseDeviceBottomSheet;
-                    deviceBottomSheetFragment = null;
-                }
-                deviceBottomSheetFragment = new Features.DeviceFeatures.DeviceBottomSheetFragment();
-                deviceBottomSheetFragment.Load(featureViewModel);
-                deviceBottomSheetFragment.Show(SupportFragmentManager, featureViewModel.Feature.FeatureId.ToSafeString());
-                deviceBottomSheetFragment.AfterClose += OnAfterCloseDeviceBottomSheet;
-            }
-            catch (Exception ex)
-            {
-                Core.Logger.Instance.Error(ex);
-            }
-        }
-
-        private void OnAfterCloseDeviceBottomSheet(object sender, Features.DeviceFeatures.ViewModels.FeatureViewModel featureViewModel)
-        {
-            try
-            {
-                if (featureViewModel != null)
-                {
-                    // TOOD: we should check that the feature dashboard is active and is for the updated device id
-                    featuresDashboardFragment.UpdateFeatureGrid();
-                }
-            }
-            catch (Exception ex)
-            {
-                Core.Logger.Instance.Error(ex);
-            }
-        }
-
-        private void OnShowDeviceAddBottomSheet(object sender, Features.DeviceFeatures.ViewModels.FeatureViewModel featureViewModel)
-        {
-            try
-            {
-                if (deviceAddSheetFragment != null)
-                {
-                    deviceAddSheetFragment.AfterClose -= OnAfterCloseDeviceAddBottomSheet;
-                    deviceAddSheetFragment = null;
-                }
-                deviceAddSheetFragment = new Features.Devices.DeviceAddSheetFragment();
-                //deviceAddSheetFragment.Load(featureViewModel);
-                //deviceAddSheetFragment.Show(SupportFragmentManager, featureViewModel.Feature.FeatureId.ToSafeString());
-                deviceAddSheetFragment.AfterClose += OnAfterCloseDeviceAddBottomSheet;
-            }
-            catch (Exception ex)
-            {
-                Core.Logger.Instance.Error(ex);
-            }
-        }
-
-        private void OnAfterCloseDeviceAddBottomSheet(object sender, object featureViewModel)
-        {
-            try
-            {
-                if (featureViewModel != null)
-                {
-                    // TODO: update dashboard fragment / device managment
-                }
+                bottomSheetManager.Show(new Features.DeviceFeatures.FeatureFavoriteSheetFragment()
+                    , featureViewModel
+                    , (viewModel) =>
+                    {
+                        try
+                        {
+                            // TOOD: we should check that the feature dashboard is active and is for the updated device id
+                            featuresDashboardFragment.UpdateFeatureGrid();
+                        }
+                        catch (Exception ex)
+                        {
+                            Core.Logger.Instance.Error(ex);
+                        }
+                    }, featureViewModel.Feature.FeatureId.ToSafeString());
             }
             catch (Exception ex)
             {
@@ -323,7 +277,8 @@ namespace Rediscovery.Client.App.MobileAndroid
             {
                 // TODO: show user dashboard (this dashboard should also be the default fragment on open)
                 toolbar.Title = Resources.GetString(Resource.String.app_name);
-                SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, new Features.Home.DashboardFragment()).Commit();
+                var dashboard = new Features.Home.DashboardFragment();
+                SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, dashboard).Commit();
             }
             catch (Exception ex)
             {

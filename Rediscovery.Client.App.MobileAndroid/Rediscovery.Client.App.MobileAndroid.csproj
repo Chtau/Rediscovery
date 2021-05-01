@@ -64,11 +64,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Controls\BaseBottomSheet.cs" />
+    <Compile Include="Core\Controls\BottomSheetManager.cs" />
     <Compile Include="Core\Database.cs" />
     <Compile Include="Core\CoreIO.cs" />
     <Compile Include="Core\Logger.cs" />
     <Compile Include="Features\DeviceFeatures\AdvWebViewClient.cs" />
-    <Compile Include="Features\DeviceFeatures\DeviceBottomSheetFragment.cs" />
+    <Compile Include="Features\DeviceFeatures\FeatureFavoriteSheetFragment.cs" />
     <Compile Include="Features\DeviceFeatures\DeviceFeaturesAdapter.cs" />
     <Compile Include="Features\DeviceFeatures\FeatureActivity.cs" />
     <Compile Include="Features\DeviceFeatures\FeatureException.cs" />

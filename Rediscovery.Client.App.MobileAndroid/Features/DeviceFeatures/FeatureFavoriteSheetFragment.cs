@@ -14,7 +14,7 @@ using System.Text;
 
 namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 {
-    public class DeviceBottomSheetFragment : Core.Controls.BaseBottomSheet<ViewModels.FeatureViewModel>
+    public class FeatureFavoriteSheetFragment : Core.Controls.BaseBottomSheet<ViewModels.FeatureViewModel>
     {
         private MaterialRadioButton rbtnThemeRedisocvery;
         private MaterialRadioButton rbtnThemeBlue;
@@ -91,7 +91,6 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
                 {
                     OnInvokeAfterClose(null);
                 }
-                Dismiss();
             }
             catch (Exception ex)
             {

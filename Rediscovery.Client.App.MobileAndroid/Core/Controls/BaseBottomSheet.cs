@@ -30,6 +30,17 @@ namespace Rediscovery.Client.App.MobileAndroid.Core.Controls
             ViewModel = viewModel;
         }
 
-        internal void OnInvokeAfterClose(TModel model) => AfterClose?.Invoke(this, model);
+        internal void OnInvokeAfterClose(TModel model)
+        {
+            try
+            {
+                AfterClose?.Invoke(this, model);
+                Dismiss();
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
     }
 }
