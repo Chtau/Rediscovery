@@ -5940,7 +5940,7 @@ namespace Rediscovery.Client.App.MobileAndroid
 			public const int buttonDeviceAdd = 2131230820;
 			
 			// aapt resource value: 0x7F080065
-			public const int buttonDevicesDiscoveryToggle = 2131230821;
+			public const int buttonDevicesPlayPause = 2131230821;
 			
 			// aapt resource value: 0x7F080066
 			public const int buttonFeatureEditCancel = 2131230822;

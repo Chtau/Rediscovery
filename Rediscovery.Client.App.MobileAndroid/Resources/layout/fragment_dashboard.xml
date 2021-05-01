@@ -30,7 +30,7 @@
             android:layout_marginRight="10dp"
             android:text="@string/dashboard_devices" />
         <Button
-            android:id="@+id/buttonDevicesDiscoveryToggle"
+            android:id="@+id/buttonDevicesPlayPause"
             android:layout_width="52dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
