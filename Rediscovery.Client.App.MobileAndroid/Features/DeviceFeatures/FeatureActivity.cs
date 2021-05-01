@@ -19,7 +19,8 @@ using System.Threading.Tasks;
 
 namespace Rediscovery.Client.App.MobileAndroid.Features.DeviceFeatures
 {
-    [Activity(Label = "FeatureActivity", Theme = "@style/Rediscovery.NoActionBar", MainLauncher = false)]
+    //Theme = "@style/Rediscovery.NoActionBar",
+    [Activity(Label = "FeatureActivity",  MainLauncher = false)]
     public class FeatureActivity : AppCompatActivity
     {
         public const string Key_DeviceId = "deviceid";
