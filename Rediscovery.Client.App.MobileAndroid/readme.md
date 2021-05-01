@@ -2,7 +2,9 @@
 ### Resources
 
 * Info: we need to keep the folder "drawable-v21" and use it for the drawer items.
-* Vector Animations https://shapeshifter.design/
+* [Vector Animations](https://shapeshifter.design/)
+* [Material Components](https://material.io/components/navigation-drawer/android#anatomy)
+* [Xamarin Android](https://docs.microsoft.com/en-us/xamarin/android/user-interface/material-theme)
 
 # TODO
 
