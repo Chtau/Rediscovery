@@ -17,7 +17,8 @@ using Google.Android.Material.Snackbar;
 
 namespace Rediscovery.Client.App.MobileAndroid
 {
-    [Activity(Label = "@string/app_name", Icon = "@mipmap/ic_launcher", MainLauncher = false)]
+    //Label = "@string/app_name", Icon = "@mipmap/ic_launcher", 
+    [Activity(MainLauncher = false)]
     public class MainActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener
     {
         public static MainActivity Instance;

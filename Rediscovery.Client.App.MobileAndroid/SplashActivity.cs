@@ -12,7 +12,8 @@ using System.Threading.Tasks;
 
 namespace Rediscovery.Client.App.MobileAndroid
 {
-    [Activity(Label = "@string/app_name", Icon = "@mipmap/ic_launcher", Theme = "@style/AppThemeRediscovery.Splash", MainLauncher = true, NoHistory = true)]
+    //Label = "@string/app_name", Icon = "@mipmap/ic_launcher",
+    [Activity(Theme = "@style/AppThemeRediscovery.Splash", MainLauncher = true, NoHistory = true)]
     [IntentFilter(new[] { Intent.ActionSend }, Categories = new[] { Intent.CategoryDefault }, DataMimeType = @"*/*")]
     public class SplashActivity : Activity
     {
