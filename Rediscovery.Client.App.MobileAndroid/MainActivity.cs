@@ -279,6 +279,29 @@ namespace Rediscovery.Client.App.MobileAndroid
                 // TODO: show user dashboard (this dashboard should also be the default fragment on open)
                 toolbar.Title = Resources.GetString(Resource.String.app_name);
                 var dashboard = new Features.Home.DashboardFragment();
+                dashboard.AddDeviceRequest += (_obj, _args) =>
+                {
+                    try
+                    {
+                        bottomSheetManager.Show(new Features.Devices.DeviceAddSheetFragment()
+                        , null
+                        , (viewModel) =>
+                        {
+                            try
+                            {
+                               // TODO: handle add new device
+                            }
+                            catch (Exception ex)
+                            {
+                                Core.Logger.Instance.Error(ex);
+                            }
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        Core.Logger.Instance.Error(ex);
+                    }
+                };
                 SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, dashboard).Commit();
             }
             catch (Exception ex)

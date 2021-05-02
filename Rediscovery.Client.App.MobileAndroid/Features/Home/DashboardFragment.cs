@@ -19,6 +19,8 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Home
 
         private bool isAutoDiscoverDevices = false;
 
+        public event EventHandler AddDeviceRequest;
+
         public static DashboardFragment Create()
         {
             var args = new Bundle();
@@ -95,7 +97,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Home
         {
             try
             {
-
+                AddDeviceRequest?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception ex)
             {

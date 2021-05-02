@@ -12,14 +12,9 @@ using System.Text;
 
 namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
 {
-    public class DeviceAddSheetFragment : BottomSheetDialogFragment
+    public class DeviceAddSheetFragment : Core.Controls.BaseBottomSheet<object>
     {
-        public event EventHandler AfterClose;
-
-        public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-        {
-            return inflater.Inflate(Resource.Layout.device_bottom_sheet, container, false);
-        }
+        internal override int Layout => Resource.Layout.device_bottom_sheet;
 
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
@@ -43,15 +38,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
         {
             try
             {
-                if (save)
-                {
-                    AfterClose?.Invoke(this, null);
-                }
-                else
-                {
-                    AfterClose?.Invoke(this, null);
-                }
-                Dismiss();
+                OnInvokeAfterClose(null);
             }
             catch (Exception ex)
             {
