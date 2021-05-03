@@ -1,15 +1,11 @@
 <resources>
 
   <!--parent="Theme.AppCompat"-->
-  <style name="Rediscovery" parent="Theme.MaterialComponents">
-      <item name="android:colorPrimary">@color/theme_rediscovery_primary</item>
+  <style name="Rediscovery" parent="Theme.MaterialComponents.Light">
+    <!--<item name="android:colorPrimary">@color/theme_rediscovery_primary</item>
       <item name="android:colorPrimaryDark">@color/theme_rediscovery_primary_dark</item>
       <item name="android:colorAccent">@color/theme_rediscovery_accent</item>
-    <item name="colorOnSecondary">@color/theme_rediscovery_accent</item>
-    <item name="colorSecondaryVariant">@color/theme_rediscovery_accent</item>
-    <item name="colorOnPrimary">@color/theme_rediscovery_accent</item>
-    <item name="colorPrimaryVariant">@color/theme_rediscovery_accent</item>
-    <item name="colorSecondary">@color/theme_rediscovery_accent</item>
+   
       <item name="android:textColorPrimary">@color/text_light</item>
       <item name="android:textColorPrimaryInverse">@android:color/black</item>
       <item name="android:statusBarColor">@color/theme_rediscovery_primary_dark</item>
@@ -25,89 +21,134 @@
       <item name="itemTextColor">@color/theme_rediscovery_primary_shade_black</item>
       <item name="itemIconTint">@color/theme_rediscovery_primary_shade_black</item>
       <item name="android:listDivider">@color/theme_rediscovery_primary</item>
+      -->
+
+      <item name="colorPrimary">@color/theme_rediscovery_primary</item>
+      <item name="colorPrimaryVariant">@color/theme_rediscovery_primary_dark</item>
+      <item name="colorOnPrimary">@color/theme_rediscovery_primary_text</item>
+
+      <item name="colorSecondary">@color/theme_rediscovery_accent</item>
+      <item name="colorSecondaryVariant">@color/theme_rediscovery_accent_dark</item>
+      <item name="colorOnSecondary">@color/theme_rediscovery_accent_text</item>
+
+      <item name="windowActionBar">false</item>
+      <item name="windowNoTitle">true</item>
+      <item name="android:navigationBarColor">@color/theme_rediscovery_primary</item>
+      <item name="android:statusBarColor">@color/theme_rediscovery_primary_dark</item>
     </style>
 
-    <style name="Rediscovery.Blue" parent="Rediscovery">
+  <style name="Rediscovery.Blue" parent="Rediscovery">
+      <!--
       <item name="android:colorPrimary">@color/theme_blue_primary</item>
       <item name="android:colorPrimaryDark">@color/theme_blue_primary</item>
       <item name="android:textColorPrimary">@color/theme_blue_text</item>
       <item name="android:statusBarColor">@color/theme_blue_primary_dark</item>
       <item name="android:windowBackground">@color/theme_blue_background</item>
       <item name="android:colorAccent">@color/theme_blue_accent</item>
+      -->
     </style>
 
     <style name="Rediscovery.Green" parent="Rediscovery">
+      <!--
       <item name="android:colorPrimary">@color/theme_green_primary</item>
       <item name="android:colorPrimaryDark">@color/theme_green_primary</item>
       <item name="android:textColorPrimary">@color/theme_green_text</item>
       <item name="android:statusBarColor">@color/theme_green_primary_dark</item>
       <item name="android:windowBackground">@color/theme_green_background</item>
       <item name="android:colorAccent">@color/theme_green_accent</item>
+      -->
     </style>
 
   
     <style name="Rediscovery.Purple" parent="Rediscovery">
+      <!--
       <item name="android:colorPrimary">@color/theme_purple_primary</item>
       <item name="android:colorPrimaryDark">@color/theme_purple_primary</item>
       <item name="android:textColorPrimary">@color/theme_purple_text</item>
       <item name="android:statusBarColor">@color/theme_purple_primary_dark</item>
       <item name="android:windowBackground">@color/theme_purple_background</item>
       <item name="android:colorAccent">@color/theme_purple_accent</item>
+      -->
     </style>
 
     <style name="Rediscovery.Red" parent="Rediscovery">
+      <!--
       <item name="android:colorPrimary">@color/theme_red_primary</item>
       <item name="android:colorPrimaryDark">@color/theme_red_primary</item>
       <item name="android:textColorPrimary">@color/theme_red_text</item>
       <item name="android:statusBarColor">@color/theme_red_primary_dark</item>
       <item name="android:windowBackground">@color/theme_red_background</item>
       <item name="android:colorAccent">@color/theme_red_accent</item>
+      -->
     </style>
 
     <style name="Rediscovery.Yellow" parent="Rediscovery">
+      <!--
       <item name="android:colorPrimary">@color/theme_yellow_primary</item>
       <item name="android:colorPrimaryDark">@color/theme_yellow_primary</item>
       <item name="android:textColorPrimary">@color/theme_yellow_text</item>
       <item name="android:statusBarColor">@color/theme_yellow_primary_dark</item>
       <item name="android:windowBackground">@color/theme_yellow_background</item>
       <item name="android:colorAccent">@color/theme_yellow_accent</item>
+      -->
+
     </style>
 
   
     <style name="Rediscovery.CompoundButton" parent="@android:style/Widget.Material.Button.Borderless">
+      <!--
       <item name="android:background">@drawable/selector_button</item>
-    </style>
+      -->
+  </style>
 
     <style name="Rediscovery.CompoundButton.Radio" parent="Rediscovery.CompoundButton">
+      <!--
       <item name="android:background">@drawable/selector_checkable</item>
+      -->
+      
     </style>
 
     <style name="Rediscovery.CompoundButton.True" parent="Rediscovery.CompoundButton">
+      <!--
       <item name="android:background">@drawable/selector_true</item>
+      -->
     </style>
 
     <style name="Rediscovery.CompoundButton.False" parent="Rediscovery.CompoundButton">
+      <!--
       <item name="android:background">@drawable/selector_false</item>
+      -->
     </style>
 
     <style name="Rediscovery.TextAppearance">
     </style>
 
     <style name="Rediscovery.TextAppearance.Title" parent="android:TextAppearance.Material.Title">
+      <!--
       <item name="android:textColor">@color/theme_rediscovery_primary</item>
-    </style>
+      -->
+
+  </style>
 
     <style name="Rediscovery.TextAppearance.Title.Inverse" parent="android:TextAppearance.Material.Title">
+      <!--
       <item name="android:textColor">@android:color/white</item>
-    </style>
+      -->
+
+  </style>
 
     <style name="Rediscovery.TextAppearance.Title.Picker" parent="Rediscovery.TextAppearance.Title">
+      <!--
       <item name="android:textSize">96sp</item>
-    </style>
+      -->
+
+  </style>
 
     <style name="Rediscovery.TextAppearance.Subhead" parent="android:TextAppearance.Material.Subhead">
+      <!--
       <item name="android:textColor">@color/theme_rediscovery_primary</item>
-    </style>
+      -->
+  </style>
     
 
     <style name="AppThemeRediscovery.Splash" parent ="Rediscovery">

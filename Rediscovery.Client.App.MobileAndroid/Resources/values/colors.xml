@@ -10,9 +10,13 @@
 
   <!-- rediscovery theme colors -->
   <color name="theme_rediscovery_primary">#00796B</color>
-  <color name="theme_rediscovery_accent">#79000e</color>
+  <color name="theme_rediscovery_primary_text">#ffffff</color>
+  <color name="theme_rediscovery_accent">#b71c1c</color>
+  <color name="theme_rediscovery_accent_text">#ffffff</color>
   <color name="theme_rediscovery_primary_dark">#003742</color>
   <color name="theme_rediscovery_primary_light">#7DBAB4</color>
+  <color name="theme_rediscovery_accent_dark">#7f0000</color>
+  <color name="theme_rediscovery_accent_light">#f05545</color>
   <color name="theme_rediscovery_primary_shade_black_darkest">#0d1917</color>
   <color name="theme_rediscovery_primary_shade_black">#122a26</color>
   <color name="theme_rediscovery_primary_shade_white_lightes">#dae8e5</color>
@@ -56,4 +60,13 @@
   <!--<color name="colorAccent">#FF7200</color>-->
   <color name="launcher_background">#FFFFFF</color>
   <color name="touch_effect">#9ccc</color>
+
+  <color name="primaryColor">#00796b</color>
+  <color name="primaryLightColor">#48a999</color>
+  <color name="primaryDarkColor">#004c40</color>
+  <color name="secondaryColor">#b71c1c</color>
+  <color name="secondaryLightColor">#f05545</color>
+  <color name="secondaryDarkColor">#7f0000</color>
+  <color name="primaryTextColor">#ffffff</color>
+  <color name="secondaryTextColor">#ffffff</color>
 </resources>
