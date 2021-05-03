@@ -8,43 +8,19 @@
         android:layout_height="match_parent"
         android:layout_marginTop="15dp"
         android:orientation="horizontal">
-        <RadioGroup
-            android:layout_weight="1"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/outlinedTextField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp">
-        <com.google.android.material.radiobutton.MaterialRadioButton
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/theme_rediscovery"
-            android:id="@+id/rbtnThemeRedisocvery" />
-        <com.google.android.material.radiobutton.MaterialRadioButton
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/theme_blue"
-            android:id="@+id/rbtnThemeBlue" />
-        <com.google.android.material.radiobutton.MaterialRadioButton
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/theme_green"
-            android:id="@+id/rbtnThemeGreen" />
-        <com.google.android.material.radiobutton.MaterialRadioButton
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/theme_purple"
-            android:id="@+id/rbtnThemePurple" />
-        <com.google.android.material.radiobutton.MaterialRadioButton
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/theme_red"
-            android:id="@+id/rbtnThemeRed" />
-        <com.google.android.material.radiobutton.MaterialRadioButton
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/theme_yellow"
-            android:id="@+id/rbtnThemeYellow" />
-        </RadioGroup>
+            android:hint="@string/add_device_ip"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+            />
+
+        </com.google.android.material.textfield.TextInputLayout>
         <LinearLayout
             android:layout_marginRight="25dp"
             android:layout_width="wrap_content"

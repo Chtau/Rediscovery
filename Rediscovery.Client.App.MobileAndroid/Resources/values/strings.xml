@@ -22,4 +22,5 @@
     <string name="favorite">Favorite</string>
     <string name="dashboard_devices">Manage Devices</string>
     <string name="dashboard_new_device">New Device</string>
+    <string name="add_device_ip">IP</string>
 </resources>

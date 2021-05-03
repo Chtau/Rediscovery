@@ -14,7 +14,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
 {
     public class DeviceAddSheetFragment : Core.Controls.BaseBottomSheet<object>
     {
-        internal override int Layout => Resource.Layout.device_bottom_sheet;
+        internal override int Layout => Resource.Layout.sheet_device_add;
 
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
