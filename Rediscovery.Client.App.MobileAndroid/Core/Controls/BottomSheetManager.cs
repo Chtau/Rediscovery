@@ -32,7 +32,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Core.Controls
                         if (args != null)
                             successCloseCallback?.Invoke(args);
                     };
-                    bottomSheet.Show(SupportFragmentManager, tag ?? viewModel.ToString());
+                    bottomSheet.Show(SupportFragmentManager, tag ?? (viewModel?.ToString() ?? Guid.NewGuid().ToSafeString()));
                 }
             }
             catch (Exception ex)
