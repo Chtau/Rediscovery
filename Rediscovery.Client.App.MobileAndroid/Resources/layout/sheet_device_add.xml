@@ -1,15 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?> 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical" >
     <LinearLayout
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="15dp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/outlinedTextField"
+            android:id="@+id/addDeviceIP"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/add_device_ip"
@@ -19,18 +22,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
             />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/addDevicePort"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/add_device_port"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                        android:inputType="numberSigned"
+            />
 
         </com.google.android.material.textfield.TextInputLayout>
-        <LinearLayout
-            android:layout_marginRight="25dp"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <CheckBox android:id="@+id/checkboxFeatureFavorite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/favorite"/>
-        </LinearLayout>
     </LinearLayout>
     
     <LinearLayout
@@ -41,17 +47,21 @@
         android:orientation="horizontal"
         android:gravity="center_horizontal">
         <Button
+            app:icon="@drawable/ic_connect"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
             android:id="@+id/buttonFeatureEditCancel"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
-            android:text="@android:string/cancel"
+            android:text="@string/add_device_try_connect"
             android:layout_marginRight="10dp"
             android:layout_gravity="center_horizontal"/>
         <Button
+            app:icon="@drawable/ic_save"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
             android:id="@+id/buttonFeatureEditOk"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
-            android:text="@android:string/ok"
+            android:text="@string/save"
             android:layout_marginLeft="10dp"
             android:layout_gravity="center_horizontal"/>
     </LinearLayout>

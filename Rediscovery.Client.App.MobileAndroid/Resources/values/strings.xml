@@ -23,4 +23,7 @@
     <string name="dashboard_devices">Manage Devices</string>
     <string name="dashboard_new_device">New Device</string>
     <string name="add_device_ip">IP</string>
+    <string name="add_device_port">Port</string>
+    <string name="save">Save</string>
+    <string name="add_device_try_connect">Try Connect</string>
 </resources>
