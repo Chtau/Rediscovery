@@ -14,18 +14,24 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
 {
     public class DeviceAddSheetFragment : Core.Controls.BaseBottomSheet<object>
     {
+        private Button btnTryConnect;
+        private Button btnEditOk;
+        private TextView ipAddress;
+        private TextView portAddress;
+
         internal override int Layout => Resource.Layout.sheet_device_add;
 
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
             try
             {
-                
-                var btnOk = view.FindViewById<Button>(Resource.Id.buttonFeatureEditOk);
-                btnOk.Click += (_obj, _args) => OnClose(true);
-                var btnCancel = view.FindViewById<Button>(Resource.Id.buttonFeatureEditCancel);
-                btnCancel.Click += (_obj, _args) => OnClose(false);
-                //OnLoad();
+                ipAddress = view.FindViewById<TextView>(Resource.Id.addDeviceIP);
+                portAddress = view.FindViewById<TextView>(Resource.Id.addDevicePort);
+
+                btnTryConnect = view.FindViewById<Button>(Resource.Id.buttonFeatureEditTryConnect);
+                btnTryConnect.Click += (_obj, _args) => OnTryConnect();
+                btnEditOk = view.FindViewById<Button>(Resource.Id.buttonFeatureEditOk);
+                btnEditOk.Click += (_obj, _args) => OnSave();
             }
             catch (Exception ex)
             {
@@ -34,11 +40,23 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
             base.OnViewCreated(view, savedInstanceState);
         }
 
-        private void OnClose(bool save)
+        private void OnSave()
         {
             try
             {
                 OnInvokeAfterClose(null);
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        private void OnTryConnect()
+        {
+            try
+            {
+                
             }
             catch (Exception ex)
             {

@@ -12,7 +12,6 @@
         android:layout_marginTop="15dp"
         android:orientation="vertical">
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/addDeviceIP"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/add_device_ip"
@@ -21,10 +20,10 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/addDeviceIP"
             />
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/addDevicePort"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/add_device_port"
@@ -34,6 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                         android:inputType="numberSigned"
+                android:id="@+id/addDevicePort"
             />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -49,7 +49,7 @@
         <Button
             app:icon="@drawable/ic_connect"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-            android:id="@+id/buttonFeatureEditCancel"
+            android:id="@+id/buttonFeatureEditTryConnect"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:text="@string/add_device_try_connect"
