@@ -5,6 +5,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Google.Android.Material.BottomSheet;
+using Rediscovery.Client.App.MobileAndroid.Features.Devices.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ using System.Text;
 
 namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
 {
-    public class DeviceAddSheetFragment : Core.Controls.BaseBottomSheet<object>
+    public class DeviceAddSheetFragment : Core.Controls.BaseBottomSheet<DeviceAddViewModel>
     {
         private Button btnTryConnect;
         private Button btnEditOk;
@@ -44,7 +45,8 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
         {
             try
             {
-                OnInvokeAfterClose(null);
+                OnUpdateViewModel();
+                OnInvokeAfterClose(ViewModel);
             }
             catch (Exception ex)
             {
@@ -56,7 +58,31 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
         {
             try
             {
-                
+                OnUpdateViewModel();
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        private void OnUpdateViewModel()
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(ipAddress.Text))
+                {
+                    DeviceAddViewModel item = ViewModel;
+                    if (item == null)
+                    {
+                        item = new DeviceAddViewModel();
+                    }
+                    item.IP = ipAddress.Text;
+                    int port = -1;
+                    if (!string.IsNullOrWhiteSpace(portAddress.Text))
+                        if (int.TryParse(portAddress.Text, out port))
+                            item.Port = port;
+                }
             }
             catch (Exception ex)
             {

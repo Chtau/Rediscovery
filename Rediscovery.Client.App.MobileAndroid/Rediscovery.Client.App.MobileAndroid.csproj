@@ -76,6 +76,7 @@
     <Compile Include="Features\DeviceFeatures\FeatureJSInterface.cs" />
     <Compile Include="Features\DeviceFeatures\ViewModels\FeatureViewHolder.cs" />
     <Compile Include="Features\DeviceFeatures\ViewModels\FeatureViewModel.cs" />
+    <Compile Include="Features\Devices\ViewModels\DeviceAddViewModel.cs" />
     <Compile Include="Features\Home\DashboardFragment.cs" />
     <Compile Include="Features\Devices\DeviceAddSheetFragment.cs" />
     <Compile Include="Features\Home\DevicesDashboardFragment.cs" />
@@ -378,7 +379,6 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Features\Devices\ViewModels\" />
     <Folder Include="Features\Home\ViewModels\" />
   </ItemGroup>
   <ItemGroup>

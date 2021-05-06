@@ -289,7 +289,10 @@ namespace Rediscovery.Client.App.MobileAndroid
                         {
                             try
                             {
-                               // TODO: handle add new device
+                                if (viewModel != null)
+                                {
+                                    // TODO: handle add new device
+                                }
                             }
                             catch (Exception ex)
                             {
