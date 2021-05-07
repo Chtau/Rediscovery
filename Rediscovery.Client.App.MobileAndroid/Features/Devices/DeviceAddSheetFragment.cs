@@ -13,7 +13,7 @@ using System.Text;
 
 namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
 {
-    public class DeviceAddSheetFragment : Core.Controls.BaseBottomSheet<DeviceAddViewModel>
+    public class DeviceAddSheetFragment : Core.Controls.BaseBottomSheet<DeviceManageViewModel>
     {
         private Button btnTryConnect;
         private Button btnEditOk;
@@ -72,10 +72,10 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
             {
                 if (!string.IsNullOrWhiteSpace(ipAddress.Text))
                 {
-                    DeviceAddViewModel item = ViewModel;
+                    DeviceManageViewModel item = ViewModel;
                     if (item == null)
                     {
-                        item = new DeviceAddViewModel();
+                        item = new DeviceManageViewModel();
                     }
                     item.IP = ipAddress.Text;
                     int port = -1;

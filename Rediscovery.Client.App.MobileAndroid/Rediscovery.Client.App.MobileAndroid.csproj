@@ -76,7 +76,8 @@
     <Compile Include="Features\DeviceFeatures\FeatureJSInterface.cs" />
     <Compile Include="Features\DeviceFeatures\ViewModels\FeatureViewHolder.cs" />
     <Compile Include="Features\DeviceFeatures\ViewModels\FeatureViewModel.cs" />
-    <Compile Include="Features\Devices\ViewModels\DeviceAddViewModel.cs" />
+    <Compile Include="Features\Devices\DeviceManagmentAdapter.cs" />
+    <Compile Include="Features\Devices\ViewModels\DeviceManageViewModel.cs" />
     <Compile Include="Features\Home\DashboardFragment.cs" />
     <Compile Include="Features\Devices\DeviceAddSheetFragment.cs" />
     <Compile Include="Features\Home\DevicesDashboardFragment.cs" />
@@ -389,6 +390,12 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-v21\ic_connect.xml">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\fragment_device_managment.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
     </AndroidResource>
