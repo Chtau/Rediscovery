@@ -81,31 +81,12 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
 
         public override View GetView(int position, View convertView, ViewGroup parent)
         {
-            if (convertView == null)
+            /*if (convertView == null)
             {
                 convertView = layoutInflater.Inflate(Resource.Layout.item_devicefeature, parent, false);
                 convertView.Tag = new FeatureViewHolder((LinearLayout)convertView);
             }
             var view = convertView;
-            /*DeviceFeaturesAdapterViewHolder holder = null;
-
-            if (view != null)
-                holder = view.Tag as DeviceFeaturesAdapterViewHolder;
-
-            if (holder == null)
-            {
-                holder = new DeviceFeaturesAdapterViewHolder();
-                var inflater = _context.GetSystemService(Context.LayoutInflaterService).JavaCast<LayoutInflater>();
-                //replace with your item and your holder items
-                //comment back in
-                //view = inflater.Inflate(Resource.Layout.item, parent, false);
-                //holder.Title = view.FindViewById<TextView>(Resource.Id.text);
-                view.Tag = holder;
-            }*/
-
-
-            //fill in your items
-            //holder.Title.Text = "new text here";
 
             var holder = (FeatureViewHolder)view.Tag;
             var featureView = (ViewModels.DeviceManageViewModel)GetItem(position);
@@ -128,37 +109,22 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
             holder.LinearLayout.Click += (_obj, _args) =>
             {
                 LayoutClick?.Invoke(this, featureView);
-            };
-            return view;
+            };*/
+            return convertView;// view;
         }
 
-        private void OnSetIcon(FeatureViewModel featureViewModel, ImageView icon)
+        private void OnSetIcon(ViewModels.DeviceManageViewModel featureViewModel, ImageView icon)
         {
-            var thumb = System.IO.Path.Combine(Core.CoreIO.Instance.DeviceFeatureThumbnailDirectory(_device.DeviceId), $"{featureViewModel.Feature.FeatureId.ToSafeString()}.png");
+            string thumb = null;// System.IO.Path.Combine(Core.CoreIO.Instance.DeviceFeatureThumbnailDirectory(_device.DeviceId), $"{featureViewModel.Feature.FeatureId.ToSafeString()}.png");
             if (System.IO.File.Exists(thumb))
             {
                 icon.SetImageURI(Android.Net.Uri.FromFile(new Java.IO.File(thumb)));
             }
             else
             {
-                var featureImageResource = Resource.Drawable.icon_devicefeature_default; //_context.GetIdentifier(IconCategory + category.Id, Drawable, packageName);
+                var featureImageResource = Resource.Drawable.icon_devicefeature_default;
                 icon.SetImageResource(featureImageResource);
             }
-            /*var solved = category.Solved;
-            if (solved)
-            {
-                var solvedIcon = LoadSolvedIcon(category, categoryImageResource);
-                icon.SetImageDrawable(solvedIcon);
-            }
-            else
-            {
-                icon.SetImageResource(categoryImageResource);
-            }*/
-        }
-
-        private Color GetColor(int colorRes)
-        {
-            return new Color(_context.GetColor(colorRes));
         }
 
         public override bool HasStableIds => true;

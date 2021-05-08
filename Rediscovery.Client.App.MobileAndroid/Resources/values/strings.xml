@@ -25,5 +25,5 @@
     <string name="add_device_ip">IP</string>
     <string name="add_device_port">Port</string>
     <string name="save">Save</string>
-    <string name="add_device_try_connect">Try Connect</string>
+    <string name="add_device_try_connect">Connect</string>
 </resources>
