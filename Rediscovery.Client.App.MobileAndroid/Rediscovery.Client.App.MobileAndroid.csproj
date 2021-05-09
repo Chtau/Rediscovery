@@ -78,6 +78,7 @@
     <Compile Include="Features\DeviceFeatures\ViewModels\FeatureViewModel.cs" />
     <Compile Include="Features\Devices\DeviceManagmentAdapter.cs" />
     <Compile Include="Features\Devices\DeviceManagmentFragment.cs" />
+    <Compile Include="Features\Devices\DeviceManagmentViewHolder.cs" />
     <Compile Include="Features\Devices\ViewModels\DeviceManageViewModel.cs" />
     <Compile Include="Features\Home\DashboardFragment.cs" />
     <Compile Include="Features\Devices\DeviceAddSheetFragment.cs" />
@@ -403,6 +404,12 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-v21\ic_devices.xml">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\item_device_managment.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
     </AndroidResource>

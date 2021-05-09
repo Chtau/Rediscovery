@@ -20,12 +20,5 @@
     android:stretchMode="columnWidth"
     android:verticalSpacing="@dimen/spacing_normal"
     tools:ignore="Overdraw" />
-    <!--android:background="?android:windowBackground"-->
-
-    <!--<TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="TODO: Feature Dashboard" />-->
-
+    
 </FrameLayout>

@@ -14,6 +14,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices.ViewModels
 {
     public class DeviceManageViewModel : Java.Lang.Object, IParcelable
     {
+        public string Title { get; set; }
         public string IP { get; set; }
         public int Port { get; set; } = -1;
 

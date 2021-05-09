@@ -4,6 +4,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using AndroidX.RecyclerView.Widget;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +12,39 @@ using System.Text;
 
 namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
 {
-    public class DeviceManagmentAdapter : BaseAdapter
+    // TODO: https://docs.microsoft.com/en-us/xamarin/android/user-interface/layouts/recycler-view/recyclerview-example
+
+    public class DeviceManagmentAdapter : RecyclerView.Adapter
     {
-        private readonly Context _context;
+        private readonly List<ViewModels.DeviceManageViewModel> _models = new List<ViewModels.DeviceManageViewModel>();
+
+        public override int ItemCount => _models?.Count ?? 0;
+
+        public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
+        {
+            DeviceManagmentViewHolder vh = holder as DeviceManagmentViewHolder;
+
+            // Load the photo image resource from the photo album:
+            //vh.Image.SetImageResource(mPhotoAlbum[position].PhotoID);
+
+            // Load the photo caption from the photo album:
+            vh.Title.Text = _models[position].Title;
+        }
+
+        public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
+        {
+            // Inflate the CardView for the photo:
+            View itemView = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.item_device_managment, parent, false);
+
+            // Create a ViewHolder to hold view references inside the CardView:
+            DeviceManagmentViewHolder vh = new DeviceManagmentViewHolder(itemView);
+            return vh;
+        }
+
+        /*private readonly Context _context;
         private readonly LayoutInflater layoutInflater;
         private readonly Features.Models.Device _device;
-        private readonly List<ViewModels.DeviceManageViewModel> _models = new List<ViewModels.DeviceManageViewModel>();
+        
         private bool localFeatures;
 
         public event EventHandler<ViewModels.DeviceManageViewModel> ButtonActionClick;
@@ -42,26 +70,6 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
             try
             {
                 _models.Clear();
-                /*if (localFeatures)
-                {
-                    if (_device?.FeaturesLocal?.Count > 0)
-                    {
-                        foreach (var feature in _device.FeaturesLocal.OrderBy(x => x.OrderBy))
-                        {
-                            _models.Add(new ViewModels.FeatureViewModel(_device.DeviceId, feature));
-                        }
-                    }
-                }
-                else
-                {
-                    if (_device?.FeaturesRemote?.Count > 0)
-                    {
-                        foreach (var feature in _device.FeaturesRemote.OrderBy(x => x.OrderBy))
-                        {
-                            _models.Add(new ViewModels.FeatureViewModel(_device.DeviceId, feature));
-                        }
-                    }
-                }*/
             }
             catch (Exception ex)
             {
@@ -81,35 +89,6 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
 
         public override View GetView(int position, View convertView, ViewGroup parent)
         {
-            /*if (convertView == null)
-            {
-                convertView = layoutInflater.Inflate(Resource.Layout.item_devicefeature, parent, false);
-                convertView.Tag = new FeatureViewHolder((LinearLayout)convertView);
-            }
-            var view = convertView;
-
-            var holder = (FeatureViewHolder)view.Tag;
-            var featureView = (ViewModels.DeviceManageViewModel)GetItem(position);
-            //view.SetBackgroundColor(GetColor(theme.WindowBackgroundColor));
-            holder.Title.Text = featureView.Feature.Name;
-            //holder.Title.SetTextColor(GetColor((theme.TextPrimaryColor)));
-            //holder.Title.SetBackgroundColor(GetColor(theme.PrimaryColor));
-            if (featureView.Feature.DisplayTheme == 0)
-                featureView.Feature.DisplayTheme = 1;
-            var theme = Helpers.Theme.FromOrdinal(featureView.Feature.DisplayTheme, Helpers.Theme.Themes.Blue);
-            OnSetIcon(featureView, holder.Icon);
-
-            view.SetBackgroundColor(GetColor(theme.PrimaryColor));//.WindowBackgroundColor));
-            holder.Title.SetTextColor(GetColor((theme.TextPrimaryColor)));
-            holder.Title.SetBackgroundColor(GetColor(theme.PrimaryColor));
-            holder.Button.Click += (_obj, _args) =>
-            {
-                ButtonActionClick?.Invoke(this, featureView);
-            };
-            holder.LinearLayout.Click += (_obj, _args) =>
-            {
-                LayoutClick?.Invoke(this, featureView);
-            };*/
             return convertView;// view;
         }
 
@@ -132,6 +111,6 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
         public override bool AreAllItemsEnabled()
         {
             return false;
-        }
+        }*/
     }
 }
