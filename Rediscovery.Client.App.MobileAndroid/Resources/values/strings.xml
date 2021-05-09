@@ -26,4 +26,6 @@
     <string name="add_device_port">Port</string>
     <string name="save">Save</string>
     <string name="add_device_try_connect">Connect</string>
+    <string name="device_managment">Device managment</string>
+    <string name="dashboard">Dashboard</string>
 </resources>

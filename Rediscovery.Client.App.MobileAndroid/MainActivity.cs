@@ -46,6 +46,7 @@ namespace Rediscovery.Client.App.MobileAndroid
         private Toolbar toolbar;
         private Features.DeviceFeatures.FeaturesDashboardFragment featuresDashboardFragment = null;
         private const int Menu_Dashboard_Id = 1001;
+        private const int Menu_DeviceManagment_Id = 1002;
         private Core.Controls.BottomSheetManager bottomSheetManager;
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -161,8 +162,11 @@ namespace Rediscovery.Client.App.MobileAndroid
             {
                 _navigationDeviceIds.Clear();
                 // default navigation items (home)
-                var menuItemDashboard = navigationView.Menu.Add(0, Menu_Dashboard_Id, 0, "Dashboard");
+                var menuItemDashboard = navigationView.Menu.Add(0, Menu_Dashboard_Id, 0, Resource.String.dashboard);
                 menuItemDashboard.SetIcon(Resource.Drawable.ic_dashboard);
+
+                var menuItemDeviceManament = navigationView.Menu.Add(0, Menu_DeviceManagment_Id, 1, Resource.String.device_managment);
+                menuItemDeviceManament.SetIcon(Resource.Drawable.ic_devices);
 
                 Features.Manager.DeviceManager.Instance.Init();
 
@@ -235,11 +239,12 @@ namespace Rediscovery.Client.App.MobileAndroid
                 {
 
                 }
-                /*else if (id == Menu_Dashboard_Id)
+                else if (id == Menu_DeviceManagment_Id)
                 {
-                    
-                    SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, new Features.Home.DashboardFragment()).Commit();
-                }*/
+                    toolbar.Title = Resources.GetString(Resource.String.device_managment);
+                    var devices = new Features.Devices.DeviceManagmentFragment();
+                    SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, devices).Commit();
+                }
                 else if (_navigationDeviceIds.ContainsKey(id))
                 {
                     if (featuresDashboardFragment != null)
