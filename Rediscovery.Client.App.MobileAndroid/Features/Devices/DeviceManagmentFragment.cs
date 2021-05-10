@@ -61,7 +61,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
             try
             {
                 menu.Clear();
-                inflater.Inflate(Resource.Menu.menu_features, menu);
+                //inflater.Inflate(Resource.Menu.menu_features, menu);
                 //OnUpdateMenuState(menu);
             }
             catch (Exception ex)
@@ -131,7 +131,8 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
                 deviceManagmentAdapter = new DeviceManagmentAdapter(Activity);
                 //deviceManagmentAdapter.LayoutClick += DeviceFeaturesAdapter_LayoutClick;
                 //deviceManagmentAdapter.ButtonActionClick += DeviceFeaturesAdapter_ButtonActionClick;
-                recyclerView.SwapAdapter(deviceManagmentAdapter, true);
+                //recyclerView.SwapAdapter(deviceManagmentAdapter, true);
+                recyclerView.SetAdapter(deviceManagmentAdapter);
             }
             catch (Exception ex)
             {

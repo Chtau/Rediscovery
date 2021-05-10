@@ -19,7 +19,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
         private readonly Context _context;
         private readonly List<ViewModels.DeviceManageViewModel> _models = new List<ViewModels.DeviceManageViewModel>();
 
-        public override int ItemCount => _models?.Count ?? 0;
+        public override int ItemCount => _models.Count;
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
@@ -45,6 +45,23 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
         public DeviceManagmentAdapter(Context context)
         {
             _context = context;
+            OnUpdateDatasource();
+        }
+
+        private void OnUpdateDatasource()
+        {
+            try
+            {
+                _models.Clear();
+                for (int i = 0; i < 5; i++)
+                {
+                    _models.Add(new ViewModels.DeviceManageViewModel($"Title {i + 1}", $"127.0.0.{i + 1}", 80));
+                }
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
         }
 
         /*private readonly Context _context;

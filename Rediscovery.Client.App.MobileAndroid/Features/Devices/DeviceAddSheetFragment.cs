@@ -75,7 +75,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
                     DeviceManageViewModel item = ViewModel;
                     if (item == null)
                     {
-                        item = new DeviceManageViewModel(null, -1);
+                        item = new DeviceManageViewModel(null, null, -1);
                     }
                     item.IP = ipAddress.Text;
                     int port = -1;

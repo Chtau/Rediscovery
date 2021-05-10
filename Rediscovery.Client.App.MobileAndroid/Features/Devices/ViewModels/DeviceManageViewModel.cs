@@ -25,14 +25,16 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices.ViewModels
             return creator;
         }
 
-        public DeviceManageViewModel(string ip, int port)
+        public DeviceManageViewModel(string title, string ip, int port)
         {
+            Title = title;
             IP = ip;
             Port = port;
         }
 
         public DeviceManageViewModel(Parcel inObj)
         {
+            Title = inObj.ReadString();
             IP = inObj.ReadString();
             Port = inObj.ReadInt();
         }
@@ -44,6 +46,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices.ViewModels
 
         public void WriteToParcel(Parcel dest, [GeneratedEnum] ParcelableWriteFlags flags)
         {
+            dest.WriteString(Title);
             dest.WriteString(IP);
             dest.WriteInt(Port);            
         }
