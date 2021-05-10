@@ -16,6 +16,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
 
     public class DeviceManagmentAdapter : RecyclerView.Adapter
     {
+        private readonly Context _context;
         private readonly List<ViewModels.DeviceManageViewModel> _models = new List<ViewModels.DeviceManageViewModel>();
 
         public override int ItemCount => _models?.Count ?? 0;
@@ -39,6 +40,11 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
             // Create a ViewHolder to hold view references inside the CardView:
             DeviceManagmentViewHolder vh = new DeviceManagmentViewHolder(itemView);
             return vh;
+        }
+
+        public DeviceManagmentAdapter(Context context)
+        {
+            _context = context;
         }
 
         /*private readonly Context _context;

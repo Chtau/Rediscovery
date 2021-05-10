@@ -50,7 +50,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
             recyclerView = view.FindViewById<RecyclerView>(Resource.Id.deviceManagment);
-            //OnSetNewFeatures(showLocalFeatures);
+            OnSetNewDeviceManagment();
             base.OnViewCreated(view, savedInstanceState);
         }
 
@@ -128,7 +128,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
                     //deviceManagmentAdapter.LayoutClick -= DeviceFeaturesAdapter_LayoutClick;
                     //deviceManagmentAdapter.ButtonActionClick -= DeviceFeaturesAdapter_ButtonActionClick;
                 }
-                //deviceManagmentAdapter = new DeviceFeaturesAdapter(Activity, Device, localFeatures);
+                deviceManagmentAdapter = new DeviceManagmentAdapter(Activity);
                 //deviceManagmentAdapter.LayoutClick += DeviceFeaturesAdapter_LayoutClick;
                 //deviceManagmentAdapter.ButtonActionClick += DeviceFeaturesAdapter_ButtonActionClick;
                 recyclerView.SwapAdapter(deviceManagmentAdapter, true);
