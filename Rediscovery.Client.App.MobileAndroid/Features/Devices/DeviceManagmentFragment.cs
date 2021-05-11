@@ -5,6 +5,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
+using Google.Android.Material.FloatingActionButton;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
 {
     public class DeviceManagmentFragment : AndroidX.Fragment.App.Fragment
     {
+        private FloatingActionButton addDeviceButton;
         private RecyclerView recyclerView;
         private DeviceManagmentAdapter deviceManagmentAdapter;
         private IMenu managmentMenu;
@@ -49,11 +51,25 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
 
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
+            addDeviceButton = view.FindViewById<FloatingActionButton>(Resource.Id.addDeviceButton);
+            addDeviceButton.Click += AddDeviceButton_Click;
             recyclerView = view.FindViewById<RecyclerView>(Resource.Id.deviceManagment);
             var layoutManager = new LinearLayoutManager(Context);
             recyclerView.SetLayoutManager(layoutManager);
             OnSetNewDeviceManagment();
             base.OnViewCreated(view, savedInstanceState);
+        }
+
+        private void AddDeviceButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // TODO: open bottom sheet to add new device
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
         }
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
