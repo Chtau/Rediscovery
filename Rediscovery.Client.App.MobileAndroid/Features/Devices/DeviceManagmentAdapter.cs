@@ -35,6 +35,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
 
             // Load the photo caption from the photo album:
             vh.Title.Text = _models[position].Title;
+            vh.Subtitle.Text = $"{_models[position].IP}:{_models[position].Port}";
         }
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)

@@ -15,11 +15,13 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
     public class DeviceManagmentViewHolder : RecyclerView.ViewHolder
     {
         public TextView Title { get; private set; }
+        public TextView Subtitle { get; private set; }
 
         public DeviceManagmentViewHolder(View itemView) : base(itemView)
         {
             // Locate and cache view references:
             Title = itemView.FindViewById<TextView>(Resource.Id.device_managment_title);
+            Subtitle = itemView.FindViewById<TextView>(Resource.Id.device_managment_subtitle);
         }
     }
 }
