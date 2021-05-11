@@ -50,6 +50,8 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
             recyclerView = view.FindViewById<RecyclerView>(Resource.Id.deviceManagment);
+            var layoutManager = new LinearLayoutManager(Context);
+            recyclerView.SetLayoutManager(layoutManager);
             OnSetNewDeviceManagment();
             base.OnViewCreated(view, savedInstanceState);
         }

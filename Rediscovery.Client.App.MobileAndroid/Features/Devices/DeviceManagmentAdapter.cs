@@ -21,6 +21,11 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
 
         public override int ItemCount => _models.Count;
 
+        public override long GetItemId(int position)
+        {
+            return _models[position].GetHashCode();
+        }
+
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             DeviceManagmentViewHolder vh = holder as DeviceManagmentViewHolder;
