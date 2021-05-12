@@ -21,6 +21,8 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
         private IMenu managmentMenu;
 
         public event EventHandler<ViewModels.DeviceManageViewModel> DeviceAddSheetRequested;
+        public event EventHandler<ViewModels.DeviceManageViewModel> DeviceEditSheetRequested;
+        public event EventHandler<ViewModels.DeviceManageViewModel> DeviceConnectRequested;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -64,7 +66,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
         {
             try
             {
-                // TODO: open bottom sheet to add new device
+                DeviceAddSheetRequested?.Invoke(this, new ViewModels.DeviceManageViewModel(null, null, -1));
             }
             catch (Exception ex)
             {
@@ -147,10 +149,33 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
                     //deviceManagmentAdapter.ButtonActionClick -= DeviceFeaturesAdapter_ButtonActionClick;
                 }
                 deviceManagmentAdapter = new DeviceManagmentAdapter(Activity);
-                //deviceManagmentAdapter.LayoutClick += DeviceFeaturesAdapter_LayoutClick;
-                //deviceManagmentAdapter.ButtonActionClick += DeviceFeaturesAdapter_ButtonActionClick;
-                //recyclerView.SwapAdapter(deviceManagmentAdapter, true);
-                recyclerView.SetAdapter(deviceManagmentAdapter);
+                deviceManagmentAdapter.ConnectModel += DeviceManagmentAdapter_ConnectModel;
+                deviceManagmentAdapter.EditModel += DeviceManagmentAdapter_EditModel;
+                recyclerView.SwapAdapter(deviceManagmentAdapter, true);
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        private void DeviceManagmentAdapter_EditModel(object sender, ViewModels.DeviceManageViewModel e)
+        {
+            try
+            {
+                DeviceEditSheetRequested?.Invoke(this, e);
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        private void DeviceManagmentAdapter_ConnectModel(object sender, ViewModels.DeviceManageViewModel e)
+        {
+            try
+            {
+                DeviceConnectRequested?.Invoke(this, e);
             }
             catch (Exception ex)
             {

@@ -12,30 +12,29 @@ using System.Text;
 
 namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
 {
-    // TODO: https://docs.microsoft.com/en-us/xamarin/android/user-interface/layouts/recycler-view/recyclerview-example
-
     public class DeviceManagmentAdapter : RecyclerView.Adapter
     {
         private readonly Context _context;
         private readonly List<ViewModels.DeviceManageViewModel> _models = new List<ViewModels.DeviceManageViewModel>();
 
-        public override int ItemCount => _models.Count;
+        public event EventHandler<ViewModels.DeviceManageViewModel> EditModel;
+        public event EventHandler<ViewModels.DeviceManageViewModel> ConnectModel;
 
-        /*public override long GetItemId(int position)
-        {
-            return _models[position].GetHashCode();
-        }*/
+        public override int ItemCount => _models.Count;
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             DeviceManagmentViewHolder vh = holder as DeviceManagmentViewHolder;
-
-            // Load the photo image resource from the photo album:
-            //vh.Image.SetImageResource(mPhotoAlbum[position].PhotoID);
-
-            // Load the photo caption from the photo album:
             vh.Title.Text = _models[position].Title;
             vh.Subtitle.Text = $"{_models[position].IP}:{_models[position].Port}";
+            vh.Edit.Click += (obj, args) =>
+            {
+                EditModel?.Invoke(this, _models[position]);
+            };
+            vh.Connect.Click += (obj, args) =>
+            {
+                ConnectModel?.Invoke(this, _models[position]);
+            };
         }
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
@@ -54,7 +53,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
             OnUpdateDatasource();
         }
 
-        public void Load()
+        public void Refresh()
         {
             OnUpdateDatasource();
         }

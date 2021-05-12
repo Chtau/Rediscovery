@@ -33,6 +33,9 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
                 btnTryConnect.Click += (_obj, _args) => OnTryConnect();
                 btnEditOk = view.FindViewById<Button>(Resource.Id.buttonFeatureEditOk);
                 btnEditOk.Click += (_obj, _args) => OnSave();
+
+                ipAddress.Text = ViewModel.IP;
+                portAddress.Text = ViewModel.Port.ToString();
             }
             catch (Exception ex)
             {

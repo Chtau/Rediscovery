@@ -243,6 +243,18 @@ namespace Rediscovery.Client.App.MobileAndroid
                 {
                     toolbar.Title = Resources.GetString(Resource.String.device_managment);
                     var devices = new Features.Devices.DeviceManagmentFragment();
+                    devices.DeviceAddSheetRequested += (obj, args) =>
+                    {
+                        OnShowDeviceEditSheet(null);
+                    };
+                    devices.DeviceEditSheetRequested += (obj, args) =>
+                    {
+                        OnShowDeviceEditSheet(args);
+                    };
+                    devices.DeviceConnectRequested += (obj, args) =>
+                    {
+
+                    };
                     SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, devices).Commit();
                 }
                 else if (_navigationDeviceIds.ContainsKey(id))
@@ -286,31 +298,36 @@ namespace Rediscovery.Client.App.MobileAndroid
                 var dashboard = new Features.Home.DashboardFragment();
                 dashboard.AddDeviceRequest += (_obj, _args) =>
                 {
+                    OnShowDeviceEditSheet(null);
+                };
+                SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, dashboard).Commit();
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        private void OnShowDeviceEditSheet(Features.Devices.ViewModels.DeviceManageViewModel deviceManageViewModel)
+        {
+            try
+            {
+                bottomSheetManager.Show(new Features.Devices.DeviceAddSheetFragment()
+                , deviceManageViewModel
+                , (viewModel) =>
+                {
                     try
                     {
-                        bottomSheetManager.Show(new Features.Devices.DeviceAddSheetFragment()
-                        , null
-                        , (viewModel) =>
+                        if (viewModel != null)
                         {
-                            try
-                            {
-                                if (viewModel != null)
-                                {
                                     // TODO: handle add new device
                                 }
-                            }
-                            catch (Exception ex)
-                            {
-                                Core.Logger.Instance.Error(ex);
-                            }
-                        });
                     }
                     catch (Exception ex)
                     {
                         Core.Logger.Instance.Error(ex);
                     }
-                };
-                SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, dashboard).Commit();
+                });
             }
             catch (Exception ex)
             {
