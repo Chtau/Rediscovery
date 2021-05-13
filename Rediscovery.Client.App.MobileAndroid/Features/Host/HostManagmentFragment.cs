@@ -6,6 +6,8 @@ using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
 using Google.Android.Material.FloatingActionButton;
+using Rediscovery.Client.App.MobileAndroid.Core.Controls;
+using Rediscovery.Client.App.MobileAndroid.Features.Devices.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,16 +15,15 @@ using System.Text;
 
 namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
 {
-    public class DeviceManagmentFragment : AndroidX.Fragment.App.Fragment
+    public class HostManagmentFragment : AndroidX.Fragment.App.Fragment, IBottomSheetSupport<HostEditSheetFragment, ViewModels.HostManageViewModel>
     {
         private FloatingActionButton addDeviceButton;
         private RecyclerView recyclerView;
-        private DeviceManagmentAdapter deviceManagmentAdapter;
+        private HostManagmentAdapter deviceManagmentAdapter;
         private IMenu managmentMenu;
 
-        public event EventHandler<ViewModels.DeviceManageViewModel> DeviceAddSheetRequested;
-        public event EventHandler<ViewModels.DeviceManageViewModel> DeviceEditSheetRequested;
-        public event EventHandler<ViewModels.DeviceManageViewModel> DeviceConnectRequested;
+        public event EventHandler<ViewModels.HostManageViewModel> DeviceConnectRequested;
+        public event EventHandler<BottomSheetEventArgs<HostEditSheetFragment, HostManageViewModel>> OpenSheet;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -48,7 +49,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            return inflater.Inflate(Resource.Layout.fragment_device_managment, container, false);
+            return inflater.Inflate(Resource.Layout.host_managment_fragment, container, false);
         }
 
         public override void OnViewCreated(View view, Bundle savedInstanceState)
@@ -60,18 +61,6 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
             recyclerView.SetLayoutManager(layoutManager);
             OnSetNewDeviceManagment();
             base.OnViewCreated(view, savedInstanceState);
-        }
-
-        private void AddDeviceButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                DeviceAddSheetRequested?.Invoke(this, new ViewModels.DeviceManageViewModel(null, null, -1));
-            }
-            catch (Exception ex)
-            {
-                Core.Logger.Instance.Error(ex);
-            }
         }
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
@@ -148,7 +137,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
                     //deviceManagmentAdapter.LayoutClick -= DeviceFeaturesAdapter_LayoutClick;
                     //deviceManagmentAdapter.ButtonActionClick -= DeviceFeaturesAdapter_ButtonActionClick;
                 }
-                deviceManagmentAdapter = new DeviceManagmentAdapter(Activity);
+                deviceManagmentAdapter = new HostManagmentAdapter(Activity);
                 deviceManagmentAdapter.ConnectModel += DeviceManagmentAdapter_ConnectModel;
                 deviceManagmentAdapter.EditModel += DeviceManagmentAdapter_EditModel;
                 recyclerView.SwapAdapter(deviceManagmentAdapter, true);
@@ -159,11 +148,11 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
             }
         }
 
-        private void DeviceManagmentAdapter_EditModel(object sender, ViewModels.DeviceManageViewModel e)
+        private void AddDeviceButton_Click(object sender, EventArgs e)
         {
             try
             {
-                DeviceEditSheetRequested?.Invoke(this, e);
+                OnOpenSheetRequest(new HostManageViewModel(null, null, -1));
             }
             catch (Exception ex)
             {
@@ -171,11 +160,40 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
             }
         }
 
-        private void DeviceManagmentAdapter_ConnectModel(object sender, ViewModels.DeviceManageViewModel e)
+        private void DeviceManagmentAdapter_EditModel(object sender, ViewModels.HostManageViewModel e)
+        {
+            try
+            {
+                OnOpenSheetRequest(e);
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        private void OnOpenSheetRequest(HostManageViewModel viewModel)
+        {
+            OpenSheet.Invoke(this, new BottomSheetEventArgs<HostEditSheetFragment, HostManageViewModel>(new HostEditSheetFragment(), viewModel));
+        }
+
+        private void DeviceManagmentAdapter_ConnectModel(object sender, ViewModels.HostManageViewModel e)
         {
             try
             {
                 DeviceConnectRequested?.Invoke(this, e);
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        public void AfterCloseSheet(HostManageViewModel viewModel)
+        {
+            try
+            {
+                // TODO: implement refresh after a change from this callback
             }
             catch (Exception ex)
             {

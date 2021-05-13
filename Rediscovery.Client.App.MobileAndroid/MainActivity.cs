@@ -14,6 +14,8 @@ using AndroidX.DrawerLayout.Widget;
 using Google.Android.Material.FloatingActionButton;
 using Google.Android.Material.Navigation;
 using Google.Android.Material.Snackbar;
+using Rediscovery.Client.App.MobileAndroid.Core.Controls;
+using Rediscovery.Client.App.MobileAndroid.Features.Devices;
 
 namespace Rediscovery.Client.App.MobileAndroid
 {
@@ -46,7 +48,7 @@ namespace Rediscovery.Client.App.MobileAndroid
         private Toolbar toolbar;
         private Features.DeviceFeatures.FeaturesDashboardFragment featuresDashboardFragment = null;
         private const int Menu_Dashboard_Id = 1001;
-        private const int Menu_DeviceManagment_Id = 1002;
+        private const int Menu_Host_Managment_Id = 1002;
         private Core.Controls.BottomSheetManager bottomSheetManager;
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -165,8 +167,8 @@ namespace Rediscovery.Client.App.MobileAndroid
                 var menuItemDashboard = navigationView.Menu.Add(0, Menu_Dashboard_Id, 0, Resource.String.dashboard);
                 menuItemDashboard.SetIcon(Resource.Drawable.ic_dashboard);
 
-                var menuItemDeviceManament = navigationView.Menu.Add(0, Menu_DeviceManagment_Id, 1, Resource.String.device_managment);
-                menuItemDeviceManament.SetIcon(Resource.Drawable.ic_devices);
+                var menuItemHostManament = navigationView.Menu.Add(0, Menu_Host_Managment_Id, 1, Resource.String.host_managment_menu);
+                menuItemHostManament.SetIcon(Resource.Drawable.ic_devices);
 
                 Features.Manager.DeviceManager.Instance.Init();
 
@@ -239,23 +241,25 @@ namespace Rediscovery.Client.App.MobileAndroid
                 {
 
                 }
-                else if (id == Menu_DeviceManagment_Id)
+                else if (id == Menu_Host_Managment_Id)
                 {
-                    toolbar.Title = Resources.GetString(Resource.String.device_managment);
-                    var devices = new Features.Devices.DeviceManagmentFragment();
-                    devices.DeviceAddSheetRequested += (obj, args) =>
+                    toolbar.Title = Resources.GetString(Resource.String.host_managment_menu);
+                    var hostManagment = new Features.Devices.HostManagmentFragment();
+                    if (hostManagment is IBottomSheetSupport<HostEditSheetFragment, Features.Devices.ViewModels.HostManageViewModel> hostBottomSheetSupport)
                     {
-                        OnShowDeviceEditSheet(null);
-                    };
-                    devices.DeviceEditSheetRequested += (obj, args) =>
-                    {
-                        OnShowDeviceEditSheet(args);
-                    };
-                    devices.DeviceConnectRequested += (obj, args) =>
+                        hostBottomSheetSupport.OpenSheet += (obj, args) =>
+                        {
+                            OnShowBottomSheet(args, (viewModel) =>
+                            {
+                                hostBottomSheetSupport.AfterCloseSheet(viewModel);
+                            });
+                        };
+                    }
+                    hostManagment.DeviceConnectRequested += (obj, args) =>
                     {
 
                     };
-                    SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, devices).Commit();
+                    SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, hostManagment).Commit();
                 }
                 else if (_navigationDeviceIds.ContainsKey(id))
                 {
@@ -296,10 +300,10 @@ namespace Rediscovery.Client.App.MobileAndroid
                 // TODO: show user dashboard (this dashboard should also be the default fragment on open)
                 toolbar.Title = Resources.GetString(Resource.String.app_name);
                 var dashboard = new Features.Home.DashboardFragment();
-                dashboard.AddDeviceRequest += (_obj, _args) =>
+                /*dashboard.AddDeviceRequest += (_obj, _args) =>
                 {
                     OnShowDeviceEditSheet(null);
-                };
+                };*/
                 SupportFragmentManager.BeginTransaction().Replace(Resource.Id.content_main_container, dashboard).Commit();
             }
             catch (Exception ex)
@@ -308,25 +312,15 @@ namespace Rediscovery.Client.App.MobileAndroid
             }
         }
 
-        private void OnShowDeviceEditSheet(Features.Devices.ViewModels.DeviceManageViewModel deviceManageViewModel)
+        private void OnShowBottomSheet<TSheet, TModel>(BottomSheetEventArgs<TSheet, TModel> args, Action<TModel> afterCloseCallback) where TSheet : IBaseBottomSheet<TModel>
         {
             try
             {
-                bottomSheetManager.Show(new Features.Devices.DeviceAddSheetFragment()
-                , deviceManageViewModel
+                bottomSheetManager.Show(args.BottomSheet
+                , args.ViewModel
                 , (viewModel) =>
                 {
-                    try
-                    {
-                        if (viewModel != null)
-                        {
-                                    // TODO: handle add new device
-                                }
-                    }
-                    catch (Exception ex)
-                    {
-                        Core.Logger.Instance.Error(ex);
-                    }
+                    afterCloseCallback?.Invoke(viewModel);
                 });
             }
             catch (Exception ex)

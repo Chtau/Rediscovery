@@ -12,19 +12,19 @@ using System.Text;
 
 namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
 {
-    public class DeviceManagmentAdapter : RecyclerView.Adapter
+    public class HostManagmentAdapter : RecyclerView.Adapter
     {
         private readonly Context _context;
-        private readonly List<ViewModels.DeviceManageViewModel> _models = new List<ViewModels.DeviceManageViewModel>();
+        private readonly List<ViewModels.HostManageViewModel> _models = new List<ViewModels.HostManageViewModel>();
 
-        public event EventHandler<ViewModels.DeviceManageViewModel> EditModel;
-        public event EventHandler<ViewModels.DeviceManageViewModel> ConnectModel;
+        public event EventHandler<ViewModels.HostManageViewModel> EditModel;
+        public event EventHandler<ViewModels.HostManageViewModel> ConnectModel;
 
         public override int ItemCount => _models.Count;
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
-            DeviceManagmentViewHolder vh = holder as DeviceManagmentViewHolder;
+            HostManagmentViewHolder vh = holder as HostManagmentViewHolder;
             vh.Title.Text = _models[position].Title;
             vh.Subtitle.Text = $"{_models[position].IP}:{_models[position].Port}";
             vh.Edit.Click += (obj, args) =>
@@ -40,14 +40,14 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
         {
             // Inflate the CardView for the photo:
-            View itemView = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.item_device_managment, parent, false);
+            View itemView = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.host_managment_listitem, parent, false);
 
             // Create a ViewHolder to hold view references inside the CardView:
-            DeviceManagmentViewHolder vh = new DeviceManagmentViewHolder(itemView);
+            HostManagmentViewHolder vh = new HostManagmentViewHolder(itemView);
             return vh;
         }
 
-        public DeviceManagmentAdapter(Context context)
+        public HostManagmentAdapter(Context context)
         {
             _context = context;
             OnUpdateDatasource();
@@ -65,7 +65,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
                 _models.Clear();
                 for (int i = 0; i < 5; i++)
                 {
-                    _models.Add(new ViewModels.DeviceManageViewModel($"Title {i + 1}", $"127.0.0.{i + 1}", 80));
+                    _models.Add(new ViewModels.HostManageViewModel($"Title {i + 1}", $"127.0.0.{i + 1}", 80));
                 }
             }
             catch (Exception ex)

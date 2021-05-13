@@ -12,27 +12,27 @@ using System.Text;
 
 namespace Rediscovery.Client.App.MobileAndroid.Features.Devices.ViewModels
 {
-    public class DeviceManageViewModel : Java.Lang.Object, IParcelable
+    public class HostManageViewModel : Java.Lang.Object, IParcelable
     {
         public string Title { get; set; }
         public string IP { get; set; }
         public int Port { get; set; } = -1;
 
-        public static Creator<DeviceManageViewModel> InitializeCreator()
+        public static Creator<HostManageViewModel> InitializeCreator()
         {
-            var creator = new Creator<DeviceManageViewModel>();
-            creator.Created += (sender, e) => e.Result = new DeviceManageViewModel(e.Source);
+            var creator = new Creator<HostManageViewModel>();
+            creator.Created += (sender, e) => e.Result = new HostManageViewModel(e.Source);
             return creator;
         }
 
-        public DeviceManageViewModel(string title, string ip, int port)
+        public HostManageViewModel(string title, string ip, int port)
         {
             Title = title;
             IP = ip;
             Port = port;
         }
 
-        public DeviceManageViewModel(Parcel inObj)
+        public HostManageViewModel(Parcel inObj)
         {
             Title = inObj.ReadString();
             IP = inObj.ReadString();

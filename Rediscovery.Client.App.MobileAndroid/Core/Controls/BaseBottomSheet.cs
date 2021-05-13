@@ -12,7 +12,7 @@ using System.Text;
 
 namespace Rediscovery.Client.App.MobileAndroid.Core.Controls
 {
-    public abstract class BaseBottomSheet<TModel> : BottomSheetDialogFragment
+    public abstract class BaseBottomSheet<TModel> : BottomSheetDialogFragment, IBaseBottomSheet<TModel>
     {
         public TModel ViewModel { get; private set; }
 

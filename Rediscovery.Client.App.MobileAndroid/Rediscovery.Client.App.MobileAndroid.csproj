@@ -64,7 +64,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Controls\BaseBottomSheet.cs" />
+    <Compile Include="Core\Controls\BottomSheetEventArgs.cs" />
     <Compile Include="Core\Controls\BottomSheetManager.cs" />
+    <Compile Include="Core\Controls\IBaseBottomSheet.cs" />
+    <Compile Include="Core\Controls\IBottomSheetSupport.cs" />
     <Compile Include="Core\Database.cs" />
     <Compile Include="Core\CoreIO.cs" />
     <Compile Include="Core\Logger.cs" />
@@ -76,12 +79,12 @@
     <Compile Include="Features\DeviceFeatures\FeatureJSInterface.cs" />
     <Compile Include="Features\DeviceFeatures\ViewModels\FeatureViewHolder.cs" />
     <Compile Include="Features\DeviceFeatures\ViewModels\FeatureViewModel.cs" />
-    <Compile Include="Features\Devices\DeviceManagmentAdapter.cs" />
-    <Compile Include="Features\Devices\DeviceManagmentFragment.cs" />
-    <Compile Include="Features\Devices\DeviceManagmentViewHolder.cs" />
-    <Compile Include="Features\Devices\ViewModels\DeviceManageViewModel.cs" />
+    <Compile Include="Features\Host\HostManagmentAdapter.cs" />
+    <Compile Include="Features\Host\HostManagmentFragment.cs" />
+    <Compile Include="Features\Host\HostManagmentViewHolder.cs" />
+    <Compile Include="Features\Host\ViewModels\HostManageViewModel.cs" />
     <Compile Include="Features\Home\DashboardFragment.cs" />
-    <Compile Include="Features\Devices\DeviceAddSheetFragment.cs" />
+    <Compile Include="Features\Host\HostEditSheetFragment.cs" />
     <Compile Include="Features\Home\DevicesDashboardFragment.cs" />
     <Compile Include="Features\Home\DiscoveryFragment.cs" />
     <Compile Include="Features\DeviceFeatures\FeaturesDashboardFragment.cs" />
@@ -376,7 +379,7 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\sheet_device_add.xml">
+    <AndroidResource Include="Resources\layout\host_managment_edit_buttom_sheet.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
     </AndroidResource>
@@ -397,7 +400,7 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\fragment_device_managment.xml">
+    <AndroidResource Include="Resources\layout\host_managment_fragment.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
     </AndroidResource>
@@ -409,7 +412,7 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\item_device_managment.xml">
+    <AndroidResource Include="Resources\layout\host_managment_listitem.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
     </AndroidResource>

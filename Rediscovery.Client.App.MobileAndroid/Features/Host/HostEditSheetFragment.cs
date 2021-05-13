@@ -13,14 +13,14 @@ using System.Text;
 
 namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
 {
-    public class DeviceAddSheetFragment : Core.Controls.BaseBottomSheet<DeviceManageViewModel>
+    public class HostEditSheetFragment : Core.Controls.BaseBottomSheet<HostManageViewModel>
     {
         private Button btnTryConnect;
         private Button btnEditOk;
         private TextView ipAddress;
         private TextView portAddress;
 
-        internal override int Layout => Resource.Layout.sheet_device_add;
+        internal override int Layout => Resource.Layout.host_managment_edit_buttom_sheet;
 
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
@@ -75,10 +75,10 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
             {
                 if (!string.IsNullOrWhiteSpace(ipAddress.Text))
                 {
-                    DeviceManageViewModel item = ViewModel;
+                    HostManageViewModel item = ViewModel;
                     if (item == null)
                     {
-                        item = new DeviceManageViewModel(null, null, -1);
+                        item = new HostManageViewModel(null, null, -1);
                     }
                     item.IP = ipAddress.Text;
                     int port = -1;

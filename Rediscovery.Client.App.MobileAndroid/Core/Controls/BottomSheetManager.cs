@@ -20,7 +20,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Core.Controls
             SupportFragmentManager = supportFragmentManager;
         }
 
-        public void Show<TModel>(BaseBottomSheet<TModel> bottomSheet, TModel viewModel, Action<TModel> successCloseCallback, string tag = null)
+        public void Show<TModel>(IBaseBottomSheet<TModel> bottomSheet, TModel viewModel, Action<TModel> successCloseCallback, string tag = null)
         {
             try
             {
