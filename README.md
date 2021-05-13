@@ -82,7 +82,19 @@ After starting the Discovery service will add a Firewall rule (this may require 
 * Plugin Manager
 * More Documentation
 
+## Infrastructur
+
+### Host
+A Host manages communication between connected devices.
+Hosts can also provide features for device to consume.
+
+### Device
+Devices provide and consume features from and to other devices.
+
+## Communication
+**Device** connects to a **Host**, now the connected **Device** can see all other connected **Devices**. If the **Host** provides any features by it self the **Device** can already access it. **Device** features can only be accessed after the access right to the **Device** is being given. A **Host** can dictate that all **Devices** connected can access all features of all **Devices** all the time.
+
 
 ## License
 
-[MIT](LICENSE) © [Christoph Taucher](https://github.com/Chtau)
+[Mozilla Public License Version 2.0](LICENSE) ï¿½ [Christoph Taucher](https://github.com/Chtau)
