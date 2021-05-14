@@ -16,7 +16,8 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
     public class HostEditSheetFragment : Core.Controls.BaseBottomSheet<HostManageViewModel>
     {
         private Button btnTryConnect;
-        private Button btnEditOk;
+        private Button btnEditSave;
+        private TextView friendlyName;
         private TextView ipAddress;
         private TextView portAddress;
 
@@ -26,16 +27,19 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
         {
             try
             {
-                ipAddress = view.FindViewById<TextView>(Resource.Id.addDeviceIP);
-                portAddress = view.FindViewById<TextView>(Resource.Id.addDevicePort);
+                friendlyName = view.FindViewById<TextView>(Resource.Id.hostEditFriendlyName);
+                ipAddress = view.FindViewById<TextView>(Resource.Id.hostEditIP);
+                portAddress = view.FindViewById<TextView>(Resource.Id.hostEditPort);
 
-                btnTryConnect = view.FindViewById<Button>(Resource.Id.buttonFeatureEditTryConnect);
+                btnTryConnect = view.FindViewById<Button>(Resource.Id.btnHostEditTryConnect);
                 btnTryConnect.Click += (_obj, _args) => OnTryConnect();
-                btnEditOk = view.FindViewById<Button>(Resource.Id.buttonFeatureEditOk);
-                btnEditOk.Click += (_obj, _args) => OnSave();
+                btnEditSave = view.FindViewById<Button>(Resource.Id.btnHostEditSave);
+                btnEditSave.Click += (_obj, _args) => OnSave();
 
+                friendlyName.Text = ViewModel.FriendlyName;
                 ipAddress.Text = ViewModel.IP;
-                portAddress.Text = ViewModel.Port.ToString();
+                if (ViewModel.Port > 0)
+                    portAddress.Text = ViewModel.Port.ToString();
             }
             catch (Exception ex)
             {
@@ -80,6 +84,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
                     {
                         item = new HostManageViewModel(null, null, -1);
                     }
+                    item.FriendlyName = friendlyName.Text;
                     item.IP = ipAddress.Text;
                     int port = -1;
                     if (!string.IsNullOrWhiteSpace(portAddress.Text))

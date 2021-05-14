@@ -25,7 +25,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Devices
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             HostManagmentViewHolder vh = holder as HostManagmentViewHolder;
-            vh.Title.Text = _models[position].Title;
+            vh.Title.Text = _models[position].FriendlyName;
             vh.Subtitle.Text = $"{_models[position].IP}:{_models[position].Port}";
             vh.Edit.Click += (obj, args) =>
             {

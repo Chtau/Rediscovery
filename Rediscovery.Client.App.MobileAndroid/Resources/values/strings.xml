@@ -22,10 +22,12 @@
     <string name="favorite">Favorite</string>
     <string name="dashboard_devices">Manage Devices</string>
     <string name="dashboard_new_device">New Device</string>
-    <string name="add_device_ip">IP</string>
-    <string name="add_device_port">Port</string>
+    <string name="host_edit_friendlyname">Name</string>
+    <string name="host_edit_ip">IP</string>
+    <string name="host_edit_port">Port</string>
     <string name="save">Save</string>
-    <string name="add_device_try_connect">Connect</string>
+    <string name="host_try_connect">Connect</string>
+    <string name="host_save">Save</string>
     <string name="host_managment_menu">Host managment</string>
     <string name="dashboard">Dashboard</string>
 </resources>

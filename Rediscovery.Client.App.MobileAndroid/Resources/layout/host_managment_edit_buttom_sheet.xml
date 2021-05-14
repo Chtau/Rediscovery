@@ -14,26 +14,38 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/add_device_ip"
+            android:hint="@string/host_edit_friendlyname"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/addDeviceIP"
+                android:id="@+id/hostEditFriendlyName"
             />
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/add_device_port"
+            android:hint="@string/host_edit_ip"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/hostEditIP"
+            />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/host_edit_port"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                         android:inputType="numberSigned"
-                android:id="@+id/addDevicePort"
+                android:id="@+id/hostEditPort"
             />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -49,19 +61,19 @@
         <Button
             app:icon="@drawable/ic_connect"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-            android:id="@+id/buttonFeatureEditTryConnect"
+            android:id="@+id/btnHostEditTryConnect"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
-            android:text="@string/add_device_try_connect"
+            android:text="@string/host_try_connect"
             android:layout_marginRight="10dp"
             android:layout_gravity="center_horizontal"/>
         <Button
             app:icon="@drawable/ic_save"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-            android:id="@+id/buttonFeatureEditOk"
+            android:id="@+id/btnHostEditSave"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
-            android:text="@string/save"
+            android:text="@string/host_save"
             android:layout_marginLeft="10dp"
             android:layout_gravity="center_horizontal"/>
     </LinearLayout>
