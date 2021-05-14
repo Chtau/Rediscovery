@@ -92,6 +92,7 @@
     <Compile Include="Features\Models\BaseViewOrderModel.cs" />
     <Compile Include="Features\Models\Device.cs" />
     <Compile Include="Features\Models\Feature.cs" />
+    <Compile Include="Features\Models\Host.cs" />
     <Compile Include="Helpers\Creator.cs" />
     <Compile Include="Helpers\GuidExtensions.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
