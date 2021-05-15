@@ -85,9 +85,15 @@ After starting the Discovery service will add a Firewall rule (this may require 
 ## Communication
 **Device** connects to a **Device**, now the connected **Device** can see all other **Features** which this **Device** provides and the target **Device** also can now see the **Features** of the source **Device**.
 
-For a successful connection between **Devices** an ahtuorization is required, this can be different for different Operating System and device type.
+For a successful connection between **Devices** an authorization is required, this can be different for different Operating System and device type.
 Authorization with a Android **Device** could be made by scanning a QR Code.
+
+The connection target can decide if the source is allowed to auto connect the next time without authorization. Target **Devices** can change the authorization state any time event if a **Device** never connected to it.
+
+Data exchange between **Devices** is always P2P only the discovery can be made with an additional service.
+
+**Discovery Service** can share **Device** connection information with other **Devices**.
 
 ## License
 
-[Mozilla Public License Version 2.0](LICENSE) � [Christoph Taucher](https://github.com/Chtau)
+[Mozilla Public License Version 2.0](LICENSE) © [Christoph Taucher](https://github.com/Chtau)
