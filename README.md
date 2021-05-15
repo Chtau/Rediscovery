@@ -82,18 +82,11 @@ After starting the Discovery service will add a Firewall rule (this may require 
 * Plugin Manager
 * More Documentation
 
-## Infrastructur
-
-### Host
-A Host manages communication between connected devices.
-Hosts can also provide features for device to consume.
-
-### Device
-Devices provide and consume features from and to other devices.
-
 ## Communication
-**Device** connects to a **Host**, now the connected **Device** can see all other connected **Devices**. If the **Host** provides any features by it self the **Device** can already access it. **Device** features can only be accessed after the access right to the **Device** is being given. A **Host** can dictate that all **Devices** connected can access all features of all **Devices** all the time.
+**Device** connects to a **Device**, now the connected **Device** can see all other **Features** which this **Device** provides and the target **Device** also can now see the **Features** of the source **Device**.
 
+For a successful connection between **Devices** an ahtuorization is required, this can be different for different Operating System and device type.
+Authorization with a Android **Device** could be made by scanning a QR Code.
 
 ## License
 
