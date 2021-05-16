@@ -83,6 +83,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rediscovery.Client.Shared.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rediscovery.Android", "Rediscovery\Rediscovery.Android\Rediscovery.Android.csproj", "{F9C86884-BB0E-424A-AD62-85B29F533BA1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rediscovery.Communication.Protocol", "Rediscovery.Communication.Protocol\Rediscovery.Communication.Protocol.csproj", "{C1200E5A-0226-4685-85CB-FBF670795578}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rediscovery.Communication.Protocol.Test", "Rediscovery.Communication.Protocol.Test\Rediscovery.Communication.Protocol.Test.csproj", "{D51D36D6-E588-40AC-9611-5A598D899B15}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -585,6 +589,30 @@ Global
 		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Release|x86.ActiveCfg = Release|x86
 		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Release|x86.Build.0 = Release|x86
 		{F9C86884-BB0E-424A-AD62-85B29F533BA1}.Release|x86.Deploy.0 = Release|x86
+		{C1200E5A-0226-4685-85CB-FBF670795578}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1200E5A-0226-4685-85CB-FBF670795578}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1200E5A-0226-4685-85CB-FBF670795578}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C1200E5A-0226-4685-85CB-FBF670795578}.Debug|x64.Build.0 = Debug|Any CPU
+		{C1200E5A-0226-4685-85CB-FBF670795578}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C1200E5A-0226-4685-85CB-FBF670795578}.Debug|x86.Build.0 = Debug|Any CPU
+		{C1200E5A-0226-4685-85CB-FBF670795578}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1200E5A-0226-4685-85CB-FBF670795578}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1200E5A-0226-4685-85CB-FBF670795578}.Release|x64.ActiveCfg = Release|Any CPU
+		{C1200E5A-0226-4685-85CB-FBF670795578}.Release|x64.Build.0 = Release|Any CPU
+		{C1200E5A-0226-4685-85CB-FBF670795578}.Release|x86.ActiveCfg = Release|Any CPU
+		{C1200E5A-0226-4685-85CB-FBF670795578}.Release|x86.Build.0 = Release|Any CPU
+		{D51D36D6-E588-40AC-9611-5A598D899B15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D51D36D6-E588-40AC-9611-5A598D899B15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D51D36D6-E588-40AC-9611-5A598D899B15}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D51D36D6-E588-40AC-9611-5A598D899B15}.Debug|x64.Build.0 = Debug|Any CPU
+		{D51D36D6-E588-40AC-9611-5A598D899B15}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D51D36D6-E588-40AC-9611-5A598D899B15}.Debug|x86.Build.0 = Debug|Any CPU
+		{D51D36D6-E588-40AC-9611-5A598D899B15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D51D36D6-E588-40AC-9611-5A598D899B15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D51D36D6-E588-40AC-9611-5A598D899B15}.Release|x64.ActiveCfg = Release|Any CPU
+		{D51D36D6-E588-40AC-9611-5A598D899B15}.Release|x64.Build.0 = Release|Any CPU
+		{D51D36D6-E588-40AC-9611-5A598D899B15}.Release|x86.ActiveCfg = Release|Any CPU
+		{D51D36D6-E588-40AC-9611-5A598D899B15}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
