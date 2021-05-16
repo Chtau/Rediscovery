@@ -1,10 +1,13 @@
 ﻿using Rediscovery.Client.App.Core.Features.Device.Models;
 using Rediscovery.Client.Shared.Core.Dependency;
 using Rediscovery.Client.Shared.Core.Features.Heartbeat.Models;
+using Rediscovery.Shared.Base.Discovery;
 using Rediscovery.Shared.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 
 namespace Rediscovery.Client.App.Core.Features.Device
@@ -13,7 +16,8 @@ namespace Rediscovery.Client.App.Core.Features.Device
     {
         private readonly ILogger _logger;
         private readonly ISettingValue<ConnectSetting> _monitorSettings;
-        private List<IConnectDevice> connectDevices = new List<IConnectDevice>();
+        private readonly List<IConnectDevice> _connectDevices = new List<IConnectDevice>();
+        private System.Threading.Thread listenThread;
 
         public event EventHandler<DeviceConnectionState> ConnectionStateChanged;
         public event EventHandler<HeartbeatResult<ConnectionConfiguration>> HeartbeatReceived;
@@ -84,10 +88,10 @@ namespace Rediscovery.Client.App.Core.Features.Device
                     {
                         try
                         {
-                            var index = connectDevices.FindIndex(x => x.ConnectionConfiguration?.Id == configuration.Id);
+                            var index = _connectDevices.FindIndex(x => x.ConnectionConfiguration?.Id == configuration.Id);
                             if (index != -1)
                             {
-                                connectDevices[index].SetConfiguration(configuration);
+                                _connectDevices[index].SetConfiguration(configuration);
                             }
                             else
                             {
@@ -96,7 +100,7 @@ namespace Rediscovery.Client.App.Core.Features.Device
                                 // hook events
                                 newConnectDevice.ConnectionStateChanged += (obj, args) => ConnectionStateChanged?.Invoke(obj, args);
                                 newConnectDevice.HeartbeatReceived += (obj, args) => HeartbeatReceived?.Invoke(obj, args);
-                                connectDevices.Add(newConnectDevice);
+                                _connectDevices.Add(newConnectDevice);
                             }
                         } catch (Exception ex)
                         {
@@ -121,12 +125,12 @@ namespace Rediscovery.Client.App.Core.Features.Device
                     {
                         try
                         {
-                            var index = connectDevices.FindIndex(x => x.ConnectionConfiguration?.Id == id);
+                            var index = _connectDevices.FindIndex(x => x.ConnectionConfiguration?.Id == id);
                             if (index != -1)
                             {
-                                connectDevices[index].Disconnect();
-                                connectDevices[index].Dispose();
-                                connectDevices.RemoveAt(index);
+                                _connectDevices[index].Disconnect();
+                                _connectDevices[index].Dispose();
+                                _connectDevices.RemoveAt(index);
                             }
                         }
                         catch (Exception ex)
@@ -142,11 +146,47 @@ namespace Rediscovery.Client.App.Core.Features.Device
             }
         }
 
+        public void Listen()//DiscoveryServiceInfo discoveryServiceInfo, int discoveryPort, Action<string> callbackReceived)
+        {
+            try
+            {
+                listenThread = new System.Threading.Thread(() =>
+                {
+                    try
+                    {
+                        //var Server = new UdpClient(discoveryPort);
+                        //var answer = Encoding.ASCII.GetBytes(discoveryServiceInfo.ToString());
+
+                        while (true)
+                        {
+                            /*var ClientEp = new IPEndPoint(IPAddress.Any, 0);
+                            var ClientRequestData = Server.Receive(ref ClientEp);
+                            var ClientRequest = Encoding.ASCII.GetString(ClientRequestData);
+                            callbackReceived?.Invoke(ClientEp.Address.ToString());
+                            Server.Send(answer, answer.Length, ClientEp);*/
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex);
+                    }
+                })
+                {
+                    Name = "DeviceListen"
+                };
+                listenThread.Start();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+            }
+        }
+
         private IConnectDevice OnTryGetConnectDevice(Guid id)
         {
             try
             {
-                var conDevice = connectDevices.FirstOrDefault(x => x.ConnectionConfiguration?.Id == id);
+                var conDevice = _connectDevices.FirstOrDefault(x => x.ConnectionConfiguration?.Id == id);
                 if (conDevice != null)
                     return conDevice;
             }

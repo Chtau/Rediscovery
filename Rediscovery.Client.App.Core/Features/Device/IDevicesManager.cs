@@ -10,6 +10,15 @@ namespace Rediscovery.Client.App.Core.Features.Device
     {
         event EventHandler<DeviceConnectionState> ConnectionStateChanged;
         event EventHandler<HeartbeatResult<ConnectionConfiguration>> HeartbeatReceived;
+        /// <summary>
+        /// Starts a network listener for incoming probes
+        /// </summary>
+        void Listen();
+        /// <summary>
+        /// Sends a probe signal to the connection configuration to check if it exists or is reachable
+        /// </summary>
+        /// <param name="connectionId">Known connection configuration Id</param>
+        /// <returns></returns>
         bool Probe(Guid connectionId);
         void Connect(Guid connectionId);
         bool Disconnect(Guid connectionId);
