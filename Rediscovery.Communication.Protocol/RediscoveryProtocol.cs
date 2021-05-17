@@ -1,21 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 
 namespace Rediscovery.Communication.Protocol
 {
+    // TODO: https://docs.microsoft.com/en-us/dotnet/framework/network-programming/asynchronous-server-socket-example
+    // TODO: https://www.c-sharpcorner.com/article/building-a-blockchain-in-net-core-p2p-network/
+
     public class RediscoveryProtocol : IRediscoveryProtocol
     {
-        private readonly IProtocolLogger _protocolLogger;
+        private readonly IProtocolLogger _logger;
 
         public RediscoveryProtocol(IProtocolLogger protocolLogger = null)
         {
-            _protocolLogger = protocolLogger ?? new Internal.ProtocolLogger();
+            _logger = protocolLogger ?? new Internal.ProtocolLogger();
         }
 
         public ConnectionState Connect(Connection connection)
         {
-            throw new NotImplementedException();
+            
+            return ConnectionState.Unkown;
         }
 
         public bool Disconnect()
@@ -35,7 +41,59 @@ namespace Rediscovery.Communication.Protocol
 
         public void Listen(Action<Transfer> receivedCallback)
         {
-            throw new NotImplementedException();
+            try
+            {
+                byte[] bytes = new Byte[1024];
+                // Establish the local endpoint for the socket.  
+                // The DNS name of the computer  
+                // running the listener is "host.contoso.com".  
+                IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+                IPAddress ipAddress = ipHostInfo.AddressList[0];
+                IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);
+                Socket listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+
+                listener.Bind(localEndPoint);
+                listener.Listen(10);
+                string data = null;
+                // Start listening for connections.  
+                while (true)
+                {
+                    Console.WriteLine("Waiting for a connection...");
+                    // Program is suspended while waiting for an incoming connection.  
+                    Socket handler = listener.Accept();
+                    data = null;
+
+                    // An incoming connection needs to be processed.  
+                    while (true)
+                    {
+                        int bytesRec = handler.Receive(bytes);
+                        data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
+                        if (data.IndexOf("<EOF>") > -1)
+                        {
+                            receivedCallback?.Invoke(new Transfer
+                            {
+                                Content = Encoding.ASCII.GetBytes(data)
+                            });
+                            break;
+                        }
+                    }
+
+                    // Show the data on the console.  
+                    Console.WriteLine("Text received : {0}", data);
+
+                    // Echo the data back to the client.  
+                    byte[] msg = Encoding.ASCII.GetBytes(data);
+
+                    handler.Send(msg);
+                    handler.Shutdown(SocketShutdown.Both);
+                    handler.Close();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
         }
 
         public void LowLatencyListen(Action<Transfer> receivedCallback)
@@ -55,7 +113,61 @@ namespace Rediscovery.Communication.Protocol
 
         public TransportState Send(Transfer transfer)
         {
-            throw new NotImplementedException();
+            try
+            {
+                byte[] bytes = new Byte[1024];
+                // Establish the remote endpoint for the socket.  
+                // This example uses port 11000 on the local computer.  
+                IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+                IPAddress ipAddress = ipHostInfo.AddressList[0];
+                IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
+
+                // Create a TCP/IP  socket.  
+                Socket sender = new Socket(ipAddress.AddressFamily,
+                    SocketType.Stream, ProtocolType.Tcp);
+
+                // Connect the socket to the remote endpoint. Catch any errors.  
+                try
+                {
+                    sender.Connect(remoteEP);
+
+                    Console.WriteLine("Socket connected to {0}",
+                        sender.RemoteEndPoint.ToString());
+
+                    // Encode the data string into a byte array.  
+                    byte[] msg = Encoding.ASCII.GetBytes("This is a test<EOF>");
+
+                    // Send the data through the socket.  
+                    int bytesSent = sender.Send(msg);
+
+                    // Receive the response from the remote device.  
+                    int bytesRec = sender.Receive(bytes);
+                    Console.WriteLine("Echoed test = {0}",
+                        Encoding.ASCII.GetString(bytes, 0, bytesRec));
+
+                    // Release the socket.  
+                    sender.Shutdown(SocketShutdown.Both);
+                    sender.Close();
+
+                }
+                catch (ArgumentNullException ane)
+                {
+                    Console.WriteLine("ArgumentNullException : {0}", ane.ToString());
+                }
+                catch (SocketException se)
+                {
+                    Console.WriteLine("SocketException : {0}", se.ToString());
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Unexpected exception : {0}", e.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+            return TransportState.Unkown;
         }
 
         public TransportState Stream(Action<object> streamData)
