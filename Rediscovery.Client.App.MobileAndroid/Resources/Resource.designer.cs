@@ -5994,10 +5994,10 @@ namespace Rediscovery.Client.App.MobileAndroid
 			public const int btnHostEditTryConnect = 2131230822;
 			
 			// aapt resource value: 0x7F080067
-			public const int buttonDeviceAdd = 2131230823;
+			public const int btnSocketListenTest = 2131230823;
 			
 			// aapt resource value: 0x7F080068
-			public const int buttonDevicesPlayPause = 2131230824;
+			public const int btnSocketSendTest = 2131230824;
 			
 			// aapt resource value: 0x7F080069
 			public const int buttonFeatureEditCancel = 2131230825;
@@ -8092,22 +8092,28 @@ namespace Rediscovery.Client.App.MobileAndroid
 			public const int status_bar_notification_info_overflow = 2131689599;
 			
 			// aapt resource value: 0x7F0F0080
-			public const int theme_blue = 2131689600;
+			public const int test_socket_listen = 2131689600;
 			
 			// aapt resource value: 0x7F0F0081
-			public const int theme_green = 2131689601;
+			public const int test_socket_send = 2131689601;
 			
 			// aapt resource value: 0x7F0F0082
-			public const int theme_purple = 2131689602;
+			public const int theme_blue = 2131689602;
 			
 			// aapt resource value: 0x7F0F0083
-			public const int theme_red = 2131689603;
+			public const int theme_green = 2131689603;
 			
 			// aapt resource value: 0x7F0F0084
-			public const int theme_rediscovery = 2131689604;
+			public const int theme_purple = 2131689604;
 			
 			// aapt resource value: 0x7F0F0085
-			public const int theme_yellow = 2131689605;
+			public const int theme_red = 2131689605;
+			
+			// aapt resource value: 0x7F0F0086
+			public const int theme_rediscovery = 2131689606;
+			
+			// aapt resource value: 0x7F0F0087
+			public const int theme_yellow = 2131689607;
 			
 			static String()
 			{

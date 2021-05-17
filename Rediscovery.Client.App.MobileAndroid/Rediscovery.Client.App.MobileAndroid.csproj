@@ -252,6 +252,10 @@
       <Project>{b236cd42-5d2c-46e0-8fa2-ad188a16923b}</Project>
       <Name>Rediscovery.Client.App.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rediscovery.Communication.Protocol\Rediscovery.Communication.Protocol.csproj">
+      <Project>{c1200e5a-0226-4685-85cb-fbf670795578}</Project>
+      <Name>Rediscovery.Communication.Protocol</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\item_devicefeature.xml" />

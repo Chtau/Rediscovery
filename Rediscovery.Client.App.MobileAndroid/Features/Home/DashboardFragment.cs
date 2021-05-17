@@ -5,10 +5,13 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using Google.Android.Material.Snackbar;
+using Rediscovery.Communication.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Rediscovery.Client.App.MobileAndroid.Features.Home
 {
@@ -16,8 +19,12 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Home
     {
         private Button btnPlayPauseDevice;
         private Button btnAddDevice;
+        private Button btnTestSocketListen;
+        private Button btnTestSocketSend;
 
         private bool isAutoDiscoverDevices = false;
+
+        private IRediscoveryProtocol protocol = new RediscoveryProtocol();
 
         public event EventHandler AddDeviceRequest;
 
@@ -46,10 +53,14 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Home
         {
             try
             {
-                btnPlayPauseDevice = view.FindViewById<Button>(Resource.Id.buttonDevicesPlayPause);
+                btnTestSocketListen = view.FindViewById<Button>(Resource.Id.btnSocketListenTest);
+                btnTestSocketListen.Click += BtnTestSocketListen_Click;
+                btnTestSocketSend = view.FindViewById<Button>(Resource.Id.btnSocketSendTest);
+                btnTestSocketSend.Click += BtnTestSocketSend_Click;
+                /*btnPlayPauseDevice = view.FindViewById<Button>(Resource.Id.buttonDevicesPlayPause);
                 btnAddDevice = view.FindViewById<Button>(Resource.Id.buttonDeviceAdd);
                 btnAddDevice.Click += BtnAddDevice_Click;
-                btnPlayPauseDevice.Click += BtnPlayPauseDevice_Click;
+                btnPlayPauseDevice.Click += BtnPlayPauseDevice_Click;*/
 
                 OnToggleAutoDiscoverDevices(false);
             }
@@ -58,6 +69,39 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Home
                 Core.Logger.Instance.Error(ex);
             }
             base.OnViewCreated(view, savedInstanceState);
+        }
+
+        private void BtnTestSocketSend_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                protocol.Send(null);
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
+        }
+
+        private void BtnTestSocketListen_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Task.Run(() =>
+                {
+                    protocol.Listen((transfer) =>
+                    {
+                        var result = System.Text.ASCIIEncoding.ASCII.GetString(transfer.Content);
+                        System.Diagnostics.Trace.TraceInformation($"Socket received:{result}");
+
+                        Snackbar.Make(View, $"Socket received:{result}", Snackbar.LengthLong).Show();
+                    });
+                });
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Instance.Error(ex);
+            }
         }
 
         private void BtnPlayPauseDevice_Click(object sender, EventArgs e)

@@ -30,4 +30,6 @@
     <string name="host_save">Save</string>
     <string name="host_managment_menu">Host managment</string>
     <string name="dashboard">Dashboard</string>
+    <string name="test_socket_listen">Socket Listen</string>
+    <string name="test_socket_send">Socket Send</string>
 </resources>

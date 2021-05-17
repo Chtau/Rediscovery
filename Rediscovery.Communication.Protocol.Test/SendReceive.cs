@@ -29,5 +29,13 @@ namespace Rediscovery.Communication.Protocol.Test
             } while (!stop);
             Assert.True(!string.IsNullOrWhiteSpace(data), "No Data received via Socket");
         }
+
+        [Fact]
+        public void SendToIP()
+        {
+            //192.168.1.102:11000
+            RediscoveryProtocol protocol = new RediscoveryProtocol();
+            protocol.Send("192.168.1.102");
+        }
     }
 }
