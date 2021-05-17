@@ -24,7 +24,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Home
 
         private bool isAutoDiscoverDevices = false;
 
-        private IRediscoveryProtocol protocol = new RediscoveryProtocol();
+        private RediscoveryProtocol protocol = new RediscoveryProtocol();
 
         public event EventHandler AddDeviceRequest;
 
@@ -75,7 +75,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Home
         {
             try
             {
-                protocol.Send(null);
+                protocol.Send("192.168.1.103");
             }
             catch (Exception ex)
             {

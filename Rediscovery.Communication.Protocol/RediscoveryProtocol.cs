@@ -9,9 +9,15 @@ namespace Rediscovery.Communication.Protocol
     // TODO: https://docs.microsoft.com/en-us/dotnet/framework/network-programming/asynchronous-server-socket-example
     // TODO: https://www.c-sharpcorner.com/article/building-a-blockchain-in-net-core-p2p-network/
 
+    /* Bash
+     * Listen via Netcat: nc -l -p 11000
+     * Write via Netcat: echo 'test<EOF>' | sudo  netcat 192.168.1.102 11000
+     */
+
     public class RediscoveryProtocol : IRediscoveryProtocol
     {
         private readonly IProtocolLogger _logger;
+        private Setting setting;
 
         public RediscoveryProtocol(IProtocolLogger protocolLogger = null)
         {
@@ -20,7 +26,14 @@ namespace Rediscovery.Communication.Protocol
 
         public ConnectionState Connect(Connection connection)
         {
-            
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
             return ConnectionState.Unkown;
         }
 
@@ -229,9 +242,61 @@ namespace Rediscovery.Communication.Protocol
             return TransportState.Unkown;
         }
 
+        public void Start(Setting setting)
+        {
+            try
+            {
+                this.setting = setting ?? new Setting();
+                // start listen for portocol data and discovery requests
+                OnListenDiscovery();
+                OnListenData();
+                OnListenLowData();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+        }
+
         public TransportState Stream(Action<object> streamData)
         {
             throw new NotImplementedException();
+        }
+
+        private void OnListenDiscovery()
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+        }
+
+        private void OnListenData()
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+        }
+
+        private void OnListenLowData()
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
         }
     }
 }
