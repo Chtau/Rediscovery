@@ -8,7 +8,9 @@ namespace Rediscovery.Communication.Protocol.Internal
     {
         private System.Threading.Thread listenThread;
         private readonly IProtocolLogger _logger;
-        private string threadName = $"Thread_{DateTime.Today.Ticks}";
+        private readonly string threadName = $"Thread_{DateTime.Today.Ticks}";
+
+        private bool working = false;
 
         public BaseListener(IProtocolLogger protocolLogger = null, string threadName = null)
         {
@@ -18,31 +20,62 @@ namespace Rediscovery.Communication.Protocol.Internal
             OnInitThread();
         }
 
-        public virtual void Start()
+        public virtual bool Start()
         {
             try
             {
+                working = true;
                 listenThread.Start();
+                return true;
+            }
+            catch (System.Threading.ThreadStateException tsEx)
+            {
+                _logger.Warning(tsEx);
+                OnInitThread();
+                try
+                {
+                    working = true;
+                    listenThread.Start();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex);
+                }
             }
             catch (Exception ex)
             {
                 _logger.Error(ex);
             }
+            return false;
         }
 
-        public virtual void Stop()
+        public virtual bool Stop()
         {
             try
             {
-                listenThread.Abort();
+                working = false;
+                listenThread?.Abort();
+                return true;
             }
             catch (Exception ex)
             {
                 _logger.Error(ex);
             }
+            return false;
+        }
+
+        public virtual void OnBeforeDoWork()
+        {
+
         }
 
         public virtual void OnDoWork()
+        {
+
+        }
+
+        public virtual void OnBeforeRestartWorker()
         {
 
         }
@@ -55,7 +88,8 @@ namespace Rediscovery.Communication.Protocol.Internal
                 {
                     try
                     {
-                        while (true)
+                        OnBeforeDoWork();
+                        while (working)
                         {
                             OnDoWork();
                         }
@@ -63,7 +97,9 @@ namespace Rediscovery.Communication.Protocol.Internal
                     catch (Exception ex)
                     {
                         _logger.Error(ex);
-                        // TODO: if we reach this point we need to restart
+                        // if we reach this point we need to restart
+                        OnBeforeRestartWorker();
+                        Start();
                     }
                 })
                 {
