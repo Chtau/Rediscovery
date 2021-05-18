@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Rediscovery.Communication.Protocol.Internal
+{
+    internal class DiscoveryListener : BaseListener
+    {
+        public DiscoveryListener(IProtocolLogger protocolLogger = null) : base(protocolLogger, "Discovery")
+        {
+
+        }
+
+        public override void OnDoWork()
+        {
+            
+        }
+    }
+}

@@ -8,8 +8,9 @@ namespace Rediscovery.Communication.Protocol.Internal
     {
         private System.Threading.Thread listenThread;
         private readonly IProtocolLogger _logger;
-        private readonly string threadName = $"Thread_{DateTime.Today.Ticks}";
+        private readonly string threadName = $"Thread";
 
+        private Setting setting;
         private bool working = false;
 
         public BaseListener(IProtocolLogger protocolLogger = null, string threadName = null)
@@ -18,6 +19,11 @@ namespace Rediscovery.Communication.Protocol.Internal
             if (!string.IsNullOrWhiteSpace(threadName))
                 this.threadName = threadName;
             OnInitThread();
+        }
+
+        public virtual void Initialize(Setting setting)
+        {
+            this.setting = setting;
         }
 
         public virtual bool Start()
@@ -103,7 +109,7 @@ namespace Rediscovery.Communication.Protocol.Internal
                     }
                 })
                 {
-                    Name = threadName
+                    Name = $"{threadName}_{DateTime.Today.Ticks}"
                 };
             }
             catch (Exception ex)

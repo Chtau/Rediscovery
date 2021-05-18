@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rediscovery.Communication.Protocol.Internal;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -17,11 +18,18 @@ namespace Rediscovery.Communication.Protocol
     public class RediscoveryProtocol : IRediscoveryProtocol
     {
         private readonly IProtocolLogger _logger;
+        private readonly DiscoveryListener _discoveryListener;
+        private readonly DataListener _dataListener;
+        private readonly LowDataListener _lowDataListener;
         private Setting setting;
+        
 
         public RediscoveryProtocol(IProtocolLogger protocolLogger = null)
         {
             _logger = protocolLogger ?? new Internal.ProtocolLogger();
+            _discoveryListener = new DiscoveryListener(_logger);
+            _dataListener = new DataListener(_logger);
+            _lowDataListener = new LowDataListener(_logger);
         }
 
         public ConnectionState Connect(Connection connection)
@@ -247,6 +255,9 @@ namespace Rediscovery.Communication.Protocol
             try
             {
                 this.setting = setting ?? new Setting();
+                _discoveryListener.Initialize(setting);
+                _dataListener.Initialize(setting);
+                _lowDataListener.Initialize(setting);
                 // start listen for portocol data and discovery requests
                 OnListenDiscovery();
                 OnListenData();
@@ -267,7 +278,7 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
-
+                _discoveryListener.Start();
             }
             catch (Exception ex)
             {
@@ -279,7 +290,7 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
-
+                _dataListener.Start();
             }
             catch (Exception ex)
             {
@@ -291,7 +302,7 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
-
+                _lowDataListener.Start();
             }
             catch (Exception ex)
             {

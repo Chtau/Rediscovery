@@ -6,7 +6,7 @@ namespace Rediscovery.Communication.Protocol
 {
     public interface IRediscoveryProtocol
     {
-        void Start(int? listenPort);
+        void Start(Setting setting);
         ConnectionState Connect(Connection connection);
         bool Disconnect();
         TransportState Send(Transfer transfer);
