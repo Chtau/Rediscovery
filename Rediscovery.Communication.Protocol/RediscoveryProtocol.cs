@@ -64,7 +64,7 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
-                byte[] bytes = new Byte[1024];
+                byte[] bytes = new Byte[setting.ListenPackageBytesData];
                 // Establish the local endpoint for the socket.  
                 // The DNS name of the computer  
                 // running the listener is "host.contoso.com".  
@@ -74,7 +74,7 @@ namespace Rediscovery.Communication.Protocol
                 IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);
                 Socket listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 */
-                Socket listener = Network.CreateSocket(11000);
+                Socket listener = Network.CreateSocket(setting.ListenPortData);
                 listener.Bind(listener.LocalEndPoint);// localEndPoint);
                 listener.Listen(10);
                 string data = null;
@@ -138,7 +138,7 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
-                byte[] bytes = new Byte[1024];
+                byte[] bytes = new Byte[setting.SendPackageBytesData];
                 // Establish the remote endpoint for the socket.  
                 // This example uses port 11000 on the local computer.  
                 /*
@@ -147,7 +147,7 @@ namespace Rediscovery.Communication.Protocol
                 IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
                 */
                 // Create a TCP/IP  socket.  
-                Socket sender = Network.CreateSocket(11000);/* new Socket(ipAddress.AddressFamily,
+                Socket sender = Network.CreateSocket(setting.ListenPortData);/* new Socket(ipAddress.AddressFamily,
                     SocketType.Stream, ProtocolType.Tcp);*/
 
                 // Connect the socket to the remote endpoint. Catch any errors.  
