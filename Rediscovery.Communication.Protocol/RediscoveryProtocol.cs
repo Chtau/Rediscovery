@@ -68,12 +68,14 @@ namespace Rediscovery.Communication.Protocol
                 // Establish the local endpoint for the socket.  
                 // The DNS name of the computer  
                 // running the listener is "host.contoso.com".  
+                /*
                 IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
                 IPAddress ipAddress = ipHostInfo.AddressList[0];
                 IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);
                 Socket listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-
-                listener.Bind(localEndPoint);
+                */
+                Socket listener = Network.CreateSocket(11000);
+                listener.Bind(listener.LocalEndPoint);// localEndPoint);
                 listener.Listen(10);
                 string data = null;
                 // Start listening for connections.  
@@ -139,18 +141,19 @@ namespace Rediscovery.Communication.Protocol
                 byte[] bytes = new Byte[1024];
                 // Establish the remote endpoint for the socket.  
                 // This example uses port 11000 on the local computer.  
+                /*
                 IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
                 IPAddress ipAddress = ipHostInfo.AddressList[0];
                 IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
-
+                */
                 // Create a TCP/IP  socket.  
-                Socket sender = new Socket(ipAddress.AddressFamily,
-                    SocketType.Stream, ProtocolType.Tcp);
+                Socket sender = Network.CreateSocket(11000);/* new Socket(ipAddress.AddressFamily,
+                    SocketType.Stream, ProtocolType.Tcp);*/
 
                 // Connect the socket to the remote endpoint. Catch any errors.  
                 try
                 {
-                    sender.Connect(remoteEP);
+                    sender.Connect(sender.RemoteEndPoint);
 
                     Console.WriteLine("Socket connected to {0}",
                         sender.RemoteEndPoint.ToString());
