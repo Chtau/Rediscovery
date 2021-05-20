@@ -6,6 +6,8 @@ namespace Rediscovery.Communication.Protocol.Internal
 {
     internal class DiscoveryListener : BaseListener
     {
+        public override int ListenerBufferSize => setting.ListenPackageBytesDiscovery;
+
         public DiscoveryListener(IProtocolLogger protocolLogger = null) : base(protocolLogger, "Discovery")
         {
 

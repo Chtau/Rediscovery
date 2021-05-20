@@ -12,13 +12,13 @@ namespace Rediscovery.Communication.Protocol
         public const int DefaultPackageBytes = 1024;
 
         public int ListenPortDiscovery { get; set; } = DefaultListenPortDiscovery;
-        public long ListenPackageBytesDiscovery { get; set; } = DefaultPackageBytes;
-        public long SendPackageBytesDiscovery { get; set; } = DefaultPackageBytes;
+        public int ListenPackageBytesDiscovery { get; set; } = DefaultPackageBytes;
+        public int SendPackageBytesDiscovery { get; set; } = DefaultPackageBytes;
         public int ListenPortData { get; set; } = DefaultListenPortData;
-        public long ListenPackageBytesData { get; set; } = DefaultPackageBytes;
-        public long SendPackageBytesData { get; set; } = DefaultPackageBytes;
+        public int ListenPackageBytesData { get; set; } = DefaultPackageBytes;
+        public int SendPackageBytesData { get; set; } = DefaultPackageBytes;
         public int ListenPortLowData { get; set; } = DefaultListenPortLowData;
-        public long ListenPackageBytesLowData { get; set; } = DefaultPackageBytes;
-        public long SendPackageBytesLowData { get; set; } = DefaultPackageBytes;
+        public int ListenPackageBytesLowData { get; set; } = DefaultPackageBytes;
+        public int SendPackageBytesLowData { get; set; } = DefaultPackageBytes;
     }
 }
