@@ -7,6 +7,7 @@ namespace Rediscovery.Communication.Protocol.Internal
     internal class LowDataListener : BaseListener
     {
         public override int ListenerBufferSize => setting.ListenPackageBytesLowData;
+        public override int ListenerPort => setting.ListenPortLowData;
 
         public LowDataListener(IProtocolLogger protocolLogger = null) : base(protocolLogger, "LowData")
         {

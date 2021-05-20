@@ -3,20 +3,25 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Linq;
 
 namespace Rediscovery.Communication.Protocol.Internal
 {
     internal abstract class BaseListener
     {
+        private const string EOF = "!#~^%$|";
+
         private System.Threading.Thread listenThread;
         private readonly IProtocolLogger _logger;
         private readonly string threadName = $"Thread";
+        private readonly byte[] EOFBytes = Encoding.UTF8.GetBytes(EOF);
 
         internal Setting setting;
         private bool working = false;
         private static ManualResetEvent allDone = new ManualResetEvent(false);
 
         public virtual int ListenerBufferSize => setting.ListenPackageBytesData;
+        public virtual int ListenerPort => setting.ListenPortData;
 
         public BaseListener(IProtocolLogger protocolLogger = null, string threadName = null)
         {
@@ -100,7 +105,7 @@ namespace Rediscovery.Communication.Protocol.Internal
                     try
                     {
                         OnBeforeDoWork();
-                        Socket listener = Network.CreateSocket(setting.ListenPortData);
+                        Socket listener = Network.CreateSocket(ListenerPort);
                         listener.Bind(listener.LocalEndPoint);
                         listener.Listen(10);
 
@@ -170,25 +175,35 @@ namespace Rediscovery.Communication.Protocol.Internal
 
             if (bytesRead > 0)
             {
-                // There  might be more data, so store the data received so far.  
-                /*state.sb.Append(Encoding.ASCII.GetString(
-                    state.buffer, 0, bytesRead));*/
-                state.Data.AddRange(state.Buffer);
-
+                int eofIndex = 0;
+                int bufferEnd = ListenerBufferSize;
+                for (int i = 0; i < state.Buffer.Length; i++)
+                {
+                    if (state.Buffer[i] == EOFBytes[eofIndex])
+                    {
+                        eofIndex++;
+                        if (eofIndex == EOFBytes.Length)
+                        {
+                            bufferEnd = i - EOFBytes.Length;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        eofIndex = 0;
+                    }
+                }
+                                
                 // Check for end-of-file tag. If it is not there, read
                 // more data.  
-                content = state.sb.ToString();
-                if (content.IndexOf("<EOF>") > -1)
+                if (bufferEnd < ListenerBufferSize)
                 {
-                    // All the data has been read from the
-                    // client. Display it on the console.  
-                    Console.WriteLine("Read {0} bytes from socket. \n Data : {1}",
-                        content.Length, content);
-                    // Echo the data back to the client.  
-                    //Send(handler, content);
+                    state.Data.AddRange(state.Buffer.Take(bufferEnd));
+                    // All the data has been read from the client.
                 }
                 else
                 {
+                    state.Data.AddRange(state.Buffer);
                     // Not all data received. Get more.  
                     handler.BeginReceive(state.Buffer, 0, ListenerBufferSize, 0, new AsyncCallback(ReadCallback), state);
                 }
