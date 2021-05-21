@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Rediscovery.Communication.Protocol.Internal
 {
-    internal abstract class BaseListener
+    internal abstract class BaseListener : IListener
     {
         private const string EOF = "!#~^%$|";
 
@@ -18,7 +18,8 @@ namespace Rediscovery.Communication.Protocol.Internal
 
         internal Setting setting;
         private bool working = false;
-        private static ManualResetEvent allDone = new ManualResetEvent(false);
+        private static readonly ManualResetEvent allDone = new ManualResetEvent(false);
+        private Action<byte[]> stateCompleteCallback;
 
         public virtual int ListenerBufferSize => setting.ListenPackageBytesData;
         public virtual int ListenerPort => setting.ListenPortData;
@@ -34,6 +35,11 @@ namespace Rediscovery.Communication.Protocol.Internal
         public virtual void Initialize(Setting setting)
         {
             this.setting = setting;
+        }
+
+        public virtual void StateCompleteListener(Action<byte[]> callback)
+        {
+            stateCompleteCallback = callback;
         }
 
         public virtual bool Start()
@@ -81,17 +87,12 @@ namespace Rediscovery.Communication.Protocol.Internal
             return false;
         }
 
-        public virtual void OnBeforeDoWork()
+        internal virtual void OnBeforeDoWork()
         {
 
         }
 
-        public virtual void OnDoWork()
-        {
-
-        }
-
-        public virtual void OnBeforeRestartWorker()
+        internal virtual void OnBeforeRestartWorker()
         {
 
         }
@@ -122,7 +123,6 @@ namespace Rediscovery.Communication.Protocol.Internal
 
                             // Wait until a connection is made before continuing.  
                             allDone.WaitOne();
-                            OnDoWork();
                         }
                     }
                     catch (Exception ex)
@@ -200,6 +200,9 @@ namespace Rediscovery.Communication.Protocol.Internal
                 {
                     state.Data.AddRange(state.Buffer.Take(bufferEnd));
                     // All the data has been read from the client.
+                    var rawData = state.Data.ToArray();
+                    OnStateObjectComplete(rawData);
+                    stateCompleteCallback?.Invoke(rawData);
                 }
                 else
                 {
@@ -208,6 +211,11 @@ namespace Rediscovery.Communication.Protocol.Internal
                     handler.BeginReceive(state.Buffer, 0, ListenerBufferSize, 0, new AsyncCallback(ReadCallback), state);
                 }
             }
+        }
+
+        internal virtual void OnStateObjectComplete(byte[] data)
+        {
+            
         }
     }
 }

@@ -18,9 +18,9 @@ namespace Rediscovery.Communication.Protocol
     public class RediscoveryProtocol : IRediscoveryProtocol
     {
         private readonly IProtocolLogger _logger;
-        private readonly DiscoveryListener _discoveryListener;
-        private readonly DataListener _dataListener;
-        private readonly LowDataListener _lowDataListener;
+        private readonly IListener _discoveryListener;
+        private readonly IListener _dataListener;
+        private readonly IListener _lowDataListener;
         private Setting setting;
         
 
@@ -64,6 +64,15 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
+                _dataListener.StateCompleteListener((array) =>
+                {
+                    receivedCallback?.Invoke(new Transfer
+                    {
+                        Content = array
+                    });
+                });
+                return;
+
                 byte[] bytes = new Byte[setting.ListenPackageBytesData];
                 // Establish the local endpoint for the socket.  
                 // The DNS name of the computer  
@@ -121,7 +130,20 @@ namespace Rediscovery.Communication.Protocol
 
         public void LowLatencyListen(Action<Transfer> receivedCallback)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _lowDataListener.StateCompleteListener((array) =>
+                {
+                    receivedCallback?.Invoke(new Transfer
+                    {
+                        Content = array
+                    });
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
         }
 
         public TransportState LowLatencySend(Transfer transfer)
@@ -259,8 +281,13 @@ namespace Rediscovery.Communication.Protocol
             {
                 this.setting = setting ?? new Setting();
                 _discoveryListener.Initialize(setting);
+                /*_discoveryListener.StateCompleteListener((data) =>
+                {
+
+                });*/
                 _dataListener.Initialize(setting);
                 _lowDataListener.Initialize(setting);
+                
                 // start listen for portocol data and discovery requests
                 OnListenDiscovery();
                 OnListenData();

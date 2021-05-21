@@ -9,14 +9,14 @@ namespace Rediscovery.Communication.Protocol.Internal
         public override int ListenerBufferSize => setting.ListenPackageBytesData;
         public override int ListenerPort => setting.ListenPortData;
 
-        public DataListener(IProtocolLogger protocolLogger = null) : base(protocolLogger, "Data")
+        public DataListener(IProtocolLogger protocolLogger = null) : base(protocolLogger, nameof(DataListener))
         {
 
         }
 
-        public override void OnDoWork()
+        internal override void OnStateObjectComplete(byte[] data)
         {
-
+            base.OnStateObjectComplete(data);
         }
     }
 }
