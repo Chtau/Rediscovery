@@ -5,16 +5,14 @@ using System.Text;
 using System.Threading;
 using System.Linq;
 
-namespace Rediscovery.Communication.Protocol.Internal
+namespace Rediscovery.Communication.Protocol.Internal.Listener
 {
     internal abstract class BaseListener : IListener
     {
-        private const string EOF = "!#~^%$|";
-
         private System.Threading.Thread listenThread;
         private readonly IProtocolLogger _logger;
         private readonly string threadName = $"Thread";
-        private readonly byte[] EOFBytes = Encoding.UTF8.GetBytes(EOF);
+        private readonly byte[] EOFBytes = Encoding.UTF8.GetBytes(Network.EOF);
 
         internal Setting setting;
         private bool working = false;

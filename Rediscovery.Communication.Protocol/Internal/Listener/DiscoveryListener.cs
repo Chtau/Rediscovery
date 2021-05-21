@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Communication.Protocol.Internal
+namespace Rediscovery.Communication.Protocol.Internal.Listener
 {
     internal class DiscoveryListener : BaseListener
     {

@@ -1,4 +1,5 @@
 ﻿using Rediscovery.Communication.Protocol.Internal;
+using Rediscovery.Communication.Protocol.Internal.Listener;
 using System;
 using System.Collections.Generic;
 using System.Net;
