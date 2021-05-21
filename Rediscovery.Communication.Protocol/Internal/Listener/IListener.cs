@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rediscovery.Communication.Protocol.Internal.Listener
 {
-    public interface IListener
+    internal interface IListener
     {
         void Initialize(Setting setting);
         void StateCompleteListener(Action<byte[]> callback);

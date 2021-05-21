@@ -12,15 +12,14 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
         private System.Threading.Thread listenThread;
         private readonly IProtocolLogger _logger;
         private readonly string threadName = $"Thread";
-        private readonly byte[] EOFBytes = Encoding.UTF8.GetBytes(Network.EOF);
 
         internal Setting setting;
         private bool working = false;
         private static readonly ManualResetEvent allDone = new ManualResetEvent(false);
         private Action<byte[]> stateCompleteCallback;
 
-        public virtual int ListenerBufferSize => setting.ListenPackageBytesData;
-        public virtual int ListenerPort => setting.ListenPortData;
+        public virtual int BufferSize => setting.ListenPackageBytesData;
+        public virtual int Port => setting.ListenPortData;
 
         public BaseListener(IProtocolLogger protocolLogger = null, string threadName = null)
         {
@@ -104,8 +103,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                     try
                     {
                         OnBeforeDoWork();
-                        Socket listener = Network.CreateSocket(ListenerPort);
-                        listener.Bind(listener.LocalEndPoint);
+                        Socket listener = Network.CreateSocket(11000);// Port);
+                        listener.Bind(Network.LocalEndPoint(11000));// Port));// listener.LocalEndPoint) ;
                         listener.Listen(10);
 
                         while (working)
@@ -154,9 +153,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
             var state = new StateObjectListener
             {
                 WorkSocket = handler,
-                Buffer = new byte[ListenerBufferSize]
+                Buffer = new byte[BufferSize]
             };
-            handler.BeginReceive(state.Buffer, 0, ListenerBufferSize, 0, new AsyncCallback(ReadCallback), state);
+            handler.BeginReceive(state.Buffer, 0, BufferSize, 0, new AsyncCallback(ReadCallback), state);
+            
         }
 
         private void ReadCallback(IAsyncResult ar)
@@ -174,15 +174,15 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
             if (bytesRead > 0)
             {
                 int eofIndex = 0;
-                int bufferEnd = ListenerBufferSize;
+                int bufferEnd = BufferSize;
                 for (int i = 0; i < state.Buffer.Length; i++)
                 {
-                    if (state.Buffer[i] == EOFBytes[eofIndex])
+                    if (state.Buffer[i] == Network.EOFBytes[eofIndex])
                     {
                         eofIndex++;
-                        if (eofIndex == EOFBytes.Length)
+                        if (eofIndex == Network.EOFBytes.Length)
                         {
-                            bufferEnd = i - EOFBytes.Length;
+                            bufferEnd = i - Network.EOFBytes.Length;
                             break;
                         }
                     }
@@ -194,7 +194,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                                 
                 // Check for end-of-file tag. If it is not there, read
                 // more data.  
-                if (bufferEnd < ListenerBufferSize)
+                if (bufferEnd < BufferSize)
                 {
                     state.Data.AddRange(state.Buffer.Take(bufferEnd));
                     // All the data has been read from the client.
@@ -206,7 +206,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                 {
                     state.Data.AddRange(state.Buffer);
                     // Not all data received. Get more.  
-                    handler.BeginReceive(state.Buffer, 0, ListenerBufferSize, 0, new AsyncCallback(ReadCallback), state);
+                    handler.BeginReceive(state.Buffer, 0, BufferSize, 0, new AsyncCallback(ReadCallback), state);
                 }
             }
         }

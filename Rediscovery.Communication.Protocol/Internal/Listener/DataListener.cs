@@ -6,8 +6,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
 {
     internal class DataListener : BaseListener
     {
-        public override int ListenerBufferSize => setting.ListenPackageBytesData;
-        public override int ListenerPort => setting.ListenPortData;
+        public override int BufferSize => setting.ListenPackageBytesData;
+        public override int Port => setting.ListenPortData;
 
         public DataListener(IProtocolLogger protocolLogger = null) : base(protocolLogger, nameof(DataListener))
         {

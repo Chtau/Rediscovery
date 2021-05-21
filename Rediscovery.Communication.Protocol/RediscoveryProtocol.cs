@@ -1,7 +1,9 @@
 ﻿using Rediscovery.Communication.Protocol.Internal;
 using Rediscovery.Communication.Protocol.Internal.Listener;
+using Rediscovery.Communication.Protocol.Internal.Sender;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -22,6 +24,9 @@ namespace Rediscovery.Communication.Protocol
         private readonly IListener _discoveryListener;
         private readonly IListener _dataListener;
         private readonly IListener _lowDataListener;
+        private readonly ISender _discoverySender;
+        private readonly ISender _dataSender;
+        private readonly ISender _lowDataSender;
         private Setting setting;
         
 
@@ -31,6 +36,9 @@ namespace Rediscovery.Communication.Protocol
             _discoveryListener = new DiscoveryListener(_logger);
             _dataListener = new DataListener(_logger);
             _lowDataListener = new LowDataListener(_logger);
+            _discoverySender = new DiscoverySender(_logger);
+            _dataSender = new DataSender(_logger);
+            _lowDataSender = new LowDataSender(_logger);
         }
 
         public ConnectionState Connect(Connection connection)
@@ -78,14 +86,14 @@ namespace Rediscovery.Communication.Protocol
                 // Establish the local endpoint for the socket.  
                 // The DNS name of the computer  
                 // running the listener is "host.contoso.com".  
-                /*
+                
                 IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
                 IPAddress ipAddress = ipHostInfo.AddressList[0];
                 IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);
                 Socket listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                */
-                Socket listener = Network.CreateSocket(setting.ListenPortData);
-                listener.Bind(listener.LocalEndPoint);// localEndPoint);
+                
+                //Socket listener = Network.CreateSocket(setting.ListenPortData);
+                listener.Bind(localEndPoint);//listener.LocalEndPoint);// 
                 listener.Listen(10);
                 string data = null;
                 // Start listening for connections.  
@@ -161,31 +169,34 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
+                //_dataSender.Send(transfer.Content, setting.ListenPortData);
+                //return TransportState.Ok;
                 byte[] bytes = new Byte[setting.SendPackageBytesData];
                 // Establish the remote endpoint for the socket.  
                 // This example uses port 11000 on the local computer.  
-                /*
+                
                 IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
                 IPAddress ipAddress = ipHostInfo.AddressList[0];
-                IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
-                */
+                IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);// 13571);// 11000);
+                
                 // Create a TCP/IP  socket.  
-                Socket sender = Network.CreateSocket(setting.ListenPortData);/* new Socket(ipAddress.AddressFamily,
-                    SocketType.Stream, ProtocolType.Tcp);*/
-
+                Socket sender =  new Socket(ipAddress.AddressFamily,
+                    SocketType.Stream, ProtocolType.Tcp);
+                    //Network.CreateSocket(setting.ListenPortData);/**/
                 // Connect the socket to the remote endpoint. Catch any errors.  
                 try
                 {
-                    sender.Connect(sender.RemoteEndPoint);
+                    sender.Connect(remoteEP);// sender.RemoteEndPoint);
 
                     Console.WriteLine("Socket connected to {0}",
                         sender.RemoteEndPoint.ToString());
 
                     // Encode the data string into a byte array.  
                     byte[] msg = Encoding.ASCII.GetBytes("This is a test<EOF>");
-
+                    var data = msg.ToList();
+                    data.AddRange(Network.EOFBytes);
                     // Send the data through the socket.  
-                    int bytesSent = sender.Send(msg);
+                    int bytesSent = sender.Send(data.ToArray());
 
                     // Receive the response from the remote device.  
                     int bytesRec = sender.Receive(bytes);
@@ -281,18 +292,17 @@ namespace Rediscovery.Communication.Protocol
             try
             {
                 this.setting = setting ?? new Setting();
-                _discoveryListener.Initialize(setting);
-                /*_discoveryListener.StateCompleteListener((data) =>
-                {
-
-                });*/
-                _dataListener.Initialize(setting);
-                _lowDataListener.Initialize(setting);
+                _discoverySender.Initialize(this.setting);
+                _dataSender.Initialize(this.setting);
+                _lowDataSender.Initialize(this.setting);
+                _discoveryListener.Initialize(this.setting);
+                _dataListener.Initialize(this.setting);
+                _lowDataListener.Initialize(this.setting);
                 
                 // start listen for portocol data and discovery requests
-                OnListenDiscovery();
+                //OnListenDiscovery();
                 OnListenData();
-                OnListenLowData();
+                //OnListenLowData();
             }
             catch (Exception ex)
             {
