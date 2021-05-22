@@ -182,7 +182,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                         eofIndex++;
                         if (eofIndex == Network.EOFBytes.Length)
                         {
-                            bufferEnd = i - Network.EOFBytes.Length;
+                            bufferEnd = (i + 1) - Network.EOFBytes.Length;
                             break;
                         }
                     }
