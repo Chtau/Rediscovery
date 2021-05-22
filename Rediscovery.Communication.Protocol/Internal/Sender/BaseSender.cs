@@ -35,7 +35,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                     {
                         Socket sender = Network.CreateSocket(port);
                         //172.16.78.133
-                        sender.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), port));// Network.LocalEndPoint(port));
+                        sender.Connect(Network.LocalEndPoint(11000));// new IPEndPoint(IPAddress.Parse("127.0.0.1"), port));// Network.LocalEndPoint(port));
                         var raw = new List<byte>(data);
                         raw.AddRange(Network.EOFBytes);
                         var bytes = raw.ToArray();

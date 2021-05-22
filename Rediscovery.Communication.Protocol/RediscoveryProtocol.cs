@@ -169,8 +169,8 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
-                //_dataSender.Send(transfer.Content, setting.ListenPortData);
-                //return TransportState.Ok;
+                _dataSender.Send(transfer.Content, 11000);// setting.ListenPortData);
+                return TransportState.Ok;
                 byte[] bytes = new Byte[setting.SendPackageBytesData];
                 // Establish the remote endpoint for the socket.  
                 // This example uses port 11000 on the local computer.  
