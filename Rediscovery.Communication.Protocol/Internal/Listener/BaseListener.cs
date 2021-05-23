@@ -103,8 +103,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                     try
                     {
                         OnBeforeDoWork();
-                        Socket listener = Network.CreateSocket(11000);// Port);
-                        listener.Bind(Network.LocalEndPoint(11000));// Port));// listener.LocalEndPoint) ;
+                        Socket listener = Network.CreateSocket(Port);// 11000);// 
+                        listener.Bind(Network.LocalEndPoint(Port));// 11000));// // listener.LocalEndPoint) ;
                         listener.Listen(10);
 
                         while (working)

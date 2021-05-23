@@ -169,7 +169,7 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
-                _dataSender.Send(transfer.Content, 11000);// setting.ListenPortData);
+                _dataSender.Send(transfer.Content, setting.ListenPortData); // 11000);// 
                 return TransportState.Ok;
                 byte[] bytes = new Byte[setting.SendPackageBytesData];
                 // Establish the remote endpoint for the socket.  

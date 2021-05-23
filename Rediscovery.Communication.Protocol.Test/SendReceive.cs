@@ -14,12 +14,6 @@ namespace Rediscovery.Communication.Protocol.Test
             
             bool stop = false;
             string data = null;
-            /*protocol.Listen((transfer) =>
-            {
-                data = System.Text.ASCIIEncoding.ASCII.GetString(transfer.Content);
-                //stop = true;
-            });*/
-            //System.Threading.Thread.Sleep(TimeSpan.FromSeconds(1));
             Task.Run(async () =>
             {
                 protocol.Listen((transfer) =>
@@ -42,8 +36,8 @@ namespace Rediscovery.Communication.Protocol.Test
             do
             {
                 System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(10));
-            } while (!stop);// (string.IsNullOrWhiteSpace(data));
-            Assert.True(!string.IsNullOrWhiteSpace(data), "No Data received via Socket");
+            } while (!stop);
+            Assert.True(data == "Test", "No Data received via Socket");
         }
 
         [Fact]
