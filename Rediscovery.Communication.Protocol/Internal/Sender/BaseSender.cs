@@ -25,7 +25,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
             this.setting = setting;
         }
 
-        public void Send(byte[] data, int port)
+        public void Send(byte[] data, int port, Action<TransportState> successCallback)
         {
             try
             {
@@ -34,40 +34,47 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                     try
                     {
                         Socket sender = Network.CreateSocket(port);
-                        sender.Connect(Network.LocalEndPoint(port));// 11000));// new IPEndPoint(IPAddress.Parse("127.0.0.1"), port));// Network.LocalEndPoint(port));
+                        sender.Connect(Network.LocalEndPoint(port));
                         var raw = new List<byte>(data);
                         raw.AddRange(Network.EOFBytes);
                         var bytes = raw.ToArray();
-                        sender.BeginSend(bytes, 0, bytes.Length, 0, new AsyncCallback(OnSendCallback), sender);
+                        sender.BeginSend(bytes, 0, bytes.Length, 0,
+                            new AsyncCallback(OnSendCallback),
+                            new StateObjectSender
+                            {
+                                Sender = sender,
+                                SuccessCallback = successCallback
+                            });
                     }
                     catch (Exception ex)
                     {
                         _logger.Error(ex);
+                        successCallback?.Invoke(TransportState.Error);
                     }
                 });
             } catch (Exception ex)
             {
                 _logger.Error(ex);
+                successCallback?.Invoke(TransportState.Error);
             }
         }
 
         private void OnSendCallback(IAsyncResult ar)
         {
+            StateObjectSender stateObject = null;
             try
             {
-                // Retrieve the socket from the state object.  
-                Socket client = (Socket)ar.AsyncState;
+                stateObject = (StateObjectSender)ar.AsyncState;
 
                 // Complete sending the data to the remote device.  
-                int bytesSent = client.EndSend(ar);
+                int bytesSent = stateObject.Sender.EndSend(ar);
                 Console.WriteLine("Sent {0} bytes to server.", bytesSent);
-
-                // Signal that all bytes have been sent.  
-                //sendDone.Set();
+                stateObject.SuccessCallback?.Invoke(TransportState.Ok);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.ToString());
+                _logger.Error(ex);
+                stateObject?.SuccessCallback?.Invoke(TransportState.Error);
             }
         }
     }

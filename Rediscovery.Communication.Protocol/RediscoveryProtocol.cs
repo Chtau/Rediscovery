@@ -165,67 +165,20 @@ namespace Rediscovery.Communication.Protocol
             throw new NotImplementedException();
         }
 
-        public TransportState Send(Transfer transfer)
+        public void Send(Transfer transfer, Action<TransportState> successCallback = null)
         {
             try
             {
-                _dataSender.Send(transfer.Content, setting.ListenPortData); // 11000);// 
-                return TransportState.Ok;
-                byte[] bytes = new Byte[setting.SendPackageBytesData];
-                // Establish the remote endpoint for the socket.  
-                // This example uses port 11000 on the local computer.  
-                
-                IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
-                IPAddress ipAddress = ipHostInfo.AddressList[0];
-                IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);// 13571);// 11000);
-                
-                // Create a TCP/IP  socket.  
-                Socket sender =  new Socket(ipAddress.AddressFamily,
-                    SocketType.Stream, ProtocolType.Tcp);
-                    //Network.CreateSocket(setting.ListenPortData);/**/
-                // Connect the socket to the remote endpoint. Catch any errors.  
-                try
+                _dataSender.Send(transfer.Content, setting.ListenPortData, (success) =>
                 {
-                    sender.Connect(remoteEP);// sender.RemoteEndPoint);
-
-                    Console.WriteLine("Socket connected to {0}",
-                        sender.RemoteEndPoint.ToString());
-
-                    // Encode the data string into a byte array.  
-                    byte[] msg = Encoding.ASCII.GetBytes("This is a test<EOF>");
-                    var data = msg.ToList();
-                    data.AddRange(Network.EOFBytes);
-                    // Send the data through the socket.  
-                    int bytesSent = sender.Send(data.ToArray());
-
-                    // Receive the response from the remote device.  
-                    int bytesRec = sender.Receive(bytes);
-                    Console.WriteLine("Echoed test = {0}",
-                        Encoding.ASCII.GetString(bytes, 0, bytesRec));
-
-                    // Release the socket.  
-                    sender.Shutdown(SocketShutdown.Both);
-                    sender.Close();
-
-                }
-                catch (ArgumentNullException ane)
-                {
-                    Console.WriteLine("ArgumentNullException : {0}", ane.ToString());
-                }
-                catch (SocketException se)
-                {
-                    Console.WriteLine("SocketException : {0}", se.ToString());
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Unexpected exception : {0}", e.ToString());
-                }
+                    successCallback?.Invoke(success);
+                });
             }
             catch (Exception ex)
             {
                 _logger.Error(ex);
+                successCallback?.Invoke(TransportState.Error);
             }
-            return TransportState.Unkown;
         }
 
         public TransportState Send(string ip)

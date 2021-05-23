@@ -7,6 +7,6 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
     internal interface ISender
     {
         void Initialize(Setting setting);
-        void Send(byte[] data, int port);
+        void Send(byte[] data, int port, Action<TransportState> successCallback);
     }
 }

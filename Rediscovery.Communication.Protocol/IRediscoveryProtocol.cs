@@ -9,7 +9,7 @@ namespace Rediscovery.Communication.Protocol
         void Start(Setting setting);
         ConnectionState Connect(Connection connection);
         bool Disconnect();
-        TransportState Send(Transfer transfer);
+        void Send(Transfer transfer, Action<TransportState> successCallback = null);
         TransportState Stream(Action<object> streamData);
         void Listen(Action<Transfer> receivedCallback);
         TransportState LowLatencySend(Transfer transfer);

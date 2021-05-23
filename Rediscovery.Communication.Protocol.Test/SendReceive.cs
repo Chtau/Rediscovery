@@ -30,6 +30,10 @@ namespace Rediscovery.Communication.Protocol.Test
                 protocol.Send(new Transfer
                 {
                     Content = System.Text.Encoding.ASCII.GetBytes("Test")
+                }, (success) =>
+                {
+                    if (success != TransportState.Ok)
+                        throw new Exception("Failed to send");
                 });
             });
             
