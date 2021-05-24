@@ -7,7 +7,7 @@ namespace Rediscovery.Communication.Protocol.Test
     public class SendReceive
     {
         [Fact]
-        public void SendReceiveSocket()
+        public void SendReceiveSocketSimpleText()
         {
             IRediscoveryProtocol protocol = new RediscoveryProtocol();
             protocol.Start(new Setting());
@@ -42,14 +42,6 @@ namespace Rediscovery.Communication.Protocol.Test
                 System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(10));
             } while (!stop);
             Assert.True(data == "Test", "No Data received via Socket");
-        }
-
-        [Fact]
-        public void SendToIP()
-        {
-            //192.168.1.102:11000
-            RediscoveryProtocol protocol = new RediscoveryProtocol();
-            protocol.Send("192.168.1.102");
         }
     }
 }

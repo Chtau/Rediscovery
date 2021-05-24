@@ -7,6 +7,7 @@ namespace Rediscovery.Communication.Protocol
     public class Transfer
     {
         public byte[] Content { get; set; }
+        public string IP { get; set; }
     }
 
     public enum TransportState

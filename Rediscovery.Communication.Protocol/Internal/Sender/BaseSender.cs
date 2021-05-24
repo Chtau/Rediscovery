@@ -25,7 +25,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
             this.setting = setting;
         }
 
-        public void Send(byte[] data, int port, Action<TransportState> successCallback)
+        public void Send(byte[] data, string ip, int port, Action<TransportState> successCallback)
         {
             try
             {
@@ -34,7 +34,12 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                     try
                     {
                         Socket sender = Network.CreateSocket(port);
-                        sender.Connect(Network.LocalEndPoint(port));
+                        EndPoint remoteEP;
+                        if (!string.IsNullOrWhiteSpace(ip))
+                            remoteEP = new IPEndPoint(IPAddress.Parse(ip), port);
+                        else
+                            remoteEP = Network.LocalEndPoint(port);
+                        sender.Connect(remoteEP);
                         var raw = new List<byte>(data);
                         raw.AddRange(Network.EOFBytes);
                         var bytes = raw.ToArray();
@@ -68,7 +73,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
 
                 // Complete sending the data to the remote device.  
                 int bytesSent = stateObject.Sender.EndSend(ar);
-                Console.WriteLine("Sent {0} bytes to server.", bytesSent);
+                //Console.WriteLine("Sent {0} bytes to server.", bytesSent);
                 stateObject.SuccessCallback?.Invoke(TransportState.Ok);
             }
             catch (Exception ex)
