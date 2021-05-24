@@ -113,7 +113,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                             allDone.Reset();
 
                             // Start an asynchronous socket to listen for connections.  
-                            Console.WriteLine("Waiting for a connection...");
+                            //Console.WriteLine("Waiting for a connection...");
                             listener.BeginAccept(
                                 new AsyncCallback(AcceptCallback),
                                 listener);
@@ -142,72 +142,83 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
 
         private void AcceptCallback(IAsyncResult ar)
         {
-            // Signal the main thread to continue.  
-            allDone.Set();
-
-            // Get the socket that handles the client request.  
-            Socket listener = (Socket)ar.AsyncState;
-            Socket handler = listener.EndAccept(ar);
-
-            // Create the state object.  
-            var state = new StateObjectListener
+            try
             {
-                WorkSocket = handler,
-                Buffer = new byte[BufferSize]
-            };
-            handler.BeginReceive(state.Buffer, 0, BufferSize, 0, new AsyncCallback(ReadCallback), state);
-            
+                // Signal the main thread to continue.  
+                allDone.Set();
+
+                // Get the socket that handles the client request.  
+                Socket listener = (Socket)ar.AsyncState;
+                Socket handler = listener.EndAccept(ar);
+
+                // Create the state object.  
+                var state = new StateObjectListener
+                {
+                    WorkSocket = handler,
+                    Buffer = new byte[BufferSize]
+                };
+                handler.BeginReceive(state.Buffer, 0, BufferSize, 0, new AsyncCallback(ReadCallback), state);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
         }
 
         private void ReadCallback(IAsyncResult ar)
         {
-            String content = String.Empty;
-
-            // Retrieve the state object and the handler socket  
-            // from the asynchronous state object.  
-            var state = (StateObjectListener)ar.AsyncState;
-            Socket handler = state.WorkSocket;
-
-            // Read data from the client socket.
-            int bytesRead = handler.EndReceive(ar);
-
-            if (bytesRead > 0)
+            try
             {
-                int eofIndex = 0;
-                int bufferEnd = BufferSize;
-                for (int i = 0; i < state.Buffer.Length; i++)
+                // Retrieve the state object and the handler socket  
+                // from the asynchronous state object.  
+                var state = (StateObjectListener)ar.AsyncState;
+                Socket handler = state.WorkSocket;
+
+                // Read data from the client socket.
+                int bytesRead = handler.EndReceive(ar);
+
+                if (bytesRead > 0)
                 {
-                    if (state.Buffer[i] == Network.EOFBytes[eofIndex])
+                    int eofIndex = 0;
+                    int bufferEnd = BufferSize;
+                    for (int i = 0; i < state.Buffer.Length; i++)
                     {
-                        eofIndex++;
-                        if (eofIndex == Network.EOFBytes.Length)
+                        if (state.Buffer[i] == Network.EOFBytes[eofIndex])
                         {
-                            bufferEnd = (i + 1) - Network.EOFBytes.Length;
-                            break;
+                            eofIndex++;
+                            if (eofIndex == Network.EOFBytes.Length)
+                            {
+                                bufferEnd = (i + 1) - Network.EOFBytes.Length;
+                                break;
+                            }
                         }
+                        else
+                        {
+                            eofIndex = 0;
+                        }
+                    }
+
+                    // Check for end-of-file tag. If it is not there, read
+                    // more data.  
+                    if (bufferEnd < BufferSize)
+                    {
+                        state.Data.AddRange(state.Buffer.Take(bufferEnd));
+                        // All the data has been read from the client.
+                        var rawData = state.Data.ToArray();
+                        OnStateObjectComplete(rawData);
+                        stateCompleteCallback?.Invoke(rawData);
                     }
                     else
                     {
-                        eofIndex = 0;
+                        state.Data.AddRange(state.Buffer);
+                        // Not all data received. Get more.  
+                        handler.BeginReceive(state.Buffer, 0, BufferSize, 0, new AsyncCallback(ReadCallback), state);
                     }
                 }
-                                
-                // Check for end-of-file tag. If it is not there, read
-                // more data.  
-                if (bufferEnd < BufferSize)
-                {
-                    state.Data.AddRange(state.Buffer.Take(bufferEnd));
-                    // All the data has been read from the client.
-                    var rawData = state.Data.ToArray();
-                    OnStateObjectComplete(rawData);
-                    stateCompleteCallback?.Invoke(rawData);
-                }
-                else
-                {
-                    state.Data.AddRange(state.Buffer);
-                    // Not all data received. Get more.  
-                    handler.BeginReceive(state.Buffer, 0, BufferSize, 0, new AsyncCallback(ReadCallback), state);
-                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
             }
         }
 

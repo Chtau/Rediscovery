@@ -11,7 +11,6 @@ using System.Text;
 namespace Rediscovery.Communication.Protocol
 {
     // TODO: https://docs.microsoft.com/en-us/dotnet/framework/network-programming/asynchronous-server-socket-example
-    // TODO: https://www.c-sharpcorner.com/article/building-a-blockchain-in-net-core-p2p-network/
 
     /* Bash
      * Listen via Netcat: nc -l -p 11000
@@ -80,56 +79,6 @@ namespace Rediscovery.Communication.Protocol
                         Content = array
                     });
                 });
-                return;
-
-                byte[] bytes = new Byte[setting.ListenPackageBytesData];
-                // Establish the local endpoint for the socket.  
-                // The DNS name of the computer  
-                // running the listener is "host.contoso.com".  
-                
-                IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
-                IPAddress ipAddress = ipHostInfo.AddressList[0];
-                IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);
-                Socket listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                
-                //Socket listener = Network.CreateSocket(setting.ListenPortData);
-                listener.Bind(localEndPoint);//listener.LocalEndPoint);// 
-                listener.Listen(10);
-                string data = null;
-                // Start listening for connections.  
-                while (true)
-                {
-                    Console.WriteLine("Waiting for a connection...");
-                    // Program is suspended while waiting for an incoming connection.  
-                    Socket handler = listener.Accept();
-                    data = null;
-
-                    // An incoming connection needs to be processed.  
-                    while (true)
-                    {
-                        int bytesRec = handler.Receive(bytes);
-                        data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
-                        if (data.IndexOf("<EOF>") > -1)
-                        {
-                            receivedCallback?.Invoke(new Transfer
-                            {
-                                Content = Encoding.ASCII.GetBytes(data)
-                            });
-                            break;
-                        }
-                    }
-
-                    // Show the data on the console.  
-                    Console.WriteLine("Text received : {0}", data);
-
-                    // Echo the data back to the client.  
-                    byte[] msg = Encoding.ASCII.GetBytes(data);
-
-                    handler.Send(msg);
-                    handler.Shutdown(SocketShutdown.Both);
-                    handler.Close();
-                }
-
             }
             catch (Exception ex)
             {
