@@ -143,7 +143,7 @@ namespace Rediscovery.Communication.Protocol
                 _lowDataListener.Initialize(this.setting);
                 
                 // start listen for portocol data and discovery requests
-                //OnListenDiscovery();
+                OnListenDiscovery();
                 OnListenData();
                 //OnListenLowData();
             }
