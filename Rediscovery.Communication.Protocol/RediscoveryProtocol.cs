@@ -68,6 +68,18 @@ namespace Rediscovery.Communication.Protocol
             throw new NotImplementedException();
         }
 
+        public void NewDevices(Action<object> deviceCallback)
+        {
+            try
+            {
+                
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+        }
+
         public void Listen(Action<Transfer> receivedCallback)
         {
             try

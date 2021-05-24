@@ -23,10 +23,6 @@ After one discovery listener receives handshake setting from a peer it sends it'
     "Metadata": {
         "OS": "Android",
         "Idiom": "Phone",
-        "ScreenSize": {
-            "Width": 1920,
-            "Height": 1080
-        },
         "User": "Test A",
         "Machine": "Device A",
         "Is64Bit": true,
@@ -36,7 +32,7 @@ After one discovery listener receives handshake setting from a peer it sends it'
 }
 ```
 
-`Identifier` is a combination of values to create a unique key per device. The values use a `@` as delimiter.
+`Identifier` is a combination of values to create a unique key per device. The values use a `@` as delimiter. `SHA512` is then used on this `String` to create the final `Identifier`.
 
 1. Ticks as at the time of first creating the identifier
 2. Guid without delimiter

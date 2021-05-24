@@ -9,6 +9,7 @@ namespace Rediscovery.Communication.Protocol
         void Start(Setting setting);
         ConnectionState Connect(Connection connection);
         bool Disconnect();
+        void NewDevices(Action<object> deviceCallback);
         void Send(Transfer transfer, Action<TransportState> successCallback = null);
         TransportState Stream(Action<object> streamData);
         void Listen(Action<Transfer> receivedCallback);
