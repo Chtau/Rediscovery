@@ -4,11 +4,10 @@ using System.Text;
 
 namespace Rediscovery.Communication.Protocol.Models
 {
-    public class Device
+    public class DeviceGreeting
     {
         public string Identifier { get; set; }
         public string FriendlyName { get; set; }
-        public DeviceCommunicationSetting Data { get; set; }
-        public DeviceCommunicationSetting LowData { get; set; }
+        public DeviceCommunication Communication { get; set; }
     }
 }
