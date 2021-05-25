@@ -94,6 +94,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
 
         }
 
+        internal virtual Socket OnGetSocket()
+        {
+            return Network.CreateSocket(Port);
+        }
+
         private void OnInitThread()
         {
             try
@@ -103,8 +108,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                     try
                     {
                         OnBeforeDoWork();
-                        Socket listener = Network.CreateSocket(Port);// 11000);// 
-                        listener.Bind(Network.LocalEndPoint(Port));// 11000));// // listener.LocalEndPoint) ;
+                        Socket listener = OnGetSocket();
+                        listener.Bind(Network.LocalEndPoint(Port));
                         listener.Listen(10);
 
                         while (working)
@@ -113,7 +118,6 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                             allDone.Reset();
 
                             // Start an asynchronous socket to listen for connections.  
-                            //Console.WriteLine("Waiting for a connection...");
                             listener.BeginAccept(
                                 new AsyncCallback(AcceptCallback),
                                 listener);

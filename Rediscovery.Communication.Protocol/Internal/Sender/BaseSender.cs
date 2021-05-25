@@ -25,6 +25,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
             this.setting = setting;
         }
 
+        internal virtual Socket OnGetSocket(int port)
+        {
+            return Network.CreateSocket(port);
+        }
+
         public void Send(byte[] data, string ip, int port, Action<TransportState> successCallback)
         {
             try
@@ -33,7 +38,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                 {
                     try
                     {
-                        Socket sender = Network.CreateSocket(port);
+                        Socket sender = OnGetSocket(port);
                         EndPoint remoteEP;
                         if (!string.IsNullOrWhiteSpace(ip))
                             remoteEP = new IPEndPoint(IPAddress.Parse(ip), port);
