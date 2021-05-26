@@ -45,10 +45,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                         else
                             remoteEP = Network.LocalEndPoint(port);
                         sender.Connect(remoteEP);
-                        var raw = new List<byte>(data);
+                        int sendLength = data.Length + Network.EOFBytes.Length;
+                        var raw = new List<byte>(sendLength);
+                        raw.AddRange(data);
                         raw.AddRange(Network.EOFBytes);
-                        var bytes = raw.ToArray();
-                        sender.BeginSend(bytes, 0, bytes.Length, 0,
+                        sender.BeginSend(raw.ToArray(), 0, sendLength, 0,
                             new AsyncCallback(OnSendCallback),
                             new StateObjectSender
                             {
