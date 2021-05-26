@@ -23,7 +23,7 @@ namespace Rediscovery.Communication.Protocol
         private readonly IListener _discoveryListener;
         private readonly IListener _dataListener;
         private readonly IListener _lowDataListener;
-        private readonly ISender _discoverySender;
+        private readonly DiscoverySender _discoverySender;
         private readonly ISender _dataSender;
         private readonly ISender _lowDataSender;
         private Setting setting;
@@ -156,7 +156,7 @@ namespace Rediscovery.Communication.Protocol
                 
                 // start listen for portocol data and discovery requests
                 OnListenDiscovery();
-                OnListenData();
+                //OnListenData();
                 //OnListenLowData();
             }
             catch (Exception ex)
@@ -175,6 +175,7 @@ namespace Rediscovery.Communication.Protocol
             try
             {
                 _discoveryListener.Start();
+                _discoverySender.Start();
             }
             catch (Exception ex)
             {

@@ -14,6 +14,11 @@ namespace Rediscovery.Communication.Protocol.Test
         {
             IRediscoveryProtocol protocol = new RediscoveryProtocol();
             protocol.Start(new Setting());
+            do
+            {
+                //protocol.
+                System.Threading.Thread.Sleep(TimeSpan.FromSeconds(1));
+            } while (true);
         }
     }
 }
