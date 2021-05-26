@@ -79,9 +79,6 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                 {
                     try
                     {
-                        IPHostEntry hostEntry = Dns.GetHostEntry(Dns.GetHostName());
-                        IPEndPoint endPoint = new IPEndPoint(hostEntry.AddressList[1], setting.ListenPortDiscovery);
-
                         var socket = OnGetSocket(setting.SendPortDiscovery);
                         socket.EnableBroadcast = true;
                         socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
@@ -89,14 +86,14 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                         {
                             System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(100));
                             var data = System.Text.Encoding.ASCII.GetBytes("Hello");
-                            socket.SendTo(data, endPoint);
+                            socket.SendTo(data, new IPEndPoint(IPAddress.Broadcast, setting.ListenPortDiscovery));
                         }
                     }
                     catch (Exception ex)
                     {
                         _logger.Error(ex);
                         // if we reach this point we need to restart
-                        ///Start();
+                        Start();
                     }
                 })
                 {

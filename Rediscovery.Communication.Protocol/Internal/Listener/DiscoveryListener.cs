@@ -97,7 +97,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                     {
                         _logger.Error(ex);
                         // if we reach this point we need to restart
-                        //Start();
+                        Start();
                     }
                 })
                 {
