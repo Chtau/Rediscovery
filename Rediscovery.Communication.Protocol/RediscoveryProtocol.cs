@@ -20,7 +20,7 @@ namespace Rediscovery.Communication.Protocol
     public class RediscoveryProtocol : IRediscoveryProtocol
     {
         private readonly IProtocolLogger _logger;
-        private readonly IListener _discoveryListener;
+        private readonly DiscoveryListener _discoveryListener;
         private readonly IListener _dataListener;
         private readonly IListener _lowDataListener;
         private readonly DiscoverySender _discoverySender;
