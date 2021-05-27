@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Rediscovery.Communication.Protocol.Models;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Linq;
 
 namespace Rediscovery.Communication.Protocol.Internal.Listener
 {
@@ -11,9 +13,12 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
         private readonly IProtocolLogger _logger;
         private System.Threading.Thread listenThread;
         private readonly string threadName = $"Thread_{nameof(DiscoveryListener)}";
+        private List<DeviceGreetingReceived> _devices = new List<DeviceGreetingReceived>();
 
         private Setting setting;
         private bool working = false;
+
+        public List<DeviceGreeting> Devices => _devices.Select(x => x.Device).ToList();
 
         public DiscoveryListener(IProtocolLogger protocolLogger = null)
         {

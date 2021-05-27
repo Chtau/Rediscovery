@@ -9,5 +9,6 @@ namespace Rediscovery.Communication.Protocol.Models
         public string Identifier { get; set; }
         public string FriendlyName { get; set; }
         public DeviceCommunication Communication { get; set; }
+        public DeviceMetadata Metadata { get; set; }
     }
 }

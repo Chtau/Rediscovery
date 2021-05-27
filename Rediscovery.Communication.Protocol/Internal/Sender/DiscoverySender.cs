@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rediscovery.Communication.Protocol.Models;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -108,9 +109,40 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
 
         private Socket OnGetSocket(int port)
         {
-            //return Network.CreateSocket(port, SocketType.Dgram, ProtocolType.Udp);
             var endpoint = new IPEndPoint(IPAddress.Broadcast, port);
             return new Socket(endpoint.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
+        }
+
+        private DeviceGreeting OnGetDeviceGreeting()
+        {
+            return new DeviceGreeting
+            {
+                Identifier = Environment.MachineName,
+                FriendlyName = Environment.MachineName,
+                Metadata = new DeviceMetadata
+                {
+                    Idiom = DeviceMetadata.IdiomType.Desktop,
+                    Is64Bit = Environment.Is64BitOperatingSystem,
+                    Machine = Environment.MachineName,
+                    OS = Environment.OSVersion.ToString(),
+                    PhysicalMemory = Environment.WorkingSet,
+                    Processor = Environment.ProcessorCount,
+                    User = Environment.UserName
+                },
+                Communication = new DeviceCommunication
+                {
+                    Data = new DeviceCommunicationSetting
+                    {
+                        ByteSize = setting.ListenPackageBytesData,
+                        Port = setting.ListenPortData
+                    },
+                    LowData = new DeviceCommunicationSetting
+                    {
+                        ByteSize = setting.ListenPackageBytesLowData,
+                        Port = setting.ListenPortLowData
+                    }
+                }
+            };
         }
     }
 }
