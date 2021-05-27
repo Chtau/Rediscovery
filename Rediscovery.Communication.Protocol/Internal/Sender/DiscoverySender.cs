@@ -1,4 +1,5 @@
-﻿using Rediscovery.Communication.Protocol.Models;
+﻿using MessagePack;
+using Rediscovery.Communication.Protocol.Models;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -87,6 +88,15 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                         {
                             System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(100));
                             var data = System.Text.Encoding.ASCII.GetBytes("Hello");
+                            
+                            // TODO: use compression for message pack serializer
+                            var lz4Options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
+                            var lz4Options1 = MessagePack.Resolvers.ContractlessStandardResolver.Options.WithCompression(MessagePackCompression.Lz4BlockArray);
+
+                            //var bin = MessagePackSerializer.Serialize(OnGetDeviceGreeting(), MessagePack.Resolvers.ContractlessStandardResolver.Options);
+                            var bin2 = MessagePackSerializer.Serialize(OnGetDeviceGreeting(), lz4Options1);
+                            //var blob = MessagePackSerializer.Typeless.Serialize(OnGetDeviceGreeting());
+                            var blob2 = MessagePackSerializer.Typeless.Serialize(OnGetDeviceGreeting(), lz4Options1);
                             socket.SendTo(data, new IPEndPoint(IPAddress.Broadcast, setting.ListenPortDiscovery));
                         }
                     }
