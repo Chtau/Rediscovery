@@ -26,18 +26,21 @@ namespace Rediscovery.Communication.Protocol
         private readonly DiscoverySender _discoverySender;
         private readonly ISender _dataSender;
         private readonly ISender _lowDataSender;
+        private readonly ISerializer _serializer;
+
         private Setting setting;
         
 
-        public RediscoveryProtocol(IProtocolLogger protocolLogger = null)
+        public RediscoveryProtocol(IProtocolLogger protocolLogger = null, ISerializer serializer = null)
         {
             _logger = protocolLogger ?? new Internal.ProtocolLogger();
-            _discoveryListener = new DiscoveryListener(_logger);
-            _dataListener = new DataListener(_logger);
-            _lowDataListener = new LowDataListener(_logger);
-            _discoverySender = new DiscoverySender(_logger);
-            _dataSender = new DataSender(_logger);
-            _lowDataSender = new LowDataSender(_logger);
+            _serializer = serializer ?? new Serializer(_logger);
+            _discoveryListener = new DiscoveryListener(_logger, _serializer);
+            _dataListener = new DataListener(_logger, _serializer);
+            _lowDataListener = new LowDataListener(_logger, _serializer);
+            _discoverySender = new DiscoverySender(_logger, _serializer);
+            _dataSender = new DataSender(_logger, _serializer);
+            _lowDataSender = new LowDataSender(_logger, _serializer);
         }
 
         public ConnectionState Connect(Connection connection)

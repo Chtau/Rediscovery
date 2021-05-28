@@ -8,7 +8,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
     {
         public override int BufferSize => setting.SendPackageBytesData;
 
-        public DataSender(IProtocolLogger protocolLogger = null) : base(protocolLogger)
+        public DataSender(IProtocolLogger protocolLogger, ISerializer serializer) : base(protocolLogger, serializer)
         {
 
         }

@@ -11,15 +11,18 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
     internal class DiscoverySender
     {
         private readonly IProtocolLogger _logger;
+        private readonly ISerializer _serializer;
+
         private System.Threading.Thread listenThread;
         private readonly string threadName = $"Thread_{nameof(DiscoverySender)}";
 
         private Setting setting;
         private bool working = false;
 
-        public DiscoverySender(IProtocolLogger protocolLogger = null)
+        public DiscoverySender(IProtocolLogger protocolLogger, ISerializer serializer)
         {
-            _logger = protocolLogger ?? new ProtocolLogger();
+            _logger = protocolLogger;
+            _serializer = serializer;
             OnInitThread();
         }
 
@@ -87,17 +90,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                         while (working)
                         {
                             System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(100));
-                            var data = System.Text.Encoding.ASCII.GetBytes("Hello");
-                            
-                            // TODO: use compression for message pack serializer
-                            var lz4Options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
-                            var lz4Options1 = MessagePack.Resolvers.ContractlessStandardResolver.Options.WithCompression(MessagePackCompression.Lz4BlockArray);
-
-                            //var bin = MessagePackSerializer.Serialize(OnGetDeviceGreeting(), MessagePack.Resolvers.ContractlessStandardResolver.Options);
-                            var bin2 = MessagePackSerializer.Serialize(OnGetDeviceGreeting(), lz4Options1);
-                            //var blob = MessagePackSerializer.Typeless.Serialize(OnGetDeviceGreeting());
-                            var blob2 = MessagePackSerializer.Typeless.Serialize(OnGetDeviceGreeting(), lz4Options1);
-                            socket.SendTo(data, new IPEndPoint(IPAddress.Broadcast, setting.ListenPortDiscovery));
+                            socket.SendTo(_serializer.Serialize(OnGetDeviceGreeting()), new IPEndPoint(IPAddress.Broadcast, setting.ListenPortDiscovery));
                         }
                     }
                     catch (Exception ex)

@@ -10,14 +10,16 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
     internal abstract class BaseSender : ISender
     {
         private readonly IProtocolLogger _logger;
+        private readonly ISerializer _serializer;
 
         internal Setting setting;
 
         public virtual int BufferSize => setting.SendPackageBytesData;
 
-        public BaseSender(IProtocolLogger protocolLogger = null)
+        public BaseSender(IProtocolLogger protocolLogger, ISerializer serializer)
         {
-            _logger = protocolLogger ?? new ProtocolLogger();
+            _logger = protocolLogger;
+            _serializer = serializer;
         }
 
         public void Initialize(Setting setting)
