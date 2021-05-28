@@ -16,7 +16,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
         private System.Threading.Thread listenThread;
         private readonly string threadName = $"Thread_{nameof(DiscoverySender)}";
 
-        private Setting setting;
+        private DiscoveryConfiguration configuration;
         private bool working = false;
 
         public DiscoverySender(IProtocolLogger protocolLogger, ISerializer serializer)
@@ -26,9 +26,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
             OnInitThread();
         }
 
-        public void Initialize(Setting setting)
+        public void Initialize(DiscoveryConfiguration configuration)
         {
-            this.setting = setting;
+            this.configuration = configuration;
         }
 
         public bool Start()
@@ -84,13 +84,13 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                 {
                     try
                     {
-                        var socket = OnGetSocket(setting.SendPortDiscovery);
+                        var socket = OnGetSocket(configuration.Connection.SendPort);
                         socket.EnableBroadcast = true;
                         socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
                         while (working)
                         {
                             System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(100));
-                            socket.SendTo(_serializer.Serialize(OnGetDeviceGreeting()), new IPEndPoint(IPAddress.Broadcast, setting.ListenPortDiscovery));
+                            socket.SendTo(_serializer.Serialize(OnGetDeviceGreeting()), new IPEndPoint(IPAddress.Broadcast, configuration.Connection.SendPort));
                         }
                     }
                     catch (Exception ex)
@@ -134,15 +134,16 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                 },
                 Communication = new DeviceCommunication
                 {
+                    // TODO: fill DeviceGreeting with real data
                     Data = new DeviceCommunicationSetting
                     {
-                        ByteSize = setting.ListenPackageBytesData,
-                        Port = setting.ListenPortData
+                        ByteSize = -1,//setting.ListenPackageBytesData,
+                        Port = -1//setting.ListenPortData
                     },
                     LowData = new DeviceCommunicationSetting
                     {
-                        ByteSize = setting.ListenPackageBytesLowData,
-                        Port = setting.ListenPortLowData
+                        ByteSize = -1,//setting.ListenPackageBytesLowData,
+                        Port = -1//setting.ListenPortLowData
                     }
                 }
             };

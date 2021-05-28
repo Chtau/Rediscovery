@@ -6,7 +6,7 @@ namespace Rediscovery.Communication.Protocol
 {
     public interface IRediscoveryProtocol
     {
-        void Start(Setting setting);
+        void Start(Models.Configuration configuration);
         ConnectionState Connect(Connection connection);
         bool Disconnect();
         void NewDevices(Action<object> deviceCallback);

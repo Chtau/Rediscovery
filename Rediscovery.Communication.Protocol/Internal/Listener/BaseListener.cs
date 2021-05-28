@@ -15,13 +15,13 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
 
         private System.Threading.Thread listenThread;
 
-        internal Setting setting;
+        internal Models.BaseConfiguration configuration;
         private bool working = false;
         private static readonly ManualResetEvent allDone = new ManualResetEvent(false);
         private Action<byte[]> stateCompleteCallback;
 
-        public virtual int BufferSize => setting.ListenPackageBytesData;
-        public virtual int Port => setting.ListenPortData;
+        public virtual int BufferSize => configuration.Connection.PackageSize;
+        public virtual int Port => configuration.Connection.ListenPort;
 
         public BaseListener(IProtocolLogger protocolLogger, ISerializer serializer, string threadName = null)
         {
@@ -32,9 +32,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
             OnInitThread();
         }
 
-        public virtual void Initialize(Setting setting)
+        public virtual void Initialize(Models.BaseConfiguration configuration)
         {
-            this.setting = setting;
+            this.configuration = configuration;
         }
 
         public virtual void StateCompleteListener(Action<byte[]> callback)

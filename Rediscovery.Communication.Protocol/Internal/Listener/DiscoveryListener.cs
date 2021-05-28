@@ -17,7 +17,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
         private readonly string threadName = $"Thread_{nameof(DiscoveryListener)}";
         private List<DeviceGreetingReceived> _devices = new List<DeviceGreetingReceived>();
 
-        private Setting setting;
+        private DiscoveryConfiguration configuration;
         private bool working = false;
 
         public List<DeviceGreeting> Devices => _devices.Select(x => x.Device).ToList();
@@ -29,9 +29,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
             OnInitThread();
         }
 
-        public void Initialize(Setting setting)
+        public void Initialize(DiscoveryConfiguration configuration)
         {
-            this.setting = setting;
+            this.configuration = configuration;
         }
 
         public bool Start()
@@ -87,8 +87,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                 {
                     try
                     {
-                        var socket = OnGetSocket(setting.ListenPortDiscovery);
-                        socket.Bind(new IPEndPoint(IPAddress.Any, setting.ListenPortDiscovery));
+                        var socket = OnGetSocket(configuration.Connection.ListenPort);
+                        socket.Bind(new IPEndPoint(IPAddress.Any, configuration.Connection.ListenPort));
                         //socket.EnableBroadcast = true;
                         while (working)
                         {

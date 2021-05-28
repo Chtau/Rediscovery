@@ -12,9 +12,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
         private readonly IProtocolLogger _logger;
         private readonly ISerializer _serializer;
 
-        internal Setting setting;
+        internal Models.BaseConfiguration configuration;
 
-        public virtual int BufferSize => setting.SendPackageBytesData;
+        public virtual int BufferSize => configuration.Connection.PackageSize;
 
         public BaseSender(IProtocolLogger protocolLogger, ISerializer serializer)
         {
@@ -22,9 +22,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
             _serializer = serializer;
         }
 
-        public void Initialize(Setting setting)
+        public void Initialize(Models.BaseConfiguration configuration)
         {
-            this.setting = setting;
+            this.configuration = configuration;
         }
 
         internal virtual Socket OnGetSocket(int port)

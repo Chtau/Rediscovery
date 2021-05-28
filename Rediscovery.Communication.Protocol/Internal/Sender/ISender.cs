@@ -6,7 +6,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
 {
     internal interface ISender
     {
-        void Initialize(Setting setting);
+        void Initialize(Models.BaseConfiguration configuration);
         void Send(byte[] data, string ip, int port, Action<TransportState> successCallback);
     }
 }

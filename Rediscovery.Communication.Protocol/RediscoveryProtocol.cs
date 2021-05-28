@@ -28,7 +28,7 @@ namespace Rediscovery.Communication.Protocol
         private readonly ISender _lowDataSender;
         private readonly ISerializer _serializer;
 
-        private Setting setting;
+        private Models.Configuration configuration;
         
 
         public RediscoveryProtocol(IProtocolLogger protocolLogger = null, ISerializer serializer = null)
@@ -133,7 +133,7 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
-                _dataSender.Send(transfer.Content, transfer.IP, setting.ListenPortData, (success) =>
+                _dataSender.Send(transfer.Content, transfer.IP, configuration.Data.Connection.ListenPort, (success) =>
                 {
                     successCallback?.Invoke(success);
                 });
@@ -145,17 +145,17 @@ namespace Rediscovery.Communication.Protocol
             }
         }
 
-        public void Start(Setting setting)
+        public void Start(Models.Configuration configuration)
         {
             try
             {
-                this.setting = setting ?? new Setting();
-                _discoverySender.Initialize(this.setting);
-                _dataSender.Initialize(this.setting);
-                _lowDataSender.Initialize(this.setting);
-                _discoveryListener.Initialize(this.setting);
-                _dataListener.Initialize(this.setting);
-                _lowDataListener.Initialize(this.setting);
+                this.configuration = configuration ?? new Models.Configuration();
+                _discoverySender.Initialize(this.configuration.Discovery);
+                _dataSender.Initialize(this.configuration.Data);
+                _lowDataSender.Initialize(this.configuration.LowData);
+                _discoveryListener.Initialize(this.configuration.Discovery);
+                _dataListener.Initialize(this.configuration.Data);
+                _lowDataListener.Initialize(this.configuration.LowData);
                 
                 // start listen for portocol data and discovery requests
                 OnListenDiscovery();

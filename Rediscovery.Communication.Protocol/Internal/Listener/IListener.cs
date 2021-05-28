@@ -6,7 +6,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
 {
     internal interface IListener
     {
-        void Initialize(Setting setting);
+        void Initialize(Models.BaseConfiguration configuration);
         void StateCompleteListener(Action<byte[]> callback);
         bool Start();
         bool Stop();

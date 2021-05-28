@@ -6,8 +6,6 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
 {
     internal class LowDataSender : BaseSender
     {
-        public override int BufferSize => setting.SendPackageBytesLowData;
-
         public LowDataSender(IProtocolLogger protocolLogger, ISerializer serializer) : base(protocolLogger, serializer)
         {
 
