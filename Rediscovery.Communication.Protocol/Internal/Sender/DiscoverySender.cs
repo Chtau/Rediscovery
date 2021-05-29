@@ -12,12 +12,14 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
     {
         private readonly IProtocolLogger _logger;
         private readonly IPackagePipeline _packagePipeline;
-
-        private System.Threading.Thread listenThread;
         private readonly string threadName = $"Thread_{nameof(DiscoverySender)}";
 
+        private System.Threading.Thread listenThread;
         private DiscoveryConfiguration configuration;
         private bool working = false;
+        private string currentIdentifier;
+
+        public DeviceGreeting Greeting { get; set; }
 
         public DiscoverySender(IProtocolLogger protocolLogger, IPackagePipeline packagePipeline)
         {
@@ -76,6 +78,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
             return false;
         }
 
+        public void SetIdentifier(string identifier) => currentIdentifier = identifier;
+
         private void OnInitThread()
         {
             try
@@ -119,12 +123,17 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
 
         private DeviceGreeting OnGetDeviceGreeting()
         {
-            // TODO: fill DeviceGreeting with real data
-            return new DeviceGreeting
+            if (Greeting == null)
             {
-                Identifier = Environment.MachineName,
-                FriendlyName = Environment.MachineName,
-                Metadata = new DeviceMetadata
+                Greeting = new DeviceGreeting
+                {
+                    Identifier = currentIdentifier,
+                    FriendlyName = Environment.MachineName
+                };
+            }
+            if (Greeting.Metadata == null)
+            {
+                Greeting.Metadata = new DeviceMetadata
                 {
                     Idiom = DeviceMetadata.IdiomType.Desktop,
                     Is64Bit = Environment.Is64BitOperatingSystem,
@@ -133,21 +142,29 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                     PhysicalMemory = Environment.WorkingSet,
                     Processor = Environment.ProcessorCount,
                     User = Environment.UserName
-                },
-                Communication = new DeviceCommunication
+                };
+            }
+            if (Greeting.Communication == null)
+            {
+                Greeting.Communication = new DeviceCommunication();
+            }
+            if (Greeting.Communication.Data == null)
+            {
+                Greeting.Communication.Data = new DeviceCommunicationSetting
                 {
-                    Data = new DeviceCommunicationSetting
-                    {
-                        ByteSize = -1,//setting.ListenPackageBytesData,
-                        Port = -1//setting.ListenPortData
-                    },
-                    LowData = new DeviceCommunicationSetting
-                    {
-                        ByteSize = -1,//setting.ListenPackageBytesLowData,
-                        Port = -1//setting.ListenPortLowData
-                    }
-                }
-            };
+                    ByteSize = -1,//setting.ListenPackageBytesData,
+                    Port = -1//setting.ListenPortData
+                };
+            }
+            if (Greeting.Communication.LowData == null)
+            {
+                Greeting.Communication.LowData = new DeviceCommunicationSetting
+                {
+                    ByteSize = -1,//setting.ListenPackageBytesLowData,
+                    Port = -1//setting.ListenPortLowData
+                };
+            }
+            return Greeting;
         }
     }
 }

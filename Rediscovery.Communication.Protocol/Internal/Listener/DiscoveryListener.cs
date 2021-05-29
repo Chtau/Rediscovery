@@ -94,7 +94,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                         while (working)
                         {
                             EndPoint clientEp = new IPEndPoint(IPAddress.Any, 0);
-                            var bytes = new byte[512];
+                            var bytes = new byte[configuration.Connection.PackageSize];
                             int bytesReceived = socket.ReceiveFrom(bytes, ref clientEp);
                             if (bytesReceived > 0)
                             {

@@ -22,5 +22,8 @@ namespace Rediscovery.Communication.Protocol
         void LowLatencyListen(Action<Transfer> receivedCallback);
         object GetDiagnosticData();
         object GetConnectionInfo();
+        void ChangeGreeting(DeviceGreeting greeting);
+        void SetIdentifier(string identifer);
+        string NewIdentifier();
     }
 }

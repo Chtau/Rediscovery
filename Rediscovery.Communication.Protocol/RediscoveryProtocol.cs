@@ -31,12 +31,25 @@ namespace Rediscovery.Communication.Protocol
         private readonly IPackagePipeline _packagePipeline;
 
         private Models.Configuration configuration;
+        private string identifer;
 
         public event EventHandler DevicesChanged;
 
         public List<DeviceGreeting> Devices => _discoveryListener.Devices;
+        public string Identifer 
+        { 
+            get
+            {
+                if (string.IsNullOrWhiteSpace(identifer))
+                {
+                    identifer = NewIdentifier();
+                    OnChangedIdentifier();
+                }
+                return identifer;
+            }
+        }
 
-        public RediscoveryProtocol(IProtocolLogger protocolLogger = null, ISerializer serializer = null)
+        public RediscoveryProtocol(string identifer = null, IProtocolLogger protocolLogger = null, ISerializer serializer = null)
         {
             _logger = protocolLogger ?? new Internal.ProtocolLogger();
             _serializer = serializer ?? new Serializer(_logger);
@@ -52,7 +65,16 @@ namespace Rediscovery.Communication.Protocol
             _discoverySender = new DiscoverySender(_logger, _packagePipeline);
             _dataSender = new DataSender(_logger, _packagePipeline);
             _lowDataSender = new LowDataSender(_logger, _packagePipeline);
+            if (!string.IsNullOrWhiteSpace(identifer))
+            {
+                this.identifer = identifer;
+                OnChangedIdentifier();
+            }
+            if (string.IsNullOrWhiteSpace(Identifer))
+                throw new ArgumentNullException(nameof(Identifer), "Cloud not create a new Identifier");
         }
+
+        public string NewIdentifier() => $"{Guid.NewGuid()}.{DateTime.Now}.{Environment.MachineName}".GetHashString();
 
         public ConnectionState Connect(Connection connection)
         {
@@ -215,6 +237,43 @@ namespace Rediscovery.Communication.Protocol
             try
             {
                 _lowDataListener.Start();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+        }
+
+        public void ChangeGreeting(DeviceGreeting greeting)
+        {
+            try
+            {
+                _discoverySender.Greeting = greeting;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+        }
+
+        public void SetIdentifier(string identifer)
+        {
+            try
+            {
+                this.identifer = identifer;
+                OnChangedIdentifier();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+        }
+
+        private void OnChangedIdentifier()
+        {
+            try
+            {
+                _discoverySender.SetIdentifier(Identifer);
             }
             catch (Exception ex)
             {
