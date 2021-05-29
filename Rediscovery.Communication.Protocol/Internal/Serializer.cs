@@ -18,7 +18,7 @@ namespace Rediscovery.Communication.Protocol.Internal
         {
             try
             {
-                return (T)MessagePackSerializer.Typeless.Deserialize(raw, OnGetOptions());
+                return MessagePackSerializer.Deserialize<T>(raw, OnGetOptions());
             } catch (Exception ex)
             {
                 _logger.Error(ex);
@@ -30,7 +30,7 @@ namespace Rediscovery.Communication.Protocol.Internal
         {
             try
             {
-                return MessagePackSerializer.Typeless.Serialize(instance, OnGetOptions());
+                return MessagePackSerializer.Serialize(instance, OnGetOptions());
             }
             catch (Exception ex)
             {

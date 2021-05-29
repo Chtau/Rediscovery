@@ -21,6 +21,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
         private bool working = false;
 
         public List<DeviceGreeting> Devices => _devices.Select(x => x.Device).ToList();
+        public event EventHandler DevicesChanged;
 
         public DiscoveryListener(IProtocolLogger protocolLogger, IPackagePipeline packagePipeline)
         {
@@ -98,6 +99,23 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                             if (bytesReceived > 0)
                             {
                                 System.Diagnostics.Trace.TraceInformation($"Received UDP DGRAM Bytes Count:{bytesReceived}");
+                                var deviceGreeting = _packagePipeline.Incoming<DeviceGreeting>(bytes.Take(bytesReceived).ToArray());
+                                if (deviceGreeting != null)
+                                {
+                                    var d = _devices.FirstOrDefault(x => x.Device.Identifier == deviceGreeting.Identifier);
+                                    if (d != null)
+                                    {
+                                        if (d.Update(deviceGreeting))
+                                        {
+                                            DevicesChanged?.Invoke(this, EventArgs.Empty);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        _devices.Add(new DeviceGreetingReceived(deviceGreeting));
+                                        DevicesChanged?.Invoke(this, EventArgs.Empty);
+                                    }
+                                }
                             }
                         }
                     }

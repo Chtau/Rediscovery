@@ -90,6 +90,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                         while (working)
                         {
                             System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(100));
+                            // TODO: send own device greeting and all other devices with +1 hop
                             socket.SendTo(_packagePipeline.Outgoing(OnGetDeviceGreeting()), new IPEndPoint(IPAddress.Broadcast, configuration.Connection.SendPort));
                         }
                     }

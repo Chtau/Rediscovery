@@ -5,9 +5,11 @@ using System.Text;
 namespace Rediscovery.Communication.Protocol.Internal
 {
     // TODO: Package Design used for TCP
+    // TODO: Should we change to Byte flags instead of structur to reduce bytes used?
     // 1.) Fixed Length with the size of the PackageHeader Class
     // 2.) PackageHeader Instance which descripes the following data with Checksum
     // 3.) Data bytes until the size from the PackageHeader.PayloadSize is reached
+    // 4.) TODO: peer receiver / hop target
 
     internal class PackageHeader
     {
