@@ -10,7 +10,7 @@ namespace Rediscovery.Communication.Protocol.Test
         public void SendReceiveSocketSimpleText()
         {
             IRediscoveryProtocol protocol = new RediscoveryProtocol();
-            protocol.Start(new Setting());
+            protocol.Start(null);
             
             bool stop = false;
             string data = null;

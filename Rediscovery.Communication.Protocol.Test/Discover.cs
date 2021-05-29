@@ -13,7 +13,7 @@ namespace Rediscovery.Communication.Protocol.Test
         public void Listen()
         {
             IRediscoveryProtocol protocol = new RediscoveryProtocol();
-            protocol.Start(new Setting());
+            protocol.Start(null);
             do
             {
                 //protocol.

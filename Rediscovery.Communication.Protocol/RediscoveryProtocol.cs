@@ -150,6 +150,12 @@ namespace Rediscovery.Communication.Protocol
             try
             {
                 this.configuration = configuration ?? new Models.Configuration();
+                if (this.configuration.Discovery == null)
+                    this.configuration.Discovery = new Models.DiscoveryConfiguration();
+                if (this.configuration.Data == null)
+                    this.configuration.Data = new Models.DataConfiguration();
+                if (this.configuration.LowData == null)
+                    this.configuration.LowData = new Models.LowDataConfiguration();
                 _discoverySender.Initialize(this.configuration.Discovery);
                 _dataSender.Initialize(this.configuration.Data);
                 _lowDataSender.Initialize(this.configuration.LowData);
