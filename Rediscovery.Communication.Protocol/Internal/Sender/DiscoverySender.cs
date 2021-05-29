@@ -118,6 +118,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
 
         private DeviceGreeting OnGetDeviceGreeting()
         {
+            // TODO: fill DeviceGreeting with real data
             return new DeviceGreeting
             {
                 Identifier = Environment.MachineName,
@@ -134,7 +135,6 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                 },
                 Communication = new DeviceCommunication
                 {
-                    // TODO: fill DeviceGreeting with real data
                     Data = new DeviceCommunicationSetting
                     {
                         ByteSize = -1,//setting.ListenPackageBytesData,
