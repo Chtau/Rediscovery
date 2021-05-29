@@ -6,7 +6,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
 {
     internal class LowDataListener : BaseListener
     {
-        public LowDataListener(IProtocolLogger protocolLogger, ISerializer serializer) : base(protocolLogger, serializer, nameof(LowDataListener))
+        public LowDataListener(IProtocolLogger protocolLogger, IPackagePipeline packagePipeline) : base(protocolLogger, packagePipeline, nameof(LowDataListener))
         {
 
         }

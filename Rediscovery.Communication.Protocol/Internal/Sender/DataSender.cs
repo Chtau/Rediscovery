@@ -6,7 +6,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
 {
     internal class DataSender : BaseSender
     {
-        public DataSender(IProtocolLogger protocolLogger, ISerializer serializer) : base(protocolLogger, serializer)
+        public DataSender(IProtocolLogger protocolLogger, IPackagePipeline packagePipeline) : base(protocolLogger, packagePipeline)
         {
 
         }

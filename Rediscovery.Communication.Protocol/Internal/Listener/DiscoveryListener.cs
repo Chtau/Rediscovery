@@ -11,7 +11,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
     internal class DiscoveryListener
     {
         private readonly IProtocolLogger _logger;
-        private readonly ISerializer _serializer;
+        private readonly IPackagePipeline _packagePipeline;
 
         private System.Threading.Thread listenThread;
         private readonly string threadName = $"Thread_{nameof(DiscoveryListener)}";
@@ -22,10 +22,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
 
         public List<DeviceGreeting> Devices => _devices.Select(x => x.Device).ToList();
 
-        public DiscoveryListener(IProtocolLogger protocolLogger, ISerializer serializer)
+        public DiscoveryListener(IProtocolLogger protocolLogger, IPackagePipeline packagePipeline)
         {
             _logger = protocolLogger;
-            _serializer = serializer;
+            _packagePipeline = packagePipeline;
             OnInitThread();
         }
 

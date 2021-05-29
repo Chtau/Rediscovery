@@ -10,7 +10,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
     internal abstract class BaseListener : IListener
     {
         private readonly IProtocolLogger _logger;
-        private readonly ISerializer _serializer;
+        private readonly IPackagePipeline _packagePipeline;
         private readonly string threadName = $"Thread";
 
         private System.Threading.Thread listenThread;
@@ -23,10 +23,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
         public virtual int BufferSize => configuration.Connection.PackageSize;
         public virtual int Port => configuration.Connection.ListenPort;
 
-        public BaseListener(IProtocolLogger protocolLogger, ISerializer serializer, string threadName = null)
+        public BaseListener(IProtocolLogger protocolLogger, IPackagePipeline packagePipeline, string threadName = null)
         {
             _logger = protocolLogger;
-            _serializer = serializer;
+            _packagePipeline = packagePipeline;
             if (!string.IsNullOrWhiteSpace(threadName))
                 this.threadName = threadName;
             OnInitThread();

@@ -10,16 +10,16 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
     internal abstract class BaseSender : ISender
     {
         private readonly IProtocolLogger _logger;
-        private readonly ISerializer _serializer;
+        private readonly IPackagePipeline _packagePipeline;
 
         internal Models.BaseConfiguration configuration;
 
         public virtual int BufferSize => configuration.Connection.PackageSize;
 
-        public BaseSender(IProtocolLogger protocolLogger, ISerializer serializer)
+        public BaseSender(IProtocolLogger protocolLogger, IPackagePipeline packagePipeline)
         {
             _logger = protocolLogger;
-            _serializer = serializer;
+            _packagePipeline = packagePipeline;
         }
 
         public void Initialize(Models.BaseConfiguration configuration)

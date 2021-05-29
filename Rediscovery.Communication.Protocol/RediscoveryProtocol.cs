@@ -27,6 +27,7 @@ namespace Rediscovery.Communication.Protocol
         private readonly ISender _dataSender;
         private readonly ISender _lowDataSender;
         private readonly ISerializer _serializer;
+        private readonly IPackagePipeline _packagePipeline;
 
         private Models.Configuration configuration;
         
@@ -35,12 +36,14 @@ namespace Rediscovery.Communication.Protocol
         {
             _logger = protocolLogger ?? new Internal.ProtocolLogger();
             _serializer = serializer ?? new Serializer(_logger);
-            _discoveryListener = new DiscoveryListener(_logger, _serializer);
-            _dataListener = new DataListener(_logger, _serializer);
-            _lowDataListener = new LowDataListener(_logger, _serializer);
-            _discoverySender = new DiscoverySender(_logger, _serializer);
-            _dataSender = new DataSender(_logger, _serializer);
-            _lowDataSender = new LowDataSender(_logger, _serializer);
+            _packagePipeline = new PackagePipeline(_logger, _serializer);
+
+            _discoveryListener = new DiscoveryListener(_logger, _packagePipeline);
+            _dataListener = new DataListener(_logger, _packagePipeline);
+            _lowDataListener = new LowDataListener(_logger, _packagePipeline);
+            _discoverySender = new DiscoverySender(_logger, _packagePipeline);
+            _dataSender = new DataSender(_logger, _packagePipeline);
+            _lowDataSender = new LowDataSender(_logger, _packagePipeline);
         }
 
         public ConnectionState Connect(Connection connection)
@@ -165,7 +168,7 @@ namespace Rediscovery.Communication.Protocol
                 
                 // start listen for portocol data and discovery requests
                 OnListenDiscovery();
-                //OnListenData();
+                OnListenData();
                 //OnListenLowData();
             }
             catch (Exception ex)

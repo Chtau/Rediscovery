@@ -11,7 +11,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
     internal class DiscoverySender
     {
         private readonly IProtocolLogger _logger;
-        private readonly ISerializer _serializer;
+        private readonly IPackagePipeline _packagePipeline;
 
         private System.Threading.Thread listenThread;
         private readonly string threadName = $"Thread_{nameof(DiscoverySender)}";
@@ -19,10 +19,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
         private DiscoveryConfiguration configuration;
         private bool working = false;
 
-        public DiscoverySender(IProtocolLogger protocolLogger, ISerializer serializer)
+        public DiscoverySender(IProtocolLogger protocolLogger, IPackagePipeline packagePipeline)
         {
             _logger = protocolLogger;
-            _serializer = serializer;
+            _packagePipeline = packagePipeline;
             OnInitThread();
         }
 
@@ -90,7 +90,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                         while (working)
                         {
                             System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(100));
-                            socket.SendTo(_serializer.Serialize(OnGetDeviceGreeting()), new IPEndPoint(IPAddress.Broadcast, configuration.Connection.SendPort));
+                            socket.SendTo(_packagePipeline.Outgoing(OnGetDeviceGreeting()), new IPEndPoint(IPAddress.Broadcast, configuration.Connection.SendPort));
                         }
                     }
                     catch (Exception ex)

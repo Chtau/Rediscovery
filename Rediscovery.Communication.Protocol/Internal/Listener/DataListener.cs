@@ -7,7 +7,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
     internal class DataListener : BaseListener
     {
 
-        public DataListener(IProtocolLogger protocolLogger, ISerializer serializer) : base(protocolLogger, serializer, nameof(DataListener))
+        public DataListener(IProtocolLogger protocolLogger, IPackagePipeline packagePipeline) : base(protocolLogger, packagePipeline, nameof(DataListener))
         {
 
         }
