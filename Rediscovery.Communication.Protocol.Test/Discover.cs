@@ -16,9 +16,9 @@ namespace Rediscovery.Communication.Protocol.Test
             protocol.Start(null);
             do
             {
-                //protocol.
-                System.Threading.Thread.Sleep(TimeSpan.FromSeconds(1));
-            } while (true);
+                System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(50));
+            } while (protocol.Devices.Count != 1);
+            Assert.True(protocol.Devices.Count == 1, "Discover device number missmatch");
         }
     }
 }

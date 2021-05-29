@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rediscovery.Communication.Protocol.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,6 +7,9 @@ namespace Rediscovery.Communication.Protocol
 {
     public interface IRediscoveryProtocol
     {
+        List<DeviceGreeting> Devices { get; }
+        event EventHandler DevicesChanged;
+
         void Start(Models.Configuration configuration);
         ConnectionState Connect(Connection connection);
         bool Disconnect();

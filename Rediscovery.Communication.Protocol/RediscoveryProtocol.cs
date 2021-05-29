@@ -1,6 +1,7 @@
 ﻿using Rediscovery.Communication.Protocol.Internal;
 using Rediscovery.Communication.Protocol.Internal.Listener;
 using Rediscovery.Communication.Protocol.Internal.Sender;
+using Rediscovery.Communication.Protocol.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,10 @@ namespace Rediscovery.Communication.Protocol
         private readonly IPackagePipeline _packagePipeline;
 
         private Models.Configuration configuration;
-        
+
+        public event EventHandler DevicesChanged;
+
+        public List<DeviceGreeting> Devices => _discoveryListener.Devices;
 
         public RediscoveryProtocol(IProtocolLogger protocolLogger = null, ISerializer serializer = null)
         {
@@ -39,6 +43,10 @@ namespace Rediscovery.Communication.Protocol
             _packagePipeline = new PackagePipeline(_logger, _serializer);
 
             _discoveryListener = new DiscoveryListener(_logger, _packagePipeline);
+            _discoveryListener.DevicesChanged += (obj, args) =>
+            {
+                DevicesChanged?.Invoke(this, EventArgs.Empty);
+            };
             _dataListener = new DataListener(_logger, _packagePipeline);
             _lowDataListener = new LowDataListener(_logger, _packagePipeline);
             _discoverySender = new DiscoverySender(_logger, _packagePipeline);
