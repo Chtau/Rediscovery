@@ -90,7 +90,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                     {
                         var socket = OnGetSocket(configuration.Connection.ListenPort);
                         socket.Bind(new IPEndPoint(IPAddress.Any, configuration.Connection.ListenPort));
-                        //socket.EnableBroadcast = true;
+                        
                         while (working)
                         {
                             EndPoint clientEp = new IPEndPoint(IPAddress.Any, 0);
@@ -102,17 +102,18 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                                 var deviceGreeting = _packagePipeline.Incoming<DeviceGreeting>(bytes.Take(bytesReceived).ToArray());
                                 if (deviceGreeting != null)
                                 {
+                                    var ipEndpoint = (IPEndPoint)clientEp;
                                     var d = _devices.FirstOrDefault(x => x.Device.Identifier == deviceGreeting.Identifier);
                                     if (d != null)
                                     {
-                                        if (d.Update(deviceGreeting))
+                                        if (d.Update(deviceGreeting, ipEndpoint.Address.ToString()))
                                         {
                                             DevicesChanged?.Invoke(this, EventArgs.Empty);
                                         }
                                     }
                                     else
                                     {
-                                        _devices.Add(new DeviceGreetingReceived(deviceGreeting));
+                                        _devices.Add(new DeviceGreetingReceived(deviceGreeting, ipEndpoint.Address.ToString()));
                                         DevicesChanged?.Invoke(this, EventArgs.Empty);
                                     }
                                 }

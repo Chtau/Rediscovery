@@ -7,24 +7,28 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
 {
     internal class DeviceGreetingReceived
     {
+        public string IP { get; private set; }
         public DateTime Received { get; private set; }
         public DeviceGreeting Device { get; private set; }
 
-        public DeviceGreetingReceived(DeviceGreeting device)
+        public DeviceGreetingReceived(DeviceGreeting device, string ip)
         {
             Device = device;
             Received = DateTime.UtcNow;
+            IP = ip;
         }
 
         /// <summary>
         /// Updates the greeting device information and the time received
         /// </summary>
         /// <param name="device">New received device greeting</param>
+        /// <param name="ip">IP of the peer</param>
         /// <returns>true if device data has changed</returns>
-        public bool Update(DeviceGreeting device)
+        public bool Update(DeviceGreeting device, string ip)
         {
             Device = device;
             Received = DateTime.UtcNow;
+            IP = ip;
 
             return false;
         }
