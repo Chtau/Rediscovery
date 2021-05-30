@@ -63,6 +63,7 @@ namespace Rediscovery.Communication.Protocol
             _dataListener = new DataListener(_logger, _packagePipeline);
             _lowDataListener = new LowDataListener(_logger, _packagePipeline);
             _discoverySender = new DiscoverySender(_logger, _packagePipeline);
+            _discoverySender.KnownDevicesCallback(() => _discoveryListener.Devices);
             _dataSender = new DataSender(_logger, _packagePipeline);
             _lowDataSender = new LowDataSender(_logger, _packagePipeline);
             if (!string.IsNullOrWhiteSpace(identifer))

@@ -23,6 +23,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
         private string currentFriendlyName;
         private DeviceMetadata.IdiomType currentIdiom = DeviceMetadata.IdiomType.Desktop;
         private DeviceGreeting greeting;
+        private Func<List<DeviceGreeting>> deviceGreetingCallback;
+        private TimeSpan discoverySendTimeout = TimeSpan.FromMilliseconds(100);
 
         public DiscoverySender(IProtocolLogger protocolLogger, IPackagePipeline packagePipeline)
         {
@@ -86,6 +88,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
         public void SetIdentifier(string identifier) => currentIdentifier = identifier;
         public void SetFriendlyName(string friendlyName) => currentFriendlyName = friendlyName;
         public void SetIdiom(DeviceMetadata.IdiomType idiomType) => currentIdiom = idiomType;
+        public void KnownDevicesCallback(Func<List<DeviceGreeting>> callback) => deviceGreetingCallback = callback;
 
         private void OnInitThread()
         {
@@ -100,9 +103,56 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                         socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
                         while (working)
                         {
-                            System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(100));
-                            // TODO: send own device greeting and all other devices with +1 hop
-                            socket.SendTo(_packagePipeline.Outgoing(OnGetDeviceGreeting()), new IPEndPoint(IPAddress.Broadcast, configuration.Connection.SendPort));
+                            System.Threading.Thread.Sleep(discoverySendTimeout);
+                            // send own device greeting
+                            // All other peers will be send with +1 hop
+                            // and communication ports and package size will be used from this
+                            // because the current device is a proxy for the peers
+                            try
+                            {
+                                socket.SendTo(_packagePipeline.Outgoing(OnGetDeviceGreeting()), new IPEndPoint(IPAddress.Broadcast, configuration.Connection.SendPort));
+                                var deviceGreetings = deviceGreetingCallback.Invoke();
+                                if (deviceGreetings.Count > 0)
+                                {
+                                    foreach (var deviceGreeting in deviceGreetings)
+                                    {
+                                        var peerGreeting = new DeviceGreeting
+                                        {
+                                            Identifier = deviceGreeting.Identifier,
+                                            FriendlyName = deviceGreeting.FriendlyName,
+                                            Hops = deviceGreeting.Hops + 1,
+                                            Communication = new DeviceCommunication
+                                            {
+                                                Data = new DeviceCommunicationSetting
+                                                {
+                                                    PackageSize = connectionConfigurationData.PackageSize,
+                                                    Port = connectionConfigurationData.ListenPort
+                                                },
+                                                LowData = new DeviceCommunicationSetting
+                                                {
+                                                    PackageSize = connectionConfigurationLowData.PackageSize,
+                                                    Port = connectionConfigurationLowData.ListenPort
+                                                }
+                                            },
+                                            Metadata = new DeviceMetadata
+                                            {
+                                                Idiom = deviceGreeting.Metadata.Idiom,
+                                                Is64Bit = deviceGreeting.Metadata.Is64Bit,
+                                                Machine = deviceGreeting.Metadata.Machine,
+                                                OS = deviceGreeting.Metadata.OS,
+                                                PhysicalMemory = deviceGreeting.Metadata.PhysicalMemory,
+                                                Processor = deviceGreeting.Metadata.Processor,
+                                                User = deviceGreeting.Metadata.User
+                                            }
+                                        };
+                                        socket.SendTo(_packagePipeline.Outgoing(peerGreeting), new IPEndPoint(IPAddress.Broadcast, configuration.Connection.SendPort));
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.Error(ex);
+                            }
                         }
                     }
                     catch (Exception ex)
