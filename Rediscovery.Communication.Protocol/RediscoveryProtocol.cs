@@ -264,6 +264,7 @@ namespace Rediscovery.Communication.Protocol
             try
             {
                 _discoverySender.SetIdentifier(Identifer);
+                _discoveryListener.SetIdentifier(Identifer);
             }
             catch (Exception ex)
             {

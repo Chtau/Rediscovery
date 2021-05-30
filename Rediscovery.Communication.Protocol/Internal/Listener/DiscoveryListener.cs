@@ -19,6 +19,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
 
         private DiscoveryConfiguration configuration;
         private bool working = false;
+        private TimeSpan deviceTimeoutOffset = TimeSpan.FromSeconds(10);
+        private string currentIdentifier;
 
         public List<DeviceGreeting> Devices => _devices.Select(x => x.Device).ToList();
         public event EventHandler DevicesChanged;
@@ -29,6 +31,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
             _packagePipeline = packagePipeline;
             OnInitThread();
         }
+
+        public void SetIdentifier(string identifier) => currentIdentifier = identifier;
 
         public void Initialize(DiscoveryConfiguration configuration)
         {
@@ -102,22 +106,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                                 var deviceGreeting = _packagePipeline.Incoming<DeviceGreeting>(bytes.Take(bytesReceived).ToArray());
                                 if (deviceGreeting != null)
                                 {
-                                    var ipEndpoint = (IPEndPoint)clientEp;
-                                    var d = _devices.FirstOrDefault(x => x.Device.Identifier == deviceGreeting.Identifier);
-                                    if (d != null)
-                                    {
-                                        if (d.Update(deviceGreeting, ipEndpoint.Address.ToString()))
-                                        {
-                                            DevicesChanged?.Invoke(this, EventArgs.Empty);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        _devices.Add(new DeviceGreetingReceived(deviceGreeting, ipEndpoint.Address.ToString()));
-                                        DevicesChanged?.Invoke(this, EventArgs.Empty);
-                                    }
+                                    OnHandleReceivedDevices(deviceGreeting, (IPEndPoint)clientEp);
                                 }
                             }
+                            OnHandleTimeoutDevices();
                         }
                     }
                     catch (Exception ex)
@@ -141,6 +133,44 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
         {
             var endpoint = new IPEndPoint(IPAddress.Broadcast, port);
             return new Socket(endpoint.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
+        }
+
+        private void OnHandleReceivedDevices(DeviceGreeting deviceGreeting, IPEndPoint ipEndPoint)
+        {
+            if (deviceGreeting.Identifier == currentIdentifier)
+                return;
+            try
+            {
+                var d = _devices.FirstOrDefault(x => x.Device.Identifier == deviceGreeting.Identifier);
+                if (d != null)
+                {
+                    if (d.Update(deviceGreeting, ipEndPoint.Address.ToString()))
+                    {
+                        DevicesChanged?.Invoke(this, EventArgs.Empty);
+                    }
+                }
+                else
+                {
+                    _devices.Add(new DeviceGreetingReceived(deviceGreeting, ipEndPoint.Address.ToString()));
+                    DevicesChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+        }
+
+        private void OnHandleTimeoutDevices()
+        {
+            try
+            {
+                _devices.RemoveAll(x => x.Received < (DateTime.UtcNow - deviceTimeoutOffset));
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
         }
     }
 }
