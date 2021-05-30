@@ -8,12 +8,15 @@ namespace Rediscovery.Communication.Protocol
     public interface IRediscoveryProtocol
     {
         List<DeviceGreeting> Devices { get; }
-        event EventHandler DevicesChanged;
+        /// <summary>
+        /// Triggered if a device greeting has changed from the discovery.
+        /// Device Identifier will be provided as argument.
+        /// </summary>
+        event EventHandler<string> DevicesChanged;
 
         void Start(Models.Configuration configuration);
         ConnectionState Connect(Connection connection);
         bool Disconnect();
-        void NewDevices(Action<object> deviceCallback);
         void Send(Transfer transfer, Action<TransportState> successCallback = null);
         TransportState Stream(Action<object> streamData);
         void Listen(Action<Transfer> receivedCallback);

@@ -86,7 +86,7 @@ namespace Rediscovery.Communication.Protocol.Test
             protocol.Start(null);
             await Task.Delay(TimeSpan.FromSeconds(1));
             Assert.True(protocol.Devices.Count == 2, "Discover device number missmatch");
-            Assert.True(protocol.Devices[0].Hops == 0, "Peer connection should be direct");
+            Assert.True(protocol.Devices.Count(x => x.Hops == 0) == 2, "Peer connection should be direct");
         }
 
         [Fact]

@@ -33,7 +33,7 @@ namespace Rediscovery.Communication.Protocol
         private Models.Configuration configuration;
         private string identifer;
 
-        public event EventHandler DevicesChanged;
+        public event EventHandler<string> DevicesChanged;
 
         public List<DeviceGreeting> Devices => _discoveryListener.Devices;
         public string Identifer 
@@ -58,7 +58,7 @@ namespace Rediscovery.Communication.Protocol
             _discoveryListener = new DiscoveryListener(_logger, _packagePipeline);
             _discoveryListener.DevicesChanged += (obj, args) =>
             {
-                DevicesChanged?.Invoke(this, EventArgs.Empty);
+                DevicesChanged?.Invoke(this, args);
             };
             _dataListener = new DataListener(_logger, _packagePipeline);
             _lowDataListener = new LowDataListener(_logger, _packagePipeline);
@@ -103,18 +103,6 @@ namespace Rediscovery.Communication.Protocol
         public object GetDiagnosticData()
         {
             throw new NotImplementedException();
-        }
-
-        public void NewDevices(Action<object> deviceCallback)
-        {
-            try
-            {
-                
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex);
-            }
         }
 
         public void Listen(Action<Transfer> receivedCallback)

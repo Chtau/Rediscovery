@@ -23,7 +23,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
         private string currentIdentifier;
 
         public List<DeviceGreeting> Devices => _devices.Select(x => x.Device).ToList();
-        public event EventHandler DevicesChanged;
+        public event EventHandler<string> DevicesChanged;
 
         public DiscoveryListener(IProtocolLogger protocolLogger, IPackagePipeline packagePipeline)
         {
@@ -150,13 +150,13 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                 {
                     if (d.Update(deviceGreeting, ipEndPoint.Address.ToString()))
                     {
-                        DevicesChanged?.Invoke(this, EventArgs.Empty);
+                        DevicesChanged?.Invoke(this, deviceGreeting.Identifier);
                     }
                 }
                 else
                 {
                     _devices.Add(new DeviceGreetingReceived(deviceGreeting, ipEndPoint.Address.ToString()));
-                    DevicesChanged?.Invoke(this, EventArgs.Empty);
+                    DevicesChanged?.Invoke(this, deviceGreeting.Identifier);
                 }
             }
             catch (Exception ex)

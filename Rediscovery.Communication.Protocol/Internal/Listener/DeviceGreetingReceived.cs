@@ -26,14 +26,22 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
         /// <returns>true if device data has changed</returns>
         public bool Update(DeviceGreeting device, string ip)
         {
-            if (device.Hops <= Device.Hops)
+            if (device.Hops < Device.Hops)
             {
+                // peer connection with fewer hops
                 Device = device;
                 Received = DateTime.UtcNow;
                 IP = ip;
                 return true;
+            } else if (device.Hops == Device.Hops)
+            {
+                // update for received time
+                Device = device;
+                Received = DateTime.UtcNow;
+                IP = ip;
             }
-
+            // peer connection with more hops are ignored because they are only be relevant
+            // if the current device will be removed from the timeout
             return false;
         }
     }
