@@ -16,10 +16,13 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
 
         private System.Threading.Thread listenThread;
         private DiscoveryConfiguration configuration;
+        private ConnectionConfiguration connectionConfigurationData;
+        private ConnectionConfiguration connectionConfigurationLowData;
         private bool working = false;
         private string currentIdentifier;
-
-        public DeviceGreeting Greeting { get; set; }
+        private string currentFriendlyName;
+        private DeviceMetadata.IdiomType currentIdiom = DeviceMetadata.IdiomType.Desktop;
+        private DeviceGreeting greeting;
 
         public DiscoverySender(IProtocolLogger protocolLogger, IPackagePipeline packagePipeline)
         {
@@ -28,9 +31,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
             OnInitThread();
         }
 
-        public void Initialize(DiscoveryConfiguration configuration)
+        public void Initialize(DiscoveryConfiguration configuration, ConnectionConfiguration connectionConfigurationData, ConnectionConfiguration connectionConfigurationLowData)
         {
             this.configuration = configuration;
+            this.connectionConfigurationData = connectionConfigurationData;
+            this.connectionConfigurationLowData = connectionConfigurationLowData;
         }
 
         public bool Start()
@@ -79,6 +84,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
         }
 
         public void SetIdentifier(string identifier) => currentIdentifier = identifier;
+        public void SetFriendlyName(string friendlyName) => currentFriendlyName = friendlyName;
+        public void SetIdiom(DeviceMetadata.IdiomType idiomType) => currentIdiom = idiomType;
 
         private void OnInitThread()
         {
@@ -123,19 +130,19 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
 
         private DeviceGreeting OnGetDeviceGreeting()
         {
-            if (Greeting == null)
+            if (greeting == null)
             {
-                Greeting = new DeviceGreeting
+                greeting = new DeviceGreeting
                 {
                     Identifier = currentIdentifier,
-                    FriendlyName = Environment.MachineName
+                    FriendlyName = currentFriendlyName ?? Environment.MachineName
                 };
             }
-            if (Greeting.Metadata == null)
+            if (greeting.Metadata == null)
             {
-                Greeting.Metadata = new DeviceMetadata
+                greeting.Metadata = new DeviceMetadata
                 {
-                    Idiom = DeviceMetadata.IdiomType.Desktop,
+                    Idiom = currentIdiom,
                     Is64Bit = Environment.Is64BitOperatingSystem,
                     Machine = Environment.MachineName,
                     OS = Environment.OSVersion.ToString(),
@@ -144,27 +151,29 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                     User = Environment.UserName
                 };
             }
-            if (Greeting.Communication == null)
+            if (greeting.Communication == null)
             {
-                Greeting.Communication = new DeviceCommunication();
+                greeting.Communication = new DeviceCommunication();
             }
-            if (Greeting.Communication.Data == null)
+            if (greeting.Communication.Data == null
+                || greeting.Communication.Data.Port == -1)
             {
-                Greeting.Communication.Data = new DeviceCommunicationSetting
+                greeting.Communication.Data = new DeviceCommunicationSetting
                 {
-                    ByteSize = -1,//setting.ListenPackageBytesData,
-                    Port = -1//setting.ListenPortData
+                    PackageSize = connectionConfigurationData.PackageSize,
+                    Port = connectionConfigurationData.ListenPort
                 };
             }
-            if (Greeting.Communication.LowData == null)
+            if (greeting.Communication.LowData == null
+                || greeting.Communication.LowData.Port == -1)
             {
-                Greeting.Communication.LowData = new DeviceCommunicationSetting
+                greeting.Communication.LowData = new DeviceCommunicationSetting
                 {
-                    ByteSize = -1,//setting.ListenPackageBytesLowData,
-                    Port = -1//setting.ListenPortLowData
+                    PackageSize = connectionConfigurationLowData.PackageSize,
+                    Port = connectionConfigurationLowData.ListenPort
                 };
             }
-            return Greeting;
+            return greeting;
         }
     }
 }

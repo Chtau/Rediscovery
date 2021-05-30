@@ -184,7 +184,7 @@ namespace Rediscovery.Communication.Protocol
             {
                 this.configuration = configuration ?? new Models.Configuration();
                 
-                _discoverySender.Initialize(this.configuration.Discovery);
+                _discoverySender.Initialize(this.configuration.Discovery, this.configuration.Data.Connection, this.configuration.LowData.Connection);
                 _dataSender.Initialize(this.configuration.Data);
                 _lowDataSender.Initialize(this.configuration.LowData);
                 _discoveryListener.Initialize(this.configuration.Discovery);
@@ -244,24 +244,14 @@ namespace Rediscovery.Communication.Protocol
             }
         }
 
-        public void ChangeGreeting(DeviceGreeting greeting)
-        {
-            try
-            {
-                _discoverySender.Greeting = greeting;
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex);
-            }
-        }
-
-        public void SetIdentifier(string identifer)
+        public void SetMetadata(string identifer, string friendlyName, DeviceMetadata.IdiomType idiomType)
         {
             try
             {
                 this.identifer = identifer;
                 OnChangedIdentifier();
+                _discoverySender.SetFriendlyName(friendlyName);
+                _discoverySender.SetIdiom(idiomType);
             }
             catch (Exception ex)
             {
