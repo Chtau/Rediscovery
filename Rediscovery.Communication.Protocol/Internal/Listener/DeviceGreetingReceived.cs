@@ -26,9 +26,13 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
         /// <returns>true if device data has changed</returns>
         public bool Update(DeviceGreeting device, string ip)
         {
-            Device = device;
-            Received = DateTime.UtcNow;
-            IP = ip;
+            if (device.Hops <= Device.Hops)
+            {
+                Device = device;
+                Received = DateTime.UtcNow;
+                IP = ip;
+                return true;
+            }
 
             return false;
         }
