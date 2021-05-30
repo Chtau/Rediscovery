@@ -90,5 +90,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                 stateObject?.SuccessCallback?.Invoke(TransportState.Error);
             }
         }
+
+        public void Stop()
+        {
+            
+        }
     }
 }

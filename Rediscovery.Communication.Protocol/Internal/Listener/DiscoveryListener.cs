@@ -71,19 +71,17 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
             return false;
         }
 
-        public bool Stop()
+        public void Stop()
         {
             try
             {
                 working = false;
                 listenThread?.Abort();
-                return true;
             }
             catch (Exception ex)
             {
                 _logger.Error(ex);
             }
-            return false;
         }
 
         private void OnInitThread()

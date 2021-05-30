@@ -18,7 +18,7 @@ namespace Rediscovery.Communication.Protocol
      * Write via Netcat: echo 'test<EOF>' | sudo  netcat 192.168.1.102 11000
      */
 
-    public class RediscoveryProtocol : IRediscoveryProtocol
+    public class RediscoveryProtocol : IRediscoveryProtocol, IDisposable
     {
         private readonly IProtocolLogger _logger;
         private readonly DiscoveryListener _discoveryListener;
@@ -32,6 +32,7 @@ namespace Rediscovery.Communication.Protocol
 
         private Models.Configuration configuration;
         private string identifer;
+        private bool disposedValue;
 
         public event EventHandler<string> DevicesChanged;
 
@@ -77,22 +78,9 @@ namespace Rediscovery.Communication.Protocol
 
         public string NewIdentifier() => $"{Guid.NewGuid()}.{DateTime.Now}.{Environment.MachineName}".GetHashString();
 
-        public ConnectionState Connect(Connection connection)
+        public void Stop()
         {
-            try
-            {
-
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex);
-            }
-            return ConnectionState.Unkown;
-        }
-
-        public bool Disconnect()
-        {
-            throw new NotImplementedException();
+            OnStop();
         }
 
         public object GetConnectionInfo()
@@ -259,6 +247,41 @@ namespace Rediscovery.Communication.Protocol
             {
                 _logger.Error(ex);
             }
+        }
+
+        private void OnStop()
+        {
+            try
+            {
+                _discoveryListener.Stop();
+                _dataListener.Stop();
+                _lowDataListener.Stop();
+                _discoverySender.Stop();
+                _dataSender.Stop();
+                _lowDataSender.Stop();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    OnStop();
+                }
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

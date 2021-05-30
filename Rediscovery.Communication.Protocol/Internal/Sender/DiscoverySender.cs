@@ -72,19 +72,17 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
             return false;
         }
 
-        public bool Stop()
+        public void Stop()
         {
             try
             {
                 working = false;
                 listenThread?.Abort();
-                return true;
             }
             catch (Exception ex)
             {
                 _logger.Error(ex);
             }
-            return false;
         }
 
         public void SetIdentifier(string identifier) => currentIdentifier = identifier;

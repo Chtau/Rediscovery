@@ -16,6 +16,8 @@ namespace Rediscovery.Communication.Protocol.Test
             protocol.Start(null);
             await Task.Delay(TimeSpan.FromSeconds(1));
             Assert.True(protocol.Devices.Count == 0, "Discover device number missmatch");
+
+            protocol.Stop();
         }
 
         [Fact]
@@ -43,6 +45,9 @@ namespace Rediscovery.Communication.Protocol.Test
             await Task.Delay(TimeSpan.FromSeconds(1));
             Assert.True(protocol.Devices.Count == 1, "Discover device number missmatch");
             Assert.True(protocol.Devices[0].Hops == 0, "Peer connection should be direct");
+
+            protocol.Stop();
+            protocol1.Stop();
         }
 
         [Fact]
@@ -87,6 +92,10 @@ namespace Rediscovery.Communication.Protocol.Test
             await Task.Delay(TimeSpan.FromSeconds(1));
             Assert.True(protocol.Devices.Count == 2, "Discover device number missmatch");
             Assert.True(protocol.Devices.Count(x => x.Hops == 0) == 2, "Peer connection should be direct");
+
+            protocol.Stop();
+            protocol1.Stop();
+            protocol2.Stop();
         }
 
         [Fact]
@@ -132,6 +141,10 @@ namespace Rediscovery.Communication.Protocol.Test
             await Task.Delay(TimeSpan.FromSeconds(1));
             Assert.True(protocol.Devices.Count == 2, "Discover device number missmatch");
             Assert.True(protocol.Devices.Count(x => x.Hops != 0) == 1, "Peer device with one hop should exist");
+
+            protocol.Stop();
+            protocol1.Stop();
+            protocol2.Stop();
         }
     }
 }

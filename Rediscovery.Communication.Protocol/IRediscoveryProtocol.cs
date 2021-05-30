@@ -15,8 +15,7 @@ namespace Rediscovery.Communication.Protocol
         event EventHandler<string> DevicesChanged;
 
         void Start(Models.Configuration configuration);
-        ConnectionState Connect(Connection connection);
-        bool Disconnect();
+        void Stop();
         void Send(Transfer transfer, Action<TransportState> successCallback = null);
         TransportState Stream(Action<object> streamData);
         void Listen(Action<Transfer> receivedCallback);
