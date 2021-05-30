@@ -43,6 +43,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
         {
             try
             {
+                if (configuration.ListenerDeactivated)
+                    return true;
                 working = true;
                 listenThread.Start();
                 return true;
@@ -90,6 +92,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
             {
                 listenThread = new System.Threading.Thread(() =>
                 {
+                    if (configuration.ListenerDeactivated)
+                        return;
                     try
                     {
                         var socket = OnGetSocket(configuration.Connection.ListenPort);

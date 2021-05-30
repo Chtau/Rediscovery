@@ -44,6 +44,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
         {
             try
             {
+                if (configuration.SenderDeactivated)
+                    return true;
                 working = true;
                 listenThread.Start();
                 return true;
@@ -96,6 +98,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
             {
                 listenThread = new System.Threading.Thread(() =>
                 {
+                    if (configuration.SenderDeactivated)
+                        return;
                     try
                     {
                         var socket = OnGetSocket(configuration.Connection.SendPort);
