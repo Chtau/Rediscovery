@@ -112,7 +112,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                             // because the current device is a proxy for the peers
                             try
                             {
-                                socket.SendTo(_packagePipeline.Outgoing(OnGetDeviceGreeting()), new IPEndPoint(IPAddress.Broadcast, configuration.Connection.SendPort));
+                                var device = OnGetDeviceGreeting();
+                                var deviceRaw = _packagePipeline.Outgoing(device);
+                                _logger.Trace($"Broadcast Greeting for Peer:{device.Identifier} Hops:{device.Hops} Bytes:{deviceRaw.Length}");
+                                socket.SendTo(deviceRaw, new IPEndPoint(IPAddress.Broadcast, configuration.Connection.SendPort));
                                 var deviceGreetings = deviceGreetingCallback.Invoke();
                                 if (deviceGreetings.Count > 0)
                                 {
@@ -147,7 +150,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                                                 User = deviceGreeting.Metadata.User
                                             }
                                         };
-                                        socket.SendTo(_packagePipeline.Outgoing(peerGreeting), new IPEndPoint(IPAddress.Broadcast, configuration.Connection.SendPort));
+                                        var raw = _packagePipeline.Outgoing(peerGreeting);
+                                        _logger.Trace($"Broadcast Greeting for Peer:{deviceGreeting.Identifier} Hops:{deviceGreeting.Hops} Bytes:{raw.Length}");
+                                        socket.SendTo(raw, new IPEndPoint(IPAddress.Broadcast, configuration.Connection.SendPort));
                                     }
                                 }
                             }

@@ -10,5 +10,6 @@ namespace Rediscovery.Communication.Protocol
         void Warning(Exception ex);
         void Warning(string message);
         void Information(string message);
+        void Trace(string message);
     }
 }

@@ -16,6 +16,11 @@ namespace Rediscovery.Communication.Protocol.Internal
             System.Diagnostics.Trace.TraceInformation(message);
         }
 
+        public void Trace(string message)
+        {
+            System.Diagnostics.Trace.TraceInformation(message);
+        }
+
         public void Warning(Exception ex)
         {
             System.Diagnostics.Trace.TraceWarning(ex.ToString());
