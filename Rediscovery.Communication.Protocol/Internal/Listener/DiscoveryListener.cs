@@ -84,6 +84,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
             }
         }
 
+        public DeviceGreetingReceived GetDeviceGreeting(string identifier) => _devices.First(x => x.Device.Identifier == identifier);
+
         private void OnInitThread()
         {
             try

@@ -42,13 +42,12 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
             stateCompleteCallback = callback;
         }
 
-        public virtual bool Start()
+        public virtual void Start()
         {
             try
             {
                 working = true;
                 listenThread.Start();
-                return true;
             }
             catch (System.Threading.ThreadStateException tsEx)
             {
@@ -58,7 +57,6 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                 {
                     working = true;
                     listenThread.Start();
-                    return true;
                 }
                 catch (Exception ex)
                 {
@@ -69,22 +67,19 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
             {
                 _logger.Error(ex);
             }
-            return false;
         }
 
-        public virtual bool Stop()
+        public virtual void Stop()
         {
             try
             {
                 working = false;
                 listenThread?.Abort();
-                return true;
             }
             catch (Exception ex)
             {
                 _logger.Error(ex);
             }
-            return false;
         }
 
         internal virtual void OnBeforeDoWork()

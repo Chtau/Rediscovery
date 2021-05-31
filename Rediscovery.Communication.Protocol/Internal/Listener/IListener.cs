@@ -8,7 +8,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
     {
         void Initialize(Models.BaseConfiguration configuration);
         void StateCompleteListener(Action<byte[]> callback);
-        bool Start();
-        bool Stop();
+        void Start();
+        void Stop();
     }
 }

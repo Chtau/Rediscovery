@@ -4,10 +4,16 @@ using System.Text;
 
 namespace Rediscovery.Communication.Protocol
 {
-    public class Transfer
+    public class Transfer<T>
     {
-        public byte[] Content { get; set; }
-        public string IP { get; set; }
+        public T Content { get; }
+        public string DeviceIdentifier { get; }
+
+        public Transfer(string deviceIdentifier, T content)
+        {
+            DeviceIdentifier = deviceIdentifier;
+            Content = content;
+        }
     }
 
     public enum TransportState

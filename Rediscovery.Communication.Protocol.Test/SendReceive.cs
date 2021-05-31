@@ -16,9 +16,9 @@ namespace Rediscovery.Communication.Protocol.Test
             string data = null;
             Task.Run(async () =>
             {
-                protocol.Listen((transfer) =>
+                protocol.Listen<string>((transfer) =>
                 {
-                    data = System.Text.ASCIIEncoding.ASCII.GetString(transfer.Content);
+                    data = transfer.Content;
                     stop = true;
                 });
                 await Task.Delay(TimeSpan.FromSeconds(5));
@@ -27,10 +27,7 @@ namespace Rediscovery.Communication.Protocol.Test
             System.Threading.Thread.Sleep(TimeSpan.FromSeconds(1));
             Task.Run(() =>
             {
-                protocol.Send(new Transfer
-                {
-                    Content = System.Text.Encoding.ASCII.GetBytes("Test")
-                }, (success) =>
+                protocol.Send(new Transfer<string>("" , "Test"), (success) =>
                 {
                     if (success != TransportState.Ok)
                         throw new Exception("Failed to send");

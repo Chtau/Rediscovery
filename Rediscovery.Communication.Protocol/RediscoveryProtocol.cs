@@ -93,16 +93,16 @@ namespace Rediscovery.Communication.Protocol
             throw new NotImplementedException();
         }
 
-        public void Listen(Action<Transfer> receivedCallback)
+        public void Listen<T>(Action<Transfer<T>> receivedCallback)
         {
             try
             {
                 _dataListener.StateCompleteListener((array) =>
                 {
-                    receivedCallback?.Invoke(new Transfer
+                    /*receivedCallback?.Invoke(new Transfer<T>
                     {
                         Content = array
-                    });
+                    });*/
                 });
             }
             catch (Exception ex)
@@ -111,16 +111,16 @@ namespace Rediscovery.Communication.Protocol
             }
         }
 
-        public void LowLatencyListen(Action<Transfer> receivedCallback)
+        public void LowLatencyListen<T>(Action<Transfer<T>> receivedCallback)
         {
             try
             {
                 _lowDataListener.StateCompleteListener((array) =>
                 {
-                    receivedCallback?.Invoke(new Transfer
+                    /*receivedCallback?.Invoke(new Transfer<T>
                     {
                         Content = array
-                    });
+                    });*/
                 });
             }
             catch (Exception ex)
@@ -129,21 +129,17 @@ namespace Rediscovery.Communication.Protocol
             }
         }
 
-        public TransportState LowLatencySend(Transfer transfer)
+        public TransportState LowLatencySend<T>(Transfer<T> transfer)
         {
             throw new NotImplementedException();
         }
 
-        public TransportState LowLatencyStream(Action<object> streamData)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Send(Transfer transfer, Action<TransportState> successCallback = null)
+        public void Send<T>(Transfer<T> transfer, Action<TransportState> successCallback = null)
         {
             try
             {
-                _dataSender.Send(transfer.Content, transfer.IP, configuration.Data.Connection.ListenPort, (success) =>
+                var device = _discoveryListener.GetDeviceGreeting(transfer.DeviceIdentifier);
+                _dataSender.Send(transfer.Content, device, (success) =>
                 {
                     successCallback?.Invoke(success);
                 });
@@ -177,11 +173,6 @@ namespace Rediscovery.Communication.Protocol
             {
                 _logger.Error(ex);
             }
-        }
-
-        public TransportState Stream(Action<object> streamData)
-        {
-            throw new NotImplementedException();
         }
 
         private void OnListenDiscovery()

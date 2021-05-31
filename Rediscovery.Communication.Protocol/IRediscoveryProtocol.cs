@@ -16,12 +16,10 @@ namespace Rediscovery.Communication.Protocol
 
         void Start(Models.Configuration configuration);
         void Stop();
-        void Send(Transfer transfer, Action<TransportState> successCallback = null);
-        TransportState Stream(Action<object> streamData);
-        void Listen(Action<Transfer> receivedCallback);
-        TransportState LowLatencySend(Transfer transfer);
-        TransportState LowLatencyStream(Action<object> streamData);
-        void LowLatencyListen(Action<Transfer> receivedCallback);
+        void Send<T>(Transfer<T> transfer, Action<TransportState> successCallback = null);
+        void Listen<T>(Action<Transfer<T>> receivedCallback);
+        TransportState LowLatencySend<T>(Transfer<T> transfer);
+        void LowLatencyListen<T>(Action<Transfer<T>> receivedCallback);
         object GetDiagnosticData();
         object GetConnectionInfo();
         void SetMetadata(string identifer, string friendlyName, DeviceMetadata.IdiomType idiomType);

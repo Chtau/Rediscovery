@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rediscovery.Communication.Protocol.Internal.Listener;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -94,6 +95,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
         public void Stop()
         {
             
+        }
+
+        public void Send<T>(T content, DeviceGreetingReceived deviceGreeting, Action<TransportState> successCallback)
+        {
+            throw new NotImplementedException();
         }
     }
 }
