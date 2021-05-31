@@ -34,9 +34,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                 {
                     try
                     {
-                        Socket sender = OnGetSocket(deviceGreeting.Device.Communication.Data.Port);
-                        EndPoint remoteEP = new IPEndPoint(IPAddress.Parse(deviceGreeting.IP), deviceGreeting.Device.Communication.Data.Port);
-                        sender.Connect(remoteEP);
+                        var endpoint = new IPEndPoint(IPAddress.Parse(deviceGreeting.IP), deviceGreeting.Device.Communication.Data.Port);
+                        Socket sender = new Socket(endpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                        sender.Connect(endpoint);
                         var rawContent = _packagePipeline.Outgoing(content);
                         int sendLength = rawContent.Length + Network.EOFBytes.Length;
                         var raw = new List<byte>(sendLength);
@@ -73,11 +73,6 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
             {
                 _logger.Error(ex);
             }
-        }
-
-        private Socket OnGetSocket(int port)
-        {
-            return Network.CreateSocket(port);
         }
 
         private void OnSendCallback(IAsyncResult ar)

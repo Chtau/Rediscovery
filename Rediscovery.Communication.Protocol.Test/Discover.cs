@@ -23,22 +23,7 @@ namespace Rediscovery.Communication.Protocol.Test
         [Fact]
         public async void ListenSecondDevice()
         {
-            IRediscoveryProtocol protocol1 = new RediscoveryProtocol();
-            protocol1.Start(new Models.Configuration
-            {
-                Discovery = new Models.DiscoveryConfiguration
-                {
-                    ListenerDeactivated = true
-                },
-                Data = new Models.DataConfiguration
-                {
-                    Connection = new Models.ConnectionConfiguration(16576, 16577, 1024)
-                },
-                LowData = new Models.LowDataConfiguration
-                {
-                    Connection = new Models.ConnectionConfiguration(16578, 16579, 1024)
-                }
-            });
+            IRediscoveryProtocol protocol1 = Shared.TestDevice(new Models.ConnectionConfiguration(16576, 16577, 1024));
 
             IRediscoveryProtocol protocol = new RediscoveryProtocol();
             protocol.Start(null);
@@ -53,39 +38,9 @@ namespace Rediscovery.Communication.Protocol.Test
         [Fact]
         public async void ListenMupltipleDevices()
         {
-            IRediscoveryProtocol protocol1 = new RediscoveryProtocol();
-            protocol1.Start(new Models.Configuration
-            {
-                Discovery = new Models.DiscoveryConfiguration
-                {
-                    ListenerDeactivated = true
-                },
-                Data = new Models.DataConfiguration
-                {
-                    Connection = new Models.ConnectionConfiguration(16476, 16477, 1024)
-                },
-                LowData = new Models.LowDataConfiguration
-                {
-                    Connection = new Models.ConnectionConfiguration(16478, 16479, 1024)
-                }
-            });
+            IRediscoveryProtocol protocol1 = Shared.TestDevice(new Models.ConnectionConfiguration(16576, 16577, 1024));
 
-            IRediscoveryProtocol protocol2 = new RediscoveryProtocol();
-            protocol2.Start(new Models.Configuration
-            {
-                Discovery = new Models.DiscoveryConfiguration
-                {
-                    ListenerDeactivated = true
-                },
-                Data = new Models.DataConfiguration
-                {
-                    Connection = new Models.ConnectionConfiguration(16576, 16577, 1024)
-                },
-                LowData = new Models.LowDataConfiguration
-                {
-                    Connection = new Models.ConnectionConfiguration(16578, 16579, 1024)
-                }
-            });
+            IRediscoveryProtocol protocol2 = Shared.TestDevice(new Models.ConnectionConfiguration(16576, 16577, 1024));
 
             IRediscoveryProtocol protocol = new RediscoveryProtocol();
             protocol.Start(null);

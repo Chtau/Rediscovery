@@ -1,0 +1,32 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Rediscovery.Communication.Protocol.Test
+{
+    public static class Shared
+    {
+        public static IRediscoveryProtocol TestDevice(Models.ConnectionConfiguration connection)
+        {
+            IRediscoveryProtocol protocol1 = new RediscoveryProtocol();
+            protocol1.Start(new Models.Configuration
+            {
+                Discovery = new Models.DiscoveryConfiguration
+                {
+                    ListenerDeactivated = true
+                },
+                Data = new Models.DataConfiguration
+                {
+                    Connection = connection
+                },
+                LowData = new Models.LowDataConfiguration
+                {
+                    Connection = new Models.ConnectionConfiguration(16578, 16579, 1024)
+                }
+            });
+            return protocol1;
+        }
+    }
+}

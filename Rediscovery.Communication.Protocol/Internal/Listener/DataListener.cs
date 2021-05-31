@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -14,7 +15,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
         private readonly IPackagePipeline _packagePipeline;
         private readonly string threadName = $"Thread_{nameof(DataListener)}";
 
-        private System.Threading.Thread listenThread;
+        private Thread listenThread;
 
         internal DataConfiguration configuration;
         private bool working = false;
@@ -86,8 +87,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                 {
                     try
                     {
-                        Socket listener = OnGetSocket(configuration.Connection.ListenPort);
-                        listener.Bind(Network.LocalEndPoint(configuration.Connection.ListenPort));
+                        Socket listener = new Socket(IPAddress.Any.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                        listener.Bind(new IPEndPoint(IPAddress.Any, configuration.Connection.ListenPort));
                         listener.Listen(10);
 
                         while (working)
@@ -200,11 +201,6 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
             {
                 _logger.Error(ex);
             }
-        }
-
-        private Socket OnGetSocket(int port)
-        {
-            return Network.CreateSocket(port);
         }
     }
 }
