@@ -73,6 +73,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                 working = false;
                 listenThread?.Abort();
             }
+            catch (PlatformNotSupportedException) { }
             catch (Exception ex)
             {
                 _logger.Error(ex);
