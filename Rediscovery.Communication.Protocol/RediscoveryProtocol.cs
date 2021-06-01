@@ -99,10 +99,7 @@ namespace Rediscovery.Communication.Protocol
             {
                 _dataListener.StateCompleteListener((array) =>
                 {
-                    /*receivedCallback?.Invoke(new Transfer<T>
-                    {
-                        Content = array
-                    });*/
+                    receivedCallback?.Invoke(new Transfer<T>("", _packagePipeline.Incoming<T>(array)));
                 });
             }
             catch (Exception ex)
@@ -115,13 +112,14 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
-                _lowDataListener.StateCompleteListener((array) =>
+                return;
+                /*_lowDataListener.StateCompleteListener((array) =>
                 {
-                    /*receivedCallback?.Invoke(new Transfer<T>
+                    receivedCallback?.Invoke(new Transfer<T>
                     {
                         Content = array
-                    });*/
-                });
+                    });
+                });*/
             }
             catch (Exception ex)
             {

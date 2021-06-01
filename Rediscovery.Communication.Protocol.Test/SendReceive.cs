@@ -19,7 +19,7 @@ namespace Rediscovery.Communication.Protocol.Test
             string data = null;
             Task.Run(async () =>
             {
-                protocol.Listen<string>((transfer) =>
+                protocol1.Listen<string>((transfer) =>
                 {
                     data = transfer.Content;
                     stop = true;
