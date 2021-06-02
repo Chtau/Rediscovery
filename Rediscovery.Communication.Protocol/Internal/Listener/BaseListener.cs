@@ -37,9 +37,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
             this.configuration = configuration;
         }
 
-        public virtual void StateCompleteListener(Action<byte[]> callback)
+        public virtual void StateCompleteListener(Action<StateComplete> callback)
         {
-            stateCompleteCallback = callback;
+            //stateCompleteCallback = callback;
         }
 
         public virtual void Start()

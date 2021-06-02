@@ -20,7 +20,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
         internal DataConfiguration configuration;
         private bool working = false;
         private static readonly ManualResetEvent allDone = new ManualResetEvent(false);
-        private Action<byte[]> stateCompleteCallback;
+        private Action<StateComplete> stateCompleteCallback;
 
         public DataListener(IProtocolLogger protocolLogger, IPackagePipeline packagePipeline)
         {
@@ -61,7 +61,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
             }
         }
 
-        public void StateCompleteListener(Action<byte[]> callback)
+        public void StateCompleteListener(Action<StateComplete> callback)
         {
             stateCompleteCallback = callback;
         }
@@ -156,7 +156,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                 // from the asynchronous state object.  
                 var state = (StateObjectListener)ar.AsyncState;
                 Socket handler = state.WorkSocket;
-
+                //handler.RemoteEndPoint
                 // Read data from the client socket.
                 int bytesRead = handler.EndReceive(ar);
 
@@ -188,7 +188,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                         state.Data.AddRange(state.Buffer.Take(bufferEnd));
                         // All the data has been read from the client.
                         var rawData = state.Data.ToArray();
-                        stateCompleteCallback?.Invoke(rawData);
+                        var remoteEP = handler.RemoteEndPoint as IPEndPoint;
+                        stateCompleteCallback?.Invoke(new StateComplete(rawData, remoteEP?.Address?.ToString()));
                     }
                     else
                     {

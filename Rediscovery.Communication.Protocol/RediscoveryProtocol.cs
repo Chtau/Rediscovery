@@ -97,9 +97,10 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
-                _dataListener.StateCompleteListener((array) =>
+                _dataListener.StateCompleteListener((result) =>
                 {
-                    receivedCallback?.Invoke(new Transfer<T>("", _packagePipeline.Incoming<T>(array)));
+                    //_discoveryListener.Devices.FirstOrDefault()
+                    receivedCallback?.Invoke(new Transfer<T>(result.IP, _packagePipeline.Incoming<T>(result.Raw)));
                 });
             }
             catch (Exception ex)
