@@ -23,4 +23,8 @@
     <ProjectReference Include="..\Rediscovery.Communication.Protocol\Rediscovery.Communication.Protocol.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="SampleFiles\" />
+  </ItemGroup>
+
 </Project>
