@@ -196,12 +196,17 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                     {
                         state.Data.AddRange(state.Buffer);
                         // Not all data received. Get more.  
+                        _logger.Trace($"{nameof(DataListener)} Package part Bytes Count:{state.Data.Count}");
                         handler.BeginReceive(state.Buffer, 0, configuration.Connection.PackageSize, 0, new AsyncCallback(ReadCallback), state);
                     }
                 }
             }
             catch (Exception ex)
             {
+                // The following error is normal behavior which we must handle
+                // ErrorCode: 10054
+                // Socket: ConnectionReset
+                // Message: Eine vorhandene Verbindung wurde vom Remotehost geschlossen.
                 _logger.Error(ex);
             }
         }

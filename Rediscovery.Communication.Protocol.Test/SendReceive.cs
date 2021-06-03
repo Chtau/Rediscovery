@@ -88,5 +88,48 @@ namespace Rediscovery.Communication.Protocol.Test
             protocol1.Stop();
             protocol.Stop();
         }
+
+        [Theory]
+        [InlineData("BigSample.pdf")]
+        public void SendReceiveBigSamplePDF(string fileName)
+        {
+            string path = System.IO.Path.Combine("..", "..", "..", "SampleFiles", fileName);
+            byte[] content = System.IO.File.ReadAllBytes(path);
+            IRediscoveryProtocol protocol1 = Shared.TestDevice(new Models.ConnectionConfiguration(16576, 16577, 1024));
+            IRediscoveryProtocol protocol = new RediscoveryProtocol();
+            protocol.Start(null);
+            Task.Delay(TimeSpan.FromSeconds(1)).GetAwaiter().GetResult();
+
+            bool stop = false;
+            byte[] data = null;
+            Task.Run(async () =>
+            {
+                protocol1.Listen<byte[]>((transfer) =>
+                {
+                    data = transfer.Content;
+                    stop = true;
+                });
+                await Task.Delay(TimeSpan.FromSeconds(135));
+                stop = true;
+            });
+            System.Threading.Thread.Sleep(TimeSpan.FromSeconds(1));
+            Task.Run(() =>
+            {
+                protocol.Send(new Transfer<byte[]>(protocol.Devices[0].Identifier, content), (success) =>
+                {
+                    if (success != TransportState.Ok)
+                        throw new Exception("Failed to send");
+                });
+            });
+
+            do
+            {
+                System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(10));
+            } while (!stop);
+            Assert.True(data.Length == content.Length, "Wrong Data length received");
+
+            protocol1.Stop();
+            protocol.Stop();
+        }
     }
 }
