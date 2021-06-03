@@ -189,6 +189,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                         // All the data has been read from the client.
                         var rawData = state.Data.ToArray();
                         var remoteEP = handler.RemoteEndPoint as IPEndPoint;
+                        _logger.Trace($"{nameof(DataListener)} received From:{remoteEP.Address}:{remoteEP.Port} Bytes Count:{rawData.Length}");
                         stateCompleteCallback?.Invoke(new StateComplete(rawData, remoteEP?.Address?.ToString()));
                     }
                     else

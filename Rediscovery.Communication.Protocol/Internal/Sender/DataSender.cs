@@ -42,6 +42,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                         var raw = new List<byte>(sendLength);
                         raw.AddRange(rawContent);
                         raw.AddRange(Network.EOFBytes);
+                        _logger.Trace($"{nameof(DataSender)} send raw data. Peer:{deviceGreeting.Device.Identifier} Hops:{deviceGreeting.Device.Hops} Bytes:{raw.Count}");
                         sender.BeginSend(raw.ToArray(), 0, sendLength, 0,
                             new AsyncCallback(OnSendCallback),
                             new StateObjectSender

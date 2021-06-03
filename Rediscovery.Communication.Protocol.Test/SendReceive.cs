@@ -51,7 +51,7 @@ namespace Rediscovery.Communication.Protocol.Test
         [Fact]
         public void SendReceiveLongText()
         {
-            string content = string.Join("", System.Linq.Enumerable.Repeat($"{DateTime.UtcNow:yyyy-MM-dd-HH-mm-FFFFFFF}", 1000));
+            string content = string.Join("", System.Linq.Enumerable.Repeat($"{DateTime.UtcNow.Ticks}{DateTime.UtcNow:yyyy-MM-dd-HH-mm-FFFFFFF}", 1000000));
             IRediscoveryProtocol protocol1 = Shared.TestDevice(new Models.ConnectionConfiguration(16576, 16577, 1024));
             IRediscoveryProtocol protocol = new RediscoveryProtocol();
             protocol.Start(null);
