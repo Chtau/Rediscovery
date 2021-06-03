@@ -11,10 +11,16 @@ namespace Rediscovery.Communication.Protocol.Internal
     // 3.) Data bytes until the size from the PackageHeader.PayloadSize is reached
     // 4.) TODO: peer receiver / hop target
 
-    internal class PackageHeader
+    /// <summary>
+    /// Collect UDP/TCP Packages to create our Package state object which validates and prepares the data for proxy work
+    /// </summary>
+    internal class PackageState
     {
         public DateTime SenderTimestamp { get; set; }
         public long PayloadSize { get; set; }
         public string Checksum { get; set; }
+        public string SenderIdentifier { get; set; }
+        public string ReceiverIdentifier { get; set; }
+        public byte[] Payload { get; set; }
     }
 }
