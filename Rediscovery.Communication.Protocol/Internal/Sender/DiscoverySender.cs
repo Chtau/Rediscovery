@@ -11,7 +11,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
     internal class DiscoverySender
     {
         private readonly IProtocolLogger _logger;
-        private readonly IPackagePipeline _packagePipeline;
+        private readonly IDiscoveryPipeline _discoveryPipeline;
         private readonly string threadName = $"Thread_{nameof(DiscoverySender)}";
 
         private System.Threading.Thread listenThread;
@@ -26,10 +26,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
         private Func<List<DeviceGreeting>> deviceGreetingCallback;
         private TimeSpan discoverySendTimeout = TimeSpan.FromMilliseconds(100);
 
-        public DiscoverySender(IProtocolLogger protocolLogger, IPackagePipeline packagePipeline)
+        public DiscoverySender(IProtocolLogger protocolLogger, IDiscoveryPipeline discoveryPipeline)
         {
             _logger = protocolLogger;
-            _packagePipeline = packagePipeline;
+            _discoveryPipeline = discoveryPipeline;
             OnInitThread();
         }
 
@@ -114,7 +114,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                             try
                             {
                                 var device = OnGetDeviceGreeting();
-                                var deviceRaw = _packagePipeline.Outgoing(device);
+                                var deviceRaw = _discoveryPipeline.Outgoing(device);
                                 _logger.Trace($"Broadcast Greeting for Peer:{device.Identifier} Hops:{device.Hops} Bytes:{deviceRaw.Length}");
                                 socket.SendTo(deviceRaw, new IPEndPoint(IPAddress.Broadcast, configuration.Connection.SendPort));
                                 var deviceGreetings = deviceGreetingCallback.Invoke();
@@ -151,7 +151,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                                                 User = deviceGreeting.Metadata.User
                                             }
                                         };
-                                        var raw = _packagePipeline.Outgoing(peerGreeting);
+                                        var raw = _discoveryPipeline.Outgoing(peerGreeting);
                                         _logger.Trace($"Broadcast Greeting for Peer:{deviceGreeting.Identifier} Hops:{deviceGreeting.Hops} Bytes:{raw.Length}");
                                         socket.SendTo(raw, new IPEndPoint(IPAddress.Broadcast, configuration.Connection.SendPort));
                                     }

@@ -11,7 +11,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
     internal class DiscoveryListener
     {
         private readonly IProtocolLogger _logger;
-        private readonly IPackagePipeline _packagePipeline;
+        private readonly IDiscoveryPipeline _discoveryPipeline;
 
         private System.Threading.Thread listenThread;
         private readonly string threadName = $"Thread_{nameof(DiscoveryListener)}";
@@ -25,10 +25,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
         public List<DeviceGreeting> Devices => _devices.Select(x => x.Device).ToList();
         public event EventHandler<string> DevicesChanged;
 
-        public DiscoveryListener(IProtocolLogger protocolLogger, IPackagePipeline packagePipeline)
+        public DiscoveryListener(IProtocolLogger protocolLogger, IDiscoveryPipeline discoveryPipeline)
         {
             _logger = protocolLogger;
-            _packagePipeline = packagePipeline;
+            _discoveryPipeline = discoveryPipeline;
             OnInitThread();
         }
 
@@ -108,7 +108,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Listener
                             if (bytesReceived > 0)
                             {
                                 _logger.Trace($"Received UDP DGRAM From:{clientEp} Bytes Count:{bytesReceived}");
-                                var deviceGreeting = _packagePipeline.Incoming<DeviceGreeting>(bytes.Take(bytesReceived).ToArray());
+                                var deviceGreeting = _discoveryPipeline.Incoming<DeviceGreeting>(bytes.Take(bytesReceived).ToArray());
                                 if (deviceGreeting != null)
                                 {
                                     OnHandleReceivedDevices(deviceGreeting, (IPEndPoint)clientEp);

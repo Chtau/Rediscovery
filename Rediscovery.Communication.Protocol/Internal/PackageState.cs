@@ -21,6 +21,7 @@ namespace Rediscovery.Communication.Protocol.Internal
         public string Checksum { get; set; }
         public string SenderIdentifier { get; set; }
         public string ReceiverIdentifier { get; set; }
+        public List<int> ReceivedPackageIndexes { get; set; } = new List<int>();
         public byte[] Payload { get; set; }
     }
 }
