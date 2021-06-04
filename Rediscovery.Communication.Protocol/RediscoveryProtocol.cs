@@ -78,7 +78,7 @@ namespace Rediscovery.Communication.Protocol
                 throw new ArgumentNullException(nameof(Identifer), "Cloud not create a new Identifier");
         }
 
-        public string NewIdentifier() => $"{Guid.NewGuid()}.{DateTime.Now}.{Environment.MachineName}".GetHashString();
+        public string NewIdentifier() => $"{Guid.NewGuid()}.{DateTime.Now}.{Environment.MachineName}".GetHashString().GetHashString(HashExtensions.HashAlgorithmTypes.MD5).Substring(0,16);
 
         public void Stop()
         {
