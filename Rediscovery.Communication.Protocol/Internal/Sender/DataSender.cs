@@ -13,12 +13,14 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
     {
         private readonly IProtocolLogger _logger;
         private readonly IPackagePipeline _packagePipeline;
+        private readonly Dictionary<string, Socket> _sockets = new Dictionary<string, Socket>();
         private DataConfiguration configuration;
 
         public DataSender(IProtocolLogger protocolLogger, IPackagePipeline packagePipeline)
         {
             _logger = protocolLogger;
             _packagePipeline = packagePipeline;
+            _packagePipeline.SendNextRaw += _packagePipeline_SendNextRaw;
         }
 
         public void Initialize(BaseConfiguration configuration)
@@ -32,7 +34,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
             {
                 Task.Run(() =>
                 {
-                    try
+                    _packagePipeline.Outgoing(content, deviceGreeting);
+                    /*try
                     {
                         var endpoint = new IPEndPoint(IPAddress.Parse(deviceGreeting.IP), deviceGreeting.Device.Communication.Data.Port);
                         Socket sender = new Socket(endpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
@@ -55,7 +58,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                     {
                         _logger.Error(ex);
                         successCallback?.Invoke(TransportState.Error);
-                    }
+                    }*/
                 });
             } catch (Exception ex)
             {
@@ -69,6 +72,41 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
             try
             {
 
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+        }
+
+        private Socket OnGetSocket(DeviceGreetingReceived deviceGreeting)
+        {
+            Socket sender;
+            if (_sockets.ContainsKey(deviceGreeting.Device.Identifier))
+            {
+                sender = _sockets[deviceGreeting.Device.Identifier];
+                if (sender.Connected)
+                    return sender;
+                _sockets.Remove(deviceGreeting.Device.Identifier);
+            }
+            var endpoint = new IPEndPoint(IPAddress.Parse(deviceGreeting.IP), deviceGreeting.Device.Communication.Data.Port);
+            sender = new Socket(endpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            sender.Connect(endpoint);
+            _sockets.Add(deviceGreeting.Device.Identifier, sender);
+            return sender;
+        }
+
+
+        private void _packagePipeline_SendNextRaw(object sender, OutgoingPackageRawPart e)
+        {
+            try
+            {
+                var socket = OnGetSocket(e.DeviceGreeting);
+                socket.BeginSend(e.Raw, 0, e.Raw.Length, 0, new AsyncCallback(OnSendCallback),
+                            new StateObjectSender
+                            {
+                                Sender = socket
+                            });
             }
             catch (Exception ex)
             {
