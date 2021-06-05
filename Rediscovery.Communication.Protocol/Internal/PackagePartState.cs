@@ -16,25 +16,82 @@ namespace Rediscovery.Communication.Protocol.Internal
     /// </summary>
     internal class PackagePartState
     {
-        public DateTime SenderTimestamp { get; set; }
-        public long PayloadSize { get; set; }
-        public string Checksum { get; set; }
-        public string SenderIdentifier { get; set; }
-        public string ReceiverIdentifier { get; set; }
-        public byte[] PartPayload { get; set; }
-        public int Index { get; set; }
+        private readonly int _packageSize = 46; 
 
-        public byte[] CreateSenderPackage()
+        public DateTime SenderTimestamp { get; private set; }
+        public long PayloadSize { get; private set; }
+        public string Checksum { get; private set; }
+        public string SenderIdentifier { get; private set; }
+        public string ReceiverIdentifier { get; private set; }
+        public byte[] PayloadPart { get; private set; }
+        public int Index { get; private set; }
+
+        public PackagePartState(int packageSize,
+            string senderIdentifier,
+            string receiverIdentifier,
+            string checksum,
+            long payloadSize,
+            int index)
         {
-            var raw = new List<byte>(46); // Convert.FromBase64String => 12 + 12 + 6 + 7 + 12 + 3
+            _packageSize = packageSize;
+            SenderIdentifier = senderIdentifier;
+            ReceiverIdentifier = receiverIdentifier;
+            Checksum = checksum;
+            PayloadSize = payloadSize;
+            Index = index;
+        }
+
+        public PackagePartState(byte[] receivedPackage)
+        {
+
+        }
+
+        /// <summary>
+        /// Create a header for the current values to measure the length 
+        /// which is required to set the correct payload
+        /// </summary>
+        /// <returns></returns>
+        public int HeaderSizeOnly()
+        {
+            return OnCreateSenderPackage(null).Count;
+        }
+
+        /// <summary>
+        /// Sets the byte[] payload for this index
+        /// Use <see cref="HeaderSizeOnly"/> to calculate the correct payload length for this part
+        /// </summary>
+        /// <param name="payloadPart"></param>
+        public void SetPayload(byte[] payloadPart)
+        {
+            PayloadPart = payloadPart;
+        }
+
+        /// <summary>
+        /// Create a byte[] package which includes the header and payload
+        /// </summary>
+        /// <param name="dateTime">Sets a sender timestamp. Default is UTC now.</param>
+        /// <returns>Byte[] with a maximal size of package size</returns>
+        public byte[] CreateSenderPackage(DateTime? dateTime)
+        {
+            if (!dateTime.HasValue)
+                dateTime = DateTime.UtcNow;
+            var raw = OnCreateSenderPackage(dateTime);
+            raw.AddRange(PayloadPart);
+            return raw.ToArray();
+        }
+
+        private List<byte> OnCreateSenderPackage(DateTime? dateTime)
+        {
+            if (!dateTime.HasValue)
+                dateTime = DateTime.UtcNow;
+            var raw = new List<byte>(_packageSize); // Convert.FromBase64String => 12 + 12 + 6 + 7 + 12 + 3
             raw.AddRange(Convert.FromBase64String(SenderIdentifier)); // 12 byte = sender device (local)
             raw.AddRange(Convert.FromBase64String(ReceiverIdentifier)); // 12 byte = receiver device (remote)
             raw.AddRange(Convert.FromBase64String(Checksum)); // 12 byte = checksum MD5 first 16 characters (is at the same time the overall package identifier)
-            raw.AddRange(Convert.FromBase64String(SenderTimestamp.ToString("mmssffff"))); // 7 byte = sender timestamp format "minutes-seconds-tousends of second"
+            raw.AddRange(Convert.FromBase64String(dateTime.Value.ToString("mmssffff"))); // 7 byte = sender timestamp format "minutes-seconds-tousends of second"
             raw.AddRange(Encoding.UTF8.GetBytes($"+{PayloadSize}+")); // ?? byte = length of the total payload
             raw.AddRange(Encoding.UTF8.GetBytes($"+{Index}+")); // ?? byte = package index
-
-            return raw.ToArray();
+            return raw;
         }
     }
 }
