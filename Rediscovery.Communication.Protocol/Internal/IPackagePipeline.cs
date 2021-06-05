@@ -10,5 +10,6 @@ namespace Rediscovery.Communication.Protocol.Internal
         event EventHandler<OutgoingPackageRawPart> SendNextRaw;
         bool Outgoing<T>(T instance, DeviceGreetingReceived deviceGreeting);
         T Incoming<T>(byte[] raw);
+        void SetIdentifier(string identifier);
     }
 }

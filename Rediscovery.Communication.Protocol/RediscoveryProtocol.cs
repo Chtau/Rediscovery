@@ -234,6 +234,7 @@ namespace Rediscovery.Communication.Protocol
             {
                 _discoverySender.SetIdentifier(Identifer);
                 _discoveryListener.SetIdentifier(Identifer);
+                _packagePipeline.SetIdentifier(Identifer);
             }
             catch (Exception ex)
             {
