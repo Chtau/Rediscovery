@@ -20,7 +20,7 @@ namespace Rediscovery.Communication.Protocol.Internal
         private readonly int _packageSize = 46;
         private readonly byte valueDelimiter = Encoding.UTF8.GetBytes("+").First();
 
-        public DateTime SenderTimestamp { get; private set; }
+        public DateTime SenderTimestamp { get; private set; } = DateTime.UtcNow;
         public long PayloadSize { get; private set; }
         public string Checksum { get; private set; }
         public string SenderIdentifier { get; private set; }

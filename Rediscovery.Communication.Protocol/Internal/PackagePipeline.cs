@@ -49,16 +49,21 @@ namespace Rediscovery.Communication.Protocol.Internal
                 var index = 0;
                 while (rawPayload.Count > 0)
                 {
-                    // remove used bytes from raw payload when added to packs
                     var pack = new PackagePartState(packSize,
                         currentIdentifier,
                         deviceGreeting.Device.Identifier,
                         checksum,
                         payloadSize,
                         index);
+                    // get payload based on preliminar header size
                     var headerSize = pack.HeaderSizeOnly();
-                    pack.SetPayload(rawPayload.Take(packSize - headerSize).ToArray());
-                    rawPayload.RemoveRange(0, packSize - headerSize);
+                    var takePayload = packSize - headerSize;
+                    pack.SetPayload(rawPayload.Take(takePayload).ToArray());
+                    // remove used bytes from raw payload when added to packs
+                    if (takePayload > rawPayload.Count)
+                        rawPayload.Clear();
+                    else
+                        rawPayload.RemoveRange(0, takePayload);
                     index++;
                     packs.Add(pack);
                 }
