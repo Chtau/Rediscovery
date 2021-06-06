@@ -1,0 +1,102 @@
+﻿using Rediscovery.Communication.Protocol.Internal.Listener;
+using Rediscovery.Communication.Protocol.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Rediscovery.Communication.Protocol.Internal
+{
+    internal class DeviceManager : IDeviceManager
+    {
+        private readonly IProtocolLogger _logger;
+        private readonly List<DeviceGreetingReceived> _devices = new List<DeviceGreetingReceived>();
+        private readonly TimeSpan deviceTimeoutOffset = TimeSpan.FromSeconds(10);
+        private readonly TimeSpan waitBeforeTimeoutCheck = TimeSpan.FromSeconds(30);
+
+        private bool isTimeoutCheckRunning = false;
+
+        public event EventHandler<string> DeviceChanged;
+
+        public DeviceManager(IProtocolLogger logger)
+        {
+            _logger = logger;
+        }
+
+        public DeviceGreetingReceived GetGreeting(string identifier)
+        {
+            try
+            {
+                _devices.FirstOrDefault(x => string.Equals(x.Device.Identifier, identifier, StringComparison.OrdinalIgnoreCase));
+            } catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+            return null;
+        }
+
+        public bool Change(DeviceGreeting deviceGreeting, IPEndPoint ipEndPoint)
+        {
+            try
+            {
+                lock (_devices)
+                {
+                    var d = _devices.FirstOrDefault(x => x.Device.Identifier == deviceGreeting.Identifier);
+                    if (d != null)
+                    {
+                        if (d.Update(deviceGreeting, ipEndPoint.Address.ToString()))
+                        {
+                            OnHandleTimeoutDevices();
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        _devices.Add(new DeviceGreetingReceived(deviceGreeting, ipEndPoint.Address.ToString()));
+                        OnHandleTimeoutDevices();
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+            OnHandleTimeoutDevices();
+            return false;
+        }
+
+        private void OnHandleTimeoutDevices()
+        {
+            if (isTimeoutCheckRunning)
+                return;
+            isTimeoutCheckRunning = true;
+            try
+            {
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        await Task.Delay(waitBeforeTimeoutCheck);
+                        _devices.RemoveAll(x => x.Received < (DateTime.UtcNow - deviceTimeoutOffset));
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex);
+                    } finally
+                    {
+                        isTimeoutCheckRunning = false;
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+                isTimeoutCheckRunning = false;
+            }
+        }
+    }
+}
