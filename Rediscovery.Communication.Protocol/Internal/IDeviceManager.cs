@@ -5,10 +5,9 @@ using System.Text;
 
 namespace Rediscovery.Communication.Protocol.Internal
 {
-    internal interface IPackagePipeline
+    internal interface IDeviceManager
     {
-        bool Outgoing<T>(T instance, DeviceGreetingReceived deviceGreeting);
-        T Incoming<T>(byte[] raw);
-        void SetIdentifier(string identifier);
+        event EventHandler<string> DeviceChanged;
+        DeviceGreetingReceived GetGreeting(string identifier);
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
+using Rediscovery.Communication.Protocol.Internal.Sender;
 
 namespace Rediscovery.Communication.Protocol.Internal
 {
@@ -11,17 +12,18 @@ namespace Rediscovery.Communication.Protocol.Internal
     {
         private readonly IProtocolLogger _logger;
         private readonly ISerializer _serializer;
+        private readonly ICommunication _communication;
         private readonly List<PackagePartState> outgoingPackages = new List<PackagePartState>();
 
         private string currentIdentifier;
         private Task outTask;
 
-        public event EventHandler<OutgoingPackageRawPart> SendNextRaw;
-
-        public PackagePipeline(IProtocolLogger logger, ISerializer serializer)
+        public PackagePipeline(IProtocolLogger logger, ISerializer serializer, ICommunication communication)
         {
             _logger = logger;
             _serializer = serializer;
+            _communication = communication;
+            _communication.Receive += _communication_Receive;
         }
 
         public void SetIdentifier(string identifier) => currentIdentifier = identifier;
@@ -96,13 +98,14 @@ namespace Rediscovery.Communication.Protocol.Internal
             {
                 while (outgoingPackages.Count > 0)
                 {
+                    // invoke sender to clear the collection of created packages
                     try
                     {
                         var item = outgoingPackages.FirstOrDefault();
                         if (item != null)
                         {
                             outgoingPackages.Remove(item);
-                            // TODO: invoke sender to clear the collection of created packages
+                            _communication.Send(new CommunicationPayload(item.CreateSenderPackage(DateTime.UtcNow), item.ReceiverIdentifier));
                         }
                     }
                     catch (Exception ex)
@@ -117,6 +120,18 @@ namespace Rediscovery.Communication.Protocol.Internal
             } finally
             {
                 outTask = null;
+            }
+        }
+
+        private void _communication_Receive(object sender, CommunicationPayload e)
+        {
+            try
+            {
+                // TODO: create package part for this payload
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
             }
         }
     }
