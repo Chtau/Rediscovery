@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Rediscovery.Communication.Protocol.Internal
@@ -16,7 +17,8 @@ namespace Rediscovery.Communication.Protocol.Internal
     /// </summary>
     internal class PackagePartState
     {
-        private readonly int _packageSize = 46; 
+        private readonly int _packageSize = 46;
+        private readonly byte valueDelimiter = Encoding.UTF8.GetBytes("+").First();
 
         public DateTime SenderTimestamp { get; private set; }
         public long PayloadSize { get; private set; }
@@ -57,7 +59,7 @@ namespace Rediscovery.Communication.Protocol.Internal
         }
 
         /// <summary>
-        /// Sets the byte[] payload for this index
+        /// Sets the <see cref="byte[]"/> payload for this index
         /// Use <see cref="HeaderSizeOnly"/> to calculate the correct payload length for this part
         /// </summary>
         /// <param name="payloadPart"></param>
@@ -67,10 +69,10 @@ namespace Rediscovery.Communication.Protocol.Internal
         }
 
         /// <summary>
-        /// Create a byte[] package which includes the header and payload
+        /// Create a <see cref="byte[]"/> package which includes the header and payload
         /// </summary>
         /// <param name="dateTime">Sets a sender timestamp. Default is UTC now.</param>
-        /// <returns>Byte[] with a maximal size of package size</returns>
+        /// <returns><see cref="byte[]"/> with a maximal size of package size</returns>
         public byte[] CreateSenderPackage(DateTime? dateTime)
         {
             if (!dateTime.HasValue)

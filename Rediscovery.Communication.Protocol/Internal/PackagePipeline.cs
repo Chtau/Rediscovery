@@ -10,9 +10,7 @@ namespace Rediscovery.Communication.Protocol.Internal
     {
         private readonly IProtocolLogger _logger;
         private readonly ISerializer _serializer;
-        private readonly int headerSize = 0;
-        private readonly byte valueDelimiter = Encoding.UTF8.GetBytes("+").First();
-
+        
         private string currentIdentifier;
 
         public event EventHandler<OutgoingPackageRawPart> SendNextRaw;
@@ -41,37 +39,28 @@ namespace Rediscovery.Communication.Protocol.Internal
         {
             try
             {
-                //var headerBytes = new List<byte>(46); // Convert.FromBase64String => 12 + 12 + 6 + 7 + 12 + 3
-                var localDeviceBytes = Convert.FromBase64String(currentIdentifier); // 12 byte = sender device (local)
-                var remoteDeviceBytes = Convert.FromBase64String(deviceGreeting.Device.Identifier); // 12 byte = receiver device (remote)
-                
-                var rawPayload = _serializer.Serialize(instance);
-                var payloadSize = rawPayload.Length;
-                var payloadSizeBytes = Encoding.UTF8.GetBytes($"+{payloadSize}+"); // ?? byte = length of the total payload
-                var checksum = rawPayload.GetHashString(HashExtensions.HashAlgorithmTypes.MD5).Substring(0, 16);
-                var checksumBytes = Convert.FromBase64String(checksum); // 12 byte = checksum MD5 first 16 characters (is at the same time the overall package identifier)
+                var rawPayload = _serializer.Serialize(instance).ToList();
+                var payloadSize = rawPayload.Count;
+                var checksum = rawPayload.ToArray().GetHashString(HashExtensions.HashAlgorithmTypes.MD5).Substring(0, 16);
                 
                 var packSize = deviceGreeting.Device.Communication.Data.PackageSize;
-                var headerPackSize = (packSize + headerSize);
-                var packCount = payloadSize / headerPackSize;
-                if (packCount == 0)
-                    packCount = 1;
 
-                var packs = new PackagePartState[packCount];
-                for (int i = 0; i < packCount; i++)
+                var packs = new List<PackagePartState>();
+                var index = 0;
+                while (rawPayload.Count > 0)
                 {
-                    var headerBytes = new List<byte>(46);
-                    headerBytes.AddRange(localDeviceBytes);
-                    headerBytes.AddRange(remoteDeviceBytes);
-                    headerBytes.AddRange(Encoding.UTF8.GetBytes($"+{i}+")); // ?? byte = package index
-                    headerBytes.AddRange(Convert.FromBase64String(DateTime.UtcNow.ToString("mmssffff"))); // 7 byte = sender timestamp format "minutes-seconds-tousends of second"
-
-                    packs[i] = new PackagePartState
-                    {
-                        PartPayload = rawPayload.Skip(headerPackSize * i).Take(headerPackSize).ToArray(),
-                        PayloadSize = rawPayload.Length,
-                        ReceiverIdentifier = deviceGreeting.Device.Identifier,
-                    };
+                    // remove used bytes from raw payload when added to packs
+                    var pack = new PackagePartState(packSize,
+                        currentIdentifier,
+                        deviceGreeting.Device.Identifier,
+                        checksum,
+                        payloadSize,
+                        index);
+                    var headerSize = pack.HeaderSizeOnly();
+                    pack.SetPayload(rawPayload.Take(packSize - headerSize).ToArray());
+                    rawPayload.RemoveRange(0, packSize - headerSize);
+                    index++;
+                    packs.Add(pack);
                 }
                 
                 return true;
