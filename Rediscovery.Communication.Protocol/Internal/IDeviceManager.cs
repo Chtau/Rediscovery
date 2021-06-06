@@ -9,10 +9,19 @@ namespace Rediscovery.Communication.Protocol.Internal
 {
     internal interface IDeviceManager
     {
+        /// <summary>
+        /// Will be triggered after a device is changed or added
+        /// </summary>
         event EventHandler<string> DeviceChanged;
+        /// <summary>
+        /// Get the current device greeting information from the device identifier
+        /// </summary>
+        /// <param name="identifier"></param>
+        /// <returns></returns>
         DeviceGreetingReceived GetGreeting(string identifier);
         /// <summary>
-        /// 
+        /// Add or update device greeting information.
+        /// Timeout check will be started if no timeout is running.
         /// </summary>
         /// <param name="deviceGreeting"></param>
         /// <param name="ipEndPoint"></param>

@@ -50,6 +50,7 @@ namespace Rediscovery.Communication.Protocol.Internal
                         if (d.Update(deviceGreeting, ipEndPoint.Address.ToString()))
                         {
                             OnHandleTimeoutDevices();
+                            DeviceChanged?.Invoke(this, deviceGreeting.Identifier);
                             return true;
                         }
                     }
@@ -57,6 +58,7 @@ namespace Rediscovery.Communication.Protocol.Internal
                     {
                         _devices.Add(new DeviceGreetingReceived(deviceGreeting, ipEndPoint.Address.ToString()));
                         OnHandleTimeoutDevices();
+                        DeviceChanged?.Invoke(this, deviceGreeting.Identifier);
                         return true;
                     }
                 }
