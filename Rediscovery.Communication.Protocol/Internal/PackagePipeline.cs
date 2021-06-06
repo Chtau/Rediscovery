@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Rediscovery.Communication.Protocol.Internal
 {
@@ -10,8 +11,10 @@ namespace Rediscovery.Communication.Protocol.Internal
     {
         private readonly IProtocolLogger _logger;
         private readonly ISerializer _serializer;
-        
+        private readonly List<PackagePartState> outgoingPackages = new List<PackagePartState>();
+
         private string currentIdentifier;
+        private Task outTask;
 
         public event EventHandler<OutgoingPackageRawPart> SendNextRaw;
 
@@ -67,7 +70,17 @@ namespace Rediscovery.Communication.Protocol.Internal
                     index++;
                     packs.Add(pack);
                 }
-                
+
+                lock (outgoingPackages)
+                {
+                    outgoingPackages.AddRange(packs);
+                }
+
+                if (outTask == null)
+                {
+                    outTask = Task.Run(OnOutgoingTaskRunner);
+                }
+
                 return true;
             }
             catch (Exception ex)
@@ -75,6 +88,36 @@ namespace Rediscovery.Communication.Protocol.Internal
                 _logger.Error(ex);
             }
             return false;
+        }
+
+        private void OnOutgoingTaskRunner()
+        {
+            try
+            {
+                while (outgoingPackages.Count > 0)
+                {
+                    try
+                    {
+                        var item = outgoingPackages.FirstOrDefault();
+                        if (item != null)
+                        {
+                            outgoingPackages.Remove(item);
+                            // TODO: invoke sender to clear the collection of created packages
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            } finally
+            {
+                outTask = null;
+            }
         }
     }
 }
