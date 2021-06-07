@@ -106,7 +106,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
                             int bytesReceived = socket.ReceiveFrom(bytes, ref clientEp);
                             if (bytesReceived > 0)
                             {
+#if DISCOVER
                                 _logger.Trace($"Received UDP DGRAM From:{clientEp} Bytes Count:{bytesReceived}");
+#endif
                                 var deviceGreeting = _discoveryPipeline.Incoming<DeviceGreeting>(bytes.Take(bytesReceived).ToArray());
                                 if (deviceGreeting != null)
                                 {

@@ -53,6 +53,10 @@ namespace Rediscovery.Communication.Protocol
 
         public RediscoveryProtocol(string identifer = null, IProtocolLogger protocolLogger = null, ISerializer serializer = null)
         {
+#if DISCOVER
+            _logger.Trace("Diagnostic => Discover is active");
+#endif
+
             _logger = protocolLogger ?? new Internal.ProtocolLogger();
             _serializer = serializer ?? new Serializer(_logger);
             _deviceManager = new DeviceManager(_logger);

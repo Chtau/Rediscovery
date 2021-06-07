@@ -118,7 +118,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
                             {
                                 var device = OnGetDeviceGreeting();
                                 var deviceRaw = _discoveryPipeline.Outgoing(device);
+#if DISCOVER
                                 _logger.Trace($"Broadcast Greeting for Peer:{device.Identifier} Hops:{device.Hops} Bytes:{deviceRaw.Length}");
+#endif
                                 socket.SendTo(deviceRaw, new IPEndPoint(IPAddress.Broadcast, configuration.Connection.SendPort));
                                 var deviceGreetings = _deviceManager.Devices;
                                 if (deviceGreetings.Count > 0)
@@ -155,7 +157,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
                                             }
                                         };
                                         var raw = _discoveryPipeline.Outgoing(peerGreeting);
+#if DISCOVER
                                         _logger.Trace($"Broadcast Greeting for Peer:{deviceGreeting.Identifier} Hops:{deviceGreeting.Hops} Bytes:{raw.Length}");
+#endif
                                         socket.SendTo(raw, new IPEndPoint(IPAddress.Broadcast, configuration.Connection.SendPort));
                                     }
                                 }
