@@ -68,7 +68,7 @@ namespace Rediscovery.Communication.Protocol
             _discoveryListener = new DiscoveryListener(_logger, _discoveryPipeline, _deviceManager);
             _dataListener = new DataListener(_logger, _packagePipeline);
             _lowDataListener = new LowDataListener(_logger, _packagePipeline);
-            _discoverySender = new DiscoverySender(_logger, _discoveryPipeline);
+            _discoverySender = new DiscoverySender(_logger, _discoveryPipeline, _deviceManager);
             _dataSender = new DataSender(_logger, _packagePipeline);
             _lowDataSender = new LowDataSender(_logger, _packagePipeline);
             if (!string.IsNullOrWhiteSpace(identifer))
@@ -234,6 +234,7 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
+                _deviceManager.SetIdentifier(Identifer);
                 _discoverySender.SetIdentifier(Identifer);
                 _discoveryListener.SetIdentifier(Identifer);
                 _packagePipeline.SetIdentifier(Identifer);

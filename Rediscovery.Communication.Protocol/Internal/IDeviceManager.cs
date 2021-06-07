@@ -29,5 +29,10 @@ namespace Rediscovery.Communication.Protocol.Internal
         /// <param name="ipEndPoint"></param>
         /// <returns>True if this is a new device or something has changed. False when no changes happend.</returns>
         bool Change(DeviceGreeting deviceGreeting, IPEndPoint ipEndPoint);
+        /// <summary>
+        /// Set the identifier of the current device
+        /// </summary>
+        /// <param name="identifer"></param>
+        void SetIdentifier(string identifer);
     }
 }

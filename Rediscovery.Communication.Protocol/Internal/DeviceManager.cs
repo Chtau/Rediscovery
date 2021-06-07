@@ -18,6 +18,7 @@ namespace Rediscovery.Communication.Protocol.Internal
         private readonly TimeSpan waitBeforeTimeoutCheck = TimeSpan.FromSeconds(30);
 
         private bool isTimeoutCheckRunning = false;
+        private string currentIdentifer;
 
         public List<DeviceGreeting> Devices => _devices.Select(x => x.Device)?.ToList();
 
@@ -44,6 +45,8 @@ namespace Rediscovery.Communication.Protocol.Internal
         {
             try
             {
+                if (string.Equals(currentIdentifer, deviceGreeting.Identifier))
+                    return false;
                 lock (_devices)
                 {
                     var d = _devices.FirstOrDefault(x => x.Device.Identifier == deviceGreeting.Identifier);
@@ -102,5 +105,7 @@ namespace Rediscovery.Communication.Protocol.Internal
                 isTimeoutCheckRunning = false;
             }
         }
+
+        public void SetIdentifier(string identifer) => currentIdentifer = identifer;
     }
 }

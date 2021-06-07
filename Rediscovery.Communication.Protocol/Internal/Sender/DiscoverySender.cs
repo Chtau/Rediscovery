@@ -12,6 +12,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
     {
         private readonly IProtocolLogger _logger;
         private readonly IDiscoveryPipeline _discoveryPipeline;
+        private readonly IDeviceManager _deviceManager;
         private readonly string threadName = $"Thread_{nameof(DiscoverySender)}";
 
         private System.Threading.Thread listenThread;
@@ -23,13 +24,15 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
         private string currentFriendlyName;
         private DeviceMetadata.IdiomType currentIdiom = DeviceMetadata.IdiomType.Desktop;
         private DeviceGreeting greeting;
-        private Func<List<DeviceGreeting>> deviceGreetingCallback;
         private TimeSpan discoverySendTimeout = TimeSpan.FromMilliseconds(100);
 
-        public DiscoverySender(IProtocolLogger protocolLogger, IDiscoveryPipeline discoveryPipeline)
+        public DiscoverySender(IProtocolLogger protocolLogger, 
+            IDiscoveryPipeline discoveryPipeline,
+            IDeviceManager deviceManager)
         {
             _logger = protocolLogger;
             _discoveryPipeline = discoveryPipeline;
+            _deviceManager = deviceManager;
             OnInitThread();
         }
 
@@ -89,7 +92,6 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
         public void SetIdentifier(string identifier) => currentIdentifier = identifier;
         public void SetFriendlyName(string friendlyName) => currentFriendlyName = friendlyName;
         public void SetIdiom(DeviceMetadata.IdiomType idiomType) => currentIdiom = idiomType;
-        public void KnownDevicesCallback(Func<List<DeviceGreeting>> callback) => deviceGreetingCallback = callback;
 
         private void OnInitThread()
         {
@@ -117,7 +119,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
                                 var deviceRaw = _discoveryPipeline.Outgoing(device);
                                 _logger.Trace($"Broadcast Greeting for Peer:{device.Identifier} Hops:{device.Hops} Bytes:{deviceRaw.Length}");
                                 socket.SendTo(deviceRaw, new IPEndPoint(IPAddress.Broadcast, configuration.Connection.SendPort));
-                                var deviceGreetings = deviceGreetingCallback.Invoke();
+                                var deviceGreetings = _deviceManager.Devices;
                                 if (deviceGreetings.Count > 0)
                                 {
                                     foreach (var deviceGreeting in deviceGreetings)
