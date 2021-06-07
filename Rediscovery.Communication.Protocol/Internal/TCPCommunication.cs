@@ -1,6 +1,4 @@
-﻿using Rediscovery.Communication.Protocol.Internal.Listener;
-using Rediscovery.Communication.Protocol.Internal.Sender;
-using Rediscovery.Communication.Protocol.Models;
+﻿using Rediscovery.Communication.Protocol.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

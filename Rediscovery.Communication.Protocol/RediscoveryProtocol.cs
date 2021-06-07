@@ -1,6 +1,5 @@
 ﻿using Rediscovery.Communication.Protocol.Internal;
-using Rediscovery.Communication.Protocol.Internal.Listener;
-using Rediscovery.Communication.Protocol.Internal.Sender;
+using Rediscovery.Communication.Protocol.Internal.Discovery;
 using Rediscovery.Communication.Protocol.Models;
 using System;
 using System.Collections.Generic;
@@ -22,11 +21,7 @@ namespace Rediscovery.Communication.Protocol
     {
         private readonly IProtocolLogger _logger;
         private readonly DiscoveryListener _discoveryListener;
-        private readonly IListener _dataListener;
-        private readonly IListener _lowDataListener;
         private readonly DiscoverySender _discoverySender;
-        private readonly ISender _dataSender;
-        private readonly ISender _lowDataSender;
         private readonly ISerializer _serializer;
         private readonly IPackagePipeline _packagePipeline;
         private readonly IDiscoveryPipeline _discoveryPipeline;
@@ -40,6 +35,7 @@ namespace Rediscovery.Communication.Protocol
         public event EventHandler<string> DevicesChanged;
 
         public List<DeviceGreeting> Devices => _deviceManager.Devices;
+
         public string Identifer 
         { 
             get
@@ -66,11 +62,7 @@ namespace Rediscovery.Communication.Protocol
             _packagePipeline = new PackagePipeline(_logger, _serializer, _communication);
             _discoveryPipeline = new DiscoveryPipeline(_logger, _serializer);
             _discoveryListener = new DiscoveryListener(_logger, _discoveryPipeline, _deviceManager);
-            _dataListener = new DataListener(_logger, _packagePipeline);
-            _lowDataListener = new LowDataListener(_logger, _packagePipeline);
             _discoverySender = new DiscoverySender(_logger, _discoveryPipeline, _deviceManager);
-            _dataSender = new DataSender(_logger, _packagePipeline);
-            _lowDataSender = new LowDataSender(_logger, _packagePipeline);
             if (!string.IsNullOrWhiteSpace(identifer))
             {
                 this.identifer = identifer;
@@ -101,40 +93,12 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
-                _dataListener.StateCompleteListener((result) =>
-                {
-                    //_discoveryListener.Devices.FirstOrDefault()
-                    receivedCallback?.Invoke(new Transfer<T>(result.IP, _packagePipeline.Incoming<T>(result.Raw)));
-                });
+                
             }
             catch (Exception ex)
             {
                 _logger.Error(ex);
             }
-        }
-
-        public void LowLatencyListen<T>(Action<Transfer<T>> receivedCallback)
-        {
-            try
-            {
-                return;
-                /*_lowDataListener.StateCompleteListener((array) =>
-                {
-                    receivedCallback?.Invoke(new Transfer<T>
-                    {
-                        Content = array
-                    });
-                });*/
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex);
-            }
-        }
-
-        public TransportState LowLatencySend<T>(Transfer<T> transfer)
-        {
-            throw new NotImplementedException();
         }
 
         public void Send<T>(Transfer<T> transfer, Action<TransportState> successCallback = null)
@@ -142,10 +106,7 @@ namespace Rediscovery.Communication.Protocol
             try
             {
                 var device = _deviceManager.GetGreeting(transfer.DeviceIdentifier);
-                _dataSender.Send(transfer.Content, device, (success) =>
-                {
-                    successCallback?.Invoke(success);
-                });
+                
             }
             catch (Exception ex)
             {
@@ -161,16 +122,10 @@ namespace Rediscovery.Communication.Protocol
                 this.configuration = configuration ?? new Models.Configuration();
                 
                 _discoverySender.Initialize(this.configuration.Discovery, this.configuration.Data.Connection, this.configuration.LowData.Connection);
-                _dataSender.Initialize(this.configuration.Data);
-                _lowDataSender.Initialize(this.configuration.LowData);
                 _discoveryListener.Initialize(this.configuration.Discovery);
-                _dataListener.Initialize(this.configuration.Data);
-                _lowDataListener.Initialize(this.configuration.LowData);
                 
                 // start listen for portocol data and discovery requests
                 OnListenDiscovery();
-                OnListenData();
-                //OnListenLowData();
             }
             catch (Exception ex)
             {
@@ -184,30 +139,6 @@ namespace Rediscovery.Communication.Protocol
             {
                 _discoveryListener.Start();
                 _discoverySender.Start();
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex);
-            }
-        }
-
-        private void OnListenData()
-        {
-            try
-            {
-                _dataListener.Start();
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex);
-            }
-        }
-
-        private void OnListenLowData()
-        {
-            try
-            {
-                _lowDataListener.Start();
             }
             catch (Exception ex)
             {
@@ -250,11 +181,7 @@ namespace Rediscovery.Communication.Protocol
             try
             {
                 _discoveryListener.Stop();
-                _dataListener.Stop();
-                _lowDataListener.Stop();
                 _discoverySender.Stop();
-                _dataSender.Stop();
-                _lowDataSender.Stop();
             }
             catch (Exception ex)
             {

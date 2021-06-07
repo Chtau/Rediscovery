@@ -1,10 +1,8 @@
-﻿using Rediscovery.Communication.Protocol.Internal.Listener;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
-using Rediscovery.Communication.Protocol.Internal.Sender;
 
 namespace Rediscovery.Communication.Protocol.Internal
 {

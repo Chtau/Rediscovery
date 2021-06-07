@@ -18,8 +18,6 @@ namespace Rediscovery.Communication.Protocol
         void Stop();
         void Send<T>(Transfer<T> transfer, Action<TransportState> successCallback = null);
         void Listen<T>(Action<Transfer<T>> receivedCallback);
-        TransportState LowLatencySend<T>(Transfer<T> transfer);
-        void LowLatencyListen<T>(Action<Transfer<T>> receivedCallback);
         object GetDiagnosticData();
         object GetConnectionInfo();
         void SetMetadata(string identifer, string friendlyName, DeviceMetadata.IdiomType idiomType);

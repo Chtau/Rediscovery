@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Linq;
 
-namespace Rediscovery.Communication.Protocol.Internal.Listener
+namespace Rediscovery.Communication.Protocol.Internal.Discovery
 {
     internal class DiscoveryListener
     {
