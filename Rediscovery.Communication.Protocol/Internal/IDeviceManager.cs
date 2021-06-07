@@ -9,6 +9,8 @@ namespace Rediscovery.Communication.Protocol.Internal
 {
     internal interface IDeviceManager
     {
+        List<DeviceGreeting> Devices { get; }
+
         /// <summary>
         /// Will be triggered after a device is changed or added
         /// </summary>

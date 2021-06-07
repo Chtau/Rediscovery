@@ -30,6 +30,8 @@ namespace Rediscovery.Communication.Protocol
         private readonly ISerializer _serializer;
         private readonly IPackagePipeline _packagePipeline;
         private readonly IDiscoveryPipeline _discoveryPipeline;
+        private readonly IDeviceManager _deviceManager;
+        private readonly ICommunication _communication;
 
         private Models.Configuration configuration;
         private string identifer;
@@ -37,7 +39,7 @@ namespace Rediscovery.Communication.Protocol
 
         public event EventHandler<string> DevicesChanged;
 
-        public List<DeviceGreeting> Devices => _discoveryListener.Devices;
+        public List<DeviceGreeting> Devices => _deviceManager.Devices;
         public string Identifer 
         { 
             get
@@ -55,18 +57,18 @@ namespace Rediscovery.Communication.Protocol
         {
             _logger = protocolLogger ?? new Internal.ProtocolLogger();
             _serializer = serializer ?? new Serializer(_logger);
-            _packagePipeline = new PackagePipeline(_logger, _serializer);
-            _discoveryPipeline = new DiscoveryPipeline(_logger, _serializer);
-
-            _discoveryListener = new DiscoveryListener(_logger, _discoveryPipeline);
-            _discoveryListener.DevicesChanged += (obj, args) =>
+            _deviceManager = new DeviceManager(_logger);
+            _deviceManager.DeviceChanged += (obj, args) =>
             {
                 DevicesChanged?.Invoke(this, args);
             };
+            _communication = new TCPCommunication(_logger, _deviceManager);
+            _packagePipeline = new PackagePipeline(_logger, _serializer, _communication);
+            _discoveryPipeline = new DiscoveryPipeline(_logger, _serializer);
+            _discoveryListener = new DiscoveryListener(_logger, _discoveryPipeline, _deviceManager);
             _dataListener = new DataListener(_logger, _packagePipeline);
             _lowDataListener = new LowDataListener(_logger, _packagePipeline);
             _discoverySender = new DiscoverySender(_logger, _discoveryPipeline);
-            _discoverySender.KnownDevicesCallback(() => _discoveryListener.Devices);
             _dataSender = new DataSender(_logger, _packagePipeline);
             _lowDataSender = new LowDataSender(_logger, _packagePipeline);
             if (!string.IsNullOrWhiteSpace(identifer))
@@ -139,7 +141,7 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
-                var device = _discoveryListener.GetDeviceGreeting(transfer.DeviceIdentifier);
+                var device = _deviceManager.GetGreeting(transfer.DeviceIdentifier);
                 _dataSender.Send(transfer.Content, device, (success) =>
                 {
                     successCallback?.Invoke(success);

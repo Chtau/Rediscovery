@@ -19,6 +19,8 @@ namespace Rediscovery.Communication.Protocol.Internal
 
         private bool isTimeoutCheckRunning = false;
 
+        public List<DeviceGreeting> Devices => _devices.Select(x => x.Device)?.ToList();
+
         public event EventHandler<string> DeviceChanged;
 
         public DeviceManager(IProtocolLogger logger)

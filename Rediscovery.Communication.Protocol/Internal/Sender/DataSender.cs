@@ -20,7 +20,6 @@ namespace Rediscovery.Communication.Protocol.Internal.Sender
         {
             _logger = protocolLogger;
             _packagePipeline = packagePipeline;
-            _packagePipeline.SendNextRaw += _packagePipeline_SendNextRaw;
         }
 
         public void Initialize(BaseConfiguration configuration)
