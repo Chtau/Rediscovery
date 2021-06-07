@@ -23,7 +23,7 @@ namespace Rediscovery.Communication.Protocol.Internal
             _logger = logger;
             _serializer = serializer;
             _communication = communication;
-            _communication.Receive += _communication_Receive;
+            _communication.Receive += Communication_Receive;
         }
 
         public void SetIdentifier(string identifier) => currentIdentifier = identifier;
@@ -123,7 +123,7 @@ namespace Rediscovery.Communication.Protocol.Internal
             }
         }
 
-        private void _communication_Receive(object sender, CommunicationPayload e)
+        private void Communication_Receive(object sender, CommunicationPayload e)
         {
             try
             {

@@ -4,6 +4,7 @@ using System.Text;
 
 namespace Rediscovery.Communication.Protocol.Internal.Listener
 {
+    [Obsolete("Use Pipeline & Communication instead")]
     internal class LowDataListener : BaseListener
     {
         public LowDataListener(IProtocolLogger protocolLogger, IPackagePipeline packagePipeline) : base(protocolLogger, packagePipeline, nameof(LowDataListener))

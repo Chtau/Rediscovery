@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Rediscovery.Communication.Protocol.Internal.Sender
 {
+    [Obsolete("Use Pipeline & Communication instead")]
     internal interface ISender
     {
         void Initialize(Models.BaseConfiguration configuration);

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Rediscovery.Communication.Protocol.Internal.Sender
 {
+    [Obsolete("Use Pipeline & Communication instead")]
     internal class DataSender : ISender
     {
         private readonly IProtocolLogger _logger;

@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace Rediscovery.Communication.Protocol.Internal.Listener
 {
+    [Obsolete("Use Pipeline & Communication instead")]
     internal abstract class BaseListener : IListener
     {
         private readonly IProtocolLogger _logger;

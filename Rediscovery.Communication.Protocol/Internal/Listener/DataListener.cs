@@ -9,6 +9,7 @@ using System.Threading;
 
 namespace Rediscovery.Communication.Protocol.Internal.Listener
 {
+    [Obsolete("Use Pipeline & Communication instead")]
     internal class DataListener : IListener
     {
         private readonly IProtocolLogger _logger;

@@ -4,6 +4,7 @@ using System.Text;
 
 namespace Rediscovery.Communication.Protocol.Internal.Listener
 {
+    [Obsolete("Use Pipeline & Communication instead")]
     internal interface IListener
     {
         void Initialize(Models.BaseConfiguration configuration);
