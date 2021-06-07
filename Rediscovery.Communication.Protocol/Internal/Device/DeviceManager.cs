@@ -32,7 +32,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         {
             try
             {
-                _devices.FirstOrDefault(x => string.Equals(x.Device.Identifier, identifier, StringComparison.OrdinalIgnoreCase));
+                return _devices.FirstOrDefault(x => string.Equals(x.Device.Identifier, identifier, StringComparison.OrdinalIgnoreCase));
             } catch (Exception ex)
             {
                 _logger.Error(ex);

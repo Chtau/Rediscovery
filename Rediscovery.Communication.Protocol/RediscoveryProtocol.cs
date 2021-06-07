@@ -108,7 +108,7 @@ namespace Rediscovery.Communication.Protocol
             try
             {
                 var device = _deviceManager.GetGreeting(transfer.DeviceIdentifier);
-                
+                _packagePipeline.Outgoing(transfer.Content, device);
             }
             catch (Exception ex)
             {
