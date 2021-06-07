@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
-namespace Rediscovery.Communication.Protocol.Internal
+namespace Rediscovery.Communication.Protocol.Internal.Device
 {
     internal interface IDeviceManager
     {

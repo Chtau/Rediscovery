@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Rediscovery.Communication.Protocol.Internal
+namespace Rediscovery.Communication.Protocol.Internal.Data
 {
     // TODO: Package Design used for TCP
     // TODO: Should we change to Byte flags instead of structur to reduce bytes used?

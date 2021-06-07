@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Linq;
+using Rediscovery.Communication.Protocol.Internal.Device;
 
 namespace Rediscovery.Communication.Protocol.Internal.Discovery
 {

@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Rediscovery.Communication.Protocol.Internal.Device;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rediscovery.Communication.Protocol.Internal
+namespace Rediscovery.Communication.Protocol.Internal.Data
 {
     internal interface IPackagePipeline
     {

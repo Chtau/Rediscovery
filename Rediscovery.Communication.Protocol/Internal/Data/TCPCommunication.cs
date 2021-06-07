@@ -1,4 +1,5 @@
-﻿using Rediscovery.Communication.Protocol.Models;
+﻿using Rediscovery.Communication.Protocol.Internal.Device;
+using Rediscovery.Communication.Protocol.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Rediscovery.Communication.Protocol.Internal
+namespace Rediscovery.Communication.Protocol.Internal.Data
 {
     internal class TCPCommunication : ICommunication
     {

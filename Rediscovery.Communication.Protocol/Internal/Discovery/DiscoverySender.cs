@@ -1,4 +1,5 @@
 ﻿using MessagePack;
+using Rediscovery.Communication.Protocol.Internal.Device;
 using Rediscovery.Communication.Protocol.Models;
 using System;
 using System.Collections.Generic;

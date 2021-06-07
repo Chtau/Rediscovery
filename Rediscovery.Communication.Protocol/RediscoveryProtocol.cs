@@ -1,4 +1,6 @@
 ﻿using Rediscovery.Communication.Protocol.Internal;
+using Rediscovery.Communication.Protocol.Internal.Data;
+using Rediscovery.Communication.Protocol.Internal.Device;
 using Rediscovery.Communication.Protocol.Internal.Discovery;
 using Rediscovery.Communication.Protocol.Models;
 using System;

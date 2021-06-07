@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
+using Rediscovery.Communication.Protocol.Internal.Device;
 
-namespace Rediscovery.Communication.Protocol.Internal
+namespace Rediscovery.Communication.Protocol.Internal.Data
 {
     internal class PackagePipeline : IPackagePipeline
     {
