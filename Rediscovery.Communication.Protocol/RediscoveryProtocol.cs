@@ -126,12 +126,9 @@ namespace Rediscovery.Communication.Protocol
             try
             {
                 this.configuration = configuration ?? new Models.Configuration();
-                
-                _discoverySender.Initialize(this.configuration.Discovery, this.configuration.Data.Connection, this.configuration.LowData.Connection);
-                _discoveryListener.Initialize(this.configuration.Discovery);
-                
-                // start listen for portocol data and discovery requests
-                OnListenDiscovery();
+
+                OnStartDiscovery();
+                OnStartCommunication();
             }
             catch (Exception ex)
             {
@@ -139,12 +136,29 @@ namespace Rediscovery.Communication.Protocol
             }
         }
 
-        private void OnListenDiscovery()
+        private void OnStartDiscovery()
         {
             try
             {
+                _discoverySender.Initialize(this.configuration.Discovery, this.configuration.Data.Connection, this.configuration.LowData.Connection);
+                _discoveryListener.Initialize(this.configuration.Discovery);
+
                 _discoveryListener.Start();
                 _discoverySender.Start();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+        }
+
+        private void OnStartCommunication()
+        {
+            try
+            {
+                _communication.Initialize(this.configuration.Data);
+
+                _communication.Start();
             }
             catch (Exception ex)
             {

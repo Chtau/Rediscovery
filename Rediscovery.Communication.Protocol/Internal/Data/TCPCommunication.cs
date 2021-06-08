@@ -23,7 +23,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 
         private BaseConfiguration configuration;
 
-        public event EventHandler<CommunicationPayload> Receive;
+        public event EventHandler<byte[]> Receive;
 
         public TCPCommunication(IProtocolLogger logger,
             IDeviceManager deviceManager)
@@ -153,28 +153,14 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 while (listenerWorking)
                 {
                     Socket handler = listener.Accept();
-                    //data = null;
 
                     // An incoming connection needs to be processed.  
                     while (listenerWorking)
                     {
                         int bytesRec = handler.Receive(byteBuffer);
-                        Receive?.Invoke(this, new CommunicationPayload(byteBuffer, null));
-                        // TODO: add data to the pipeline incoming
-                        /*data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
-                        if (data.IndexOf("<EOF>") > -1)
-                        {
-                            break;
-                        }*/
+                        Receive?.Invoke(this, byteBuffer);
                     }
 
-                    // Show the data on the console.  
-                    //Console.WriteLine("Text received : {0}", data);
-
-                    // Echo the data back to the client.  
-                    //byte[] msg = Encoding.ASCII.GetBytes(data);
-
-                    //handler.Send(msg);
                     handler.Shutdown(SocketShutdown.Both);
                     handler.Close();
                 }

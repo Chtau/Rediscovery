@@ -142,11 +142,15 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             }
         }
 
-        private void Communication_Receive(object sender, CommunicationPayload e)
+        private void Communication_Receive(object sender, byte[] e)
         {
             try
             {
+#if PIPELINE
+                _logger.Trace($"{nameof(PackagePipeline)}.{nameof(Communication_Receive)} received Bytes:{e.Length}");
+#endif
                 // TODO: create package part for this payload
+                
             }
             catch (Exception ex)
             {
