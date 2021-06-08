@@ -43,6 +43,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         {
             try
             {
+#if PIPELINE
+                _logger.Trace($"{nameof(PackagePipeline)}.{nameof(Outgoing)} start adding packages for instance of Type:\"{instance.GetType().FullName}\"");
+                var beforeAdd = DateTime.UtcNow;
+#endif
                 var rawPayload = _serializer.Serialize(instance).ToList();
                 var payloadSize = rawPayload.Count;
                 var checksum = rawPayload.ToArray().GetHashString(HashExtensions.HashAlgorithmTypes.MD5).Substring(0, 16);
@@ -76,9 +80,15 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 {
                     outgoingPackages.AddRange(packs);
                 }
-
+#if PIPELINE
+                var timeDif = DateTime.UtcNow - beforeAdd;
+                _logger.Trace($"{nameof(PackagePipeline)}.{nameof(Outgoing)} added new packages. (Count:{packs.Count} Time:{timeDif:G})");
+#endif
                 if (outTask == null)
                 {
+#if PIPELINE
+                    _logger.Trace($"{nameof(PackagePipeline)}.{nameof(Outgoing)} starting {nameof(OnOutgoingTaskRunner)} after adding packages.");
+#endif
                     outTask = Task.Run(OnOutgoingTaskRunner);
                 }
 
@@ -98,6 +108,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 while (outgoingPackages.Count > 0)
                 {
                     // invoke sender to clear the collection of created packages
+#if PIPELINE
+                    var totalSize = outgoingPackages.Sum(x => x.PayloadSize);
+                    _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoingTaskRunner)} Total Bytes:{totalSize}");
+                    var beforeSend = DateTime.UtcNow;
+#endif
                     try
                     {
                         var item = outgoingPackages.FirstOrDefault();
@@ -111,6 +126,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                     {
                         _logger.Error(ex);
                     }
+#if PIPELINE
+                    var timeDif = DateTime.UtcNow - beforeSend;
+                    var workedBytes = totalSize - outgoingPackages.Sum(x => x.PayloadSize);
+                    _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoingTaskRunner)} Transmitted Bytes:{workedBytes} Time:{timeDif:G}");
+#endif
                 }
             }
             catch (Exception ex)
