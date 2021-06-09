@@ -142,8 +142,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 {
                     // invoke sender to clear the collection of created packages
 #if PIPELINE
-                    var totalSize = outgoingPackages.Sum(x => x.PayloadSize);
-                    _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoingTaskRunner)} Total Bytes:{totalSize}");
+                    var totalSize = outgoingPackages.Sum(x => x.PayloadPartSize);
+                    _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoingTaskRunner)} total payload Bytes:{totalSize}");
                     var beforeSend = DateTime.UtcNow;
 #endif
                     try
@@ -164,7 +164,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                     }
 #if PIPELINE
                     var timeDif = DateTime.UtcNow - beforeSend;
-                    var workedBytes = totalSize - outgoingPackages.Sum(x => x.PayloadSize);
+                    var workedBytes = totalSize - outgoingPackages.Sum(x => x.PayloadPartSize);
                     _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoingTaskRunner)} Transmitted Bytes:{workedBytes} Time:{timeDif:G}");
                     
 #endif
@@ -183,9 +183,6 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         {
             try
             {
-#if PIPELINE
-                _logger.Trace($"{nameof(PackagePipeline)}.{nameof(Communication_Receive)} received Bytes:{e.Length}");
-#endif
                 // create package part for this payload
                 var pack = new PackagePartState(e);
                 if (pack.IsValid())
