@@ -21,7 +21,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         private readonly byte valueDelimiter = Encoding.UTF8.GetBytes("+").First();
 
         public DateTime SenderTimestamp { get; private set; } = DateTime.UtcNow;
-        public long PayloadSize { get; private set; }
+        public int PayloadSize { get; private set; }
         public string Checksum { get; private set; }
         public string SenderIdentifier { get; private set; }
         public string ReceiverIdentifier { get; private set; }
@@ -32,7 +32,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             string senderIdentifier,
             string receiverIdentifier,
             string checksum,
-            long payloadSize,
+            int payloadSize,
             int index)
         {
             _packageSize = packageSize;
@@ -112,6 +112,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             raw.AddRange(Convert.FromBase64String(SenderTimestamp.ToString("mmssffff"))); // 6 byte = sender timestamp format "minutes-seconds-tousends of second"
             raw.AddRange(Encoding.UTF8.GetBytes($"+{PayloadSize}+")); // ?? byte = length of the total payload
             raw.AddRange(Encoding.UTF8.GetBytes($"+{Index}+")); // ?? byte = package index
+
+            // TODO: we need to add payload size in this package part / or a flag if the package is full of data
+
             return raw;
         }
 
@@ -144,7 +147,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 Index = int.Parse(index);
                 rawList.RemoveRange(0, indexEndIndex + 1);
 
-                PayloadPart = rawList.ToArray();
+                PayloadPart = rawList.Take(PayloadSize).ToArray();
 
                 return true;
             }
