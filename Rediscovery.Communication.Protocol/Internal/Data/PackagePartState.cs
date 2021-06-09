@@ -22,6 +22,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 
         public DateTime SenderTimestamp { get; private set; } = DateTime.UtcNow;
         public int PayloadSize { get; private set; }
+        public int PayloadPartSize { get; private set; }
         public string Checksum { get; private set; }
         public string SenderIdentifier { get; private set; }
         public string ReceiverIdentifier { get; private set; }
@@ -40,6 +41,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             ReceiverIdentifier = receiverIdentifier;
             Checksum = checksum;
             PayloadSize = payloadSize;
+            PayloadPartSize = PayloadSize; // set maximum value because if we are smaller we pad teh number with leading zero
             Index = index;
         }
 
@@ -66,6 +68,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         public void SetPayload(byte[] payloadPart)
         {
             PayloadPart = payloadPart;
+            PayloadPartSize = PayloadPart.Length;
         }
 
         /// <summary>
@@ -111,9 +114,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             raw.AddRange(Convert.FromBase64String(Checksum)); // 12 byte = checksum MD5 first 16 characters (is at the same time the overall package identifier)
             raw.AddRange(Convert.FromBase64String(SenderTimestamp.ToString("mmssffff"))); // 6 byte = sender timestamp format "minutes-seconds-tousends of second"
             raw.AddRange(Encoding.UTF8.GetBytes($"+{PayloadSize}+")); // ?? byte = length of the total payload
+            string formatPartPayload = $"D{PayloadSize.ToString().Length}";
+            raw.AddRange(Encoding.UTF8.GetBytes($"+{PayloadPartSize.ToString(formatPartPayload)}+")); // ?? byte = can't be longer then the payload size
             raw.AddRange(Encoding.UTF8.GetBytes($"+{Index}+")); // ?? byte = package index
-
-            // TODO: we need to add payload size in this package part / or a flag if the package is full of data
 
             return raw;
         }
@@ -140,6 +143,13 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 PayloadSize = int.Parse(payloadSize);
                 rawList.RemoveRange(0, payloadSizeEndIndex + 1);
 
+                // payload part size
+                rawList.RemoveRange(0, 1); // remove delimiter
+                var payloadPartSizeEndIndex = rawList.IndexOf(valueDelimiter);
+                var payloadPartSize = Encoding.UTF8.GetString(rawList.Take(payloadPartSizeEndIndex).ToArray());
+                PayloadPartSize = int.Parse(payloadPartSize);
+                rawList.RemoveRange(0, payloadPartSizeEndIndex + 1);
+
                 // index
                 rawList.RemoveRange(0, 1); // remove delimiter
                 var indexEndIndex = rawList.IndexOf(valueDelimiter);
@@ -147,7 +157,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 Index = int.Parse(index);
                 rawList.RemoveRange(0, indexEndIndex + 1);
 
-                PayloadPart = rawList.Take(PayloadSize).ToArray();
+                PayloadPart = rawList.Take(PayloadPartSize).ToArray();
 
                 return true;
             }
