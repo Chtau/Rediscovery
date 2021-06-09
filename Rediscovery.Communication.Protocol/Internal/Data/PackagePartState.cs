@@ -26,7 +26,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         public string SenderIdentifier { get; private set; }
         public string ReceiverIdentifier { get; private set; }
         public byte[] PayloadPart { get; private set; }
-        public int Index { get; private set; }
+        public int Index { get; private set; } = -1;
 
         public PackagePartState(int packageSize,
             string senderIdentifier,
@@ -80,6 +80,19 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             var raw = OnCreateSenderPackage(dateTime);
             raw.AddRange(PayloadPart);
             return raw.ToArray();
+        }
+
+        /// <summary>
+        /// Validates the package structur
+        /// </summary>
+        /// <returns></returns>
+        public bool IsValid()
+        {
+            return !string.IsNullOrWhiteSpace(SenderIdentifier)
+                && !string.IsNullOrWhiteSpace(ReceiverIdentifier)
+                && !string.IsNullOrWhiteSpace(Checksum)
+                && PayloadSize > 0
+                && Index != -1;
         }
 
         private List<byte> OnCreateSenderPackage(DateTime? dateTime)

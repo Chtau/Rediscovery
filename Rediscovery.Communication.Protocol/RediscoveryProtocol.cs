@@ -65,7 +65,7 @@ namespace Rediscovery.Communication.Protocol
                 DevicesChanged?.Invoke(this, args);
             };
             _communication = new TCPCommunication(_logger, _deviceManager);
-            _packagePipeline = new PackagePipeline(_logger, _serializer, _communication);
+            _packagePipeline = new PackagePipeline(_logger, _serializer, _communication, _deviceManager);
             _discoveryPipeline = new DiscoveryPipeline(_logger, _serializer);
             _discoveryListener = new DiscoveryListener(_logger, _discoveryPipeline, _deviceManager);
             _discoverySender = new DiscoverySender(_logger, _discoveryPipeline, _deviceManager);
