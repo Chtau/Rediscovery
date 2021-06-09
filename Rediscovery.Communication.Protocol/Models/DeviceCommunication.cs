@@ -7,6 +7,6 @@ namespace Rediscovery.Communication.Protocol.Models
     public class DeviceCommunication
     {
         public DeviceCommunicationSetting Data { get; set; }
-        public DeviceCommunicationSetting LowData { get; set; }
+        public DeviceCommunicationSetting DataLarge { get; set; }
     }
 }

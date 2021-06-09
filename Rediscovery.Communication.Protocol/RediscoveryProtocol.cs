@@ -85,16 +85,6 @@ namespace Rediscovery.Communication.Protocol
             OnStop();
         }
 
-        public object GetConnectionInfo()
-        {
-            throw new NotImplementedException();
-        }
-
-        public object GetDiagnosticData()
-        {
-            throw new NotImplementedException();
-        }
-
         public void Listen<T>(Action<Transfer<T>> receivedCallback)
         {
             try
@@ -143,7 +133,7 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
-                _discoverySender.Initialize(this.configuration.Discovery, this.configuration.Data.Connection, this.configuration.LowData.Connection);
+                _discoverySender.Initialize(this.configuration.Discovery, this.configuration.Data.Connection, this.configuration.Data.ConnectionLargeData);
                 _discoveryListener.Initialize(this.configuration.Discovery);
 
                 _discoveryListener.Start();
@@ -160,7 +150,6 @@ namespace Rediscovery.Communication.Protocol
             try
             {
                 _communication.Initialize(this.configuration.Data);
-
                 _communication.Start();
             }
             catch (Exception ex)
@@ -205,6 +194,7 @@ namespace Rediscovery.Communication.Protocol
             {
                 _discoveryListener.Stop();
                 _discoverySender.Stop();
+                _communication.Stop();
             }
             catch (Exception ex)
             {
