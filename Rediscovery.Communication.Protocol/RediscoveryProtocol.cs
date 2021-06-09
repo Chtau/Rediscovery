@@ -99,7 +99,10 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
-                
+                _packagePipeline.Incoming<T>((instance, identifer) =>
+                {
+                    receivedCallback?.Invoke(new Transfer<T>(identifer, instance));
+                });
             }
             catch (Exception ex)
             {

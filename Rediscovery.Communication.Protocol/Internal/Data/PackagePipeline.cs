@@ -18,6 +18,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 
         private string currentIdentifier;
         private Task outTask;
+        private Action<byte[], string> incomingPackageCompleteCallback;
 
         public PackagePipeline(IProtocolLogger logger, 
             ISerializer serializer, 
@@ -33,7 +34,22 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 
         public void SetIdentifier(string identifier) => currentIdentifier = identifier;
 
-        public T Incoming<T>(byte[] raw)
+        public void Incoming<T>(Action<T, string> instanceCallback)
+        {
+            try
+            {
+                incomingPackageCompleteCallback = (payload, identifer) =>
+                {
+                    instanceCallback.Invoke(_serializer.Deserialize<T>(payload), identifer);
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+        }
+
+        /*public T Incoming<T>(byte[] raw)
         {
             try
             {
@@ -43,7 +59,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 _logger.Error(ex);
             }
             return default;
-        }
+        }*/
 
         public bool Outgoing<T>(T instance, DeviceGreetingReceived deviceGreeting)
         {
@@ -137,6 +153,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                         {
                             outgoingPackages.Remove(item);
                             _communication.Send(new CommunicationPayload(item.CreateSenderPackage(DateTime.UtcNow), item.ReceiverIdentifier));
+#if PIPELINE
+                            _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoingTaskRunner)} Header:{item.DumpHeader()}");
+#endif
                         }
                     }
                     catch (Exception ex)
@@ -147,6 +166,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                     var timeDif = DateTime.UtcNow - beforeSend;
                     var workedBytes = totalSize - outgoingPackages.Sum(x => x.PayloadSize);
                     _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoingTaskRunner)} Transmitted Bytes:{workedBytes} Time:{timeDif:G}");
+                    
 #endif
                 }
             }
@@ -170,16 +190,22 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 var pack = new PackagePartState(e);
                 if (pack.IsValid())
                 {
+#if PIPELINE
+                    _logger.Trace($"{nameof(PackagePipeline)}.{nameof(Communication_Receive)} Header:{pack.DumpHeader()}");
+#endif
                     if (string.Equals(currentIdentifier, pack.ReceiverIdentifier, StringComparison.OrdinalIgnoreCase))
                     {
                         // handle in normal incoming workflow
                         incomingPackages.Add(pack);
+                        OnCheckCompletePackages(incomingPackages);
                     } else
                     {
                         // we are only on proxy duty
                         // we need to create new package parts with the payload
                         // because the package size for the next receiver could
                         // be different then the received package size
+
+                        // TODO: we need to create packages which are compatible with the original Index & Checksum
                         var payload = pack.PayloadPart;
                         var device = _deviceManager.GetGreeting(pack.ReceiverIdentifier);
                         if (OnCreatePackageParts(payload.ToList(), device.Device.Communication.Data.PackageSize, device.Device.Identifier))
@@ -195,11 +221,62 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 #endif
                         }
                     }
+                } else
+                {
+#if PIPELINE
+                    _logger.Warning($"{nameof(PackagePipeline)}.{nameof(Communication_Receive)} package is not valid");
+#endif
                 }
             }
             catch (Exception ex)
             {
                 _logger.Error(ex);
+            }
+        }
+
+        private void OnCheckCompletePackages(List<PackagePartState> packages)
+        {
+            if (packages.Count > 0)
+            {
+#if PIPELINE
+                _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnCheckCompletePackages)} check if any packages are complete from the parts collection. (Parts:{packages.Count})");
+#endif
+                var removeChecksums = new List<string>();
+                var groupItems = packages.GroupBy(x => x.Checksum);
+                foreach (var item in groupItems)
+                {
+                    var firstHeader = item.First();
+                    var payload = new List<byte>();
+                    foreach (var part in item.OrderBy(x => x.Index))
+                    {
+                        payload.AddRange(part.PayloadPart);
+                    }
+                    if (payload.Count == firstHeader.PayloadSize)
+                    {
+                        // if the size from the aggregated payload and header size match the data should be complete
+                        var checksum = payload.ToArray().GetHashString(HashExtensions.HashAlgorithmTypes.MD5).Substring(0, 16);
+                        if (firstHeader.Checksum == checksum)
+                        {
+#if PIPELINE
+                            _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnCheckCompletePackages)} Package complete with Checksum:\"{checksum}\" with payload Size:{payload.Count}");
+#endif
+                            incomingPackageCompleteCallback.Invoke(payload.ToArray(), firstHeader.SenderIdentifier);
+                            removeChecksums.Add(checksum);
+                        } else
+                        {
+#if PIPELINE
+                            _logger.Warning($"{nameof(PackagePipeline)}.{nameof(OnCheckCompletePackages)} aggregated payload size matches header provided size but Checksum match failed");
+#endif
+                        }
+                    }
+                }
+                if (removeChecksums.Count > 0)
+                {
+                    foreach (var checksum in removeChecksums)
+                    {
+                        packages.RemoveAll(x => x.Checksum == checksum);
+                    }
+                }
             }
         }
     }

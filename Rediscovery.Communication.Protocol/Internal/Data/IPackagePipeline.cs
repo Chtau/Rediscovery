@@ -8,7 +8,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
     internal interface IPackagePipeline
     {
         bool Outgoing<T>(T instance, DeviceGreetingReceived deviceGreeting);
-        T Incoming<T>(byte[] raw);
+        void Incoming<T>(Action<T, string> instanceCallback);
         void SetIdentifier(string identifier);
     }
 }

@@ -45,7 +45,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 
         public PackagePartState(byte[] receivedPackage)
         {
-
+            OnParsePackage(receivedPackage);
         }
 
         /// <summary>
@@ -95,18 +95,60 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 && Index != -1;
         }
 
+        internal string DumpHeader()
+        {
+            return $"{nameof(SenderIdentifier)}:\"{SenderIdentifier}\";{nameof(ReceiverIdentifier)}:\"{ReceiverIdentifier}\";{nameof(Checksum)}:\"{Checksum}\";{nameof(PayloadSize)}:{PayloadSize};{nameof(Index)}:{Index}";
+        }
+
         private List<byte> OnCreateSenderPackage(DateTime? dateTime)
         {
             if (!dateTime.HasValue)
                 dateTime = DateTime.UtcNow;
+            SenderTimestamp = dateTime.Value;
             var raw = new List<byte>(_packageSize); // Convert.FromBase64String => 12 + 12 + 6 + 7 + 12 + 3
             raw.AddRange(Convert.FromBase64String(SenderIdentifier)); // 12 byte = sender device (local)
             raw.AddRange(Convert.FromBase64String(ReceiverIdentifier)); // 12 byte = receiver device (remote)
             raw.AddRange(Convert.FromBase64String(Checksum)); // 12 byte = checksum MD5 first 16 characters (is at the same time the overall package identifier)
-            raw.AddRange(Convert.FromBase64String(dateTime.Value.ToString("mmssffff"))); // 7 byte = sender timestamp format "minutes-seconds-tousends of second"
+            raw.AddRange(Convert.FromBase64String(SenderTimestamp.ToString("mmssffff"))); // 6 byte = sender timestamp format "minutes-seconds-tousends of second"
             raw.AddRange(Encoding.UTF8.GetBytes($"+{PayloadSize}+")); // ?? byte = length of the total payload
             raw.AddRange(Encoding.UTF8.GetBytes($"+{Index}+")); // ?? byte = package index
             return raw;
+        }
+
+        private bool OnParsePackage(byte[] raw)
+        {
+            if (raw?.Length > 0 && raw.Length >= 46)
+            {
+                var rawList = raw.ToList();
+                SenderIdentifier = Convert.ToBase64String(rawList.Take(12).ToArray());
+                rawList.RemoveRange(0, 12);
+                ReceiverIdentifier = Convert.ToBase64String(rawList.Take(12).ToArray());
+                rawList.RemoveRange(0, 12);
+                Checksum = Convert.ToBase64String(rawList.Take(12).ToArray());
+                rawList.RemoveRange(0, 12);
+                var timestamp = Convert.ToBase64String(rawList.Take(6).ToArray());
+                SenderTimestamp = DateTime.ParseExact(timestamp, "mmssffff", null);
+                rawList.RemoveRange(0, 6);
+
+                // payload size
+                rawList.RemoveRange(0, 1); // remove delimiter
+                var payloadSizeEndIndex = rawList.IndexOf(valueDelimiter);
+                var payloadSize = Encoding.UTF8.GetString(rawList.Take(payloadSizeEndIndex).ToArray());
+                PayloadSize = int.Parse(payloadSize);
+                rawList.RemoveRange(0, payloadSizeEndIndex + 1);
+
+                // index
+                rawList.RemoveRange(0, 1); // remove delimiter
+                var indexEndIndex = rawList.IndexOf(valueDelimiter);
+                var index = Encoding.UTF8.GetString(rawList.Take(indexEndIndex).ToArray());
+                Index = int.Parse(index);
+                rawList.RemoveRange(0, indexEndIndex + 1);
+
+                PayloadPart = rawList.ToArray();
+
+                return true;
+            }
+            return false;
         }
     }
 }
