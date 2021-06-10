@@ -101,6 +101,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
             {
                 Thread.Sleep(TimeSpan.FromMilliseconds(10));
             }
+            Thread.Sleep(TimeSpan.FromMilliseconds(100));
         }
 
         private void OnInitThread()

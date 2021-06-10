@@ -108,6 +108,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             {
                 Thread.Sleep(TimeSpan.FromMilliseconds(10));
             }
+            Thread.Sleep(TimeSpan.FromMilliseconds(100));
         }
 
         private Socket OnGetSocket(DeviceGreetingReceived deviceGreeting)

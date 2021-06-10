@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
 namespace Rediscovery.Communication.Protocol.Test
 {
+
     public static class Shared
     {
         public static IRediscoveryProtocol TestDevice(Models.ConnectionConfiguration connection)
