@@ -14,6 +14,7 @@ namespace Rediscovery.Communication.Protocol.Models
         }
 
         public int ListenPort { get; }
+        [Obsolete("This port is device specific")]
         public int SendPort { get; }
         public int PackageSize { get; }
     }

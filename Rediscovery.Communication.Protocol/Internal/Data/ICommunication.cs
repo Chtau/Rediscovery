@@ -11,7 +11,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         /// Contains Header and Payload
         /// </summary>
         event EventHandler<byte[]> Receive;
-        void Initialize(Models.BaseConfiguration configuration);
+        void Initialize(Models.ConnectionConfiguration configuration);
         /// <summary>
         /// Send payload
         /// </summary>

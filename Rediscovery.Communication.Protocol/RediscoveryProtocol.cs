@@ -12,13 +12,6 @@ using System.Text;
 
 namespace Rediscovery.Communication.Protocol
 {
-    // TODO: https://docs.microsoft.com/en-us/dotnet/framework/network-programming/asynchronous-server-socket-example
-
-    /* Bash
-     * Listen via Netcat: nc -l -p 11000
-     * Write via Netcat: echo 'test<EOF>' | sudo  netcat 192.168.1.102 11000
-     */
-
     public class RediscoveryProtocol : IRediscoveryProtocol, IDisposable
     {
         private readonly IProtocolLogger _logger;
@@ -29,6 +22,7 @@ namespace Rediscovery.Communication.Protocol
         private readonly IDiscoveryPipeline _discoveryPipeline;
         private readonly IDeviceManager _deviceManager;
         private readonly ICommunication _communication;
+        private readonly ICommunication _communicationLarge;
 
         private Models.Configuration configuration;
         private string identifer;
@@ -65,7 +59,8 @@ namespace Rediscovery.Communication.Protocol
                 DevicesChanged?.Invoke(this, args);
             };
             _communication = new TCPCommunication(_logger, _deviceManager);
-            _packagePipeline = new PackagePipeline(_logger, _serializer, _communication, _deviceManager);
+            _communicationLarge = new TCPCommunication(_logger, _deviceManager, true);
+            _packagePipeline = new PackagePipeline(_logger, _serializer, _communication, _communicationLarge, _deviceManager);
             _discoveryPipeline = new DiscoveryPipeline(_logger, _serializer);
             _discoveryListener = new DiscoveryListener(_logger, _discoveryPipeline, _deviceManager);
             _discoverySender = new DiscoverySender(_logger, _discoveryPipeline, _deviceManager);
@@ -149,8 +144,10 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
-                _communication.Initialize(this.configuration.Data);
+                _communication.Initialize(this.configuration.Data.Connection);
                 _communication.Start();
+                _communicationLarge.Initialize(this.configuration.Data.ConnectionLargeData);
+                _communicationLarge.Start();
             }
             catch (Exception ex)
             {
@@ -195,6 +192,7 @@ namespace Rediscovery.Communication.Protocol
                 _discoveryListener.Stop();
                 _discoverySender.Stop();
                 _communication.Stop();
+                _communicationLarge.Stop();
             }
             catch (Exception ex)
             {

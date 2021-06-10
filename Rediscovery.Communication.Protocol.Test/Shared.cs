@@ -19,11 +19,8 @@ namespace Rediscovery.Communication.Protocol.Test
                 },
                 Data = new Models.DataConfiguration
                 {
-                    Connection = connection
-                },
-                LowData = new Models.LowDataConfiguration
-                {
-                    Connection = new Models.ConnectionConfiguration(16578, 16579, 1024)
+                    Connection = connection,
+                    ConnectionLargeData = new Models.ConnectionConfiguration(16578, 16579, 1024 * 60)
                 }
             });
             return protocol1;

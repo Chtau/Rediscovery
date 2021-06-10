@@ -17,7 +17,7 @@ namespace Rediscovery.Communication.Protocol.Models
         public DataConfiguration()
         {
             Connection = new ConnectionConfiguration(DefaultListenPortData, DefaultSendPortData, DefaultPackageSize);
-            ConnectionLargeData = new ConnectionConfiguration(DefaultListenPortData, DefaultSendPortData, DefaultPackageSize * 60);
+            ConnectionLargeData = new ConnectionConfiguration(DefaultListenPortDataLarge, DefaultSendPortDataLarge, DefaultPackageSize * 60);
         }
     }
 }

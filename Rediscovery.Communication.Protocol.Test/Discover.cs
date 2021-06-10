@@ -66,11 +66,8 @@ namespace Rediscovery.Communication.Protocol.Test
                 },
                 Data = new Models.DataConfiguration
                 {
-                    Connection = new Models.ConnectionConfiguration(16476, 16477, 1024)
-                },
-                LowData = new Models.LowDataConfiguration
-                {
-                    Connection = new Models.ConnectionConfiguration(16478, 16479, 1024)
+                    Connection = new Models.ConnectionConfiguration(16476, 16477, 1024),
+                    ConnectionLargeData = new Models.ConnectionConfiguration(16478, 16479, 1024 * 60)
                 }
             });
 
@@ -83,11 +80,8 @@ namespace Rediscovery.Communication.Protocol.Test
                 },
                 Data = new Models.DataConfiguration
                 {
-                    Connection = new Models.ConnectionConfiguration(16576, 16577, 1024)
-                },
-                LowData = new Models.LowDataConfiguration
-                {
-                    Connection = new Models.ConnectionConfiguration(16578, 16579, 1024)
+                    Connection = new Models.ConnectionConfiguration(16576, 16577, 1024),
+                    ConnectionLargeData = new Models.ConnectionConfiguration(16478, 16479, 1024 * 60)
                 }
             });
 

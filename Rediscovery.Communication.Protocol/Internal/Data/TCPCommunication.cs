@@ -17,23 +17,25 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         private readonly IDeviceManager _deviceManager;
         private readonly Dictionary<string, Socket> _sender = new Dictionary<string, Socket>();
         private readonly string _listenerThreadName = $"Thread_Listener_{nameof(TCPCommunication)}";
+        private readonly bool _isLarge = false;
 
         private Thread listenThread;
         private bool listenerWorking = false;
 
-        private BaseConfiguration configuration;
+        private ConnectionConfiguration configuration;
 
         public event EventHandler<byte[]> Receive;
 
         public TCPCommunication(IProtocolLogger logger,
-            IDeviceManager deviceManager)
+            IDeviceManager deviceManager, bool isLarge = false)
         {
+            _isLarge = isLarge;
             _logger = logger;
             _deviceManager = deviceManager;
             OnInitListenerThread();
         }
 
-        public void Initialize(BaseConfiguration config)
+        public void Initialize(ConnectionConfiguration config)
         {
             configuration = config;
         }
@@ -88,7 +90,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                     return sender;
                 _sender.Remove(deviceGreeting.Device.Identifier);
             }
-            var endpoint = new IPEndPoint(IPAddress.Parse(deviceGreeting.IP), deviceGreeting.Device.Communication.Data.Port);
+            int port = deviceGreeting.Device.Communication.Data.Port;
+            if (_isLarge)
+                port = deviceGreeting.Device.Communication.DataLarge.Port;
+            var endpoint = new IPEndPoint(IPAddress.Parse(deviceGreeting.IP), port);
             sender = new Socket(endpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             sender.Connect(endpoint);
             _sender.Add(deviceGreeting.Device.Identifier, sender);
@@ -145,10 +150,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             try
             {
                 Socket listener = new Socket(IPAddress.Any.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                listener.Bind(new IPEndPoint(IPAddress.Any, configuration.Connection.ListenPort));
+                listener.Bind(new IPEndPoint(IPAddress.Any, configuration.ListenPort));
                 listener.Listen(10);
 
-                var byteBuffer = new byte[configuration.Connection.PackageSize];
+                var byteBuffer = new byte[configuration.PackageSize];
 
                 while (listenerWorking)
                 {
