@@ -95,7 +95,7 @@ namespace Rediscovery.Communication.Protocol
             }
         }
 
-        public void Send<T>(Transfer<T> transfer, Action<TransportState> successCallback = null)
+        public void Send<T>(Transfer<T> transfer)
         {
             try
             {
@@ -105,7 +105,6 @@ namespace Rediscovery.Communication.Protocol
             catch (Exception ex)
             {
                 _logger.Error(ex);
-                successCallback?.Invoke(TransportState.Error);
             }
         }
 

@@ -31,11 +31,7 @@ namespace Rediscovery.Communication.Protocol.Test
             System.Threading.Thread.Sleep(TimeSpan.FromSeconds(1));
             Task.Run(() =>
             {
-                protocol.Send(new Transfer<string>(protocol.Devices[0].Identifier, content), (success) =>
-                {
-                    if (success != TransportState.Ok)
-                        throw new Exception("Failed to send");
-                });
+                protocol.Send(new Transfer<string>(protocol.Devices[0].Identifier, content));
             });
             
             do
@@ -72,11 +68,7 @@ namespace Rediscovery.Communication.Protocol.Test
             System.Threading.Thread.Sleep(TimeSpan.FromSeconds(1));
             Task.Run(() =>
             {
-                protocol.Send(new Transfer<string>(protocol.Devices[0].Identifier, content), (success) =>
-                {
-                    if (success != TransportState.Ok)
-                        throw new Exception("Failed to send");
-                });
+                protocol.Send(new Transfer<string>(protocol.Devices[0].Identifier, content));
             });
 
             do
@@ -115,11 +107,7 @@ namespace Rediscovery.Communication.Protocol.Test
             System.Threading.Thread.Sleep(TimeSpan.FromSeconds(1));
             Task.Run(() =>
             {
-                protocol.Send(new Transfer<byte[]>(protocol.Devices[0].Identifier, content), (success) =>
-                {
-                    if (success != TransportState.Ok)
-                        throw new Exception("Failed to send");
-                });
+                protocol.Send(new Transfer<byte[]>(protocol.Devices[0].Identifier, content));
             });
 
             do
