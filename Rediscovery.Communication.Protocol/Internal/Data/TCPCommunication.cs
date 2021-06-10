@@ -21,6 +21,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 
         private Thread listenThread;
         private bool listenerWorking = false;
+        private Socket handler;
+        private Socket listener;
 
         private ConnectionConfiguration configuration;
 
@@ -71,12 +73,40 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             try
             {
                 listenerWorking = false;
+                if (handler != null)
+                {
+                    try
+                    {
+                        handler.Close();
+                        handler.Dispose();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex);
+                    }
+                }
+                if (listener != null)
+                {
+                    try
+                    {
+                        listener.Close();
+                        listener.Dispose();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex);
+                    }
+                }
                 listenThread?.Abort();
             }
             catch (PlatformNotSupportedException) { }
             catch (Exception ex)
             {
                 _logger.Error(ex);
+            }
+            while (listener?.Connected == true || handler?.Connected == true)
+            {
+                Thread.Sleep(TimeSpan.FromMilliseconds(10));
             }
         }
 
@@ -107,7 +137,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 listenerWorking = true;
                 listenThread.Start();
             }
-            catch (System.Threading.ThreadStateException tsEx)
+            catch (ThreadStateException tsEx)
             {
                 _logger.Warning(tsEx);
                 OnInitListenerThread();
@@ -131,7 +161,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         {
             try
             {
-                listenThread = new System.Threading.Thread(() =>
+                listenThread = new Thread(() =>
                 {
                     OnListenToSocket();
                 })
@@ -147,9 +177,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 
         private void OnListenToSocket()
         {
+            if (!listenerWorking)
+                return;
             try
             {
-                Socket listener = new Socket(IPAddress.Any.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                listener = new Socket(IPAddress.Any.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 listener.Bind(new IPEndPoint(IPAddress.Any, configuration.ListenPort));
                 listener.Listen(10);
 
@@ -157,7 +189,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 
                 while (listenerWorking)
                 {
-                    Socket handler = listener.Accept();
+                    handler = listener.Accept();
 
                     // An incoming connection needs to be processed.  
                     while (listenerWorking)
@@ -173,7 +205,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             catch (Exception ex)
             {
                 _logger.Error(ex);
-                OnStartListener();
+                if (listenerWorking)
+                    OnStartListener();
             }
         }
     }

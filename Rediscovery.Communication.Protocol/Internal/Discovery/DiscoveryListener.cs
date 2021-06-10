@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Linq;
 using Rediscovery.Communication.Protocol.Internal.Device;
+using System.Threading;
 
 namespace Rediscovery.Communication.Protocol.Internal.Discovery
 {
@@ -22,6 +23,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
         private bool working = false;
         private TimeSpan deviceTimeoutOffset = TimeSpan.FromSeconds(10);
         private string currentIdentifier;
+        private Socket socket;
 
         public DiscoveryListener(IProtocolLogger protocolLogger, 
             IDiscoveryPipeline discoveryPipeline,
@@ -77,6 +79,17 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
             try
             {
                 working = false;
+                if (socket != null)
+                {
+                    try
+                    {
+                        socket.Close();
+                        socket.Dispose();
+                    } catch (Exception ex)
+                    {
+                        _logger.Error(ex);
+                    }
+                }
                 listenThread?.Abort();
             }
             catch (PlatformNotSupportedException) { }
@@ -84,19 +97,23 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
             {
                 _logger.Error(ex);
             }
+            while (socket?.Connected == true)
+            {
+                Thread.Sleep(TimeSpan.FromMilliseconds(10));
+            }
         }
 
         private void OnInitThread()
         {
             try
             {
-                listenThread = new System.Threading.Thread(() =>
+                listenThread = new Thread(() =>
                 {
-                    if (configuration.ListenerDeactivated)
+                    if (configuration.ListenerDeactivated || !working)
                         return;
                     try
                     {
-                        var socket = OnGetSocket(configuration.Connection.ListenPort);
+                        socket = OnGetSocket(configuration.Connection.ListenPort);
                         socket.Bind(new IPEndPoint(IPAddress.Any, configuration.Connection.ListenPort));
                         
                         while (working)
@@ -121,7 +138,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
                     {
                         _logger.Error(ex);
                         // if we reach this point we need to restart
-                        Start();
+                        if (working)
+                            Start();
                     }
                 })
                 {
