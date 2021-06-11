@@ -13,8 +13,10 @@ namespace Rediscovery.Communication.Protocol.Test
         public void SendReceiveSimpleTextWithProxy()
         {
             string content = "Test";
-            IRediscoveryProtocol protocolProxy = new RediscoveryProtocol();
-            protocolProxy.Start(new Models.Configuration
+            
+            IRediscoveryProtocol protocolReceiver = new RediscoveryProtocol();
+            protocolReceiver.SetMetadata("8FB2D46ED8DDA5D9", "Receiver", Models.DeviceMetadata.IdiomType.Undefined);
+            protocolReceiver.Start(new Models.Configuration
             {
                 Discovery = new Models.DiscoveryConfiguration
                 {
@@ -27,9 +29,10 @@ namespace Rediscovery.Communication.Protocol.Test
                     ConnectionLargeData = new Models.ConnectionConfiguration(16498, 16499, 1024 * 60)
                 }
             });
-
-            IRediscoveryProtocol protocol2 = new RediscoveryProtocol();
-            protocol2.Start(new Models.Configuration
+            
+            IRediscoveryProtocol protocolProxy = new RediscoveryProtocol();
+            protocolProxy.SetMetadata("091812ED97D4F55A", "Proxy", Models.DeviceMetadata.IdiomType.Undefined);
+            protocolProxy.Start(new Models.Configuration
             {
                 Discovery = new Models.DiscoveryConfiguration
                 {
@@ -41,8 +44,9 @@ namespace Rediscovery.Communication.Protocol.Test
                     ConnectionLargeData = new Models.ConnectionConfiguration(16488, 16489, 1024 * 60)
                 }
             });
-
+            
             IRediscoveryProtocol protocol = new RediscoveryProtocol();
+            protocol.SetMetadata("08232A238D844317", "Sender", Models.DeviceMetadata.IdiomType.Undefined);
             protocol.Start(null);
             Task.Delay(TimeSpan.FromSeconds(1)).GetAwaiter().GetResult();
 
@@ -50,7 +54,7 @@ namespace Rediscovery.Communication.Protocol.Test
             string data = null;
             Task.Run(async () =>
             {
-                protocol2.Listen<string>((transfer) =>
+                protocolReceiver.Listen<string>((transfer) =>
                 {
                     data = transfer.Content;
                     stop = true;
@@ -61,7 +65,7 @@ namespace Rediscovery.Communication.Protocol.Test
             System.Threading.Thread.Sleep(TimeSpan.FromSeconds(1));
             Task.Run(() =>
             {
-                protocol.Send(new Transfer<string>(protocol2.Identifer, content));
+                protocol.Send(new Transfer<string>(protocolReceiver.Identifer, content));
             });
 
             do
@@ -70,7 +74,7 @@ namespace Rediscovery.Communication.Protocol.Test
             } while (!stop);
             Assert.True(data == content, "No Data received via Socket");
 
-            protocol2.Stop();
+            protocolReceiver.Stop();
             protocolProxy.Stop();
             protocol.Stop();
         }
