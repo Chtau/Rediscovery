@@ -18,6 +18,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         private readonly List<PackagePartState> outgoingLargePackages = new List<PackagePartState>();
         private readonly List<PackagePartState> incomingPackages = new List<PackagePartState>();
         private readonly List<PackagePartState> incomingLargePackages = new List<PackagePartState>();
+        private readonly List<PackagePartState> incomingPackagesProxy = new List<PackagePartState>();
+        private readonly List<PackagePartState> incomingLargePackagesProxy = new List<PackagePartState>();
 
         private string currentIdentifier;
         private Task outTask;
@@ -209,7 +211,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         {
             try
             {
-                OnReceivePackage(e, incomingPackages);
+                OnReceivePackage(e, incomingPackages, incomingPackagesProxy);
             }
             catch (Exception ex)
             {
@@ -221,7 +223,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         {
             try
             {
-                OnReceivePackage(e, incomingLargePackages);
+                OnReceivePackage(e, incomingLargePackages, incomingLargePackagesProxy);
             }
             catch (Exception ex)
             {
@@ -229,20 +231,35 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             }
         }
 
-        private void OnReceivePackage(byte[] raw, List<PackagePartState> packages)
+        private void OnReceivePackage(byte[] raw, List<PackagePartState> packages, List<PackagePartState> packagesProxy)
         {
             // create package part for this payload
             var pack = new PackagePartState(raw);
             if (pack.IsValid())
             {
 #if PIPELINE
-                _logger.Trace($"{nameof(PackagePipeline)}.{nameof(Communication_Receive)} Header:{pack}");
+                _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnReceivePackage)} Header:{pack}");
 #endif
-                if (string.Equals(currentIdentifier, pack.ReceiverIdentifier, StringComparison.OrdinalIgnoreCase))
+                if (pack.PackageType == PackagePartState.PackageMessageType.Proxy)
+                {
+                    // handle in proxy incoming workflow
+                    packagesProxy.Add(pack);
+                    OnCheckCompletePackages(packagesProxy, (payload, identifer) =>
+                    {
+#if PIPELINE
+                        _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnReceivePackage)} Proxy Package complete with Payload size:{payload.Length} from:{identifer}");
+#endif
+                        OnReceivePackage(_serializer.Deserialize<byte[]>(payload), packages, packagesProxy);
+                    });
+                }
+                else if (string.Equals(currentIdentifier, pack.ReceiverIdentifier, StringComparison.OrdinalIgnoreCase))
                 {
                     // handle in normal incoming workflow
                     packages.Add(pack);
-                    OnCheckCompletePackages(packages);
+                    OnCheckCompletePackages(packages, (payload, identifer) =>
+                    {
+                        incomingPackageCompleteCallback.Invoke(payload, identifer);
+                    });
                 }
                 else
                 {
@@ -254,7 +271,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                     if (OnOutgoing(raw, device, PackagePartState.PackageMessageType.Proxy))
                     {
 #if PIPELINE
-                        _logger.Trace($"{nameof(PackagePipeline)}.{nameof(Communication_Receive)} add new package part where we are proxy");
+                        _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnReceivePackage)} add new package part where we are proxy");
 #endif
                     }
                 }
@@ -262,12 +279,12 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             else
             {
 #if PIPELINE
-                _logger.Warning($"{nameof(PackagePipeline)}.{nameof(Communication_Receive)} package is not valid");
+                _logger.Warning($"{nameof(PackagePipeline)}.{nameof(OnReceivePackage)} package is not valid");
 #endif
             }
         }
 
-        private void OnCheckCompletePackages(List<PackagePartState> packages)
+        private void OnCheckCompletePackages(List<PackagePartState> packages, Action<byte[], string> packageCompleteCallback)
         {
             if (packages.Count > 0)
             {
@@ -293,7 +310,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 #if PIPELINE
                             _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnCheckCompletePackages)} Package complete with Checksum:\"{checksum}\" with payload Size:{payload.Count}");
 #endif
-                            incomingPackageCompleteCallback.Invoke(payload.ToArray(), firstHeader.SenderIdentifier);
+                            packageCompleteCallback.Invoke(payload.ToArray(), firstHeader.SenderIdentifier);
                             removeChecksums.Add(checksum);
                         } else
                         {
