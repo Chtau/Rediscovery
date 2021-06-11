@@ -10,6 +10,13 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
     /// </summary>
     internal class PackagePartState
     {
+        public enum PackageMessageType
+        {
+            Undefined = 0,
+            Data = 1,
+            Proxy = 2
+        }
+
         /// <summary>
         /// Minimum size for a valid header
         /// </summary>
@@ -24,24 +31,32 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         public string ReceiverIdentifier { get; private set; }
         public byte[] PayloadPart { get; private set; }
         public int Index { get; private set; } = -1;
+        public PackageMessageType PackageType { get; private set; } = PackageMessageType.Data;
+
+        public PackagePartState()
+        {
+
+        }
 
         public PackagePartState(int packageSize,
             string senderIdentifier,
             string receiverIdentifier,
             string checksum,
             int payloadSize,
-            int index)
+            int index,
+            PackageMessageType type = PackageMessageType.Data) : this()
         {
             _packageSize = packageSize;
             SenderIdentifier = senderIdentifier;
             ReceiverIdentifier = receiverIdentifier;
             Checksum = checksum;
             PayloadSize = payloadSize;
-            PayloadPartSize = PayloadSize; // set maximum value because if we are smaller we pad teh number with leading zero
+            PayloadPartSize = PayloadSize; // set maximum value because if we are smaller we pad the number with leading zero
             Index = index;
+            PackageType = type;
         }
 
-        public PackagePartState(byte[] receivedPackage)
+        public PackagePartState(byte[] receivedPackage) : this()
         {
             OnParsePackage(receivedPackage);
         }
@@ -94,9 +109,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 && Index != -1;
         }
 
-        internal string DumpHeader()
+        public override string ToString()
         {
-            return $"{nameof(SenderIdentifier)}:\"{SenderIdentifier}\";{nameof(ReceiverIdentifier)}:\"{ReceiverIdentifier}\";{nameof(Checksum)}:\"{Checksum}\";{nameof(PayloadSize)}:{PayloadSize};{nameof(Index)}:{Index}";
+            return $"{nameof(SenderIdentifier)}:\"{SenderIdentifier}\";{nameof(ReceiverIdentifier)}:\"{ReceiverIdentifier}\";{nameof(Checksum)}:\"{Checksum}\";{nameof(PayloadSize)}:{PayloadSize};{nameof(Index)}:{Index};{nameof(PackageType)}:{Enum.GetName(typeof(PackageMessageType), PackageType)}";
         }
 
         private List<byte> OnCreateSenderPackage(DateTime? dateTime)
@@ -109,6 +124,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             raw.AddRange(Convert.FromBase64String(ReceiverIdentifier)); // 12 byte = receiver device (remote)
             raw.AddRange(Convert.FromBase64String(Checksum)); // 12 byte = checksum MD5 first 16 characters (is at the same time the overall package identifier)
             raw.AddRange(Convert.FromBase64String(SenderTimestamp.ToString("mmssffff"))); // 6 byte = sender timestamp format "minutes-seconds-tousends of second"
+            raw.AddRange(Encoding.UTF8.GetBytes(((int)PackageType).ToString())); // 1 byte
             raw.AddRange(Encoding.UTF8.GetBytes($"+{PayloadSize}+")); // ?? byte = length of the total payload
             string formatPartPayload = $"D{PayloadSize.ToString().Length}";
             raw.AddRange(Encoding.UTF8.GetBytes($"+{PayloadPartSize.ToString(formatPartPayload)}+")); // ?? byte = can't be longer then the payload size
@@ -131,6 +147,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 var timestamp = Convert.ToBase64String(rawList.Take(6).ToArray());
                 SenderTimestamp = DateTime.ParseExact(timestamp, "mmssffff", null);
                 rawList.RemoveRange(0, 6);
+                var packageTypeMsg = Encoding.UTF8.GetString(rawList.Take(1).ToArray());
+                PackageType = (PackageMessageType)int.Parse(packageTypeMsg);
+                rawList.RemoveRange(0, 1);
+
 
                 // payload size
                 rawList.RemoveRange(0, 1); // remove delimiter

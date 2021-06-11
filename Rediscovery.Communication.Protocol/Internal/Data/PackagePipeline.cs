@@ -58,10 +58,15 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 
         public bool Outgoing<T>(T instance, DeviceGreetingReceived deviceGreeting)
         {
+            return OnOutgoing(instance, deviceGreeting);
+        }
+
+        private bool OnOutgoing<T>(T instance, DeviceGreetingReceived deviceGreeting, PackagePartState.PackageMessageType messageType = PackagePartState.PackageMessageType.Data)
+        {
             try
             {
 #if PIPELINE
-                _logger.Trace($"{nameof(PackagePipeline)}.{nameof(Outgoing)} adding packages for instance of Type:\"{instance.GetType().FullName}\"");
+                _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoing)} adding packages for instance of Type:\"{instance.GetType().FullName}\"");
 #endif
                 var rawPayload = _serializer.Serialize(instance).ToList();
                 if (rawPayload.Count > (deviceGreeting.Device.Communication.DataLarge.PackageSize * 5))
@@ -75,7 +80,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                             if (outLargeTask == null)
                             {
 #if PIPELINE
-                                _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnCreatePackageParts)} starting {nameof(OnOutgoingTaskRunner)} for Large data after adding packages.");
+                                _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoing)} starting {nameof(OnOutgoingTaskRunner)} for Large data after adding packages.");
 #endif
                                 outLargeTask = Task.Run(() =>
                                 {
@@ -83,8 +88,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                                     outLargeTask = null;
                                 });
                             }
-                        });
-                } else
+                        }, messageType);
+                }
+                else
                 {
                     return OnCreatePackageParts(rawPayload,
                         deviceGreeting.Device.Communication.Data.PackageSize,
@@ -95,7 +101,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                             if (outTask == null)
                             {
 #if PIPELINE
-                                _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnCreatePackageParts)} starting {nameof(OnOutgoingTaskRunner)} after adding packages.");
+                                _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoing)} starting {nameof(OnOutgoingTaskRunner)} after adding packages.");
 #endif
                                 outTask = Task.Run(() =>
                                 {
@@ -103,7 +109,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                                     outTask = null;
                                 });
                             }
-                        });
+                        }, messageType);
                 }
             }
             catch (Exception ex)
@@ -113,7 +119,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             return false;
         }
 
-        private bool OnCreatePackageParts(List<byte> rawPayload, int packSize, string receiverIdentifier, List<PackagePartState> packages, Action taskRunner)
+        private bool OnCreatePackageParts(List<byte> rawPayload, int packSize, string receiverIdentifier, List<PackagePartState> packages, Action taskRunner, PackagePartState.PackageMessageType messageType)
         {
 #if PIPELINE
             _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnCreatePackageParts)} create packages with from payload with size:{rawPayload.Count}");
@@ -131,7 +137,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                     receiverIdentifier,
                     checksum,
                     payloadSize,
-                    index);
+                    index,
+                    messageType);
                 // get payload based on preliminar header size
                 var headerSize = pack.HeaderSizeOnly();
                 var takePayload = packSize - headerSize;
@@ -176,7 +183,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                             packages.Remove(item);
                             send.Invoke(new CommunicationPayload(item.CreateSenderPackage(DateTime.UtcNow), item.ReceiverIdentifier));
 #if PIPELINE
-                            _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoingTaskRunner)} Header:{item.DumpHeader()}");
+                            _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoingTaskRunner)} Header:{item}");
 #endif
                         }
                     }
@@ -229,7 +236,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             if (pack.IsValid())
             {
 #if PIPELINE
-                _logger.Trace($"{nameof(PackagePipeline)}.{nameof(Communication_Receive)} Header:{pack.DumpHeader()}");
+                _logger.Trace($"{nameof(PackagePipeline)}.{nameof(Communication_Receive)} Header:{pack}");
 #endif
                 if (string.Equals(currentIdentifier, pack.ReceiverIdentifier, StringComparison.OrdinalIgnoreCase))
                 {
@@ -243,24 +250,13 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                     // we need to create new package parts with the payload
                     // because the package size for the next receiver could
                     // be different then the received package size
-
-                    // TODO: we need to create packages which are compatible with the original Index & Checksum
-                    var payload = pack.PayloadPart;
                     var device = _deviceManager.GetGreeting(pack.ReceiverIdentifier);
-                    /*
-                    if (OnCreatePackageParts(payload.ToList(), device.Device.Communication.Data.PackageSize, device.Device.Identifier, outgoingPackages))
+                    if (OnOutgoing(raw, device, PackagePartState.PackageMessageType.Proxy))
                     {
 #if PIPELINE
                         _logger.Trace($"{nameof(PackagePipeline)}.{nameof(Communication_Receive)} add new package part where we are proxy");
 #endif
                     }
-                    else
-                    {
-#if PIPELINE
-                        _logger.Warning($"{nameof(PackagePipeline)}.{nameof(Communication_Receive)} proxy package failed to add");
-#endif
-                    }
-                    */
                 }
             }
             else
