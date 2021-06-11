@@ -10,13 +10,31 @@ namespace Rediscovery.Communication.Protocol.Test
     public class SendReceiveWithProxy
     {
         [Fact]
-        public void SendReceiveSimpleText()
+        public void SendReceiveSimpleTextWithProxy()
         {
             string content = "Test";
-            IRediscoveryProtocol protocolProxy = Shared.TestDevice(new Models.ConnectionConfiguration(16576, 16577, 1024));
+            IRediscoveryProtocol protocolProxy = new RediscoveryProtocol();
+            protocolProxy.Start(new Models.Configuration
+            {
+                Discovery = new Models.DiscoveryConfiguration
+                {
+                    ListenerDeactivated = true,
+                    Connection = new Models.ConnectionConfiguration(16571, 16581, 1024)
+                },
+                Data = new Models.DataConfiguration
+                {
+                    Connection = new Models.ConnectionConfiguration(16596, 16597, 1024),
+                    ConnectionLargeData = new Models.ConnectionConfiguration(16498, 16499, 1024 * 60)
+                }
+            });
+
             IRediscoveryProtocol protocol2 = new RediscoveryProtocol();
             protocol2.Start(new Models.Configuration
             {
+                Discovery = new Models.DiscoveryConfiguration
+                {
+                    Connection = new Models.ConnectionConfiguration(16581, Models.DiscoveryConfiguration.DefaultSendPortDiscovery, 1024)
+                },
                 Data = new Models.DataConfiguration
                 {
                     Connection = new Models.ConnectionConfiguration(16586, 16587, 1024),
