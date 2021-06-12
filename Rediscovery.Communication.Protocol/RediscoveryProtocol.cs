@@ -95,6 +95,11 @@ namespace Rediscovery.Communication.Protocol
             }
         }
 
+        public void Listen<T>(string key, Action<Transfer<T>> receivedCallback)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Send<T>(Transfer<T> transfer)
         {
             try
@@ -106,6 +111,11 @@ namespace Rediscovery.Communication.Protocol
             {
                 _logger.Error(ex);
             }
+        }
+
+        public void Send<T>(string key, Transfer<T> transfer)
+        {
+            throw new NotImplementedException();
         }
 
         public void Start(Models.Configuration configuration)
@@ -199,6 +209,7 @@ namespace Rediscovery.Communication.Protocol
             }
         }
 
+        #region Dispose
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -216,5 +227,6 @@ namespace Rediscovery.Communication.Protocol
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+        #endregion
     }
 }

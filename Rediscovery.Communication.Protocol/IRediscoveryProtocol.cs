@@ -36,12 +36,14 @@ namespace Rediscovery.Communication.Protocol
         /// <typeparam name="T">Type of the data</typeparam>
         /// <param name="transfer">Transfer object which contains the receiver identifer</param>
         void Send<T>(Transfer<T> transfer);
+        void Send<T>(string key, Transfer<T> transfer);
         /// <summary>
         /// Callback to get incoming data
         /// </summary>
         /// <typeparam name="T">Type of the data</typeparam>
         /// <param name="receivedCallback">Callback action when data is ready</param>
         void Listen<T>(Action<Transfer<T>> receivedCallback);
+        void Listen<T>(string key, Action<Transfer<T>> receivedCallback);
         /// <summary>
         /// Updates the metadata for the current device
         /// </summary>
