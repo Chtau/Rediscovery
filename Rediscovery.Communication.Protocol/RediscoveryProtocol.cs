@@ -34,6 +34,7 @@ namespace Rediscovery.Communication.Protocol
         public event EventHandler<string> DevicesChanged;
 
         public List<DeviceGreeting> Devices => _deviceManager.Devices;
+        public Traffic Traffic => _diagnosticPackage.Traffic;
 
         public string Identifer 
         { 
