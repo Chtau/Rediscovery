@@ -23,6 +23,7 @@ namespace Rediscovery.Communication.Protocol
         private readonly IDeviceManager _deviceManager;
         private readonly ICommunication _communication;
         private readonly ICommunication _communicationLarge;
+        private readonly Dictionary<string, Action<Transfer<byte[]>>> _listenCallbacks = new Dictionary<string, Action<Transfer<byte[]>>>();
 
         private Models.Configuration configuration;
         private string identifer;
@@ -61,6 +62,7 @@ namespace Rediscovery.Communication.Protocol
             _communication = new TCPCommunication(_logger, _deviceManager);
             _communicationLarge = new TCPCommunication(_logger, _deviceManager, true);
             _packagePipeline = new PackagePipeline(_logger, _serializer, _communication, _communicationLarge, _deviceManager);
+            OnListenIncomingPackages();
             _discoveryPipeline = new DiscoveryPipeline(_logger, _serializer);
             _discoveryListener = new DiscoveryListener(_logger, _discoveryPipeline, _deviceManager);
             _discoverySender = new DiscoverySender(_logger, _discoveryPipeline, _deviceManager);
@@ -82,6 +84,7 @@ namespace Rediscovery.Communication.Protocol
 
         public void Listen<T>(Action<Transfer<T>> receivedCallback)
         {
+            OnListen(PackagePartState.DefaultCallbackKey, receivedCallback);
             try
             {
                 _packagePipeline.Incoming<T>((instance, identifer) =>
@@ -97,15 +100,27 @@ namespace Rediscovery.Communication.Protocol
 
         public void Listen<T>(string key, Action<Transfer<T>> receivedCallback)
         {
-            throw new NotImplementedException();
+            OnListen(key, receivedCallback);
         }
 
         public void Send<T>(Transfer<T> transfer)
         {
+            OnSend(transfer, null);
+        }
+
+        public void Send<T>(string callbackKey, Transfer<T> transfer)
+        {
+            OnSend(transfer, callbackKey);
+        }
+
+        public void Start(Configuration configuration)
+        {
             try
             {
-                var device = _deviceManager.GetGreeting(transfer.DeviceIdentifier);
-                _packagePipeline.Outgoing(transfer.Content, device);
+                this.configuration = configuration ?? new Configuration();
+
+                OnStartDiscovery();
+                OnStartCommunication();
             }
             catch (Exception ex)
             {
@@ -113,19 +128,14 @@ namespace Rediscovery.Communication.Protocol
             }
         }
 
-        public void Send<T>(string key, Transfer<T> transfer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Start(Models.Configuration configuration)
+        public void SetMetadata(string identifer, string friendlyName, DeviceMetadata.IdiomType idiomType)
         {
             try
             {
-                this.configuration = configuration ?? new Models.Configuration();
-
-                OnStartDiscovery();
-                OnStartCommunication();
+                this.identifer = identifer;
+                OnChangedIdentifier();
+                _discoverySender.SetFriendlyName(friendlyName);
+                _discoverySender.SetIdiom(idiomType);
             }
             catch (Exception ex)
             {
@@ -164,14 +174,54 @@ namespace Rediscovery.Communication.Protocol
             }
         }
 
-        public void SetMetadata(string identifer, string friendlyName, DeviceMetadata.IdiomType idiomType)
+        private void OnListenIncomingPackages()
         {
             try
             {
-                this.identifer = identifer;
-                OnChangedIdentifier();
-                _discoverySender.SetFriendlyName(friendlyName);
-                _discoverySender.SetIdiom(idiomType);
+                _packagePipeline.IncomingRaw((instance, identifer, callbackKey) =>
+                {
+                    if (string.IsNullOrWhiteSpace(callbackKey))
+                        callbackKey = PackagePartState.DefaultCallbackKey;
+                    if (_listenCallbacks.ContainsKey(callbackKey))
+                        _listenCallbacks[callbackKey].Invoke(new Transfer<byte[]>(identifer, instance));
+                    else
+                        _logger.Error(new InvalidCastException($"Pipeline Incoming callback transfer content for Key:\"{callbackKey}\" could not be found"));
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+        }
+
+        private void OnListen<T>(string callbackKey, Action<Transfer<T>> receivedCallback)
+        {
+            try
+            {
+                void action(Transfer<byte[]> transfer)
+                {
+                    // deserialize to object type
+                    receivedCallback?.Invoke(new Transfer<T>(transfer.DeviceIdentifier, _serializer.Deserialize<T>(transfer.Content)));
+                }
+                if (string.IsNullOrWhiteSpace(callbackKey))
+                    callbackKey = PackagePartState.DefaultCallbackKey;
+                if (_listenCallbacks.ContainsKey(callbackKey))
+                    _listenCallbacks[callbackKey] = action;
+                else
+                    _listenCallbacks.Add(callbackKey, action);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+        }
+
+        private void OnSend<T>(Transfer<T> transfer, string callbackKey)
+        {
+            try
+            {
+                var device = _deviceManager.GetGreeting(transfer.DeviceIdentifier);
+                _packagePipeline.Outgoing(transfer.Content, device, callbackKey);
             }
             catch (Exception ex)
             {

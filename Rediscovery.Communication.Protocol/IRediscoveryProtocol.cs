@@ -36,7 +36,7 @@ namespace Rediscovery.Communication.Protocol
         /// <typeparam name="T">Type of the data</typeparam>
         /// <param name="transfer">Transfer object which contains the receiver identifer</param>
         void Send<T>(Transfer<T> transfer);
-        void Send<T>(string key, Transfer<T> transfer);
+        void Send<T>(string callbackKey, Transfer<T> transfer);
         /// <summary>
         /// Callback to get incoming data
         /// </summary>

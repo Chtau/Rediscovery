@@ -10,6 +10,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
     /// </summary>
     internal class PackagePartState
     {
+        public const string ValueDelimiter = "+";
+        public const string DefaultCallbackKey = "#";
+        public const string TimestampFormat = "mmssffff";
+
         public enum PackageMessageType
         {
             Undefined = 0,
@@ -21,7 +25,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         /// Minimum size for a valid header
         /// </summary>
         private readonly int _packageSize = 46;
-        private readonly byte valueDelimiter = Encoding.UTF8.GetBytes("+").First();
+        private readonly byte valueDelimiter = Encoding.UTF8.GetBytes(ValueDelimiter).First();
 
         public DateTime SenderTimestamp { get; private set; } = DateTime.UtcNow;
         public int PayloadSize { get; private set; }
@@ -32,6 +36,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         public byte[] PayloadPart { get; private set; }
         public int Index { get; private set; } = -1;
         public PackageMessageType PackageType { get; private set; } = PackageMessageType.Data;
+        public string CallbackKey { get; private set; } = DefaultCallbackKey;
 
         public PackagePartState()
         {
@@ -44,6 +49,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             string checksum,
             int payloadSize,
             int index,
+            string callbackKey,
             PackageMessageType type = PackageMessageType.Data) : this()
         {
             _packageSize = packageSize;
@@ -54,6 +60,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             PayloadPartSize = PayloadSize; // set maximum value because if we are smaller we pad the number with leading zero
             Index = index;
             PackageType = type;
+            CallbackKey = callbackKey;
         }
 
         public PackagePartState(byte[] receivedPackage) : this()
@@ -111,7 +118,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 
         public override string ToString()
         {
-            return $"{nameof(SenderIdentifier)}:\"{SenderIdentifier}\";{nameof(ReceiverIdentifier)}:\"{ReceiverIdentifier}\";{nameof(Checksum)}:\"{Checksum}\";{nameof(PayloadSize)}:{PayloadSize};{nameof(Index)}:{Index};{nameof(PackageType)}:{Enum.GetName(typeof(PackageMessageType), PackageType)}";
+            return $"{nameof(SenderIdentifier)}:\"{SenderIdentifier}\";{nameof(ReceiverIdentifier)}:\"{ReceiverIdentifier}\";{nameof(Checksum)}:\"{Checksum}\";{nameof(PayloadSize)}:{PayloadSize};{nameof(Index)}:{Index};{nameof(PackageType)}:{Enum.GetName(typeof(PackageMessageType), PackageType)};{nameof(CallbackKey)}:{CallbackKey}";
         }
 
         private List<byte> OnCreateSenderPackage(DateTime? dateTime)
@@ -123,12 +130,13 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             raw.AddRange(Convert.FromBase64String(SenderIdentifier)); // 12 byte = sender device (local)
             raw.AddRange(Convert.FromBase64String(ReceiverIdentifier)); // 12 byte = receiver device (remote)
             raw.AddRange(Convert.FromBase64String(Checksum)); // 12 byte = checksum MD5 first 16 characters (is at the same time the overall package identifier)
-            raw.AddRange(Convert.FromBase64String(SenderTimestamp.ToString("mmssffff"))); // 6 byte = sender timestamp format "minutes-seconds-tousends of second"
+            raw.AddRange(Convert.FromBase64String(SenderTimestamp.ToString(TimestampFormat))); // 6 byte = sender timestamp format "minutes-seconds-tousends of second"
             raw.AddRange(Encoding.UTF8.GetBytes(((int)PackageType).ToString())); // 1 byte
-            raw.AddRange(Encoding.UTF8.GetBytes($"+{PayloadSize}+")); // ?? byte = length of the total payload
+            raw.AddRange(Encoding.UTF8.GetBytes($"{ValueDelimiter}{PayloadSize}{ValueDelimiter}")); // ?? byte = length of the total payload
             string formatPartPayload = $"D{PayloadSize.ToString().Length}";
-            raw.AddRange(Encoding.UTF8.GetBytes($"+{PayloadPartSize.ToString(formatPartPayload)}+")); // ?? byte = can't be longer then the payload size
-            raw.AddRange(Encoding.UTF8.GetBytes($"+{Index}+")); // ?? byte = package index
+            raw.AddRange(Encoding.UTF8.GetBytes($"{ValueDelimiter}{PayloadPartSize.ToString(formatPartPayload)}{ValueDelimiter}")); // ?? byte = can't be longer then the payload size
+            raw.AddRange(Encoding.UTF8.GetBytes($"{ValueDelimiter}{Index}{ValueDelimiter}")); // ?? byte = package index
+            raw.AddRange(Encoding.UTF8.GetBytes($"{ValueDelimiter}{CallbackKey ?? DefaultCallbackKey}{ValueDelimiter}")); // ?? byte = callback key
 
             return raw;
         }
@@ -145,7 +153,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 Checksum = Convert.ToBase64String(rawList.Take(12).ToArray());
                 rawList.RemoveRange(0, 12);
                 var timestamp = Convert.ToBase64String(rawList.Take(6).ToArray());
-                SenderTimestamp = DateTime.ParseExact(timestamp, "mmssffff", null);
+                SenderTimestamp = DateTime.ParseExact(timestamp, TimestampFormat, null);
                 rawList.RemoveRange(0, 6);
                 var packageTypeMsg = Encoding.UTF8.GetString(rawList.Take(1).ToArray());
                 PackageType = (PackageMessageType)int.Parse(packageTypeMsg);
@@ -172,6 +180,14 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 var index = Encoding.UTF8.GetString(rawList.Take(indexEndIndex).ToArray());
                 Index = int.Parse(index);
                 rawList.RemoveRange(0, indexEndIndex + 1);
+
+                // callback key
+                rawList.RemoveRange(0, 1); // remove delimiter
+                var callbackKeyEndIndex = rawList.IndexOf(valueDelimiter);
+                var callbackKey = Encoding.UTF8.GetString(rawList.Take(callbackKeyEndIndex).ToArray());
+                if (!string.IsNullOrWhiteSpace(callbackKey))
+                    CallbackKey = callbackKey;
+                rawList.RemoveRange(0, callbackKeyEndIndex + 1);
 
                 PayloadPart = rawList.Take(PayloadPartSize).ToArray();
 
