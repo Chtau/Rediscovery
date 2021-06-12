@@ -132,7 +132,7 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
-                this.identifer = identifer;
+                this.identifer = identifer.ExactLength(16);
                 OnChangedIdentifier();
                 _discoverySender.SetFriendlyName(friendlyName);
                 _discoverySender.SetIdiom(idiomType);
