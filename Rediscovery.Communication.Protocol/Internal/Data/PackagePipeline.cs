@@ -4,6 +4,7 @@ using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
 using Rediscovery.Communication.Protocol.Internal.Device;
+using Rediscovery.Communication.Protocol.Internal.Diagnostic;
 
 namespace Rediscovery.Communication.Protocol.Internal.Data
 {
@@ -14,6 +15,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         private readonly ICommunication _communication;
         private readonly ICommunication _communicationLarge;
         private readonly IDeviceManager _deviceManager;
+        private readonly IDiagnosticPackage _diagnosticPackage;
         private readonly List<PackagePartState> outgoingPackages = new List<PackagePartState>();
         private readonly List<PackagePartState> outgoingLargePackages = new List<PackagePartState>();
         private readonly List<PackagePartState> incomingPackages = new List<PackagePartState>();
@@ -30,11 +32,13 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             ISerializer serializer, 
             ICommunication communication,
             ICommunication communicationLarge,
-            IDeviceManager deviceManager)
+            IDeviceManager deviceManager,
+            IDiagnosticPackage diagnosticPackage)
         {
             _logger = logger;
             _serializer = serializer;
             _deviceManager = deviceManager;
+            _diagnosticPackage = diagnosticPackage;
             _communication = communication;
             _communication.Receive += Communication_Receive;
             _communicationLarge = communicationLarge;
@@ -203,6 +207,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 #if PIPELINE
                             _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoingTaskRunner)} Header:{item}");
 #endif
+                            _diagnosticPackage.Send(item);
                         }
                     }
                     catch (Exception ex)
@@ -291,6 +296,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 #endif
                     }
                 }
+                _diagnosticPackage.Add(pack);
             }
             else
             {
@@ -328,6 +334,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 #endif
                             packageCompleteCallback.Invoke(payload.ToArray(), firstHeader.SenderIdentifier, firstHeader.CallbackKey);
                             removeChecksums.Add(checksum);
+                            _diagnosticPackage.PackageComplete(checksum);
                         } else
                         {
 #if PIPELINE

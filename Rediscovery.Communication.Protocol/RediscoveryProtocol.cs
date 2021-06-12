@@ -1,6 +1,7 @@
 ﻿using Rediscovery.Communication.Protocol.Internal;
 using Rediscovery.Communication.Protocol.Internal.Data;
 using Rediscovery.Communication.Protocol.Internal.Device;
+using Rediscovery.Communication.Protocol.Internal.Diagnostic;
 using Rediscovery.Communication.Protocol.Internal.Discovery;
 using Rediscovery.Communication.Protocol.Models;
 using System;
@@ -23,6 +24,7 @@ namespace Rediscovery.Communication.Protocol
         private readonly IDeviceManager _deviceManager;
         private readonly ICommunication _communication;
         private readonly ICommunication _communicationLarge;
+        private readonly IDiagnosticPackage _diagnosticPackage;
         private readonly Dictionary<string, Action<Transfer<byte[]>>> _listenCallbacks = new Dictionary<string, Action<Transfer<byte[]>>>();
 
         private Models.Configuration configuration;
@@ -54,6 +56,7 @@ namespace Rediscovery.Communication.Protocol
 
             _logger = protocolLogger ?? new Internal.ProtocolLogger();
             _serializer = serializer ?? new Serializer(_logger);
+            _diagnosticPackage = new DiagnosticPackage(_logger);
             _deviceManager = new DeviceManager(_logger);
             _deviceManager.DeviceChanged += (obj, args) =>
             {
@@ -61,7 +64,7 @@ namespace Rediscovery.Communication.Protocol
             };
             _communication = new TCPCommunication(_logger, _deviceManager);
             _communicationLarge = new TCPCommunication(_logger, _deviceManager, true);
-            _packagePipeline = new PackagePipeline(_logger, _serializer, _communication, _communicationLarge, _deviceManager);
+            _packagePipeline = new PackagePipeline(_logger, _serializer, _communication, _communicationLarge, _deviceManager, _diagnosticPackage);
             OnListenIncomingPackages();
             _discoveryPipeline = new DiscoveryPipeline(_logger, _serializer);
             _discoveryListener = new DiscoveryListener(_logger, _discoveryPipeline, _deviceManager);

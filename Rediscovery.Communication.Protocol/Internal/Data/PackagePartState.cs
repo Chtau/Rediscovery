@@ -28,6 +28,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         private readonly byte valueDelimiter = Encoding.UTF8.GetBytes(ValueDelimiter).First();
 
         public DateTime SenderTimestamp { get; private set; } = DateTime.UtcNow;
+        public DateTime ReceivedTimestamp { get; private set; } = DateTime.UtcNow;
         public int PayloadSize { get; private set; }
         public int PayloadPartSize { get; private set; }
         public string Checksum { get; private set; }
@@ -154,11 +155,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 rawList.RemoveRange(0, 12);
                 var timestamp = Convert.ToBase64String(rawList.Take(6).ToArray());
                 SenderTimestamp = DateTime.ParseExact(timestamp, TimestampFormat, null);
+                ReceivedTimestamp = DateTime.UtcNow;
                 rawList.RemoveRange(0, 6);
                 var packageTypeMsg = Encoding.UTF8.GetString(rawList.Take(1).ToArray());
                 PackageType = (PackageMessageType)int.Parse(packageTypeMsg);
                 rawList.RemoveRange(0, 1);
-
 
                 // payload size
                 rawList.RemoveRange(0, 1); // remove delimiter
