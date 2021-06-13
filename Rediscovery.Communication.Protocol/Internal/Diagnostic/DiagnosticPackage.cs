@@ -82,5 +82,41 @@ namespace Rediscovery.Communication.Protocol.Internal.Diagnostic
                 }
             });
         }
+
+        public void BytesSend(long bytes)
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    lock (syncLock)
+                    {
+                        Traffic.AddOutgoingBytes(bytes);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex);
+                }
+            });
+        }
+
+        public void BytesReceived(long bytes)
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    lock (syncLock)
+                    {
+                        Traffic.AddIncomingBytes(bytes);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex);
+                }
+            });
+        }
     }
 }

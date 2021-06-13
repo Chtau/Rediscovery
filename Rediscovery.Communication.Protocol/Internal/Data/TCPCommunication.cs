@@ -1,4 +1,5 @@
 ﻿using Rediscovery.Communication.Protocol.Internal.Device;
+using Rediscovery.Communication.Protocol.Internal.Diagnostic;
 using Rediscovery.Communication.Protocol.Models;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
     {
         private readonly IProtocolLogger _logger;
         private readonly IDeviceManager _deviceManager;
+        private readonly IDiagnosticPackage _diagnosticPackage;
         private readonly Dictionary<string, Socket> _sender = new Dictionary<string, Socket>();
         private readonly string _listenerThreadName = $"Thread_Listener_{nameof(TCPCommunication)}";
         private readonly bool _isLarge = false;
@@ -29,10 +31,12 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         public event EventHandler<byte[]> Receive;
 
         public TCPCommunication(IProtocolLogger logger,
-            IDeviceManager deviceManager, bool isLarge = false)
+            IDeviceManager deviceManager,
+            IDiagnosticPackage diagnosticPackage, bool isLarge = false)
         {
             _isLarge = isLarge;
             _logger = logger;
+            _diagnosticPackage = diagnosticPackage;
             _deviceManager = deviceManager;
             OnInitListenerThread();
         }
@@ -55,6 +59,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                     0,
                     bytesToSend,
                     SocketFlags.None);
+                _diagnosticPackage.BytesSend(sendBytes);
                 return bytesToSend == sendBytes;
             } catch (Exception ex)
             {
@@ -197,6 +202,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                     {
                         int bytesRec = handler.Receive(byteBuffer);
                         Receive?.Invoke(this, byteBuffer);
+                        _diagnosticPackage.BytesReceived(bytesRec);
                     }
 
                     handler.Shutdown(SocketShutdown.Both);

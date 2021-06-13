@@ -12,5 +12,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Diagnostic
         void Send(Data.PackagePartState package);
         void Add(Data.PackagePartState package);
         void PackageComplete(string checksum);
+        void BytesSend(long bytes);
+        void BytesReceived(long bytes);
     }
 }

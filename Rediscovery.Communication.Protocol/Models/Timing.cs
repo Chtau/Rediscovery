@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace Rediscovery.Communication.Protocol.Models
 {
@@ -15,6 +16,11 @@ namespace Rediscovery.Communication.Protocol.Models
             Times.Add(time);
         }
 
-        internal void Add(TimeSpan time) => Times.Add(time);
+        internal void Add(TimeSpan time)
+        {
+            if (Times.Count > 250)
+                Times = Times.Skip(50).ToList();
+            Times.Add(time);
+        }
     }
 }
