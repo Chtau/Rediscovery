@@ -11,7 +11,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Diagnostic
     internal class DiagnosticPackage : IDiagnosticPackage
     {
         private readonly IProtocolLogger _logger;
-
+        private object syncLock = new object();
         public Traffic Traffic { get; private set; } = new Traffic();
         public List<Timing> Timings { get; private set; } = new List<Timing>();
 
@@ -26,17 +26,20 @@ namespace Rediscovery.Communication.Protocol.Internal.Diagnostic
             {
                 try
                 {
-                    Traffic.AddIncomingPackageParts();
-                    var difTimestamp = package.ReceivedTimestamp - package.SenderTimestamp;
-                    if (difTimestamp.Hours != 0)
-                        difTimestamp -= TimeSpan.FromHours(difTimestamp.Hours);
-                    if (difTimestamp.Days != 0)
-                        difTimestamp -= TimeSpan.FromDays(difTimestamp.Days);
-                    var index = Timings.FindIndex(x => x.DeviceIdentifer == package.SenderIdentifier);
-                    if (index != -1)
-                        Timings[index].Add(difTimestamp);
-                    else
-                        Timings.Add(new Timing(package.SenderIdentifier, difTimestamp));
+                    lock(syncLock)
+                    {
+                        Traffic.AddIncomingPackageParts();
+                        var difTimestamp = package.ReceivedTimestamp - package.SenderTimestamp;
+                        if (difTimestamp.Hours != 0)
+                            difTimestamp -= TimeSpan.FromHours(difTimestamp.Hours);
+                        if (difTimestamp.Days != 0)
+                            difTimestamp -= TimeSpan.FromDays(difTimestamp.Days);
+                        var index = Timings.FindIndex(x => x.DeviceIdentifer == package.SenderIdentifier);
+                        if (index != -1)
+                            Timings[index].Add(difTimestamp);
+                        else
+                            Timings.Add(new Timing(package.SenderIdentifier, difTimestamp));
+                    }
                 } catch (Exception ex)
                 {
                     _logger.Error(ex);
@@ -50,7 +53,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Diagnostic
             {
                 try
                 {
-                    Traffic.AddIncomingPackagesCompleted();
+                    lock(syncLock)
+                    {
+                        Traffic.AddIncomingPackagesCompleted();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -65,7 +71,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Diagnostic
             {
                 try
                 {
-                    Traffic.AddOutgoingPackageParts();
+                    lock(syncLock)
+                    {
+                        Traffic.AddOutgoingPackageParts();
+                    }
                 }
                 catch (Exception ex)
                 {
