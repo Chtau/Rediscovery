@@ -35,6 +35,7 @@ namespace Rediscovery.Communication.Protocol
 
         public List<DeviceGreeting> Devices => _deviceManager.Devices;
         public Traffic Traffic => _diagnosticPackage.Traffic;
+        public List<Timing> Timings => _diagnosticPackage.Timings;
 
         public string Identifer 
         { 

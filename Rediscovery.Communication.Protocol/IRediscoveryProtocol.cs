@@ -17,6 +17,7 @@ namespace Rediscovery.Communication.Protocol
         /// </summary>
         List<DeviceGreeting> Devices { get; }
         Traffic Traffic { get; }
+        List<Timing> Timings { get; }
         /// <summary>
         /// Triggered if a device greeting has changed from the discovery.
         /// Device Identifier will be provided as argument.

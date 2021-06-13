@@ -2,6 +2,7 @@
 using Rediscovery.Communication.Protocol.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Diagnostic
         private readonly IProtocolLogger _logger;
 
         public Traffic Traffic { get; private set; } = new Traffic();
+        public List<Timing> Timings { get; private set; } = new List<Timing>();
 
         public DiagnosticPackage(IProtocolLogger logger)
         {
@@ -25,6 +27,12 @@ namespace Rediscovery.Communication.Protocol.Internal.Diagnostic
                 try
                 {
                     Traffic.AddIncomingPackageParts();
+                    var difTimestamp = package.SenderTimestamp - package.ReceivedTimestamp;
+                    var index = Timings.FindIndex(x => x.DeviceIdentifer == package.SenderIdentifier);
+                    if (index != -1)
+                        Timings[index].Add(difTimestamp);
+                    else
+                        Timings.Add(new Timing(package.SenderIdentifier, difTimestamp));
                 } catch (Exception ex)
                 {
                     _logger.Error(ex);
