@@ -27,7 +27,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Diagnostic
                 try
                 {
                     Traffic.AddIncomingPackageParts();
-                    var difTimestamp = package.SenderTimestamp - package.ReceivedTimestamp;
+                    var difTimestamp = package.ReceivedTimestamp - package.SenderTimestamp;
+                    if (difTimestamp.Hours != 0)
+                        difTimestamp -= TimeSpan.FromHours(difTimestamp.Hours);
+                    if (difTimestamp.Days != 0)
+                        difTimestamp -= TimeSpan.FromDays(difTimestamp.Days);
                     var index = Timings.FindIndex(x => x.DeviceIdentifer == package.SenderIdentifier);
                     if (index != -1)
                         Timings[index].Add(difTimestamp);
