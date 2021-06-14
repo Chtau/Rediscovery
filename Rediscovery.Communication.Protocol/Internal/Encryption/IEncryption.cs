@@ -10,5 +10,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
         Keys GenerateRSA();
         byte[] EncryptRSA(string publicKey, byte[] content);
         byte[] DecryptRSA(string privateKey, byte[] cypherContent);
+        byte[] EncryptAES(string password, byte[] content);
+        byte[] DecryptAES(string password, byte[] cypherContent);
     }
 }

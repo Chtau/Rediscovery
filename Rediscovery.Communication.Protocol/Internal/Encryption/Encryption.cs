@@ -31,6 +31,14 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
             return csp.Decrypt(cypherContent, false);
         }
 
+        public byte[] EncryptAES(string password, byte[] content)
+        {
+            return SymmetricAES.Encrypt(content, password);
+        }
 
+        public byte[] DecryptAES(string password, byte[] cypherContent)
+        {
+            return SymmetricAES.Decrypt(cypherContent, password);
+        }
     }
 }
