@@ -1,4 +1,5 @@
-﻿using Rediscovery.Communication.Protocol.Models;
+﻿using Rediscovery.Communication.Protocol.Internal.Encryption;
+using Rediscovery.Communication.Protocol.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,8 +17,18 @@ namespace Rediscovery.Communication.Protocol
         /// Actvie devices in the Network
         /// </summary>
         List<DeviceGreeting> Devices { get; }
+        /// <summary>
+        /// Network traffic for incoming and outgoing data
+        /// </summary>
         Traffic Traffic { get; }
+        /// <summary>
+        /// Package timings for all devices but maximal 250 entries per device.
+        /// </summary>
         List<Timing> Timings { get; }
+        /// <summary>
+        /// Public RAS key for data encryption
+        /// </summary>
+        string PublicRSA { get; }
         /// <summary>
         /// Triggered if a device greeting has changed from the discovery.
         /// Device Identifier will be provided as argument.
@@ -58,5 +69,11 @@ namespace Rediscovery.Communication.Protocol
         /// </summary>
         /// <returns></returns>
         string NewIdentifier();
+        /// <summary>
+        /// Sets the RSA keys which are internally used for 
+        /// </summary>
+        /// <param name="privateKey">Private key for decrypt received data</param>
+        /// <param name="publicKey">Public key which other devices use for encryption.</param>
+        void SetRASKeys(string privateKey, string publicKey);
     }
 }

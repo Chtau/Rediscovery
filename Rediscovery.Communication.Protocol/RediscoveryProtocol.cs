@@ -3,6 +3,7 @@ using Rediscovery.Communication.Protocol.Internal.Data;
 using Rediscovery.Communication.Protocol.Internal.Device;
 using Rediscovery.Communication.Protocol.Internal.Diagnostic;
 using Rediscovery.Communication.Protocol.Internal.Discovery;
+using Rediscovery.Communication.Protocol.Internal.Encryption;
 using Rediscovery.Communication.Protocol.Models;
 using System;
 using System.Collections.Generic;
@@ -25,9 +26,10 @@ namespace Rediscovery.Communication.Protocol
         private readonly ICommunication _communication;
         private readonly ICommunication _communicationLarge;
         private readonly IDiagnosticPackage _diagnosticPackage;
+        private readonly IEncryption _encryption;
         private readonly Dictionary<string, Action<Transfer<byte[]>>> _listenCallbacks = new Dictionary<string, Action<Transfer<byte[]>>>();
 
-        private Models.Configuration configuration;
+        private Configuration configuration;
         private string identifer;
         private bool disposedValue;
 
@@ -36,6 +38,7 @@ namespace Rediscovery.Communication.Protocol
         public List<DeviceGreeting> Devices => _deviceManager.Devices;
         public Traffic Traffic => _diagnosticPackage.Traffic;
         public List<Timing> Timings => _diagnosticPackage.Timings;
+        public string PublicRSA => _encryption.RSAKey?.Public;
 
         public string Identifer 
         { 
@@ -53,11 +56,15 @@ namespace Rediscovery.Communication.Protocol
         public RediscoveryProtocol(string identifer = null, IProtocolLogger protocolLogger = null, ISerializer serializer = null)
         {
 #if DISCOVER
-            _logger.Trace("Diagnostic => Discover is active");
+            _logger.Trace("Diagnostic => [Discover] is active");
+#endif
+#if PIPELINE
+            _logger.Trace("Diagnostic => [Pipeline] is active");
 #endif
 
             _logger = protocolLogger ?? new Internal.ProtocolLogger();
             _serializer = serializer ?? new Serializer(_logger);
+            _encryption = new Encryption();
             _diagnosticPackage = new DiagnosticPackage(_logger);
             _deviceManager = new DeviceManager(_logger);
             _deviceManager.DeviceChanged += (obj, args) =>
@@ -146,6 +153,11 @@ namespace Rediscovery.Communication.Protocol
             {
                 _logger.Error(ex);
             }
+        }
+
+        public void SetRASKeys(string privateKey, string publicKey)
+        {
+            _encryption.SetPrivateRASKey(new Keys(privateKey, publicKey));
         }
 
         private void OnStartDiscovery()

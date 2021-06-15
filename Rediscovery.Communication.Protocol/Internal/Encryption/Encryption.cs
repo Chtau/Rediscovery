@@ -7,6 +7,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
 {
     internal class Encryption : IEncryption
     {
+        public Keys RSAKey { get; private set; }
+
         public Keys GenerateRSA()
         {
             var csp = new RSACryptoServiceProvider(4096);
@@ -39,6 +41,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
         public byte[] DecryptAES(string password, byte[] cypherContent)
         {
             return SymmetricAES.Decrypt(cypherContent, password);
+        }
+
+        public void SetPrivateRASKey(Keys key)
+        {
+            RSAKey = key;
         }
     }
 }

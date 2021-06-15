@@ -7,6 +7,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
 {
     internal interface IEncryption
     {
+        Keys RSAKey { get; }
+        void SetPrivateRASKey(Keys key);
         Keys GenerateRSA();
         byte[] EncryptRSA(string publicKey, byte[] content);
         byte[] DecryptRSA(string privateKey, byte[] cypherContent);
