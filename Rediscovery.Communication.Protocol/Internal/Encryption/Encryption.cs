@@ -7,6 +7,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
 {
     internal class Encryption : IEncryption
     {
+        public string AESPassword { get; private set; }
         public Keys RSAKey { get; private set; }
 
         public Keys GenerateRSA()
@@ -33,19 +34,28 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
             return csp.Decrypt(cypherContent, false);
         }
 
-        public byte[] EncryptAES(string password, byte[] content)
+        public byte[] EncryptAES(byte[] content)
         {
-            return SymmetricAES.Encrypt(content, password);
+            if (!string.IsNullOrWhiteSpace(AESPassword))
+                return SymmetricAES.Encrypt(content, AESPassword);
+            return content;
         }
 
-        public byte[] DecryptAES(string password, byte[] cypherContent)
+        public byte[] DecryptAES(byte[] cypherContent)
         {
-            return SymmetricAES.Decrypt(cypherContent, password);
+            if (!string.IsNullOrWhiteSpace(AESPassword))
+                return SymmetricAES.Decrypt(cypherContent, AESPassword);
+            return cypherContent;
         }
 
         public void SetPrivateRASKey(Keys key)
         {
             RSAKey = key;
+        }
+
+        public void SetAESPassword(string password)
+        {
+            AESPassword = password;
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Rediscovery.Communication.Protocol.Internal.Device;
 using Rediscovery.Communication.Protocol.Internal.Diagnostic;
+using Rediscovery.Communication.Protocol.Internal.Encryption;
 
 namespace Rediscovery.Communication.Protocol.Internal.Data
 {
@@ -12,6 +13,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
     {
         private readonly IProtocolLogger _logger;
         private readonly ISerializer _serializer;
+        private readonly IEncryption _encryption;
         private readonly ICommunication _communication;
         private readonly ICommunication _communicationLarge;
         private readonly IDeviceManager _deviceManager;
@@ -29,7 +31,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         private Action<byte[], string, string> incomingPackageCompleteCallback;
 
         public PackagePipeline(IProtocolLogger logger, 
-            ISerializer serializer, 
+            ISerializer serializer,
+            IEncryption encryption,
             ICommunication communication,
             ICommunication communicationLarge,
             IDeviceManager deviceManager,
@@ -37,6 +40,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         {
             _logger = logger;
             _serializer = serializer;
+            _encryption = encryption;
             _deviceManager = deviceManager;
             _diagnosticPackage = diagnosticPackage;
             _communication = communication;
@@ -203,7 +207,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                         if (item != null)
                         {
                             packages.Remove(item);
-                            send.Invoke(new CommunicationPayload(item.CreateSenderPackage(DateTime.UtcNow), item.ReceiverIdentifier));
+                            send.Invoke(new CommunicationPayload(_encryption.EncryptAES(item.CreateSenderPackage(DateTime.UtcNow)), item.ReceiverIdentifier));
 #if PIPELINE
                             _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoingTaskRunner)} Header:{item}");
 #endif
@@ -255,7 +259,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         private void OnReceivePackage(byte[] raw, List<PackagePartState> packages, List<PackagePartState> packagesProxy)
         {
             // create package part for this payload
-            var pack = new PackagePartState(raw);
+            var pack = new PackagePartState(_encryption.DecryptAES(raw));
             if (pack.IsValid())
             {
 #if PIPELINE
