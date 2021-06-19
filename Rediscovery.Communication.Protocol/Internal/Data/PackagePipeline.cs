@@ -93,7 +93,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 #if PIPELINE
                 _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoing)} adding packages for instance of Type:\"{instance.GetType().FullName}\"");
 #endif
-                var rawPayload = _serializer.Serialize(instance).ToList();
+                var rawPayload = _encryption.EncryptAES(_deviceManager.DeviceAESPassword(deviceGreeting.Device.Identifier), _serializer.Serialize(instance)).ToList();
                 if (rawPayload.Count > (deviceGreeting.Device.Communication.DataLarge.PackageSize * 5))
                 {
                     return OnCreatePackageParts(rawPayload,
@@ -207,7 +207,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                         if (item != null)
                         {
                             packages.Remove(item);
-                            send.Invoke(new CommunicationPayload(_encryption.EncryptAES(item.CreateSenderPackage(DateTime.UtcNow)), item.ReceiverIdentifier));
+                            send.Invoke(new CommunicationPayload(item.CreateSenderPackage(DateTime.UtcNow), item.ReceiverIdentifier));
 #if PIPELINE
                             _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoingTaskRunner)} Header:{item}");
 #endif
@@ -259,7 +259,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         private void OnReceivePackage(byte[] raw, List<PackagePartState> packages, List<PackagePartState> packagesProxy)
         {
             // create package part for this payload
-            var pack = new PackagePartState(_encryption.DecryptAES(raw));
+            var pack = new PackagePartState();
             if (pack.IsValid())
             {
 #if PIPELINE
@@ -336,7 +336,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 #if PIPELINE
                             _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnCheckCompletePackages)} Package complete with Checksum:\"{checksum}\" with payload Size:{payload.Count}");
 #endif
-                            packageCompleteCallback.Invoke(payload.ToArray(), firstHeader.SenderIdentifier, firstHeader.CallbackKey);
+                            packageCompleteCallback.Invoke(_encryption.DecryptAES(_deviceManager.DeviceAESPassword(firstHeader.SenderIdentifier), payload.ToArray()), firstHeader.SenderIdentifier, firstHeader.CallbackKey);
                             removeChecksums.Add(checksum);
                             _diagnosticPackage.PackageComplete(checksum);
                         } else

@@ -15,6 +15,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         private readonly List<DeviceGreetingReceived> _devices = new List<DeviceGreetingReceived>();
         private readonly TimeSpan deviceTimeoutOffset = TimeSpan.FromSeconds(10);
         private readonly TimeSpan waitBeforeTimeoutCheck = TimeSpan.FromSeconds(30);
+        private readonly Dictionary<string, string> _deviceAES = new Dictionary<string, string>();
 
         private bool isTimeoutCheckRunning = false;
         private string currentIdentifer;
@@ -106,5 +107,33 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         }
 
         public void SetIdentifier(string identifer) => currentIdentifer = identifer;
+
+        public string DeviceAESPassword(string identifer)
+        {
+            try
+            {
+                if (_deviceAES.ContainsKey(identifer))
+                    return _deviceAES[identifer];
+            } catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+            return identifer;
+        }
+
+        public void AddOrUpdateDeviceAES(string identifer, string password)
+        {
+            try
+            {
+                if (_deviceAES.ContainsKey(identifer))
+                    _deviceAES[identifer] = password;
+                else
+                    _deviceAES.Add(identifer, password);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+        }
     }
 }

@@ -33,5 +33,18 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         /// </summary>
         /// <param name="identifer"></param>
         void SetIdentifier(string identifer);
+        /// <summary>
+        /// AES password for the device Identifer.
+        /// If no password is found the Identifer will be returned.
+        /// </summary>
+        /// <param name="identifer">Device Identifer</param>
+        /// <returns>Password or Identifer</returns>
+        string DeviceAESPassword(string identifer);
+        /// <summary>
+        /// Adds or updates the AES password for a device
+        /// </summary>
+        /// <param name="identifer">Device identifer</param>
+        /// <param name="password">AES password</param>
+        void AddOrUpdateDeviceAES(string identifer, string password);
     }
 }
