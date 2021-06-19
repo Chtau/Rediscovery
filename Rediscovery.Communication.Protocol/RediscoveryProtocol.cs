@@ -155,10 +155,7 @@ namespace Rediscovery.Communication.Protocol
             }
         }
 
-        public void SetRASKeys(string privateKey, string publicKey)
-        {
-            _encryption.SetPrivateRASKey(new Keys(privateKey, publicKey));
-        }
+        public void SetRASKeys(string privateKey, string publicKey) => _encryption.SetPrivateRASKey(new Keys(privateKey, publicKey));
 
         private void OnStartDiscovery()
         {
