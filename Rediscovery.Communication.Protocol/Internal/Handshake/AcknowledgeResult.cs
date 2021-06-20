@@ -1,0 +1,40 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Rediscovery.Communication.Protocol.Internal.Handshake
+{
+    internal class AcknowledgeResult
+    {
+        public enum State
+        {
+            None,
+            Ok,
+            Timeout,
+            Denied,
+            Running
+        }
+
+        public State ResponseState { get; private set; } = State.None;
+        public DateTime Start { get; private set; } = DateTime.UtcNow;
+        public DateTime? End { get; private set; }
+        public string RemoteDeviceIdentifer { get; }
+
+        public AcknowledgeResult(string remoteDeviceIdentifer)
+        {
+            RemoteDeviceIdentifer = remoteDeviceIdentifer;
+        }
+
+        public void StartRequest(State state = State.Running)
+        {
+            Start = DateTime.UtcNow;
+            ResponseState = state;
+        }
+
+        public void ResponseReceived(State state)
+        {
+            End = DateTime.UtcNow;
+            ResponseState = state;
+        }
+    }
+}

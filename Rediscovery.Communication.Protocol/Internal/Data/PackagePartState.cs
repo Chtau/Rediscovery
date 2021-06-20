@@ -39,11 +39,6 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         public PackageMessageType PackageType { get; private set; } = PackageMessageType.Data;
         public string CallbackKey { get; private set; } = DefaultCallbackKey;
 
-        public PackagePartState()
-        {
-
-        }
-
         public PackagePartState(int packageSize,
             string senderIdentifier,
             string receiverIdentifier,
@@ -51,7 +46,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             int payloadSize,
             int index,
             string callbackKey,
-            PackageMessageType type = PackageMessageType.Data) : this()
+            PackageMessageType type = PackageMessageType.Data)
         {
             _packageSize = packageSize;
             SenderIdentifier = senderIdentifier;
@@ -64,7 +59,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             CallbackKey = callbackKey;
         }
 
-        public PackagePartState(byte[] receivedPackage) : this()
+        public PackagePartState(byte[] receivedPackage)
         {
             OnParsePackage(receivedPackage);
         }
@@ -114,12 +109,13 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 && !string.IsNullOrWhiteSpace(ReceiverIdentifier)
                 && !string.IsNullOrWhiteSpace(Checksum)
                 && PayloadSize > 0
-                && Index != -1;
+                && Index != -1
+                && PayloadPart?.Length > 0;
         }
 
         public override string ToString()
         {
-            return $"{nameof(SenderIdentifier)}:\"{SenderIdentifier}\";{nameof(ReceiverIdentifier)}:\"{ReceiverIdentifier}\";{nameof(Checksum)}:\"{Checksum}\";{nameof(PayloadSize)}:{PayloadSize};{nameof(Index)}:{Index};{nameof(PackageType)}:{Enum.GetName(typeof(PackageMessageType), PackageType)};{nameof(CallbackKey)}:{CallbackKey}";
+            return $"{nameof(SenderIdentifier)}:\"{SenderIdentifier}\";{nameof(ReceiverIdentifier)}:\"{ReceiverIdentifier}\";{nameof(Checksum)}:\"{Checksum}\";{nameof(PayloadSize)}:{PayloadSize};{nameof(Index)}:{Index};{nameof(PackageType)}:{Enum.GetName(typeof(PackageMessageType), PackageType)};{nameof(CallbackKey)}:{CallbackKey};{nameof(PayloadPart)}:{PayloadPart?.Length}";
         }
 
         private List<byte> OnCreateSenderPackage(DateTime? dateTime)
