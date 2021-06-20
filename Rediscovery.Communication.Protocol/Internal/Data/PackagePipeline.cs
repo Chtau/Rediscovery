@@ -259,7 +259,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         private void OnReceivePackage(byte[] raw, List<PackagePartState> packages, List<PackagePartState> packagesProxy)
         {
             // create package part for this payload
-            var pack = new PackagePartState();
+            var pack = new PackagePartState(raw);
             if (pack.IsValid())
             {
 #if PIPELINE
@@ -305,7 +305,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             else
             {
 #if PIPELINE
-                _logger.Warning($"{nameof(PackagePipeline)}.{nameof(OnReceivePackage)} package is not valid");
+                _logger.Warning($"{nameof(PackagePipeline)}.{nameof(OnReceivePackage)} package is not valid. (Pack:\"{pack}\"");
 #endif
             }
         }
@@ -336,7 +336,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 #if PIPELINE
                             _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnCheckCompletePackages)} Package complete with Checksum:\"{checksum}\" with payload Size:{payload.Count}");
 #endif
-                            packageCompleteCallback.Invoke(_encryption.DecryptAES(_deviceManager.DeviceAESPassword(firstHeader.SenderIdentifier), payload.ToArray()), firstHeader.SenderIdentifier, firstHeader.CallbackKey);
+                            packageCompleteCallback.Invoke(_encryption.DecryptAES(_deviceManager.DeviceAESPassword(firstHeader.ReceiverIdentifier), payload.ToArray()), firstHeader.SenderIdentifier, firstHeader.CallbackKey);
                             removeChecksums.Add(checksum);
                             _diagnosticPackage.PackageComplete(checksum);
                         } else

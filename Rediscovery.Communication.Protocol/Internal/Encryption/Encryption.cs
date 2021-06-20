@@ -8,6 +8,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
     internal class Encryption : IEncryption
     {
         public Keys RSAKey { get; private set; }
+        public string AESPassword { get; private set; }
 
         public Keys GenerateRSA()
         {
@@ -47,9 +48,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
             return cypherContent;
         }
 
-        public void SetPrivateRASKey(Keys key)
-        {
-            RSAKey = key;
-        }
+        public void SetInternRAS(Keys key) => RSAKey = key;
+        public void SetInternAES(string password) => AESPassword = password;
     }
 }

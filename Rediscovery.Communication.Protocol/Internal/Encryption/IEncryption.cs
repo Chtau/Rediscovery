@@ -12,10 +12,19 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
         /// </summary>
         Keys RSAKey { get; }
         /// <summary>
+        /// Access to the current AES password
+        /// </summary>
+        string AESPassword { get; }
+        /// <summary>
         /// Sets RSA public and private keys.
         /// </summary>
         /// <param name="key">RSA key pair</param>
-        void SetPrivateRASKey(Keys key);
+        void SetInternRAS(Keys key);
+        /// <summary>
+        /// Password for the AES encryption.
+        /// </summary>
+        /// <param name="password">Plain text password</param>
+        void SetInternAES(string password);
         /// <summary>
         /// Generate new RSA key pair
         /// </summary>

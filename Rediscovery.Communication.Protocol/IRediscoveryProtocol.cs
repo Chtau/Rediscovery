@@ -75,5 +75,10 @@ namespace Rediscovery.Communication.Protocol
         /// <param name="privateKey">Private key for decrypt received data</param>
         /// <param name="publicKey">Public key which other devices use for encryption.</param>
         void SetRASKeys(string privateKey, string publicKey);
+        /// <summary>
+        /// Sets the AES password which will be used for outgoing messages.
+        /// </summary>
+        /// <param name="password">Plain text password</param>
+        void SetAESPassword(string password);
     }
 }

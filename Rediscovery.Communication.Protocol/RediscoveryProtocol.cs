@@ -55,13 +55,6 @@ namespace Rediscovery.Communication.Protocol
 
         public RediscoveryProtocol(string identifer = null, IProtocolLogger protocolLogger = null, ISerializer serializer = null)
         {
-#if DISCOVER
-            _logger.Trace("Diagnostic => [Discover] is active");
-#endif
-#if PIPELINE
-            _logger.Trace("Diagnostic => [Pipeline] is active");
-#endif
-
             _logger = protocolLogger ?? new Internal.ProtocolLogger();
             _serializer = serializer ?? new Serializer(_logger);
             _encryption = new Encryption();
@@ -85,6 +78,13 @@ namespace Rediscovery.Communication.Protocol
             }
             if (string.IsNullOrWhiteSpace(Identifer))
                 throw new ArgumentNullException(nameof(Identifer), "Cloud not create a new Identifier");
+
+#if DISCOVER
+            _logger.Trace("Diagnostic => [Discover] is active");
+#endif
+#if PIPELINE
+            _logger.Trace("Diagnostic => [Pipeline] is active");
+#endif
         }
 
         public string NewIdentifier() => $"{Guid.NewGuid()}.{DateTime.Now}.{Environment.MachineName}".GetHashString().GetHashString(HashExtensions.HashAlgorithmTypes.MD5).Substring(0,16);
@@ -155,7 +155,9 @@ namespace Rediscovery.Communication.Protocol
             }
         }
 
-        public void SetRASKeys(string privateKey, string publicKey) => _encryption.SetPrivateRASKey(new Keys(privateKey, publicKey));
+        public void SetRASKeys(string privateKey, string publicKey) => _encryption.SetInternRAS(new Keys(privateKey, publicKey));
+
+        public void SetAESPassword(string password) => _encryption.SetInternAES(password);
 
         private void OnStartDiscovery()
         {
