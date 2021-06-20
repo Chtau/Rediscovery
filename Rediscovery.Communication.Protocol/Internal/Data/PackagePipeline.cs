@@ -93,7 +93,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 #if PIPELINE
                 _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoing)} adding packages for instance of Type:\"{instance.GetType().FullName}\"");
 #endif
-                var rawPayload = _encryption.EncryptAES(_deviceManager.DeviceAESPassword(deviceGreeting.Device.Identifier), _serializer.Serialize(instance)).ToList();
+                var rawPayload = _encryption.EncryptSymmetric(_deviceManager.DeviceSymmetricPassword(deviceGreeting.Device.Identifier), _serializer.Serialize(instance)).ToList();
                 if (rawPayload.Count > (deviceGreeting.Device.Communication.DataLarge.PackageSize * 5))
                 {
                     return OnCreatePackageParts(rawPayload,
@@ -336,7 +336,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 #if PIPELINE
                             _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnCheckCompletePackages)} Package complete with Checksum:\"{checksum}\" with payload Size:{payload.Count}");
 #endif
-                            packageCompleteCallback.Invoke(_encryption.DecryptAES(_deviceManager.DeviceAESPassword(firstHeader.ReceiverIdentifier), payload.ToArray()), firstHeader.SenderIdentifier, firstHeader.CallbackKey);
+                            packageCompleteCallback.Invoke(_encryption.DecryptSymmetric(_deviceManager.DeviceSymmetricPassword(firstHeader.ReceiverIdentifier), payload.ToArray()), firstHeader.SenderIdentifier, firstHeader.CallbackKey);
                             removeChecksums.Add(checksum);
                             _diagnosticPackage.PackageComplete(checksum);
                         } else

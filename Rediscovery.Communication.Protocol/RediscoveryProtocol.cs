@@ -157,7 +157,7 @@ namespace Rediscovery.Communication.Protocol
 
         public void SetRASKeys(string privateKey, string publicKey) => _encryption.SetInternRAS(new Keys(privateKey, publicKey));
 
-        public void SetAESPassword(string password) => _encryption.SetInternAES(password);
+        public void SetAESPassword(string password) => _encryption.SetInternSymmetric(password);
 
         private void OnStartDiscovery()
         {

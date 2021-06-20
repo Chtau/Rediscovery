@@ -14,7 +14,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
         /// <summary>
         /// Access to the current AES password
         /// </summary>
-        string AESPassword { get; }
+        string SymmetricPassword { get; }
         /// <summary>
         /// Sets RSA public and private keys.
         /// </summary>
@@ -24,7 +24,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
         /// Password for the AES encryption.
         /// </summary>
         /// <param name="password">Plain text password</param>
-        void SetInternAES(string password);
+        void SetInternSymmetric(string password);
         /// <summary>
         /// Generate new RSA key pair
         /// </summary>
@@ -47,16 +47,16 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
         /// <summary>
         /// Create cypher <see cref="byte[]"/> from the raw <see cref="byte[]"/> content.
         /// </summary>
-        /// <param name="password">AES password string</param>
+        /// <param name="password">Symmetric password string</param>
         /// <param name="content">RAW content</param>
         /// <returns>Cypher content</returns>
-        byte[] EncryptAES(string password, byte[] content);
+        byte[] EncryptSymmetric(string password, byte[] content);
         /// <summary>
         /// Creates plain <see cref="byte[]"/> from cypher content.
         /// </summary>
-        /// <param name="password">AES password string</param>
+        /// <param name="password">Symmetric password string</param>
         /// <param name="cypherContent">Cypher content</param>
         /// <returns>Plain content</returns>
-        byte[] DecryptAES(string password, byte[] cypherContent);
+        byte[] DecryptSymmetric(string password, byte[] cypherContent);
     }
 }

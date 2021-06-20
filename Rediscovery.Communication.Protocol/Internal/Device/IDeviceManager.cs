@@ -34,17 +34,17 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         /// <param name="identifer"></param>
         void SetIdentifier(string identifer);
         /// <summary>
-        /// AES password for the device Identifer.
+        /// Symmetric password for the device Identifer.
         /// If no password is found the Identifer will be returned.
         /// </summary>
         /// <param name="identifer">Device Identifer</param>
         /// <returns>Password or Identifer</returns>
-        string DeviceAESPassword(string identifer);
+        string DeviceSymmetricPassword(string identifer);
         /// <summary>
-        /// Adds or updates the AES password for a device
+        /// Adds or updates the Symmetric password for a device
         /// </summary>
         /// <param name="identifer">Device identifer</param>
-        /// <param name="password">AES password</param>
-        void AddOrUpdateDeviceAES(string identifer, string password);
+        /// <param name="password">Symmetric password</param>
+        void AddOrUpdateDeviceSymmetric(string identifer, string password);
     }
 }
