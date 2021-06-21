@@ -7,7 +7,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
 {
     internal interface IHandshakePipeline
     {
-        void SynchronizeCommunication(DeviceGreetingReceived deviceGreeting);
+        void SynchronizeCommunication(DeviceGreetingReceived deviceGreeting, string password);
         void AcknowledgeCommunication(Action<AcknowledgeResult> acknowledgeCallback);
         void SetIdentifier(string identifier);
     }

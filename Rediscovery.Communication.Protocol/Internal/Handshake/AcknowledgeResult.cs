@@ -19,10 +19,12 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
         public DateTime Start { get; private set; } = DateTime.UtcNow;
         public DateTime? End { get; private set; }
         public string RemoteDeviceIdentifer { get; }
+        public string HandshakePassword { get; }
 
-        public AcknowledgeResult(string remoteDeviceIdentifer)
+        public AcknowledgeResult(string remoteDeviceIdentifer, string password)
         {
             RemoteDeviceIdentifer = remoteDeviceIdentifer;
+            HandshakePassword = password;
         }
 
         public void StartRequest(State state = State.Running)

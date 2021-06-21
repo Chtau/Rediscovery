@@ -4,6 +4,7 @@ using Rediscovery.Communication.Protocol.Internal.Device;
 using Rediscovery.Communication.Protocol.Internal.Diagnostic;
 using Rediscovery.Communication.Protocol.Internal.Discovery;
 using Rediscovery.Communication.Protocol.Internal.Encryption;
+using Rediscovery.Communication.Protocol.Internal.Handshake;
 using Rediscovery.Communication.Protocol.Models;
 using System;
 using System.Collections.Generic;
@@ -22,9 +23,11 @@ namespace Rediscovery.Communication.Protocol
         private readonly ISerializer _serializer;
         private readonly IPackagePipeline _packagePipeline;
         private readonly IDiscoveryPipeline _discoveryPipeline;
+        private readonly IHandshakePipeline _handshakePipeline;
         private readonly IDeviceManager _deviceManager;
         private readonly ICommunication _communication;
         private readonly ICommunication _communicationLarge;
+        private readonly ICommunication _communicationHandshake;
         private readonly IDiagnosticPackage _diagnosticPackage;
         private readonly IEncryption _encryption;
         private readonly Dictionary<string, Action<Transfer<byte[]>>> _listenCallbacks = new Dictionary<string, Action<Transfer<byte[]>>>();
@@ -66,7 +69,9 @@ namespace Rediscovery.Communication.Protocol
             };
             _communication = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage);
             _communicationLarge = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, true);
+            _communicationHandshake = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, false);
             _packagePipeline = new PackagePipeline(_logger, _serializer, _encryption, _communication, _communicationLarge, _deviceManager, _diagnosticPackage);
+            _handshakePipeline = new HandshakePipeline(_logger, _serializer, _encryption, _deviceManager, _diagnosticPackage, _communicationHandshake);
             OnListenIncomingPackages();
             _discoveryPipeline = new DiscoveryPipeline(_logger, _serializer);
             _discoveryListener = new DiscoveryListener(_logger, _discoveryPipeline, _deviceManager);
@@ -133,6 +138,7 @@ namespace Rediscovery.Communication.Protocol
 
                 OnStartDiscovery();
                 OnStartCommunication();
+                OnStartHandshake();
             }
             catch (Exception ex)
             {
@@ -163,8 +169,8 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
-                _discoverySender.Initialize(this.configuration.Discovery, this.configuration.Data.Connection, this.configuration.Data.ConnectionLargeData);
-                _discoveryListener.Initialize(this.configuration.Discovery);
+                _discoverySender.Initialize(configuration.Discovery, configuration.Data.Connection, configuration.Data.ConnectionLargeData);
+                _discoveryListener.Initialize(configuration.Discovery);
 
                 _discoveryListener.Start();
                 _discoverySender.Start();
@@ -179,10 +185,23 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
-                _communication.Initialize(this.configuration.Data.Connection);
+                _communication.Initialize(configuration.Data.Connection);
                 _communication.Start();
-                _communicationLarge.Initialize(this.configuration.Data.ConnectionLargeData);
+                _communicationLarge.Initialize(configuration.Data.ConnectionLargeData);
                 _communicationLarge.Start();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+        }
+
+        private void OnStartHandshake()
+        {
+            try
+            {
+                _communicationHandshake.Initialize(configuration.Handshake.Connection);
+                _communicationHandshake.Start();
             }
             catch (Exception ex)
             {
@@ -253,6 +272,7 @@ namespace Rediscovery.Communication.Protocol
                 _discoverySender.SetIdentifier(Identifer);
                 _discoveryListener.SetIdentifier(Identifer);
                 _packagePipeline.SetIdentifier(Identifer);
+                _handshakePipeline.SetIdentifier(Identifer);
             }
             catch (Exception ex)
             {
@@ -268,6 +288,7 @@ namespace Rediscovery.Communication.Protocol
                 _discoverySender.Stop();
                 _communication.Stop();
                 _communicationLarge.Stop();
+                _communicationHandshake.Stop();
             }
             catch (Exception ex)
             {

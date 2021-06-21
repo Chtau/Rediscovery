@@ -67,5 +67,25 @@ namespace Rediscovery.Communication.Protocol.Internal
                 sb.Append(b.ToString("X2"));
             return sb.ToString();
         }
+
+        /// <summary>
+        /// Our default checksum implementation which uses the first 16 characters of <see cref="HashAlgorithmTypes.MD5"/>
+        /// </summary>
+        /// <param name="input">Value to get the hash for</param>
+        /// <returns>Checksum for the input</returns>
+        public static string GetChecksum(this byte[] input)
+        {
+            return input.GetHashString(HashAlgorithmTypes.MD5).Substring(0, 16);
+        }
+
+        /// <summary>
+        /// Our default checksum implementation which uses the first 16 characters of <see cref="HashAlgorithmTypes.MD5"/>
+        /// </summary>
+        /// <param name="input">Value to get the hash for</param>
+        /// <returns>Checksum for the input</returns>
+        public static string GetChecksum(this string input)
+        {
+            return input.GetHashString(HashAlgorithmTypes.MD5).Substring(0, 16);
+        }
     }
 }

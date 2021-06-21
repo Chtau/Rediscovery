@@ -93,6 +93,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 #if PIPELINE
                 _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoing)} adding packages for instance of Type:\"{instance.GetType().FullName}\"");
 #endif
+                // TODO: fix encryption => _encryption.EncryptSymmetric should be used in the raw outgoing and incoming to prevent header leaks
                 var rawPayload = _encryption.EncryptSymmetric(_deviceManager.DeviceSymmetricPassword(deviceGreeting.Device.Identifier), _serializer.Serialize(instance)).ToList();
                 if (rawPayload.Count > (deviceGreeting.Device.Communication.DataLarge.PackageSize * 5))
                 {
@@ -151,7 +152,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             var beforeAdd = DateTime.UtcNow;
 #endif
             var payloadSize = rawPayload.Count;
-            var checksum = rawPayload.ToArray().GetHashString(HashExtensions.HashAlgorithmTypes.MD5).Substring(0, 16);
+            var checksum = rawPayload.ToArray().GetChecksum();
 
             var packs = new List<PackagePartState>();
             var index = 0;
@@ -236,6 +237,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         {
             try
             {
+                // TODO: fix decryption => _encryption.DecryptSymmetric should be used in the raw outgoing and incoming to prevent header leaks
                 OnReceivePackage(e, incomingPackages, incomingPackagesProxy);
             }
             catch (Exception ex)
@@ -248,6 +250,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         {
             try
             {
+                // TODO: fix decryption => _encryption.DecryptSymmetric should be used in the raw outgoing and incoming to prevent header leaks
                 OnReceivePackage(e, incomingLargePackages, incomingLargePackagesProxy);
             }
             catch (Exception ex)
@@ -263,7 +266,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             if (pack.IsValid())
             {
 #if PIPELINE
-                _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnReceivePackage)} Header:{pack}");
+                _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnReceivePackage)} Content:{pack}");
 #endif
                 if (pack.PackageType == PackagePartState.PackageMessageType.Proxy)
                 {
@@ -305,7 +308,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             else
             {
 #if PIPELINE
-                _logger.Warning($"{nameof(PackagePipeline)}.{nameof(OnReceivePackage)} package is not valid. (Pack:\"{pack}\"");
+                _logger.Warning($"{nameof(PackagePipeline)}.{nameof(OnReceivePackage)} package is not valid. (Content:\"{pack}\"");
 #endif
             }
         }
@@ -330,7 +333,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                     if (payload.Count == firstHeader.PayloadSize)
                     {
                         // if the size from the aggregated payload and header size match the data should be complete
-                        var checksum = payload.ToArray().GetHashString(HashExtensions.HashAlgorithmTypes.MD5).Substring(0, 16);
+                        var checksum = payload.ToArray().GetChecksum();
                         if (firstHeader.Checksum == checksum)
                         {
 #if PIPELINE
