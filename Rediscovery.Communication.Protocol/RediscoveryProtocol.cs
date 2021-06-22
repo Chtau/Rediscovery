@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Rediscovery.Communication.Protocol
 {
@@ -66,6 +67,7 @@ namespace Rediscovery.Communication.Protocol
             _deviceManager.DeviceChanged += (obj, args) =>
             {
                 DevicesChanged?.Invoke(this, args);
+                OnAfterDeviceChanged(args);
             };
             _communication = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage);
             _communicationLarge = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, true);
@@ -294,6 +296,23 @@ namespace Rediscovery.Communication.Protocol
             {
                 _logger.Error(ex);
             }
+        }
+
+        private void OnAfterDeviceChanged(string identifer)
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    // TODO: what to we do with the password here
+                    //       should we use a password from the device manager, user input or ignore it?
+                    _handshakePipeline.SynchronizeCommunication(_deviceManager.GetGreeting(identifer), null);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex);
+                }
+            });
         }
 
         #region Dispose

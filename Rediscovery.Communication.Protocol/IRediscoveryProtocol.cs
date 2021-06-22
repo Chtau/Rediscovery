@@ -70,15 +70,23 @@ namespace Rediscovery.Communication.Protocol
         /// <returns></returns>
         string NewIdentifier();
         /// <summary>
-        /// Sets the RSA keys which are internally used for 
+        /// Sets the RSA keys which are internally used for encryption
         /// </summary>
         /// <param name="privateKey">Private key for decrypt received data</param>
         /// <param name="publicKey">Public key which other devices use for encryption.</param>
         void SetRASKeys(string privateKey, string publicKey);
         /// <summary>
-        /// Sets the AES password which will be used for outgoing messages.
+        /// Add passwords for network Symmetric encryption.
+        /// This will be used for Discovery and Handshake data encryption.
+        /// If you want to set the password for the local network use <see cref="SetNetworkPassword(string)"/>.
         /// </summary>
-        /// <param name="password">Plain text password</param>
-        void SetAESPassword(string password);
+        /// <param name="passwords">String passwords</param>
+        void AddNetworkPasswords(params string[] passwords);
+        /// <summary>
+        /// Password used for the current networks Symmetric encryption.
+        /// If you need to add a password for a remote network use <see cref="AddNetworkPasswords(string[])"/>.
+        /// </summary>
+        /// <param name="password">String password.</param>
+        void SetNetworkPassword(string password);
     }
 }
