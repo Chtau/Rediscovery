@@ -5,6 +5,7 @@ using Rediscovery.Communication.Protocol.Internal.Diagnostic;
 using Rediscovery.Communication.Protocol.Internal.Discovery;
 using Rediscovery.Communication.Protocol.Internal.Encryption;
 using Rediscovery.Communication.Protocol.Internal.Handshake;
+using Rediscovery.Communication.Protocol.Internal.Network;
 using Rediscovery.Communication.Protocol.Models;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,7 @@ namespace Rediscovery.Communication.Protocol
         private readonly ICommunication _communicationHandshake;
         private readonly IDiagnosticPackage _diagnosticPackage;
         private readonly IEncryption _encryption;
+        private readonly INetworkState _networkState;
         private readonly Dictionary<string, Action<Transfer<byte[]>>> _listenCallbacks = new Dictionary<string, Action<Transfer<byte[]>>>();
 
         private Configuration configuration;
@@ -59,10 +61,11 @@ namespace Rediscovery.Communication.Protocol
 
         public RediscoveryProtocol(string identifer = null, IProtocolLogger protocolLogger = null, ISerializer serializer = null)
         {
-            _logger = protocolLogger ?? new Internal.ProtocolLogger();
+            _logger = protocolLogger ?? new ProtocolLogger();
             _serializer = serializer ?? new Serializer(_logger);
             _encryption = new Encryption();
             _diagnosticPackage = new DiagnosticPackage(_logger);
+            _networkState = new NetworkState(_logger, _encryption);
             _deviceManager = new DeviceManager(_logger);
             _deviceManager.DeviceChanged += (obj, args) =>
             {
@@ -165,7 +168,9 @@ namespace Rediscovery.Communication.Protocol
 
         public void SetRASKeys(string privateKey, string publicKey) => _encryption.SetInternRAS(new Keys(privateKey, publicKey));
 
-        public void SetAESPassword(string password) => _encryption.SetInternSymmetric(password);
+        public void AddNetworkPasswords(params string[] passwords) => _networkState.AddNetworkPasswords(passwords);
+
+        public void SetNetworkPassword(string password) => _networkState.SetNetworkPassword(password);
 
         private void OnStartDiscovery()
         {

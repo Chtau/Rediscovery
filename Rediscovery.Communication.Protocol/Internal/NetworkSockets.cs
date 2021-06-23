@@ -6,10 +6,10 @@ using System.Text;
 
 namespace Rediscovery.Communication.Protocol.Internal
 {
-    public static class Network
+    public static class NetworkSockets
     {
         internal const string EOF = "!#~^%$|";
-        internal static readonly byte[] EOFBytes = Encoding.UTF8.GetBytes(Network.EOF);
+        internal static readonly byte[] EOFBytes = Encoding.UTF8.GetBytes(NetworkSockets.EOF);
 
         internal static Socket CreateSocket(int port, SocketType type = SocketType.Stream, ProtocolType protocolType = ProtocolType.Tcp)
         {
