@@ -2,6 +2,7 @@
 using Rediscovery.Communication.Protocol.Internal.Device;
 using Rediscovery.Communication.Protocol.Internal.Diagnostic;
 using Rediscovery.Communication.Protocol.Internal.Encryption;
+using Rediscovery.Communication.Protocol.Internal.Network;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
         private readonly IDeviceManager _deviceManager;
         private readonly IDiagnosticPackage _diagnosticPackage;
         private readonly ICommunication _communication;
+        private readonly INetworkState _networkState;
         private readonly List<AcknowledgeResult> _acknowledgeResults = new List<AcknowledgeResult>();
 
         private string currentIdentifier;
@@ -27,7 +29,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
             IEncryption encryption,
             IDeviceManager deviceManager,
             IDiagnosticPackage diagnosticPackage,
-            ICommunication communication)
+            ICommunication communication,
+            INetworkState networkState)
         {
             _logger = logger;
             _serializer = serializer;
@@ -35,32 +38,33 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
             _deviceManager = deviceManager;
             _diagnosticPackage = diagnosticPackage;
             _communication = communication;
+            _networkState = networkState;
             _communication.Receive += Communication_Receive;
         }
 
-        public void SetIdentifier(string identifier) => currentIdentifier = identifier;
+        public void SetIdentifier(string identifier) => currentIdentifier = identifier.ExactLength(16);
 
         public void AcknowledgeCommunication(Action<AcknowledgeResult> acknowledgeCallback)
         {
             deviceAcknowledgeCallback = acknowledgeCallback;
         }
 
-        public void SynchronizeCommunication(DeviceGreetingReceived deviceGreeting, string password)
+        public void SynchronizeCommunication(DeviceGreetingReceived deviceGreeting)
         {
             try
             {
-                var key = _encryption.RSAKey.Public;
+                var key = _serializer.Serialize(_encryption.RSAKey.Public);
                 var rawPackage = new HandshakeState(currentIdentifier,
                     deviceGreeting.Device.Identifier,
                     key.GetChecksum(),
-                    Convert.FromBase64String(key),
+                    key,
                     HandshakeState.MessageValueType.PublicKey,
                     HandshakeState.ExpectedResponseType.SymmetricPasswordCypher);
-                var ack = new AcknowledgeResult(deviceGreeting.Device.Identifier, password);
+                var ack = new AcknowledgeResult(deviceGreeting.Device.Identifier, null);
                 ack.StartRequest();
                 _acknowledgeResults.Add(ack);
                 // configuration for a handshake (default) password 
-                _communication.Send(new CommunicationPayload(_encryption.EncryptSymmetric(ack.HandshakePassword, _serializer.Serialize(rawPackage)), deviceGreeting.Device.Identifier));
+                _communication.Send(new CommunicationPayload(_networkState.Encrypt(_serializer.Serialize(rawPackage.CreateRaw().ToArray())), deviceGreeting.Device.Identifier));
             } catch (Exception ex)
             {
                 _logger.Error(ex);
@@ -69,12 +73,25 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
 
         private void Communication_Receive(object sender, byte[] e)
         {
+            HandshakeState pack = null;
             try
             {
-                // TODO: check against all acknowledge where the password gives a valid package
-                //       if we receive a valid package we need to check that we are the receiver
-                var pack = new HandshakeState(_encryption.DecryptSymmetric("", e));
-                if (pack.IsValid())
+                // if we receive a valid package we need to check that we are the receiver
+                _networkState.EnumerateDecryptPasswords((pw) =>
+                {
+                    try
+                    {
+                        pack = new HandshakeState(_serializer.Deserialize<byte[]>(_encryption.DecryptSymmetric(pw, e)));
+                        if (pack.IsValid() && pack.ReceiverIdentifier == currentIdentifier)
+                            return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex);
+                    }
+                    return false;
+                });
+                if (pack != null && pack.IsValid())
                 {
                     if (pack.ReceiverIdentifier != currentIdentifier)
                     {

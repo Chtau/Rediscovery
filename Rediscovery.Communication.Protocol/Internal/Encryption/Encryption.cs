@@ -7,8 +7,13 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
 {
     internal class Encryption : IEncryption
     {
-        public Keys RSAKey { get; private set; }
+        public Keys RSAKey { get; private set; } 
         public string SymmetricPassword { get; private set; }
+
+        public Encryption()
+        {
+            RSAKey = GenerateRSA();
+        }
 
         public Keys GenerateRSA()
         {

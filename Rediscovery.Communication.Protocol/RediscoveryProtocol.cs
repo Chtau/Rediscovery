@@ -76,7 +76,7 @@ namespace Rediscovery.Communication.Protocol
             _communicationLarge = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, true);
             _communicationHandshake = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, false);
             _packagePipeline = new PackagePipeline(_logger, _serializer, _encryption, _communication, _communicationLarge, _deviceManager, _diagnosticPackage);
-            _handshakePipeline = new HandshakePipeline(_logger, _serializer, _encryption, _deviceManager, _diagnosticPackage, _communicationHandshake);
+            _handshakePipeline = new HandshakePipeline(_logger, _serializer, _encryption, _deviceManager, _diagnosticPackage, _communicationHandshake, _networkState);
             OnListenIncomingPackages();
             _discoveryPipeline = new DiscoveryPipeline(_logger, _serializer, _networkState, _encryption);
             _discoveryListener = new DiscoveryListener(_logger, _discoveryPipeline, _deviceManager);
@@ -309,9 +309,7 @@ namespace Rediscovery.Communication.Protocol
             {
                 try
                 {
-                    // TODO: what to we do with the password here
-                    //       should we use a password from the device manager, user input or ignore it?
-                    _handshakePipeline.SynchronizeCommunication(_deviceManager.GetGreeting(identifer), null);
+                    _handshakePipeline.SynchronizeCommunication(_deviceManager.GetGreeting(identifer));
                 }
                 catch (Exception ex)
                 {

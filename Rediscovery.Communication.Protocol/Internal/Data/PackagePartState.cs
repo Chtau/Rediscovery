@@ -49,9 +49,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             PackageMessageType type = PackageMessageType.Data)
         {
             _packageSize = packageSize;
-            SenderIdentifier = senderIdentifier;
-            ReceiverIdentifier = receiverIdentifier;
-            Checksum = checksum;
+            SenderIdentifier = senderIdentifier.ExactLength(16);
+            ReceiverIdentifier = receiverIdentifier.ExactLength(16);
+            Checksum = checksum.ExactLength(16);
             PayloadSize = payloadSize;
             PayloadPartSize = PayloadSize; // set maximum value because if we are smaller we pad the number with leading zero
             Index = index;

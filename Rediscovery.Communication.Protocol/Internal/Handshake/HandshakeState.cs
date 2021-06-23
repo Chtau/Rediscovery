@@ -38,9 +38,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
             MessageValueType valueType,
             ExpectedResponseType responseType)
         {
-            SenderIdentifier = senderIdentifier;
-            ReceiverIdentifier = receiverIdentifier;
-            Checksum = checksum;
+            SenderIdentifier = senderIdentifier.ExactLength(16);
+            ReceiverIdentifier = receiverIdentifier.ExactLength(16);
+            Checksum = checksum.ExactLength(16);
             Value = value;
             ValueType = valueType;
             ResponseType = responseType;
@@ -84,7 +84,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
             raw.AddRange(Encoding.UTF8.GetBytes(((int)ResponseType).ToString()));
             raw.AddRange(Encoding.UTF8.GetBytes($"{ValueDelimiter}{Value.Length}{ValueDelimiter}"));
             raw.AddRange(Value);
-            return null;
+            return raw;
         }
 
         public bool IsValid()

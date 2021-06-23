@@ -23,7 +23,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
 
         public AcknowledgeResult(string remoteDeviceIdentifer, string password)
         {
-            RemoteDeviceIdentifer = remoteDeviceIdentifer;
+            RemoteDeviceIdentifer = remoteDeviceIdentifer.ExactLength(16);
             HandshakePassword = password;
         }
 
