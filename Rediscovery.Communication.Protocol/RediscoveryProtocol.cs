@@ -78,7 +78,7 @@ namespace Rediscovery.Communication.Protocol
             _packagePipeline = new PackagePipeline(_logger, _serializer, _encryption, _communication, _communicationLarge, _deviceManager, _diagnosticPackage);
             _handshakePipeline = new HandshakePipeline(_logger, _serializer, _encryption, _deviceManager, _diagnosticPackage, _communicationHandshake);
             OnListenIncomingPackages();
-            _discoveryPipeline = new DiscoveryPipeline(_logger, _serializer);
+            _discoveryPipeline = new DiscoveryPipeline(_logger, _serializer, _networkState, _encryption);
             _discoveryListener = new DiscoveryListener(_logger, _discoveryPipeline, _deviceManager);
             _discoverySender = new DiscoverySender(_logger, _discoveryPipeline, _deviceManager);
             if (!string.IsNullOrWhiteSpace(identifer))
