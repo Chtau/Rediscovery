@@ -19,48 +19,58 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         private readonly IDiagnosticPackage _diagnosticPackage;
         private readonly Dictionary<string, Socket> _sender = new Dictionary<string, Socket>();
         private readonly string _listenerThreadName = $"Thread_Listener_{nameof(TCPCommunication)}";
-        private readonly bool _isLarge = false;
+        private readonly int _packageEncryptionSignatureLength;
 
         private Thread listenThread;
         private bool listenerWorking = false;
         private Socket handler;
         private Socket listener;
 
-        private ConnectionConfiguration configuration;
+        private ConnectionListenConfiguration configuration;
 
         public event EventHandler<byte[]> Receive;
 
         public TCPCommunication(IProtocolLogger logger,
             IDeviceManager deviceManager,
-            IDiagnosticPackage diagnosticPackage, bool isLarge = false)
+            IDiagnosticPackage diagnosticPackage, string threadName = null,
+            int packageEncryptionSignatureLength = 0)
         {
-            _isLarge = isLarge;
+            _packageEncryptionSignatureLength = packageEncryptionSignatureLength;
             _logger = logger;
             _diagnosticPackage = diagnosticPackage;
             _deviceManager = deviceManager;
+            if (!string.IsNullOrWhiteSpace(threadName))
+                _listenerThreadName += $"_{threadName}";
+
             OnInitListenerThread();
         }
 
-        public void Initialize(ConnectionConfiguration config)
+        public void Initialize(ConnectionListenConfiguration config)
         {
             configuration = config;
         }
 
-        public bool Send(CommunicationPayload communicationPayload)
+        public bool Send<TPayload>(TPayload communicationPayload) where TPayload : CommunicationPayload
         {
             try
             {
-                var greeting = _deviceManager.GetGreeting(communicationPayload.ReceiverIdentifier);
-                if (greeting == null)
-                    return false;
-                var socket = OnGetSocket(greeting);
-                int bytesToSend = communicationPayload.Payload.Length;
-                int sendBytes = socket.Send(communicationPayload.Payload,
-                    0,
-                    bytesToSend,
-                    SocketFlags.None);
-                _diagnosticPackage.BytesSend(sendBytes);
-                return bytesToSend == sendBytes;
+                if (communicationPayload is TCPCommunicationPayload payload)
+                {
+                    var ip = _deviceManager.GetIP(payload.ReceiverIdentifier);
+                    if (string.IsNullOrWhiteSpace(ip))
+                        return false;
+                    var socket = OnGetSocket(payload.ReceiverIdentifier, ip, payload.Port);
+                    int bytesToSend = payload.Payload.Length;
+                    int sendBytes = socket.Send(payload.Payload,
+                        0,
+                        bytesToSend,
+                        SocketFlags.None);
+                    _diagnosticPackage.BytesSend(sendBytes);
+                    return bytesToSend == sendBytes;
+                } else
+                {
+                    throw new NotSupportedException($"Type:\"{communicationPayload.GetType().FullName}\" is not supported in \"{nameof(TCPCommunication)}\"");
+                }
             } catch (Exception ex)
             {
                 _logger.Error(ex);
@@ -116,23 +126,21 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             Thread.Sleep(TimeSpan.FromMilliseconds(100));
         }
 
-        private Socket OnGetSocket(DeviceGreetingReceived deviceGreeting)
+        private Socket OnGetSocket(string identifier, string ip, int port)
         {
+            identifier = identifier.ToLower();
             Socket sender;
-            if (_sender.ContainsKey(deviceGreeting.Device.Identifier))
+            if (_sender.ContainsKey(identifier))
             {
-                sender = _sender[deviceGreeting.Device.Identifier];
+                sender = _sender[identifier];
                 if (sender.Connected)
                     return sender;
-                _sender.Remove(deviceGreeting.Device.Identifier);
+                _sender.Remove(identifier);
             }
-            int port = deviceGreeting.Device.Communication.Data.Port;
-            if (_isLarge)
-                port = deviceGreeting.Device.Communication.DataLarge.Port;
-            var endpoint = new IPEndPoint(IPAddress.Parse(deviceGreeting.IP), port);
+            var endpoint = new IPEndPoint(IPAddress.Parse(ip), port);
             sender = new Socket(endpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             sender.Connect(endpoint);
-            _sender.Add(deviceGreeting.Device.Identifier, sender);
+            _sender.Add(identifier, sender);
             return sender;
         }
 
@@ -145,7 +153,19 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             }
             catch (ThreadStateException tsEx)
             {
+                // TODO: improve restart logic with delay to reduce spam
+                _logger.Warning($"Thread Name:\"{listenThread.Name}\" State:{listenThread.ThreadState}");
                 _logger.Warning(tsEx);
+                if (listenThread.ThreadState == ThreadState.Running)
+                {
+                    try
+                    {
+                        listenThread.Abort();
+                    } catch (Exception ex)
+                    {
+                        _logger.Error(ex);
+                    }
+                }
                 OnInitListenerThread();
                 try
                 {
@@ -183,15 +203,17 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 
         private void OnListenToSocket()
         {
+            if (configuration.Disable)
+                return;
             if (!listenerWorking)
                 return;
             try
             {
                 listener = new Socket(IPAddress.Any.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                listener.Bind(new IPEndPoint(IPAddress.Any, configuration.ListenPort));
+                listener.Bind(new IPEndPoint(IPAddress.Any, configuration.Port));
                 listener.Listen(10);
 
-                var byteBuffer = new byte[configuration.PackageSize];
+                var byteBuffer = new byte[configuration.PackageSize + _packageEncryptionSignatureLength];
 
                 while (listenerWorking)
                 {

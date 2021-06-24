@@ -18,8 +18,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
 
         private System.Threading.Thread listenThread;
         private DiscoveryConfiguration configuration;
-        private ConnectionConfiguration connectionConfigurationData;
-        private ConnectionConfiguration connectionConfigurationDataLarge;
+        private ConnectionListenConfiguration connectionListenConfigurationData;
+        private ConnectionListenConfiguration connectionListenConfigurationLarge;
+        private ConnectionListenConfiguration connectionListenConfigurationHandshake;
         private bool working = false;
         private string currentIdentifier;
         private string currentFriendlyName;
@@ -37,11 +38,12 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
             OnInitThread();
         }
 
-        public void Initialize(DiscoveryConfiguration configuration, ConnectionConfiguration connectionConfigurationData, ConnectionConfiguration connectionConfigurationDataLarge)
+        public void Initialize(DiscoveryConfiguration configuration, ConnectionListenConfiguration listenConfigurationHandshake, ConnectionListenConfiguration listenConfigurationData, ConnectionListenConfiguration listenConfigurationLarge)
         {
             this.configuration = configuration;
-            this.connectionConfigurationData = connectionConfigurationData;
-            this.connectionConfigurationDataLarge = connectionConfigurationDataLarge;
+            connectionListenConfigurationHandshake = listenConfigurationHandshake;
+            connectionListenConfigurationData = listenConfigurationData;
+            connectionListenConfigurationLarge = listenConfigurationLarge;
         }
 
         public bool Start()
@@ -136,13 +138,18 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
                                             {
                                                 Data = new DeviceCommunicationSetting
                                                 {
-                                                    PackageSize = connectionConfigurationData.PackageSize,
-                                                    Port = connectionConfigurationData.ListenPort,
+                                                    PackageSize = connectionListenConfigurationData.PackageSize,
+                                                    Port = connectionListenConfigurationData.Port,
                                                 },
-                                                DataLarge = new DeviceCommunicationSetting
+                                                Large = new DeviceCommunicationSetting
                                                 {
-                                                    PackageSize = connectionConfigurationDataLarge.PackageSize,
-                                                    Port = connectionConfigurationDataLarge.ListenPort
+                                                    PackageSize = connectionListenConfigurationLarge.PackageSize,
+                                                    Port = connectionListenConfigurationLarge.Port
+                                                },
+                                                Handshake = new DeviceCommunicationSetting
+                                                {
+                                                    PackageSize = connectionListenConfigurationHandshake.PackageSize,
+                                                    Port = connectionListenConfigurationHandshake.Port
                                                 }
                                             },
                                             Metadata = new DeviceMetadata
@@ -220,22 +227,31 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
             {
                 greeting.Communication = new DeviceCommunication();
             }
+            if (greeting.Communication.Handshake == null
+                || greeting.Communication.Handshake.Port == -1)
+            {
+                greeting.Communication.Handshake = new DeviceCommunicationSetting
+                {
+                    PackageSize = connectionListenConfigurationHandshake.PackageSize,
+                    Port = connectionListenConfigurationHandshake.Port
+                };
+            }
             if (greeting.Communication.Data == null
                 || greeting.Communication.Data.Port == -1)
             {
                 greeting.Communication.Data = new DeviceCommunicationSetting
                 {
-                    PackageSize = connectionConfigurationData.PackageSize,
-                    Port = connectionConfigurationData.ListenPort
+                    PackageSize = connectionListenConfigurationData.PackageSize,
+                    Port = connectionListenConfigurationData.Port
                 };
             }
-            if (greeting.Communication.DataLarge == null
-                || greeting.Communication.DataLarge.Port == -1)
+            if (greeting.Communication.Large == null
+                || greeting.Communication.Large.Port == -1)
             {
-                greeting.Communication.DataLarge = new DeviceCommunicationSetting
+                greeting.Communication.Large = new DeviceCommunicationSetting
                 {
-                    PackageSize = connectionConfigurationDataLarge.PackageSize,
-                    Port = connectionConfigurationDataLarge.ListenPort
+                    PackageSize = connectionListenConfigurationLarge.PackageSize,
+                    Port = connectionListenConfigurationLarge.Port
                 };
             }
             return greeting;

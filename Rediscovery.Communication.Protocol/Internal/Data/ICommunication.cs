@@ -11,13 +11,13 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         /// Contains Header and Payload
         /// </summary>
         event EventHandler<byte[]> Receive;
-        void Initialize(Models.ConnectionConfiguration configuration);
+        void Initialize(Models.ConnectionListenConfiguration configuration);
         /// <summary>
         /// Send payload
         /// </summary>
         /// <param name="communicationPayload"></param>
         /// <returns>False if the payload could not be send</returns>
-        bool Send(CommunicationPayload communicationPayload);
+        bool Send<TPayload>(TPayload communicationPayload) where TPayload : CommunicationPayload;
         /// <summary>
         /// Start to listen for incoming data
         /// </summary>

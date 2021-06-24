@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Rediscovery.Communication.Protocol.Internal.Device;
 using Rediscovery.Communication.Protocol.Internal.Diagnostic;
 using Rediscovery.Communication.Protocol.Internal.Encryption;
+using Rediscovery.Communication.Protocol.Internal.Network;
+using Rediscovery.Communication.Protocol.Models;
 
 namespace Rediscovery.Communication.Protocol.Internal.Data
 {
@@ -18,6 +20,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         private readonly ICommunication _communicationLarge;
         private readonly IDeviceManager _deviceManager;
         private readonly IDiagnosticPackage _diagnosticPackage;
+        private readonly INetworkState _networkState;
         private readonly List<PackagePartState> outgoingPackages = new List<PackagePartState>();
         private readonly List<PackagePartState> outgoingLargePackages = new List<PackagePartState>();
         private readonly List<PackagePartState> incomingPackages = new List<PackagePartState>();
@@ -29,6 +32,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         private Task outTask;
         private Task outLargeTask;
         private Action<byte[], string, string> incomingPackageCompleteCallback;
+        private Random random = new Random();
 
         public PackagePipeline(IProtocolLogger logger, 
             ISerializer serializer,
@@ -36,13 +40,15 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             ICommunication communication,
             ICommunication communicationLarge,
             IDeviceManager deviceManager,
-            IDiagnosticPackage diagnosticPackage)
+            IDiagnosticPackage diagnosticPackage,
+            INetworkState networkState)
         {
             _logger = logger;
             _serializer = serializer;
             _encryption = encryption;
             _deviceManager = deviceManager;
             _diagnosticPackage = diagnosticPackage;
+            _networkState = networkState;
             _communication = communication;
             _communication.Receive += Communication_Receive;
             _communicationLarge = communicationLarge;
@@ -94,11 +100,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoing)} adding packages for instance of Type:\"{instance.GetType().FullName}\"");
 #endif
                 // TODO: fix encryption => _encryption.EncryptSymmetric should be used in the raw outgoing and incoming to prevent header leaks
-                var rawPayload = _encryption.EncryptSymmetric(_deviceManager.DeviceSymmetricPassword(deviceGreeting.Device.Identifier), _serializer.Serialize(instance)).ToList();
-                if (rawPayload.Count > (deviceGreeting.Device.Communication.DataLarge.PackageSize * 5))
+                var rawPayload = _serializer.Serialize(instance).ToList();// _encryption.EncryptSymmetric(_deviceManager.DeviceSymmetricPassword(deviceGreeting.Device.Identifier), _serializer.Serialize(instance)).ToList();
+                if (rawPayload.Count > (deviceGreeting.Device.Communication.Large.PackageSize * 5))
                 {
                     return OnCreatePackageParts(rawPayload,
-                        deviceGreeting.Device.Communication.DataLarge.PackageSize,
+                        deviceGreeting.Device.Communication.Large.PackageSize,
                         deviceGreeting.Device.Identifier,
                         outgoingLargePackages,
                         () =>
@@ -110,7 +116,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 #endif
                                 outLargeTask = Task.Run(() =>
                                 {
-                                    OnOutgoingTaskRunner(outgoingLargePackages, _communicationLarge.Send);
+                                    OnOutgoingTaskRunner(outgoingLargePackages, _communicationLarge.Send, true);
                                     outLargeTask = null;
                                 });
                             }
@@ -148,7 +154,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         private bool OnCreatePackageParts(List<byte> rawPayload, int packSize, string receiverIdentifier, List<PackagePartState> packages, Action taskRunner, PackagePartState.PackageMessageType messageType, string callbackKey)
         {
 #if PIPELINE
-            _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnCreatePackageParts)} create packages with from payload with size:{rawPayload.Count}");
+            _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnCreatePackageParts)} create packages for Receiver:\"{receiverIdentifier}\" with payload size:{rawPayload.Count}");
             var beforeAdd = DateTime.UtcNow;
 #endif
             var payloadSize = rawPayload.Count;
@@ -190,7 +196,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             return true;
         }
 
-        private void OnOutgoingTaskRunner(List<PackagePartState> packages, Func<CommunicationPayload, bool> send)
+        private void OnOutgoingTaskRunner(List<PackagePartState> packages, Func<CommunicationPayload, bool> send, bool large = false)
         {
             try
             {
@@ -207,12 +213,38 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                         var item = packages.FirstOrDefault();
                         if (item != null)
                         {
-                            packages.Remove(item);
-                            send.Invoke(new CommunicationPayload(item.CreateSenderPackage(DateTime.UtcNow), item.ReceiverIdentifier));
+                            var com = _deviceManager.GetGreeting(item.ReceiverIdentifier)?.Device.Communication;
+                            if (com != null)
+                            {
+                                DeviceCommunicationSetting communicationSetting = com.Data;
+                                if (large)
+                                    communicationSetting = com.Large;
+                                var encSignLength = 96;// (16 + 32 + 16 + 16);
+                                var raw = item.CreateSenderPackage(DateTime.UtcNow);
+                                // TODO: increase raw to package size
+                                var fullRaw = new List<byte>(communicationSetting.PackageSize);
+                                fullRaw.AddRange(raw);
+                                if (raw.Length < communicationSetting.PackageSize)
+                                {
+                                    byte[] b = new byte[communicationSetting.PackageSize - raw.Length];
+                                    random.NextBytes(b);
+                                    fullRaw.AddRange(b);
+                                }
+                                var enc = _networkState.Encrypt(fullRaw.ToArray());
+                                
+                                send.Invoke(new TCPCommunicationPayload(enc, item.ReceiverIdentifier, communicationSetting.Port, communicationSetting.PackageSize + encSignLength));
 #if PIPELINE
-                            _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoingTaskRunner)} Header:{item}");
+                                _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoingTaskRunner)} Header:{item}");
 #endif
-                            _diagnosticPackage.Send(item);
+                                _diagnosticPackage.Send(item);
+                                packages.Remove(item);
+                            }
+                        } else
+                        {
+                            // add to the bottom of the packages
+                            // this only happends if we haven't discovered this device at the moment
+                            packages.Remove(item);
+                            packages.Add(item);
                         }
                     }
                     catch (Exception ex)
@@ -237,7 +269,6 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         {
             try
             {
-                // TODO: fix decryption => _encryption.DecryptSymmetric should be used in the raw outgoing and incoming to prevent header leaks
                 OnReceivePackage(e, incomingPackages, incomingPackagesProxy);
             }
             catch (Exception ex)
@@ -250,7 +281,6 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         {
             try
             {
-                // TODO: fix decryption => _encryption.DecryptSymmetric should be used in the raw outgoing and incoming to prevent header leaks
                 OnReceivePackage(e, incomingLargePackages, incomingLargePackagesProxy);
             }
             catch (Exception ex)
@@ -262,8 +292,30 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         private void OnReceivePackage(byte[] raw, List<PackagePartState> packages, List<PackagePartState> packagesProxy)
         {
             // create package part for this payload
-            var pack = new PackagePartState(raw);
-            if (pack.IsValid())
+            // our received bytes here are cypher
+            /*
+            int i = raw.Length - 1;
+            while (raw[i] == 0)
+                --i;
+            byte[] rawTrim = new byte[i + 1];
+            Array.Copy(raw, rawTrim, i + 1);*/
+
+            PackagePartState pack = null;
+            _networkState.EnumerateDecryptPasswords(pw =>
+            {
+                try
+                {
+                    pack = new PackagePartState(_encryption.DecryptSymmetric(pw, raw));
+                    if (pack.IsValid())
+                        return true;
+                } catch (Exception ex)
+                {
+                    _logger.Error(ex);
+                }
+                return false;
+            });
+            
+            if (pack?.IsValid() == true)
             {
 #if PIPELINE
                 _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnReceivePackage)} Content:{pack}");
@@ -339,7 +391,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 #if PIPELINE
                             _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnCheckCompletePackages)} Package complete with Checksum:\"{checksum}\" with payload Size:{payload.Count}");
 #endif
-                            packageCompleteCallback.Invoke(_encryption.DecryptSymmetric(_deviceManager.DeviceSymmetricPassword(firstHeader.ReceiverIdentifier), payload.ToArray()), firstHeader.SenderIdentifier, firstHeader.CallbackKey);
+                            packageCompleteCallback.Invoke(payload.ToArray(), firstHeader.SenderIdentifier, firstHeader.CallbackKey);
                             removeChecksums.Add(checksum);
                             _diagnosticPackage.PackageComplete(checksum);
                         } else

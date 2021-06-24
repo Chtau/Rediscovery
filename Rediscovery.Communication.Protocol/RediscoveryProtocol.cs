@@ -19,6 +19,8 @@ namespace Rediscovery.Communication.Protocol
 {
     public class RediscoveryProtocol : IRediscoveryProtocol, IDisposable
     {
+        internal const int PackageEncryptionSignatureLength = 96;//(16 + 32 + 16 + 16);
+
         private readonly IProtocolLogger _logger;
         private readonly DiscoveryListener _discoveryListener;
         private readonly DiscoverySender _discoverySender;
@@ -72,10 +74,10 @@ namespace Rediscovery.Communication.Protocol
                 DevicesChanged?.Invoke(this, args);
                 OnAfterDeviceChanged(args);
             };
-            _communication = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage);
-            _communicationLarge = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, true);
-            _communicationHandshake = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, false);
-            _packagePipeline = new PackagePipeline(_logger, _serializer, _encryption, _communication, _communicationLarge, _deviceManager, _diagnosticPackage);
+            _communication = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, "Data", PackageEncryptionSignatureLength);
+            _communicationLarge = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, "Large", PackageEncryptionSignatureLength);
+            _communicationHandshake = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, "Handshake", PackageEncryptionSignatureLength);
+            _packagePipeline = new PackagePipeline(_logger, _serializer, _encryption, _communication, _communicationLarge, _deviceManager, _diagnosticPackage, _networkState);
             _handshakePipeline = new HandshakePipeline(_logger, _serializer, _encryption, _deviceManager, _diagnosticPackage, _communicationHandshake, _networkState);
             OnListenIncomingPackages();
             _discoveryPipeline = new DiscoveryPipeline(_logger, _serializer, _networkState, _encryption);
@@ -176,7 +178,7 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
-                _discoverySender.Initialize(configuration.Discovery, configuration.Data.Connection, configuration.Data.ConnectionLargeData);
+                _discoverySender.Initialize(configuration.Discovery, configuration.Handshake.Connection.GetListenConfiguration(), configuration.Data.Connection.GetListenConfiguration(), configuration.Large.Connection.GetListenConfiguration());
                 _discoveryListener.Initialize(configuration.Discovery);
 
                 _discoveryListener.Start();
@@ -192,9 +194,9 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
-                _communication.Initialize(configuration.Data.Connection);
+                _communication.Initialize(configuration.Data.Connection.GetListenConfiguration());
                 _communication.Start();
-                _communicationLarge.Initialize(configuration.Data.ConnectionLargeData);
+                _communicationLarge.Initialize(configuration.Large.Connection.GetListenConfiguration());
                 _communicationLarge.Start();
             }
             catch (Exception ex)
@@ -207,7 +209,7 @@ namespace Rediscovery.Communication.Protocol
         {
             try
             {
-                _communicationHandshake.Initialize(configuration.Handshake.Connection);
+                _communicationHandshake.Initialize(configuration.Handshake.Connection.GetListenConfiguration());
                 _communicationHandshake.Start();
             }
             catch (Exception ex)
