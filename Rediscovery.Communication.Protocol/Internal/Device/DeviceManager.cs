@@ -135,5 +135,18 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
                 _logger.Error(ex);
             }
         }
+
+        public string GetIP(string identifier)
+        {
+            try
+            {
+                return _devices.FirstOrDefault(x => string.Equals(x.Device.Identifier, identifier, StringComparison.OrdinalIgnoreCase))?.IP;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+            return null;
+        }
     }
 }

@@ -46,5 +46,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         /// <param name="identifer">Device identifer</param>
         /// <param name="password">Symmetric password</param>
         void AddOrUpdateDeviceSymmetric(string identifer, string password);
+        /// <summary>
+        /// Get the current IP address for the device identifer
+        /// </summary>
+        /// <param name="identifier">Known device identifer</param>
+        /// <returns>IP or null</returns>
+        string GetIP(string identifier);
     }
 }
