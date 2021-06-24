@@ -8,6 +8,7 @@ namespace Rediscovery.Communication.Protocol.Models
     {
         public DiscoveryConfiguration Discovery { get; set; } = new DiscoveryConfiguration();
         public DataConfiguration Data { get; set; } = new DataConfiguration();
+        public LargeConfiguration Large { get; set; } = new LargeConfiguration();
         public HandshakeConfiguration Handshake { get; set; } = new HandshakeConfiguration();
     }
 }
