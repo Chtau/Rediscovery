@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace Rediscovery.Communication.Protocol.Test.Mocks
 {
-    public class Communication : Internal.Data.ICommunication
+    public class Communication : ICommunication
     {
         public event EventHandler<byte[]> Receive;
 
-        public void Initialize(ConnectionConfiguration configuration)
+        public void Initialize(ConnectionListenConfiguration configuration)
         {
             
         }
 
-        public bool Send(CommunicationPayload communicationPayload)
+        public bool Send<TPayload>(TPayload communicationPayload) where TPayload : CommunicationPayload
         {
             Receive?.Invoke(this, communicationPayload.Payload);
             return true;

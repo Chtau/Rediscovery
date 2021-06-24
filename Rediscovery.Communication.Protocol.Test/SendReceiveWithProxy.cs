@@ -26,7 +26,10 @@ namespace Rediscovery.Communication.Protocol.Test
                 Data = new Models.DataConfiguration
                 {
                     Connection = new Models.ConnectionConfiguration(16596, 16597, 1024),
-                    ConnectionLargeData = new Models.ConnectionConfiguration(16498, 16499, 1024 * 60)
+                },
+                Large = new Models.LargeConfiguration
+                {
+                    Connection = new Models.ConnectionConfiguration(16498, 16499, 1024 * 60)
                 }
             });
             
@@ -41,7 +44,10 @@ namespace Rediscovery.Communication.Protocol.Test
                 Data = new Models.DataConfiguration
                 {
                     Connection = new Models.ConnectionConfiguration(16586, 16587, 1024),
-                    ConnectionLargeData = new Models.ConnectionConfiguration(16488, 16489, 1024 * 60)
+                },
+                Large = new Models.LargeConfiguration
+                {
+                    Connection = new Models.ConnectionConfiguration(16488, 16489, 1024 * 60)
                 }
             });
             

@@ -18,6 +18,7 @@ namespace Rediscovery.Communication.Protocol.Test
             Assert.True(protocol.Devices.Count == 0, "Discover device number missmatch");
 
             protocol.Stop();
+            await Task.Delay(TimeSpan.FromSeconds(1));
         }
 
         [Fact]
@@ -33,6 +34,7 @@ namespace Rediscovery.Communication.Protocol.Test
 
             protocol.Stop();
             protocol1.Stop();
+            await Task.Delay(TimeSpan.FromSeconds(1));
         }
 
         [Fact]
@@ -51,6 +53,7 @@ namespace Rediscovery.Communication.Protocol.Test
             protocol.Stop();
             protocol1.Stop();
             protocol2.Stop();
+            await Task.Delay(TimeSpan.FromSeconds(1));
         }
 
         [Fact]
@@ -66,8 +69,11 @@ namespace Rediscovery.Communication.Protocol.Test
                 },
                 Data = new Models.DataConfiguration
                 {
-                    Connection = new Models.ConnectionConfiguration(16476, 16477, 1024),
-                    ConnectionLargeData = new Models.ConnectionConfiguration(16478, 16479, 1024 * 60)
+                    Connection = new Models.ConnectionConfiguration(16476, 16477, 1024)
+                },
+                Large = new Models.LargeConfiguration
+                {
+                    Connection = new Models.ConnectionConfiguration(16478, 16479, 1024 * 60)
                 }
             });
 
@@ -80,8 +86,11 @@ namespace Rediscovery.Communication.Protocol.Test
                 },
                 Data = new Models.DataConfiguration
                 {
-                    Connection = new Models.ConnectionConfiguration(16576, 16577, 1024),
-                    ConnectionLargeData = new Models.ConnectionConfiguration(16478, 16479, 1024 * 60)
+                    Connection = new Models.ConnectionConfiguration(16576, 16577, 1024)
+                },
+                Large = new Models.LargeConfiguration
+                {
+                    Connection = new Models.ConnectionConfiguration(16478, 16479, 1024 * 60)
                 }
             });
 
@@ -94,6 +103,7 @@ namespace Rediscovery.Communication.Protocol.Test
             protocol.Stop();
             protocol1.Stop();
             protocol2.Stop();
+            await Task.Delay(TimeSpan.FromSeconds(1));
         }
     }
 }
