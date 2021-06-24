@@ -7,6 +7,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
 {
     internal class Encryption : IEncryption
     {
+        public int SymmetricEncryptionSignatureLength => SymmetricAES.MinimumEncryptedMessageByteSize;
         public Keys RSAKey { get; private set; } 
         public string SymmetricPassword { get; private set; }
 

@@ -1,5 +1,6 @@
 ﻿using Rediscovery.Communication.Protocol.Internal.Device;
 using Rediscovery.Communication.Protocol.Internal.Diagnostic;
+using Rediscovery.Communication.Protocol.Internal.Encryption;
 using Rediscovery.Communication.Protocol.Models;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         private readonly IProtocolLogger _logger;
         private readonly IDeviceManager _deviceManager;
         private readonly IDiagnosticPackage _diagnosticPackage;
+        private readonly IEncryption _encryption;
         private readonly Dictionary<string, Socket> _sender = new Dictionary<string, Socket>();
         private readonly string _listenerThreadName = $"Thread_Listener_{nameof(TCPCommunication)}";
-        private readonly int _packageEncryptionSignatureLength;
 
         private Thread listenThread;
         private bool listenerWorking = false;
@@ -32,10 +33,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 
         public TCPCommunication(IProtocolLogger logger,
             IDeviceManager deviceManager,
-            IDiagnosticPackage diagnosticPackage, string threadName = null,
-            int packageEncryptionSignatureLength = 0)
+            IDiagnosticPackage diagnosticPackage,
+            IEncryption encryption,
+            string threadName = null)
         {
-            _packageEncryptionSignatureLength = packageEncryptionSignatureLength;
+            _encryption = encryption;
             _logger = logger;
             _diagnosticPackage = diagnosticPackage;
             _deviceManager = deviceManager;
@@ -213,7 +215,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 listener.Bind(new IPEndPoint(IPAddress.Any, configuration.Port));
                 listener.Listen(10);
 
-                var byteBuffer = new byte[configuration.PackageSize + _packageEncryptionSignatureLength];
+                var byteBuffer = new byte[configuration.PackageSize + _encryption.SymmetricEncryptionSignatureLength];
 
                 while (listenerWorking)
                 {

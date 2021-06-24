@@ -19,8 +19,6 @@ namespace Rediscovery.Communication.Protocol
 {
     public class RediscoveryProtocol : IRediscoveryProtocol, IDisposable
     {
-        internal const int PackageEncryptionSignatureLength = 96;//(16 + 32 + 16 + 16);
-
         private readonly IProtocolLogger _logger;
         private readonly DiscoveryListener _discoveryListener;
         private readonly DiscoverySender _discoverySender;
@@ -74,9 +72,9 @@ namespace Rediscovery.Communication.Protocol
                 DevicesChanged?.Invoke(this, args);
                 OnAfterDeviceChanged(args);
             };
-            _communication = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, "Data", PackageEncryptionSignatureLength);
-            _communicationLarge = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, "Large", PackageEncryptionSignatureLength);
-            _communicationHandshake = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, "Handshake", PackageEncryptionSignatureLength);
+            _communication = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, _encryption, "Data");
+            _communicationLarge = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, _encryption, "Large");
+            _communicationHandshake = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, _encryption, "Handshake");
             _packagePipeline = new PackagePipeline(_logger, _serializer, _encryption, _communication, _communicationLarge, _deviceManager, _diagnosticPackage, _networkState);
             _handshakePipeline = new HandshakePipeline(_logger, _serializer, _encryption, _deviceManager, _diagnosticPackage, _communicationHandshake, _networkState);
             OnListenIncomingPackages();

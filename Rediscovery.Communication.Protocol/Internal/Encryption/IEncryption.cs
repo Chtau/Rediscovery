@@ -7,6 +7,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
 {
     internal interface IEncryption
     {
+        int SymmetricEncryptionSignatureLength { get; }
         /// <summary>
         /// Access to the current RSA key pair
         /// </summary>

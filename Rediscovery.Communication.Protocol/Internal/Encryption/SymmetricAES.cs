@@ -14,7 +14,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
         private const int PasswordIterationCount = 100_000;
         private const int SignatureByteSize = 256 / 8;
 
-        private const int MinimumEncryptedMessageByteSize = PasswordSaltByteSize + PasswordSaltByteSize + AesBlockByteSize + AesBlockByteSize + SignatureByteSize;
+        public const int MinimumEncryptedMessageByteSize = PasswordSaltByteSize + PasswordSaltByteSize + AesBlockByteSize + AesBlockByteSize + SignatureByteSize;
 
         private static readonly Encoding StringEncoding = Encoding.UTF8;
         private static readonly RandomNumberGenerator Random = RandomNumberGenerator.Create();
