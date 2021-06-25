@@ -11,6 +11,7 @@ namespace Rediscovery.Communication.Protocol.Test.Mocks
     public class Communication : ICommunication
     {
         public event EventHandler<byte[]> Receive;
+        public event EventHandler<byte[]> MockSend;
 
         public void Initialize(ConnectionListenConfiguration configuration)
         {
@@ -19,7 +20,8 @@ namespace Rediscovery.Communication.Protocol.Test.Mocks
 
         public bool Send<TPayload>(TPayload communicationPayload) where TPayload : CommunicationPayload
         {
-            Receive?.Invoke(this, communicationPayload.Payload);
+            MockSend?.Invoke(this, communicationPayload.Payload);
+            //Receive?.Invoke(this, communicationPayload.Payload);
             return true;
         }
 
@@ -32,5 +34,8 @@ namespace Rediscovery.Communication.Protocol.Test.Mocks
         {
             
         }
+
+        public void InvokeReceive(byte[] payload) => Receive?.Invoke(this, payload);
+        
     }
 }

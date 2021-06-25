@@ -20,6 +20,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
         public DateTime? End { get; private set; }
         public string RemoteDeviceIdentifer { get; }
         public string HandshakePassword { get; }
+        public HandshakeState Response { get; private set; }
 
         public AcknowledgeResult(string remoteDeviceIdentifer, string password)
         {
@@ -33,10 +34,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
             ResponseState = state;
         }
 
-        public void ResponseReceived(State state)
+        public void ResponseReceived(State state, HandshakeState response)
         {
             End = DateTime.UtcNow;
             ResponseState = state;
+            Response = response;
         }
     }
 }

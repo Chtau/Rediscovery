@@ -64,12 +64,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
                 ack.StartRequest();
                 _acknowledgeResults.Add(ack);
                 // configuration for a handshake (default) password 
-                var raw = _serializer.Serialize(rawPackage.CreateRaw().ToArray());
-                var enc = _networkState.Encrypt(_networkState.NormalizePackageSize(raw, deviceGreeting.Device.Communication.Handshake.PackageSize));
-                _communication.Send(new TCPCommunicationPayload(enc,
-                    deviceGreeting.Device.Identifier,
-                    deviceGreeting.Device.Communication.Handshake.Port,
-                    deviceGreeting.Device.Communication.Handshake.PackageSize));
+                OnSendPackage(rawPackage, deviceGreeting);
             } catch (Exception ex)
             {
                 _logger.Error(ex);
@@ -110,9 +105,14 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
                     var ack = _acknowledgeResults.FirstOrDefault(x => x.RemoteDeviceIdentifer == pack.SenderIdentifier);
                     if (ack != null)
                     {
-                        ack.ResponseReceived(AcknowledgeResult.State.Ok);
+                        // response to our request
+                        ack.ResponseReceived(AcknowledgeResult.State.Ok, pack);
                         deviceAcknowledgeCallback?.Invoke(ack);
                         _acknowledgeResults.Remove(ack);
+                    } else
+                    {
+                        // we need to response
+                        OnHandleAckResponse(pack);
                     }
                 }
                 else
@@ -126,6 +126,52 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
             {
                 _logger.Error(ex);
             }
+        }
+
+        private void OnHandleAckResponse(HandshakeState receivedPackage)
+        {
+#if PIPELINE
+            _logger.Trace($"{nameof(HandshakePipeline)}.{nameof(OnHandleAckResponse)} device:\"{receivedPackage.SenderIdentifier}\" expecte a response for {nameof(receivedPackage.ResponseType)}:{Enum.GetName(typeof(HandshakeState.ExpectedResponseType), receivedPackage.ResponseType)}");
+#endif
+            HandshakeState package = null;
+            var deviceGreeting = _deviceManager.GetGreeting(receivedPackage.SenderIdentifier);
+            switch (receivedPackage.ResponseType)
+            {
+                case HandshakeState.ExpectedResponseType.PublicKey:
+                    var key = _serializer.Serialize(_encryption.RSAKey.Public);
+                    package = new HandshakeState(currentIdentifier,
+                        deviceGreeting.Device.Identifier,
+                        key.GetChecksum(),
+                        key,
+                        HandshakeState.MessageValueType.PublicKey,
+                        HandshakeState.ExpectedResponseType.None);
+                    break;
+                case HandshakeState.ExpectedResponseType.SymmetricPasswordCypher:
+                    var pw = _serializer.Serialize(_encryption.SymmetricPassword);
+                    package = new HandshakeState(currentIdentifier,
+                        deviceGreeting.Device.Identifier,
+                        pw.GetChecksum(),
+                        pw,
+                        HandshakeState.MessageValueType.SymmetricPasswordCypher,
+                        HandshakeState.ExpectedResponseType.None);
+                    break;
+                case HandshakeState.ExpectedResponseType.None:
+                default:
+                    // done
+                    break;
+            }
+            if (package != null)
+                OnSendPackage(package, deviceGreeting);
+        }
+
+        private void OnSendPackage(HandshakeState package, DeviceGreetingReceived deviceGreeting)
+        {
+            var raw = _serializer.Serialize(package.CreateRaw().ToArray());
+            var enc = _networkState.Encrypt(_networkState.NormalizePackageSize(raw, deviceGreeting.Device.Communication.Handshake.PackageSize));
+            _communication.Send(new TCPCommunicationPayload(enc,
+                deviceGreeting.Device.Identifier,
+                deviceGreeting.Device.Communication.Handshake.Port,
+                deviceGreeting.Device.Communication.Handshake.PackageSize));
         }
     }
 }

@@ -45,6 +45,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         {
             try
             {
+                if (deviceGreeting.Identifier.Length > 16)
+                    deviceGreeting.Identifier = deviceGreeting.Identifier.ExactLength(16);
                 if (string.Equals(currentIdentifer, deviceGreeting.Identifier))
                     return false;
                 lock (_devices)
