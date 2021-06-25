@@ -13,6 +13,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Network
         private readonly IProtocolLogger _logger;
         private readonly IEncryption _encryption;
         private readonly List<string> _networkPasswords = new List<string>();
+        private readonly Random _random = new Random();
 
         private string currentNetworkPassword = DefaultPassword;
 
@@ -56,5 +57,18 @@ namespace Rediscovery.Communication.Protocol.Internal.Network
         }
 
         public void SetNetworkPassword(string password) => currentNetworkPassword = password;
+
+        public byte[] NormalizePackageSize(byte[] raw, int targetSize)
+        {
+            var fullRaw = new List<byte>(targetSize);
+            fullRaw.AddRange(raw);
+            if (raw.Length < targetSize)
+            {
+                byte[] b = new byte[targetSize - raw.Length];
+                _random.NextBytes(b);
+                fullRaw.AddRange(b);
+            }
+            return fullRaw.ToArray();
+        }
     }
 }

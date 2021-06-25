@@ -32,7 +32,6 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         private Task outTask;
         private Task outLargeTask;
         private Action<byte[], string, string> incomingPackageCompleteCallback;
-        private Random random = new Random();
 
         public PackagePipeline(IProtocolLogger logger, 
             ISerializer serializer,
@@ -219,20 +218,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                                 DeviceCommunicationSetting communicationSetting = com.Data;
                                 if (large)
                                     communicationSetting = com.Large;
-                                var encSignLength = 96;// (16 + 32 + 16 + 16);
                                 var raw = item.CreateSenderPackage(DateTime.UtcNow);
-                                // TODO: increase raw to package size
-                                var fullRaw = new List<byte>(communicationSetting.PackageSize);
-                                fullRaw.AddRange(raw);
-                                if (raw.Length < communicationSetting.PackageSize)
-                                {
-                                    byte[] b = new byte[communicationSetting.PackageSize - raw.Length];
-                                    random.NextBytes(b);
-                                    fullRaw.AddRange(b);
-                                }
-                                var enc = _networkState.Encrypt(fullRaw.ToArray());
+                                var enc = _networkState.Encrypt(_networkState.NormalizePackageSize(raw, communicationSetting.PackageSize));
                                 
-                                send.Invoke(new TCPCommunicationPayload(enc, item.ReceiverIdentifier, communicationSetting.Port, communicationSetting.PackageSize + encSignLength));
+                                send.Invoke(new TCPCommunicationPayload(enc, item.ReceiverIdentifier, communicationSetting.Port, communicationSetting.PackageSize + _encryption.SymmetricEncryptionSignatureLength));
 #if PIPELINE
                                 _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoingTaskRunner)} Header:{item}");
 #endif
@@ -293,13 +282,6 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         {
             // create package part for this payload
             // our received bytes here are cypher
-            /*
-            int i = raw.Length - 1;
-            while (raw[i] == 0)
-                --i;
-            byte[] rawTrim = new byte[i + 1];
-            Array.Copy(raw, rawTrim, i + 1);*/
-
             PackagePartState pack = null;
             _networkState.EnumerateDecryptPasswords(pw =>
             {

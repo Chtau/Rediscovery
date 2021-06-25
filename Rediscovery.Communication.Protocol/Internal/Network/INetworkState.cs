@@ -30,5 +30,13 @@ namespace Rediscovery.Communication.Protocol.Internal.Network
         /// <param name="raw">Raw traffic before it will be send</param>
         /// <returns></returns>
         byte[] Encrypt(byte[] raw);
+        /// <summary>
+        /// Creates a <see cref="byte[]"/> with the target package size.
+        /// If the raw data is smaller then the target size random bytes will be used as filler.
+        /// </summary>
+        /// <param name="raw">Payload</param>
+        /// <param name="targetSize">Target package size</param>
+        /// <returns></returns>
+        byte[] NormalizePackageSize(byte[] raw, int targetSize);
     }
 }

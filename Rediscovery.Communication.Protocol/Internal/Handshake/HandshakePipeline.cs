@@ -64,8 +64,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
                 ack.StartRequest();
                 _acknowledgeResults.Add(ack);
                 // configuration for a handshake (default) password 
-                _communication.Send(new TCPCommunicationPayload(_networkState.Encrypt(_serializer.Serialize(rawPackage.CreateRaw().ToArray())), 
-                    deviceGreeting.Device.Identifier, 
+                var raw = _serializer.Serialize(rawPackage.CreateRaw().ToArray());
+                var enc = _networkState.Encrypt(_networkState.NormalizePackageSize(raw, deviceGreeting.Device.Communication.Handshake.PackageSize));
+                _communication.Send(new TCPCommunicationPayload(enc,
+                    deviceGreeting.Device.Identifier,
                     deviceGreeting.Device.Communication.Handshake.Port,
                     deviceGreeting.Device.Communication.Handshake.PackageSize));
             } catch (Exception ex)

@@ -101,7 +101,7 @@ namespace Rediscovery.Communication.Protocol.Test
                     data = transfer.Content;
                     stop = true;
                 });
-                await Task.Delay(TimeSpan.FromMinutes(1));
+                await Task.Delay(TimeSpan.FromMinutes(10));
                 stop = true;
             });
             System.Threading.Thread.Sleep(TimeSpan.FromSeconds(1));
