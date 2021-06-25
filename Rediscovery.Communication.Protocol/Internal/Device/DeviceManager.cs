@@ -16,6 +16,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         private readonly TimeSpan deviceTimeoutOffset = TimeSpan.FromSeconds(10);
         private readonly TimeSpan waitBeforeTimeoutCheck = TimeSpan.FromSeconds(30);
         private readonly Dictionary<string, string> _deviceSymmetric = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _devicePublicKeys = new Dictionary<string, string>();
 
         private bool isTimeoutCheckRunning = false;
         private string currentIdentifer;
@@ -143,6 +144,35 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
             try
             {
                 return _devices.FirstOrDefault(x => string.Equals(x.Device.Identifier, identifier, StringComparison.OrdinalIgnoreCase))?.IP;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+            return null;
+        }
+
+        public void AddOrUpdateDevicePublicKey(string identifer, string publicKey)
+        {
+            try
+            {
+                if (_devicePublicKeys.ContainsKey(identifer))
+                    _devicePublicKeys[identifer] = publicKey;
+                else
+                    _devicePublicKeys.Add(identifer, publicKey);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+        }
+
+        public string DevicePublicKey(string identifer)
+        {
+            try
+            {
+                if (_devicePublicKeys.ContainsKey(identifer))
+                    return _devicePublicKeys[identifer];
             }
             catch (Exception ex)
             {

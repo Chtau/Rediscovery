@@ -101,17 +101,17 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
 #if PIPELINE
                     _logger.Trace($"{nameof(HandshakePipeline)}.{nameof(Communication_Receive)} Content:{pack}");
 #endif
+                    // handle message value
+                    OnHandleMessageValue(pack.SenderIdentifier, pack.ValueType, pack.Value);
+                    // respond if needed
+                    OnHandleAckResponse(pack.SenderIdentifier, pack.ResponseType, pack.Value);
+                    // finsih and publish acknowledge event to the request
                     var ack = _acknowledgeResults.FirstOrDefault(x => x.RemoteDeviceIdentifer == pack.SenderIdentifier);
                     if (ack != null)
                     {
-                        // response to our request
                         ack.ResponseReceived(AcknowledgeResult.State.Ok, pack);
                         deviceAcknowledgeCallback?.Invoke(ack);
                         _acknowledgeResults.Remove(ack);
-                    } else
-                    {
-                        // we need to response
-                        OnHandleAckResponse(pack.SenderIdentifier, pack.ResponseType, pack.Value);
                     }
                 }
                 else
@@ -164,6 +164,24 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
             }
             if (package != null)
                 OnSendPackage(package, deviceGreeting);
+        }
+
+        private void OnHandleMessageValue(string senderIdentifier, HandshakeState.MessageValueType messageValueType, byte[] value)
+        {
+            switch (messageValueType)
+            {
+                case HandshakeState.MessageValueType.PublicKey:
+                    var pubKey = _serializer.Deserialize<string>(value);
+                    _deviceManager.AddOrUpdateDevicePublicKey(senderIdentifier, pubKey);
+                    break;
+                case HandshakeState.MessageValueType.SymmetricPasswordCypher:
+                    var pw = _serializer.Deserialize<string>(value);
+                    _deviceManager.AddOrUpdateDeviceSymmetric(senderIdentifier, pw);
+                    break;
+                case HandshakeState.MessageValueType.Undefined:
+                default:
+                    break;
+            }
         }
 
         private void OnSendPackage(HandshakeState package, DeviceGreetingReceived deviceGreeting)

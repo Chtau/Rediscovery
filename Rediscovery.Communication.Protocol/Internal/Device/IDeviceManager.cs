@@ -47,10 +47,23 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         /// <param name="password">Symmetric password</param>
         void AddOrUpdateDeviceSymmetric(string identifer, string password);
         /// <summary>
+        /// Adds or updates the public key for a device
+        /// </summary>
+        /// <param name="identifer">Device identifer</param>
+        /// <param name="publicKey">Public key</param>
+        void AddOrUpdateDevicePublicKey(string identifer, string publicKey);
+        /// <summary>
         /// Get the current IP address for the device identifer
         /// </summary>
         /// <param name="identifier">Known device identifer</param>
         /// <returns>IP or null</returns>
         string GetIP(string identifier);
+        /// <summary>
+        /// Public key for a device Identifer.
+        /// If no public key is found <see cref="null"/> will be returned.
+        /// </summary>
+        /// <param name="identifer">Device Identifer</param>
+        /// <returns>Public key or <see cref="null"/></returns>
+        string DevicePublicKey(string identifer);
     }
 }
