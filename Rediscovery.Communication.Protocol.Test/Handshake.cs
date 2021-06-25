@@ -50,6 +50,8 @@ namespace Rediscovery.Communication.Protocol.Test
 
             Internal.Diagnostic.IDiagnosticPackage diagnosticPackage = new Internal.Diagnostic.DiagnosticPackage(logger);
             Internal.Encryption.IEncryption encryption = new Internal.Encryption.Encryption();
+            encryption.SetInternSymmetric("HalloWorld!");
+            ISerializer serializer = new Internal.Serializer(logger);
 
             var com1 = new Mocks.Communication();
             var com2 = new Mocks.Communication();
@@ -63,7 +65,7 @@ namespace Rediscovery.Communication.Protocol.Test
             };
 
             IHandshakePipeline handshakePipeline = new HandshakePipeline(logger,
-                new Internal.Serializer(logger),
+                serializer,
                 encryption,
                 deviceManager,
                 diagnosticPackage,
@@ -71,7 +73,7 @@ namespace Rediscovery.Communication.Protocol.Test
                 new Internal.Network.NetworkState(logger, encryption));
 
             IHandshakePipeline handshakePipeline2 = new HandshakePipeline(logger,
-                new Internal.Serializer(logger),
+                serializer,
                 encryption,
                 deviceManager2,
                 diagnosticPackage,
@@ -93,9 +95,12 @@ namespace Rediscovery.Communication.Protocol.Test
                 ackResult = ack;
             });
             handshakePipeline.SynchronizeCommunication(new Internal.Device.DeviceGreetingReceived(device2, "127.0.0.1"));
-            await Task.Delay(TimeSpan.FromSeconds(10));
+            await Task.Delay(TimeSpan.FromSeconds(2));
             Assert.NotNull(ackResult);
             Assert.True(ackResult.ResponseState == AcknowledgeResult.State.Ok);
+            var dec = encryption.DecryptRSA(encryption.RSAKey.Private, ackResult.Response.Value);
+            var plainPW = serializer.Deserialize<string>(dec);
+            Assert.True(plainPW == encryption.SymmetricPassword);
         }
 
         [Fact]

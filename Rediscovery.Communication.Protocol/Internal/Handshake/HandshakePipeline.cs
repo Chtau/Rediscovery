@@ -63,7 +63,6 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
                 var ack = new AcknowledgeResult(deviceGreeting.Device.Identifier, null);
                 ack.StartRequest();
                 _acknowledgeResults.Add(ack);
-                // configuration for a handshake (default) password 
                 OnSendPackage(rawPackage, deviceGreeting);
             } catch (Exception ex)
             {
@@ -112,7 +111,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
                     } else
                     {
                         // we need to response
-                        OnHandleAckResponse(pack);
+                        OnHandleAckResponse(pack.SenderIdentifier, pack.ResponseType, pack.Value);
                     }
                 }
                 else
@@ -128,14 +127,14 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
             }
         }
 
-        private void OnHandleAckResponse(HandshakeState receivedPackage)
+        private void OnHandleAckResponse(string senderIdentifer, HandshakeState.ExpectedResponseType expectedResponseType, byte[] value)
         {
 #if PIPELINE
-            _logger.Trace($"{nameof(HandshakePipeline)}.{nameof(OnHandleAckResponse)} device:\"{receivedPackage.SenderIdentifier}\" expecte a response for {nameof(receivedPackage.ResponseType)}:{Enum.GetName(typeof(HandshakeState.ExpectedResponseType), receivedPackage.ResponseType)}");
+            _logger.Trace($"{nameof(HandshakePipeline)}.{nameof(OnHandleAckResponse)} device:\"{senderIdentifer}\" expecte a response for {nameof(HandshakeState.ExpectedResponseType)}:{Enum.GetName(typeof(HandshakeState.ExpectedResponseType), expectedResponseType)}");
 #endif
             HandshakeState package = null;
-            var deviceGreeting = _deviceManager.GetGreeting(receivedPackage.SenderIdentifier);
-            switch (receivedPackage.ResponseType)
+            var deviceGreeting = _deviceManager.GetGreeting(senderIdentifer);
+            switch (expectedResponseType)
             {
                 case HandshakeState.ExpectedResponseType.PublicKey:
                     var key = _serializer.Serialize(_encryption.RSAKey.Public);
@@ -147,7 +146,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
                         HandshakeState.ExpectedResponseType.None);
                     break;
                 case HandshakeState.ExpectedResponseType.SymmetricPasswordCypher:
-                    var pw = _serializer.Serialize(_encryption.SymmetricPassword);
+                    var pubKey = _serializer.Deserialize<string>(value);
+                    var plainPW = _serializer.Serialize(_encryption.SymmetricPassword);
+                    var encPW = _encryption.EncryptRSA(pubKey, plainPW);
+                    var pw = (encPW);
                     package = new HandshakeState(currentIdentifier,
                         deviceGreeting.Device.Identifier,
                         pw.GetChecksum(),
