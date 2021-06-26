@@ -6,12 +6,12 @@ namespace Rediscovery.Communication.Protocol.Models
 {
     public class HandshakeConfiguration : BaseConfiguration
     {
-        public const int DefaultListenPortData = 13561;
-        public const int DefaultSendPortData = 13561;
+        public const int DefaultListenPort = 13561;
+        public const int DefaultSendPort = 13561;
 
         public HandshakeConfiguration()
         {
-            Connection = new ConnectionConfiguration(DefaultListenPortData, DefaultSendPortData, DefaultPackageSize);
+            Connection = new ConnectionConfiguration(DefaultListenPort, DefaultSendPort, DefaultPackageSize);
         }
     }
 }

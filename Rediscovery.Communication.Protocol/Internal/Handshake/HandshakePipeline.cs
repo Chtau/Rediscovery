@@ -134,6 +134,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
 #endif
             HandshakeState package = null;
             var deviceGreeting = _deviceManager.GetGreeting(senderIdentifer);
+            if (deviceGreeting == null)
+                return;
             switch (expectedResponseType)
             {
                 case HandshakeState.ExpectedResponseType.PublicKey:
@@ -175,8 +177,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
                     _deviceManager.AddOrUpdateDevicePublicKey(senderIdentifier, pubKey);
                     break;
                 case HandshakeState.MessageValueType.SymmetricPasswordCypher:
-                    var pw = _serializer.Deserialize<string>(value);
-                    _deviceManager.AddOrUpdateDeviceSymmetric(senderIdentifier, pw);
+                    var raw = _encryption.DecryptRSA(_encryption.RSAKey.Private, value);
+                    var pwVal = _serializer.Deserialize<string>(raw);
+                    _deviceManager.AddOrUpdateDeviceSymmetric(senderIdentifier, pwVal);
                     break;
                 case HandshakeState.MessageValueType.Undefined:
                 default:

@@ -98,8 +98,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 #if PIPELINE
                 _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoing)} adding packages for instance of Type:\"{instance.GetType().FullName}\"");
 #endif
-                // TODO: fix encryption => _encryption.EncryptSymmetric should be used in the raw outgoing and incoming to prevent header leaks
-                var rawPayload = _serializer.Serialize(instance).ToList();// _encryption.EncryptSymmetric(_deviceManager.DeviceSymmetricPassword(deviceGreeting.Device.Identifier), _serializer.Serialize(instance)).ToList();
+                // TODO: instance payload will be encrypted with the symmetric password which will be retrieved from the handshake with public key
+                var rawPayload = _serializer.Serialize(instance).ToList();//_encryption.EncryptSymmetric(_deviceManager.DeviceSymmetricPassword(deviceGreeting.Device.Identifier), _serializer.Serialize(instance)).ToList();
                 if (rawPayload.Count > (deviceGreeting.Device.Communication.Large.PackageSize * 5))
                 {
                     return OnCreatePackageParts(rawPayload,
@@ -219,6 +219,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                                 if (large)
                                     communicationSetting = com.Large;
                                 var raw = item.CreateSenderPackage(DateTime.UtcNow);
+                                // symmetric encryption based on the network key to prevent leaking of header and meta data outside of the network
                                 var enc = _networkState.Encrypt(_networkState.NormalizePackageSize(raw, communicationSetting.PackageSize));
                                 
                                 send.Invoke(new TCPCommunicationPayload(enc, item.ReceiverIdentifier, communicationSetting.Port, communicationSetting.PackageSize + _encryption.SymmetricEncryptionSignatureLength));

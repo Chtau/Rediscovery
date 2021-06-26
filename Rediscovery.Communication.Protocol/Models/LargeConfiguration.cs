@@ -6,12 +6,12 @@ namespace Rediscovery.Communication.Protocol.Models
 {
     public class LargeConfiguration : BaseConfiguration
     {
-        public const int DefaultListenPortLarge = 13572;
-        public const int DefaultSendPortLarge = 13572;
+        public const int DefaultListenPort = 13572;
+        public const int DefaultSendPort = 13572;
 
         public LargeConfiguration()
         {
-            Connection = new ConnectionConfiguration(DefaultListenPortLarge, DefaultSendPortLarge, DefaultPackageSize * 60);
+            Connection = new ConnectionConfiguration(DefaultListenPort, DefaultSendPort, DefaultPackageSize * 60);
         }
     }
 }

@@ -13,14 +13,17 @@ namespace Rediscovery.Communication.Protocol.Test
     {
         public static IRediscoveryProtocol TestDevice(Models.ConnectionConfiguration connection, 
             Models.ConnectionConfiguration connectionLarge = null,
-            Models.ConnectionConfiguration connectionHandshake = null)
+            Models.ConnectionConfiguration connectionHandshake = null,
+            Models.ConnectionConfiguration connectionDiscovery = null, bool discoveryListenDeactivated = true)
         {
             IRediscoveryProtocol protocol1 = new RediscoveryProtocol();
             protocol1.Start(new Models.Configuration
             {
                 Discovery = new Models.DiscoveryConfiguration
                 {
-                    ListenerDeactivated = true,
+                    ListenerDeactivated = discoveryListenDeactivated,
+                    Connection = connectionDiscovery ?? new Models.ConnectionConfiguration(Models.DiscoveryConfiguration.DefaultListenPort,
+                        Models.DiscoveryConfiguration.DefaultSendPort, Models.DiscoveryConfiguration.DefaultPackageSize)
                 },
                 Data = new Models.DataConfiguration
                 {
@@ -34,8 +37,33 @@ namespace Rediscovery.Communication.Protocol.Test
                 {
                     Connection = connectionHandshake ?? new Models.ConnectionConfiguration(
                         13565,
-                        Models.HandshakeConfiguration.DefaultSendPortData,
+                        Models.HandshakeConfiguration.DefaultSendPort,
                         Models.HandshakeConfiguration.DefaultPackageSize)
+                }
+            });
+            return protocol1;
+        }
+
+        public static IRediscoveryProtocol TestDevice(int portSendOffest = 0, int portListenOffest = 1000)
+        {
+            IRediscoveryProtocol protocol1 = new RediscoveryProtocol();
+            protocol1.Start(new Models.Configuration
+            {
+                Discovery = new Models.DiscoveryConfiguration
+                {
+                    Connection = new Models.ConnectionConfiguration(Models.DiscoveryConfiguration.DefaultListenPort + portListenOffest, Models.DiscoveryConfiguration.DefaultSendPort + portSendOffest, Models.DiscoveryConfiguration.DefaultPackageSize)
+                },
+                Data = new Models.DataConfiguration
+                {
+                    Connection = new Models.ConnectionConfiguration(Models.DataConfiguration.DefaultListenPort + portListenOffest, Models.DataConfiguration.DefaultSendPort + portSendOffest, Models.DataConfiguration.DefaultPackageSize)
+                },
+                Large = new Models.LargeConfiguration
+                {
+                    Connection = new Models.ConnectionConfiguration(Models.LargeConfiguration.DefaultListenPort + portListenOffest, Models.LargeConfiguration.DefaultSendPort + portSendOffest, Models.LargeConfiguration.DefaultPackageSize * 60)
+                },
+                Handshake = new Models.HandshakeConfiguration
+                {
+                    Connection = new Models.ConnectionConfiguration(Models.HandshakeConfiguration.DefaultListenPort + portListenOffest, Models.HandshakeConfiguration.DefaultSendPort + portSendOffest, Models.HandshakeConfiguration.DefaultPackageSize)
                 }
             });
             return protocol1;

@@ -29,8 +29,8 @@ namespace Rediscovery.Communication.Protocol.Test
             IRediscoveryProtocol protocol = new RediscoveryProtocol();
             protocol.Start(null);
             await Task.Delay(TimeSpan.FromSeconds(5));
-            Assert.True(protocol.Devices.Count == 1, "Discover device number missmatch");
-            Assert.True(protocol.Devices[0].Hops == 0, "Peer connection should be direct");
+            Assert.True(protocol.Devices.Count == 1, "[Protocol] => Discover device number missmatch");
+            Assert.True(protocol.Devices[0].Hops == 0, "[Protocol] => Peer connection should be direct");
 
             protocol.Stop();
             protocol1.Stop();
@@ -82,7 +82,7 @@ namespace Rediscovery.Communication.Protocol.Test
             {
                 Discovery = new Models.DiscoveryConfiguration
                 {
-                    Connection = new Models.ConnectionConfiguration(16574, Models.DiscoveryConfiguration.DefaultSendPortDiscovery, 1024)
+                    Connection = new Models.ConnectionConfiguration(16574, Models.DiscoveryConfiguration.DefaultSendPort, 1024)
                 },
                 Data = new Models.DataConfiguration
                 {

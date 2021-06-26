@@ -24,6 +24,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         public List<DeviceGreeting> Devices => _devices.Select(x => x.Device)?.ToList();
 
         public event EventHandler<string> DeviceChanged;
+        public event EventHandler<string> DeviceIncomingPing;
 
         public DeviceManager(IProtocolLogger logger)
         {
@@ -69,6 +70,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
                         DeviceChanged?.Invoke(this, deviceGreeting.Identifier);
                         return true;
                     }
+                    DeviceIncomingPing?.Invoke(this, deviceGreeting.Identifier);
                 }
             }
             catch (Exception ex)
@@ -179,6 +181,19 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
                 _logger.Error(ex);
             }
             return null;
+        }
+
+        public bool HandshakeRequired(string identifer)
+        {
+            try
+            {
+                return _devicePublicKeys.ContainsKey(identifer) && _deviceSymmetric.ContainsKey(identifer);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+            return false;
         }
     }
 }

@@ -39,7 +39,7 @@ namespace Rediscovery.Communication.Protocol.Test
             {
                 Discovery = new Models.DiscoveryConfiguration
                 {
-                    Connection = new Models.ConnectionConfiguration(16581, Models.DiscoveryConfiguration.DefaultSendPortDiscovery, 1024)
+                    Connection = new Models.ConnectionConfiguration(16581, Models.DiscoveryConfiguration.DefaultSendPort, 1024)
                 },
                 Data = new Models.DataConfiguration
                 {

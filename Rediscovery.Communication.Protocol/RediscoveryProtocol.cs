@@ -72,6 +72,10 @@ namespace Rediscovery.Communication.Protocol
                 DevicesChanged?.Invoke(this, args);
                 OnAfterDeviceChanged(args);
             };
+            _deviceManager.DeviceIncomingPing += (obj, args) =>
+            {
+                OnAfterDevicePinged(args);
+            };
             _communication = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, _encryption, "Data");
             _communicationLarge = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, _encryption, "Large");
             _communicationHandshake = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, _encryption, "Handshake");
@@ -310,6 +314,23 @@ namespace Rediscovery.Communication.Protocol
                 try
                 {
                     _handshakePipeline.SynchronizeCommunication(_deviceManager.GetGreeting(identifer));
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex);
+                }
+            });
+        }
+
+        private void OnAfterDevicePinged(string identifer)
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    // check if the handshake for this device must be executed
+                    if (!_deviceManager.HandshakeRequired(identifer))
+                        _handshakePipeline.SynchronizeCommunication(_deviceManager.GetGreeting(identifer));
                 }
                 catch (Exception ex)
                 {

@@ -15,6 +15,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         /// </summary>
         event EventHandler<string> DeviceChanged;
         /// <summary>
+        /// Will be triggered every time a device reports from discovery
+        /// </summary>
+        event EventHandler<string> DeviceIncomingPing;
+        /// <summary>
         /// Get the current device greeting information from the device identifier
         /// </summary>
         /// <param name="identifier"></param>
@@ -65,5 +69,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         /// <param name="identifer">Device Identifer</param>
         /// <returns>Public key or <see cref="null"/></returns>
         string DevicePublicKey(string identifer);
+        /// <summary>
+        /// Only true if all device data from handshakes are up to date for the identifer
+        /// </summary>
+        /// <param name="identifer">Device identifer</param>
+        /// <returns></returns>
+        bool HandshakeRequired(string identifer);
     }
 }

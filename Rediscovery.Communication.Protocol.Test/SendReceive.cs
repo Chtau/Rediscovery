@@ -10,10 +10,12 @@ namespace Rediscovery.Communication.Protocol.Test
         public void SendReceiveSocketSimpleText()
         {
             string content = "Test";
-            IRediscoveryProtocol protocol1 = Shared.TestDevice(new Models.ConnectionConfiguration(16576, 16577, 1024));//, new Models.ConnectionConfiguration(19571, 19572, 1024));
+            IRediscoveryProtocol protocol1 = Shared.TestDevice(0, 1000);
+            Task.Delay(TimeSpan.FromSeconds(1)).GetAwaiter().GetResult();
 
-            IRediscoveryProtocol protocol = new RediscoveryProtocol();
-            protocol.Start(null);
+            //IRediscoveryProtocol protocol = new RediscoveryProtocol();
+            //protocol.Start(null);
+            IRediscoveryProtocol protocol = Shared.TestDevice(1000, 0);
             Task.Delay(TimeSpan.FromSeconds(1)).GetAwaiter().GetResult();
 
             bool stop = false;
@@ -29,6 +31,7 @@ namespace Rediscovery.Communication.Protocol.Test
                 stop = true;
             });
             System.Threading.Thread.Sleep(TimeSpan.FromSeconds(5));
+            //System.Threading.Thread.Sleep(TimeSpan.FromMinutes(5));
             Task.Run(() =>
             {
                 protocol.Send(new Transfer<string>(protocol.Devices[0].Identifier, content));

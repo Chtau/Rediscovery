@@ -6,12 +6,12 @@ namespace Rediscovery.Communication.Protocol.Models
 {
     public class DataConfiguration : BaseConfiguration
     {
-        public const int DefaultListenPortData = 13571;
-        public const int DefaultSendPortData = 13571;
+        public const int DefaultListenPort = 13571;
+        public const int DefaultSendPort = 13571;
 
         public DataConfiguration()
         {
-            Connection = new ConnectionConfiguration(DefaultListenPortData, DefaultSendPortData, DefaultPackageSize);
+            Connection = new ConnectionConfiguration(DefaultListenPort, DefaultSendPort, DefaultPackageSize);
         }
     }
 }
