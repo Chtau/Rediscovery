@@ -99,7 +99,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoing)} adding packages for instance of Type:\"{instance.GetType().FullName}\"");
 #endif
                 // TODO: instance payload will be encrypted with the symmetric password which will be retrieved from the handshake with public key
-                var rawPayload = _serializer.Serialize(instance).ToList();//_encryption.EncryptSymmetric(_deviceManager.DeviceSymmetricPassword(deviceGreeting.Device.Identifier), _serializer.Serialize(instance)).ToList();
+                // _serializer.Serialize(instance).ToList();//
+                var rawPayload = _encryption.EncryptSymmetric(_deviceManager.DeviceSymmetricPassword(deviceGreeting.Device.Identifier), _serializer.Serialize(instance)).ToList();
                 if (rawPayload.Count > (deviceGreeting.Device.Communication.Large.PackageSize * 5))
                 {
                     return OnCreatePackageParts(rawPayload,
@@ -374,7 +375,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 #if PIPELINE
                             _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnCheckCompletePackages)} Package complete with Checksum:\"{checksum}\" with payload Size:{payload.Count}");
 #endif
-                            packageCompleteCallback.Invoke(payload.ToArray(), firstHeader.SenderIdentifier, firstHeader.CallbackKey);
+                            // decrypt with our symmetric password
+                            // TODO: we should have only a single password per sender identifier
+                            // TODO: on handshake create a new symmetric password per remote identifer and save it local and send it away
+                            var encPayload = _encryption.DecryptSymmetric(_encryption.SymmetricPassword, payload.ToArray());
+                            packageCompleteCallback.Invoke(encPayload, firstHeader.SenderIdentifier, firstHeader.CallbackKey);
                             removeChecksums.Add(checksum);
                             _diagnosticPackage.PackageComplete(checksum);
                         } else
