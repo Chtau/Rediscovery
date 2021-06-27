@@ -19,11 +19,13 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
 
         private System.Threading.Thread listenThread;
         private readonly string threadName = $"Thread_{nameof(DiscoveryListener)}";
+        private readonly Dictionary<int, Socket> sockets = new Dictionary<int, Socket>();
 
         private DiscoveryConfiguration configuration;
         private bool working = false;
         private TimeSpan deviceTimeoutOffset = TimeSpan.FromSeconds(10);
         private string currentIdentifier;
+        private CancellationTokenSource tokenSource;
 
         public DiscoveryListener(IProtocolLogger protocolLogger, 
             IDiscoveryPipeline discoveryPipeline,
@@ -79,6 +81,23 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
             try
             {
                 working = false;
+                tokenSource.Cancel();
+                if (sockets.Count > 0)
+                {
+                    foreach (var portSocket in sockets)
+                    {
+                        try
+                        {
+                            portSocket.Value.Close();
+                            portSocket.Value.Dispose();
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Error(ex);
+                        }
+                    }
+                    sockets.Clear();
+                }
                 listenThread?.Abort();
             }
             catch (PlatformNotSupportedException) { }
@@ -97,18 +116,20 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
                 {
                     if (configuration.ListenerDeactivated || !working)
                         return;
+                    tokenSource = new CancellationTokenSource();
                     try
                     {
-                        Parallel.ForEach(configuration.Connection.ListenPort, (port) =>
+                        Parallel.ForEach(configuration.Connection.ListenPort,
+                            new ParallelOptions { CancellationToken = tokenSource.Token }, (port) =>
                         {
-                            var socket = OnGetSocket(port);
-                            socket.Bind(new IPEndPoint(IPAddress.Any, port));
+                            sockets.Add(port, OnGetSocket(port));
+                            sockets[port].Bind(new IPEndPoint(IPAddress.Any, port));
 
                             while (working)
                             {
                                 EndPoint clientEp = new IPEndPoint(IPAddress.Any, 0);
                                 var bytes = new byte[configuration.Connection.PackageSize];
-                                int bytesReceived = socket.ReceiveFrom(bytes, ref clientEp);
+                                int bytesReceived = sockets[port].ReceiveFrom(bytes, ref clientEp);
                                 if (bytesReceived > 0)
                                 {
 #if DISCOVER
@@ -122,6 +143,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
                                 }
                             }
                         });
+                    }
+                    catch (SocketException)
+                    {
+                        if (working)
+                            Start();
                     }
                     catch (Exception ex)
                     {

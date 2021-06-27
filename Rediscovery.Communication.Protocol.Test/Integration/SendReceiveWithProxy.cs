@@ -24,7 +24,7 @@ namespace Rediscovery.Communication.Protocol.Test.Integration
             protocol.SetMetadata("08232A238D844317", "Sender", Models.DeviceMetadata.IdiomType.Undefined);
             //protocol.Start(null);
             Task.Delay(TimeSpan.FromSeconds(10)).GetAwaiter().GetResult();
-            Task.Delay(TimeSpan.FromMinutes(10)).GetAwaiter().GetResult();
+            //Task.Delay(TimeSpan.FromMinutes(10)).GetAwaiter().GetResult();
 
             bool stop = false;
             string data = null;
