@@ -66,7 +66,7 @@ namespace Rediscovery.Communication.Protocol
             _encryption = new Encryption();
             _diagnosticPackage = new DiagnosticPackage(_logger);
             _networkState = new NetworkState(_logger, _encryption);
-            _deviceManager = new DeviceManager(_logger);
+            _deviceManager = new DeviceManager(_logger, _encryption);
             _deviceManager.DeviceChanged += (obj, args) =>
             {
                 DevicesChanged?.Invoke(this, args);

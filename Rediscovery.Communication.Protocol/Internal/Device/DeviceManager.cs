@@ -1,4 +1,5 @@
-﻿using Rediscovery.Communication.Protocol.Models;
+﻿using Rediscovery.Communication.Protocol.Internal.Encryption;
+using Rediscovery.Communication.Protocol.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
     internal class DeviceManager : IDeviceManager
     {
         private readonly IProtocolLogger _logger;
+        private readonly IEncryption _encryption;
         private readonly List<DeviceGreetingReceived> _devices = new List<DeviceGreetingReceived>();
         private readonly TimeSpan deviceTimeoutOffset = TimeSpan.FromSeconds(10);
         private readonly TimeSpan waitBeforeTimeoutCheck = TimeSpan.FromSeconds(30);
@@ -26,9 +28,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         public event EventHandler<string> DeviceChanged;
         public event EventHandler<string> DeviceIncomingPing;
 
-        public DeviceManager(IProtocolLogger logger)
+        public DeviceManager(IProtocolLogger logger,
+            IEncryption encryption)
         {
             _logger = logger;
+            _encryption = encryption;
         }
 
         public DeviceGreetingReceived GetGreeting(string identifier)
@@ -111,29 +115,29 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
             }
         }
 
-        public void SetIdentifier(string identifer) => currentIdentifer = identifer;
+        public void SetIdentifier(string identifier) => currentIdentifer = identifier;
 
-        public string DeviceSymmetricPassword(string identifer)
+        private string OnDeviceSymmetricPassword(string identifier)
         {
             try
             {
-                if (_deviceSymmetric.ContainsKey(identifer))
-                    return _deviceSymmetric[identifer];
+                if (_deviceSymmetric.ContainsKey(identifier))
+                    return _deviceSymmetric[identifier];
             } catch (Exception ex)
             {
                 _logger.Error(ex);
             }
-            return identifer;
+            return null;
         }
 
-        public void AddOrUpdateDeviceSymmetric(string identifer, string password)
+        public void AddOrUpdateDeviceSymmetric(string identifier, string password)
         {
             try
             {
-                if (_deviceSymmetric.ContainsKey(identifer))
-                    _deviceSymmetric[identifer] = password;
+                if (_deviceSymmetric.ContainsKey(identifier))
+                    _deviceSymmetric[identifier] = password;
                 else
-                    _deviceSymmetric.Add(identifer, password);
+                    _deviceSymmetric.Add(identifier, password);
             }
             catch (Exception ex)
             {
@@ -154,14 +158,14 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
             return null;
         }
 
-        public void AddOrUpdateDevicePublicKey(string identifer, string publicKey)
+        public void AddOrUpdateDevicePublicKey(string identifier, string publicKey)
         {
             try
             {
-                if (_devicePublicKeys.ContainsKey(identifer))
-                    _devicePublicKeys[identifer] = publicKey;
+                if (_devicePublicKeys.ContainsKey(identifier))
+                    _devicePublicKeys[identifier] = publicKey;
                 else
-                    _devicePublicKeys.Add(identifer, publicKey);
+                    _devicePublicKeys.Add(identifier, publicKey);
             }
             catch (Exception ex)
             {
@@ -169,12 +173,12 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
             }
         }
 
-        public string DevicePublicKey(string identifer)
+        public string DevicePublicKey(string identifier)
         {
             try
             {
-                if (_devicePublicKeys.ContainsKey(identifer))
-                    return _devicePublicKeys[identifer];
+                if (_devicePublicKeys.ContainsKey(identifier))
+                    return _devicePublicKeys[identifier];
             }
             catch (Exception ex)
             {
@@ -183,11 +187,12 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
             return null;
         }
 
-        public bool HandshakeRequired(string identifer)
+        public bool HandshakeRequired(string identifier)
         {
             try
             {
-                return _devicePublicKeys.ContainsKey(identifer) && _deviceSymmetric.ContainsKey(identifer);
+                return _devicePublicKeys.ContainsKey(identifier) 
+                    && _deviceSymmetric.ContainsKey(identifier);
             }
             catch (Exception ex)
             {
@@ -195,5 +200,56 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
             }
             return false;
         }
+
+        public byte[] Decrypt(byte[] cypher, string identifier)
+        {
+            try
+            {
+                var pw = OnDeviceSymmetricPassword(OnGetLocalRemoteIdentifier(identifier));
+                if (!string.IsNullOrWhiteSpace(pw))
+                    return _encryption.DecryptSymmetric(pw, cypher);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+            return null;
+        }
+
+        public byte[] Encrypt(byte[] raw, string identifier)
+        {
+            try
+            {
+                var pw = OnDeviceSymmetricPassword(identifier);
+                if (!string.IsNullOrWhiteSpace(pw))
+                    return _encryption.EncryptSymmetric(pw, raw);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+            return null;
+        }
+
+        public string GetOrCreateSymmetricPassword(string identifier, bool addForLocalIdentifier = true)
+        {
+            try
+            {
+                var key = OnGetLocalRemoteIdentifier(identifier);
+                var pw = OnDeviceSymmetricPassword(key);
+                if (!string.IsNullOrWhiteSpace(pw))
+                    return pw;
+                var newPW = _encryption.CreatePassword();
+                AddOrUpdateDeviceSymmetric(key, newPW);
+                return newPW;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+            return null;
+        }
+
+        private string OnGetLocalRemoteIdentifier(string identifier) => currentIdentifer + "@" + identifier;
     }
 }

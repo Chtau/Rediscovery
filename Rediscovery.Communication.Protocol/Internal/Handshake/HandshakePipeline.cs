@@ -149,7 +149,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
                     break;
                 case HandshakeState.ExpectedResponseType.SymmetricPasswordCypher:
                     var pubKey = _serializer.Deserialize<string>(value);
-                    var plainPW = _serializer.Serialize(_encryption.SymmetricPassword);
+                    var plainPW = _serializer.Serialize(_deviceManager.GetOrCreateSymmetricPassword(senderIdentifer));
                     var encPW = _encryption.EncryptRSA(pubKey, plainPW);
                     var pw = (encPW);
                     package = new HandshakeState(currentIdentifier,

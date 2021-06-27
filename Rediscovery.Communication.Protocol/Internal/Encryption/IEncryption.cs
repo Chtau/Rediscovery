@@ -59,5 +59,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
         /// <param name="cypherContent">Cypher content</param>
         /// <returns>Plain content</returns>
         byte[] DecryptSymmetric(string password, byte[] cypherContent);
+        /// <summary>
+        /// Generates a cryptographic random password based on extendet aplhanumeric
+        /// </summary>
+        /// <param name="length">Password length</param>
+        /// <returns></returns>
+        string CreatePassword(int length = 64);
     }
 }

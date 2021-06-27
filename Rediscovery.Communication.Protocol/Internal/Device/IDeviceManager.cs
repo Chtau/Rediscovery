@@ -35,27 +35,20 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         /// <summary>
         /// Set the identifier of the current device
         /// </summary>
-        /// <param name="identifer"></param>
-        void SetIdentifier(string identifer);
-        /// <summary>
-        /// Symmetric password for the device Identifer.
-        /// If no password is found the Identifer will be returned.
-        /// </summary>
-        /// <param name="identifer">Device Identifer</param>
-        /// <returns>Password or Identifer</returns>
-        string DeviceSymmetricPassword(string identifer);
+        /// <param name="identifier"></param>
+        void SetIdentifier(string identifier);
         /// <summary>
         /// Adds or updates the Symmetric password for a device
         /// </summary>
-        /// <param name="identifer">Device identifer</param>
+        /// <param name="identifier">Device identifer</param>
         /// <param name="password">Symmetric password</param>
-        void AddOrUpdateDeviceSymmetric(string identifer, string password);
+        void AddOrUpdateDeviceSymmetric(string identifier, string password);
         /// <summary>
         /// Adds or updates the public key for a device
         /// </summary>
-        /// <param name="identifer">Device identifer</param>
+        /// <param name="identifier">Device identifer</param>
         /// <param name="publicKey">Public key</param>
-        void AddOrUpdateDevicePublicKey(string identifer, string publicKey);
+        void AddOrUpdateDevicePublicKey(string identifier, string publicKey);
         /// <summary>
         /// Get the current IP address for the device identifer
         /// </summary>
@@ -66,14 +59,17 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         /// Public key for a device Identifer.
         /// If no public key is found <see cref="null"/> will be returned.
         /// </summary>
-        /// <param name="identifer">Device Identifer</param>
+        /// <param name="identifier">Device Identifer</param>
         /// <returns>Public key or <see cref="null"/></returns>
-        string DevicePublicKey(string identifer);
+        string DevicePublicKey(string identifier);
         /// <summary>
         /// Only true if all device data from handshakes are up to date for the identifer
         /// </summary>
         /// <param name="identifer">Device identifer</param>
         /// <returns></returns>
-        bool HandshakeRequired(string identifer);
+        bool HandshakeRequired(string identifier);
+        byte[] Decrypt(byte[] cypher, string identifier);
+        byte[] Encrypt(byte[] raw, string identifier);
+        string GetOrCreateSymmetricPassword(string identifier, bool addForLocalIdentifier = true);
     }
 }

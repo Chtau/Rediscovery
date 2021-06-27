@@ -55,6 +55,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
         }
 
         public void SetInternRAS(Keys key) => RSAKey = key;
+
         public void SetInternSymmetric(string password) => SymmetricPassword = password;
+
+        public string CreatePassword(int length = 64) => CryptographyRandomString.GetAlphanumericExtendet(length);
     }
 }
