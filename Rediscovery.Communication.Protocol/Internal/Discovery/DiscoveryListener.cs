@@ -24,7 +24,6 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
         private bool working = false;
         private TimeSpan deviceTimeoutOffset = TimeSpan.FromSeconds(10);
         private string currentIdentifier;
-        private Socket socket;
 
         public DiscoveryListener(IProtocolLogger protocolLogger, 
             IDiscoveryPipeline discoveryPipeline,
@@ -80,27 +79,12 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
             try
             {
                 working = false;
-                if (socket != null)
-                {
-                    try
-                    {
-                        socket.Close();
-                        socket.Dispose();
-                    } catch (Exception ex)
-                    {
-                        _logger.Error(ex);
-                    }
-                }
                 listenThread?.Abort();
             }
             catch (PlatformNotSupportedException) { }
             catch (Exception ex)
             {
                 _logger.Error(ex);
-            }
-            while (socket?.Connected == true)
-            {
-                Thread.Sleep(TimeSpan.FromMilliseconds(10));
             }
             Thread.Sleep(TimeSpan.FromMilliseconds(100));
         }
@@ -117,7 +101,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
                     {
                         Parallel.ForEach(configuration.Connection.ListenPort, (port) =>
                         {
-                            socket = OnGetSocket(port);
+                            var socket = OnGetSocket(port);
                             socket.Bind(new IPEndPoint(IPAddress.Any, port));
 
                             while (working)
