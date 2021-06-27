@@ -14,7 +14,10 @@ namespace Rediscovery.Communication.Protocol.Test
         public async void InOutLoopBack()
         {
             IProtocolLogger logger = new Internal.ProtocolLogger();
-            Internal.Device.IDeviceManager deviceManager = new Internal.Device.DeviceManager(logger);
+            Internal.Diagnostic.IDiagnosticPackage diagnosticPackage = new Internal.Diagnostic.DiagnosticPackage(logger);
+            Internal.Encryption.IEncryption encryption = new Internal.Encryption.Encryption();
+
+            Internal.Device.IDeviceManager deviceManager = new Internal.Device.DeviceManager(logger, encryption);
             var device2 = new Models.DeviceGreeting
             {
                 FriendlyName = "B",
@@ -31,7 +34,7 @@ namespace Rediscovery.Communication.Protocol.Test
             };
             deviceManager.Change(device2, System.Net.IPEndPoint.Parse("127.0.0.1"));
 
-            Internal.Device.IDeviceManager deviceManager2 = new Internal.Device.DeviceManager(logger);
+            Internal.Device.IDeviceManager deviceManager2 = new Internal.Device.DeviceManager(logger, encryption);
             var device = new Models.DeviceGreeting
             {
                 FriendlyName = "A",
@@ -48,8 +51,6 @@ namespace Rediscovery.Communication.Protocol.Test
             };
             deviceManager2.Change(device, System.Net.IPEndPoint.Parse("127.0.0.1"));
 
-            Internal.Diagnostic.IDiagnosticPackage diagnosticPackage = new Internal.Diagnostic.DiagnosticPackage(logger);
-            Internal.Encryption.IEncryption encryption = new Internal.Encryption.Encryption();
             encryption.SetInternSymmetric("HalloWorld!");
             ISerializer serializer = new Internal.Serializer(logger);
 
@@ -107,9 +108,9 @@ namespace Rediscovery.Communication.Protocol.Test
         public async void In()
         {
             IProtocolLogger logger = new Internal.ProtocolLogger();
-            Internal.Device.IDeviceManager deviceManager = new Internal.Device.DeviceManager(logger);
-            Internal.Diagnostic.IDiagnosticPackage diagnosticPackage = new Internal.Diagnostic.DiagnosticPackage(logger);
             Internal.Encryption.IEncryption encryption = new Internal.Encryption.Encryption();
+            Internal.Device.IDeviceManager deviceManager = new Internal.Device.DeviceManager(logger, encryption);
+            Internal.Diagnostic.IDiagnosticPackage diagnosticPackage = new Internal.Diagnostic.DiagnosticPackage(logger);
             IHandshakePipeline handshakePipeline = new HandshakePipeline(logger,
                 new Internal.Serializer(logger),
                 encryption,
