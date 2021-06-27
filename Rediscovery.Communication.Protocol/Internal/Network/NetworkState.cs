@@ -32,7 +32,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Network
                     _networkPasswords.Add(password);
             });
         }
-
+        
         public void EnumerateDecryptPasswords(Func<string, bool> passwordCallback)
         {
             try
