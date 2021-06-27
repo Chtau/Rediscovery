@@ -4,17 +4,11 @@ using System.Text;
 
 namespace Rediscovery.Communication.Protocol.Models
 {
-    public class ConnectionConfiguration
+    public class ConnectionConfiguration : BaseConnectionConfiguration<int, int>
     {
-        public ConnectionConfiguration(int listenPort, int sendPort, int packageSize)
+        public ConnectionConfiguration(int listenPort, int sendPort, int packageSize) : base(listenPort, sendPort, packageSize)
         {
-            ListenPort = listenPort;
-            SendPort = sendPort;
-            PackageSize = packageSize;
+            
         }
-
-        public int ListenPort { get; }
-        public int SendPort { get; }
-        public int PackageSize { get; }
     }
 }

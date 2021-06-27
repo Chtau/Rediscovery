@@ -7,6 +7,7 @@ using System.Text;
 using System.Linq;
 using Rediscovery.Communication.Protocol.Internal.Device;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Rediscovery.Communication.Protocol.Internal.Discovery
 {
@@ -114,26 +115,29 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
                         return;
                     try
                     {
-                        socket = OnGetSocket(configuration.Connection.ListenPort);
-                        socket.Bind(new IPEndPoint(IPAddress.Any, configuration.Connection.ListenPort));
-                        
-                        while (working)
+                        Parallel.ForEach(configuration.Connection.ListenPort, (port) =>
                         {
-                            EndPoint clientEp = new IPEndPoint(IPAddress.Any, 0);
-                            var bytes = new byte[configuration.Connection.PackageSize];
-                            int bytesReceived = socket.ReceiveFrom(bytes, ref clientEp);
-                            if (bytesReceived > 0)
+                            socket = OnGetSocket(port);
+                            socket.Bind(new IPEndPoint(IPAddress.Any, port));
+
+                            while (working)
                             {
+                                EndPoint clientEp = new IPEndPoint(IPAddress.Any, 0);
+                                var bytes = new byte[configuration.Connection.PackageSize];
+                                int bytesReceived = socket.ReceiveFrom(bytes, ref clientEp);
+                                if (bytesReceived > 0)
+                                {
 #if DISCOVER
                                 _logger.Trace($"Received UDP DGRAM From:{clientEp} Bytes Count:{bytesReceived}");
 #endif
-                                var deviceGreeting = _discoveryPipeline.Incoming<DeviceGreeting>(bytes.Take(bytesReceived).ToArray());
-                                if (deviceGreeting != null)
-                                {
-                                    _deviceManager.Change(deviceGreeting, (IPEndPoint)clientEp);
+                                    var deviceGreeting = _discoveryPipeline.Incoming<DeviceGreeting>(bytes.Take(bytesReceived).ToArray());
+                                    if (deviceGreeting != null)
+                                    {
+                                        _deviceManager.Change(deviceGreeting, (IPEndPoint)clientEp);
+                                    }
                                 }
                             }
-                        }
+                        });
                     }
                     catch (Exception ex)
                     {

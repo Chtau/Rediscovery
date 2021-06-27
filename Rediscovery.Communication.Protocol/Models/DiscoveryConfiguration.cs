@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rediscovery.Communication.Protocol.Models
 {
-    public class DiscoveryConfiguration : BaseConfiguration
+    public class DiscoveryConfiguration : BaseConfiguration<ConnectionConfigurationDiscovery>
     {
         public const int DefaultListenPort = 13570;
         public const int DefaultSendPort = 13570;
@@ -14,7 +14,7 @@ namespace Rediscovery.Communication.Protocol.Models
 
         public DiscoveryConfiguration()
         {
-            Connection = new ConnectionConfiguration(DefaultListenPort, DefaultSendPort, DefaultPackageSize);
+            Connection = new ConnectionConfigurationDiscovery(new List<int> { DefaultListenPort }, new List<int> { DefaultSendPort }, DefaultPackageSize);
         }
     }
 }

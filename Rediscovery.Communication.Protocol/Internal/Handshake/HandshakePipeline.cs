@@ -97,6 +97,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
 #if PIPELINE
                         _logger.Trace($"{nameof(HandshakePipeline)}.{nameof(Communication_Receive)} Put we're not the correct receiver in the package. (Content:{pack})");
 #endif
+                        return;
                     }
 #if PIPELINE
                     _logger.Trace($"{nameof(HandshakePipeline)}.{nameof(Communication_Receive)} Content:{pack}");

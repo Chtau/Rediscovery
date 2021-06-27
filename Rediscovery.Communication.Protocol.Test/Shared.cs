@@ -14,7 +14,7 @@ namespace Rediscovery.Communication.Protocol.Test
         public static IRediscoveryProtocol TestDevice(Models.ConnectionConfiguration connection, 
             Models.ConnectionConfiguration connectionLarge = null,
             Models.ConnectionConfiguration connectionHandshake = null,
-            Models.ConnectionConfiguration connectionDiscovery = null, bool discoveryListenDeactivated = true)
+            Models.ConnectionConfigurationDiscovery connectionDiscovery = null, bool discoveryListenDeactivated = true)
         {
             IRediscoveryProtocol protocol1 = new RediscoveryProtocol();
             protocol1.Start(new Models.Configuration
@@ -22,8 +22,8 @@ namespace Rediscovery.Communication.Protocol.Test
                 Discovery = new Models.DiscoveryConfiguration
                 {
                     ListenerDeactivated = discoveryListenDeactivated,
-                    Connection = connectionDiscovery ?? new Models.ConnectionConfiguration(Models.DiscoveryConfiguration.DefaultListenPort,
-                        Models.DiscoveryConfiguration.DefaultSendPort, Models.DiscoveryConfiguration.DefaultPackageSize)
+                    Connection = connectionDiscovery ?? new Models.ConnectionConfigurationDiscovery(new List<int> { Models.DiscoveryConfiguration.DefaultListenPort },
+                        new List<int> { Models.DiscoveryConfiguration.DefaultSendPort }, Models.DiscoveryConfiguration.DefaultPackageSize)
                 },
                 Data = new Models.DataConfiguration
                 {
@@ -51,7 +51,7 @@ namespace Rediscovery.Communication.Protocol.Test
             {
                 Discovery = new Models.DiscoveryConfiguration
                 {
-                    Connection = new Models.ConnectionConfiguration(Models.DiscoveryConfiguration.DefaultListenPort + portListenOffest, Models.DiscoveryConfiguration.DefaultSendPort + portSendOffest, Models.DiscoveryConfiguration.DefaultPackageSize)
+                    Connection = new Models.ConnectionConfigurationDiscovery(new List<int> { Models.DiscoveryConfiguration.DefaultListenPort + portListenOffest }, new List<int> { Models.DiscoveryConfiguration.DefaultSendPort + portSendOffest }, Models.DiscoveryConfiguration.DefaultPackageSize)
                 },
                 Data = new Models.DataConfiguration
                 {

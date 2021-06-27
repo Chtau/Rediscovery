@@ -55,3 +55,7 @@ A low latency unsafe way of transfering data between peers based on UDP. (Packag
 
 * [Enclave UDP Network](https://github.com/enclave-networks/research.udp-perf)
 * [Enclave UDP Network Blog](https://enclave.io/high-performance-udp-sockets-net5/)
+
+## Handshake
+
+We should switch from key exchange to `Diffie-Hellman` Key Agreement Scheme [ECDiffieHellmanCng](https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography.ecdiffiehellmancng?view=net-5.0)

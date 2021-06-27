@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rediscovery.Communication.Protocol.Models
 {
-    public class DataConfiguration : BaseConfiguration
+    public class DataConfiguration : BaseConfiguration<ConnectionConfiguration>
     {
         public const int DefaultListenPort = 13571;
         public const int DefaultSendPort = 13571;

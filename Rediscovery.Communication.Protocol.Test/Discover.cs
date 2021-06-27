@@ -65,7 +65,7 @@ namespace Rediscovery.Communication.Protocol.Test
                 Discovery = new Models.DiscoveryConfiguration
                 {
                     ListenerDeactivated = true,
-                    Connection = new Models.ConnectionConfiguration(16571, 16574, 1024)
+                    Connection = new Models.ConnectionConfigurationDiscovery(16571, 16574, 1024)
                 },
                 Data = new Models.DataConfiguration
                 {
@@ -82,7 +82,7 @@ namespace Rediscovery.Communication.Protocol.Test
             {
                 Discovery = new Models.DiscoveryConfiguration
                 {
-                    Connection = new Models.ConnectionConfiguration(16574, Models.DiscoveryConfiguration.DefaultSendPort, 1024)
+                    Connection = new Models.ConnectionConfigurationDiscovery(16574, Models.DiscoveryConfiguration.DefaultSendPort, 1024)
                 },
                 Data = new Models.DataConfiguration
                 {
@@ -99,6 +99,30 @@ namespace Rediscovery.Communication.Protocol.Test
             await Task.Delay(TimeSpan.FromSeconds(5));
             Assert.True(protocol.Devices.Count == 2, "Discover device number missmatch");
             Assert.True(protocol.Devices.Count(x => x.Hops != 0) == 1, "Peer device with one hop should exist");
+
+            protocol.Stop();
+            protocol1.Stop();
+            protocol2.Stop();
+            await Task.Delay(TimeSpan.FromSeconds(1));
+        }
+
+        [Fact]
+        public async void ListenRange()
+        {
+            IRediscoveryProtocol protocolP2 = Shared.TestDevice(1000, 11000);
+            IRediscoveryProtocol protocolP1 = Shared.TestDevice(1000, 10000);
+
+            IRediscoveryProtocol protocol3 = Shared.TestDevice(0, 1000);
+
+            IRediscoveryProtocol protocol1 = Shared.TestDevice(new Models.ConnectionConfiguration(16576, 16577, 1024));
+
+            IRediscoveryProtocol protocol2 = Shared.TestDevice(new Models.ConnectionConfiguration(16576, 16577, 1024));
+
+            IRediscoveryProtocol protocol = new RediscoveryProtocol();
+            protocol.Start(null);
+            await Task.Delay(TimeSpan.FromSeconds(5));
+            Assert.True(protocol.Devices.Count == 3, "Discover device number missmatch");
+            Assert.True(protocol.Devices.Count(x => x.Hops == 0) == 2, "Peer connection should be direct");
 
             protocol.Stop();
             protocol1.Stop();

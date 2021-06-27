@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Rediscovery.Communication.Protocol.Internal.Discovery
 {
@@ -106,76 +107,79 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
                         return;
                     try
                     {
-                        var socket = OnGetSocket(configuration.Connection.SendPort);
-                        socket.EnableBroadcast = true;
-                        socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
-                        while (working)
+                        Parallel.ForEach(configuration.Connection.SendPort, (port) =>
                         {
-                            System.Threading.Thread.Sleep(discoverySendTimeout);
-                            // send own device greeting
-                            // All other peers will be send with +1 hop
-                            // and communication ports and package size will be used from this
-                            // because the current device is a proxy for the peers
-                            try
+                            var socket = OnGetSocket(port);
+                            socket.EnableBroadcast = true;
+                            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
+                            while (working)
                             {
-                                var device = OnGetDeviceGreeting();
-                                var deviceRaw = _discoveryPipeline.Outgoing(device);
+                                System.Threading.Thread.Sleep(discoverySendTimeout);
+                                // send own device greeting
+                                // All other peers will be send with +1 hop
+                                // and communication ports and package size will be used from this
+                                // because the current device is a proxy for the peers
+                                try
+                                {
+                                    var device = OnGetDeviceGreeting();
+                                    var deviceRaw = _discoveryPipeline.Outgoing(device);
 #if DISCOVER
                                 _logger.Trace($"Broadcast Greeting for Peer:{device.Identifier} Hops:{device.Hops} Bytes:{deviceRaw.Length}");
 #endif
-                                socket.SendTo(deviceRaw, new IPEndPoint(IPAddress.Broadcast, configuration.Connection.SendPort));
-                                var deviceGreetings = _deviceManager.Devices;
-                                if (deviceGreetings.Count > 0)
-                                {
-                                    foreach (var deviceGreeting in deviceGreetings)
+                                    socket.SendTo(deviceRaw, new IPEndPoint(IPAddress.Broadcast, port));
+                                    var deviceGreetings = _deviceManager.Devices;
+                                    if (deviceGreetings.Count > 0)
                                     {
-                                        var peerGreeting = new DeviceGreeting
+                                        foreach (var deviceGreeting in deviceGreetings)
                                         {
-                                            Identifier = deviceGreeting.Identifier,
-                                            FriendlyName = deviceGreeting.FriendlyName,
-                                            Hops = deviceGreeting.Hops + 1,
-                                            Communication = new DeviceCommunication
+                                            var peerGreeting = new DeviceGreeting
                                             {
-                                                Data = new DeviceCommunicationSetting
+                                                Identifier = deviceGreeting.Identifier,
+                                                FriendlyName = deviceGreeting.FriendlyName,
+                                                Hops = deviceGreeting.Hops + 1,
+                                                Communication = new DeviceCommunication
                                                 {
-                                                    PackageSize = connectionListenConfigurationData.PackageSize,
-                                                    Port = connectionListenConfigurationData.Port,
+                                                    Data = new DeviceCommunicationSetting
+                                                    {
+                                                        PackageSize = connectionListenConfigurationData.PackageSize,
+                                                        Port = connectionListenConfigurationData.Port,
+                                                    },
+                                                    Large = new DeviceCommunicationSetting
+                                                    {
+                                                        PackageSize = connectionListenConfigurationLarge.PackageSize,
+                                                        Port = connectionListenConfigurationLarge.Port
+                                                    },
+                                                    Handshake = new DeviceCommunicationSetting
+                                                    {
+                                                        PackageSize = connectionListenConfigurationHandshake.PackageSize,
+                                                        Port = connectionListenConfigurationHandshake.Port
+                                                    }
                                                 },
-                                                Large = new DeviceCommunicationSetting
+                                                Metadata = new DeviceMetadata
                                                 {
-                                                    PackageSize = connectionListenConfigurationLarge.PackageSize,
-                                                    Port = connectionListenConfigurationLarge.Port
-                                                },
-                                                Handshake = new DeviceCommunicationSetting
-                                                {
-                                                    PackageSize = connectionListenConfigurationHandshake.PackageSize,
-                                                    Port = connectionListenConfigurationHandshake.Port
+                                                    Idiom = deviceGreeting.Metadata.Idiom,
+                                                    Is64Bit = deviceGreeting.Metadata.Is64Bit,
+                                                    Machine = deviceGreeting.Metadata.Machine,
+                                                    OS = deviceGreeting.Metadata.OS,
+                                                    PhysicalMemory = deviceGreeting.Metadata.PhysicalMemory,
+                                                    Processor = deviceGreeting.Metadata.Processor,
+                                                    User = deviceGreeting.Metadata.User
                                                 }
-                                            },
-                                            Metadata = new DeviceMetadata
-                                            {
-                                                Idiom = deviceGreeting.Metadata.Idiom,
-                                                Is64Bit = deviceGreeting.Metadata.Is64Bit,
-                                                Machine = deviceGreeting.Metadata.Machine,
-                                                OS = deviceGreeting.Metadata.OS,
-                                                PhysicalMemory = deviceGreeting.Metadata.PhysicalMemory,
-                                                Processor = deviceGreeting.Metadata.Processor,
-                                                User = deviceGreeting.Metadata.User
-                                            }
-                                        };
-                                        var raw = _discoveryPipeline.Outgoing(peerGreeting);
+                                            };
+                                            var raw = _discoveryPipeline.Outgoing(peerGreeting);
 #if DISCOVER
                                         _logger.Trace($"Broadcast Greeting for Peer:{deviceGreeting.Identifier} Hops:{deviceGreeting.Hops} Bytes:{raw.Length}");
 #endif
-                                        socket.SendTo(raw, new IPEndPoint(IPAddress.Broadcast, configuration.Connection.SendPort));
+                                            socket.SendTo(raw, new IPEndPoint(IPAddress.Broadcast, port));
+                                        }
                                     }
                                 }
+                                catch (Exception ex)
+                                {
+                                    _logger.Error(ex);
+                                }
                             }
-                            catch (Exception ex)
-                            {
-                                _logger.Error(ex);
-                            }
-                        }
+                        });
                     }
                     catch (Exception ex)
                     {
