@@ -75,7 +75,7 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Home
         {
             try
             {
-                protocol.Send("192.168.1.103");
+                //protocol.Send("192.168.1.103");
             }
             catch (Exception ex)
             {
@@ -89,13 +89,13 @@ namespace Rediscovery.Client.App.MobileAndroid.Features.Home
             {
                 Task.Run(() =>
                 {
-                    protocol.Listen((transfer) =>
+                    /*protocol.Listen((transfer) =>
                     {
                         var result = System.Text.ASCIIEncoding.ASCII.GetString(transfer.Content);
                         System.Diagnostics.Trace.TraceInformation($"Socket received:{result}");
 
                         Snackbar.Make(View, $"Socket received:{result}", Snackbar.LengthLong).Show();
-                    });
+                    });*/
                 });
             }
             catch (Exception ex)

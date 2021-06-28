@@ -59,5 +59,42 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
         public void SetInternSymmetric(string password) => SymmetricPassword = password;
 
         public string CreatePassword(int length = 64) => CryptographyRandomString.GetAlphanumericExtendet(length);
+
+        public byte[] DHPublicKey()
+        {
+            using (ECDiffieHellmanCng client = new ECDiffieHellmanCng())
+            {
+                client.KeyDerivationFunction = ECDiffieHellmanKeyDerivationFunction.Hmac;
+                client.HashAlgorithm = CngAlgorithm.ECDiffieHellmanP521;
+                return client.PublicKey.ToByteArray();
+                /*Bob bob = new Bob();
+                CngKey bobKey = CngKey.Import(bob.bobPublicKey, CngKeyBlobFormat.EccPublicBlob);
+                byte[] aliceKey = alice.DeriveKeyMaterial(bobKey);
+                byte[] encryptedMessage = null;
+                byte[] iv = null;
+                Send(aliceKey, "Secret message", out encryptedMessage, out iv);
+                bob.Receive(encryptedMessage, iv);*/
+            }
+        }
+
+        public byte[] DHEncrypt(byte[] payload, byte[] publicKey)
+        {
+            using (ECDiffieHellmanCng client = new ECDiffieHellmanCng())
+            {
+                CngKey key = CngKey.Import(publicKey, CngKeyBlobFormat.EccPublicBlob);
+                /*Bob bob = new Bob();
+                CngKey bobKey = CngKey.Import(bob.bobPublicKey, CngKeyBlobFormat.EccPublicBlob);
+                byte[] aliceKey = alice.DeriveKeyMaterial(bobKey);
+                byte[] encryptedMessage = null;
+                byte[] iv = null;
+                Send(aliceKey, "Secret message", out encryptedMessage, out iv);
+                bob.Receive(encryptedMessage, iv);*/
+            }
+        }
+
+        public byte[] DHDecrypt(byte[] payload, byte[] publicKey)
+        {
+
+        }
     }
 }
