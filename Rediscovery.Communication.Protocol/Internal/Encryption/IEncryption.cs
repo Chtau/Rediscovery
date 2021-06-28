@@ -7,6 +7,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
 {
     internal interface IEncryption
     {
+        /// <summary>
+        /// Overhead for symmectic encryption signature
+        /// </summary>
         int SymmetricEncryptionSignatureLength { get; }
         /// <summary>
         /// Access to the current RSA key pair
@@ -65,5 +68,17 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
         /// <param name="length">Password length</param>
         /// <returns></returns>
         string CreatePassword(int length = 64);
+        /// <summary>
+        /// Generate a Diffie Hellman key pair
+        /// </summary>
+        /// <returns>Private and Public key</returns>
+        Keys<byte[]> DHKeys();
+        /// <summary>
+        /// Calculates the shared key with the local private and the remote public key
+        /// </summary>
+        /// <param name="remotePublicKey">Public key from a remote device</param>
+        /// <param name="privateKey">Private local key</param>
+        /// <returns>Shared key (512 bytes / 64 bits)</returns>
+        byte[] DHSharedKey(byte[] remotePublicKey, byte[] privateKey);
     }
 }

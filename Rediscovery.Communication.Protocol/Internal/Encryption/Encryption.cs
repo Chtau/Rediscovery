@@ -8,7 +8,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
     internal class Encryption : IEncryption
     {
         public int SymmetricEncryptionSignatureLength => SymmetricAES.MinimumEncryptedMessageByteSize;
-        public Keys<string> RSAKey { get; private set; } 
+        public Keys<string> RSAKey { get; private set; }
         public string SymmetricPassword { get; private set; }
 
         public Encryption()
@@ -69,9 +69,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
             return new Keys<byte[]>(pKey, client.PublicKey.ToByteArray());
         }
 
-        public byte[] DHSharedKey(byte[] remotePublicKey)
+        public byte[] DHSharedKey(byte[] remotePublicKey, byte[] privateKey)
         {
             using ECDiffieHellmanCng client = new ECDiffieHellmanCng();
+            client.ImportECPrivateKey(privateKey, out int read);
             client.KeyDerivationFunction = ECDiffieHellmanKeyDerivationFunction.Hmac;
             client.HashAlgorithm = CngAlgorithm.ECDiffieHellmanP521;
             var pbkey = ECDiffieHellmanCngPublicKey.FromByteArray(remotePublicKey, CngKeyBlobFormat.EccPublicBlob);
