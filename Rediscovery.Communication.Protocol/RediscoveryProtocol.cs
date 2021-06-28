@@ -170,7 +170,7 @@ namespace Rediscovery.Communication.Protocol
             }
         }
 
-        public void SetRASKeys(string privateKey, string publicKey) => _encryption.SetInternRAS(new Keys(privateKey, publicKey));
+        public void SetRASKeys(string privateKey, string publicKey) => _encryption.SetInternRAS(new Keys<string>(privateKey, publicKey));
 
         public void AddNetworkPasswords(params string[] passwords) => _networkState.AddNetworkPasswords(passwords);
 

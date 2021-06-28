@@ -10,6 +10,21 @@ namespace Rediscovery.Communication.Protocol.Test
 {
     public class Encryption
     {
+        [Fact]
+        public void DiffieHellmanPublicKey()
+        {
+            var encryption = new Internal.Encryption.Encryption();
+            var bytes = encryption.DHKeys();
+            Assert.True(bytes.Public.Length == 140);
+        }
 
+        [Fact]
+        public void DiffieHellmanSharedKey()
+        {
+            var encryption = new Internal.Encryption.Encryption();
+            var bytes = encryption.DHKeys();
+            var shared = encryption.DHSharedKey(bytes.Public);
+            Assert.True(shared.Length == 64);
+        }
     }
 }

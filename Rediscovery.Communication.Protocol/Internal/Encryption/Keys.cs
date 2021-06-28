@@ -4,12 +4,12 @@ using System.Text;
 
 namespace Rediscovery.Communication.Protocol.Internal.Encryption
 {
-    internal class Keys
+    internal class Keys<T>
     {
-        public string Private { get; }
-        public string Public { get; }
+        public T Private { get; }
+        public T Public { get; }
 
-        public Keys(string @private, string @public)
+        public Keys(T @private, T @public)
         {
             Private = @private;
             Public = @public;

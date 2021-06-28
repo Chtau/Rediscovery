@@ -11,7 +11,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
         /// <summary>
         /// Access to the current RSA key pair
         /// </summary>
-        Keys RSAKey { get; }
+        Keys<string> RSAKey { get; }
         /// <summary>
         /// Access to the current AES password
         /// </summary>
@@ -20,7 +20,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
         /// Sets RSA public and private keys.
         /// </summary>
         /// <param name="key">RSA key pair</param>
-        void SetInternRAS(Keys key);
+        void SetInternRAS(Keys<string> key);
         /// <summary>
         /// Password for the AES encryption.
         /// </summary>
@@ -30,7 +30,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
         /// Generate new RSA key pair
         /// </summary>
         /// <returns>RSA public and private key</returns>
-        Keys GenerateRSA();
+        Keys<string> GenerateRSA();
         /// <summary>
         /// Create cypher <see cref="byte[]"/> from the raw <see cref="byte[]"/> content.
         /// </summary>
