@@ -19,6 +19,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         private readonly TimeSpan waitBeforeTimeoutCheck = TimeSpan.FromSeconds(30);
         private readonly Dictionary<string, string> _deviceSymmetric = new Dictionary<string, string>();
         private readonly Dictionary<string, string> _devicePublicKeys = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _deviceDHKeys = new Dictionary<string, string>();
 
         private bool isTimeoutCheckRunning = false;
         private string currentIdentifer;
@@ -231,7 +232,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
             return null;
         }
 
-        public string GetOrCreateSymmetricPassword(string identifier, bool addForLocalIdentifier = true)
+        /*public string GetOrCreateSymmetricPassword(string identifier, bool addForLocalIdentifier = true)
         {
             try
             {
@@ -248,8 +249,18 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
                 _logger.Error(ex);
             }
             return null;
-        }
+        }*/
 
         private string OnGetLocalRemoteIdentifier(string identifier) => currentIdentifer + "@" + identifier;
+
+        public void DHKeyReceived(byte[] publicKey, string identifier)
+        {
+            throw new NotImplementedException();
+        }
+
+        public byte[] GetDHPublicKey(string identifier)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

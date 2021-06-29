@@ -70,6 +70,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         bool HandshakeRequired(string identifier);
         byte[] Decrypt(byte[] cypher, string identifier);
         byte[] Encrypt(byte[] raw, string identifier);
-        string GetOrCreateSymmetricPassword(string identifier, bool addForLocalIdentifier = true);
+        void DHKeyReceived(byte[] publicKey, string identifier);
+        byte[] GetDHPublicKey(string identifier);
     }
 }
