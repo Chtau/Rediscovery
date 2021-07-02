@@ -48,7 +48,7 @@ namespace Rediscovery.Communication.Protocol.Test
         [InlineData("{9F866A95-F78B-4931-BBEC-A1DFD41F480E}", "{F89BF020-0EBE-4CCC-AB07-701B2A76C1FB}")]
         [InlineData("{A529F099-3274-483F-8314-0610E34BABD3}", "{F89BF020-0EBE-4CCC-AB07-701B2A76C1FB}")]
         [InlineData("{0870337D-DDD4-4B5F-A537-AA4CE6255B80}", "{F89BF020-0EBE-4CCC-AB07-701B2A76C1FB}")]
-        public void AES(string pw, string dataRaw)
+        public void Symmetric(string pw, string dataRaw)
         {
             var dataByte = Encoding.UTF8.GetBytes(dataRaw);
             var encryption = new Internal.Encryption.Encryption();
