@@ -262,5 +262,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         {
             throw new NotImplementedException();
         }
+
+        public object GetOrCreateSymmetricPassword(string senderIdentifer)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

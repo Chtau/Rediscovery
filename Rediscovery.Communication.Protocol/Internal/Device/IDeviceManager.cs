@@ -72,5 +72,6 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         byte[] Encrypt(byte[] raw, string identifier);
         void DHKeyReceived(byte[] publicKey, string identifier);
         byte[] GetDHPublicKey(string identifier);
+        object GetOrCreateSymmetricPassword(string senderIdentifer);
     }
 }
