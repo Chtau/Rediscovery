@@ -1,4 +1,12 @@
-﻿using System;
+﻿using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Digests;
+using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.Crypto.Macs;
+using Org.BouncyCastle.Crypto.Modes;
+using Org.BouncyCastle.Crypto.Paddings;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Security;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -25,24 +33,35 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
             var keySalt = GenerateRandomBytes(PasswordSaltByteSize);
             var key = GetKey(password, keySalt);
             var iv = GenerateRandomBytes(AesBlockByteSize);
-
             byte[] cipherText;
+
+#if false
             using (var aes = CreateAes())
             using (var encryptor = aes.CreateEncryptor(key, iv))
             {
                 cipherText = encryptor.TransformFinalBlock(content, 0, content.Length);
             }
+#else
+            AesEngine engine = new AesEngine();
+            CbcBlockCipher blockCipher = new CbcBlockCipher(engine);
+            PaddedBufferedBlockCipher cipher = new PaddedBufferedBlockCipher(blockCipher); //scheme is PKCS5/PKCS7
+            KeyParameter keyParam = new KeyParameter(key);
+            ParametersWithIV keyParamWithIV = new ParametersWithIV(keyParam, iv, 0, AesBlockByteSize);
+
+            cipher.Init(true, keyParamWithIV);
+            cipherText = new byte[cipher.GetOutputSize(content.Length)];
+            int length = cipher.ProcessBytes(content, cipherText, 0);
+            cipher.DoFinal(cipherText, length);
+#endif
 
             // sign
             var authKeySalt = GenerateRandomBytes(PasswordSaltByteSize);
             var result = Merge(additionalCapacity: SignatureByteSize, authKeySalt, keySalt, iv, cipherText);
+            var payloadToSignLength = result.Length - SignatureByteSize;
 
-            using (var hmac = new HMACSHA256(GetKey(password, authKeySalt)))
-            {
-                var payloadToSignLength = result.Length - SignatureByteSize;
-                var signatureTag = hmac.ComputeHash(result, 0, payloadToSignLength);
-                signatureTag.CopyTo(result, payloadToSignLength);
-            }
+            var hash = HMACSHA256(GetKey(password, authKeySalt), result, 0, payloadToSignLength);
+            hash.CopyTo(result, payloadToSignLength);
+
             return result;
         }
 
@@ -91,6 +110,85 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
                 }
             }
         }
+
+        private static byte[] HMACSHA256(byte[] key, byte[] buffer, int offset, int count)
+        {
+#if false
+            using (var hmacMS = new HMACSHA256(key))
+            {
+                return hmacMS.ComputeHash(buffer, offset, count);
+            }
+#else
+            var hmac = new HMac(new Sha256Digest());
+            hmac.Init(new KeyParameter(key));
+            byte[] result = new byte[hmac.GetMacSize()];
+            hmac.BlockUpdate(buffer, offset, count);
+            hmac.DoFinal(result, 0);
+
+            return result;
+#endif
+        }
+
+        /*private static ICipherParameters CreateKeyParameters(byte[] key, byte[] iv, int macSize)
+        {
+            var keyParameter = new KeyParameter(key);
+            if (_cipherMode == CipherMode.CBC)
+            {
+                return new ParametersWithIV(keyParameter, iv);
+            }
+            else if (_cipherMode == CipherMode.GCM)
+            {
+                return new AeadParameters(keyParameter, macSize, iv);
+            }
+
+            throw new Exception("Unsupported cipher mode");
+        }
+
+        private static string PackCipherData(byte[] encryptedBytes, byte[] iv)
+        {
+            var dataSize = encryptedBytes.Length + iv.Length + 1;
+            if (_cipherMode == CipherMode.CBC)
+                dataSize += 1;
+
+            var index = 0;
+            var data = new byte[dataSize];
+            data[index] = AesIvSize;
+            index += 1;
+            if (_cipherMode == CipherMode.CBC)
+            {
+                data[index] = GcmTagSize;
+                index += 1;
+            }
+
+            Array.Copy(iv, 0, data, index, iv.Length);
+            index += iv.Length;
+            Array.Copy(encryptedBytes, 0, data, index, encryptedBytes.Length);
+
+            return Convert.ToBase64String(data);
+        }
+
+        private static (byte[], byte[], byte) UnpackCipherData(string cipherText)
+        {
+            var index = 0;
+            var cipherData = Convert.FromBase64String(cipherText);
+            byte ivSize = cipherData[index];
+            index += 1;
+
+            byte tagSize = 0;
+            if (_cipherMode == CipherMode.CBC)
+            {
+                tagSize = cipherData[index];
+                index += 1;
+            }
+
+            byte[] iv = new byte[ivSize];
+            Array.Copy(cipherData, index, iv, 0, ivSize);
+            index += ivSize;
+
+            byte[] encryptedBytes = new byte[cipherData.Length - index];
+            Array.Copy(cipherData, index, encryptedBytes, 0, encryptedBytes.Length);
+            return (encryptedBytes, iv, tagSize);
+        }*/
 
         private static Aes CreateAes()
         {
