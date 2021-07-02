@@ -5,3 +5,22 @@
 Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
+
+@code { 
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        try
+        {
+            var prot = new Rediscovery.Communication.Protocol.RediscoveryProtocol("123");
+            prot.Start(null);
+            System.Diagnostics.Trace.TraceInformation("Protocol started");
+
+        } catch (Exception ex)
+        {
+            System.Diagnostics.Trace.TraceError(ex.ToString());
+        }
+    }
+
+}

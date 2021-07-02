@@ -7,6 +7,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
 {
     internal class Encryption : IEncryption
     {
+        // TODO: Need to replace RSACryptoServiceProvider because of PlatformNotSupported in Blazor => replcae with Diffie-Hellman
+        // TODO: Need to replace SymmetricAES.Encrypt because of PlatformNotSupported in Blazor => Need Implementation
+        // TODO: Need to replace CryptographyRandomString.GetAlphanumericExtendet (System.Security.Cryptography.Csp) because of PlatformNotSupported in Blazor => Not used at the moment (only nice to have)
+        
+
         public int SymmetricEncryptionSignatureLength => SymmetricAES.MinimumEncryptedMessageByteSize;
         public Keys<string> RSAKey { get; private set; }
         public string SymmetricPassword { get; private set; }
@@ -14,14 +19,17 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
         public Encryption()
         {
             RSAKey = GenerateRSA();
+            //var a = SymmetricAES.Encrypt(System.Text.Encoding.UTF8.GetBytes("testetst"), "asdasdasd");
+            //var pw = CryptographyRandomString.GetAlphanumericExtendet(128);
         }
 
         public Keys<string> GenerateRSA()
         {
-            var csp = new RSACryptoServiceProvider(4096);
+            /*var csp = new RSACryptoServiceProvider(4096);
             var privKey = csp.ExportParameters(true);
             var pubKey = csp.ExportParameters(false);
-            return new Keys<string>(privKey.Serialize(), pubKey.Serialize());
+            return new Keys<string>(privKey.Serialize(), pubKey.Serialize());*/
+            return null;
         }
 
         public byte[] EncryptRSA(string publicKey, byte[] content)
