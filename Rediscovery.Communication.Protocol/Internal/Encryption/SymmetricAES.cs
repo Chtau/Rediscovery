@@ -35,7 +35,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
             var iv = GenerateRandomBytes(AesBlockByteSize);
             byte[] cipherText;
 
-#if false
+#if MSCrypto
             using (var aes = CreateAes())
             using (var encryptor = aes.CreateEncryptor(key, iv))
             {
@@ -74,6 +74,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
 
             var authKeySalt = encryptedData.AsSpan(0, PasswordSaltByteSize).ToArray();
             var keySalt = encryptedData.AsSpan(PasswordSaltByteSize, PasswordSaltByteSize).ToArray();
+            var key = GetKey(password, keySalt);
             var iv = encryptedData.AsSpan(2 * PasswordSaltByteSize, AesBlockByteSize).ToArray();
             var signatureTag = encryptedData.AsSpan(encryptedData.Length - SignatureByteSize, SignatureByteSize).ToArray();
 
@@ -81,39 +82,47 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
             var cipherTextLength = encryptedData.Length - cipherTextIndex - signatureTag.Length;
 
             // verify signature
-            using (var hmac = new HMACSHA256(GetKey(password, authKeySalt)))
+            var payloadToSignLength = encryptedData.Length - SignatureByteSize;
+            var hash = HMACSHA256(GetKey(password, authKeySalt), encryptedData, 0, payloadToSignLength);
+            // constant time checking to prevent timing attacks
+            var signatureVerificationResult = 0;
+            for (int i = 0; i < signatureTag.Length; i++)
             {
-                var payloadToSignLength = encryptedData.Length - SignatureByteSize;
-                var signatureTagExpected = hmac
-                    .ComputeHash(encryptedData, 0, payloadToSignLength);
-
-                // constant time checking to prevent timing attacks
-                var signatureVerificationResult = 0;
-                for (int i = 0; i < signatureTag.Length; i++)
-                {
-                    signatureVerificationResult |= signatureTag[i] ^ signatureTagExpected[i];
-                }
-
-                if (signatureVerificationResult != 0)
-                {
-                    throw new CryptographicException("Invalid signature");
-                }
+                signatureVerificationResult |= signatureTag[i] ^ hash[i];
             }
 
-            // decrypt
+            if (signatureVerificationResult != 0)
+            {
+                throw new CryptographicException("Invalid signature");
+            }
+
+#if MSCrypto
             using (var aes = CreateAes())
             {
-                using (var encryptor = aes.CreateDecryptor(GetKey(password, keySalt), iv))
+                using (var encryptor = aes.CreateDecryptor(key, iv))
                 {
+                    // Result = 38      128, 48, 48
                     var decryptedBytes = encryptor.TransformFinalBlock(encryptedData, cipherTextIndex, cipherTextLength);
                     return decryptedBytes;
                 }
             }
+#else
+            // decrypt
+            AesEngine engine = new AesEngine();
+            CbcBlockCipher blockCipher = new CbcBlockCipher(engine);
+            PaddedBufferedBlockCipher cipher = new PaddedBufferedBlockCipher(blockCipher); // Scheme is PKCS5/PKCS7
+            KeyParameter keyParam = new KeyParameter(key);
+            ParametersWithIV keyParamWithIV = new ParametersWithIV(keyParam, iv);
+
+            cipher.Init(false, keyParamWithIV);
+            //var length = cipher.ProcessBytes(encryptedData, cipherTextIndex, cipherTextLength, comparisonBytes, 0);
+            return cipher.DoFinal(encryptedData, cipherTextIndex, cipherTextLength);
+#endif
         }
 
         private static byte[] HMACSHA256(byte[] key, byte[] buffer, int offset, int count)
         {
-#if false
+#if MSCrypto
             using (var hmacMS = new HMACSHA256(key))
             {
                 return hmacMS.ComputeHash(buffer, offset, count);
