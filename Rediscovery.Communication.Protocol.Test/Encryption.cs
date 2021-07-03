@@ -58,5 +58,11 @@ namespace Rediscovery.Communication.Protocol.Test
             Assert.True(dataRaw == dataRawOut, "String data output");
             Assert.True(Convert.ToBase64String(dataByte) == Convert.ToBase64String(dataByteOut), "Byte data output");
         }
+
+        [Fact]
+        public void DH()
+        {
+            Internal.Encryption.AsymmetricDiffieHellman.GetNewKeyPair();
+        }
     }
 }
