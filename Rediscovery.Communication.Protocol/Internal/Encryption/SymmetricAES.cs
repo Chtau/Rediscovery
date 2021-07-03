@@ -138,67 +138,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
 #endif
         }
 
-        /*private static ICipherParameters CreateKeyParameters(byte[] key, byte[] iv, int macSize)
-        {
-            var keyParameter = new KeyParameter(key);
-            if (_cipherMode == CipherMode.CBC)
-            {
-                return new ParametersWithIV(keyParameter, iv);
-            }
-            else if (_cipherMode == CipherMode.GCM)
-            {
-                return new AeadParameters(keyParameter, macSize, iv);
-            }
-
-            throw new Exception("Unsupported cipher mode");
-        }
-
-        private static string PackCipherData(byte[] encryptedBytes, byte[] iv)
-        {
-            var dataSize = encryptedBytes.Length + iv.Length + 1;
-            if (_cipherMode == CipherMode.CBC)
-                dataSize += 1;
-
-            var index = 0;
-            var data = new byte[dataSize];
-            data[index] = AesIvSize;
-            index += 1;
-            if (_cipherMode == CipherMode.CBC)
-            {
-                data[index] = GcmTagSize;
-                index += 1;
-            }
-
-            Array.Copy(iv, 0, data, index, iv.Length);
-            index += iv.Length;
-            Array.Copy(encryptedBytes, 0, data, index, encryptedBytes.Length);
-
-            return Convert.ToBase64String(data);
-        }
-
-        private static (byte[], byte[], byte) UnpackCipherData(string cipherText)
-        {
-            var index = 0;
-            var cipherData = Convert.FromBase64String(cipherText);
-            byte ivSize = cipherData[index];
-            index += 1;
-
-            byte tagSize = 0;
-            if (_cipherMode == CipherMode.CBC)
-            {
-                tagSize = cipherData[index];
-                index += 1;
-            }
-
-            byte[] iv = new byte[ivSize];
-            Array.Copy(cipherData, index, iv, 0, ivSize);
-            index += ivSize;
-
-            byte[] encryptedBytes = new byte[cipherData.Length - index];
-            Array.Copy(cipherData, index, encryptedBytes, 0, encryptedBytes.Length);
-            return (encryptedBytes, iv, tagSize);
-        }*/
-
+#if MSCrypto
         private static Aes CreateAes()
         {
             var aes = Aes.Create();
@@ -206,6 +146,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
             aes.Padding = PaddingMode.PKCS7;
             return aes;
         }
+#endif
 
         private static byte[] GetKey(string password, byte[] passwordSalt)
         {
