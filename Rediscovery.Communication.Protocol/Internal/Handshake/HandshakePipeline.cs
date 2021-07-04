@@ -53,6 +53,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
         {
             try
             {
+                // TODO: check if this is needed (we already could have received the remote public key with the handle from OnHandleMessageValue)
                 var key = _deviceManager.GetDHPublicKey(deviceGreeting.Device.Identifier);
                 var rawPackage = new HandshakeState(currentIdentifier,
                     deviceGreeting.Device.Identifier,
@@ -141,6 +142,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
             switch (expectedResponseType)
             {
                 case HandshakeState.ExpectedResponseType.PublicKey:
+                    // TODO: check if this is needed (we already could have received the remote public key with the handle from OnHandleMessageValue)
                     var key = _deviceManager.GetDHPublicKey(senderIdentifer);
                     package = new HandshakeState(currentIdentifier,
                         deviceGreeting.Device.Identifier,
