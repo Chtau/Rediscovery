@@ -14,12 +14,13 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
     {
         private readonly IProtocolLogger _logger;
         private readonly IEncryption _encryption;
+        private readonly ISerializer _serializer;
         private readonly List<DeviceGreetingReceived> _devices = new List<DeviceGreetingReceived>();
         private readonly TimeSpan deviceTimeoutOffset = TimeSpan.FromSeconds(10);
         private readonly TimeSpan waitBeforeTimeoutCheck = TimeSpan.FromSeconds(30);
         private readonly Dictionary<string, string> _deviceSymmetric = new Dictionary<string, string>();
         private readonly Dictionary<string, string> _devicePublicKeys = new Dictionary<string, string>();
-        private readonly Dictionary<string, string> _deviceDHKeys = new Dictionary<string, string>();
+        private readonly Dictionary<string, AsymmetricDiffieHellman> _deviceDHInstances = new Dictionary<string, AsymmetricDiffieHellman>();
 
         private bool isTimeoutCheckRunning = false;
         private string currentIdentifer;
@@ -30,18 +31,22 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         public event EventHandler<string> DeviceIncomingPing;
 
         public DeviceManager(IProtocolLogger logger,
-            IEncryption encryption)
+            IEncryption encryption,
+            ISerializer serializer)
         {
             _logger = logger;
             _encryption = encryption;
+            _serializer = serializer;
         }
 
         public DeviceGreetingReceived GetGreeting(string identifier)
         {
             try
             {
+                identifier = identifier.ExactLength(16);
                 return _devices.FirstOrDefault(x => string.Equals(x.Device.Identifier, identifier, StringComparison.OrdinalIgnoreCase));
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.Error(ex);
             }
@@ -103,7 +108,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
                     catch (Exception ex)
                     {
                         _logger.Error(ex);
-                    } finally
+                    }
+                    finally
                     {
                         isTimeoutCheckRunning = false;
                     }
@@ -116,22 +122,24 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
             }
         }
 
-        public void SetIdentifier(string identifier) => currentIdentifer = identifier;
+        public void SetIdentifier(string identifier) => currentIdentifer = identifier.ExactLength(16);
 
         private string OnDeviceSymmetricPassword(string identifier)
         {
             try
             {
+                identifier = identifier.ExactLength(16);
                 if (_deviceSymmetric.ContainsKey(identifier))
                     return _deviceSymmetric[identifier];
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.Error(ex);
             }
             return null;
         }
 
-        public void AddOrUpdateDeviceSymmetric(string identifier, string password)
+        /*public void AddOrUpdateDeviceSymmetric(string identifier, string password)
         {
             try
             {
@@ -144,12 +152,13 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
             {
                 _logger.Error(ex);
             }
-        }
+        }*/
 
         public string GetIP(string identifier)
         {
             try
             {
+                identifier = identifier.ExactLength(16);
                 return _devices.FirstOrDefault(x => string.Equals(x.Device.Identifier, identifier, StringComparison.OrdinalIgnoreCase))?.IP;
             }
             catch (Exception ex)
@@ -159,7 +168,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
             return null;
         }
 
-        public void AddOrUpdateDevicePublicKey(string identifier, string publicKey)
+        /*public void AddOrUpdateDevicePublicKey(string identifier, string publicKey)
         {
             try
             {
@@ -172,9 +181,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
             {
                 _logger.Error(ex);
             }
-        }
+        }*/
 
-        public string DevicePublicKey(string identifier)
+        /*public string DevicePublicKey(string identifier)
         {
             try
             {
@@ -186,14 +195,14 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
                 _logger.Error(ex);
             }
             return null;
-        }
+        }*/
 
         public bool HandshakeRequired(string identifier)
         {
             try
             {
-                return _devicePublicKeys.ContainsKey(identifier) 
-                    && _deviceSymmetric.ContainsKey(identifier);
+                identifier = identifier.ExactLength(16);
+                return _deviceSymmetric.ContainsKey(identifier);
             }
             catch (Exception ex)
             {
@@ -206,7 +215,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         {
             try
             {
-                var pw = OnDeviceSymmetricPassword(OnGetLocalRemoteIdentifier(identifier));
+                identifier = identifier.ExactLength(16);
+                var pw = OnDeviceSymmetricPassword(identifier);
                 if (!string.IsNullOrWhiteSpace(pw))
                     return _encryption.DecryptSymmetric(pw, cypher);
             }
@@ -221,6 +231,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         {
             try
             {
+                identifier = identifier.ExactLength(16);
                 var pw = OnDeviceSymmetricPassword(identifier);
                 if (!string.IsNullOrWhiteSpace(pw))
                     return _encryption.EncryptSymmetric(pw, raw);
@@ -251,21 +262,64 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
             return null;
         }*/
 
-        private string OnGetLocalRemoteIdentifier(string identifier) => currentIdentifer + "@" + identifier;
+        private string OnGetLocalRemoteIdentifier(string identifier) => currentIdentifer + "@" + identifier.ExactLength(16);
 
         public void DHKeyReceived(byte[] publicKey, string identifier)
         {
-            throw new NotImplementedException();
+            try
+            {
+                identifier = identifier.ExactLength(16);
+                var coords = _serializer.Deserialize<byte[][]>(publicKey);
+                AsymmetricDiffieHellman instance = null;
+                if (!_deviceDHInstances.ContainsKey(identifier))
+                {
+                    _deviceDHInstances.Add(identifier, new AsymmetricDiffieHellman());
+                    instance = _deviceDHInstances[identifier];
+                    instance.CreateKeyPair();
+                } else
+                    instance = _deviceDHInstances[identifier];
+                instance.SetPublicKey(new AsymmetricDiffieHellman.KeyCoords(coords[0], coords[1]));
+                var sharedBytes = instance.GetSharedSecret();
+
+                string password = Convert.ToBase64String(sharedBytes);
+                if (!string.IsNullOrWhiteSpace(password))
+                {
+                    if (_deviceSymmetric.ContainsKey(identifier))
+                        _deviceSymmetric[identifier] = password;
+                    else
+                        _deviceSymmetric.Add(identifier, password);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
         }
 
         public byte[] GetDHPublicKey(string identifier)
         {
-            throw new NotImplementedException();
-        }
-
-        public object GetOrCreateSymmetricPassword(string senderIdentifer)
-        {
-            throw new NotImplementedException();
+            try
+            {
+                identifier = identifier.ExactLength(16);
+                AsymmetricDiffieHellman instance = null;
+                if (!_deviceDHInstances.ContainsKey(identifier))
+                {
+                    instance = new AsymmetricDiffieHellman();
+                    _deviceDHInstances.Add(identifier, instance);
+                    instance.CreateKeyPair();
+                } else
+                {
+                    instance = _deviceDHInstances[identifier];
+                }
+                var key = instance.LocalPublicKey;
+                var keyValues = key.Get();
+                return _serializer.Serialize(keyValues);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+            return null;
         }
     }
 }

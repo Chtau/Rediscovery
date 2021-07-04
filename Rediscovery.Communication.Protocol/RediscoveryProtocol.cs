@@ -44,10 +44,10 @@ namespace Rediscovery.Communication.Protocol
         public List<DeviceGreeting> Devices => _deviceManager.Devices;
         public Traffic Traffic => _diagnosticPackage.Traffic;
         public List<Timing> Timings => _diagnosticPackage.Timings;
-        public string PublicRSA => _encryption.RSAKey?.Public;
+        //public string PublicRSA => _encryption.RSAKey?.Public;
 
-        public string Identifer 
-        { 
+        public string Identifer
+        {
             get
             {
                 if (string.IsNullOrWhiteSpace(identifer))
@@ -66,7 +66,7 @@ namespace Rediscovery.Communication.Protocol
             _encryption = new Encryption();
             _diagnosticPackage = new DiagnosticPackage(_logger);
             _networkState = new NetworkState(_logger, _encryption);
-            _deviceManager = new DeviceManager(_logger, _encryption);
+            _deviceManager = new DeviceManager(_logger, _encryption, _serializer);
             _deviceManager.DeviceChanged += (obj, args) =>
             {
                 DevicesChanged?.Invoke(this, args);
@@ -101,7 +101,7 @@ namespace Rediscovery.Communication.Protocol
 #endif
         }
 
-        public string NewIdentifier() => $"{Guid.NewGuid()}.{DateTime.Now}.{Environment.MachineName}".GetHashString().GetHashString(HashExtensions.HashAlgorithmTypes.MD5).Substring(0,16);
+        public string NewIdentifier() => $"{Guid.NewGuid()}.{DateTime.Now}.{Environment.MachineName}".GetHashString().GetHashString(HashExtensions.HashAlgorithmTypes.MD5).Substring(0, 16);
 
         public void Stop()
         {
@@ -170,7 +170,7 @@ namespace Rediscovery.Communication.Protocol
             }
         }
 
-        public void SetRASKeys(string privateKey, string publicKey) => _encryption.SetInternRAS(new Keys<string>(privateKey, publicKey));
+        //public void SetRASKeys(string privateKey, string publicKey) => _encryption.SetInternRAS(new Keys<string>(privateKey, publicKey));
 
         public void AddNetworkPasswords(params string[] passwords) => _networkState.AddNetworkPasswords(passwords);
 

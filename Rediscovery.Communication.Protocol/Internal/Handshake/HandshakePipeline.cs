@@ -53,18 +53,19 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
         {
             try
             {
-                var key = _serializer.Serialize(_encryption.RSAKey.Public);
+                var key = _deviceManager.GetDHPublicKey(deviceGreeting.Device.Identifier);
                 var rawPackage = new HandshakeState(currentIdentifier,
                     deviceGreeting.Device.Identifier,
                     key.GetChecksum(),
                     key,
                     HandshakeState.MessageValueType.PublicKey,
-                    HandshakeState.ExpectedResponseType.SymmetricPasswordCypher);
+                    HandshakeState.ExpectedResponseType.PublicKey);
                 var ack = new AcknowledgeResult(deviceGreeting.Device.Identifier, null);
                 ack.StartRequest();
                 _acknowledgeResults.Add(ack);
                 OnSendPackage(rawPackage, deviceGreeting);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.Error(ex);
             }
@@ -140,7 +141,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
             switch (expectedResponseType)
             {
                 case HandshakeState.ExpectedResponseType.PublicKey:
-                    var key = _serializer.Serialize(_encryption.RSAKey.Public);
+                    var key = _deviceManager.GetDHPublicKey(senderIdentifer);
                     package = new HandshakeState(currentIdentifier,
                         deviceGreeting.Device.Identifier,
                         key.GetChecksum(),
@@ -149,7 +150,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
                         HandshakeState.ExpectedResponseType.None);
                     break;
                 case HandshakeState.ExpectedResponseType.SymmetricPasswordCypher:
-                    var pubKey = _serializer.Deserialize<string>(value);
+                    /*var pubKey = _serializer.Deserialize<string>(value);
                     var plainPW = _serializer.Serialize(_deviceManager.GetOrCreateSymmetricPassword(senderIdentifer));
                     var encPW = _encryption.EncryptRSA(pubKey, plainPW);
                     var pw = (encPW);
@@ -158,7 +159,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
                         pw.GetChecksum(),
                         pw,
                         HandshakeState.MessageValueType.SymmetricPasswordCypher,
-                        HandshakeState.ExpectedResponseType.None);
+                        HandshakeState.ExpectedResponseType.None);*/
                     break;
                 case HandshakeState.ExpectedResponseType.None:
                 default:
@@ -174,13 +175,14 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
             switch (messageValueType)
             {
                 case HandshakeState.MessageValueType.PublicKey:
-                    var pubKey = _serializer.Deserialize<string>(value);
-                    _deviceManager.AddOrUpdateDevicePublicKey(senderIdentifier, pubKey);
+                    //var pubKey = _serializer.Deserialize<byte[]>(value);
+                    //_deviceManager.AddOrUpdateDevicePublicKey(senderIdentifier, pubKey);
+                    _deviceManager.DHKeyReceived(value, senderIdentifier);
                     break;
                 case HandshakeState.MessageValueType.SymmetricPasswordCypher:
-                    var raw = _encryption.DecryptRSA(_encryption.RSAKey.Private, value);
+                    /*var raw = _encryption.DecryptRSA(_encryption.RSAKey.Private, value);
                     var pwVal = _serializer.Deserialize<string>(raw);
-                    _deviceManager.AddOrUpdateDeviceSymmetric(senderIdentifier, pwVal);
+                    _deviceManager.AddOrUpdateDeviceSymmetric(senderIdentifier, pwVal);*/
                     break;
                 case HandshakeState.MessageValueType.Undefined:
                 default:
@@ -190,6 +192,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
 
         private void OnSendPackage(HandshakeState package, DeviceGreetingReceived deviceGreeting)
         {
+#if PIPELINE
+            _logger.Trace($"{nameof(HandshakePipeline)}.{nameof(OnSendPackage)} Receiver:\"{deviceGreeting.Device.Identifier}\" response package {nameof(HandshakeState.MessageValueType)}:{Enum.GetName(typeof(HandshakeState.MessageValueType), package.ValueType)} {nameof(HandshakeState.ExpectedResponseType)}:{Enum.GetName(typeof(HandshakeState.ExpectedResponseType), package.ResponseType)}");
+            _logger.Trace($"{nameof(HandshakePipeline)}.{nameof(OnSendPackage)} {package}");
+#endif
             var raw = _serializer.Serialize(package.CreateRaw().ToArray());
             var enc = _networkState.Encrypt(_networkState.NormalizePackageSize(raw, deviceGreeting.Device.Communication.Handshake.PackageSize));
             _communication.Send(new TCPCommunicationPayload(enc,

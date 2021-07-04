@@ -16,8 +16,9 @@ namespace Rediscovery.Communication.Protocol.Test
             IProtocolLogger logger = new Internal.ProtocolLogger();
             Internal.Diagnostic.IDiagnosticPackage diagnosticPackage = new Internal.Diagnostic.DiagnosticPackage(logger);
             Internal.Encryption.IEncryption encryption = new Internal.Encryption.Encryption();
+            ISerializer serializer = new Internal.Serializer(logger);
 
-            Internal.Device.IDeviceManager deviceManager = new Internal.Device.DeviceManager(logger, encryption);
+            Internal.Device.IDeviceManager deviceManager = new Internal.Device.DeviceManager(logger, encryption, serializer);
             var device2 = new Models.DeviceGreeting
             {
                 FriendlyName = "B",
@@ -33,8 +34,9 @@ namespace Rediscovery.Communication.Protocol.Test
                 }
             };
             deviceManager.Change(device2, System.Net.IPEndPoint.Parse("127.0.0.1"));
+            deviceManager.SetIdentifier("3C07A55EDA88491C9A84C469C19E4F44");
 
-            Internal.Device.IDeviceManager deviceManager2 = new Internal.Device.DeviceManager(logger, encryption);
+            Internal.Device.IDeviceManager deviceManager2 = new Internal.Device.DeviceManager(logger, encryption, serializer);
             var device = new Models.DeviceGreeting
             {
                 FriendlyName = "A",
@@ -50,9 +52,9 @@ namespace Rediscovery.Communication.Protocol.Test
                 }
             };
             deviceManager2.Change(device, System.Net.IPEndPoint.Parse("127.0.0.1"));
+            deviceManager2.SetIdentifier("BC07A55EDA88491C9A84C469C19E4F44");
 
             encryption.SetInternSymmetric("HalloWorld!");
-            ISerializer serializer = new Internal.Serializer(logger);
 
             var com1 = new Mocks.Communication();
             var com2 = new Mocks.Communication();
@@ -81,7 +83,7 @@ namespace Rediscovery.Communication.Protocol.Test
                 com2,
                 new Internal.Network.NetworkState(logger, encryption));
 
-            
+
 
             handshakePipeline2.SetIdentifier("BC07A55EDA88491C9A84C469C19E4F44");
             handshakePipeline2.AcknowledgeCommunication((ack) =>
@@ -96,12 +98,19 @@ namespace Rediscovery.Communication.Protocol.Test
                 ackResult = ack;
             });
             handshakePipeline.SynchronizeCommunication(new Internal.Device.DeviceGreetingReceived(device2, "127.0.0.1"));
+            handshakePipeline2.SynchronizeCommunication(new Internal.Device.DeviceGreetingReceived(device, "127.0.0.1"));
             await Task.Delay(TimeSpan.FromSeconds(2));
             Assert.NotNull(ackResult);
             Assert.True(ackResult.ResponseState == AcknowledgeResult.State.Ok);
-            var dec = encryption.DecryptRSA(encryption.RSAKey.Private, ackResult.Response.Value);
-            var plainPW = serializer.Deserialize<string>(dec);
-            Assert.True(plainPW == encryption.SymmetricPassword);
+            // ackResult.Response.Value == public key of the remote device, in this case it would be the device "BC07A55EDA88491C9A84C469C19E4F44"
+            var pipe2PublicKey = deviceManager2.GetDHPublicKey("3C07A55EDA88491C9A84C469C19E4F44");
+            string pipePubValue = Convert.ToBase64String(ackResult.Response.Value);
+            string pipe2PubValue = Convert.ToBase64String(pipe2PublicKey);
+
+            var encValue = deviceManager.Encrypt(Encoding.UTF8.GetBytes("Hallo"), "BC07A55EDA88491C9A84C469C19E4F44");
+            var decValue = Encoding.UTF8.GetString(deviceManager2.Decrypt(encValue, "3C07A55EDA88491C9A84C469C19E4F44"));
+
+            Assert.True(decValue == "Hallo", "Received remote public key does not match send public key from remote");
         }
 
         [Fact]
@@ -109,7 +118,9 @@ namespace Rediscovery.Communication.Protocol.Test
         {
             IProtocolLogger logger = new Internal.ProtocolLogger();
             Internal.Encryption.IEncryption encryption = new Internal.Encryption.Encryption();
-            Internal.Device.IDeviceManager deviceManager = new Internal.Device.DeviceManager(logger, encryption);
+            ISerializer serializer = new Internal.Serializer(logger);
+
+            Internal.Device.IDeviceManager deviceManager = new Internal.Device.DeviceManager(logger, encryption, serializer);
             Internal.Diagnostic.IDiagnosticPackage diagnosticPackage = new Internal.Diagnostic.DiagnosticPackage(logger);
             IHandshakePipeline handshakePipeline = new HandshakePipeline(logger,
                 new Internal.Serializer(logger),

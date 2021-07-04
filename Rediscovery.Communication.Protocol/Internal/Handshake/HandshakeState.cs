@@ -14,6 +14,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
         {
             Undefined = 0,
             PublicKey = 1,
+            [Obsolete("No longer needed because we removed the usage of RSA for Diffie Hellman")]
             SymmetricPasswordCypher = 2
         }
 
@@ -21,6 +22,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
         {
             None = 0,
             PublicKey = 1,
+            [Obsolete("No longer needed because we removed the usage of RSA for Diffie Hellman")]
             SymmetricPasswordCypher = 2
         }
 

@@ -27,6 +27,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
                 X = x;
                 Y = y;
             }
+
+            public byte[][] Get() => new byte[][] { X, Y };
         }
 
         public static Keys<byte[], KeyCoords> GetNewKeyPair(byte[] seed = null)
@@ -49,6 +51,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
         private ECPublicKeyParameters remotePublicKey;
 
         public KeyCoords LocalPublicKey => new KeyCoords(localPublicKey?.Q.AffineXCoord.GetEncoded(), localPublicKey?.Q.AffineYCoord.GetEncoded());
+        public KeyCoords RemotePublicKey => new KeyCoords(remotePublicKey?.Q.AffineXCoord.GetEncoded(), remotePublicKey?.Q.AffineYCoord.GetEncoded());
 
         public AsymmetricDiffieHellman(byte[] seed = null)
         {
@@ -74,6 +77,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
             IBasicAgreement aKeyAgree = AgreementUtilities.GetBasicAgreement(KeyAlgorithm);
             aKeyAgree.Init(localPrivateKey);
             BigInteger sharedSecret = aKeyAgree.CalculateAgreement(remotePublicKey);
+            return sharedSecret.ToByteArray();
+            // TODO:
             var secret = sharedSecret.ToByteArray();
             var hmac = new HMac(new Sha512Digest());
             hmac.Init(new KeyParameter(secret));

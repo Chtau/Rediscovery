@@ -28,7 +28,7 @@ namespace Rediscovery.Communication.Protocol
         /// <summary>
         /// Public RAS key for data encryption
         /// </summary>
-        string PublicRSA { get; }
+        //string PublicRSA { get; }
         /// <summary>
         /// Triggered if a device greeting has changed from the discovery.
         /// Device Identifier will be provided as argument.
@@ -74,7 +74,7 @@ namespace Rediscovery.Communication.Protocol
         /// </summary>
         /// <param name="privateKey">Private key for decrypt received data</param>
         /// <param name="publicKey">Public key which other devices use for encryption.</param>
-        void SetRASKeys(string privateKey, string publicKey);
+        //void SetRASKeys(string privateKey, string publicKey);
         /// <summary>
         /// Add passwords for network Symmetric encryption.
         /// This will be used for Discovery and Handshake data encryption.

@@ -42,13 +42,13 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         /// </summary>
         /// <param name="identifier">Device identifer</param>
         /// <param name="password">Symmetric password</param>
-        void AddOrUpdateDeviceSymmetric(string identifier, string password);
+        //void AddOrUpdateDeviceSymmetric(string identifier, string password);
         /// <summary>
         /// Adds or updates the public key for a device
         /// </summary>
         /// <param name="identifier">Device identifer</param>
         /// <param name="publicKey">Public key</param>
-        void AddOrUpdateDevicePublicKey(string identifier, string publicKey);
+        //void AddOrUpdateDevicePublicKey(string identifier, string publicKey);
         /// <summary>
         /// Get the current IP address for the device identifer
         /// </summary>
@@ -61,7 +61,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         /// </summary>
         /// <param name="identifier">Device Identifer</param>
         /// <returns>Public key or <see cref="null"/></returns>
-        string DevicePublicKey(string identifier);
+        //string DevicePublicKey(string identifier);
         /// <summary>
         /// Only true if all device data from handshakes are up to date for the identifer
         /// </summary>
@@ -70,8 +70,17 @@ namespace Rediscovery.Communication.Protocol.Internal.Device
         bool HandshakeRequired(string identifier);
         byte[] Decrypt(byte[] cypher, string identifier);
         byte[] Encrypt(byte[] raw, string identifier);
+        /// <summary>
+        /// Remote public Diffie Hellman key for the device identifier
+        /// </summary>
+        /// <param name="publicKey">Public key of the remote device</param>
+        /// <param name="identifier">Remote device Identifier</param>
         void DHKeyReceived(byte[] publicKey, string identifier);
+        /// <summary>
+        /// Local public Diffie Hellman key in context to a remote device
+        /// </summary>
+        /// <param name="identifier">Identifier of the remote device</param>
+        /// <returns>Public key</returns>
         byte[] GetDHPublicKey(string identifier);
-        object GetOrCreateSymmetricPassword(string senderIdentifer);
     }
 }
