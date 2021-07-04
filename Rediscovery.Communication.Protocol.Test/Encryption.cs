@@ -60,9 +60,25 @@ namespace Rediscovery.Communication.Protocol.Test
         }
 
         [Fact]
-        public void DH()
+        public void DiffieHellmanImplementation()
         {
-            Internal.Encryption.AsymmetricDiffieHellman.GetNewKeyPair();
+            var pairAlice = AsymmetricDiffieHellman.GetNewKeyPair();
+            var pairBob = AsymmetricDiffieHellman.GetNewKeyPair();
+            var dhAlice = new AsymmetricDiffieHellman();
+            dhAlice.ImportKeyPair(pairAlice);
+            dhAlice.SetPublicKey(pairBob.Public);
+            var sharedAlice = dhAlice.GetSharedSecret();
+            Assert.True(sharedAlice.Length == 66, "Alice: Shared key length");
+
+            var dhBob = new AsymmetricDiffieHellman();
+            dhBob.ImportKeyPair(pairBob);
+            dhBob.SetPublicKey(pairAlice.Public);
+            var sharedBob = dhBob.GetSharedSecret();
+            Assert.True(sharedBob.Length == 66, "Bob: Shared key length");
+
+            string sharedKeyAlice = Convert.ToBase64String(sharedAlice);
+            string sharedKeyBob = Convert.ToBase64String(sharedBob);
+            Assert.True(sharedKeyAlice == sharedKeyBob, "Shared key value match");
         }
     }
 }

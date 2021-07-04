@@ -31,19 +31,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
         public static Keys<byte[], KeyCoords> GetNewKeyPair(byte[] seed = null)
         {
             var instance = new AsymmetricDiffieHellman();
-            //X9ECParameters x9EC = NistNamedCurves.GetByName("P-521");
-            //ECDomainParameters ecDomain = new ECDomainParameters(x9EC.Curve, x9EC.G, x9EC.N, x9EC.H, x9EC.GetSeed());
-            var keyPair = instance.OnGenerateKeyPair(seed);// GenerateKeyPair(ecDomain);
+            var keyPair = instance.OnGenerateKeyPair(seed);
             var privateKey = (ECPrivateKeyParameters)keyPair.Private;
             var publicKey = (ECPublicKeyParameters)keyPair.Public;
-
-            /*ECKeyPairGenerator g = (ECKeyPairGenerator)GeneratorUtilities.GetKeyPairGenerator("ECDH");
-            g.Init(new ECKeyGenerationParameters(ecDomain, new SecureRandom()));
-
-            AsymmetricCipherKeyPair aliceKeyPair = g.GenerateKeyPair();
-            */
-            //var p1 = new ECPrivateKeyParameters(privateKey.AlgorithmName, privateKey.D, privateKey.Parameters);
-            //var p2 = new ECPrivateKeyParameters(privateKey.AlgorithmName, privateKey.D, ecDomain);
             return new Keys<byte[], KeyCoords>(privateKey.D.ToByteArray(), new KeyCoords(publicKey.Q.AffineXCoord.GetEncoded(), publicKey.Q.AffineYCoord.GetEncoded()));
         }
 
@@ -102,77 +92,5 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
             g.Init(new ECKeyGenerationParameters(_ecDomain, sec));
             return g.GenerateKeyPair();
         }
-
-        /*public static byte[] KeyExchange(Uri url)
-        {
-            X9ECParameters x9EC = NistNamedCurves.GetByName("P-521");
-            ECDomainParameters ecDomain = new ECDomainParameters(x9EC.Curve, x9EC.G, x9EC.N, x9EC.H, x9EC.GetSeed());
-            AsymmetricCipherKeyPair aliceKeyPair = GenerateKeyPair(ecDomain);
-
-            ECPublicKeyParameters alicePublicKey = (ECPublicKeyParameters)aliceKeyPair.Public;
-            ECPublicKeyParameters bobPublicKey = GetBobPublicKey(url, x9EC, alicePublicKey);
-
-            byte[] AESKey = GenerateAESKey(bobPublicKey, aliceKeyPair.Private);
-
-            return AESKey;
-        }
-
-        private static AsymmetricCipherKeyPair GenerateKeyPair(ECDomainParameters ecDomain)
-        {
-            ECKeyPairGenerator g = (ECKeyPairGenerator)GeneratorUtilities.GetKeyPairGenerator("ECDH");
-            g.Init(new ECKeyGenerationParameters(ecDomain, new SecureRandom()));
-
-            AsymmetricCipherKeyPair aliceKeyPair = g.GenerateKeyPair();
-            return aliceKeyPair;
-        }
-
-        private static ECPublicKeyParameters GetBobPublicKey(Uri url,
-                                                    X9ECParameters x9EC,
-                                                    ECPublicKeyParameters alicePublicKey)
-        {
-            var bobCoords = GetBobCoords(url, alicePublicKey);
-            var point = x9EC.Curve.CreatePoint(new BigInteger(bobCoords.X), new BigInteger(bobCoords.Y));
-            return new ECPublicKeyParameters("ECDH", point, SecObjectIdentifiers.SecP521r1);
-        }
-
-        private static KeyCoords GetBobCoords(Uri url, ECPublicKeyParameters publicKey)
-        {
-            string xml = GetXmlString(publicKey);
-
-            string responseXml = null;// Encoding.UTF8.GetString(Http.Post(url, Encoding.UTF8.GetBytes(xml)));
-
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(responseXml);
-            XmlElement root = doc.DocumentElement;
-            XmlNodeList elemList = doc.DocumentElement.GetElementsByTagName("PublicKey");
-
-            return new KeyCoords(new BigInteger(elemList[0].FirstChild.Attributes["Value"].Value).ToByteArray(),
-                new BigInteger(elemList[0].LastChild.Attributes["Value"].Value).ToByteArray());
-        }
-
-        private static string GetXmlString(ECPublicKeyParameters publicKeyParameters)
-        {
-            string publicKeyXmlTemplate = @"<ECDHKeyValue xmlns=""http://www.w3.org/2001/04/xmldsig-more#""> <DomainParameters> <NamedCurve URN=""urn:oid:1.3.132.0.35"" /> </DomainParameters> <PublicKey> <X Value=""X_VALUE"" xsi:type=""PrimeFieldElemType"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" /> <Y Value=""Y_VALUE"" xsi:type=""PrimeFieldElemType"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" /> </PublicKey> </ECDHKeyValue>";
-            string xml = publicKeyXmlTemplate;
-            xml = xml.Replace("X_VALUE", publicKeyParameters.Q.AffineXCoord.ToBigInteger().ToString());
-            xml = xml.Replace("Y_VALUE", publicKeyParameters.Q.AffineYCoord.ToBigInteger().ToString());
-            return xml;
-        }
-
-        private static byte[] GenerateAESKey(ECPublicKeyParameters bobPublicKey,
-                                AsymmetricKeyParameter alicePrivateKey)
-        {
-            IBasicAgreement aKeyAgree = AgreementUtilities.GetBasicAgreement("ECDH");
-            aKeyAgree.Init(alicePrivateKey);
-            BigInteger sharedSecret = aKeyAgree.CalculateAgreement(bobPublicKey);
-            byte[] sharedSecretBytes = sharedSecret.ToByteArray();
-            // TODO: should use HMACSHA256
-            IDigest digest = new Sha256Digest();
-            byte[] symmetricKey = new byte[digest.GetDigestSize()];
-            digest.BlockUpdate(sharedSecretBytes, 0, sharedSecretBytes.Length);
-            digest.DoFinal(symmetricKey, 0);
-
-            return symmetricKey;
-        }*/
     }
 }
