@@ -4,6 +4,7 @@ using Org.BouncyCastle.Asn1.X9;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Crypto.Macs;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Security;
@@ -73,7 +74,14 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
             IBasicAgreement aKeyAgree = AgreementUtilities.GetBasicAgreement(KeyAlgorithm);
             aKeyAgree.Init(localPrivateKey);
             BigInteger sharedSecret = aKeyAgree.CalculateAgreement(remotePublicKey);
-            return sharedSecret.ToByteArray();
+            var secret = sharedSecret.ToByteArray();
+            var hmac = new HMac(new Sha512Digest());
+            hmac.Init(new KeyParameter(secret));
+            byte[] result = new byte[hmac.GetMacSize()];
+            hmac.BlockUpdate(secret, 0, secret.Length);
+            hmac.DoFinal(result, 0);
+
+            return result;
         }
 
         public void CreateKeyPair(byte[] seed = null)
