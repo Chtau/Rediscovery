@@ -102,7 +102,7 @@ namespace Rediscovery.Communication.Protocol.Test
             await Task.Delay(TimeSpan.FromSeconds(2));
             Assert.NotNull(ackResult);
             Assert.True(ackResult.ResponseState == AcknowledgeResult.State.Ok);
-            // ackResult.Response.Value == public key of the remote device, in this case it would be the device "BC07A55EDA88491C9A84C469C19E4F44"
+            
             var pipe2PublicKey = deviceManager2.GetDHPublicKey("3C07A55EDA88491C9A84C469C19E4F44");
             string pipePubValue = Convert.ToBase64String(ackResult.Response.Value);
             string pipe2PubValue = Convert.ToBase64String(pipe2PublicKey);

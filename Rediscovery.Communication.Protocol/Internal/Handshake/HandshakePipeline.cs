@@ -151,18 +151,6 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
                         HandshakeState.MessageValueType.PublicKey,
                         HandshakeState.ExpectedResponseType.None);
                     break;
-                case HandshakeState.ExpectedResponseType.SymmetricPasswordCypher:
-                    /*var pubKey = _serializer.Deserialize<string>(value);
-                    var plainPW = _serializer.Serialize(_deviceManager.GetOrCreateSymmetricPassword(senderIdentifer));
-                    var encPW = _encryption.EncryptRSA(pubKey, plainPW);
-                    var pw = (encPW);
-                    package = new HandshakeState(currentIdentifier,
-                        deviceGreeting.Device.Identifier,
-                        pw.GetChecksum(),
-                        pw,
-                        HandshakeState.MessageValueType.SymmetricPasswordCypher,
-                        HandshakeState.ExpectedResponseType.None);*/
-                    break;
                 case HandshakeState.ExpectedResponseType.None:
                 default:
                     // done
@@ -177,14 +165,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
             switch (messageValueType)
             {
                 case HandshakeState.MessageValueType.PublicKey:
-                    //var pubKey = _serializer.Deserialize<byte[]>(value);
-                    //_deviceManager.AddOrUpdateDevicePublicKey(senderIdentifier, pubKey);
                     _deviceManager.DHKeyReceived(value, senderIdentifier);
-                    break;
-                case HandshakeState.MessageValueType.SymmetricPasswordCypher:
-                    /*var raw = _encryption.DecryptRSA(_encryption.RSAKey.Private, value);
-                    var pwVal = _serializer.Deserialize<string>(raw);
-                    _deviceManager.AddOrUpdateDeviceSymmetric(senderIdentifier, pwVal);*/
                     break;
                 case HandshakeState.MessageValueType.Undefined:
                 default:

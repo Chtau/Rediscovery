@@ -10,35 +10,6 @@ namespace Rediscovery.Communication.Protocol.Test
 {
     public class Encryption
     {
-        /*[Fact]
-        public void DiffieHellmanPublicKey()
-        {
-            var encryption = new Internal.Encryption.Encryption();
-            var bytes = encryption.DHKeys();
-            Assert.True(bytes.Public.Length == 140);
-        }*/
-
-        /*[Fact]
-        public void DiffieHellmanSharedKey()
-        {
-            var encryption1 = new Internal.Encryption.Encryption();
-            var bytes1 = encryption1.DHKeys();
-
-            var encryption = new Internal.Encryption.Encryption();
-            var bytes = encryption.DHKeys();
-            var shared = encryption.DHSharedKey(bytes1.Public, bytes.Private);
-            Assert.True(shared.Length == 64, "Shared key from new Instance");
-
-            string sharedKey = Convert.ToBase64String(shared);
-
-            var encryption2 = new Internal.Encryption.Encryption();
-            var shared2 = encryption2.DHSharedKey(bytes.Public, bytes1.Private);
-            Assert.True(shared2.Length == 64, "Shared key with Imported Private key");
-
-            string sharedKey2 = Convert.ToBase64String(shared2);
-            Assert.True(sharedKey == sharedKey2, "Shared key values don't match");
-        }*/
-
         [Theory]
         [InlineData("6BB0C84B-00CD-41FE-AF33-F2038ADC294C", "F7D86692-7089-477D-9315-FB3392757834")]
         [InlineData("{DBD8C3AB-87FC-406A-97D4-135CFEAD46F2}", "{729C5D04-4835-4970-A476-84C99ACFF581}")]

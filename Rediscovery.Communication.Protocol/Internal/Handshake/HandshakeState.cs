@@ -13,17 +13,13 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
         public enum MessageValueType
         {
             Undefined = 0,
-            PublicKey = 1,
-            [Obsolete("No longer needed because we removed the usage of RSA for Diffie Hellman")]
-            SymmetricPasswordCypher = 2
+            PublicKey = 1
         }
 
         public enum ExpectedResponseType
         {
             None = 0,
-            PublicKey = 1,
-            [Obsolete("No longer needed because we removed the usage of RSA for Diffie Hellman")]
-            SymmetricPasswordCypher = 2
+            PublicKey = 1
         }
 
         public string SenderIdentifier { get; private set; }

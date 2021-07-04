@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 
 namespace Rediscovery.Communication.Protocol
 {
+    // TODO: need to swtich from Thread to Task for Blazor support
     public class RediscoveryProtocol : IRediscoveryProtocol, IDisposable
     {
         private readonly IProtocolLogger _logger;
@@ -44,7 +45,6 @@ namespace Rediscovery.Communication.Protocol
         public List<DeviceGreeting> Devices => _deviceManager.Devices;
         public Traffic Traffic => _diagnosticPackage.Traffic;
         public List<Timing> Timings => _diagnosticPackage.Timings;
-        //public string PublicRSA => _encryption.RSAKey?.Public;
 
         public string Identifer
         {
@@ -169,8 +169,6 @@ namespace Rediscovery.Communication.Protocol
                 _logger.Error(ex);
             }
         }
-
-        //public void SetRASKeys(string privateKey, string publicKey) => _encryption.SetInternRAS(new Keys<string>(privateKey, publicKey));
 
         public void AddNetworkPasswords(params string[] passwords) => _networkState.AddNetworkPasswords(passwords);
 

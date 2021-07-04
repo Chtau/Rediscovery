@@ -13,6 +13,13 @@ Welcome to your new app.
         base.OnInitialized();
         try
         {
+            Task.Run(async () =>
+            {
+                do
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(1));
+                } while (true);
+            });
             var prot = new Rediscovery.Communication.Protocol.RediscoveryProtocol("123");
             prot.Start(null);
             System.Diagnostics.Trace.TraceInformation("Protocol started");

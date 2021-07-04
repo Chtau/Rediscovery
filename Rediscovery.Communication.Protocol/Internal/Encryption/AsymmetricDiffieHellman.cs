@@ -77,8 +77,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
             IBasicAgreement aKeyAgree = AgreementUtilities.GetBasicAgreement(KeyAlgorithm);
             aKeyAgree.Init(localPrivateKey);
             BigInteger sharedSecret = aKeyAgree.CalculateAgreement(remotePublicKey);
-            return sharedSecret.ToByteArray();
-            // TODO:
+            
             var secret = sharedSecret.ToByteArray();
             var hmac = new HMac(new Sha512Digest());
             hmac.Init(new KeyParameter(secret));
