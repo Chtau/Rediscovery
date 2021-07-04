@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Org.BouncyCastle.Security;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -8,26 +9,26 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
 {
     internal static class CryptographyRandomString
     {
-        public static string GetAlphanumericExtendet(int length)
+        public static string GetAlphanumericExtendet(int length, byte[] seed = null)
         {
             string characters =
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
                 "abcdefghijklmnopqrstuvwxyz" +
                 "0123456789" +
                 "!\"§$%&/()=?`{[]}\\+#*'~´-.,_:;^°@€";
-            return Get(length, characters);
+            return Get(length, characters, seed);
         }
 
-        public static string GetAlphanumeric(int length)
+        public static string GetAlphanumeric(int length, byte[] seed = null)
         {
             string characters =
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
                 "abcdefghijklmnopqrstuvwxyz" +
                 "0123456789";
-            return Get(length, characters);
+            return Get(length, characters, seed);
         }
 
-        public static string Get(int length, IEnumerable<char> characters)
+        public static string Get(int length, IEnumerable<char> characters, byte[] seed = null)
         {
             if (length < 0 || length > int.MaxValue / 8)
                 throw new ArgumentException($"Length must be between 0 and {int.MaxValue / 8}", "length");
@@ -35,7 +36,14 @@ namespace Rediscovery.Communication.Protocol.Internal.Encryption
                 throw new ArgumentException("characters must not be null or empty", "characterSet");
             var characterArray = characters.Distinct().ToArray();
             var bytes = new byte[length * 8];
+#if MSCrypto
             new RNGCryptoServiceProvider().GetBytes(bytes);
+#else
+            var sec = new SecureRandom();
+            if (seed != null)
+                sec.SetSeed(seed);
+            sec.NextBytes(bytes);
+#endif
             var result = new char[length];
             for (int i = 0; i < length; i++)
             {
