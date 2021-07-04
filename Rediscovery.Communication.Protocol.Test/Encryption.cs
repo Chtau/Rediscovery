@@ -59,22 +59,47 @@ namespace Rediscovery.Communication.Protocol.Test
             Assert.True(Convert.ToBase64String(dataByte) == Convert.ToBase64String(dataByteOut), "Byte data output");
         }
 
-        [Fact]
-        public void DiffieHellmanImplementation()
+        [Theory]
+        [InlineData(true, "{3F320172-C697-409F-8132-AC4642B43A1D}", "{191F7601-5B52-4737-99D7-68EC964B2B85}")]
+        [InlineData(true, null, "{191F7601-5B52-4737-99D7-68EC964B2B85}")]
+        [InlineData(true, "{3F320172-C697-409F-8132-AC4642B43A1D}", null)]
+        [InlineData(true, null, null)]
+        [InlineData(false, "{3F320172-C697-409F-8132-AC4642B43A1D}", "{191F7601-5B52-4737-99D7-68EC964B2B85}")]
+        [InlineData(false, null, "{191F7601-5B52-4737-99D7-68EC964B2B85}")]
+        [InlineData(false, "{3F320172-C697-409F-8132-AC4642B43A1D}", null)]
+        [InlineData(false, null, null)]
+        public void DiffieHellmanImplementation(bool importKey, string keySeed, string curveSeed)
         {
-            var pairAlice = AsymmetricDiffieHellman.GetNewKeyPair();
-            var pairBob = AsymmetricDiffieHellman.GetNewKeyPair();
-            var dhAlice = new AsymmetricDiffieHellman();
-            dhAlice.ImportKeyPair(pairAlice);
-            dhAlice.SetPublicKey(pairBob.Public);
-            var sharedAlice = dhAlice.GetSharedSecret();
-            Assert.True(sharedAlice.Length == 66, "Alice: Shared key length");
+            byte[] keyS = null;
+            if (!string.IsNullOrWhiteSpace(keySeed))
+                keyS = Encoding.UTF8.GetBytes(keySeed);
+            byte[] curveS = null;
+            if (!string.IsNullOrWhiteSpace(curveSeed))
+                curveS = Encoding.UTF8.GetBytes(curveSeed);
 
-            var dhBob = new AsymmetricDiffieHellman();
-            dhBob.ImportKeyPair(pairBob);
-            dhBob.SetPublicKey(pairAlice.Public);
+            var pairAlice = AsymmetricDiffieHellman.GetNewKeyPair(keyS);
+            var pairBob = AsymmetricDiffieHellman.GetNewKeyPair(keyS);
+
+            var dhAlice = new AsymmetricDiffieHellman(curveS);
+            if (importKey)
+                dhAlice.ImportKeyPair(pairAlice);
+            else
+                dhAlice.CreateKeyPair(keyS);
+            
+            var dhBob = new AsymmetricDiffieHellman(curveS);
+            if (importKey)
+                dhBob.ImportKeyPair(pairBob);
+            else
+                dhBob.CreateKeyPair(keyS);
+
+
+            dhAlice.SetPublicKey(dhBob.LocalPublicKey);
+            var sharedAlice = dhAlice.GetSharedSecret();
+            Assert.True(sharedAlice.Length == 66 || sharedAlice.Length == 65, $"Alice: Shared key length:{sharedAlice.Length}");
+
+            dhBob.SetPublicKey(dhAlice.LocalPublicKey);
             var sharedBob = dhBob.GetSharedSecret();
-            Assert.True(sharedBob.Length == 66, "Bob: Shared key length");
+            Assert.True(sharedBob.Length == 66 || sharedBob.Length == 65, $"Bob: Shared key length:{sharedBob.Length}");
 
             string sharedKeyAlice = Convert.ToBase64String(sharedAlice);
             string sharedKeyBob = Convert.ToBase64String(sharedBob);
