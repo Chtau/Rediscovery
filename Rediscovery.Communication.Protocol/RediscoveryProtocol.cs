@@ -17,7 +17,6 @@ using System.Threading.Tasks;
 
 namespace Rediscovery.Communication.Protocol
 {
-    // TODO: need to swtich from Thread to Task for Blazor support
     public class RediscoveryProtocol : IRediscoveryProtocol, IDisposable
     {
         private readonly IProtocolLogger _logger;
@@ -76,9 +75,9 @@ namespace Rediscovery.Communication.Protocol
             {
                 OnAfterDevicePinged(args);
             };
-            _communication = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, _encryption, "Data");
-            _communicationLarge = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, _encryption, "Large");
-            _communicationHandshake = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, _encryption, "Handshake");
+            _communication = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, _encryption);
+            _communicationLarge = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, _encryption);
+            _communicationHandshake = new TCPCommunication(_logger, _deviceManager, _diagnosticPackage, _encryption);
             _packagePipeline = new PackagePipeline(_logger, _serializer, _encryption, _communication, _communicationLarge, _deviceManager, _diagnosticPackage, _networkState);
             _handshakePipeline = new HandshakePipeline(_logger, _serializer, _encryption, _deviceManager, _diagnosticPackage, _communicationHandshake, _networkState);
             OnListenIncomingPackages();

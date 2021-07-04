@@ -20,9 +20,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         private readonly IDiagnosticPackage _diagnosticPackage;
         private readonly IEncryption _encryption;
         private readonly Dictionary<string, Socket> _sender = new Dictionary<string, Socket>();
-        private readonly string _listenerThreadName = $"Thread_Listener_{nameof(TCPCommunication)}";
 
-        private Thread listenThread;
+        private Task listenTask;
+        private CancellationTokenSource listenCancelationTokenSource;
         private bool listenerWorking = false;
         private Socket handler;
         private Socket listener;
@@ -34,15 +34,12 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         public TCPCommunication(IProtocolLogger logger,
             IDeviceManager deviceManager,
             IDiagnosticPackage diagnosticPackage,
-            IEncryption encryption,
-            string threadName = null)
+            IEncryption encryption)
         {
             _encryption = encryption;
             _logger = logger;
             _diagnosticPackage = diagnosticPackage;
             _deviceManager = deviceManager;
-            if (!string.IsNullOrWhiteSpace(threadName))
-                _listenerThreadName += $"_{threadName}";
 
             OnInitListenerThread();
         }
@@ -114,7 +111,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                         _logger.Error(ex);
                     }
                 }
-                listenThread?.Abort();
+                listenCancelationTokenSource?.Cancel();
+                listenCancelationTokenSource = null;
             }
             catch (PlatformNotSupportedException) { }
             catch (Exception ex)
@@ -151,18 +149,19 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             try
             {
                 listenerWorking = true;
-                listenThread.Start();
+                listenTask.Start();
             }
             catch (ThreadStateException tsEx)
             {
                 // TODO: improve restart logic with delay to reduce spam
-                _logger.Warning($"Thread Name:\"{listenThread.Name}\" State:{listenThread.ThreadState}");
+                _logger.Warning($"Task ID:\"{listenTask.Id}\" State:{listenTask.Status}");
                 _logger.Warning(tsEx);
-                if (listenThread.ThreadState == ThreadState.Running)
+                if (listenTask.Status == TaskStatus.Running)
                 {
                     try
                     {
-                        listenThread.Abort();
+                        listenCancelationTokenSource.Cancel();
+                        listenCancelationTokenSource = null;
                     } catch (Exception ex)
                     {
                         _logger.Error(ex);
@@ -172,7 +171,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 try
                 {
                     listenerWorking = true;
-                    listenThread.Start();
+                    listenTask.Start();
                 }
                 catch (Exception ex)
                 {
@@ -189,13 +188,11 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         {
             try
             {
-                listenThread = new Thread(() =>
+                listenCancelationTokenSource = new CancellationTokenSource();
+                listenTask = new Task(() =>
                 {
                     OnListenToSocket();
-                })
-                {
-                    Name = $"{_listenerThreadName}_{DateTime.Today.Ticks}"
-                };
+                }, listenCancelationTokenSource.Token, TaskCreationOptions.LongRunning);
             }
             catch (Exception ex)
             {

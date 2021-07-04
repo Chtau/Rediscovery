@@ -6,8 +6,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Linq;
 using Rediscovery.Communication.Protocol.Internal.Device;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Rediscovery.Communication.Protocol.Internal.Discovery
 {
@@ -17,8 +17,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
         private readonly IDiscoveryPipeline _discoveryPipeline;
         private readonly IDeviceManager _deviceManager;
 
-        private System.Threading.Thread listenThread;
-        private readonly string threadName = $"Thread_{nameof(DiscoveryListener)}";
+        private Task listenTask;
+        private CancellationTokenSource listenCancellationTokenSource;
         private readonly Dictionary<int, Socket> sockets = new Dictionary<int, Socket>();
 
         private DiscoveryConfiguration configuration;
@@ -51,7 +51,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
                 if (configuration.ListenerDeactivated)
                     return true;
                 working = true;
-                listenThread.Start();
+                listenTask.Start();
                 return true;
             }
             catch (System.Threading.ThreadStateException tsEx)
@@ -61,7 +61,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
                 try
                 {
                     working = true;
-                    listenThread.Start();
+                    listenTask.Start();
                     return true;
                 }
                 catch (Exception ex)
@@ -98,7 +98,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
                     }
                     sockets.Clear();
                 }
-                listenThread?.Abort();
+                listenCancellationTokenSource.Cancel();
+                listenCancellationTokenSource = null;
             }
             catch (PlatformNotSupportedException) { }
             catch (Exception ex)
@@ -112,7 +113,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
         {
             try
             {
-                listenThread = new Thread(() =>
+                listenCancellationTokenSource = new CancellationTokenSource();
+                listenTask = new Task(() =>
                 {
                     if (configuration.ListenerDeactivated || !working)
                         return;
@@ -156,10 +158,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Discovery
                         if (working)
                             Start();
                     }
-                })
-                {
-                    Name = $"{threadName}_{DateTime.Today.Ticks}"
-                };
+                }, listenCancellationTokenSource.Token, TaskCreationOptions.LongRunning);
             }
             catch (Exception ex)
             {
