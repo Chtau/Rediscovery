@@ -222,7 +222,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                                 // symmetric encryption based on the network key to prevent leaking of header and meta data outside of the network
                                 var enc = _networkState.Encrypt(_networkState.NormalizePackageSize(raw, communicationSetting.PackageSize));
                                 
-                                send.Invoke(new TCPCommunicationPayload(enc, item.ReceiverIdentifier, communicationSetting.Port, communicationSetting.PackageSize + _encryption.SymmetricEncryptionSignatureLength));
+                                send.Invoke(new PortCommunicationPayload(enc, item.ReceiverIdentifier, communicationSetting.Port, communicationSetting.PackageSize + _encryption.SymmetricEncryptionSignatureLength));
 #if PIPELINE
                                 _logger.Trace($"{nameof(PackagePipeline)}.{nameof(OnOutgoingTaskRunner)} Header:{item}");
 #endif

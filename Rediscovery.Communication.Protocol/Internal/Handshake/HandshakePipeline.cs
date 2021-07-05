@@ -181,7 +181,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Handshake
 #endif
             var raw = _serializer.Serialize(package.CreateRaw().ToArray());
             var enc = _networkState.Encrypt(_networkState.NormalizePackageSize(raw, deviceGreeting.Device.Communication.Handshake.PackageSize));
-            _communication.Send(new TCPCommunicationPayload(enc,
+            _communication.Send(new PortCommunicationPayload(enc,
                 deviceGreeting.Device.Identifier,
                 deviceGreeting.Device.Communication.Handshake.Port,
                 deviceGreeting.Device.Communication.Handshake.PackageSize));

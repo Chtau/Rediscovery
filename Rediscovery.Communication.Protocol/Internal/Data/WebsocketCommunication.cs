@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 namespace Rediscovery.Communication.Protocol.Internal.Data
 {
     // TODO: to support Balzor/WASM we need a communication implemenation based on Websocket or HttpClient
-    // TODO: https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_server
     // TODO: https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_client_applications
 
     internal class WebsocketCommunication : ICommunication
@@ -53,7 +52,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             {
                 try
                 {
-                    if (communicationPayload is TCPCommunicationPayload payload)
+                    if (communicationPayload is PortCommunicationPayload payload)
                     {
                         var ip = _deviceManager.GetIP(payload.ReceiverIdentifier);
                         if (string.IsNullOrWhiteSpace(ip))

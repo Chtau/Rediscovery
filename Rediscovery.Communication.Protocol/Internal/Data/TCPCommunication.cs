@@ -53,7 +53,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         {
             try
             {
-                if (communicationPayload is TCPCommunicationPayload payload)
+                if (communicationPayload is PortCommunicationPayload payload)
                 {
                     var ip = _deviceManager.GetIP(payload.ReceiverIdentifier);
                     if (string.IsNullOrWhiteSpace(ip))

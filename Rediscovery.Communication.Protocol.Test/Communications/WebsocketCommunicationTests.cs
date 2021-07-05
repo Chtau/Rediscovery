@@ -36,7 +36,7 @@ namespace Rediscovery.Communication.Protocol.Test.Communications
             deviceManager.SetIdentifier("3C07A55EDA88491C9A84C469C19E4F44");
 
             var com = new Internal.Data.WebsocketCommunication(logger, deviceManager, diagnosticPackage, encryption);
-            com.Send(new Internal.Data.TCPCommunicationPayload(null, "BC07A55EDA88491C9A84C469C19E4F44", 49889, 1024));
+            com.Send(new Internal.Data.PortCommunicationPayload(null, "BC07A55EDA88491C9A84C469C19E4F44", 49889, 1024));
         }
     }
 }
