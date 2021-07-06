@@ -13,7 +13,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
     // TODO: to support Balzor/WASM we need a communication implemenation based on Websocket or HttpClient
     // TODO: https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_client_applications
 
-    internal class WebsocketCommunication : ICommunication
+    internal class WebSocketCommunication : ICommunication
     {
         private readonly IProtocolLogger _logger;
         private readonly IDeviceManager _deviceManager;
@@ -30,7 +30,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 
         public event EventHandler<byte[]> Receive;
 
-        public WebsocketCommunication(IProtocolLogger logger,
+        public WebSocketCommunication(IProtocolLogger logger,
             IDeviceManager deviceManager,
             IDiagnosticPackage diagnosticPackage,
             IEncryption encryption)
@@ -64,7 +64,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                     }
                     else
                     {
-                        throw new NotSupportedException($"Type:\"{communicationPayload.GetType().FullName}\" is not supported in \"{nameof(WebsocketCommunication)}\"");
+                        throw new NotSupportedException($"Type:\"{communicationPayload.GetType().FullName}\" is not supported in \"{nameof(WebSocketCommunication)}\"");
                     }
                 }
                 catch (Exception ex)

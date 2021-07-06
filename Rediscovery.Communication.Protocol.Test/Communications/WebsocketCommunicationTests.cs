@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Rediscovery.Communication.Protocol.Test.Communications
 {
-    public class WebsocketCommunicationTests
+    public class WebSocketCommunicationTests
     {
         [Fact]
         public async void Send()
@@ -35,7 +35,7 @@ namespace Rediscovery.Communication.Protocol.Test.Communications
             deviceManager.Change(device2, System.Net.IPEndPoint.Parse("127.0.0.1"));
             deviceManager.SetIdentifier("3C07A55EDA88491C9A84C469C19E4F44");
 
-            var com = new Internal.Data.WebsocketCommunication(logger, deviceManager, diagnosticPackage, encryption);
+            var com = new Internal.Data.WebSocketCommunication(logger, deviceManager, diagnosticPackage, encryption);
             com.Send(new Internal.Data.PortCommunicationPayload(null, "BC07A55EDA88491C9A84C469C19E4F44", 49889, 1024));
         }
     }
