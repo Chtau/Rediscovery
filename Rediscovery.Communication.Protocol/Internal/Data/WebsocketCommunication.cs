@@ -116,6 +116,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         {
             try
             {
+                OnInitListenerThread();
                 listenerWorking = true;
                 listenTask.Start();
             }

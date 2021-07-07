@@ -39,6 +39,12 @@ namespace Rediscovery.Communication.Protocol.Test.Communications
             Task.Run(() => server.OnOpenWebSocket());
 
             var com = new Internal.Data.WebSocketCommunication(logger, deviceManager, diagnosticPackage, encryption);
+            com.Initialize(new Models.ConnectionListenConfiguration
+            {
+                Port = 49889,
+                PackageSize = 1024
+            });
+            com.Start();
             var payload = Encoding.UTF8.GetBytes("Hallo");
             com.Send(new Internal.Data.PortCommunicationPayload(payload, "BC07A55EDA88491C9A84C469C19E4F44", 49889, 1024));
 

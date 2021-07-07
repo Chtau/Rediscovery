@@ -252,10 +252,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 var server = new TcpListener(IPAddress.Parse(ip), port);
 
                 server.Start();
-                Console.WriteLine("Server has started on {0}:{1}, Waiting for a connection...", ip, port);
+                _logger.Trace($"Server has started on {ip}:{port}, Waiting for a connection...");
 
                 TcpClient client = server.AcceptTcpClient();
-                Console.WriteLine("A client connected.");
+                _logger.Trace("A client connected.");
 
                 NetworkStream stream = client.GetStream();
 
@@ -271,7 +271,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 
                     if (Regex.IsMatch(s, "^GET", RegexOptions.IgnoreCase))
                     {
-                        Console.WriteLine("=====Handshaking from client=====\n{0}", s);
+                        _logger.Trace($"=====Handshaking from client=====\n{s}");
 
                         // 1. Obtain the value of the "Sec-WebSocket-Key" request header without any leading or trailing whitespace
                         // 2. Concatenate it with "258EAFA5-E914-47DA-95CA-C5AB0DC85B11" (a special GUID specified by RFC 6455)
@@ -308,14 +308,14 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                         }
                         else if (msglen == 127)
                         {
-                            Console.WriteLine("TODO: msglen == 127, needs qword to store msglen");
+                            _logger.Trace("TODO: msglen == 127, needs qword to store msglen");
                             // i don't really know the byte order, please edit this
                             // msglen = BitConverter.ToUInt64(new byte[] { bytes[5], bytes[4], bytes[3], bytes[2], bytes[9], bytes[8], bytes[7], bytes[6] }, 0);
                             // offset = 10;
                         }
 
                         if (msglen == 0)
-                            Console.WriteLine("msglen == 0");
+                            _logger.Trace("msglen == 0");
                         else if (mask)
                         {
                             byte[] decoded = new byte[msglen];
@@ -326,12 +326,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                                 decoded[i] = (byte)(bytes[offset + i] ^ masks[i % 4]);
 
                             string text = Encoding.UTF8.GetString(decoded);
-                            Console.WriteLine("{0}", text);
+                            _logger.Trace(text);
                         }
                         else
-                            Console.WriteLine("mask bit not set");
-
-                        Console.WriteLine();
+                            _logger.Trace("mask bit not set");
                     }
                 }
             }
