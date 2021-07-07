@@ -35,8 +35,14 @@ namespace Rediscovery.Communication.Protocol.Test.Communications
             deviceManager.Change(device2, System.Net.IPEndPoint.Parse("127.0.0.1"));
             deviceManager.SetIdentifier("3C07A55EDA88491C9A84C469C19E4F44");
 
+            var server = new Internal.Data.WebSocketServerCommunication(logger, deviceManager, diagnosticPackage, encryption);
+            Task.Run(() => server.OnOpenWebSocket());
+
             var com = new Internal.Data.WebSocketCommunication(logger, deviceManager, diagnosticPackage, encryption);
-            com.Send(new Internal.Data.PortCommunicationPayload(null, "BC07A55EDA88491C9A84C469C19E4F44", 49889, 1024));
+            var payload = Encoding.UTF8.GetBytes("Hallo");
+            com.Send(new Internal.Data.PortCommunicationPayload(payload, "BC07A55EDA88491C9A84C469C19E4F44", 49889, 1024));
+
+            await Task.Delay(TimeSpan.FromSeconds(10));
         }
     }
 }

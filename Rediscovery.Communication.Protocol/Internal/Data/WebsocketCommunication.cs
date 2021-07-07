@@ -210,6 +210,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             }
             Uri uri = new Uri($"ws://{ip}:{port}/");
             sender = new System.Net.WebSockets.ClientWebSocket();
+            if (listenCancelationTokenSource == null)
+                listenCancelationTokenSource = new CancellationTokenSource();
             await sender.ConnectAsync(uri, listenCancelationTokenSource.Token);
             _sender.Add(identifier, sender);
             return sender;
