@@ -61,6 +61,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                         int bytesToSend = payload.Payload.Length;
                         await socket.SendAsync(payload.Payload, System.Net.WebSockets.WebSocketMessageType.Binary, true, listenCancelationTokenSource.Token);
                         _diagnosticPackage.BytesSend(bytesToSend);
+
+                        var byteBuffer = new byte[configuration.PackageSize + _encryption.SymmetricEncryptionSignatureLength];
+                        var received = await socket.ReceiveAsync(byteBuffer, listenCancelationTokenSource.Token);
+                        var receivedAsText = Encoding.UTF8.GetString(byteBuffer, 0, received.Count);
                     }
                     else
                     {

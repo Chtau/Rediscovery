@@ -4,6 +4,7 @@ using Rediscovery.Communication.Protocol.Internal.Encryption;
 using Rediscovery.Communication.Protocol.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -327,6 +328,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 
                             string text = Encoding.UTF8.GetString(decoded);
                             _logger.Trace(text);
+
+                            byte[] response = Encoding.UTF8.GetBytes($"Received:{text}");
+                            client.Client.Send(OnCreateFrame(OpCode.BinaryFrame, response, true));
                         }
                         else
                             _logger.Trace("mask bit not set");
@@ -337,6 +341,29 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             {
                 _logger.Error(ex);
             }
+        }
+
+        private byte[] OnCreateFrame(OpCode opCode, byte[] payload, bool last)
+        {
+            var byteBuffer = new List<byte>
+            {
+                (byte)((last ? (byte)0x80 : (byte)0x00) | (byte)opCode),
+                payload.Length < 126 ? (byte)payload.Length
+                    : payload.Length <= ushort.MaxValue ? (byte)126
+                    : (byte)127
+            };
+            byteBuffer.AddRange(payload);
+            return byteBuffer.ToArray();
+        }
+
+        internal enum OpCode
+        {
+            ContinuationFrame = 0,
+            TextFrame = 1,
+            BinaryFrame = 2,
+            ConnectionClose = 8,
+            Ping = 9,
+            Pong = 10
         }
     }
 }
