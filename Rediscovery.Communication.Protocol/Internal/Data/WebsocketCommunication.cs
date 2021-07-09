@@ -10,21 +10,25 @@ using System.Threading.Tasks;
 
 namespace Rediscovery.Communication.Protocol.Internal.Data
 {
-    // TODO: to support Balzor/WASM we need a communication implemenation based on Websocket or HttpClient
-    // TODO: https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_client_applications
-
     internal class WebSocketCommunication : ICommunication
     {
+        struct Socket
+        {
+            public System.Net.WebSockets.ClientWebSocket WebSocket { get; }
+            public CancellationTokenSource CancellationToken { get; }
+
+            public Socket(System.Net.WebSockets.ClientWebSocket webSocket, CancellationTokenSource cancellationToken)
+            {
+                WebSocket = webSocket;
+                CancellationToken = cancellationToken;
+            }
+        }
+
         private readonly IProtocolLogger _logger;
         private readonly IDeviceManager _deviceManager;
         private readonly IDiagnosticPackage _diagnosticPackage;
         private readonly IEncryption _encryption;
-        private readonly Dictionary<string, System.Net.WebSockets.ClientWebSocket> _sender = new Dictionary<string, System.Net.WebSockets.ClientWebSocket>();
-
-        private Task listenTask;
-        private CancellationTokenSource listenCancelationTokenSource;
-        private bool listenerWorking = false;
-        private System.Net.WebSockets.ClientWebSocket listener;
+        private readonly Dictionary<string, Socket> _sockets = new Dictionary<string, Socket>();
 
         private ConnectionListenConfiguration configuration;
 
@@ -59,12 +63,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                             return;
                         var socket = await OnGetSocket(payload.ReceiverIdentifier, ip, payload.Port);
                         int bytesToSend = payload.Payload.Length;
-                        await socket.SendAsync(payload.Payload, System.Net.WebSockets.WebSocketMessageType.Binary, true, listenCancelationTokenSource.Token);
+                        await socket.WebSocket.SendAsync(payload.Payload, System.Net.WebSockets.WebSocketMessageType.Binary, true, socket.CancellationToken.Token);
                         _diagnosticPackage.BytesSend(bytesToSend);
-
-                        var byteBuffer = new byte[configuration.PackageSize + _encryption.SymmetricEncryptionSignatureLength];
-                        var received = await socket.ReceiveAsync(byteBuffer, listenCancelationTokenSource.Token);
-                        var receivedAsText = Encoding.UTF8.GetString(byteBuffer, 0, received.Count);
                     }
                     else
                     {
@@ -81,145 +81,42 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 
         public void Start()
         {
-            OnStartListener();
+
         }
 
         public void Stop()
         {
-            try
-            {
-                listenerWorking = false;
-                if (listener != null)
-                {
-                    try
-                    {
-                        listener.Abort();
-                        listener.Dispose();
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error(ex);
-                    }
-                }
-                listenCancelationTokenSource?.Cancel();
-                listenCancelationTokenSource = null;
-            }
-            catch (PlatformNotSupportedException) { }
-            catch (Exception ex)
-            {
-                _logger.Error(ex);
-            }
-            while (listener?.State != System.Net.WebSockets.WebSocketState.Closed)
-            {
-                Thread.Sleep(TimeSpan.FromMilliseconds(10));
-            }
-            Thread.Sleep(TimeSpan.FromMilliseconds(100));
+
         }
 
-        private void OnStartListener()
-        {
-            try
-            {
-                OnInitListenerThread();
-                listenerWorking = true;
-                listenTask.Start();
-            }
-            catch (ThreadStateException tsEx)
-            {
-                // TODO: improve restart logic with delay to reduce spam
-                _logger.Warning($"Task ID:\"{listenTask.Id}\" State:{listenTask.Status}");
-                _logger.Warning(tsEx);
-                if (listenTask.Status == TaskStatus.Running)
-                {
-                    try
-                    {
-                        listenCancelationTokenSource.Cancel();
-                        listenCancelationTokenSource = null;
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error(ex);
-                    }
-                }
-                OnInitListenerThread();
-                try
-                {
-                    listenerWorking = true;
-                    listenTask.Start();
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error(ex);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex);
-            }
-        }
-
-        private void OnInitListenerThread()
-        {
-            try
-            {
-                listenCancelationTokenSource = new CancellationTokenSource();
-                listenTask = new Task(async () =>
-                {
-                    await OnListenToSocket();
-                }, listenCancelationTokenSource.Token, TaskCreationOptions.LongRunning);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex);
-            }
-        }
-
-        private async Task OnListenToSocket()
-        {
-            if (configuration.Disable)
-                return;
-            if (!listenerWorking)
-                return;
-            try
-            {
-                listener = new System.Net.WebSockets.ClientWebSocket();
-                Uri uri = new Uri("ws://localhost:49889/");
-                await listener.ConnectAsync(uri, listenCancelationTokenSource.Token);
-                var byteBuffer = new byte[configuration.PackageSize + _encryption.SymmetricEncryptionSignatureLength];
-
-                while (listenerWorking)
-                {
-                    var result = await listener.ReceiveAsync(byteBuffer, listenCancelationTokenSource.Token);
-                    Receive?.Invoke(this, byteBuffer);
-                    _diagnosticPackage.BytesReceived(result.Count);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex);
-                if (listenerWorking)
-                    OnStartListener();
-            }
-        }
-
-        private async Task<System.Net.WebSockets.ClientWebSocket> OnGetSocket(string identifier, string ip, int port)
+        private async Task<Socket> OnGetSocket(string identifier, string ip, int port)
         {
             identifier = identifier.ToLower();
-            System.Net.WebSockets.ClientWebSocket sender;
-            if (_sender.ContainsKey(identifier))
+            Socket socket;
+            if (_sockets.ContainsKey(identifier))
             {
-                sender = _sender[identifier];
-                if (sender.State != System.Net.WebSockets.WebSocketState.Closed)
-                    return sender;
-                _sender.Remove(identifier);
+                socket = _sockets[identifier];
+                if (socket.WebSocket.State != System.Net.WebSockets.WebSocketState.Closed)
+                    return socket;
+                _sockets.Remove(identifier);
             }
             Uri uri = new Uri($"ws://{ip}:{port}/");
-            sender = new System.Net.WebSockets.ClientWebSocket();
-            if (listenCancelationTokenSource == null)
-                listenCancelationTokenSource = new CancellationTokenSource();
-            await sender.ConnectAsync(uri, listenCancelationTokenSource.Token);
-            _sender.Add(identifier, sender);
-            return sender;
+            var tokenSource = new CancellationTokenSource();
+            socket = new Socket(new System.Net.WebSockets.ClientWebSocket(), tokenSource);
+            await socket.WebSocket.ConnectAsync(uri, tokenSource.Token);
+            _sockets.Add(identifier, socket);
+            _ = Task.Run(async () =>
+            {
+                do
+                {
+                    var byteBuffer = new byte[configuration.PackageSize + _encryption.SymmetricEncryptionSignatureLength];
+                    var received = await socket.WebSocket.ReceiveAsync(byteBuffer, tokenSource.Token);
+                    // we cloud create a byte buffer aslong as received is not EndOfMessage
+                    Receive?.Invoke(this, byteBuffer);
+                    _diagnosticPackage.BytesReceived(received.Count);
+                } while (!tokenSource.Token.IsCancellationRequested);
+            });
+            return socket;
         }
     }
 }

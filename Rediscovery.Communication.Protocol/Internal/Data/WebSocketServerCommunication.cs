@@ -24,6 +24,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         private readonly IEncryption _encryption;
         private readonly Dictionary<string, Socket> _sender = new Dictionary<string, Socket>();
 
+        private readonly Dictionary<string, TcpClient> _clients = new Dictionary<string, TcpClient>();
+
         private Task listenTask;
         private CancellationTokenSource listenCancelationTokenSource;
         private bool listenerWorking = false;
@@ -257,6 +259,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 
                 TcpClient client = server.AcceptTcpClient();
                 _logger.Trace("A client connected.");
+                //_clients.Add(((IPEndPoint)client.Client.RemoteEndPoint).ToString(), client);
 
                 NetworkStream stream = client.GetStream();
 
@@ -294,6 +297,15 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                     }
                     else
                     {
+                        var result = OnDecode(bytes);
+                        if (result != null)
+                        {
+                            string text = Encoding.UTF8.GetString(result);
+                            _logger.Trace("Server Received:" + text);
+                            byte[] response = Encoding.UTF8.GetBytes($"Received:{text}");
+                            client.Client.Send(OnCreateFrame(OpCode.BinaryFrame, response, true));
+                        }
+                        /*
                         bool fin = (bytes[0] & 0b10000000) != 0,
                             mask = (bytes[1] & 0b10000000) != 0; // must be true, "All messages from the client to the server have this bit set"
 
@@ -334,6 +346,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                         }
                         else
                             _logger.Trace("mask bit not set");
+                        */
                     }
                 }
             }
@@ -341,6 +354,42 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
             {
                 _logger.Error(ex);
             }
+        }
+
+        private byte[] OnDecode(byte[] byteBuffer)
+        {
+            bool fin = (byteBuffer[0] & 0b10000000) != 0,
+                 mask = (byteBuffer[1] & 0b10000000) != 0; // must be true, "All messages from the client to the server have this bit set"
+
+            int opcode = byteBuffer[0] & 0b00001111, // expecting 1 - text message
+                msgLength = byteBuffer[1] - 128, // & 0111 1111
+                offset = 2;
+
+            if (msgLength == 126)
+            {
+                // was ToUInt16(bytes, offset) but the result is incorrect
+                msgLength = BitConverter.ToUInt16(new byte[] { byteBuffer[3], byteBuffer[2] }, 0);
+                offset = 4;
+            }
+            else if (msgLength == 127)
+            {
+                _logger.Trace("TODO: msglen == 127, needs qword to store msgLength");
+                // i don't really know the byte order, please edit this
+                // msglen = BitConverter.ToUInt64(new byte[] { bytes[5], bytes[4], bytes[3], bytes[2], bytes[9], bytes[8], bytes[7], bytes[6] }, 0);
+                // offset = 10;
+            }
+
+            if (mask)
+            {
+                byte[] decoded = new byte[msgLength];
+                byte[] masks = new byte[4] { byteBuffer[offset], byteBuffer[offset + 1], byteBuffer[offset + 2], byteBuffer[offset + 3] };
+                offset += 4;
+
+                for (int i = 0; i < msgLength; ++i)
+                    decoded[i] = (byte)(byteBuffer[offset + i] ^ masks[i % 4]);
+                return decoded;
+            }
+            return null;
         }
 
         private byte[] OnCreateFrame(OpCode opCode, byte[] payload, bool last)

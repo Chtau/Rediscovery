@@ -45,6 +45,11 @@ namespace Rediscovery.Communication.Protocol.Test.Communications
                 PackageSize = 1024
             });
             com.Start();
+            com.Receive += (obj, args) =>
+            {
+                var receivedAsText = Encoding.UTF8.GetString(args, 0, args.Length);
+                logger.Trace("Client Received:" + receivedAsText);
+            };
             var payload = Encoding.UTF8.GetBytes("Hallo");
             com.Send(new Internal.Data.PortCommunicationPayload(payload, "BC07A55EDA88491C9A84C469C19E4F44", 49889, 1024));
 
