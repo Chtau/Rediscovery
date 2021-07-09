@@ -86,7 +86,22 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
 
         public void Stop()
         {
-
+            try
+            {
+                var task = Task.Run(() =>
+                {
+                    Parallel.ForEach(_sockets, async (socket) =>
+                    {
+                        socket.Value.CancellationToken.Cancel();
+                        await socket.Value.WebSocket.CloseAsync(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "Stop", new CancellationTokenSource().Token);
+                    });
+                });
+                Task.WaitAny(task, Task.Delay(TimeSpan.FromSeconds(30)));
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
         }
 
         private async Task<Socket> OnGetSocket(string identifier, string ip, int port)
