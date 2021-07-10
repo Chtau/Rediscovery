@@ -92,8 +92,10 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 {
                     Parallel.ForEach(_sockets, async (socket) =>
                     {
+                        _logger.Trace($"Closing WebSocket for:{socket.Key}");
                         socket.Value.CancellationToken.Cancel();
                         await socket.Value.WebSocket.CloseAsync(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "Stop", new CancellationTokenSource().Token);
+                        _logger.Trace($"Successful closed WebSocket for:{socket.Key}");
                     });
                 });
                 Task.WaitAny(task, Task.Delay(TimeSpan.FromSeconds(30)));

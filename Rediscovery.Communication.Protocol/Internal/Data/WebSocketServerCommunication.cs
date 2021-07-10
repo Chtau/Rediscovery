@@ -250,6 +250,7 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
         {
             try
             {
+                CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
                 string ip = "127.0.0.1";
                 int port = 49889;
                 var server = new TcpListener(IPAddress.Parse(ip), port);
@@ -262,9 +263,9 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                 //_clients.Add(((IPEndPoint)client.Client.RemoteEndPoint).ToString(), client);
 
                 NetworkStream stream = client.GetStream();
-
+                
                 // enter to an infinite cycle to be able to handle every change in stream
-                while (true)
+                while (!cancellationTokenSource.Token.IsCancellationRequested)
                 {
                     while (!stream.DataAvailable) ;
                     while (client.Available < 3) ; // match against "get"
@@ -297,7 +298,17 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                     }
                     else
                     {
+                        int opcode = (bytes[0] & 0b00001111);
+                        var op = (OpCode)opcode;
                         var result = OnDecode(bytes);
+
+                        if (op == OpCode.ConnectionClose)
+                        {
+                            client.Client.Send(OnCreateFrame(OpCode.ConnectionClose, result, true));
+                            cancellationTokenSource.Cancel();
+                            break;
+                        }
+                        
                         if (result != null)
                         {
                             string text = Encoding.UTF8.GetString(result);
@@ -349,6 +360,8 @@ namespace Rediscovery.Communication.Protocol.Internal.Data
                         */
                     }
                 }
+                client.Close();
+                server.Stop();
             }
             catch (Exception ex)
             {
